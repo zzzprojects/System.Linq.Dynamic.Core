@@ -1,0 +1,42 @@
+{
+    "version": "1.0.0-*",
+
+    "dependencies": {
+        "System.Linq.Dynamic.Core": "1.0.0-*",
+
+        "xunit": "2.1.0",
+        "TestToolsToXunitProxy": "0.0.2"
+    },
+
+    "commands": {
+        "test": "xunit.runner.dnx"
+    },
+
+    "frameworks": {
+        "dnx452": {
+            "dependencies": {
+                "xunit.runner.dnx": "2.1.0-rc1-build204",
+
+                "EntityFramework.Core": "7.0.0-rc1-final",
+                "EntityFramework.Sqlite": "7.0.0-rc1-final",
+                "EntityFramework.InMemory": "7.0.0-rc1-final",
+
+                "System.Linq.Parallel": "4.0.1-beta-*",
+                "System.Threading.Tasks": "4.0.11-beta-*"
+            }
+        },
+
+        "dnxcore50": {
+            "dependencies": {
+                "xunit.runner.dnx": "2.1.0-rc1-build204",
+
+                "EntityFramework.Core": "7.0.0-rc1-final",
+                "EntityFramework.Sqlite": "7.0.0-rc1-final",
+                "EntityFramework.InMemory": "7.0.0-rc1-final",
+
+                "System.Linq.Parallel": "4.0.1-beta-*",
+                "System.Threading.Tasks": "4.0.11-beta-*"
+            }
+        }
+    }
+}

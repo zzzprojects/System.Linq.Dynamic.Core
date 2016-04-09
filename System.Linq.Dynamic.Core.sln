@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DB9A5C42-3F8B-4546-96F2-DD35BCACA018}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A43BA07-0742-4D95-83DF-50486301DF7C}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{32699374-E6B9-4870-9D4A-C8884D16CEA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test2", "test2", "{5FB356F8-05AB-4CA5-A43C-7CA5AD943166}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{7F147C37-B300-4C82-B98A-DF25CEA149E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src-console", "src-console", "{C98BB543-9BDA-4EE3-927D-0F10CC24A49B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.Linq.Dynamic.Core", "src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.xproj", "{CE1620BD-A313-4223-B991-467DA346B2ED}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.Linq.Dynamic.Core.ConsoleTestApp", "src-console\System.Linq.Dynamic.Core.ConsoleTestApp\System.Linq.Dynamic.Core.ConsoleTestApp.xproj", "{E1B36B40-0134-46C4-922B-7EC1FF6CD90F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Linq.Dynamic.Core.ConsoleTestApp.net40", "src-console\System.Linq.Dynamic.Core.ConsoleTestApp.net40\System.Linq.Dynamic.Core.ConsoleTestApp.net40.csproj", "{0EB12661-F5CF-4071-9812-F4C8AF3D4531}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE1620BD-A313-4223-B991-467DA346B2ED} = {CE1620BD-A313-4223-B991-467DA346B2ED}
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.Linq.Dynamic.Core.Tests", "test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.xproj", "{45D205D1-2338-438A-A850-52A9677EC924}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicLinqWebDocs", "web\DynamicLinqWebDocs\DynamicLinqWebDocs.csproj", "{1942BDB5-CDA0-4B50-85BD-D726303F219C}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DynamicLib", "test2\DynamicLib\DynamicLib.xproj", "{58BDDB6A-B81E-4F7D-877B-BB23DA5E5A24}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "DynamicConsoleTest", "test2\DynamicConsoleTest\DynamicConsoleTest.xproj", "{F3DC7D8A-1A63-4CE0-AEA5-A83EC5CDD873}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE1620BD-A313-4223-B991-467DA346B2ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE1620BD-A313-4223-B991-467DA346B2ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE1620BD-A313-4223-B991-467DA346B2ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE1620BD-A313-4223-B991-467DA346B2ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1B36B40-0134-46C4-922B-7EC1FF6CD90F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1B36B40-0134-46C4-922B-7EC1FF6CD90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1B36B40-0134-46C4-922B-7EC1FF6CD90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1B36B40-0134-46C4-922B-7EC1FF6CD90F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EB12661-F5CF-4071-9812-F4C8AF3D4531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EB12661-F5CF-4071-9812-F4C8AF3D4531}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EB12661-F5CF-4071-9812-F4C8AF3D4531}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EB12661-F5CF-4071-9812-F4C8AF3D4531}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45D205D1-2338-438A-A850-52A9677EC924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45D205D1-2338-438A-A850-52A9677EC924}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45D205D1-2338-438A-A850-52A9677EC924}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45D205D1-2338-438A-A850-52A9677EC924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1942BDB5-CDA0-4B50-85BD-D726303F219C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1942BDB5-CDA0-4B50-85BD-D726303F219C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1942BDB5-CDA0-4B50-85BD-D726303F219C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1942BDB5-CDA0-4B50-85BD-D726303F219C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58BDDB6A-B81E-4F7D-877B-BB23DA5E5A24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58BDDB6A-B81E-4F7D-877B-BB23DA5E5A24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58BDDB6A-B81E-4F7D-877B-BB23DA5E5A24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58BDDB6A-B81E-4F7D-877B-BB23DA5E5A24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3DC7D8A-1A63-4CE0-AEA5-A83EC5CDD873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3DC7D8A-1A63-4CE0-AEA5-A83EC5CDD873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3DC7D8A-1A63-4CE0-AEA5-A83EC5CDD873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3DC7D8A-1A63-4CE0-AEA5-A83EC5CDD873}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE1620BD-A313-4223-B991-467DA346B2ED} = {DB9A5C42-3F8B-4546-96F2-DD35BCACA018}
+		{E1B36B40-0134-46C4-922B-7EC1FF6CD90F} = {C98BB543-9BDA-4EE3-927D-0F10CC24A49B}
+		{0EB12661-F5CF-4071-9812-F4C8AF3D4531} = {C98BB543-9BDA-4EE3-927D-0F10CC24A49B}
+		{45D205D1-2338-438A-A850-52A9677EC924} = {32699374-E6B9-4870-9D4A-C8884D16CEA9}
+		{1942BDB5-CDA0-4B50-85BD-D726303F219C} = {7F147C37-B300-4C82-B98A-DF25CEA149E2}
+		{58BDDB6A-B81E-4F7D-877B-BB23DA5E5A24} = {5FB356F8-05AB-4CA5-A43C-7CA5AD943166}
+		{F3DC7D8A-1A63-4CE0-AEA5-A83EC5CDD873} = {5FB356F8-05AB-4CA5-A43C-7CA5AD943166}
+	EndGlobalSection
+EndGlobal

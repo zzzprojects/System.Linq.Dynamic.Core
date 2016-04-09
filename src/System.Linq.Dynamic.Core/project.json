@@ -1,0 +1,95 @@
+{
+    "version": "1.0.0-beta-00001",
+    "title": "System.Linq.Dynamic.Core",
+    "description": "This is a port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
+    "summary": "This is a port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
+    "tags": [ "linq", "dynamic" ],
+    "authors": [ "Stef Heyenrath" ],
+    "owners": [ "Stef Heyenrath" ],
+    "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
+    "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
+    "releaseNotes": "initial support for dnx452 and dnxcore5",
+
+    "dependencies": {
+        "ReflectionBridge": "0.0.8",
+        "JetBrains.Annotations": "10.1.2-eap"
+    },
+
+    "compilationOptions": {
+    },
+
+    "frameworks": {
+        "net35": {
+            "frameworkAssemblies": {
+            }
+        },
+        "net40": {
+            "frameworkAssemblies": {
+                "System.Data.Entity": ""
+            }
+        },
+        "net45": {
+            "frameworkAssemblies": {
+                "System.Data.Entity": ""
+            }
+        },
+        "net451": {
+            "frameworkAssemblies": {
+                "System.Data.Entity": ""
+            }
+        },
+        "net452": {
+            "frameworkAssemblies": {
+                "System.Data.Entity": ""
+            }
+        },
+        "net461": {
+            "frameworkAssemblies": {
+                "System.Data.Entity": ""
+            }
+        },
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Data.Entity": ""
+            }
+        },
+        "dnx452": {
+            "frameworkAssemblies": {
+                "System.Data.Entity": ""
+            }
+        },
+        "dnxcore5": {
+            "dependencies": {
+                "Microsoft.CSharp": "4.0.1-beta-*",
+
+                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
+
+                "System.Runtime": "4.0.21-beta-*",
+                "System.Runtime.Extensions": "4.0.11-beta-*",
+                "System.Runtime.InteropServices": "4.0.21-beta-*",
+                "System.Runtime.Loader": "4.0.0-beta-*",
+
+                "System.Runtime.Serialization.Primitives": "4.1.0-beta-*",
+                "System.Runtime.Serialization.Xml": "4.1.0-beta-*",
+
+                "System.Reflection": "4.1.0-beta-*",
+                "System.Reflection.Extensions": "4.0.1-beta-*",
+                "System.Reflection.Primitives": "4.0.1-beta-*",
+                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
+                "System.Reflection.Emit": "4.0.1-beta-*",
+
+                "System.Linq": "4.0.1-beta-*",
+                "System.Linq.Expressions": "4.0.11-beta-*",
+                "System.Linq.Queryable": "4.0.1-beta-*",
+
+                "System.Globalization": "4.0.11-beta-*",
+
+                "System.Diagnostics.Debug": "4.0.11-beta-*",
+                "System.Diagnostics.Tools": "4.0.1-beta-*",
+                "System.Diagnostics.Tracing": "4.0.21-beta-*",
+
+                "System.Threading": "4.0.11-beta-*"
+            }
+        }
+    }
+}
