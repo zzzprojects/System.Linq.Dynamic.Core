@@ -7,8 +7,7 @@ The following frameworks are supported:
 - net40
 - net45x
 - net46x
-- dnxcore451
-- dnxcore452
+- dnxcore45x
 - dnxcore50
 
 <br>
