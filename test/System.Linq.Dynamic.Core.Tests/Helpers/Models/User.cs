@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace System.Linq.Dynamic.Core.Tests.Helpers
+namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
 {
     public class User
     {
@@ -44,42 +44,5 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers
 
             return list.ToArray();
         }
-    }
-
-    public class UserProfile
-    {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public int? Age { get; set; }
-    }
-
-    public class Role
-    {
-        public static readonly Role[] StandardRoles = {
-            new Role { Name="Admin"},
-            new Role { Name="User"},
-            new Role { Name="Guest"},
-            new Role { Name="G"},
-            new Role { Name="J"},
-            new Role { Name="A"},
-        };
-
-        public Role()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        public Guid Id { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    public class SimpleValuesModel
-    {
-        public float FloatValue { get; set; }
-
-        public decimal DecimalValue { get; set; }
     }
 }

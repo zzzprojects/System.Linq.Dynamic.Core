@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Helpers;
+using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40

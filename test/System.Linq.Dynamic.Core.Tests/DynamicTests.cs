@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Helpers;
+using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using Xunit;
+using Assert = TestToolsToXunitProxy.Assert;
 #if DNXCORE50 || DNX451 || DNX452
 using TestToolsToXunitProxy;
 #else
@@ -30,7 +33,7 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.AreEqual(testList[10], userById.Single());
             Assert.AreEqual(testList[5], userByUserName.Single());
-            Assert.AreEqual(testList.Where(x => x.Profile == null).Count(), nullProfileCount.Count());
+            Assert.AreEqual(testList.Count(x => x.Profile == null), nullProfileCount.Count());
             Assert.AreEqual(testList[1], userByFirstName.Single());
         }
 
@@ -50,8 +53,8 @@ namespace System.Linq.Dynamic.Core.Tests
             Helper.ExpectException<ArgumentNullException>(() => qry.Where(null));
             Helper.ExpectException<ArgumentException>(() => qry.Where(""));
             Helper.ExpectException<ArgumentException>(() => qry.Where(" "));
-        }    
-        
+        }
+
         [TestMethod]
         public void OrderBy()
         {
@@ -67,7 +70,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var orderByAgeDesc = qry.OrderBy("Profile.Age DESC");
             var orderByComplex = qry.OrderBy("Profile.Age, Id");
             var orderByComplex2 = qry.OrderBy("Profile.Age DESC, Id");
-            
+
 
             //Assert
             CollectionAssert.AreEqual(testList.OrderBy(x => x.Id).ToArray(), orderById.ToArray());
@@ -89,7 +92,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             var orderById = qry.SelectMany("Roles.OrderBy(Name)").Select("Name");
-            var expected = qry.SelectMany(x => x.Roles.OrderBy(y => y.Name)).Select( x => x.Name);
+            var expected = qry.SelectMany(x => x.Roles.OrderBy(y => y.Name)).Select(x => x.Name);
 
             var orderByIdDesc = qry.SelectMany("Roles.OrderByDescending(Name)").Select("Name");
             var expectedDesc = qry.SelectMany(x => x.Roles.OrderByDescending(y => y.Name)).Select(x => x.Name);
@@ -115,7 +118,26 @@ namespace System.Linq.Dynamic.Core.Tests
             Helper.ExpectException<ArgumentNullException>(() => qry.OrderBy(null));
             Helper.ExpectException<ArgumentException>(() => qry.OrderBy(""));
             Helper.ExpectException<ArgumentException>(() => qry.OrderBy(" "));
-        }    
+        }
+
+        [Fact]
+        public void SelectMany()
+        {
+            // Act
+            var users = User.GenerateSampleModels(2);
+            users[0].Roles = new List<Role> { new Role { Name = "Admin", Permissions = new List<Permission> { new Permission { Name = "p-Admin" }, new Permission { Name = "p-User" } } } };
+            users[1].Roles = new List<Role> { new Role { Name = "Guest", Permissions = new List<Permission> { new Permission { Name = "p-Guest" } } } };
+
+            var query = users.AsQueryable();
+
+            // Assign
+            var queryNormal = query.SelectMany(u => u.Roles.SelectMany(r => r.Permissions)).Select(p => p.Name).ToList();
+
+            var queryDynamic = query.SelectMany("Roles.SelectMany(Permissions)").Select("Name").ToDynamicList<string>();
+
+            // Assert
+            Xunit.Assert.Equal(queryNormal, queryDynamic);
+        }
 
         [TestMethod]
         public void Select()
@@ -130,7 +152,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var userNames = qry.Select("UserName");
             var userFirstName = qry.Select("new (UserName, Profile.FirstName as MyFirstName)");
             var userRoles = qry.Select("new (UserName, Roles.Select(Id) AS RoleIds)");
-            
+
             //Assert
             CollectionAssert.AreEqual(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
 
@@ -309,7 +331,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var dynamicResult = dynamicQuery.ToDynamicArray();
 
             Assert.AreEqual(realResult.Length, dynamicResult.Length);
-            for( int i = 0; i < realResult.Length; i++)
+            for (int i = 0; i < realResult.Length; i++)
             {
                 Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].OwnerName);
                 Assert.AreEqual(realResult[i].Pet, dynamicResult[i].Pet);

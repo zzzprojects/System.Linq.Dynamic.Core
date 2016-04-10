@@ -9,6 +9,7 @@
 
     "compile": [
         "../../test/System.Linq.Dynamic.Core.Tests/Helpers/*.cs",
+        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Models/*.cs",
         "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Blog.cs",
         "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Post.cs"
     ],

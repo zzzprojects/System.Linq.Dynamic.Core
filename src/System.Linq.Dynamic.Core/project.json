@@ -3,19 +3,19 @@
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .net core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "summary": "This is a .net core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
-    "tags": [ "linq", "dynamic", "dnx", "core" ],
+    "tags": [ "system", "linq", "dynamic", "dnx", "core" ],
     "authors": [ "Microsoft", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
     "owners": [ "Stef Heyenrath" ],
     "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
     "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
     "releaseNotes": "initial support for dnx452 and dnxcore5",
 
+    "compilationOptions": {
+    },
+
     "dependencies": {
         "ReflectionBridge": "0.0.8",
         "JetBrains.Annotations": "10.1.2-eap"
-    },
-
-    "compilationOptions": {
     },
 
     "frameworks": {

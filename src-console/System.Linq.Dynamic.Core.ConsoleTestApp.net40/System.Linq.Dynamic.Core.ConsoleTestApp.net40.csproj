@@ -56,8 +56,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\SampleModels.cs">
-      <Link>Helpers\SampleModels.cs</Link>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\Permission.cs">
+      <Link>Helpers\Models\Permission.cs</Link>
+    </Compile>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\Role.cs">
+      <Link>Helpers\Models\Role.cs</Link>
+    </Compile>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\SimpleValuesModel.cs">
+      <Link>Helpers\Models\SimpleValuesModel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\User.cs">
+      <Link>Helpers\Models\User.cs</Link>
+    </Compile>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserProfile.cs">
+      <Link>Helpers\Models\UserProfile.cs</Link>
     </Compile>
     <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\TestEnum.cs">
       <Link>Helpers\TestEnum.cs</Link>

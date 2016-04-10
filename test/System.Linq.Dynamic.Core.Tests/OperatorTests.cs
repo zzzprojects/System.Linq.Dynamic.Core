@@ -1,4 +1,5 @@
 ﻿using System.Linq.Dynamic.Core.Tests.Helpers;
+using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 #if DNXCORE50 || DNX451 || DNX452
 using TestToolsToXunitProxy;
 #else

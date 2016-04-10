@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -109,7 +110,7 @@ namespace System.Linq.Dynamic.Core
         public static object Sum(this IQueryable source)
         {
             Check.NotNull(source, nameof(source));
-            
+
             return source.Provider.Execute(
                 Expression.Call(
                 typeof(Queryable), "Sum",
@@ -261,16 +262,48 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
         /// <returns>An array that contains the elements from the input sequence.</returns>
-        public static dynamic[] ToDynamicArray(this IEnumerable source)
-
+        public static dynamic[] ToDynamicArray([NotNull] this IEnumerable source)
         {
+            Check.NotNull(source, nameof(source));
             return source.Cast<object>().ToArray();
+        }
+
+        /// <summary>
+        /// Creates a list of dynamic objects from a <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
+        /// <returns>A Array{T} that contains the elements from the input sequence.</returns>
+        public static T[] ToDynamicArray<T>([NotNull] this IEnumerable source)
+        {
+            Check.NotNull(source, nameof(source));
+            return source.Cast<T>().ToArray();
+        }
+
+        /// <summary>
+        /// Creates a list of dynamic objects from a <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
+        /// <returns>A List that contains the elements from the input sequence.</returns>
+        public static List<dynamic> ToDynamicList([NotNull] this IEnumerable source)
+        {
+            Check.NotNull(source, nameof(source));
+            return source.Cast<object>().ToList();
+        }
+
+        /// <summary>
+        /// Creates a list of dynamic objects from a <see cref="IEnumerable"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
+        /// <returns>A List{T} that contains the elements from the input sequence.</returns>
+        public static List<T> ToDynamicList<T>([NotNull] this IEnumerable source)
+        {
+            Check.NotNull(source, nameof(source));
+            return source.Cast<T>().ToList();
         }
 #endif
 
-
         #endregion
-
-
     }
 }
