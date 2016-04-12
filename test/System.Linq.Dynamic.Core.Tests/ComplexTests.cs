@@ -23,7 +23,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             //Act
+            var byAgeReturnAllReal = qry.GroupBy(x => new { x.Profile.Age });
+            var groupReal = byAgeReturnAllReal.OrderBy(gg => gg.Key.Age).ToList();
+
             var byAgeReturnAll = qry.GroupBy("new (Profile.Age)");
+
+            var group = byAgeReturnAll.OrderBy("Key.Age").ToDynamicArray();
+
             var selectQry = byAgeReturnAll.Select("new (Key.Age, Sum(Income) As TotalIncome)");
 
             //Real Comparison

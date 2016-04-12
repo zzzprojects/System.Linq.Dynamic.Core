@@ -24,7 +24,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
                 {
                     Id = Guid.NewGuid(),
                     UserName = "User" + i,
-                    Income = ((i) % 15) * 100
+                    Income = 1 + (i % 15) * 100
                 };
 
                 if (!allowNullableProfiles || (i % 8) != 5)
