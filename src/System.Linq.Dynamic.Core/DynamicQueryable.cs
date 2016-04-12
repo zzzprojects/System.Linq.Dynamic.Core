@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using ReflectionBridge.Extensions;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -31,8 +32,11 @@ namespace System.Linq.Dynamic.Core
         /// var result3 = list.Where("NumberProperty=@0", SomeIntValue);
         /// </code>
         /// </example>
-        public static IQueryable<TSource> Where<TSource>(this IQueryable<TSource> source, string predicate, params object[] args)
+        public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string predicate, params object[] args)
         {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(predicate, nameof(predicate));
+
             return (IQueryable<TSource>)Where((IQueryable)source, predicate, args);
         }
 
@@ -50,7 +54,7 @@ namespace System.Linq.Dynamic.Core
         /// var result3 = list.Where("NumberProperty=@0", SomeIntValue);
         /// </code>
         /// </example>
-        public static IQueryable Where(this IQueryable source, string predicate, params object[] args)
+        public static IQueryable Where([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
@@ -80,7 +84,7 @@ namespace System.Linq.Dynamic.Core
         /// var dynamicObject = qry.Select("new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
         /// </code>
         /// </example>
-        public static IQueryable Select(this IQueryable source, string selector, params object[] args)
+        public static IQueryable Select([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
@@ -107,7 +111,7 @@ namespace System.Linq.Dynamic.Core
         /// var users = qry.Select&lt;User&gt;("new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
         /// </code>
         /// </example>
-        public static IQueryable<TResult> Select<TResult>(this IQueryable source, string selector, params object[] args)
+        public static IQueryable<TResult> Select<TResult>([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
@@ -134,7 +138,7 @@ namespace System.Linq.Dynamic.Core
         /// var users = qry.Select(typeof(User), "new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
         /// </code>
         /// </example>
-        public static IQueryable Select(this IQueryable source, Type type, string selector, params object[] args)
+        public static IQueryable Select([NotNull] this IQueryable source, [NotNull] Type type, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(type, nameof(type));
@@ -156,7 +160,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
-        public static IQueryable SelectMany(this IQueryable source, string selector, params object[] args)
+        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
@@ -197,7 +201,7 @@ namespace System.Linq.Dynamic.Core
         /// var result = list.OrderBy("NumberProperty, StringProperty DESC");
         /// </code>
         /// </example>
-        public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string ordering, params object[] args)
+        public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string ordering, params object[] args)
         {
             return (IOrderedQueryable<TSource>)OrderBy((IQueryable)source, ordering, args);
         }
@@ -214,7 +218,7 @@ namespace System.Linq.Dynamic.Core
         /// var result = list.OrderBy("NumberProperty, StringProperty DESC");
         /// </code>
         /// </example>
-        public static IOrderedQueryable OrderBy(this IQueryable source, string ordering, params object[] args)
+        public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(ordering, nameof(ordering));
@@ -256,7 +260,7 @@ namespace System.Linq.Dynamic.Core
         /// var groupResult2 = qry.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
         /// </code>
         /// </example>
-        public static IQueryable GroupBy(this IQueryable source, string keySelector, string resultSelector, object[] args)
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(keySelector, nameof(keySelector));
@@ -286,11 +290,14 @@ namespace System.Linq.Dynamic.Core
         /// var groupResult2 = qry.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
         /// </code>
         /// </example>
-        public static IQueryable GroupBy(this IQueryable source, string keySelector, string resultSelector)
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector)
         {
-            return GroupBy(source, keySelector, resultSelector, (object[])null);
-        }
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(keySelector, nameof(keySelector));
+            Check.NotEmpty(resultSelector, nameof(resultSelector));
 
+            return GroupBy(source, keySelector, resultSelector, null);
+        }
 
         /// <summary>
         /// Groups the elements of a sequence according to a specified key string function 
@@ -306,7 +313,7 @@ namespace System.Linq.Dynamic.Core
         /// var groupResult2 = qry.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
         /// </code>
         /// </example>
-        public static IQueryable GroupBy(this IQueryable source, string keySelector, object[] args)
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(keySelector, nameof(keySelector));
@@ -317,7 +324,7 @@ namespace System.Linq.Dynamic.Core
                 Expression.Call(
                     typeof(Queryable), "GroupBy",
                     new Type[] { source.ElementType, keyLambda.Body.Type },
-                    source.Expression, Expression.Quote(keyLambda)));
+                    new Expression[] { source.Expression, Expression.Quote(keyLambda) }));
         }
 
         /// <summary>
@@ -333,12 +340,13 @@ namespace System.Linq.Dynamic.Core
         /// var groupResult2 = qry.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
         /// </code>
         /// </example>
-        public static IQueryable GroupBy(this IQueryable source, string keySelector)
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector)
         {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(keySelector, nameof(keySelector));
+
             return GroupBy(source, keySelector, (object[])null);
         }
-
-
         #endregion
 
         #region GroupByMany
@@ -351,10 +359,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IEnumerable{T}"/> whose elements to group.</param>
         /// <param name="keySelectors"><see cref="string"/> expressions to specify the keys for each element.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of type <see cref="GroupResult"/> where each element represents a projection over a group, its key, and its subgroups.</returns>
-        public static IEnumerable<GroupResult> GroupByMany<TElement>(this IEnumerable<TElement> source, params string[] keySelectors)
+        public static IEnumerable<GroupResult> GroupByMany<TElement>([NotNull] this IEnumerable<TElement> source, params string[] keySelectors)
         {
             Check.NotNull(source, nameof(source));
-            Check.NotNull(keySelectors, nameof(keySelectors));
+            Check.HasNoNulls(keySelectors, nameof(keySelectors));
 
             var selectors = new List<Func<TElement, object>>(keySelectors.Length);
 
@@ -375,10 +383,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IEnumerable{T}"/> whose elements to group.</param>
         /// <param name="keySelectors">Lambda expressions to specify the keys for each element.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of type <see cref="GroupResult"/> where each element represents a projection over a group, its key, and its subgroups.</returns>
-        public static IEnumerable<GroupResult> GroupByMany<TElement>(this IEnumerable<TElement> source, params Func<TElement, object>[] keySelectors)
+        public static IEnumerable<GroupResult> GroupByMany<TElement>([NotNull] this IEnumerable<TElement> source, params Func<TElement, object>[] keySelectors)
         {
             Check.NotNull(source, nameof(source));
-            Check.NotNull(keySelectors, nameof(keySelectors));
+            Check.HasNoNulls(keySelectors, nameof(keySelectors));
 
             return GroupByManyInternal(source, keySelectors, 0);
         }
@@ -415,7 +423,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="resultSelector">A dynamic function to create a result element from two matching elements.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similiar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> obtained by performing an inner join on two sequences.</returns>
-        public static IQueryable Join(this IQueryable outer, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object[] args)
+        public static IQueryable Join([NotNull] this IQueryable outer, [NotNull] IEnumerable inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, [NotNull] string resultSelector, params object[] args)
         {
             //http://stackoverflow.com/questions/389094/how-to-create-a-dynamic-linq-join-extension-method
 
@@ -454,7 +462,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similiar to the way String.Format formats strings.</param>
         /// <remarks>This overload only works on elements where both sequences and the resulting element match.</remarks>
         /// <returns>An <see cref="IQueryable{T}"/> that has elements of type TResult obtained by performing an inner join on two sequences.</returns>
-        public static IQueryable<TElement> Join<TElement>(this IQueryable<TElement> outer, IEnumerable<TElement> inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object[] args)
+        public static IQueryable<TElement> Join<TElement>([NotNull] this IQueryable<TElement> outer, [NotNull] IEnumerable<TElement> inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, string resultSelector, params object[] args)
         {
             return (IQueryable<TElement>)Join((IQueryable)outer, (IEnumerable)inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
