@@ -8,7 +8,7 @@
             return gen.DeclareLocal(tb.GetType());
         }
 
-        public static void Emit(this ILGenerator gen,  OpCode opcode, TypeBuilder tb)
+        public static void Emit(this ILGenerator gen, OpCode opcode, TypeBuilder tb)
         {
             gen.Emit(opcode, tb.GetType());
         }

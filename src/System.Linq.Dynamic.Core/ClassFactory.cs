@@ -45,7 +45,7 @@ namespace System.Linq.Dynamic.Core
 #endif
         }
 
-        public Type GetDynamicClass(IEnumerable<DynamicProperty> properties)
+        public Type CreateType(IEnumerable<DynamicProperty> properties)
         {
             Signature signature = new Signature(properties);
 

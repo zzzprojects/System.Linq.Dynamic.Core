@@ -21,6 +21,9 @@
     "frameworks": {
         "net35": {
             "frameworkAssemblies": {
+            },
+            "dependencies": {
+                "NetLegacySupport.ConcurrentDictionary": "1.1.0"
             }
         },
         "net40": {
@@ -61,6 +64,8 @@
         "dnxcore5": {
             "dependencies": {
                 "Microsoft.CSharp": "4.0.1-beta-*",
+
+                "System.Collections.Concurrent": "4.0.11-beta-*",
 
                 "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
 
