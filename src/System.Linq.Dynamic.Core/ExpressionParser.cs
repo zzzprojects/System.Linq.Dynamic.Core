@@ -1676,15 +1676,15 @@ namespace System.Linq.Dynamic.Core
                     }
                 }
             }
+
             if (IsCompatibleWith(expr.Type, type))
             {
-#if !(NETFX_CORE || DNXCORE50)
-                if (type.IsValueType || exact) return Expression.Convert(expr, type);
-#else
-                if (type.IsValueType() || exact) return Expression.Convert(expr, type);
-#endif
+                if (type.IsValueType() || exact)
+                    return Expression.Convert(expr, type);
+
                 return expr;
             }
+
             return null;
         }
 
