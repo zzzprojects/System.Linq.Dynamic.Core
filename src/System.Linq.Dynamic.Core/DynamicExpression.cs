@@ -36,12 +36,11 @@ namespace System.Linq.Dynamic.Core
         //}
 
 #if !NETFX_CORE
-        public static Type CreateClass(IEnumerable<DynamicProperty> properties)
+        public static Type CreateClass(IList<DynamicProperty> properties)
         {
             return DynamicClassFactory.CreateType(properties);
             //return ClassFactory.Instance.CreateType(properties);
         }
 #endif
     }
-
 }

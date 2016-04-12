@@ -1,0 +1,20 @@
+{
+    "version": "1.0.0-*",
+    "compilationOptions": {
+        "emitEntryPoint": true
+    },
+	
+	 "compile": [
+        "../../src/System.Linq.Dynamic.Core/*.cs",
+		"../../src/System.Linq.Dynamic.Core/System/Reflection/Emit/*.cs",
+		"../../src/System.Linq.Dynamic.Core/Validation/.cs"
+    ],
+	
+	"dependencies": {
+        "NETStandard.Library": "1.0.0-rc2-*"
+    },
+
+    "frameworks": {
+        "dnxcore50": { }
+    }
+}

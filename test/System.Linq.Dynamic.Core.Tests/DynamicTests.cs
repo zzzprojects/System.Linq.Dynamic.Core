@@ -234,7 +234,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [TestMethod]
         public void GroupByMany_StringExpressions()
         {
-            var lst = new List<Tuple<int, int, int>>()
+            var lst = new List<Tuple<int, int, int>>
             {
                 new Tuple<int, int, int>(1, 1, 1),
                 new Tuple<int, int, int>(1, 1, 2),
@@ -255,7 +255,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [TestMethod]
         public void GroupByMany_LambdaExpressions()
         {
-            var lst = new List<Tuple<int, int, int>>()
+            var lst = new List<Tuple<int, int, int>>
             {
                 new Tuple<int, int, int>(1, 1, 1),
                 new Tuple<int, int, int>(1, 1, 2),
@@ -318,8 +318,8 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             var realResult = realQuery.ToArray();
 
-#if NET35 || DNXCORE50
-            var dynamicResult = dynamicQuery.Cast<object>().ToArray();
+#if DNXCORE50
+            var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
             Assert.AreEqual(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
@@ -337,7 +337,6 @@ namespace System.Linq.Dynamic.Core.Tests
                 Assert.AreEqual(realResult[i].Pet, dynamicResult[i].Pet);
             }
 #endif
-
         }
 
     }
