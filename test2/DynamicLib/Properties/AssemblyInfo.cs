@@ -21,3 +21,6 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("58bddb6a-b81e-4f7d-877b-bb23da5e5a24")]
+
+
+//[assembly: InternalsVisibleTo("DynamicConsoleTest")]

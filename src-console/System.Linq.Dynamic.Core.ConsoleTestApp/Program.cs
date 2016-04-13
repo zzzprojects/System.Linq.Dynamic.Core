@@ -2,23 +2,71 @@
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using System.Linq.Expressions;
 using System.Reflection;
+
 
 namespace System.Linq.Dynamic.Core.ConsoleTestApp
 {
+    public static class E
+    {
+        public static IQueryable<IGrouping<TKey, TSource>> GroupBy2<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector)
+        {
+            return source.Provider.CreateQuery<IGrouping<TKey, TSource>>(
+                Expression.Call(
+                    typeof(Queryable), "GroupBy",
+                    new Type[] { source.ElementType, keySelector.Body.Type },
+                    new Expression[] { source.Expression, Expression.Quote(keySelector) }
+                    ));
+        }
+
+        //    LambdaExpression keyLambda = DynamicExpression.ParseLambda(source.ElementType, null, keySelector, args);
+
+        //        return source.Provider.CreateQuery(
+        //            Expression.Call(
+        //                typeof(Queryable), "GroupBy",
+        //                new Type[] { source.ElementType, keyLambda.Body.Type
+        //},
+        //                new Expression[] { source.Expression, Expression.Quote(keyLambda) }));
+    }
+
     public class Program
     {
         public void Main(string[] args)
         {
             Console.WriteLine("--start");
 
-            Select();
-            TestDyn();
-            ExpressionTests_Enum();
-            Where();
-            ExpressionTests_Sum();
-            
+            GroupByAndSelect_TestDynamicSelectMember();
+            //Select();
+            //TestDyn();
+            //ExpressionTests_Enum();
+            //Where();
+            //ExpressionTests_Sum();
+
             Console.WriteLine("--end");
+        }
+
+        private static void GroupByAndSelect_TestDynamicSelectMember()
+        {
+
+
+            //Arrange
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            var rrrr = qry.GroupBy2(x => new { x.Profile.Age });
+
+            var byAgeReturnAllReal = qry.GroupBy(x => new { x.Profile.Age }).ToList();
+            var r1 = byAgeReturnAllReal[0];
+
+            var byAgeReturnAll = qry.GroupBy("new (Profile.Age as Age)").ToDynamicList();
+            var q1 = byAgeReturnAll[0];
+            var q2 = byAgeReturnAll[50];
+
+            var k = q1.Key;
+            var age = k.Age;
+
+            int y = 0;
         }
 
         private static void TestDyn()
@@ -47,10 +95,10 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp
             //Assert
             int idx = 0;
             var ar1 = result1.ToArray();
-            foreach (var c in new[] {TestEnum.Var1, TestEnum.Var2, TestEnum.Var3})
+            foreach (var c in new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 })
             {
                 Console.Write("*");
-                Write((int) c, (int) ar1[idx]);
+                Write((int)c, (int)ar1[idx]);
                 idx++;
             }
 
@@ -62,10 +110,10 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp
                 Write((int)c, (int)ar1[idx]);
                 idx++;
             }
-            
-            Write((int) TestEnum.Var5, (int) result3.Single());
-            Write((int) TestEnum.Var5, (int) result4.Single());
-            Write((int) TestEnum.Var5, (int) result5.Single());
+
+            Write((int)TestEnum.Var5, (int)result3.Single());
+            Write((int)TestEnum.Var5, (int)result4.Single());
+            Write((int)TestEnum.Var5, (int)result5.Single());
         }
 
         public static void Where()

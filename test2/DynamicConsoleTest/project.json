@@ -13,6 +13,11 @@
     },
 
     "frameworks": {
+        "dnx452": {
+            "frameworkAssemblies": {
+                "System.Data.Entity": ""
+            }
+        },
         "dnxcore5": {
             "dependencies": {
                 "Microsoft.CSharp": "4.0.1-beta-*",

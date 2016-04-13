@@ -5,7 +5,6 @@
     "owners": [ "Stef Heyenrath" ],
 
     "dependencies": {
-        "FluentValidation.dnx": "2.0.0-beta003",
         "ReflectionBridge": "0.0.8"
     },
 
@@ -15,12 +14,14 @@
     "frameworks": {
         "dnx452": {
             "frameworkAssemblies": {
-                "System.Data.Entity": "4.0.0.0"
+                "System.Data.Entity": ""
             }
         },
         "dnxcore5": {
             "dependencies": {
                 "Microsoft.CSharp": "4.0.1-beta-*",
+
+                "System.Collections.Concurrent": "4.0.11-beta-*",
 
                 "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
 
