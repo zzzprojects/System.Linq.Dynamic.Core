@@ -8,13 +8,13 @@
     "owners": [ "Stef Heyenrath" ],
     "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
     "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-    "releaseNotes": "initial support for dnx452 and dnxcore5",
+    "releaseNotes": "",
 
     "compilationOptions": {
     },
 
     "dependencies": {
-        "ReflectionBridge": "0.0.8",
+        "ReflectionBridge": "0.0.9",
         "JetBrains.Annotations": "10.1.2-eap"
     },
 
@@ -69,7 +69,6 @@
 
                 "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
 
-                "System.Runtime": "4.0.21-beta-*",
                 "System.Runtime.Extensions": "4.0.11-beta-*",
                 "System.Runtime.InteropServices": "4.0.21-beta-*",
                 "System.Runtime.Loader": "4.0.0-beta-*",
@@ -77,8 +76,6 @@
                 "System.Runtime.Serialization.Primitives": "4.1.0-beta-*",
                 "System.Runtime.Serialization.Xml": "4.1.0-beta-*",
 
-                "System.Reflection": "4.1.0-beta-*",
-                "System.Reflection.Extensions": "4.0.1-beta-*",
                 "System.Reflection.Primitives": "4.0.1-beta-*",
                 "System.Reflection.TypeExtensions": "4.1.0-beta-*",
                 "System.Reflection.Emit": "4.0.1-beta-*",

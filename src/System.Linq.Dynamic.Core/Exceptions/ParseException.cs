@@ -1,20 +1,20 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
 using System.Runtime.Serialization;
+#endif
 
-namespace System.Linq.Dynamic.Core
+namespace System.Linq.Dynamic.Core.Exceptions
 {
     /// <summary>
     /// Represents errors that occur while parsing dynamic linq string expressions.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors")]
-#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4)
+#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
     [Serializable]
 #endif
     public sealed class ParseException : Exception
     {
-        readonly int _position;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ParseException"/> class with a specified error message and position.
         /// </summary>
@@ -23,16 +23,13 @@ namespace System.Linq.Dynamic.Core
         public ParseException(string message, int position)
             : base(message)
         {
-            _position = position;
+            Position = position;
         }
 
         /// <summary>
         /// The location in the parsed string that produced the <see cref="ParseException"/>.
         /// </summary>
-        public int Position
-        {
-            get { return _position; }
-        }
+        public int Position { get; }
 
         /// <summary>
         /// Creates and returns a string representation of the current exception.
@@ -40,14 +37,14 @@ namespace System.Linq.Dynamic.Core
         /// <returns>A string representation of the current exception.</returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, Res.ParseExceptionFormat, Message, _position);
+            return string.Format(CultureInfo.CurrentCulture, Res.ParseExceptionFormat, Message, Position);
         }
 
-#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4)
+#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
         ParseException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            _position = (int)info.GetValue("position", typeof(int));
+            Position = (int)info.GetValue("position", typeof(int));
         }
 
         /// <summary>
@@ -57,7 +54,7 @@ namespace System.Linq.Dynamic.Core
         {
             base.GetObjectData(info, context);
 
-            info.AddValue("position", _position);
+            info.AddValue("position", Position);
         }
 #endif
     }

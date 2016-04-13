@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using JetBrains.Annotations;
+using ReflectionBridge.Extensions;
 
 // Copied from https://github.com/aspnet/EntityFramework/blob/dev/src/Shared/Check.cs
 namespace System.Linq.Dynamic.Core.Validation
@@ -12,6 +12,7 @@ namespace System.Linq.Dynamic.Core.Validation
     [DebuggerStepThrough]
     internal static class Check
     {
+        [ContractAnnotation("value:null => halt")]
         public static T Condition<T>([NoEnumeration] T value, [NotNull] Predicate<T> condition, [InvokerParameterName] [NotNull] string parameterName)
         {
             NotNull(condition, nameof(condition));
@@ -125,11 +126,7 @@ namespace System.Linq.Dynamic.Core.Validation
 
         public static Type ValidEntityType(Type value, [InvokerParameterName] [NotNull] string parameterName)
         {
-#if DNXCORE50
-            if (!value.GetTypeInfo().IsClass)
-#else
-            if (!value.IsClass)
-#endif
+            if (!value.IsClass())
             {
                 NotEmpty(parameterName, nameof(parameterName));
 

@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections;
 using System.Globalization;
+using System.Linq.Dynamic.Core.Exceptions;
 using ReflectionBridge.Extensions;
 
 namespace System.Linq.Dynamic.Core
@@ -229,7 +230,7 @@ namespace System.Linq.Dynamic.Core
             typeof(Math),
             typeof(Convert),
             typeof(Uri),
-#if !(NET35 || SILVERLIGHT || NETFX_CORE || DNXCORE50 || DOTNET5_4)
+#if !(NET35 || SILVERLIGHT || NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
 			typeof(Data.Objects.EntityFunctions)
 #endif
         };
@@ -444,7 +445,7 @@ namespace System.Linq.Dynamic.Core
                             //check for nullable type match
 
                             if (!identifier.Type.IsGenericType() || identifier.Type.GetGenericTypeDefinition() != typeof(Nullable<>)
-#if DNXCORE50 || DOTNET5_4
+#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
                                                         || ReflectionBridgeExtensions.GetGenericArguments(identifier.Type)[0] != right.Type)
 #else
                                                         || identifier.Type.GetGenericArguments()[0] != right.Type)
@@ -1099,7 +1100,7 @@ namespace System.Linq.Dynamic.Core
                     return Expression.Constant(dateTime, type);
 
                 object[] arguments = { text, null };
-#if DNXCORE50
+#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
                 MethodInfo method = type.GetMethod("TryParse", new[] { typeof(string), type.MakeByRefType() });
 #else
                 MethodInfo method = type.GetMethod("TryParse", BindingFlags.Public | BindingFlags.Static, null, new Type[] { typeof(string), type.MakeByRefType() }, null);
@@ -1124,7 +1125,7 @@ namespace System.Linq.Dynamic.Core
                     Type enumerableType = FindGenericType(typeof(IEnumerable<>), type);
                     if (enumerableType != null)
                     {
-#if DNXCORE50 || DOTNET5_4
+#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
                         Type elementType = ReflectionBridgeExtensions.GetGenericArguments(enumerableType)[0];
 #else
                         Type elementType = enumerableType.GetGenericArguments()[0];
@@ -1237,7 +1238,7 @@ namespace System.Linq.Dynamic.Core
                 var type = Expression.Lambda(args[0], innerIt).Body.Type;
                 var interfaces = type.GetInterfaces().Union(new[] { type });
                 Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
-#if DNXCORE50
+#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
                 Type resultType = ReflectionBridgeExtensions.GetGenericArguments(interfaceType)[0];
 #else
                 Type resultType = interfaceType.GetGenericArguments()[0];
@@ -1336,7 +1337,7 @@ namespace System.Linq.Dynamic.Core
 
         static Type GetNonNullableType(Type type)
         {
-#if DNXCORE50 || DOTNET5_4
+#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
             return IsNullableType(type) ? ReflectionBridgeExtensions.GetGenericArguments(type)[0] : type;
 #else
             return IsNullableType(type) ? type.GetGenericArguments()[0] : type;
@@ -1398,7 +1399,7 @@ namespace System.Linq.Dynamic.Core
         static int GetNumericTypeKind(Type type)
         {
             type = GetNonNullableType(type);
-#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
             if (type.IsEnum()) return 0;
 
             switch (Type.GetTypeCode(type))
@@ -1466,7 +1467,7 @@ namespace System.Linq.Dynamic.Core
 
         static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
         {
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly |
                 (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
@@ -1492,7 +1493,7 @@ namespace System.Linq.Dynamic.Core
 
         int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)
         {
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly |
                 (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
@@ -1520,7 +1521,7 @@ namespace System.Linq.Dynamic.Core
         {
             foreach (Type t in SelfAndBaseTypes(type))
             {
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
                 MemberInfo[] members = t.GetDefaultMembers();
 #else
                 MemberInfo[] members = new MemberInfo[0];
@@ -1529,7 +1530,7 @@ namespace System.Linq.Dynamic.Core
                 {
                     IEnumerable<MethodBase> methods = members
                         .OfType<PropertyInfo>().
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
                         Select(p => (MethodBase)p.GetGetMethod()).
                         Where(m => m != null);
 #else
@@ -1631,7 +1632,7 @@ namespace System.Linq.Dynamic.Core
             {
                 if (ce == _nullLiteral)
                 {
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
                     if (!type.IsValueType() || IsNullableType(type))
 #else
                     if (!type.IsValueType() || IsNullableType(type))
@@ -1645,7 +1646,7 @@ namespace System.Linq.Dynamic.Core
                     {
                         Type target = GetNonNullableType(type);
                         Object value = null;
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
                         switch (Type.GetTypeCode(ce.Type))
                         {
                             case TypeCode.Int32:
@@ -1690,7 +1691,7 @@ namespace System.Linq.Dynamic.Core
 
         static object ParseNumber(string text, Type type)
         {
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
             switch (Type.GetTypeCode(GetNonNullableType(type)))
             {
                 case TypeCode.SByte:
@@ -1801,7 +1802,7 @@ namespace System.Linq.Dynamic.Core
 
         static object ParseEnum(string name, Type type)
         {
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
             if (type.IsEnum)
             {
                 MemberInfo[] memberInfos = type.FindMembers(MemberTypes.Field,
@@ -1821,7 +1822,7 @@ namespace System.Linq.Dynamic.Core
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         static bool IsCompatibleWith(Type source, Type target)
         {
-#if !(NETFX_CORE || DNXCORE50)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
             if (source == target) return true;
             if (!target.IsValueType) return target.IsAssignableFrom(source);
             Type st = GetNonNullableType(source);
@@ -2174,14 +2175,14 @@ namespace System.Linq.Dynamic.Core
             if (type == typeof(Guid) && Guid.TryParse(text, out guid))
                 return Expression.Constant(guid, typeof(Guid));
 #else
-                try
-                {
-                    return Expression.Constant(new Guid(text));
-                }
-                catch
-                {
-                    //Doing it in old fashion way when no TryParse interface was provided by .NET
-                }
+            try
+            {
+                return Expression.Constant(new Guid(text));
+            }
+            catch
+            {
+                //Doing it in old fashion way when no TryParse interface was provided by .NET
+            }
 #endif
             return null;
         }

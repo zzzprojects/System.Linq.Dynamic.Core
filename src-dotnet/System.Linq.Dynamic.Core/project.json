@@ -1,20 +1,30 @@
 {
     "version": "1.0.0-*",
-    "compilationOptions": {
-        "emitEntryPoint": true
-    },
 	
 	 "compile": [
         "../../src/System.Linq.Dynamic.Core/*.cs",
-		"../../src/System.Linq.Dynamic.Core/System/Reflection/Emit/*.cs",
-		"../../src/System.Linq.Dynamic.Core/Validation/.cs"
+		"../../src/System.Linq.Dynamic.Core/*/*.cs",
+		"../../src/System.Linq.Dynamic.Core/System/Reflection/Emit/*.cs"
     ],
 	
 	"dependencies": {
-        "NETStandard.Library": "1.0.0-rc2-*"
+        "ReflectionBridge": "0.0.9",
+        "JetBrains.Annotations": "10.1.2-eap"
     },
-
-    "frameworks": {
-        "dnxcore50": { }
+	
+	"frameworks": {
+        "netstandardapp1.5": {
+            "imports": "dnxcore50",
+            "dependencies": {
+                "NETStandard.Library": "1.0.0-rc2-*",
+				
+				"Microsoft.CSharp": "4.0.1-rc2-*",
+				"Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-*",
+				
+				"System.Linq.Queryable": "4.0.1-rc2-*",
+				
+				"System.Reflection.Emit": "4.0.1-rc2-*"
+            }
+        }
     }
 }

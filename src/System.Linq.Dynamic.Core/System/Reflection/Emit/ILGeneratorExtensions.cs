@@ -12,5 +12,12 @@
         {
             gen.Emit(opcode, tb.GetType());
         }
+
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
+        public static void Emit(this ILGenerator gen, OpCode opcode, GenericTypeParameterBuilder gb)
+        {
+            gen.Emit(opcode, gb.AsType());
+        }
+#endif
     }
 }
