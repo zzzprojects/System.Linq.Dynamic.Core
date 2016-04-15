@@ -2,7 +2,7 @@
     "version": "1.0.0-*",
 
     "dependencies": {
-        "System.Linq.Dynamic.Core": "1.0.0-*",
+        "System.Linq.Dynamic.Core": "1.0.1-*",
 
         "xunit": "2.1.0",
         "TestToolsToXunitProxy": "0.0.2"

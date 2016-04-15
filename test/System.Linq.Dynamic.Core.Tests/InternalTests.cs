@@ -1,10 +1,10 @@
-﻿#if DNXCORE50 || DNX451 || DNX452
+﻿#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARDAPP1_5
 using TestToolsToXunitProxy;
 #else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endif
 
-#if !(NET35|| DNX452 || DNXCORE50)
+#if !(NET35|| DNX452 || DNXCORE50 || NETSTANDARDAPP1_5)
 using System.Threading.Tasks;
 #endif
 

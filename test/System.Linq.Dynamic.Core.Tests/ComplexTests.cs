@@ -1,6 +1,6 @@
 ﻿using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-#if DNXCORE50 || DNX451 || DNX452
+#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARDAPP1_5
 using TestToolsToXunitProxy;
 #else
 using Microsoft.VisualStudio.TestTools.UnitTesting;

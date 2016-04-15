@@ -2,7 +2,7 @@
     "version": "1.0.0.0-*",
     "authors": [ "Stef Heyenrath" ],
     "dependencies": {
-        "System.Linq.Dynamic.Core": "1.0.0-*",
+        "System.Linq.Dynamic.Core": "1.0.1-*",
 
         "TestToolsToXunitProxy": "0.0.2"
     },

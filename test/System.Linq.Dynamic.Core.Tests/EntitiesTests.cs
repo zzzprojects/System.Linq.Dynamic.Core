@@ -1,4 +1,4 @@
-﻿#if !DNXCORE50
+﻿#if !(DNXCORE50 || NETSTANDARDAPP1_5)
 using System.Collections;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using Microsoft.Data.Entity;

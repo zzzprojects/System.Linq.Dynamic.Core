@@ -1,5 +1,9 @@
-﻿using Microsoft.Data.Entity;
+﻿#if NETSTANDARDAPP1_5
+using Microsoft.EntityFrameworkCore;
+#else
+using Microsoft.Data.Entity;
 using Microsoft.Data.Entity.Infrastructure;
+#endif
 
 namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
 {
