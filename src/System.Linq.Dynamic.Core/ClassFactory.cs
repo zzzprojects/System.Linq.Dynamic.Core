@@ -141,6 +141,10 @@ namespace System.Linq.Dynamic.Core
                 pb.SetGetMethod(mbGet);
 
                 MethodBuilder mbSet = tb.DefineMethod("set_" + dp.Name, getSetAttr, null, new Type[] { dp.Type });
+
+                // workaround for https://github.com/dotnet/corefx/issues/7792
+                mbSet.DefineParameter(1, ParameterAttributes.In, "_" + dp.Name);
+
                 ILGenerator genSet = mbSet.GetILGenerator();
                 genSet.Emit(OpCodes.Ldarg_0);
                 genSet.Emit(OpCodes.Ldarg_1);
