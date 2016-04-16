@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
+﻿using System.Globalization;
+using System.Reflection.Emit;
+#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3)
 using System.Runtime.Serialization;
 #endif
 
@@ -9,8 +9,7 @@ namespace System.Linq.Dynamic.Core.Exceptions
     /// <summary>
     /// Represents errors that occur while parsing dynamic linq string expressions.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors")]
-#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
+#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3)
     [Serializable]
 #endif
     public sealed class ParseException : Exception
@@ -24,6 +23,7 @@ namespace System.Linq.Dynamic.Core.Exceptions
             : base(message)
         {
             Position = position;
+            ILGenerator x;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace System.Linq.Dynamic.Core.Exceptions
             return string.Format(CultureInfo.CurrentCulture, Res.ParseExceptionFormat, Message, Position);
         }
 
-#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5)
+#if !(SILVERLIGHT || DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3)
         ParseException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

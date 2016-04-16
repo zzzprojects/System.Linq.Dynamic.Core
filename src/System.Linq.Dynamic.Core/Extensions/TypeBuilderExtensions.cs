@@ -1,8 +1,11 @@
-﻿#if DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
+﻿using System.Reflection.Emit;
+using System.Reflection;
+
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3
 using System.Linq;
 #endif
 
-namespace System.Reflection.Emit
+namespace System.Linq.Dynamic.Core.Extensions
 {
     public static class TypeBuilderExtensions
     {
@@ -20,7 +23,7 @@ namespace System.Reflection.Emit
         }
 #endif
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3
         public static ConstructorBuilder DefineConstructor(this TypeBuilder tb, MethodAttributes attributes, CallingConventions callingConventions, GenericTypeParameterBuilder[] parameterTypes)
         {
             return tb.DefineConstructor(attributes, callingConventions, parameterTypes.Select(g => g.AsType()).ToArray());

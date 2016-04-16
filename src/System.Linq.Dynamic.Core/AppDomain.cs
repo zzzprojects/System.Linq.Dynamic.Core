@@ -1,4 +1,4 @@
-﻿#if DNXCORE50 || NETFX || NETSTANDARDAPP1_5
+﻿#if DNXCORE50 || NETFX || NETSTANDARD1_3
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -18,7 +18,7 @@ namespace System.Linq.Dynamic.Core
             CurrentDomain = new AppDomain();
         }
 
-#if DNXCORE50 || NETSTANDARDAPP1_5
+#if DNXCORE50 || NETSTANDARD1_3
         public Assembly[] GetAssemblies()
         {
             var assemblyNames = PlatformServices.Default.LibraryManager.GetLibraries().SelectMany(lib => lib.Assemblies).Distinct().ToArray();

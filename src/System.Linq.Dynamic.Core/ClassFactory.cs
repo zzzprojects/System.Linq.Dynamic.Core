@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
+using System.Linq.Dynamic.Core.Extensions;
 
 namespace System.Linq.Dynamic.Core
 {
-    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "There is only ever one instance of this class, and it should never be destroyed except on AppDomain termination.")]
     internal class ClassFactory
     {
         public static readonly ClassFactory Instance = new ClassFactory();

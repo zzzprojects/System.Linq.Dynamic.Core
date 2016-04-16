@@ -1,4 +1,6 @@
-﻿namespace System.Reflection.Emit
+﻿using System.Reflection.Emit;
+
+namespace System.Linq.Dynamic.Core.Extensions
 {
     // ReSharper disable once InconsistentNaming
     public static class ILGeneratorExtensions
@@ -13,7 +15,7 @@
             gen.Emit(opcode, tb.GetType());
         }
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3
         public static void Emit(this ILGenerator gen, OpCode opcode, GenericTypeParameterBuilder gb)
         {
             gen.Emit(opcode, gb.AsType());

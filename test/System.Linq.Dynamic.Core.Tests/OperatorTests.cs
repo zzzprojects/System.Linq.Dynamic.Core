@@ -1,7 +1,7 @@
 ﻿using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARDAPP1_5
+#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARD1_3
 using TestToolsToXunitProxy;
 #else
 using Microsoft.VisualStudio.TestTools.UnitTesting;

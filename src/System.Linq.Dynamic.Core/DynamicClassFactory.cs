@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
+using System.Linq.Dynamic.Core.Extensions;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -26,14 +27,14 @@ namespace System.Linq.Dynamic.Core
         private static readonly CustomAttributeBuilder DebuggerHiddenAttributeBuilder = new CustomAttributeBuilder(typeof(DebuggerHiddenAttribute).GetConstructor(Type.EmptyTypes), new object[0]);
 
         private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3
         private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public);
 #else
         private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null);
 #endif
 
         private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(Type.EmptyTypes);
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3
         private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod("Append", new[] { typeof(string) });
         private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod("Append", new[] { typeof(object) });
 #else
@@ -43,7 +44,7 @@ namespace System.Linq.Dynamic.Core
 
         private static readonly Type EqualityComparer = typeof(EqualityComparer<>);
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3
         private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
         private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public);
         private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument });
@@ -236,7 +237,7 @@ namespace System.Linq.Dynamic.Core
 
                         for (int i = 0; i < names.Length; i++)
                         {
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARDAPP1_5
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3
                             Type equalityComparerT = EqualityComparer.MakeGenericType(generics[i].AsType());
 #else
                             Type equalityComparerT = EqualityComparer.MakeGenericType(generics[i]);

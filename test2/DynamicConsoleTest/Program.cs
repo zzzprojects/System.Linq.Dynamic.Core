@@ -41,6 +41,8 @@ namespace DynamicConsoleTest
         //    int u = 0;
         //}
 
+      
+
         private static void TestEqualsNew()
         {
             var a1 = new { s = "1234" };
@@ -49,13 +51,31 @@ namespace DynamicConsoleTest
 
             var properties = new List<DynamicProperty>();
             properties.Add(new DynamicProperty("x", typeof(string)));
+            properties.Add(new DynamicProperty("i", typeof(int)));
 
             var t = DynamicClassFactory.CreateType(properties);
 
             var x1 = (dynamic)Activator.CreateInstance(t);
+            var index = t.GetProperty("i").GetIndexParameters();
+
+            var method = t.GetMethod("get_i");
+
+            ParameterInfo[] parameters = method.GetParameters();
+
+            var m = t.GetProperty("i").GetGetMethod();
+            
+            
+            int retValueI = (int)t.GetProperty("i").GetGetMethod().Invoke(x1, null);
+            int iii = x1.i;
+
 
             dynamic x0 = t.GetConstructor(new Type[] { typeof(string) }).Invoke(new string[] { "inuuu" });
             var hc = x0.GetHashCode();
+
+            
+            
+
+            string retValue = (string)t.GetProperty("x").GetGetMethod().Invoke(x0, null);
             string resss = x0.x;
            
 

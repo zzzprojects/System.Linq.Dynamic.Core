@@ -1,4 +1,4 @@
-﻿#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARDAPP1_5
+﻿#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARD1_3
 using System.Reflection;
 using TestToolsToXunitProxy;
 using ReflectionBridge;

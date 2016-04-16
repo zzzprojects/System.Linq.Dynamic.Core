@@ -1,14 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 
-
+//,
 namespace System.Linq.Dynamic.Core
 {
     /// <summary>
@@ -168,18 +167,20 @@ namespace System.Linq.Dynamic.Core
 
                             ilgeneratorConstructor.Emit(OpCodes.Stfld, fields[i]);
 
-                            PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.HasThis, generics[i], Type.EmptyTypes);
+                            PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.Standard | CallingConventions.HasThis, generics[i], Type.EmptyTypes);
 
                             // getter
-                            MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, generics[i], null);
+                            MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.Standard | CallingConventions.HasThis, generics[i], new Type[0]);
+                            //MethodKindEnum.PropAccessor
                             ILGenerator ilgeneratorGetter = getter.GetILGenerator();
+                            //ilgeneratorGetter.Emit(OpCodes.Ldc_I4, 5);
                             ilgeneratorGetter.Emit(OpCodes.Ldarg_0);
                             ilgeneratorGetter.Emit(OpCodes.Ldfld, fields[i]);
                             ilgeneratorGetter.Emit(OpCodes.Ret);
                             property.SetGetMethod(getter);
 
                             // setter
-                            MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, null, new[] { generics[i] });
+                            MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.Standard | CallingConventions.HasThis, null, new[] { generics[i] });
                             ILGenerator ilgeneratorSetter = setter.GetILGenerator();
                             ilgeneratorSetter.Emit(OpCodes.Ldarg_0);
                             ilgeneratorSetter.Emit(OpCodes.Ldarg_1);
@@ -189,7 +190,7 @@ namespace System.Linq.Dynamic.Core
                         }
 
                         // ToString()
-                        MethodBuilder toString = tb.DefineMethod("ToString", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(string), Type.EmptyTypes);
+                        MethodBuilder toString = tb.DefineMethod("ToString", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.Standard | CallingConventions.HasThis, typeof(string), Type.EmptyTypes);
                         toString.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
                         ILGenerator ilgeneratorToString = toString.GetILGenerator();
                         ilgeneratorToString.DeclareLocal(typeof(StringBuilder));
@@ -197,7 +198,7 @@ namespace System.Linq.Dynamic.Core
                         ilgeneratorToString.Emit(OpCodes.Stloc_0);
 
                         // Equals
-                        MethodBuilder equals = tb.DefineMethod("Equals", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(bool), new[] { typeof(object) });
+                        MethodBuilder equals = tb.DefineMethod("Equals", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.Standard | CallingConventions.HasThis, typeof(bool), new[] { typeof(object) });
                         equals.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
                         equals.DefineParameter(1, ParameterAttributes.None, "value");
                         ILGenerator ilgeneratorEquals = equals.GetILGenerator();
@@ -210,7 +211,7 @@ namespace System.Linq.Dynamic.Core
                         Label equalsLabel = ilgeneratorEquals.DefineLabel();
 
                         // GetHashCode()
-                        MethodBuilder getHashCode = tb.DefineMethod("GetHashCode", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(int), Type.EmptyTypes);
+                        MethodBuilder getHashCode = tb.DefineMethod("GetHashCode", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.Standard | CallingConventions.HasThis, typeof(int), Type.EmptyTypes);
                         getHashCode.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
                         ILGenerator ilgeneratorGetHashCode = getHashCode.GetILGenerator();
                         ilgeneratorGetHashCode.DeclareLocal(typeof(int));
@@ -315,7 +316,11 @@ namespace System.Linq.Dynamic.Core
                         ilgeneratorToString.Emit(OpCodes.Callvirt, ObjectToString);
                         ilgeneratorToString.Emit(OpCodes.Ret);
 
+#if DNXCORE50
+                        type = tb.CreateTypeInfo().AsType();
+#else
                         type = tb.CreateType();
+#endif
 
                         type = GeneratedTypes.GetOrAdd(fullName, type);
                     }

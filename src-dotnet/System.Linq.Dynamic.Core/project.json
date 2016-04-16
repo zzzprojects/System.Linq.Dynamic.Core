@@ -1,10 +1,11 @@
 {
-    "version": "1.0.0-*",
+    "version": "1.0.1-*",
 	
 	 "compile": [
         "../../src/System.Linq.Dynamic.Core/*.cs",
 		"../../src/System.Linq.Dynamic.Core/*/*.cs",
-		"../../src/System.Linq.Dynamic.Core/System/Reflection/Emit/*.cs"
+		"../../src/System.Linq.Dynamic.Core/*/*/*.cs",
+		"../../src/System.Linq.Dynamic.Core/*/*/*/*.cs"
     ],
 	
 	"dependencies": {
@@ -13,17 +14,24 @@
     },
 	
 	"frameworks": {
-        "netstandardapp1.5": {
-            "imports": "dnxcore50",
+        "netstandard1.3": {
+            "imports": [
+                "dnxcore50",
+				"portable-net45"
+            ],
             "dependencies": {
-                "NETStandard.Library": "1.0.0-rc2-*",
+                "NETStandard.Library": "1.5.0-rc3-*",
 				
-				"Microsoft.CSharp": "4.0.1-rc2-*",
+				
+				"Microsoft.CSharp": "4.0.1-rc3-*",
 				"Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-*",
 				
-				"System.Linq.Queryable": "4.0.1-rc2-*",
+				"System.Linq.Queryable": "4.0.1-rc3-*",
 				
-				"System.Reflection.Emit": "4.0.1-rc2-*"
+				"System.ObjectModel": "4.0.12-rc3-*",
+				"System.Reflection.Emit": "4.0.1-rc3-*",
+				"System.Reflection.Emit.Lightweight": "4.0.1-rc3-*",
+				"System.Reflection.Emit.ILGeneration": "4.0.1-rc3-*"
             }
         }
     }
