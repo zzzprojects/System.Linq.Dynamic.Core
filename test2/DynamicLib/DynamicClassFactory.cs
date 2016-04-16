@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using ReflectionBridge.Extensions;
 
 //,
 namespace System.Linq.Dynamic.Core
@@ -43,7 +44,7 @@ namespace System.Linq.Dynamic.Core
         private static readonly Type EqualityComparer = typeof(EqualityComparer<>);
 
 #if DNXCORE50
-        private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
+        private static readonly Type EqualityComparerGenericArgument = TypeExtensions.GetGenericArguments(EqualityComparer)[0];
         private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public);
         private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument });
         private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", new[] { EqualityComparerGenericArgument });
@@ -107,6 +108,14 @@ namespace System.Linq.Dynamic.Core
                         {
                             string[] genericNames = names.Select(genericName => $"<{genericName}>j__TPar").ToArray();
                             generics = tb.DefineGenericParameters(genericNames);
+
+                            foreach (GenericTypeParameterBuilder b in generics)
+                            {
+                                b.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+                                var attr = b.GenericParameterAttributes;
+
+                                int y = 0;
+                            }
                         }
                         else
                         {
@@ -168,9 +177,13 @@ namespace System.Linq.Dynamic.Core
                             ilgeneratorConstructor.Emit(OpCodes.Stfld, fields[i]);
 
                             PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.Standard | CallingConventions.HasThis, generics[i], Type.EmptyTypes);
+                            property.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
 
                             // getter
                             MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.Standard | CallingConventions.HasThis, generics[i], new Type[0]);
+                            getter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+
+
                             //MethodKindEnum.PropAccessor
                             ILGenerator ilgeneratorGetter = getter.GetILGenerator();
                             //ilgeneratorGetter.Emit(OpCodes.Ldc_I4, 5);
@@ -181,6 +194,10 @@ namespace System.Linq.Dynamic.Core
 
                             // setter
                             MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.Standard | CallingConventions.HasThis, null, new[] { generics[i] });
+                            setter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+                            setter.DefineParameter(1, ParameterAttributes.In, generics[i].Name);
+
+
                             ILGenerator ilgeneratorSetter = setter.GetILGenerator();
                             ilgeneratorSetter.Emit(OpCodes.Ldarg_0);
                             ilgeneratorSetter.Emit(OpCodes.Ldarg_1);
@@ -330,6 +347,23 @@ namespace System.Linq.Dynamic.Core
             if (types.Length != 0)
             {
                 type = type.MakeGenericType(types);
+            }
+
+            var props = type.GetProperties();
+            foreach (var prop in props)
+            {
+                var setM = prop.GetSetMethod();
+                var parameters = setM.GetParameters();
+                foreach (var parameter in parameters)
+                {
+                    var x = parameter.GetCustomAttributes(false);
+
+                    
+                    if (x == null)
+                    {
+                        
+                    }
+                }
             }
 
             return type;

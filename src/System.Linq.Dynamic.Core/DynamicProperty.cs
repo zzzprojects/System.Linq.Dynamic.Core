@@ -2,23 +2,14 @@
 {
     internal class DynamicProperty
     {
-        string name;
-        Type type;
-
         public DynamicProperty(string name, Type type)
         {
-            this.name = name;
-            this.type = type;
+            Name = name;
+            Type = type;
         }
 
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name { get; }
 
-        public Type Type
-        {
-            get { return type; }
-        }
+        public Type Type { get; }
     }
 }

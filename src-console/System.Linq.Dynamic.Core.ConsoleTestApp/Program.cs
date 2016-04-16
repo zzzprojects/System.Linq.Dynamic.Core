@@ -19,15 +19,6 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp
                     new Expression[] { source.Expression, Expression.Quote(keySelector) }
                     ));
         }
-
-        //    LambdaExpression keyLambda = DynamicExpression.ParseLambda(source.ElementType, null, keySelector, args);
-
-        //        return source.Provider.CreateQuery(
-        //            Expression.Call(
-        //                typeof(Queryable), "GroupBy",
-        //                new Type[] { source.ElementType, keyLambda.Body.Type
-        //},
-        //                new Expression[] { source.Expression, Expression.Quote(keyLambda) }));
     }
 
     public class Program
@@ -59,14 +50,22 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp
             var byAgeReturnAllReal = qry.GroupBy(x => new { x.Profile.Age }).ToList();
             var r1 = byAgeReturnAllReal[0];
 
-            var byAgeReturnAll = qry.GroupBy("new (Profile.Age as Age)").ToDynamicList();
+            var byAgeReturnAll = qry.GroupBy("new (Profile.Age as Age)").OrderBy("Key.Age").ToDynamicList();
             var q1 = byAgeReturnAll[0];
             var q2 = byAgeReturnAll[50];
 
             var k = q1.Key;
-            var age = k.Age;
+            int? age = k.Age;
 
-            int y = 0;
+            foreach (var x in byAgeReturnAllReal.OrderBy(a => a.Key.Age))
+            {
+                Console.WriteLine($"age={x.Key.Age} : users={x.ToList().Count}");
+            }
+
+            foreach (var x in byAgeReturnAll)
+            {
+                Console.WriteLine($"age={x.Key.Age} : users={x}");
+            }
         }
 
         private static void TestDyn()

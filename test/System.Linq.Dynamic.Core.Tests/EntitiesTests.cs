@@ -1,5 +1,4 @@
-﻿#if !(DNXCORE50 || NETSTANDARD1_3)
-using System.Collections;
+﻿using System.Collections;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using Microsoft.Data.Entity;
 using TestToolsToXunitProxy;
@@ -116,6 +115,7 @@ namespace System.Linq.Dynamic.Core.Tests
             CollectionAssert.AreEqual(expected, test);
         }
 
+        // TODO : EF issue !!! https://github.com/aspnet/EntityFramework/issues/4968
         //[TestMethod]
         //public void Entities_Select_BlogAndPosts()
         //{
@@ -142,9 +142,9 @@ namespace System.Linq.Dynamic.Core.Tests
         //    }
         //}
 
-#endregion
+        #endregion
 
-#region GroupBy Tests
+        #region GroupBy Tests
 
         [TestMethod]
         public void Entities_GroupBy_SingleKey()
@@ -320,4 +320,3 @@ namespace System.Linq.Dynamic.Core.Tests
 #endregion
     }
 }
-#endif

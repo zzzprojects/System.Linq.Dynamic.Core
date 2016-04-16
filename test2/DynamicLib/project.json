@@ -1,11 +1,12 @@
-﻿{
+{
     "version": "1.0.0",
     "title": "",
     "authors": [ "Stef Heyenrath" ],
     "owners": [ "Stef Heyenrath" ],
 
     "dependencies": {
-        "ReflectionBridge": "0.0.8"
+        "ReflectionBridge": "0.0.8",
+        
     },
 
     "compilationOptions": {
@@ -19,7 +20,7 @@
         },
         "dnxcore5": {
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-*",
+                "System.Dynamic.Runtime": "4.0.11-beta-*",
 
                 "System.Collections.Concurrent": "4.0.11-beta-*",
 

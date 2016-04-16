@@ -41,10 +41,23 @@ namespace DynamicConsoleTest
         //    int u = 0;
         //}
 
-      
+        public class X
+        {
+            public int Test { get; set; }
+        }
+       
 
         private static void TestEqualsNew()
         {
+            var props = typeof (X).GetProperties();
+            var prop = props[0];
+            var methodForSet = prop.GetSetMethod();
+            var parameterInfos = methodForSet.GetParameters();
+            var parameterInfo = parameterInfos[0];
+            var customAttrs = parameterInfo.GetCustomAttributes(false);
+
+            int uyyyy = 0;
+
             var a1 = new { s = "1234" };
             var a2 = new { s = "1234" };
             Console.WriteLine("bool eq = a1 Equals a2 ===> {0}", a1.Equals(a2));
@@ -63,19 +76,33 @@ namespace DynamicConsoleTest
             ParameterInfo[] parameters = method.GetParameters();
 
             var m = t.GetProperty("i").GetGetMethod();
-            
-            
+
+            MethodInfo miSetter = t.GetProperty("i").GetSetMethod();
+            var pars = miSetter.GetParameters();
+            foreach (ParameterInfo par in pars)
+            {
+                var ooo = par.GetCustomAttributes(false);
+                int uuuuu = 9;
+            }
+
             int retValueI = (int)t.GetProperty("i").GetGetMethod().Invoke(x1, null);
+
+            x1.SetDynamicProperty("i", 10);
+            int retValue2 = x1.GetDynamicProperty<int>("i");
             int iii = x1.i;
 
+            // set 
+            x1.i = 999;
 
-            dynamic x0 = t.GetConstructor(new Type[] { typeof(string) }).Invoke(new string[] { "inuuu" });
+
+            dynamic x0 = t.GetConstructor(new Type[] { typeof(string), typeof(int) }).Invoke(new object[] { "inuuu", 140 });
             var hc = x0.GetHashCode();
 
             
             
 
             string retValue = (string)t.GetProperty("x").GetGetMethod().Invoke(x0, null);
+            
             string resss = x0.x;
            
 

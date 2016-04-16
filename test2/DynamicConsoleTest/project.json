@@ -20,7 +20,7 @@
         },
         "dnxcore5": {
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-*",
+                
 
                 "System.Runtime": "4.0.21-beta-*",
                 "System.Runtime.Extensions": "4.0.11-beta-*",

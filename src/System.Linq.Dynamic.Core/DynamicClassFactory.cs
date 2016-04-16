@@ -109,6 +109,10 @@ namespace System.Linq.Dynamic.Core
                         {
                             string[] genericNames = names.Select(genericName => $"<{genericName}>j__TPar").ToArray();
                             generics = tb.DefineGenericParameters(genericNames);
+                            foreach (GenericTypeParameterBuilder b in generics)
+                            {
+                                b.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+                            }
                         }
                         else
                         {
@@ -173,6 +177,7 @@ namespace System.Linq.Dynamic.Core
 
                             // getter
                             MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, generics[i], null);
+                            getter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
                             ILGenerator ilgeneratorGetter = getter.GetILGenerator();
                             ilgeneratorGetter.Emit(OpCodes.Ldarg_0);
                             ilgeneratorGetter.Emit(OpCodes.Ldfld, fields[i]);
@@ -181,6 +186,11 @@ namespace System.Linq.Dynamic.Core
 
                             // setter
                             MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, null, new[] { generics[i] });
+                            setter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+                            
+                            // workaround for https://github.com/dotnet/corefx/issues/7792
+                            setter.DefineParameter(1, ParameterAttributes.In, generics[i].Name);
+
                             ILGenerator ilgeneratorSetter = setter.GetILGenerator();
                             ilgeneratorSetter.Emit(OpCodes.Ldarg_0);
                             ilgeneratorSetter.Emit(OpCodes.Ldarg_1);
