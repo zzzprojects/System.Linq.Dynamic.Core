@@ -1,0 +1,2 @@
+del *lock*
+dotnet restore

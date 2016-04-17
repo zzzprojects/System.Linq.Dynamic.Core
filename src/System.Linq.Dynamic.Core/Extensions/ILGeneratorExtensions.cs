@@ -15,7 +15,7 @@ namespace System.Linq.Dynamic.Core.Extensions
             gen.Emit(opcode, tb.GetType());
         }
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_3
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0
         public static void Emit(this ILGenerator gen, OpCode opcode, GenericTypeParameterBuilder gb)
         {
             gen.Emit(opcode, gb.AsType());

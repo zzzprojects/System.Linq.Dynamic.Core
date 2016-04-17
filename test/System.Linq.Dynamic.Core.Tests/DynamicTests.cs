@@ -4,19 +4,12 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Xunit;
-using Assert = TestToolsToXunitProxy.Assert;
-#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARD1_3
-using TestToolsToXunitProxy;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    [TestClass]
     public class DynamicTests
     {
-        [TestMethod]
+        [Fact]
         public void Where()
         {
             //Arrange
@@ -32,13 +25,13 @@ namespace System.Linq.Dynamic.Core.Tests
 
 
             //Assert
-            Assert.AreEqual(testList[10], userById.Single());
-            Assert.AreEqual(testList[5], userByUserName.Single());
-            Assert.AreEqual(testList.Count(x => x.Profile == null), nullProfileCount.Count());
-            Assert.AreEqual(testList[1], userByFirstName.Single());
+            Assert.Equal(testList[10], userById.Single());
+            Assert.Equal(testList[5], userByUserName.Single());
+            Assert.Equal(testList.Count(x => x.Profile == null), nullProfileCount.Count());
+            Assert.Equal(testList[1], userByFirstName.Single());
         }
 
-        [TestMethod]
+        [Fact]
         public void Where_Exceptions()
         {
             //Arrange
@@ -46,17 +39,17 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Helper.ExpectException<ParseException>(() => qry.Where("Id"));
-            Helper.ExpectException<ParseException>(() => qry.Where("Bad=3"));
-            Helper.ExpectException<ParseException>(() => qry.Where("Id=123"));
+            Assert.Throws<ParseException>(() => qry.Where("Id"));
+            Assert.Throws<ParseException>(() => qry.Where("Bad=3"));
+            Assert.Throws<ParseException>(() => qry.Where("Id=123"));
 
-            Helper.ExpectException<ArgumentNullException>(() => DynamicQueryable.Where(null, "Id=1"));
-            Helper.ExpectException<ArgumentNullException>(() => qry.Where(null));
-            Helper.ExpectException<ArgumentException>(() => qry.Where(""));
-            Helper.ExpectException<ArgumentException>(() => qry.Where(" "));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.Where(null, "Id=1"));
+            Assert.Throws<ArgumentNullException>(() => qry.Where(null));
+            Assert.Throws<ArgumentException>(() => qry.Where(""));
+            Assert.Throws<ArgumentException>(() => qry.Where(" "));
         }
 
-        [TestMethod]
+        [Fact]
         public void OrderBy()
         {
             //Arrange
@@ -74,17 +67,17 @@ namespace System.Linq.Dynamic.Core.Tests
 
 
             //Assert
-            CollectionAssert.AreEqual(testList.OrderBy(x => x.Id).ToArray(), orderById.ToArray());
-            CollectionAssert.AreEqual(testList.OrderByDescending(x => x.Id).ToArray(), orderByIdDesc.ToArray());
+            Assert.Equal(testList.OrderBy(x => x.Id).ToArray(), orderById.ToArray());
+            Assert.Equal(testList.OrderByDescending(x => x.Id).ToArray(), orderByIdDesc.ToArray());
 
-            CollectionAssert.AreEqual(testList.OrderBy(x => x.Profile.Age).ToArray(), orderByAge.ToArray());
-            CollectionAssert.AreEqual(testList.OrderByDescending(x => x.Profile.Age).ToArray(), orderByAgeDesc.ToArray());
+            Assert.Equal(testList.OrderBy(x => x.Profile.Age).ToArray(), orderByAge.ToArray());
+            Assert.Equal(testList.OrderByDescending(x => x.Profile.Age).ToArray(), orderByAgeDesc.ToArray());
 
-            CollectionAssert.AreEqual(testList.OrderBy(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex.ToArray());
-            CollectionAssert.AreEqual(testList.OrderByDescending(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex2.ToArray());
+            Assert.Equal(testList.OrderBy(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex.ToArray());
+            Assert.Equal(testList.OrderByDescending(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex2.ToArray());
         }
 
-        [TestMethod]
+        [Fact]
         public void OrderBy_AsStringExpression()
         {
             //Arrange
@@ -100,11 +93,11 @@ namespace System.Linq.Dynamic.Core.Tests
 
 
             //Assert
-            CollectionAssert.AreEqual(expected.ToArray(), orderById.Cast<string>().ToArray());
-            CollectionAssert.AreEqual(expectedDesc.ToArray(), orderByIdDesc.Cast<string>().ToArray());
+            Assert.Equal(expected.ToArray(), orderById.Cast<string>().ToArray());
+            Assert.Equal(expectedDesc.ToArray(), orderByIdDesc.Cast<string>().ToArray());
         }
 
-        [TestMethod]
+        [Fact]
         public void OrderBy_Exceptions()
         {
             //Arrange
@@ -112,13 +105,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Helper.ExpectException<ParseException>(() => qry.OrderBy("Bad=3"));
-            Helper.ExpectException<ParseException>(() => qry.Where("Id=123"));
+            Assert.Throws<ParseException>(() => qry.OrderBy("Bad=3"));
+            Assert.Throws<ParseException>(() => qry.Where("Id=123"));
 
-            Helper.ExpectException<ArgumentNullException>(() => DynamicQueryable.OrderBy(null, "Id"));
-            Helper.ExpectException<ArgumentNullException>(() => qry.OrderBy(null));
-            Helper.ExpectException<ArgumentException>(() => qry.OrderBy(""));
-            Helper.ExpectException<ArgumentException>(() => qry.OrderBy(" "));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.OrderBy(null, "Id"));
+            Assert.Throws<ArgumentNullException>(() => qry.OrderBy(null));
+            Assert.Throws<ArgumentException>(() => qry.OrderBy(""));
+            Assert.Throws<ArgumentException>(() => qry.OrderBy(" "));
         }
 
         [Fact]
@@ -140,7 +133,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Xunit.Assert.Equal(queryNormal, queryDynamic);
         }
 
-        [TestMethod]
+        [Fact]
         public void Select()
         {
             //Arrange
@@ -155,24 +148,24 @@ namespace System.Linq.Dynamic.Core.Tests
             var userRoles = qry.Select("new (UserName, Roles.Select(Id) AS RoleIds)");
 
             //Assert
-            CollectionAssert.AreEqual(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
+            Assert.Equal(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
 
 #if NET35 || DNXCORE50
-            CollectionAssert.AreEqual(testList.Select(x => x.UserName).ToArray(), userNames.AsEnumerable().Cast<string>().ToArray());
-            CollectionAssert.AreEqual(
+            Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.AsEnumerable().Cast<string>().ToArray());
+            Assert.Equal(
                 testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.Cast<object>().Select(x => x.ToString()).ToArray());
-            CollectionAssert.AreEqual(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().GetDynamicProperty<IEnumerable<Guid>>("RoleIds")));
+            Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().GetDynamicProperty<IEnumerable<Guid>>("RoleIds")));
 #else
-            CollectionAssert.AreEqual(testList.Select(x => x.UserName).ToArray(), userNames.Cast<string>().ToArray());
-            CollectionAssert.AreEqual(
+            Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.Cast<string>().ToArray());
+            Assert.Equal(
                 testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.AsEnumerable().Select(x => x.ToString()).Cast<string>().ToArray());
-            CollectionAssert.AreEqual(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().RoleIds));
+            Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().RoleIds));
 #endif
         }
 
-        [TestMethod]
+        [Fact]
         public void Select_Exceptions()
         {
             //Arrange
@@ -180,19 +173,19 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Helper.ExpectException<ParseException>(() => qry.Select("Bad"));
-            Helper.ExpectException<ParseException>(() => qry.Select("Id, UserName"));
-            Helper.ExpectException<ParseException>(() => qry.Select("new Id, UserName"));
-            Helper.ExpectException<ParseException>(() => qry.Select("new (Id, UserName"));
-            Helper.ExpectException<ParseException>(() => qry.Select("new (Id, UserName, Bad)"));
+            Assert.Throws<ParseException>(() => qry.Select("Bad"));
+            Assert.Throws<ParseException>(() => qry.Select("Id, UserName"));
+            Assert.Throws<ParseException>(() => qry.Select("new Id, UserName"));
+            Assert.Throws<ParseException>(() => qry.Select("new (Id, UserName"));
+            Assert.Throws<ParseException>(() => qry.Select("new (Id, UserName, Bad)"));
 
-            Helper.ExpectException<ArgumentNullException>(() => DynamicQueryable.Select(null, "Id"));
-            Helper.ExpectException<ArgumentNullException>(() => qry.Select(null));
-            Helper.ExpectException<ArgumentException>(() => qry.Select(""));
-            Helper.ExpectException<ArgumentException>(() => qry.Select(" "));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.Select(null, "Id"));
+            Assert.Throws<ArgumentNullException>(() => qry.Select(null));
+            Assert.Throws<ArgumentException>(() => qry.Select(""));
+            Assert.Throws<ArgumentException>(() => qry.Select(" "));
         }
 
-        [TestMethod]
+        [Fact]
         public void GroupBy()
         {
             //Arrange
@@ -204,11 +197,11 @@ namespace System.Linq.Dynamic.Core.Tests
             var byAgeReturnAll = qry.GroupBy("Profile.Age");
 
             //Assert
-            Assert.AreEqual(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnUserName.Count());
-            Assert.AreEqual(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnAll.Count());
+            Assert.Equal(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnUserName.Count());
+            Assert.Equal(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnAll.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void GroupBy_Exceptions()
         {
             //Arrange
@@ -216,23 +209,23 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Helper.ExpectException<ParseException>(() => qry.GroupBy("Bad"));
-            Helper.ExpectException<ParseException>(() => qry.GroupBy("Id, UserName"));
-            Helper.ExpectException<ParseException>(() => qry.GroupBy("new Id, UserName"));
-            Helper.ExpectException<ParseException>(() => qry.GroupBy("new (Id, UserName"));
-            Helper.ExpectException<ParseException>(() => qry.GroupBy("new (Id, UserName, Bad)"));
+            Assert.Throws<ParseException>(() => qry.GroupBy("Bad"));
+            Assert.Throws<ParseException>(() => qry.GroupBy("Id, UserName"));
+            Assert.Throws<ParseException>(() => qry.GroupBy("new Id, UserName"));
+            Assert.Throws<ParseException>(() => qry.GroupBy("new (Id, UserName"));
+            Assert.Throws<ParseException>(() => qry.GroupBy("new (Id, UserName, Bad)"));
 
-            Helper.ExpectException<ArgumentNullException>(() => DynamicQueryable.GroupBy((IQueryable<string>)null, "Id"));
-            Helper.ExpectException<ArgumentNullException>(() => qry.GroupBy(null));
-            Helper.ExpectException<ArgumentException>(() => qry.GroupBy(""));
-            Helper.ExpectException<ArgumentException>(() => qry.GroupBy(" "));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.GroupBy((IQueryable<string>)null, "Id"));
+            Assert.Throws<ArgumentNullException>(() => qry.GroupBy(null));
+            Assert.Throws<ArgumentException>(() => qry.GroupBy(""));
+            Assert.Throws<ArgumentException>(() => qry.GroupBy(" "));
 
-            Helper.ExpectException<ArgumentNullException>(() => qry.GroupBy("Id", (string)null));
-            Helper.ExpectException<ArgumentException>(() => qry.GroupBy("Id", ""));
-            Helper.ExpectException<ArgumentException>(() => qry.GroupBy("Id", " "));
+            Assert.Throws<ArgumentNullException>(() => qry.GroupBy("Id", (string)null));
+            Assert.Throws<ArgumentException>(() => qry.GroupBy("Id", ""));
+            Assert.Throws<ArgumentException>(() => qry.GroupBy("Id", " "));
         }
 
-        [TestMethod]
+        [Fact]
         public void GroupByMany_StringExpressions()
         {
             var lst = new List<Tuple<int, int, int>>
@@ -248,12 +241,12 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var sel = lst.AsQueryable().GroupByMany("Item1", "Item2");
 
-            Assert.AreEqual(sel.Count(), 2);
-            Assert.AreEqual(sel.First().Subgroups.Count(), 1);
-            Assert.AreEqual(sel.Skip(1).First().Subgroups.Count(), 2);
+            Assert.Equal(sel.Count(), 2);
+            Assert.Equal(sel.First().Subgroups.Count(), 1);
+            Assert.Equal(sel.Skip(1).First().Subgroups.Count(), 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void GroupByMany_LambdaExpressions()
         {
             var lst = new List<Tuple<int, int, int>>
@@ -269,9 +262,9 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var sel = lst.AsQueryable().GroupByMany(x => x.Item1, x => x.Item2);
 
-            Assert.AreEqual(sel.Count(), 2);
-            Assert.AreEqual(sel.First().Subgroups.Count(), 1);
-            Assert.AreEqual(sel.Skip(1).First().Subgroups.Count(), 2);
+            Assert.Equal(sel.Count(), 2);
+            Assert.Equal(sel.First().Subgroups.Count(), 1);
+            Assert.Equal(sel.Skip(1).First().Subgroups.Count(), 2);
         }
 
         class Person
@@ -285,7 +278,7 @@ namespace System.Linq.Dynamic.Core.Tests
             public Person Owner { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void Join()
         {
             //Arrange
@@ -322,20 +315,20 @@ namespace System.Linq.Dynamic.Core.Tests
 #if DNXCORE50
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
-            Assert.AreEqual(realResult.Length, dynamicResult.Length);
+            Assert.Equal(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].GetDynamicProperty<string>("OwnerName"));
-                Assert.AreEqual(realResult[i].Pet, dynamicResult[i].GetDynamicProperty<string>("Pet"));
+                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicProperty<string>("OwnerName"));
+                Assert.Equal(realResult[i].Pet, dynamicResult[i].GetDynamicProperty<string>("Pet"));
             }
 #else
             var dynamicResult = dynamicQuery.ToDynamicArray();
 
-            Assert.AreEqual(realResult.Length, dynamicResult.Length);
+            Assert.Equal(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.AreEqual(realResult[i].OwnerName, dynamicResult[i].OwnerName);
-                Assert.AreEqual(realResult[i].Pet, dynamicResult[i].Pet);
+                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].OwnerName);
+                Assert.Equal(realResult[i].Pet, dynamicResult[i].Pet);
             }
 #endif
         }

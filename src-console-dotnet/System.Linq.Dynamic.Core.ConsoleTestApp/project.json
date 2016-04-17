@@ -1,0 +1,40 @@
+{
+    "version": "1.0.0.0-*",
+    "authors": [ "Stef Heyenrath" ],
+    "dependencies": {
+        "System.Linq.Dynamic.Core": "1.0.1-*"
+    },
+	
+	"compilationOptions": {
+        "emitEntryPoint": true
+    },
+
+    "compile": [
+        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/*.cs",
+        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Models/*.cs",
+        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Blog.cs",
+        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Post.cs"
+    ],
+
+    "commands": {
+        "ConsoleTestApp": "run"
+    },
+
+    "frameworks": {
+        "netstandardapp1.0": {
+            "imports": [
+                "dnxcore50"
+            ],
+            "dependencies": {
+                "NETStandard.Library": "1.5.0-rc3-23910",
+
+				"Microsoft.CSharp": "4.0.1-rc3-23910",
+
+				"System.Reflection": "4.1.0-rc3-23910",
+				"System.Reflection.TypeExtensions": "4.1.0-rc3-23910",				
+				
+				"System.Linq.Queryable": "4.0.1-rc3-23910"
+            }
+        }
+    }
+}

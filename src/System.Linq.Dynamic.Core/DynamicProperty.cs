@@ -1,6 +1,6 @@
 ﻿namespace System.Linq.Dynamic.Core
 {
-    internal class DynamicProperty
+    public class DynamicProperty
     {
         public DynamicProperty(string name, Type type)
         {

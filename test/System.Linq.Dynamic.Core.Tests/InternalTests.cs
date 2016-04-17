@@ -1,20 +1,13 @@
-﻿#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARD1_3
-using TestToolsToXunitProxy;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
-
-#if !(NET35|| DNX452 || DNXCORE50 || NETSTANDARD1_3)
+﻿#if !(NET35|| DNX452 || DNXCORE50 || NETSTANDARD1_0 || NETSTANDARDAPP1_0)
 using System.Threading.Tasks;
 #endif
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    [TestClass]
     public class InternalTests
     {
-#if !(NET35|| DNX452 || DNXCORE50)
-        [TestMethod]
+#if !(NET35|| DNX452 || DNXCORE50 || NETSTANDARD1_0 || NETSTANDARDAPP1_0)
+        [Fact]
         public void ClassFactory_LoadTest()
         {
             //Arrange
@@ -61,6 +54,5 @@ namespace System.Linq.Dynamic.Core.Tests
 
         }
 #endif
-
     }
 }

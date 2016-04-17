@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARD1_3
-using TestToolsToXunitProxy;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    [TestClass]
     public class BasicTests
     {
         #region Aggregates
 
-        [TestMethod]
+        [Fact]
         public void Any()
         {
             //Arrange
@@ -27,12 +22,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultNone = testListNone.Any();
 
             //Assert
-            Assert.IsTrue(resultFull);
-            Assert.IsTrue(resultOne);
-            Assert.IsFalse(resultNone);
+            Assert.True(resultFull);
+            Assert.True(resultOne);
+            Assert.False(resultNone);
         }
 
-        [TestMethod]
+        [Fact]
         public void Contains()
         {
             //Arrange
@@ -45,10 +40,10 @@ namespace System.Linq.Dynamic.Core.Tests
             var testQuery = baseQuery.Where("@0.Contains(UserName)", containsList).Select("Id");
 
             //Assert
-            CollectionAssert.AreEqual(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
+            Assert.Equal(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
         }
 
-        [TestMethod]
+        [Fact]
         public void Count()
         {
             //Arrange
@@ -62,12 +57,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultNone = testListNone.Count();
 
             //Assert
-            Assert.AreEqual(100, resultFull);
-            Assert.AreEqual(1, resultOne);
-            Assert.AreEqual(0, resultNone);
+            Assert.Equal(100, resultFull);
+            Assert.Equal(1, resultOne);
+            Assert.Equal(0, resultNone);
         }
 
-        [TestMethod]
+        [Fact]
         public void In()
         {
             //Arrange
@@ -83,17 +78,17 @@ namespace System.Linq.Dynamic.Core.Tests
             var result4 = testRange.AsQueryable().Where("it in @0", testInExpression).ToArray();
 
             //Assert
-            CollectionAssert.AreEqual(new int[] { 2, 4, 6, 8 }, result1);
-            CollectionAssert.AreEqual(testModels.Take(3).ToArray(), result2);
-            CollectionAssert.AreEqual(testModels.Take(3).ToArray(), result3);
-            CollectionAssert.AreEqual(new int[] { 2, 4, 6, 8 }, result4);
+            Assert.Equal(new int[] { 2, 4, 6, 8 }, result1);
+            Assert.Equal(testModels.Take(3).ToArray(), result2);
+            Assert.Equal(testModels.Take(3).ToArray(), result3);
+            Assert.Equal(new int[] { 2, 4, 6, 8 }, result4);
         }
 
         #endregion
 
         #region Adjustors
 
-        [TestMethod]
+        [Fact]
         public void Skip()
         {
             //Arrange
@@ -107,13 +102,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultNone = testListQry.Skip(100);
 
             //Assert
-            CollectionAssert.AreEqual(testList.Skip(0).ToArray(), resultFull.Cast<User>().ToArray());
-            CollectionAssert.AreEqual(testList.Skip(1).ToArray(), resultMinus1.Cast<User>().ToArray());
-            CollectionAssert.AreEqual(testList.Skip(50).ToArray(), resultHalf.Cast<User>().ToArray());
-            CollectionAssert.AreEqual(testList.Skip(100).ToArray(), resultNone.Cast<User>().ToArray());
+            Assert.Equal(testList.Skip(0).ToArray(), resultFull.Cast<User>().ToArray());
+            Assert.Equal(testList.Skip(1).ToArray(), resultMinus1.Cast<User>().ToArray());
+            Assert.Equal(testList.Skip(50).ToArray(), resultHalf.Cast<User>().ToArray());
+            Assert.Equal(testList.Skip(100).ToArray(), resultNone.Cast<User>().ToArray());
         }
 
-        [TestMethod]
+        [Fact]
         public void Take()
         {
             //Arrange
@@ -127,13 +122,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultOne = testListQry.Take(1);
 
             //Assert
-            CollectionAssert.AreEqual(testList.Take(100).ToArray(), resultFull.Cast<User>().ToArray());
-            CollectionAssert.AreEqual(testList.Take(99).ToArray(), resultMinus1.Cast<User>().ToArray());
-            CollectionAssert.AreEqual(testList.Take(50).ToArray(), resultHalf.Cast<User>().ToArray());
-            CollectionAssert.AreEqual(testList.Take(1).ToArray(), resultOne.Cast<User>().ToArray());
+            Assert.Equal(testList.Take(100).ToArray(), resultFull.Cast<User>().ToArray());
+            Assert.Equal(testList.Take(99).ToArray(), resultMinus1.Cast<User>().ToArray());
+            Assert.Equal(testList.Take(50).ToArray(), resultHalf.Cast<User>().ToArray());
+            Assert.Equal(testList.Take(1).ToArray(), resultOne.Cast<User>().ToArray());
         }
 
-        [TestMethod]
+        [Fact]
         public void Reverse()
         {
             var testList = User.GenerateSampleModels(100);
@@ -143,14 +138,14 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = BasicQueryable.Reverse(testListQry);
 
             //Assert
-            CollectionAssert.AreEqual(Enumerable.Reverse(testList).ToArray(), result.Cast<User>().ToArray());
+            Assert.Equal(Enumerable.Reverse(testList).ToArray(), result.Cast<User>().ToArray());
         }
 
         #endregion
 
         #region Executors
 
-        [TestMethod]
+        [Fact]
         public void Single()
         {
             //Arrange
@@ -162,13 +157,13 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
 #if NET35
-            Assert.AreEqual(testList[0].Id, result.GetDynamicProperty<Guid>("Id"));
+            Assert.Equal(testList[0].Id, result.GetDynamicProperty<Guid>("Id"));
 #else
-            Assert.AreEqual(testList[0].Id, result.Id);
+            Assert.Equal(testList[0].Id, result.Id);
 #endif
         }
 
-        [TestMethod]
+        [Fact]
         public void SingleOrDefault()
         {
             //Arrange
@@ -181,14 +176,14 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
 #if NET35
-            Assert.AreEqual(testList[0].Id, singleResult.GetDynamicProperty<Guid>("Id"));
+            Assert.Equal(testList[0].Id, singleResult.GetDynamicProperty<Guid>("Id"));
 #else
-            Assert.AreEqual(testList[0].Id, singleResult.Id);
+            Assert.Equal(testList[0].Id, singleResult.Id);
 #endif
-            Assert.IsNull(defaultResult);
+            Assert.Null(defaultResult);
         }
 
-        [TestMethod]
+        [Fact]
         public void First()
         {
             //Arrange
@@ -200,13 +195,13 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
 #if NET35
-            Assert.AreEqual(testList[0].Id, result.GetDynamicProperty<Guid>("Id"));
+            Assert.Equal(testList[0].Id, result.GetDynamicProperty<Guid>("Id"));
 #else
-            Assert.AreEqual(testList[0].Id, result.Id);
+            Assert.Equal(testList[0].Id, result.Id);
 #endif
         }
 
-        [TestMethod]
+        [Fact]
         public void FirstOrDefault()
         {
             //Arrange
@@ -219,15 +214,15 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
 #if NET35
-            Assert.AreEqual(testList[0].Id, singleResult.GetDynamicProperty<Guid>("Id"));
+            Assert.Equal(testList[0].Id, singleResult.GetDynamicProperty<Guid>("Id"));
 #else
-            Assert.AreEqual(testList[0].Id, singleResult.Id);
+            Assert.Equal(testList[0].Id, singleResult.Id);
 #endif
-            Assert.IsNull(defaultResult);
+            Assert.Null(defaultResult);
         }
 
 
-        [TestMethod]
+        [Fact]
         public void First_AsStringExpression()
         {
             //Arrange
@@ -240,13 +235,13 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
 #if NET35 || DNX452 || DNXCORE50
-            CollectionAssert.AreEqual(realResult, testResult.Cast<Guid>().ToArray());
+            Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
 #else
-            CollectionAssert.AreEqual(realResult, testResult.ToDynamicArray());
+            Assert.Equal(realResult, testResult.ToDynamicArray().Cast<Guid>());
 #endif
         }
 
-        [TestMethod]
+        [Fact]
         public void Single_AsStringExpression()
         {
             //Arrange
@@ -260,9 +255,9 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
 #if NET35 || DNX452 || DNXCORE50
-            CollectionAssert.AreEqual(realResult, testResult.Cast<Guid>().ToArray());
+            Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
 #else
-            CollectionAssert.AreEqual(realResult, testResult.ToDynamicArray());
+            Assert.Equal(realResult, testResult.ToDynamicArray());
 #endif
         }
 

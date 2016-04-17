@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD1_3
+﻿#if NETSTANDARD1_0 || NETSTANDARDAPP1_0
 using Microsoft.EntityFrameworkCore;
 #else
 using Microsoft.Data.Entity;

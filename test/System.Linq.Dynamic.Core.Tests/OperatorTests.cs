@@ -1,29 +1,23 @@
 ﻿using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARD1_3
-using TestToolsToXunitProxy;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    [TestClass]
     public class OperatorTests
     {
-        [TestMethod]
-        
+        [Fact]
         public void Operator_Multiplication_Single_Float_ParseException()
         {
             //Arrange
-            var models = new [] { new SimpleValuesModel() }.AsQueryable();
+            var models = new[] { new SimpleValuesModel() }.AsQueryable();
 
             //Act + Assert
-            Helper.ExpectException<ParseException>(() => models.Select("FloatValue * DecimalValue"));
+            Assert.Throws<ParseException>(() => models.Select("FloatValue * DecimalValue"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Operator_Multiplication_Single_Float_Cast()
         {
             //Arrange
@@ -33,7 +27,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = models.Select("Decimal(FloatValue) * DecimalValue").First();
 
             //Assert
-            Assert.AreEqual(6.0m, result);
+            Assert.Equal(6.0m, result);
         }
     }
 }

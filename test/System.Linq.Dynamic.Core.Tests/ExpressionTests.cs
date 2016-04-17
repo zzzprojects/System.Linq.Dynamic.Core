@@ -2,18 +2,13 @@
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-#if DNXCORE50 || DNX451 || DNX452 || NETSTANDARD1_3
-using TestToolsToXunitProxy;
-#else
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    [TestClass]
     public class ExpressionTests
     {
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_Sum()
         {
             //Arrange
@@ -24,10 +19,10 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = qry.Select("Sum(intValue)").AsEnumerable().ToArray()[0];
 
             //Assert
-            Assert.AreEqual(15, result);
+            Assert.Equal(15, result);
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_Sum2()
         {
             //Arrange
@@ -45,11 +40,11 @@ namespace System.Linq.Dynamic.Core.Tests
             var result2 = ((IQueryable<float>)qry.Select("FloatValue")).Sum();
 
             //Assert
-            Assert.AreEqual(6.0f, result);
-            Assert.AreEqual(6.0f, result2);
+            Assert.Equal(6.0f, result);
+            Assert.Equal(6.0f, result2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_ContainsGuid()
         {
             //Arrange
@@ -73,17 +68,17 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
 #if NET35
-            Assert.AreEqual(userList[0].Id, ((User)found1.Single()).Id);
-            Assert.AreEqual(userList[0].Id, ((User)found2.Single()).Id);
+            Assert.Equal(userList[0].Id, ((User)found1.Single()).Id);
+            Assert.Equal(userList[0].Id, ((User)found2.Single()).Id);
 #else
-            Assert.AreEqual(userList[0].Id, found1.Single().Id);
-            Assert.AreEqual(userList[0].Id, found2.Single().Id);
+            Assert.Equal(userList[0].Id, found1.Single().Id);
+            Assert.Equal(userList[0].Id, found2.Single().Id);
 #endif
-            Assert.IsFalse(notFound1.Any());
-            Assert.IsFalse(notFound2.Any());
+            Assert.False(notFound1.Any());
+            Assert.False(notFound2.Any());
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_Enum()
         {
             //Arrange
@@ -98,14 +93,14 @@ namespace System.Linq.Dynamic.Core.Tests
             var result5 = qry.Where("it = @0", 8);
 
             //Assert
-            CollectionAssert.AreEqual(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 }, result1.ToArray());
-            CollectionAssert.AreEqual(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 }, result2.ToArray());
-            Assert.AreEqual(TestEnum.Var5, result3.Single());
-            Assert.AreEqual(TestEnum.Var5, result4.Single());
-            Assert.AreEqual(TestEnum.Var5, result5.Single());
+            Assert.Equal(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 }, result1.ToArray());
+            Assert.Equal(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 }, result2.ToArray());
+            Assert.Equal(TestEnum.Var5, result3.Single());
+            Assert.Equal(TestEnum.Var5, result4.Single());
+            Assert.Equal(TestEnum.Var5, result5.Single());
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_CompareWithGuid()
         {
             //Arrange
@@ -124,13 +119,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var result4 = qry.Where("it = @0", lst[2]);
 
             //Assert
-            Assert.AreEqual(lst[2], result1.Single());
-            Assert.AreEqual(lst[2], result2.Single());
-            Assert.AreEqual(lst[2], result3.Single());
-            Assert.AreEqual(lst[2], result4.Single());
+            Assert.Equal(lst[2], result1.Single());
+            Assert.Equal(lst[2], result2.Single());
+            Assert.Equal(lst[2], result3.Single());
+            Assert.Equal(lst[2], result4.Single());
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_Shift()
         {
             //Arrange
@@ -143,12 +138,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var result3 = qry.Where("it << 2 = 80");
 
             //Assert
-            CollectionAssert.AreEqual(new object[] { 20, 40, 60 }, result1.Cast<object>().ToArray());
-            CollectionAssert.AreEqual(new object[] { 5, 10, 15 }, result2.Cast<object>().ToArray());
-            Assert.AreEqual(20, result3.Single());
+            Assert.Equal(new object[] { 20, 40, 60 }, result1.Cast<object>().ToArray());
+            Assert.Equal(new object[] { 5, 10, 15 }, result2.Cast<object>().ToArray());
+            Assert.Equal(20, result3.Single());
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_LogicalAndOr()
         {
             //Arrange
@@ -160,11 +155,11 @@ namespace System.Linq.Dynamic.Core.Tests
             var result2 = qry.Where("(it & 32) > 0");
 
             //Assert
-            CollectionAssert.AreEqual(new[] { 0x21, 0x31, 0x41 }, result1.ToArray());
-            CollectionAssert.AreEqual(qry.Where(x => (x & 32) > 0).ToArray(), result2.ToArray());
+            Assert.Equal(new[] { 0x21, 0x31, 0x41 }, result1.ToArray());
+            Assert.Equal(qry.Where(x => (x & 32) > 0).ToArray(), result2.ToArray());
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_Uri()
         {
             //Arrange
@@ -181,10 +176,10 @@ namespace System.Linq.Dynamic.Core.Tests
             var result1 = qry.AsQueryable().Where("it = @0", new Uri("http://127.0.0.1"));
 
             //Assert
-            Assert.AreEqual(result1.Count(), 2);
+            Assert.Equal(result1.Count(), 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_DistinctBy()
         {
             //Arrange
@@ -210,12 +205,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry3 = p.Where("@0.Any($ == ~.Item3)", qry);
 
             //Assert
-            Assert.AreEqual(qry1.Count(), 2);
-            Assert.AreEqual(qry2.Count(), 2);
-            Assert.AreEqual(qry3.Count(), 2);
+            Assert.Equal(qry1.Count(), 2);
+            Assert.Equal(qry2.Count(), 2);
+            Assert.Equal(qry3.Count(), 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_ContextKeywordsAndSymbols()
         {
             try
@@ -225,8 +220,8 @@ namespace System.Linq.Dynamic.Core.Tests
 
                 //Act
                 GlobalConfig.AreContextKeywordsEnabled = false;
-                Helper.ExpectException<ParseException>(() => values.AsQueryable().Where("it = 2"));
-                Helper.ExpectException<ParseException>(() => values.AsQueryable().Where("root = 2"));
+                Assert.Throws<ParseException>(() => values.AsQueryable().Where("it = 2"));
+                Assert.Throws<ParseException>(() => values.AsQueryable().Where("root = 2"));
                 values.AsQueryable().Where("$ = 2");
                 values.AsQueryable().Where("~ = 2");
                 GlobalConfig.AreContextKeywordsEnabled = true;
@@ -235,8 +230,8 @@ namespace System.Linq.Dynamic.Core.Tests
                 var qry2 = values.AsQueryable().Where("$ = 2");
 
                 //Assert
-                Assert.AreEqual(2, qry1.Single());
-                Assert.AreEqual(2, qry2.Single());
+                Assert.Equal(2, qry1.Single());
+                Assert.Equal(2, qry2.Single());
             }
             finally
             {
@@ -244,7 +239,7 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpressionTests_FirstOrDefault()
         {
             //Arrange
@@ -265,8 +260,8 @@ namespace System.Linq.Dynamic.Core.Tests
             var testSingleFailResult = testListQry.Where("Roles.FirstOrDefault(Name = \"Admin\") != null").FirstOrDefault();
 
             //Assert
-            Assert.AreEqual(realSingleResult, testSingleResult);
-            Assert.AreEqual((User)realSingleFailResult, (User)testSingleFailResult);
+            Assert.Equal(realSingleResult, testSingleResult);
+            Assert.Equal((User)realSingleFailResult, (User)testSingleFailResult);
         }
     }
 }
