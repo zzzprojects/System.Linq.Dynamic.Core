@@ -133,14 +133,14 @@ namespace System.Linq.Dynamic.Core
                 FieldBuilder fb = tb.DefineField("_" + dp.Name, dp.Type, FieldAttributes.Private);
                 PropertyBuilder pb = tb.DefineProperty(dp.Name, PropertyAttributes.HasDefault, dp.Type, null);
 
-                MethodBuilder mbGet = tb.DefineMethod("get_" + dp.Name, getSetAttr, dp.Type, Type.EmptyTypes);
+                MethodBuilder mbGet = tb.DefineMethod("get_" + dp.Name, getSetAttr, dp.Type, new Type[0]);
                 ILGenerator genGet = mbGet.GetILGenerator();
                 genGet.Emit(OpCodes.Ldarg_0);
                 genGet.Emit(OpCodes.Ldfld, fb);
                 genGet.Emit(OpCodes.Ret);
                 pb.SetGetMethod(mbGet);
 
-                MethodBuilder mbSet = tb.DefineMethod("set_" + dp.Name, getSetAttr, null, new Type[] { dp.Type });
+                MethodBuilder mbSet = tb.DefineMethod("set_" + dp.Name, getSetAttr, null, new[] { dp.Type });
 
                 // workaround for https://github.com/dotnet/corefx/issues/7792
                 mbSet.DefineParameter(1, ParameterAttributes.In, "_" + dp.Name);
@@ -200,7 +200,7 @@ namespace System.Linq.Dynamic.Core
             MethodBuilder mb = tb.DefineMethod("GetHashCode",
                 MethodAttributes.Public | MethodAttributes.ReuseSlot |
                 MethodAttributes.Virtual | MethodAttributes.HideBySig,
-                typeof(int), Type.EmptyTypes);
+                typeof(int), new Type[0]);
             ILGenerator gen = mb.GetILGenerator();
             gen.Emit(OpCodes.Ldc_I4_0);
             foreach (FieldInfo field in fields)
@@ -210,7 +210,7 @@ namespace System.Linq.Dynamic.Core
                 gen.EmitCall(OpCodes.Call, ct.GetMethod("get_Default"), null);
                 gen.Emit(OpCodes.Ldarg_0);
                 gen.Emit(OpCodes.Ldfld, field);
-                gen.EmitCall(OpCodes.Callvirt, ct.GetMethod("GetHashCode", new Type[] { ft }), null);
+                gen.EmitCall(OpCodes.Callvirt, ct.GetMethod("GetHashCode", new[] { ft }), null);
                 gen.Emit(OpCodes.Xor);
             }
             gen.Emit(OpCodes.Ret);

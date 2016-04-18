@@ -10,10 +10,6 @@ using System.Threading;
 using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Extensions;
 
-#if NETSTANDARD1_0
-using BindingFlags = System.Reflection.BindingFlags;
-#endif
-
 namespace System.Linq.Dynamic.Core
 {
     /// <summary>
@@ -21,23 +17,26 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     internal static class DynamicClassFactory
     {
+        // EmptyTypes is used to indicate that we are looking for someting without any parameters. 
+        private readonly static Type[] EmptyTypes = new Type[0];
+
         private static readonly ConcurrentDictionary<string, Type> GeneratedTypes = new ConcurrentDictionary<string, Type>();
 
         private static readonly ModuleBuilder ModuleBuilder;
 
         // Some objects we cache
-        private static readonly CustomAttributeBuilder CompilerGeneratedAttributeBuilder = new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(Type.EmptyTypes), new object[0]);
+        private static readonly CustomAttributeBuilder CompilerGeneratedAttributeBuilder = new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(EmptyTypes), new object[0]);
         private static readonly CustomAttributeBuilder DebuggerBrowsableAttributeBuilder = new CustomAttributeBuilder(typeof(DebuggerBrowsableAttribute).GetConstructor(new[] { typeof(DebuggerBrowsableState) }), new object[] { DebuggerBrowsableState.Never });
-        private static readonly CustomAttributeBuilder DebuggerHiddenAttributeBuilder = new CustomAttributeBuilder(typeof(DebuggerHiddenAttribute).GetConstructor(Type.EmptyTypes), new object[0]);
+        private static readonly CustomAttributeBuilder DebuggerHiddenAttributeBuilder = new CustomAttributeBuilder(typeof(DebuggerHiddenAttribute).GetConstructor(EmptyTypes), new object[0]);
 
-        private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
+        private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(EmptyTypes);
 #if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0
         private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public);
 #else
-        private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null);
+        private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public, null, EmptyTypes, null);
 #endif
 
-        private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(Type.EmptyTypes);
+        private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(EmptyTypes);
 #if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0
         private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod("Append", new[] { typeof(string) });
         private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod("Append", new[] { typeof(object) });
@@ -48,14 +47,14 @@ namespace System.Linq.Dynamic.Core
 
         private static readonly Type EqualityComparer = typeof(EqualityComparer<>);
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0
+
         private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0
         private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public);
         private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument });
         private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", new[] { EqualityComparerGenericArgument });
 #else
-        private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
-        private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public, null, Type.EmptyTypes, null);
+        private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public, null, EmptyTypes, null);
         private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public, null, new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument }, null);
         private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", BindingFlags.Instance | BindingFlags.Public, null, new[] { EqualityComparerGenericArgument }, null);
 #endif
@@ -124,7 +123,7 @@ namespace System.Linq.Dynamic.Core
                         }
 
                         // .ctor default
-                        ConstructorBuilder constructorDef = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, Type.EmptyTypes);
+                        ConstructorBuilder constructorDef = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, EmptyTypes);
                         constructorDef.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
 
                         ILGenerator ilgeneratorConstructorDef = constructorDef.GetILGenerator();
@@ -177,7 +176,7 @@ namespace System.Linq.Dynamic.Core
 
                             ilgeneratorConstructor.Emit(OpCodes.Stfld, fields[i]);
 
-                            PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.HasThis, generics[i], Type.EmptyTypes);
+                            PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.HasThis, generics[i], EmptyTypes);
 
                             // getter
                             MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, generics[i], null);
@@ -191,7 +190,7 @@ namespace System.Linq.Dynamic.Core
                             // setter
                             MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, null, new[] { generics[i] });
                             setter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
-                            
+
                             // workaround for https://github.com/dotnet/corefx/issues/7792
                             setter.DefineParameter(1, ParameterAttributes.In, generics[i].Name);
 
@@ -204,7 +203,7 @@ namespace System.Linq.Dynamic.Core
                         }
 
                         // ToString()
-                        MethodBuilder toString = tb.DefineMethod("ToString", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(string), Type.EmptyTypes);
+                        MethodBuilder toString = tb.DefineMethod("ToString", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(string), EmptyTypes);
                         toString.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
                         ILGenerator ilgeneratorToString = toString.GetILGenerator();
                         ilgeneratorToString.DeclareLocal(typeof(StringBuilder));
@@ -214,7 +213,8 @@ namespace System.Linq.Dynamic.Core
                         // Equals
                         MethodBuilder equals = tb.DefineMethod("Equals", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(bool), new[] { typeof(object) });
                         equals.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
-                        equals.DefineParameter(1, ParameterAttributes.None, "value");
+                        equals.DefineParameter(1, ParameterAttributes.In, "value");
+
                         ILGenerator ilgeneratorEquals = equals.GetILGenerator();
                         ilgeneratorEquals.DeclareLocal(tb);
                         ilgeneratorEquals.Emit(OpCodes.Ldarg_1);
@@ -225,7 +225,7 @@ namespace System.Linq.Dynamic.Core
                         Label equalsLabel = ilgeneratorEquals.DefineLabel();
 
                         // GetHashCode()
-                        MethodBuilder getHashCode = tb.DefineMethod("GetHashCode", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(int), Type.EmptyTypes);
+                        MethodBuilder getHashCode = tb.DefineMethod("GetHashCode", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(int), EmptyTypes);
                         getHashCode.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
                         ILGenerator ilgeneratorGetHashCode = getHashCode.GetILGenerator();
                         ilgeneratorGetHashCode.DeclareLocal(typeof(int));

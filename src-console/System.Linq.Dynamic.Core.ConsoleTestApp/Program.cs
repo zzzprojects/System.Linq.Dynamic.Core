@@ -5,19 +5,28 @@ using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
 
-
 namespace System.Linq.Dynamic.Core.ConsoleTestApp
 {
     public static class E
     {
-        public static IQueryable<IGrouping<TKey, TSource>> GroupBy2<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector)
+        public static IQueryable GroupBy2<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keyLambda2)
         {
-            return source.Provider.CreateQuery<IGrouping<TKey, TSource>>(
-                Expression.Call(
-                    typeof(Queryable), "GroupBy",
-                    new Type[] { source.ElementType, keySelector.Body.Type },
-                    new Expression[] { source.Expression, Expression.Quote(keySelector) }
-                    ));
+            //LambdaExpression keyLambda = DynamicExpression.ParseLambda(source.ElementType, null, "new (Profile.Age)", null);
+            LambdaExpression x = (LambdaExpression)keyLambda2;
+
+            //return source.Provider.CreateQuery<IGrouping<TKey, TSource>>(
+            //    Expression.Call(
+            //        typeof(Queryable), "GroupBy",
+            //        new Type[] { source.ElementType, keySelector.Body.Type },
+            //        new Expression[] { source.Expression, Expression.Quote(keySelector) }
+            //        ));
+
+
+            return source.Provider.CreateQuery(
+               Expression.Call(
+                   typeof(Queryable), "GroupBy",
+                   new Type[] { source.ElementType, x.Body.Type },
+                   new Expression[] { source.Expression, Expression.Quote(x) }));
         }
     }
 
@@ -39,20 +48,20 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp
 
         private static void GroupByAndSelect_TestDynamicSelectMember()
         {
-
-
-            //Arrange
-            var testList = User.GenerateSampleModels(51);
+            var testList = User.GenerateSampleModels(51).Where(u => u.Profile.Age < 23);
             var qry = testList.AsQueryable();
 
             var rrrr = qry.GroupBy2(x => new { x.Profile.Age });
+            var ll = rrrr.ToDynamicList();
 
             var byAgeReturnAllReal = qry.GroupBy(x => new { x.Profile.Age }).ToList();
             var r1 = byAgeReturnAllReal[0];
 
-            var byAgeReturnAll = qry.GroupBy("new (Profile.Age as Age)").OrderBy("Key.Age").ToDynamicList();
+            //var byAgeReturnOK = qry.GroupBy("Profile.Age").ToDynamicList();
+
+            // -		[0]	{System.Linq.Grouping<<>f__AnonymousType0<int?>, System.Linq.Dynamic.Core.Tests.Helpers.Models.User>}	object {System.Linq.Grouping<<>f__AnonymousType0<int?>, System.Linq.Dynamic.Core.Tests.Helpers.Models.User>}
+            var byAgeReturnAll = qry.GroupBy("new (Profile.Age)").OrderBy("Key.Age").ToDynamicList();
             var q1 = byAgeReturnAll[0];
-            var q2 = byAgeReturnAll[50];
 
             var k = q1.Key;
             int? age = k.Age;

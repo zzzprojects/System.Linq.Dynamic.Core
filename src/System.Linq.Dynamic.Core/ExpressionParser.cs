@@ -974,8 +974,10 @@ namespace System.Linq.Dynamic.Core
             NextToken();
             ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
             NextToken();
-            List<DynamicProperty> properties = new List<DynamicProperty>();
-            List<Expression> expressions = new List<Expression>();
+
+            var properties = new List<DynamicProperty>();
+            var expressions = new List<Expression>();
+
             while (true)
             {
                 int exprPos = _token.pos;
@@ -995,15 +997,18 @@ namespace System.Linq.Dynamic.Core
 
                 expressions.Add(expr);
                 properties.Add(new DynamicProperty(propName, expr.Type));
-                if (_token.id != TokenId.Comma) break;
+
+                if (_token.id != TokenId.Comma)
+                    break;
+
                 NextToken();
             }
+
             ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
             NextToken();
 
-
             // http://solutionizing.net/category/linq/ 
-            Type type = _resultType ?? DynamicExpression.CreateClass(properties);
+            Type type = _resultType ?? DynamicExpression.CreateType(properties);
 
             var propertyTypes = type.GetProperties().Select(p => p.PropertyType).ToArray();
             var ctor = type.GetConstructor(propertyTypes);
@@ -1115,6 +1120,7 @@ namespace System.Linq.Dynamic.Core
             int errorPos = _token.pos;
             string id = GetIdentifier();
             NextToken();
+
             if (_token.id == TokenId.OpenParen)
             {
                 if (instance != null && type != typeof(string))
@@ -1130,6 +1136,7 @@ namespace System.Linq.Dynamic.Core
                         return ParseAggregate(instance, elementType, id, errorPos);
                     }
                 }
+
                 Expression[] args = ParseArgumentList();
                 MethodBase mb;
                 switch (FindMethod(type, id, instance == null, args, out mb))
@@ -1140,43 +1147,41 @@ namespace System.Linq.Dynamic.Core
                         MethodInfo method = (MethodInfo)mb;
                         if (!IsPredefinedType(method.DeclaringType))
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, GetTypeName(method.DeclaringType));
+
                         if (method.ReturnType == typeof(void))
                             throw ParseError(errorPos, Res.MethodIsVoid, id, GetTypeName(method.DeclaringType));
-                        return Expression.Call(instance, (MethodInfo)method, args);
+
+                        return Expression.Call(instance, method, args);
                     default:
                         throw ParseError(errorPos, Res.AmbiguousMethodInvocation, id, GetTypeName(type));
                 }
             }
-            else
+
+            if (type.IsEnum())
             {
-                if (type.IsEnum())
-                {
-                    var wr = Enum.Parse(type, id, true);
-                    if (wr != null)
-                        return Expression.Constant(wr);
-                }
+                var @enum = Enum.Parse(type, id, true);
+
+                return Expression.Constant(@enum);
+            }
 
 #if NETFX_CORE
-                if (type == typeof(DynamicObjectClass))
-                {
-                    return Expression.MakeIndex(instance, typeof(DynamicObjectClass).GetProperty("Item"), new[] { Expression.Constant(id) });
-                }
-#endif
-                MemberInfo member = FindPropertyOrField(type, id, instance == null);
-                if (member == null)
-                {
-                    throw ParseError(errorPos, Res.UnknownPropertyOrField,
-                        id, GetTypeName(type));
-                }
-
-                var property = member as PropertyInfo;
-
-                if (property != null) return Expression.Property(instance, property);
-
-                return Expression.Field(instance, (FieldInfo)member);
+            if (type == typeof(DynamicObjectClass))
+            {
+                return Expression.MakeIndex(instance, typeof(DynamicObjectClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
-        }
+#endif
+            MemberInfo member = FindPropertyOrField(type, id, instance == null);
+            if (member == null)
+            {
+                throw ParseError(errorPos, Res.UnknownPropertyOrField, id, GetTypeName(type));
+            }
 
+            var property = member as PropertyInfo;
+            if (property != null)
+                return Expression.Property(instance, property);
+
+            return Expression.Field(instance, (FieldInfo)member);
+        }
 
         static Type FindGenericType(Type generic, Type type)
         {

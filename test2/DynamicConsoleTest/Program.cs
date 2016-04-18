@@ -2,6 +2,7 @@
 //using Kendo.Mvc.Infrastructure.Implementation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 
@@ -11,6 +12,25 @@ namespace DynamicConsoleTest
     {
         public static void Main(string[] args)
         {
+            var properties = new List<DynamicProperty>();
+            properties.Add(new DynamicProperty("x", typeof(string)));
+            properties.Add(new DynamicProperty("i", typeof(int)));
+
+            var t = DynamicClassFactory.CreateType(properties);
+
+            List<DynamicClass> d = new List<DynamicClass>();
+            var x1 = (dynamic)Activator.CreateInstance(t);
+            x1.i = 100;
+            x1.x = "test 1";
+            var x2 = (dynamic)Activator.CreateInstance(t);
+            x2.i = 100;
+            x2.x = "test 2";
+
+            d.Add(x1);
+            d.Add(x2);
+
+            var g = d.AsQueryable().GroupBy(x => new { rrr = x.GetDynamicProperty<int>("i") });
+
             //TestEqualsOld();
             TestEqualsNew();
         }

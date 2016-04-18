@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Text;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -23,5 +22,32 @@ namespace System.Linq.Dynamic.Core
 
             propInfo.SetValue(this, value, null);
         }
+
+        //protected bool Equals(DynamicClass other)
+        //{
+        //    var properties = GetType().GetProperties();
+        //    foreach (var property in properties)
+        //    {
+        //        var thisValue = property.GetValue(this, null);
+        //        var otherValue = property.GetValue(other, null);
+
+        //        if (thisValue != null && !thisValue.Equals(otherValue))
+        //            return false;
+
+        //        if (otherValue != null && !otherValue.Equals(thisValue))
+        //            return false;
+        //    }
+
+        //    return true;
+        //}
+
+        //public override bool Equals(object obj)
+        //{
+        //    if (ReferenceEquals(null, obj)) return false;
+        //    if (ReferenceEquals(this, obj)) return true;
+        //    if (obj.GetType() != this.GetType()) return false;
+
+        //    return Equals((DynamicClass)obj);
+        //}
     }
 }
