@@ -6,7 +6,8 @@
     },
 	
 	"compilationOptions": {
-        "emitEntryPoint": true
+        "emitEntryPoint": true,
+		"define": [ "NETSTANDARD" ]
     },
 
     "compile": [
@@ -21,19 +22,16 @@
     },
 
     "frameworks": {
-        "netstandardapp1.0": {
+        "netcoreapp1.0": {
             "imports": [
-                "dnxcore50"
+                "dnxcore50", "portable-net45+win8"
             ],
             "dependencies": {
-                "NETStandard.Library": "1.5.0-rc3-23910",
+                "NETStandard.Library": "1.5.0-*",
 
-				"Microsoft.CSharp": "4.0.1-rc3-23910",
-
-				"System.Reflection": "4.1.0-rc3-23910",
-				"System.Reflection.TypeExtensions": "4.1.0-rc3-23910",				
+				"Microsoft.CSharp": "4.0.1-*",
 				
-				"System.Linq.Queryable": "4.0.1-rc3-23910"
+				"System.Linq.Queryable": "4.0.1-*"
             }
         }
     }

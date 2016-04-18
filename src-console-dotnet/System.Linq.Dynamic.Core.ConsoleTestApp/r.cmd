@@ -1,1 +1,1 @@
-dotnet run
+dotnet run ConsoleTestApp

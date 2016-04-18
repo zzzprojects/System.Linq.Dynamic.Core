@@ -16,6 +16,10 @@
 		"System.Linq.Dynamic.Core": "1.0.1-*"
     },
 	
+	"compilationOptions": {
+        "define": [ "NETSTANDARD" ]
+    },
+	
 	"commands": {
         "test": "xunit.runner.dnx"
     },

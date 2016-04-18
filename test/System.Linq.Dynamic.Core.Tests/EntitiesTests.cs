@@ -1,7 +1,7 @@
-﻿#if (!NETSTANDARD1_0 || NETSTANDARDAPP1_0)
+﻿#if (!NETSTANDARD)
 using System.Collections;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
-#if (NETSTANDARD1_0 || NETSTANDARDAPP1_0)
+#if (NETSTANDARD)
 using Microsoft.EntityFrameworkCore;
 #else
 using Microsoft.Data.Entity;

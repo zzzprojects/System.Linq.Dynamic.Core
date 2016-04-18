@@ -13,39 +13,30 @@
         "JetBrains.Annotations": "10.1.2-eap"
     },
 	
+	"compilationOptions": {
+        "define": [ "NETSTANDARD" ]
+    },
+	
 	"frameworks": {
-        "netstandard1.0": {
+        "netstandard1.5": {
             "imports": [
                 "dnxcore50",
 				"portable-net45"
             ],
             "dependencies": {
-                "NETStandard.Library": "1.5.0-rc3-23910",				
+                "NETStandard.Library": "1.5.0-*",
 				
-				"Microsoft.CSharp": "4.0.1-rc3-23829",
+				"Microsoft.CSharp": "4.0.1-rc3-*",
 				"Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-*",
 				
-				"System.Linq.Queryable": "4.0.1-rc3-23829",
+				"System.Linq.Queryable": "4.0.0-rc3-*",
 				
-				"System.Reflection": "4.1.0-rc3-23910",
-				"System.Reflection.TypeExtensions": "4.1.0-rc3-23910",
+				"System.Reflection.Emit": "4.0.1-*",
+				"System.Reflection.Primitives": "4.0.1-*",
+				"System.Reflection.Emit.ILGeneration": "4.0.1-*",
 				
-				"System.Reflection.Emit": "4.0.1-rc3-23829",
-				"System.Reflection.Emit.Lightweight": "4.0.1-rc3-23829",
-				"System.Reflection.Emit.ILGeneration": "4.0.1-rc3-23829",
-				
-				"System.Runtime.Serialization.Primitives":"4.0.10-beta-*"
+				"System.Runtime.Serialization.Primitives":"4.0.10-*"
             }
         }
-    },
-	
-	"runtimes": {
-    "win7-x86": {},
-    "win7-x64": {},
-    "ubuntu.14.04-x64": {},
-    "osx.10.10-x64": {},
-    "centos.7-x64": {},
-    "rhel.7-x64": {},
-    "debian.8.2-x64": {}
-  }
+    }
 }

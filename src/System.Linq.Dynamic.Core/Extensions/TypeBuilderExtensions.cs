@@ -1,7 +1,7 @@
 ﻿using System.Reflection.Emit;
 using System.Reflection;
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD
 using System.Linq;
 #endif
 
@@ -23,7 +23,7 @@ namespace System.Linq.Dynamic.Core.Extensions
         }
 #endif
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0
+#if DNXCORE50 || DOTNET5_4 || NETSTANDARD
         public static ConstructorBuilder DefineConstructor(this TypeBuilder tb, MethodAttributes attributes, CallingConventions callingConventions, GenericTypeParameterBuilder[] parameterTypes)
         {
             return tb.DefineConstructor(attributes, callingConventions, parameterTypes.Select(g => g.AsType()).ToArray());

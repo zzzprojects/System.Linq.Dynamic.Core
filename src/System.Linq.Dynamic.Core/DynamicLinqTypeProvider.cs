@@ -22,7 +22,7 @@ namespace System.Linq.Dynamic.Core
 
         static IEnumerable<Type> FindTypesMarkedWithAttribute()
         {
-#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
             return AppDomain.CurrentDomain.GetAssemblies()
 #if !(NET35)
                 .Where(x => !x.IsDynamic)

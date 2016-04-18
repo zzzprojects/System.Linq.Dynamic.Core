@@ -1,4 +1,4 @@
-﻿#if DNXCORE50 || DOTNET5_4 || NETSTANDARD1_0
+﻿#if DNXCORE50 || DOTNET5_4 || NETSTANDARD
 using System.Reflection.Emit;
 
 namespace System.Linq.Dynamic.Core.Extensions
