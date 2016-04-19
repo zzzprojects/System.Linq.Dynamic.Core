@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Helpers;
+using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Reflection;
 
@@ -8,9 +9,14 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
 {
     public class Program
     {
+        static readonly Random Rnd = new Random(1);
+        private static BlogContext context = new BlogContext();
+
         public static void Main(string[] args)
         {
             Console.WriteLine("--start");
+
+            DB();
 
             Select();
             TestDyn();
@@ -19,6 +25,53 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
             ExpressionTests_Sum();
 
             Console.WriteLine("--end");
+        }
+
+        private static void DB()
+        {
+            try
+            {
+                context.Database.Delete();
+                context.Database.CreateIfNotExists();
+                PopulateTestData(10);
+
+                var expected = context.Blogs.Select(x => new { x.BlogId, x.Name, x.Posts }).ToArray();
+
+                //Act
+                var test = context.Blogs.Select("new (BlogId, Name, Posts)").ToDynamicArray();
+
+                int y = 0;
+            }
+            finally
+            {
+                context.Database.Delete();
+            }
+        }
+
+        static void PopulateTestData(int blogCount = 25, int postCount = 10)
+        {
+            for (int i = 0; i < blogCount; i++)
+            {
+                var blog = new Blog { Name = "Blog" + (i + 1) };
+
+                context.Blogs.Add(blog);
+
+                for (int j = 0; j < postCount; j++)
+                {
+                    var post = new Post
+                    {
+                        Blog = blog,
+                        Title = $"Blog {i + 1} - Post {j + 1}",
+                        Content = "My Content",
+                        PostDate = DateTime.Today.AddDays(-Rnd.Next(0, 100)).AddSeconds(Rnd.Next(0, 30000)),
+                        NumberOfReads = Rnd.Next(0, 5000)
+                    };
+
+                    context.Posts.Add(post);
+                }
+            }
+
+            context.SaveChanges();
         }
 
         private static void TestDyn()

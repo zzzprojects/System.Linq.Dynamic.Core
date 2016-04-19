@@ -332,9 +332,12 @@ namespace System.Linq.Dynamic.Core
         }
 
         private Type _resultType;
-        public Expression Parse(Type resultType)
+        private bool _createParameterCtor;
+        public Expression Parse(bool createParameterCtor, Type resultType)
         {
+            _createParameterCtor = createParameterCtor;
             _resultType = resultType;
+
             int exprPos = _token.pos;
             Expression expr = ParseExpression();
             if (resultType != null)
@@ -1008,7 +1011,7 @@ namespace System.Linq.Dynamic.Core
             NextToken();
 
             // http://solutionizing.net/category/linq/ 
-            Type type = _resultType ?? DynamicExpression.CreateType(properties);
+            Type type = _resultType ?? DynamicExpression.CreateType(properties, _createParameterCtor);
 
             var propertyTypes = type.GetProperties().Select(p => p.PropertyType).ToArray();
             var ctor = type.GetConstructor(propertyTypes);

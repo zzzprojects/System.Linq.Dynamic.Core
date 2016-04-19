@@ -12,13 +12,14 @@ namespace System.Linq.Dynamic.Core
 
         public static LambdaExpression ParseLambda(ParameterExpression[] parameters, Type resultType, string expression, params object[] values)
         {
-            ExpressionParser parser = new ExpressionParser(parameters, expression, values);
-            return Expression.Lambda(parser.Parse(resultType), parameters);
+            var parser = new ExpressionParser(parameters, expression, values);
+            
+            return Expression.Lambda(parser.Parse(true, resultType), parameters);
         }
 
-        public static Type CreateType(IList<DynamicProperty> properties)
+        public static Type CreateType(IList<DynamicProperty> properties, bool createParameterCtor)
         {
-            return DynamicClassFactory.CreateType(properties);
+            return DynamicClassFactory.CreateType(properties, createParameterCtor);
             //return ClassFactory.Instance.CreateType(properties);
         }
     }

@@ -1,5 +1,5 @@
 {
-    "version": "1.0.1",
+    "version": "1.0.1-beta-00001",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .net core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "summary": "This is a .net core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",

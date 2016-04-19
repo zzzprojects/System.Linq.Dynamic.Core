@@ -3,6 +3,7 @@ using Xunit.Sdk;
 
 namespace System.Linq.Dynamic.Core.Tests.TestHelpers
 {
+#if !NET452
     class DisplayTestMethodNameAttribute : BeforeAfterTestAttribute
     {
         public override void Before(MethodInfo methodUnderTest)
@@ -15,4 +16,5 @@ namespace System.Linq.Dynamic.Core.Tests.TestHelpers
             Console.WriteLine("TearDown for test '{0}.'", methodUnderTest.Name);
         }
     }
+#endif
 }

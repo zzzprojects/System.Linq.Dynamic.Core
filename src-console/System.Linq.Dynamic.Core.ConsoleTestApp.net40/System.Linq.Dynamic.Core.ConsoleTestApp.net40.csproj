@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NET4</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -35,15 +35,28 @@
     <StartupObject>System.Linq.Dynamic.Core.ConsoleTestApp.net40.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ReflectionBridge, Version=0.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ReflectionBridge.0.0.8\lib\net40\ReflectionBridge.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ReflectionBridge, Version=0.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ReflectionBridge.0.0.9\lib\net40\ReflectionBridge.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SQLite.CodeFirst, Version=1.1.11.0, Culture=neutral, PublicKeyToken=eb96ba0a78d831a7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SQLite.CodeFirst.1.1.11.0\lib\net40\SQLite.CodeFirst.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Linq.Dynamic.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -56,6 +69,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Entities\Blog.cs">
+      <Link>Helpers\Entities\Blog.cs</Link>
+    </Compile>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Entities\BlogContext.cs">
+      <Link>Helpers\Entities\BlogContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Entities\Post.cs">
+      <Link>Helpers\Entities\Post.cs</Link>
+    </Compile>
     <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\Permission.cs">
       <Link>Helpers\Models\Permission.cs</Link>
     </Compile>
@@ -78,6 +100,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

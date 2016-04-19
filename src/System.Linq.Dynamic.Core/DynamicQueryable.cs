@@ -90,6 +90,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(selector, nameof(selector));
 
             LambdaExpression lambda = DynamicExpression.ParseLambda(source.ElementType, null, selector, args);
+
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Select",
@@ -117,6 +118,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(selector, nameof(selector));
 
             LambdaExpression lambda = DynamicExpression.ParseLambda(source.ElementType, typeof(TResult), selector, args);
+
             return source.Provider.CreateQuery<TResult>(
                 Expression.Call(
                     typeof(Queryable), "Select",

@@ -8,7 +8,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
+#if NET35 || DNXCORE50 || DOTNET5_4 || NETSTANDARD
 using System.Linq.Dynamic.Core.Extensions;
+#endif
 
 namespace System.Linq.Dynamic.Core
 {
@@ -70,11 +72,12 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// CreateType
+        /// Create DynamicClass Type
         /// </summary>
         /// <param name="properties">The DynamicProperties</param>
+        /// <param name="createParameterCtor">Create a .ctor with parameters.</param>
         /// <returns>Type</returns>
-        public static Type CreateType([NotNull] IList<DynamicProperty> properties)
+        public static Type CreateType([NotNull] IList<DynamicProperty> properties, bool createParameterCtor)
         {
             Check.HasNoNulls(properties, nameof(properties));
 
@@ -131,14 +134,6 @@ namespace System.Linq.Dynamic.Core
                         ilgeneratorConstructorDef.Emit(OpCodes.Call, ObjectCtor);
                         ilgeneratorConstructorDef.Emit(OpCodes.Ret);
 
-                        // .ctor
-                        ConstructorBuilder constructor = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, generics);
-                        constructor.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
-
-                        ILGenerator ilgeneratorConstructor = constructor.GetILGenerator();
-                        ilgeneratorConstructor.Emit(OpCodes.Ldarg_0);
-                        ilgeneratorConstructor.Emit(OpCodes.Call, ObjectCtor);
-
                         var fields = new FieldBuilder[names.Length];
 
                         // There are two for cycles because we want to have all the getter methods before all the other methods
@@ -147,34 +142,6 @@ namespace System.Linq.Dynamic.Core
                             // field
                             fields[i] = tb.DefineField($"<{names[i]}>i__Field", generics[i], FieldAttributes.Private | FieldAttributes.InitOnly);
                             fields[i].SetCustomAttribute(DebuggerBrowsableAttributeBuilder);
-
-                            // .ctor
-                            constructor.DefineParameter(i + 1, ParameterAttributes.None, names[i]);
-                            ilgeneratorConstructor.Emit(OpCodes.Ldarg_0);
-
-                            if (i == 0)
-                            {
-                                ilgeneratorConstructor.Emit(OpCodes.Ldarg_1);
-                            }
-                            else if (i == 1)
-                            {
-                                ilgeneratorConstructor.Emit(OpCodes.Ldarg_2);
-                            }
-                            else if (i == 2)
-                            {
-                                ilgeneratorConstructor.Emit(OpCodes.Ldarg_3);
-                            }
-                            else if (i < 255)
-                            {
-                                ilgeneratorConstructor.Emit(OpCodes.Ldarg_S, (byte)(i + 1));
-                            }
-                            else
-                            {
-                                // Ldarg uses a ushort, but the Emit only accepts short, so we use a unchecked(...), cast to short and let the CLR interpret it as ushort.
-                                ilgeneratorConstructor.Emit(OpCodes.Ldarg, unchecked((short)(i + 1)));
-                            }
-
-                            ilgeneratorConstructor.Emit(OpCodes.Stfld, fields[i]);
 
                             PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.HasThis, generics[i], EmptyTypes);
 
@@ -262,7 +229,7 @@ namespace System.Linq.Dynamic.Core
 
                             // Illegal one-byte branch at position: 9. Requested branch was: 143.
                             // So replace OpCodes.Brfalse_S to OpCodes.Brfalse
-                            ilgeneratorEquals.Emit(OpCodes.Brfalse, equalsLabel); 
+                            ilgeneratorEquals.Emit(OpCodes.Brfalse, equalsLabel);
                             ilgeneratorEquals.Emit(OpCodes.Call, equalityComparerTDefault);
                             ilgeneratorEquals.Emit(OpCodes.Ldarg_0);
                             ilgeneratorEquals.Emit(OpCodes.Ldfld, fields[i]);
@@ -295,8 +262,48 @@ namespace System.Linq.Dynamic.Core
                             ilgeneratorToString.Emit(OpCodes.Pop);
                         }
 
-                        // .ctor
-                        ilgeneratorConstructor.Emit(OpCodes.Ret);
+                        // .ctor with params
+                        if (createParameterCtor)
+                        {
+                            ConstructorBuilder constructor = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, generics);
+                            constructor.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
+
+                            ILGenerator ilgeneratorConstructor = constructor.GetILGenerator();
+                            ilgeneratorConstructor.Emit(OpCodes.Ldarg_0);
+                            ilgeneratorConstructor.Emit(OpCodes.Call, ObjectCtor);
+
+                            for (int i = 0; i < names.Length; i++)
+                            {
+                                constructor.DefineParameter(i + 1, ParameterAttributes.None, names[i]);
+                                ilgeneratorConstructor.Emit(OpCodes.Ldarg_0);
+
+                                if (i == 0)
+                                {
+                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_1);
+                                }
+                                else if (i == 1)
+                                {
+                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_2);
+                                }
+                                else if (i == 2)
+                                {
+                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_3);
+                                }
+                                else if (i < 255)
+                                {
+                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_S, (byte)(i + 1));
+                                }
+                                else
+                                {
+                                    // Ldarg uses a ushort, but the Emit only accepts short, so we use a unchecked(...), cast to short and let the CLR interpret it as ushort.
+                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg, unchecked((short)(i + 1)));
+                                }
+
+                                ilgeneratorConstructor.Emit(OpCodes.Stfld, fields[i]);
+                            }
+
+                            ilgeneratorConstructor.Emit(OpCodes.Ret);
+                        }
 
                         // Equals()
                         if (names.Length == 0)

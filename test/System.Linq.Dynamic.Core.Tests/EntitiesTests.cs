@@ -3,6 +3,8 @@ using System.Collections;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 #if (NETSTANDARD)
 using Microsoft.EntityFrameworkCore;
+#elif NET452
+using System.Data.Entity;
 #else
 using Microsoft.Data.Entity;
 #endif
@@ -23,18 +25,27 @@ namespace System.Linq.Dynamic.Core.Tests
 
         public EntitiesTests()
         {
+#if !(NET452)
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite($"Filename=DynamicLinqTestDb_{Guid.NewGuid()}.db");
 
             _context = new BlogContext(builder.Options);
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
+#else
+            _context = new BlogContext();
+            _context.Database.CreateIfNotExists();
+#endif
         }
 
         // Use TestCleanup to run code after each test has run
         public void Dispose()
         {
+#if !(NET452)
             _context.Database.EnsureDeleted();
+#else
+            _context.Database.Delete();
+#endif
 
             _context.Dispose();
             _context = null;
@@ -50,7 +61,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
                 for (int j = 0; j < postCount; j++)
                 {
-                    var post = new Post()
+                    var post = new Post
                     {
                         Blog = blog,
                         Title = $"Blog {i + 1} - Post {j + 1}",
@@ -91,16 +102,15 @@ namespace System.Linq.Dynamic.Core.Tests
             //Arrange
             PopulateTestData(5, 0);
 
-            var expected = _context.Blogs.Select(x => new { x.BlogId, x.Name }).ToArray();
+            var expected = _context.Blogs.Select(x => new { X = "x", x.BlogId, x.Name }).ToArray();
 
             //Act
-            var test = _context.Blogs.Select("new (BlogId, Name)").ToDynamicArray();
-
-
+            var test = _context.Blogs.Select("new (\"x\" as X, BlogId, Name)").ToDynamicArray();
+            
             //Assert
             Assert.Equal(
                 expected,
-                test.Select(x => new { BlogId = (int)x.BlogId, Name = (string)x.Name }).ToArray() //convert to same anomymous type used by expected so they can be found equal
+                test.Select(x => new { X = "x", BlogId = (int)x.BlogId, Name = (string)x.Name }).ToArray() //convert to same anomymous type used by expected so they can be found equal
                 );
         }
 
@@ -141,7 +151,7 @@ namespace System.Linq.Dynamic.Core.Tests
         //        Assert.Equal(expectedRow.BlogId, testRow.BlogId);
         //        Assert.Equal(expectedRow.Name, testRow.Name);
 
-        //        Assert.IsTrue(expectedRow.Posts != null);
+        //        Assert.True(expectedRow.Posts != null);
         //        Assert.Equal(expectedRow.Posts.ToList(), testRow.Posts);
         //    }
         //}
