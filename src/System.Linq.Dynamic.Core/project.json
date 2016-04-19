@@ -8,7 +8,7 @@
     "owners": [ "Stef Heyenrath" ],
     "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
     "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-    "releaseNotes": "",
+    "releaseNotes": "Fixed issue #1, #2 and #4",
 
     "compilationOptions": {
     },

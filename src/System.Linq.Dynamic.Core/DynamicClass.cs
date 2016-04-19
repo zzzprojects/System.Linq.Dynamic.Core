@@ -15,6 +15,11 @@ namespace System.Linq.Dynamic.Core
             return (T)propInfo.GetValue(this, null);
         }
 
+        public object GetDynamicProperty(string propertyName)
+        {
+            return GetDynamicProperty<object>(propertyName);
+        }
+
         public void SetDynamicProperty<T>(string propertyName, T value)
         {
             var type = GetType();

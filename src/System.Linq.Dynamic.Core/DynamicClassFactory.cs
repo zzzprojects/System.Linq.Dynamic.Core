@@ -259,7 +259,10 @@ namespace System.Linq.Dynamic.Core
                             // Equals()
                             MethodInfo equalityComparerTDefault = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerDefault);
                             MethodInfo equalityComparerTEquals = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerEquals);
-                            ilgeneratorEquals.Emit(OpCodes.Brfalse_S, equalsLabel);
+
+                            // Illegal one-byte branch at position: 9. Requested branch was: 143.
+                            // So replace OpCodes.Brfalse_S to OpCodes.Brfalse
+                            ilgeneratorEquals.Emit(OpCodes.Brfalse, equalsLabel); 
                             ilgeneratorEquals.Emit(OpCodes.Call, equalityComparerTDefault);
                             ilgeneratorEquals.Emit(OpCodes.Ldarg_0);
                             ilgeneratorEquals.Emit(OpCodes.Ldfld, fields[i]);

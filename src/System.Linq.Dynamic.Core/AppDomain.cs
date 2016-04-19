@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core
 #if (NETSTANDARD)
         public Assembly[] GetAssemblies()
         {
-            return new List<Assembly>().ToArray();
+            return new List<Assembly>().ToArray(); // TODO
         }
 #elif DNXCORE50
         public Assembly[] GetAssemblies()
