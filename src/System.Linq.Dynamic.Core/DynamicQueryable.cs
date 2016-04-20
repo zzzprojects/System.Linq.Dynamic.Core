@@ -4,6 +4,7 @@ using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using ReflectionBridge.Extensions;
 using JetBrains.Annotations;
+using System.Linq.Dynamic.Core.Extensions;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -59,7 +60,8 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
 
-            LambdaExpression lambda = DynamicExpression.ParseLambda(source.ElementType, typeof(bool), predicate, args);
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, typeof(bool), predicate, args);
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Where",
@@ -89,7 +91,8 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
 
-            LambdaExpression lambda = DynamicExpression.ParseLambda(source.ElementType, null, selector, args);
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
 
             return source.Provider.CreateQuery(
                 Expression.Call(
@@ -117,7 +120,8 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
 
-            LambdaExpression lambda = DynamicExpression.ParseLambda(source.ElementType, typeof(TResult), selector, args);
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, typeof(TResult), selector, args);
 
             return source.Provider.CreateQuery<TResult>(
                 Expression.Call(
@@ -146,7 +150,9 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(type, nameof(type));
             Check.NotEmpty(selector, nameof(selector));
 
-            LambdaExpression lambda = DynamicExpression.ParseLambda(source.ElementType, type, selector, args);
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, type, selector, args);
+
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Select",
@@ -167,7 +173,8 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
 
-            LambdaExpression lambda = DynamicExpression.ParseLambda(source.ElementType, null, selector, args);
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
 
             //Extra help to get SelectMany to work from StackOverflow Answer
             //http://stackoverflow.com/a/3001674/2465182
@@ -268,8 +275,9 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(keySelector, nameof(keySelector));
             Check.NotEmpty(resultSelector, nameof(resultSelector));
 
-            LambdaExpression keyLambda = DynamicExpression.ParseLambda(source.ElementType, null, keySelector, args);
-            LambdaExpression elementLambda = DynamicExpression.ParseLambda(source.ElementType, null, resultSelector, args);
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression keyLambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, keySelector, args);
+            LambdaExpression elementLambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, resultSelector, args);
 
             return source.Provider.CreateQuery(
                 Expression.Call(
@@ -320,7 +328,8 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(keySelector, nameof(keySelector));
 
-            LambdaExpression keyLambda = DynamicExpression.ParseLambda(source.ElementType, null, keySelector, args);
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression keyLambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, keySelector, args);
 
             return source.Provider.CreateQuery(
                 Expression.Call(
@@ -368,9 +377,10 @@ namespace System.Linq.Dynamic.Core
 
             var selectors = new List<Func<TElement, object>>(keySelectors.Length);
 
+            bool createParameterCtor = true;
             foreach (var selector in keySelectors)
             {
-                LambdaExpression l = DynamicExpression.ParseLambda(typeof(TElement), typeof(object), selector);
+                LambdaExpression l = DynamicExpression.ParseLambda(createParameterCtor, typeof(TElement), typeof(object), selector);
                 selectors.Add((Func<TElement, object>)l.Compile());
             }
 
@@ -435,15 +445,16 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(innerKeySelector, nameof(innerKeySelector));
             Check.NotEmpty(resultSelector, nameof(resultSelector));
 
-            LambdaExpression outerSelectorLambda = DynamicExpression.ParseLambda(outer.ElementType, null, outerKeySelector, args);
-            LambdaExpression innerSelectorLambda = DynamicExpression.ParseLambda(inner.AsQueryable().ElementType, null, innerKeySelector, args);
+            bool createParameterCtor = outer.IsLinqToObjects();
+            LambdaExpression outerSelectorLambda = DynamicExpression.ParseLambda(createParameterCtor, outer.ElementType, null, outerKeySelector, args);
+            LambdaExpression innerSelectorLambda = DynamicExpression.ParseLambda(createParameterCtor, inner.AsQueryable().ElementType, null, innerKeySelector, args);
 
             ParameterExpression[] parameters = new ParameterExpression[]
             {
                 Expression.Parameter(outer.ElementType, "outer"), Expression.Parameter(inner.AsQueryable().ElementType, "inner")
             };
 
-            LambdaExpression resultsSelectorLambda = DynamicExpression.ParseLambda(parameters, null, resultSelector, args);
+            LambdaExpression resultsSelectorLambda = DynamicExpression.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
 
             return outer.Provider.CreateQuery(
                 Expression.Call(

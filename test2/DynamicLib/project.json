@@ -5,8 +5,7 @@
     "owners": [ "Stef Heyenrath" ],
 
     "dependencies": {
-        "ReflectionBridge": "0.0.8",
-        
+        "ReflectionBridge": "0.0.9",
     },
 
     "compilationOptions": {

@@ -15,7 +15,7 @@
 
     "dependencies": {
         "ReflectionBridge": "0.0.9",
-        "JetBrains.Annotations": "10.1.2-eap"
+        "JetBrains.Annotations": "10.1.4"
     },
 
     "frameworks": {

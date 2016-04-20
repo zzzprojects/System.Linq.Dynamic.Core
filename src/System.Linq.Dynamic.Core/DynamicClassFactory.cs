@@ -48,8 +48,6 @@ namespace System.Linq.Dynamic.Core
 #endif
 
         private static readonly Type EqualityComparer = typeof(EqualityComparer<>);
-
-
         private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
 #if DNXCORE50 || DOTNET5_4 || NETSTANDARD
         private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public);
@@ -84,11 +82,9 @@ namespace System.Linq.Dynamic.Core
             var types = properties.Select(p => p.Type).ToArray();
             var names = properties.Select(p => p.Name).ToArray();
 
-            // Anonymous classes are generics based. The generic classes
-            // are distinguished by number of parameters and name of 
-            // parameters. The specific types of the parameters are the 
-            // generic arguments. We recreate this by creating a fullName
-            // composed of all the property names, separated by a "|"
+            // Anonymous classes are generics based. The generic classes are distinguished by number of parameters and name of parameters.
+            // The specific types of the parameters are the generic arguments.
+            // We recreate this by creating a fullName composed of all the property names, separated by a "|".
             string fullName = string.Join("|", names.Select(Escape).ToArray());
 
             Type type;
@@ -124,15 +120,6 @@ namespace System.Linq.Dynamic.Core
                         {
                             generics = new GenericTypeParameterBuilder[0];
                         }
-
-                        // .ctor default
-                        ConstructorBuilder constructorDef = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, EmptyTypes);
-                        constructorDef.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
-
-                        ILGenerator ilgeneratorConstructorDef = constructorDef.GetILGenerator();
-                        ilgeneratorConstructorDef.Emit(OpCodes.Ldarg_0);
-                        ilgeneratorConstructorDef.Emit(OpCodes.Call, ObjectCtor);
-                        ilgeneratorConstructorDef.Emit(OpCodes.Ret);
 
                         var fields = new FieldBuilder[names.Length];
 
@@ -262,9 +249,18 @@ namespace System.Linq.Dynamic.Core
                             ilgeneratorToString.Emit(OpCodes.Pop);
                         }
 
-                        // .ctor with params
                         if (createParameterCtor)
                         {
+                            // .ctor default
+                            ConstructorBuilder constructorDef = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, EmptyTypes);
+                            constructorDef.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
+
+                            ILGenerator ilgeneratorConstructorDef = constructorDef.GetILGenerator();
+                            ilgeneratorConstructorDef.Emit(OpCodes.Ldarg_0);
+                            ilgeneratorConstructorDef.Emit(OpCodes.Call, ObjectCtor);
+                            ilgeneratorConstructorDef.Emit(OpCodes.Ret);
+
+                            // .ctor with params
                             ConstructorBuilder constructor = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, generics);
                             constructor.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
 

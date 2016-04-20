@@ -333,10 +333,10 @@ namespace System.Linq.Dynamic.Core
 
         private Type _resultType;
         private bool _createParameterCtor;
-        public Expression Parse(bool createParameterCtor, Type resultType)
+        public Expression Parse(Type resultType, bool createParameterCtor)
         {
-            _createParameterCtor = createParameterCtor;
             _resultType = resultType;
+            _createParameterCtor = createParameterCtor;
 
             int exprPos = _token.pos;
             Expression expr = ParseExpression();
