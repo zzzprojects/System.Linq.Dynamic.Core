@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using Linq.PropertyTranslator.Core;
+using QueryInterceptor.Core;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -146,6 +148,25 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var userNames = qry.Select(select).ToDynamicList();
             Assert.NotNull(userNames);
+        }
+
+        [Fact]
+        public void Select_PropertyVisitor_QueryInterceptor()
+        {
+            var testList = new List<Entities.Employee>
+            {
+                new Entities.Employee {FirstName = "first", LastName = "last"}
+            };
+            var qry = testList.AsEnumerable().AsQueryable().InterceptWith(new PropertyVisitor());
+
+            var dynamicSelect = qry.Select("new (FirstName, LastName, FullName)").ToDynamicList();
+            Assert.NotNull(dynamicSelect);
+            Assert.Equal(1, dynamicSelect.Count);
+
+            var firstEmployee = dynamicSelect.FirstOrDefault();
+            Assert.NotNull(firstEmployee);
+
+            Assert.Equal("first last", firstEmployee.FullName);
         }
 
         [Fact]

@@ -1,7 +1,13 @@
-﻿namespace System.Linq.Dynamic.Core.Tests.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Linq.PropertyTranslator.Core;
+
+namespace System.Linq.Dynamic.Core.Tests.Entities
 {
     public class Employee : Entity
     {
+        private static readonly CompiledExpressionMap<Employee, string> FullNameExpr =
+            DefaultTranslationOf<Employee>.Property(e => e.FullName).Is(e => e.FirstName + " " + e.LastName);
+
         public int EmployeeNumber { get; set; }
 
         public string FirstName { get; set; }
@@ -29,5 +35,8 @@
         public SubFunction SubFunction { get; set; }
 
         public int? Assigned { get; set; }
+
+        [NotMapped]
+        public string FullName => FullNameExpr.Evaluate(this);
     }
 }
