@@ -29,29 +29,22 @@ namespace System.Linq.Dynamic.Core.Extensions
 #endif
             if (!isLinqToObjects)
             {
+                // add support for https://github.com/StefH/QueryInterceptor.Core, version 1.0.1 and up
                 if (baseType.Name == "QueryTranslatorProvider")
                 {
-                    //IQueryProvider queryTranslatorProvider = provider.GetSourceProvider();
-
-                    //return queryTranslatorProvider != null && IsProviderEnumerableQuery(queryTranslatorProvider);
+                    try
+                    {
+                        IQueryProvider originalProvider = baseType.GetPropertyValue<IQueryProvider>("OriginalProvider", provider);
+                        return originalProvider != null && IsProviderEnumerableQuery(originalProvider);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
                 }
             }
 
             return isLinqToObjects;
         }
-
-//        private static IQueryProvider GetSourceProvider(this IQueryProvider provider)
-//        {
-//#if NET35
-//            var type = provider.GetType();
-//            var propInfo = type.GetProperty("Source");
-//            IQueryProvider queryTranslatorProvider = propInfo.GetValue(provider, null) as IQueryProvider;
-//#else
-//            dynamic p = provider;
-//            IQueryProvider queryTranslatorProvider = p.Source;
-
-//#endif
-//            return queryTranslatorProvider;
-//        }
     }
 }
