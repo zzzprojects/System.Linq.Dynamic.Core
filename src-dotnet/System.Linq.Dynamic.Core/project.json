@@ -1,5 +1,5 @@
 {
-    "version": "1.0.1-*",
+    "version": "1.0.1-beta-00001",
 	
 	 "compile": [
         "../../src/System.Linq.Dynamic.Core/*.cs",
@@ -10,7 +10,7 @@
 	
 	"dependencies": {
         "ReflectionBridge": "0.0.9",
-        "JetBrains.Annotations": "10.1.2-eap"
+        "JetBrains.Annotations": "10.1.4"
     },
 	
 	"compilationOptions": {
@@ -26,10 +26,13 @@
             "dependencies": {
                 "NETStandard.Library": "1.5.0-*",
 				
-				"Microsoft.CSharp": "4.0.1-rc3-*",
+				"Microsoft.CSharp": "4.0.1-rc2-*",
+				
+				"System.Collections.Concurrent": "4.0.12-rc3-*",
+				
 				"Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-*",
 				
-				"System.Linq.Queryable": "4.0.0-rc3-*",
+				"System.Linq.Queryable": "4.0.0-rc2-*",
 				
 				"System.Reflection.Emit": "4.0.1-*",
 				"System.Reflection.Primitives": "4.0.1-*",

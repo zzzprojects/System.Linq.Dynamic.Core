@@ -1,2 +1,2 @@
 del *lock*
-dotnet restore
+"C:\Projects\GitHub\forks\corefx\Tools\dotnetcli\dotnet.exe" restore

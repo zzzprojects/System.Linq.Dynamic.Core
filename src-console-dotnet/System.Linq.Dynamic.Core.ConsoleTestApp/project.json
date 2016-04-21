@@ -2,7 +2,7 @@
     "version": "1.0.0.0-*",
     "authors": [ "Stef Heyenrath" ],
     "dependencies": {
-        "System.Linq.Dynamic.Core": "1.0.1-*"
+        
     },
 	
 	"compilationOptions": {
@@ -17,21 +17,23 @@
         "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Post.cs"
     ],
 
-    "commands": {
-        "ConsoleTestApp": "run"
-    },
 
     "frameworks": {
-        "netcoreapp1.0": {
+        "netstandard1.5": {
             "imports": [
-                "dnxcore50", "portable-net45+win8"
+                
             ],
             "dependencies": {
-                "NETStandard.Library": "1.5.0-*",
-
-				"Microsoft.CSharp": "4.0.1-*",
+                "Microsoft.NETCore.App": {
+				  "type": "platform",
+				  "version": "1.0.0-rc2-23931"
+				},
 				
-				"System.Linq.Queryable": "4.0.1-*"
+				"System.Linq.Dynamic.Core": "1.0.1-beta-00001",
+
+				"Microsoft.CSharp": "4.0.1-rc3-*",
+				
+				"System.Linq.Queryable": "4.0.1-rc3-*"
             }
         }
     }
