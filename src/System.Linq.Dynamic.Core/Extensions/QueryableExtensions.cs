@@ -4,7 +4,7 @@ using ReflectionBridge.Extensions;
 
 namespace System.Linq.Dynamic.Core.Extensions
 {
-    public static class QueryableExtensions
+    internal static class QueryableExtensions
     {
         /// <summary>
         /// Check if the Provider from IQueryable is a LinqToObjects provider.

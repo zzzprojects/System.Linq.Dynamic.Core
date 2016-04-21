@@ -1,52 +1,34 @@
 ﻿using System.Reflection.Emit;
 using System.Reflection;
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARD
-using System.Linq;
-#endif
-
 namespace System.Linq.Dynamic.Core.Extensions
 {
-    public static class TypeBuilderExtensions
+    internal static class TypeBuilderExtensions
     {
-#if !(NET40 || NET35)
+#if !(NET35 || NET40)
         public static Type CreateType(this TypeBuilder tb)
         {
             return tb.CreateTypeInfo().AsType();
         }
 #endif
 
-#if NET35
+#if NET35 || NET40
         public static PropertyBuilder DefineProperty(this TypeBuilder tb, string name, PropertyAttributes attributes, CallingConventions callingConvention, Type returnType, Type[] parameterTypes)
         {
             return tb.DefineProperty(name, attributes, returnType, parameterTypes);
         }
-#endif
 
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARD
-        public static ConstructorBuilder DefineConstructor(this TypeBuilder tb, MethodAttributes attributes, CallingConventions callingConventions, GenericTypeParameterBuilder[] parameterTypes)
+        // https://github.com/castleproject/Core/blob/netcore/src/Castle.Core/Compatibility/TypeBuilderExtensions.cs
+        // TypeBuilder and GenericTypeParameterBuilder no longer inherit from Type but TypeInfo,
+        // so there is now an AsType method to get the Type which we are providing here to shim to itself.
+        public static Type AsType(this TypeBuilder builder)
         {
-            return tb.DefineConstructor(attributes, callingConventions, parameterTypes.Select(g => g.AsType()).ToArray());
+            return builder;
         }
 
-        public static FieldBuilder DefineField(this TypeBuilder tb, string fieldName, GenericTypeParameterBuilder genericTypeParameterBuilder, FieldAttributes attributes)
+        public static Type AsType(this GenericTypeParameterBuilder builder)
         {
-            return tb.DefineField(fieldName, genericTypeParameterBuilder.AsType(), attributes);
-        }
-
-        public static MethodBuilder DefineMethod(this TypeBuilder tb, string name, MethodAttributes attributes, CallingConventions callingConvention, GenericTypeParameterBuilder returnType, Type[] parameterTypes)
-        {
-            return tb.DefineMethod(name, attributes, callingConvention, returnType.AsType(), parameterTypes);
-        }
-
-        public static MethodBuilder DefineMethod(this TypeBuilder tb, string name, MethodAttributes attributes, CallingConventions callingConvention, Type returnType, GenericTypeParameterBuilder[] parameterTypes)
-        {
-            return tb.DefineMethod(name, attributes, callingConvention, returnType, parameterTypes.Select(g => g.AsType()).ToArray());
-        }
-
-        public static PropertyBuilder DefineProperty(this TypeBuilder tb, string name, PropertyAttributes attributes, CallingConventions callingConvention, GenericTypeParameterBuilder returnType, Type[] parameterTypes)
-        {
-            return tb.DefineProperty(name, attributes, callingConvention, returnType.AsType(), parameterTypes);
+            return builder;
         }
 #endif
     }

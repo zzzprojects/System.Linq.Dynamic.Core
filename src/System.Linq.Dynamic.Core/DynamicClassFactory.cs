@@ -8,9 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
-#if NET35 || DNXCORE50 || DOTNET5_4 || NETSTANDARD
 using System.Linq.Dynamic.Core.Extensions;
-#endif
+using System.Linq;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -127,13 +126,13 @@ namespace System.Linq.Dynamic.Core
                         for (int i = 0; i < names.Length; i++)
                         {
                             // field
-                            fields[i] = tb.DefineField($"<{names[i]}>i__Field", generics[i], FieldAttributes.Private | FieldAttributes.InitOnly);
+                            fields[i] = tb.DefineField($"<{names[i]}>i__Field", generics[i].AsType(), FieldAttributes.Private | FieldAttributes.InitOnly);
                             fields[i].SetCustomAttribute(DebuggerBrowsableAttributeBuilder);
 
-                            PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.HasThis, generics[i], EmptyTypes);
+                            PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.HasThis, generics[i].AsType(), EmptyTypes);
 
                             // getter
-                            MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, generics[i], null);
+                            MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, generics[i].AsType(), null);
                             getter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
                             ILGenerator ilgeneratorGetter = getter.GetILGenerator();
                             ilgeneratorGetter.Emit(OpCodes.Ldarg_0);
@@ -142,7 +141,7 @@ namespace System.Linq.Dynamic.Core
                             property.SetGetMethod(getter);
 
                             // setter
-                            MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, null, new[] { generics[i] });
+                            MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, null, new[] { generics[i].AsType() });
                             setter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
 
                             // workaround for https://github.com/dotnet/corefx/issues/7792
@@ -170,9 +169,9 @@ namespace System.Linq.Dynamic.Core
                         equals.DefineParameter(1, ParameterAttributes.In, "value");
 
                         ILGenerator ilgeneratorEquals = equals.GetILGenerator();
-                        ilgeneratorEquals.DeclareLocal(tb);
+                        ilgeneratorEquals.DeclareLocal(tb.AsType());
                         ilgeneratorEquals.Emit(OpCodes.Ldarg_1);
-                        ilgeneratorEquals.Emit(OpCodes.Isinst, tb);
+                        ilgeneratorEquals.Emit(OpCodes.Isinst, tb.AsType());
                         ilgeneratorEquals.Emit(OpCodes.Stloc_0);
                         ilgeneratorEquals.Emit(OpCodes.Ldloc_0);
 
@@ -244,7 +243,7 @@ namespace System.Linq.Dynamic.Core
                             ilgeneratorToString.Emit(OpCodes.Ldloc_0);
                             ilgeneratorToString.Emit(OpCodes.Ldarg_0);
                             ilgeneratorToString.Emit(OpCodes.Ldfld, fields[i]);
-                            ilgeneratorToString.Emit(OpCodes.Box, generics[i]);
+                            ilgeneratorToString.Emit(OpCodes.Box, generics[i].AsType());
                             ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendObject);
                             ilgeneratorToString.Emit(OpCodes.Pop);
                         }
@@ -261,7 +260,7 @@ namespace System.Linq.Dynamic.Core
                             ilgeneratorConstructorDef.Emit(OpCodes.Ret);
 
                             // .ctor with params
-                            ConstructorBuilder constructor = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, generics);
+                            ConstructorBuilder constructor = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, generics.Select(p => p.AsType()).ToArray());
                             constructor.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
 
                             ILGenerator ilgeneratorConstructor = constructor.GetILGenerator();

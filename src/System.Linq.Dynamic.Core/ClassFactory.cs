@@ -165,10 +165,10 @@ namespace System.Linq.Dynamic.Core
                 MethodAttributes.Virtual | MethodAttributes.HideBySig,
                 typeof(bool), new Type[] { typeof(object) });
             ILGenerator gen = mb.GetILGenerator();
-            LocalBuilder other = gen.DeclareLocal(tb);
+            LocalBuilder other = gen.DeclareLocal(tb.AsType());
             Label next = gen.DefineLabel();
             gen.Emit(OpCodes.Ldarg_1);
-            gen.Emit(OpCodes.Isinst, tb);
+            gen.Emit(OpCodes.Isinst, tb.AsType());
             gen.Emit(OpCodes.Stloc, other);
             gen.Emit(OpCodes.Ldloc, other);
             gen.Emit(OpCodes.Brtrue_S, next);
