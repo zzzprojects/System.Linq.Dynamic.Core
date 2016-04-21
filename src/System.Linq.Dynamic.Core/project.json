@@ -8,7 +8,7 @@
     "owners": [ "Stef Heyenrath" ],
     "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
     "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-    "releaseNotes": "Fixed issue #1, #2 and #4",
+    "releaseNotes": "Fixed issues",
 
     "compilationOptions": {
     },
@@ -62,6 +62,38 @@
             }
         },
         "dnxcore5": {
+            "dependencies": {
+                "Microsoft.CSharp": "4.0.1-beta-*",
+
+                "System.Collections.Concurrent": "4.0.11-beta-*",
+
+                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
+
+                "System.Runtime.Extensions": "4.0.11-beta-*",
+                "System.Runtime.InteropServices": "4.0.21-beta-*",
+                "System.Runtime.Loader": "4.0.0-beta-*",
+
+                "System.Runtime.Serialization.Primitives": "4.1.0-beta-*",
+                "System.Runtime.Serialization.Xml": "4.1.0-beta-*",
+
+                "System.Reflection.Primitives": "4.0.1-beta-*",
+                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
+                "System.Reflection.Emit": "4.0.1-beta-*",
+
+                "System.Linq": "4.0.1-beta-*",
+                "System.Linq.Expressions": "4.0.11-beta-*",
+                "System.Linq.Queryable": "4.0.1-beta-*",
+
+                "System.Globalization": "4.0.11-beta-*",
+
+                "System.Diagnostics.Debug": "4.0.11-beta-*",
+                "System.Diagnostics.Tools": "4.0.1-beta-*",
+                "System.Diagnostics.Tracing": "4.0.21-beta-*",
+
+                "System.Threading": "4.0.11-beta-*"
+            }
+        },
+        "dotnet54": {
             "dependencies": {
                 "Microsoft.CSharp": "4.0.1-beta-*",
 

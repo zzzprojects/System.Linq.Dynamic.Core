@@ -10,7 +10,7 @@ namespace System.Linq.Dynamic.Core
     public class GroupResult
     {
         /// <summary>
-        /// The key value of the group. (TODO : check for DNXCORE50)
+        /// The key value of the group. (TODO : check for DNXCORE50 || DOTNET5_4)
         /// </summary>
 #if NET35
         public object Key { get; internal set; }

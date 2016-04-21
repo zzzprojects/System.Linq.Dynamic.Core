@@ -7,8 +7,9 @@ The following frameworks are supported:
 - net40
 - net45x
 - net46x
-- dnxcore45x
+- dnx45x
 - dnxcore50
+- dotnet54
 
 <br>
 This fork takes the basic library to a new level.  Contains XML Documentation and examples on how to use Dynamic Linq. Also adds unit testing to help ensure that it works properly.

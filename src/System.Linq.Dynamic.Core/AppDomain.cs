@@ -1,4 +1,4 @@
-﻿#if DNXCORE50 || NETFX || NETSTANDARD
+﻿#if DNXCORE50 || DOTNET5_4 || NETFX || NETSTANDARD
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -23,7 +23,7 @@ namespace System.Linq.Dynamic.Core
         {
             return new List<Assembly>().ToArray(); // TODO
         }
-#elif DNXCORE50
+#elif DNXCORE50 || DOTNET5_4
         public Assembly[] GetAssemblies()
         {
             var assemblyNames = PlatformServices.Default.LibraryManager.GetLibraries().SelectMany(lib => lib.Assemblies).Distinct().ToArray();
