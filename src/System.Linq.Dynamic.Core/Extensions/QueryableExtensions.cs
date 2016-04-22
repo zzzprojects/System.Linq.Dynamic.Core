@@ -1,6 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using System.Reflection;
+using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Validation;
-using ReflectionBridge.Extensions;
 
 namespace System.Linq.Dynamic.Core.Extensions
 {
@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core.Extensions
 
         private static bool IsProviderEnumerableQuery(IQueryProvider provider)
         {
-            Type baseType = provider.GetType().BaseType();
+            Type baseType = provider.GetType().GetTypeInfo().BaseType;
 #if NET35
             bool isLinqToObjects = baseType.FullName.Contains("EnumerableQuery");
 #else
@@ -34,7 +34,8 @@ namespace System.Linq.Dynamic.Core.Extensions
                 {
                     try
                     {
-                        IQueryProvider originalProvider = baseType.GetPropertyValue<IQueryProvider>("OriginalProvider", provider);
+                        PropertyInfo property = baseType.GetProperty("OriginalProvider");
+                        IQueryProvider originalProvider = property.GetValue(provider, null) as IQueryProvider;
                         return originalProvider != null && IsProviderEnumerableQuery(originalProvider);
                     }
                     catch

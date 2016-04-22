@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using JetBrains.Annotations;
-using ReflectionBridge.Extensions;
+using System.Reflection;
 
 // Copied from https://github.com/aspnet/EntityFramework/blob/dev/src/Shared/Check.cs
 namespace System.Linq.Dynamic.Core.Validation
@@ -126,7 +126,7 @@ namespace System.Linq.Dynamic.Core.Validation
 
         public static Type ValidEntityType(Type value, [InvokerParameterName] [NotNull] string parameterName)
         {
-            if (!value.IsClass())
+            if (!value.GetTypeInfo().IsClass)
             {
                 NotEmpty(parameterName, nameof(parameterName));
 

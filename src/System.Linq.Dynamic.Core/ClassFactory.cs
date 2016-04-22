@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading;
-using System.Linq.Dynamic.Core.Extensions;
 
 namespace System.Linq.Dynamic.Core
 {

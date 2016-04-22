@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Collections;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
-using ReflectionBridge.Extensions;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -446,12 +445,8 @@ namespace System.Linq.Dynamic.Core
                         {
                             //check for nullable type match
 
-                            if (!identifier.Type.IsGenericType() || identifier.Type.GetGenericTypeDefinition() != typeof(Nullable<>)
-#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD
-                                                        || ReflectionBridgeExtensions.GetGenericArguments(identifier.Type)[0] != right.Type)
-#else
-                                                        || identifier.Type.GetGenericArguments()[0] != right.Type)
-#endif
+                            if (!identifier.Type.GetTypeInfo().IsGenericType || identifier.Type.GetGenericTypeDefinition() != typeof(Nullable<>)
+                                || identifier.Type.GetTypeInfo().GetGenericTypeArguments()[0] != right.Type)
                             {
                                 throw ParseError(op.pos, Res.ExpressionTypeMismatch, identifier.Type);
                             }
@@ -508,12 +503,12 @@ namespace System.Linq.Dynamic.Core
                 NextToken();
                 Expression right = ParseComparison();
 
-                if (left.Type.IsEnum())
+                if (left.Type.GetTypeInfo().IsEnum)
                 {
                     left = Expression.Convert(left, Enum.GetUnderlyingType(left.Type));
                 }
 
-                if (right.Type.IsEnum())
+                if (right.Type.GetTypeInfo().IsEnum)
                 {
                     right = Expression.Convert(right, Enum.GetUnderlyingType(right.Type));
                 }
@@ -545,7 +540,7 @@ namespace System.Linq.Dynamic.Core
                 Expression right = ParseShift();
                 bool isEquality = op.id == TokenId.Equal || op.id == TokenId.DoubleEqual ||
                                   op.id == TokenId.ExclamationEqual || op.id == TokenId.LessGreater;
-                if (isEquality && ((!left.Type.IsValueType() && !right.Type.IsValueType()) || (left.Type == typeof(Guid) && right.Type == typeof(Guid))))
+                if (isEquality && ((!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType) || (left.Type == typeof(Guid) && right.Type == typeof(Guid))))
                 {
                     if (left.Type != right.Type)
                     {
@@ -1041,7 +1036,7 @@ namespace System.Linq.Dynamic.Core
             NextToken();
             if (_token.id == TokenId.Question)
             {
-                if (!type.IsValueType() || IsNullableType(type))
+                if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
                     throw ParseError(errorPos, Res.TypeHasNoNullableForm, GetTypeName(type));
                 type = typeof(Nullable<>).MakeGenericType(type);
                 NextToken();
@@ -1080,7 +1075,7 @@ namespace System.Linq.Dynamic.Core
             if (exprType == type)
                 return expr;
 
-            if (exprType.IsValueType() && type.IsValueType())
+            if (exprType.GetTypeInfo().IsValueType && type.GetTypeInfo().IsValueType)
             {
                 if ((IsNullableType(exprType) || IsNullableType(type)) &&
                     GetNonNullableType(exprType) == GetNonNullableType(type))
@@ -1091,7 +1086,7 @@ namespace System.Linq.Dynamic.Core
                     return Expression.ConvertChecked(expr, type);
             }
 
-            if (exprType.IsAssignableFrom(type) || type.IsAssignableFrom(exprType) || exprType.IsInterface() || type.IsInterface())
+            if (exprType.IsAssignableFrom(type) || type.IsAssignableFrom(exprType) || exprType.GetTypeInfo().IsInterface || type.GetTypeInfo().IsInterface)
                 return Expression.Convert(expr, type);
 
             // Try to Parse the string rather that just generate the convert statement
@@ -1131,11 +1126,7 @@ namespace System.Linq.Dynamic.Core
                     Type enumerableType = FindGenericType(typeof(IEnumerable<>), type);
                     if (enumerableType != null)
                     {
-#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD
-                        Type elementType = ReflectionBridgeExtensions.GetGenericArguments(enumerableType)[0];
-#else
-                        Type elementType = enumerableType.GetGenericArguments()[0];
-#endif
+                        Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
                         return ParseAggregate(instance, elementType, id, errorPos);
                     }
                 }
@@ -1160,7 +1151,7 @@ namespace System.Linq.Dynamic.Core
                 }
             }
 
-            if (type.IsEnum())
+            if (type.GetTypeInfo().IsEnum)
             {
                 var @enum = Enum.Parse(type, id, true);
 
@@ -1190,9 +1181,9 @@ namespace System.Linq.Dynamic.Core
         {
             while (type != null && type != typeof(object))
             {
-                if (type.IsGenericType() && type.GetGenericTypeDefinition() == generic)
+                if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == generic)
                     return type;
-                if (generic.IsInterface())
+                if (generic.GetTypeInfo().IsInterface)
                 {
                     foreach (Type intfType in type.GetInterfaces())
                     {
@@ -1200,7 +1191,7 @@ namespace System.Linq.Dynamic.Core
                         if (found != null) return found;
                     }
                 }
-                type = type.BaseType();
+                type = type.GetTypeInfo().BaseType;
             }
             return null;
         }
@@ -1243,11 +1234,7 @@ namespace System.Linq.Dynamic.Core
                 var type = Expression.Lambda(args[0], innerIt).Body.Type;
                 var interfaces = type.GetInterfaces().Union(new[] { type });
                 Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
-#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD
-                Type resultType = ReflectionBridgeExtensions.GetGenericArguments(interfaceType)[0];
-#else
-                Type resultType = interfaceType.GetGenericArguments()[0];
-#endif
+                Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
                 typeArgs = new Type[] { elementType, resultType };
             }
             else
@@ -1337,16 +1324,12 @@ namespace System.Linq.Dynamic.Core
 
         static bool IsNullableType(Type type)
         {
-            return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         static Type GetNonNullableType(Type type)
         {
-#if NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD
-            return IsNullableType(type) ? ReflectionBridgeExtensions.GetGenericArguments(type)[0] : type;
-#else
-            return IsNullableType(type) ? type.GetGenericArguments()[0] : type;
-#endif
+            return IsNullableType(type) ? type.GetTypeInfo().GetGenericTypeArguments()[0] : type;
         }
 
         static string GetTypeName(Type type)
@@ -1405,7 +1388,7 @@ namespace System.Linq.Dynamic.Core
         {
             type = GetNonNullableType(type);
 #if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
-            if (type.IsEnum()) return 0;
+            if (type.GetTypeInfo().IsEnum) return 0;
 
             switch (Type.GetTypeCode(type))
             {
@@ -1428,7 +1411,7 @@ namespace System.Linq.Dynamic.Core
                     return 0;
             }
 #else
-            if (type.IsEnum()) return 0;
+            if (type.GetTypeInfo().IsEnum) return 0;
 
             if (type == typeof(Char) || type == typeof(Single) || type == typeof(Double) || type == typeof(Decimal))
                 return 1;
@@ -1442,7 +1425,7 @@ namespace System.Linq.Dynamic.Core
 
         static bool IsEnumType(Type type)
         {
-            return GetNonNullableType(type).IsEnum();
+            return GetNonNullableType(type).GetTypeInfo().IsEnum;
         }
 
         void CheckAndPromoteOperand(Type signatures, string opName, ref Expression expr, int errorPos)
@@ -1552,7 +1535,7 @@ namespace System.Linq.Dynamic.Core
 
         static IEnumerable<Type> SelfAndBaseTypes(Type type)
         {
-            if (type.IsInterface())
+            if (type.GetTypeInfo().IsInterface)
             {
                 List<Type> types = new List<Type>();
                 AddInterface(types, type);
@@ -1566,7 +1549,7 @@ namespace System.Linq.Dynamic.Core
             while (type != null)
             {
                 yield return type;
-                type = type.BaseType();
+                type = type.GetTypeInfo().BaseType;
             }
         }
 
@@ -1638,9 +1621,9 @@ namespace System.Linq.Dynamic.Core
                 if (ce == _nullLiteral)
                 {
 #if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
-                    if (!type.IsValueType() || IsNullableType(type))
+                    if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
 #else
-                    if (!type.IsValueType() || IsNullableType(type))
+                    if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
 #endif
                         return Expression.Constant(null, type);
                 }
@@ -1685,7 +1668,7 @@ namespace System.Linq.Dynamic.Core
 
             if (IsCompatibleWith(expr.Type, type))
             {
-                if (type.IsValueType() || exact)
+                if (type.GetTypeInfo().IsValueType || exact)
                     return Expression.Convert(expr, type);
 
                 return expr;
@@ -1816,7 +1799,7 @@ namespace System.Linq.Dynamic.Core
                 if (memberInfos.Length != 0) return ((FieldInfo)memberInfos[0]).GetValue(null);
             }
 #else
-            if (type.IsEnum())
+            if (type.GetTypeInfo().IsEnum)
             {
                 return Enum.Parse(type, name, true);
             }
@@ -1832,8 +1815,8 @@ namespace System.Linq.Dynamic.Core
             Type st = GetNonNullableType(source);
             Type tt = GetNonNullableType(target);
             if (st != source && tt == target) return false;
-            TypeCode sc = st.IsEnum() ? TypeCode.Object : Type.GetTypeCode(st);
-            TypeCode tc = tt.IsEnum() ? TypeCode.Object : Type.GetTypeCode(tt);
+            TypeCode sc = st.GetTypeInfo().IsEnum ? TypeCode.Object : Type.GetTypeCode(st);
+            TypeCode tc = tt.GetTypeInfo().IsEnum ? TypeCode.Object : Type.GetTypeCode(tt);
             switch (sc)
             {
                 case TypeCode.SByte:
@@ -1949,12 +1932,12 @@ namespace System.Linq.Dynamic.Core
             return false;
 #else
             if (source == target) return true;
-            if (!target.IsValueType()) return target.IsAssignableFrom(source);
+            if (!target.GetTypeInfo().IsValueType) return target.IsAssignableFrom(source);
             Type st = GetNonNullableType(source);
             Type tt = GetNonNullableType(target);
             if (st != source && tt == target) return false;
-            Type sc = st.IsEnum() ? typeof(Object) : st;
-            Type tc = tt.IsEnum() ? typeof(Object) : tt;
+            Type sc = st.GetTypeInfo().IsEnum ? typeof(Object) : st;
+            Type tc = tt.GetTypeInfo().IsEnum ? typeof(Object) : tt;
 
             if (sc == typeof(SByte))
             {
@@ -2060,10 +2043,10 @@ namespace System.Linq.Dynamic.Core
                     Expression.Constant(0)
                 );
             }
-            else if (left.Type.IsEnum() || right.Type.IsEnum())
+            else if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
             {
-                return Expression.GreaterThan(left.Type.IsEnum() ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
-                    right.Type.IsEnum() ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
+                return Expression.GreaterThan(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
+                    right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
             return Expression.GreaterThan(left, right);
         }
@@ -2077,10 +2060,10 @@ namespace System.Linq.Dynamic.Core
                     Expression.Constant(0)
                 );
             }
-            else if (left.Type.IsEnum() || right.Type.IsEnum())
+            else if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
             {
-                return Expression.GreaterThanOrEqual(left.Type.IsEnum() ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
-                    right.Type.IsEnum() ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
+                return Expression.GreaterThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
+                    right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
             return Expression.GreaterThanOrEqual(left, right);
         }
@@ -2094,10 +2077,10 @@ namespace System.Linq.Dynamic.Core
                     Expression.Constant(0)
                 );
             }
-            else if (left.Type.IsEnum() || right.Type.IsEnum())
+            else if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
             {
-                return Expression.LessThan(left.Type.IsEnum() ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
-                    right.Type.IsEnum() ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
+                return Expression.LessThan(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
+                    right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
             return Expression.LessThan(left, right);
         }
@@ -2111,10 +2094,10 @@ namespace System.Linq.Dynamic.Core
                     Expression.Constant(0)
                 );
             }
-            else if (left.Type.IsEnum() || right.Type.IsEnum())
+            else if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
             {
-                return Expression.LessThanOrEqual(left.Type.IsEnum() ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
-                    right.Type.IsEnum() ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
+                return Expression.LessThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
+                    right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
             return Expression.LessThanOrEqual(left, right);
         }

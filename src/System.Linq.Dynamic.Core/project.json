@@ -1,5 +1,5 @@
 {
-    "version": "1.0.1-beta-00001",
+    "version": "1.0.1",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "summary": "This is a .NET core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
@@ -14,7 +14,6 @@
     },
 
     "dependencies": {
-        "ReflectionBridge": "0.0.9",
         "JetBrains.Annotations": "10.1.4"
     },
 

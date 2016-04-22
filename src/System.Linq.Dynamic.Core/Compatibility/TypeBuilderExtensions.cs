@@ -1,7 +1,7 @@
 ﻿using System.Reflection.Emit;
 using System.Reflection;
 
-namespace System.Linq.Dynamic.Core.Extensions
+namespace System.Reflection
 {
     internal static class TypeBuilderExtensions
     {

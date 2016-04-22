@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
-using ReflectionBridge.Extensions;
 using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Extensions;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -180,8 +180,8 @@ namespace System.Linq.Dynamic.Core
             //http://stackoverflow.com/a/3001674/2465182
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
-            Type inputType = source.Expression.Type.GetGenericArguments()[0];
-            Type resultType = lambda.Body.Type.GetGenericArguments()[0];
+            Type inputType = source.Expression.Type.GetTypeInfo().GetGenericTypeArguments()[0];
+            Type resultType = lambda.Body.Type.GetTypeInfo().GetGenericTypeArguments()[0];
             Type enumerableType = typeof(IEnumerable<>).MakeGenericType(resultType);
             Type delegateType = typeof(Func<,>).MakeGenericType(inputType, enumerableType);
             lambda = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters);
