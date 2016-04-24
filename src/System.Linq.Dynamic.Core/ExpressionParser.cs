@@ -51,7 +51,7 @@ namespace System.Linq.Dynamic.Core
             GreaterThanEqual,
             DoubleBar,
             DoubleGreaterThan,
-            DoubleLessThan,
+            DoubleLessThan
         }
 
         interface ILogicalSignatures
@@ -194,7 +194,7 @@ namespace System.Linq.Dynamic.Core
 
         // These shorthands have different name than actual type and therefore not recognized by default from the _predefinedTypes
         //
-        static readonly Dictionary<string, Type> _predefinedTypesShorthands = new Dictionary<string, Type>()
+        static readonly Dictionary<string, Type> _predefinedTypesShorthands = new Dictionary<string, Type>
         {
             { "int", typeof(Int32) },
             { "uint", typeof(UInt32) },
@@ -251,9 +251,9 @@ namespace System.Linq.Dynamic.Core
             { "mod", TokenId.Percent }
         };
 
-        static readonly Expression _trueLiteral = Expression.Constant(true);
-        static readonly Expression _falseLiteral = Expression.Constant(false);
-        static readonly Expression _nullLiteral = Expression.Constant(null);
+        static readonly Expression TrueLiteral = Expression.Constant(true);
+        static readonly Expression FalseLiteral = Expression.Constant(false);
+        static readonly Expression NullLiteral = Expression.Constant(null);
 
         const string KEYWORD_IT = "it";
         const string KEYWORD_PARENT = "parent";
@@ -266,15 +266,16 @@ namespace System.Linq.Dynamic.Core
 
         static Dictionary<string, object> _keywords;
 
-        Dictionary<string, object> _symbols;
+        readonly Dictionary<string, object> _symbols;
         IDictionary<string, object> _externals;
-        Dictionary<Expression, string> _literals;
+        readonly Dictionary<Expression, string> _literals;
         ParameterExpression _it;
         ParameterExpression _parent;
         ParameterExpression _root;
-        string _text;
+
+        readonly string _text;
         int _textPos;
-        int _textLen;
+        readonly int _textLen;
         char _ch;
         Token _token;
 
@@ -473,14 +474,14 @@ namespace System.Linq.Dynamic.Core
                     if (!typeof(IEnumerable).IsAssignableFrom(right.Type))
                         throw ParseError(_token.pos, Res.IdentifierImplementingInterfaceExpected, typeof(IEnumerable));
 
-                    var args = new Expression[] { left };
+                    var args = new[] { left };
 
                     MethodBase containsSignature;
                     if (FindMethod(typeof(IEnumerableSignatures), "Contains", false, args, out containsSignature) != 1)
                         throw ParseError(op.pos, Res.NoApplicableAggregate, "Contains");
 
-                    var typeArgs = new Type[] { left.Type };
-                    args = new Expression[] { right, left };
+                    var typeArgs = new[] { left.Type };
+                    args = new[] { right, left };
 
                     accumulate = Expression.Call(typeof(Enumerable), containsSignature.Name, typeArgs, args);
                 }
@@ -945,21 +946,21 @@ namespace System.Linq.Dynamic.Core
                 throw ParseError(errorPos, Res.FirstExprMustBeBool);
             if (expr1.Type != expr2.Type)
             {
-                Expression expr1as2 = expr2 != _nullLiteral ? PromoteExpression(expr1, expr2.Type, true) : null;
-                Expression expr2as1 = expr1 != _nullLiteral ? PromoteExpression(expr2, expr1.Type, true) : null;
-                if (expr1as2 != null && expr2as1 == null)
+                Expression expr1As2 = expr2 != NullLiteral ? PromoteExpression(expr1, expr2.Type, true) : null;
+                Expression expr2As1 = expr1 != NullLiteral ? PromoteExpression(expr2, expr1.Type, true) : null;
+                if (expr1As2 != null && expr2As1 == null)
                 {
-                    expr1 = expr1as2;
+                    expr1 = expr1As2;
                 }
-                else if (expr2as1 != null && expr1as2 == null)
+                else if (expr2As1 != null && expr1As2 == null)
                 {
-                    expr2 = expr2as1;
+                    expr2 = expr2As1;
                 }
                 else
                 {
-                    string type1 = expr1 != _nullLiteral ? expr1.Type.Name : "null";
-                    string type2 = expr2 != _nullLiteral ? expr2.Type.Name : "null";
-                    if (expr1as2 != null && expr2as1 != null)
+                    string type1 = expr1 != NullLiteral ? expr1.Type.Name : "null";
+                    string type2 = expr2 != NullLiteral ? expr2.Type.Name : "null";
+                    if (expr1As2 != null)
                         throw ParseError(errorPos, Res.BothTypesConvertToOther, type1, type2);
                     throw ParseError(errorPos, Res.NeitherTypeConvertsToOther, type1, type2);
                 }
@@ -1043,12 +1044,11 @@ namespace System.Linq.Dynamic.Core
             }
 
             // This is a shorthand for explicitely converting a string to something
-            //
             bool shorthand = _token.id == TokenId.StringLiteral;
             if (_token.id == TokenId.OpenParen || shorthand)
             {
                 Expression[] args = shorthand
-                    ? new Expression[] { ParseStringLiteral() }
+                    ? new[] { ParseStringLiteral() }
                     : ParseArgumentList();
 
                 MethodBase method;
@@ -1066,6 +1066,7 @@ namespace System.Linq.Dynamic.Core
             }
             ValidateToken(TokenId.Dot, Res.DotOrOpenParenOrStringLiteralExpected);
             NextToken();
+
             return ParseMemberAccess(type, null);
         }
 
@@ -1227,7 +1228,7 @@ namespace System.Linq.Dynamic.Core
             Type[] typeArgs;
             if ((new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending" }).Contains(signature.Name))
             {
-                typeArgs = new Type[] { elementType, args[0].Type };
+                typeArgs = new[] { elementType, args[0].Type };
             }
             else if (signature.Name == "SelectMany")
             {
@@ -1235,24 +1236,24 @@ namespace System.Linq.Dynamic.Core
                 var interfaces = type.GetInterfaces().Union(new[] { type });
                 Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
                 Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
-                typeArgs = new Type[] { elementType, resultType };
+                typeArgs = new[] { elementType, resultType };
             }
             else
             {
-                typeArgs = new Type[] { elementType };
+                typeArgs = new[] { elementType };
             }
 
             if (signature.Name == "Contains")
             {
-                args = new Expression[] { instance, args[0] };
+                args = new[] { instance, args[0] };
             }
             else if (args.Length == 0)
             {
-                args = new Expression[] { instance };
+                args = new[] { instance };
             }
             else
             {
-                args = new Expression[] { instance, Expression.Lambda(args[0], innerIt) };
+                args = new[] { instance, Expression.Lambda(args[0], innerIt) };
             }
 
             return Expression.Call(typeof(Enumerable), signature.Name, typeArgs, args);
@@ -1430,7 +1431,7 @@ namespace System.Linq.Dynamic.Core
 
         void CheckAndPromoteOperand(Type signatures, string opName, ref Expression expr, int errorPos)
         {
-            Expression[] args = new Expression[] { expr };
+            Expression[] args = new[] { expr };
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
                 throw ParseError(errorPos, Res.IncompatibleOperand,
@@ -1440,7 +1441,7 @@ namespace System.Linq.Dynamic.Core
 
         void CheckAndPromoteOperands(Type signatures, string opName, ref Expression left, ref Expression right, int errorPos)
         {
-            Expression[] args = new Expression[] { left, right };
+            Expression[] args = new[] { left, right };
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
                 throw IncompatibleOperandsError(opName, left, right, errorPos);
@@ -1618,7 +1619,7 @@ namespace System.Linq.Dynamic.Core
 
             if (ce != null)
             {
-                if (ce == _nullLiteral)
+                if (ce == NullLiteral)
                 {
 #if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
                     if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
@@ -2439,9 +2440,9 @@ namespace System.Linq.Dynamic.Core
         static Dictionary<string, object> CreateKeywords()
         {
             Dictionary<string, object> d = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            d.Add("true", _trueLiteral);
-            d.Add("false", _falseLiteral);
-            d.Add("null", _nullLiteral);
+            d.Add("true", TrueLiteral);
+            d.Add("false", FalseLiteral);
+            d.Add("null", NullLiteral);
             if (GlobalConfig.AreContextKeywordsEnabled)
             {
                 d.Add(KEYWORD_IT, KEYWORD_IT);

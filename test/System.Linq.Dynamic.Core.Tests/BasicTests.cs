@@ -242,6 +242,65 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Last()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100);
+            IQueryable testListQry = testList.AsQueryable();
+
+            //Act
+            var realResult = testList.Last();
+            var result = testListQry.Last();
+
+            //Assert
+#if NET35
+            Assert.Equal(realResult.Id, result.GetDynamicProperty<Guid>("Id"));
+#else
+            Assert.Equal(realResult.Id, result.Id);
+#endif
+        }
+
+        [Fact]
+        public void LastOrDefault()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100);
+            IQueryable testListQry = testList.AsQueryable();
+
+            //Act
+            var realResult = testList.LastOrDefault();
+            var singleResult = testListQry.LastOrDefault();
+            var defaultResult = Enumerable.Empty<User>().AsQueryable().FirstOrDefault();
+
+            //Assert
+#if NET35
+            Assert.Equal(realResult.Id, singleResult.GetDynamicProperty<Guid>("Id"));
+#else
+            Assert.Equal(realResult.Id, singleResult.Id);
+#endif
+            Assert.Null(defaultResult);
+        }
+
+        [Fact]
+        public void Last_AsStringExpression()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100);
+            IQueryable testListQry = testList.AsQueryable();
+
+            //Act
+            var realResult = testList.OrderBy(x => x.Roles.Last().Name).Select(x => x.Id).ToArray();
+            var testResult = testListQry.OrderBy("Roles.Last().Name").Select("Id");
+
+            //Assert
+#if NET35 || DNX452 || DNXCORE50 || DOTNET5_4
+            Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
+#else
+            Assert.Equal(realResult, testResult.ToDynamicArray().Cast<Guid>());
+#endif
+        }
+
+        [Fact]
         public void Single_AsStringExpression()
         {
             //Arrange

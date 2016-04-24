@@ -132,7 +132,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var queryDynamic = query.SelectMany("Roles.SelectMany(Permissions)").Select("Name").ToDynamicList<string>();
 
             // Assert
-            Xunit.Assert.Equal(queryNormal, queryDynamic);
+            Assert.Equal(queryNormal, queryDynamic);
         }
 
         [Fact]

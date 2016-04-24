@@ -9,6 +9,66 @@ namespace System.Linq.Dynamic.Core.Tests
     public class ExpressionTests
     {
         [Fact]
+        public void ExpressionTests_ParseConditionalOr1()
+        {
+            //Arrange
+            int[] values = { 1, 2, 3, 4, 5 };
+            var qry = values.AsQueryable();
+
+            //Act
+            var realResult = values.Where(x => x == 2 || x == 3).ToList();
+            var result = qry.Where("it == 2 or it == 3").ToDynamicList<int>();
+
+            //Assert
+            Assert.Equal(realResult, result);
+        }
+
+        [Fact]
+        public void ExpressionTests_ParseConditionalOr2()
+        {
+            //Arrange
+            int[] values = { 1, 2, 3, 4, 5 };
+            var qry = values.AsQueryable();
+
+            //Act
+            var realResult = values.Where(x => x == 2 || x == 3).ToList();
+            var result = qry.Where("it == 2 || it == 3").ToDynamicList<int>();
+
+            //Assert
+            Assert.Equal(realResult, result);
+        }
+
+        [Fact]
+        public void ExpressionTests_ParseConditionalAnd1()
+        {
+            //Arrange
+            var values = new[] { new { s = "s", i = 1 }, new { s = "abc", i = 2 } };
+            var qry = values.AsQueryable();
+
+            //Act
+            var realResult = values.Where(x => x.s == "s" && x.i == 2).ToList();
+            var result = qry.Where("s == \"s\" and i == 2").ToDynamicList();
+
+            //Assert
+            Assert.Equal(realResult, result);
+        }
+
+        [Fact]
+        public void ExpressionTests_ParseConditionalAnd2()
+        {
+            //Arrange
+            var values = new[] { new { s = "s", i = 1 }, new { s = "abc", i = 2 } };
+            var qry = values.AsQueryable();
+
+            //Act
+            var realResult = values.Where(x => x.s == "s" && x.i == 2).ToList();
+            var result = qry.Where("s == \"s\" && i == 2").ToDynamicList();
+
+            //Assert
+            Assert.Equal(realResult, result);
+        }
+
+        [Fact]
         public void ExpressionTests_Sum()
         {
             //Arrange
@@ -48,7 +108,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_ContainsGuid()
         {
             //Arrange
-            var userList = User.GenerateSampleModels(5, false);
+            var userList = User.GenerateSampleModels(5);
             var userQry = userList.AsQueryable();
 
             var failValues = new List<Guid>
@@ -216,7 +276,7 @@ namespace System.Linq.Dynamic.Core.Tests
             try
             {
                 //Arrange
-                int[] values = new[] { 1, 2, 3, 4, 5 };
+                int[] values = { 1, 2, 3, 4, 5 };
 
                 //Act
                 GlobalConfig.AreContextKeywordsEnabled = false;
@@ -248,20 +308,19 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var testListQry = testList.AsQueryable();
 
-
             //Act
 
             //find first user that has the role of admin
-            var realSingleResult = testListQry.Where(x => x.Roles.FirstOrDefault(y => y.Name == "Admin") != null).FirstOrDefault();
+            var realSingleResult = testListQry.FirstOrDefault(x => x.Roles.FirstOrDefault(y => y.Name == "Admin") != null);
             var testSingleResult = testListQry.Where("Roles.FirstOrDefault(Name = \"Admin\") != null").FirstOrDefault();
 
             testList[1].Roles.Clear(); //remove roles so the next set fails
-            var realSingleFailResult = testListQry.Where(x => x.Roles.FirstOrDefault(y => y.Name == "Admin") != null).FirstOrDefault();
+            var realSingleFailResult = testListQry.FirstOrDefault(x => x.Roles.FirstOrDefault(y => y.Name == "Admin") != null);
             var testSingleFailResult = testListQry.Where("Roles.FirstOrDefault(Name = \"Admin\") != null").FirstOrDefault();
 
             //Assert
             Assert.Equal(realSingleResult, testSingleResult);
-            Assert.Equal((User)realSingleFailResult, (User)testSingleFailResult);
+            Assert.Equal(realSingleFailResult, (User)testSingleFailResult);
         }
     }
 }

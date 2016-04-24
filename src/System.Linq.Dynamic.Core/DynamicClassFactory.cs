@@ -8,8 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using JetBrains.Annotations;
-using System.Linq.Dynamic.Core.Extensions;
-using System.Linq;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -204,11 +202,8 @@ namespace System.Linq.Dynamic.Core
 
                         for (int i = 0; i < names.Length; i++)
                         {
-#if DNXCORE50 || DOTNET5_4 || NETSTANDARD
                             Type equalityComparerT = EqualityComparer.MakeGenericType(generics[i].AsType());
-#else
-                            Type equalityComparerT = EqualityComparer.MakeGenericType(generics[i]);
-#endif
+
                             // Equals()
                             MethodInfo equalityComparerTDefault = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerDefault);
                             MethodInfo equalityComparerTEquals = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerEquals);
