@@ -7,5 +7,9 @@ install:
 build:
   verbosity: minimal
 
+build_script:
+- cmd: dnu build src\System.Linq.Dynamic.Core
+- cmd: dnu build test\System.Linq.Dynamic.Core.Tests
+
 test_script:
 - cmd: dnx -p test/System.Linq.Dynamic.Core.Tests test
