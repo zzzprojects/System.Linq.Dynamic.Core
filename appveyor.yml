@@ -1,0 +1,11 @@
+os: Visual Studio 2015
+
+install:
+- dnvm upgrade -r clr
+- dnu restore
+
+build:
+  verbosity: minimal
+
+test_script:
+- cmd: dnx -p test/System.Linq.Dynamic.Core.Tests test
