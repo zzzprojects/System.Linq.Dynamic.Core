@@ -204,6 +204,25 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Select_TResult()
+        {
+            //Arrange
+            List<int> range = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var testList = User.GenerateSampleModels(100);
+            var qry = testList.AsQueryable();
+
+            //Act
+            IEnumerable rangeResult = range.AsQueryable().Select<int>("it * it").ToList();
+            var userNames = qry.Select<string>("UserName").ToList();
+            var userProfiles = qry.Select<UserProfile>("Profile").ToList();
+
+            //Assert
+            Assert.Equal(range.Select(x => x * x).ToList(), rangeResult);
+            Assert.Equal(testList.Select(x => x.UserName).ToList(), userNames);
+            Assert.Equal(testList.Select(x => x.Profile).ToList(), userProfiles);
+        }
+
+        [Fact]
         public void Select()
         {
             //Arrange
@@ -222,14 +241,12 @@ namespace System.Linq.Dynamic.Core.Tests
 
 #if NET35 || DNXCORE50 || DOTNET5_4
             Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.AsEnumerable().Cast<string>().ToArray());
-            Assert.Equal(
-                testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
+            Assert.Equal(testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.Cast<object>().Select(x => x.ToString()).ToArray());
             Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().GetDynamicProperty<IEnumerable<Guid>>("RoleIds")));
 #else
             Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.Cast<string>().ToArray());
-            Assert.Equal(
-                testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
+            Assert.Equal(testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.AsEnumerable().Select(x => x.ToString()).Cast<string>().ToArray());
             Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().RoleIds));
 #endif
