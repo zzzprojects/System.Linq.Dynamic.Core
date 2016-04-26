@@ -223,6 +223,25 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Select_IntoType()
+        {
+            //Arrange
+            List<int> range = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var testList = User.GenerateSampleModels(100);
+            var qry = testList.AsQueryable();
+
+            //Act
+            IEnumerable rangeResult = range.AsQueryable().Select(typeof(int), "it * it");
+            var userNames = qry.Select(typeof(string), "UserName");
+            var userProfiles = qry.Select(typeof(UserProfile), "Profile");
+
+            //Assert
+            Assert.Equal(range.Select(x => x * x).Cast<object>().ToList(), rangeResult.ToDynamicList());
+            Assert.Equal(testList.Select(x => x.UserName).Cast<object>().ToList(), userNames.ToDynamicList());
+            Assert.Equal(testList.Select(x => x.Profile).Cast<object>().ToList(), userProfiles.ToDynamicList());
+        }
+
+        [Fact]
         public void Select()
         {
             //Arrange
