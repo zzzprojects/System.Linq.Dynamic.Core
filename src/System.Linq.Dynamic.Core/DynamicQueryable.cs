@@ -65,7 +65,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Where",
-                    new Type[] { source.ElementType },
+                    new[] { source.ElementType },
                     source.Expression, Expression.Quote(lambda)));
         }
 
@@ -97,7 +97,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Select",
-                    new Type[] { source.ElementType, lambda.Body.Type },
+                    new[] { source.ElementType, lambda.Body.Type },
                     source.Expression, Expression.Quote(lambda)));
         }
 
@@ -126,7 +126,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery<TResult>(
                 Expression.Call(
                     typeof(Queryable), "Select",
-                    new Type[] { source.ElementType, typeof(TResult) },
+                    new[] { source.ElementType, typeof(TResult) },
                     source.Expression, Expression.Quote(lambda)));
         }
 
@@ -156,7 +156,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Select",
-                    new Type[] { source.ElementType, type },
+                    new[] { source.ElementType, type },
                     source.Expression, Expression.Quote(lambda)));
         }
 
@@ -189,8 +189,81 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "SelectMany",
-                    new Type[] { source.ElementType, resultType },
+                    new[] { source.ElementType, resultType },
                     source.Expression, Expression.Quote(lambda)));
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence to an <see cref="IQueryable"/>
+        /// and invokes a result selector function on each element therein. The resulting
+        /// values from each intermediate sequence are combined into a single, one-dimensional
+        /// sequence and returned.
+        /// </summary>
+        /// <param name="source">A sequence of values to project.</param>
+        /// <param name="collectionSelector">A projection function to apply to each element of the input sequence.</param>
+        /// <param name="resultSelector">A projection function to apply to each element of each intermediate sequence. Should only use x and y as parameter names.</param>
+        /// <param name="collectionSelectorArgs">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <param name="resultSelectorArgs">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        /// An <see cref="IQueryable"/> whose elements are the result of invoking the one-to-many 
+        /// projection function <paramref name="collectionSelector"/> on each element of source and then mapping
+        /// each of those sequence elements and their corresponding source element to a result element.
+        /// </returns>
+        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string collectionSelector, [NotNull] string resultSelector, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
+        {
+            return SelectMany(source, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence to an <see cref="IQueryable"/>
+        /// and invokes a result selector function on each element therein. The resulting
+        /// values from each intermediate sequence are combined into a single, one-dimensional
+        /// sequence and returned.
+        /// </summary>
+        /// <param name="source">A sequence of values to project.</param>
+        /// <param name="collectionSelector">A projection function to apply to each element of the input sequence.</param>
+        /// <param name="collectionParameterName">The name from collectionParameter to use. Default is x.</param>
+        /// <param name="resultSelector">A projection function to apply to each element of each intermediate sequence.</param>
+        /// <param name="resultParameterName">The name from resultParameterName to use. Default is y.</param>
+        /// <param name="collectionSelectorArgs">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <param name="resultSelectorArgs">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        /// An <see cref="IQueryable"/> whose elements are the result of invoking the one-to-many 
+        /// projection function <paramref name="collectionSelector"/> on each element of source and then mapping
+        /// each of those sequence elements and their corresponding source element to a result element.
+        /// </returns>
+        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string collectionSelector, [NotNull] string resultSelector,
+            [NotNull] string collectionParameterName, [NotNull] string resultParameterName, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(collectionSelector, nameof(collectionSelector));
+            Check.NotEmpty(collectionParameterName, nameof(collectionParameterName));
+            Check.NotEmpty(resultSelector, nameof(resultSelector));
+            Check.NotEmpty(resultParameterName, nameof(resultParameterName));
+
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression sourceSelectLambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, collectionSelector, collectionSelectorArgs);
+
+            //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
+            Type sourceLambdaInputType = source.Expression.Type.GetGenericArguments()[0];
+            Type sourceLambdaResultType = sourceSelectLambda.Body.Type.GetGenericArguments()[0];
+            Type sourceLambdaEnumerableType = typeof(IEnumerable<>).MakeGenericType(sourceLambdaResultType);
+            Type sourceLambdaDelegateType = typeof(Func<,>).MakeGenericType(sourceLambdaInputType, sourceLambdaEnumerableType);
+
+            sourceSelectLambda = Expression.Lambda(sourceLambdaDelegateType, sourceSelectLambda.Body, sourceSelectLambda.Parameters);
+
+            //we have to create additional lambda for result selection
+            ParameterExpression xParameter = Expression.Parameter(source.ElementType, collectionParameterName);
+            ParameterExpression yParameter = Expression.Parameter(sourceLambdaResultType, resultParameterName);
+
+            LambdaExpression resultSelectLambda = DynamicExpression.ParseLambda(createParameterCtor, new[] { xParameter, yParameter }, null, resultSelector, resultSelectorArgs);
+            Type resultLambdaResultType = resultSelectLambda.Body.Type;
+
+            return source.Provider.CreateQuery(
+                Expression.Call(
+                typeof(Queryable), "SelectMany",
+                new[] { source.ElementType, sourceLambdaResultType, resultLambdaResultType },
+                source.Expression, Expression.Quote(sourceSelectLambda), Expression.Quote(resultSelectLambda)));
         }
 
         #endregion
@@ -242,7 +315,7 @@ namespace System.Linq.Dynamic.Core
             {
                 queryExpr = Expression.Call(
                     typeof(Queryable), o.Ascending ? methodAsc : methodDesc,
-                    new Type[] { source.ElementType, o.Selector.Type },
+                    new[] { source.ElementType, o.Selector.Type },
                     queryExpr, Expression.Quote(Expression.Lambda(o.Selector, parameters)));
                 methodAsc = "ThenBy";
                 methodDesc = "ThenByDescending";
@@ -282,7 +355,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "GroupBy",
-                    new Type[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
+                    new[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
                     source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda)));
         }
 
@@ -334,8 +407,8 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "GroupBy",
-                    new Type[] { source.ElementType, keyLambda.Body.Type },
-                    new Expression[] { source.Expression, Expression.Quote(keyLambda) }));
+                    new[] { source.ElementType, keyLambda.Body.Type },
+                    new[] { source.Expression, Expression.Quote(keyLambda) }));
         }
 
         /// <summary>
@@ -449,7 +522,7 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression outerSelectorLambda = DynamicExpression.ParseLambda(createParameterCtor, outer.ElementType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpression.ParseLambda(createParameterCtor, inner.AsQueryable().ElementType, null, innerKeySelector, args);
 
-            ParameterExpression[] parameters = new ParameterExpression[]
+            ParameterExpression[] parameters = new[]
             {
                 Expression.Parameter(outer.ElementType, "outer"), Expression.Parameter(inner.AsQueryable().ElementType, "inner")
             };
@@ -459,7 +532,7 @@ namespace System.Linq.Dynamic.Core
             return outer.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Join",
-                    new Type[] { outer.ElementType, inner.AsQueryable().ElementType, outerSelectorLambda.Body.Type, resultsSelectorLambda.Body.Type },
+                    new[] { outer.ElementType, inner.AsQueryable().ElementType, outerSelectorLambda.Body.Type, resultsSelectorLambda.Body.Type },
                     outer.Expression, inner.AsQueryable().Expression, Expression.Quote(outerSelectorLambda), Expression.Quote(innerSelectorLambda), Expression.Quote(resultsSelectorLambda)));
         }
 

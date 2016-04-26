@@ -136,6 +136,40 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void SelectMany_WithResultProjection()
+        {
+            //Arrange
+            List<int> rangeOfInt = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            List<double> rangeOfDouble = new List<double> { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
+            List<KeyValuePair<int, double>> range = rangeOfInt.SelectMany(e => rangeOfDouble, (x, y) => new KeyValuePair<int, double>(x, y)).ToList();
+
+            //Act
+            IEnumerable rangeResult = rangeOfInt.AsQueryable()
+                .SelectMany("@0", "new(x as _A, y as _B)", new object[] { rangeOfDouble })
+                .Select("it._A * it._B");
+
+            //Assert
+            Assert.Equal(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
+        }
+
+        [Fact]
+        public void SelectMany_WithResultProjection_CustomParameterNames()
+        {
+            //Arrange
+            List<int> rangeOfInt = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            List<double> rangeOfDouble = new List<double> { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
+            List<KeyValuePair<int, double>> range = rangeOfInt.SelectMany(e => rangeOfDouble, (x, y) => new KeyValuePair<int, double>(x, y)).ToList();
+
+            //Act
+            IEnumerable rangeResult = rangeOfInt.AsQueryable()
+                .SelectMany("@0", "new(VeryNiceName as _A, OtherName as _X)", "VeryNiceName", "OtherName", new object[] { rangeOfDouble })
+                .Select("it._A * it._X");
+
+            //Assert
+            Assert.Equal(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
+        }
+
+        [Fact]
         public void Select_String()
         {
             //Arrange
