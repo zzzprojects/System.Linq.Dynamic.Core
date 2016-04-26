@@ -128,8 +128,43 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assign
             var queryNormal = query.SelectMany(u => u.Roles.SelectMany(r => r.Permissions)).Select(p => p.Name).ToList();
-
             var queryDynamic = query.SelectMany("Roles.SelectMany(Permissions)").Select("Name").ToDynamicList<string>();
+
+            // Assert
+            Assert.Equal(queryNormal, queryDynamic);
+        }
+
+        [Fact]
+        public void SelectMany_TResult()
+        {
+            // Act
+            var users = User.GenerateSampleModels(2);
+            users[0].Roles = new List<Role> { new Role { Name = "Admin", Permissions = new List<Permission> { new Permission { Name = "p-Admin" }, new Permission { Name = "p-User" } } } };
+            users[1].Roles = new List<Role> { new Role { Name = "Guest", Permissions = new List<Permission> { new Permission { Name = "p-Guest" } } } };
+
+            var query = users.AsQueryable();
+
+            // Assign
+            var queryNormal = query.SelectMany(u => u.Roles.SelectMany(r => r.Permissions)).ToList();
+            var queryDynamic = query.SelectMany<Permission>("Roles.SelectMany(Permissions)").ToDynamicList();
+
+            // Assert
+            Assert.Equal(queryNormal, queryDynamic);
+        }
+
+        [Fact]
+        public void SelectMany_Intotype()
+        {
+            // Act
+            var users = User.GenerateSampleModels(2);
+            users[0].Roles = new List<Role> { new Role { Name = "Admin", Permissions = new List<Permission> { new Permission { Name = "p-Admin" }, new Permission { Name = "p-User" } } } };
+            users[1].Roles = new List<Role> { new Role { Name = "Guest", Permissions = new List<Permission> { new Permission { Name = "p-Guest" } } } };
+
+            var query = users.AsQueryable();
+
+            // Assign
+            var queryNormal = query.SelectMany(u => u.Roles.SelectMany(r => r.Permissions)).ToList();
+            var queryDynamic = query.SelectMany(typeof(Permission), "Roles.SelectMany(Permissions)").ToDynamicList();
 
             // Assert
             Assert.Equal(queryNormal, queryDynamic);
@@ -227,7 +262,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             //Arrange
             List<int> range = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            var testList = User.GenerateSampleModels(100);
+            var testList = User.GenerateSampleModels(10);
             var qry = testList.AsQueryable();
 
             //Act

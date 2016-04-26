@@ -24,7 +24,7 @@ namespace System.Linq.Dynamic.Core
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A <see cref="IQueryable{T}"/> to filter.</param>
         /// <param name="predicate">An expression string to test each element for a condition.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable{T}"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
         /// <example>
         /// <code>
@@ -46,7 +46,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
         /// <param name="predicate">An expression string to test each element for a condition.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
         /// <example>
         /// <code>
@@ -78,7 +78,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a projection string on each element of source.</returns>
         /// <example>
         /// <code>
@@ -135,7 +135,7 @@ namespace System.Linq.Dynamic.Core
         /// Details see http://solutionizing.net/category/linq/ 
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
-        /// <param name="type">The result type</param>
+        /// <param name="resultType">The result type.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
         /// <returns>An <see cref="IQueryable{TResult}"/> whose elements are the result of invoking a projection string on each element of source.</returns>
@@ -144,19 +144,19 @@ namespace System.Linq.Dynamic.Core
         /// var users = qry.Select(typeof(User), "new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
         /// </code>
         /// </example>
-        public static IQueryable Select([NotNull] this IQueryable source, [NotNull] Type type, [NotNull] string selector, params object[] args)
+        public static IQueryable Select([NotNull] this IQueryable source, [NotNull] Type resultType, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(resultType, nameof(resultType));
             Check.NotEmpty(selector, nameof(selector));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, type, selector, args);
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, resultType, selector, args);
 
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Select",
-                    new[] { source.ElementType, type },
+                    new[] { source.ElementType, resultType },
                     source.Expression, Expression.Quote(lambda)));
         }
 
@@ -166,23 +166,47 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
         public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
 
+            return SelectManyInternal(source, null, selector, args);
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence to an <see cref="IQueryable"/> and combines the resulting sequences into one sequence.
+        /// </summary>
+        /// <param name="source">A sequence of values to project.</param>
+        /// <param name="selector">A projection string expression to apply to each element.</param>
+        /// <param name="resultType">The result type.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] Type resultType, [NotNull] string selector, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(resultType, nameof(resultType));
+            Check.NotEmpty(selector, nameof(selector));
+
+            return SelectManyInternal(source, resultType, selector, args);
+        }
+
+        private static IQueryable SelectManyInternal(IQueryable source, Type resultType, string selector, params object[] args)
+        {
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
 
             //Extra help to get SelectMany to work from StackOverflow Answer
             //http://stackoverflow.com/a/3001674/2465182
 
+            // if resultType is not specified, create one based on the lambda.Body.Type
+            resultType = resultType ?? lambda.Body.Type.GetTypeInfo().GetGenericTypeArguments()[0];
+
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
-            Type inputType = source.Expression.Type.GetTypeInfo().GetGenericTypeArguments()[0];
-            Type resultType = lambda.Body.Type.GetTypeInfo().GetGenericTypeArguments()[0];
             Type enumerableType = typeof(IEnumerable<>).MakeGenericType(resultType);
+            Type inputType = source.Expression.Type.GetTypeInfo().GetGenericTypeArguments()[0];
             Type delegateType = typeof(Func<,>).MakeGenericType(inputType, enumerableType);
             lambda = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters);
 
@@ -190,6 +214,34 @@ namespace System.Linq.Dynamic.Core
                 Expression.Call(
                     typeof(Queryable), "SelectMany",
                     new[] { source.ElementType, resultType },
+                    source.Expression, Expression.Quote(lambda)));
+        }
+
+        /// <summary>
+        /// Projects each element of a sequence to an <see cref="IQueryable{TResult}"/> and combines the resulting sequences into one sequence.
+        /// </summary>
+        /// <param name="source">A sequence of values to project.</param>
+        /// <param name="selector">A projection string expression to apply to each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>An <see cref="IQueryable{TResult}"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+        public static IQueryable<TResult> SelectMany<TResult>([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(selector, nameof(selector));
+
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
+
+            //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
+            Type inputType = source.Expression.Type.GetTypeInfo().GetGenericTypeArguments()[0];
+            Type enumerableType = typeof(IEnumerable<>).MakeGenericType(typeof(TResult));
+            Type delegateType = typeof(Func<,>).MakeGenericType(inputType, enumerableType);
+            lambda = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters);
+
+            return source.Provider.CreateQuery<TResult>(
+                Expression.Call(
+                    typeof(Queryable), "SelectMany",
+                    new[] { source.ElementType, typeof(TResult) },
                     source.Expression, Expression.Quote(lambda)));
         }
 
@@ -276,7 +328,7 @@ namespace System.Linq.Dynamic.Core
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         /// <example>
         /// <code>
@@ -293,7 +345,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         /// <example>
         /// <code>
@@ -334,7 +386,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
         /// <param name="keySelector">A string expression to specify the key for each element.</param>
         /// <param name="resultSelector">A string expression to specify a result value from each group.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
         /// <example>
         /// <code>
@@ -388,7 +440,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
         /// <param name="keySelector">A string expression to specify the key for each element.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
         /// <example>
         /// <code>
@@ -506,7 +558,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="outerKeySelector">A dynamic function to extract the join key from each element of the first sequence.</param>
         /// <param name="innerKeySelector">A dynamic function to extract the join key from each element of the second sequence.</param>
         /// <param name="resultSelector">A dynamic function to create a result element from two matching elements.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> obtained by performing an inner join on two sequences.</returns>
         public static IQueryable Join([NotNull] this IQueryable outer, [NotNull] IEnumerable inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, [NotNull] string resultSelector, params object[] args)
         {
@@ -545,7 +597,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="outerKeySelector">A dynamic function to extract the join key from each element of the first sequence.</param>
         /// <param name="innerKeySelector">A dynamic function to extract the join key from each element of the second sequence.</param>
         /// <param name="resultSelector">A dynamic function to create a result element from two matching elements.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similiar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similar to the way String.Format formats strings.</param>
         /// <remarks>This overload only works on elements where both sequences and the resulting element match.</remarks>
         /// <returns>An <see cref="IQueryable{T}"/> that has elements of type TResult obtained by performing an inner join on two sequences.</returns>
         public static IQueryable<TElement> Join<TElement>([NotNull] this IQueryable<TElement> outer, [NotNull] IEnumerable<TElement> inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, string resultSelector, params object[] args)
