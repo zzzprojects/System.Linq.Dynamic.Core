@@ -5,14 +5,14 @@ namespace System.Reflection
 {
     internal static class TypeBuilderExtensions
     {
-#if !(NET35 || NET40 || SILVERLIGHT)
+#if !(NET35 || NET40 || SILVERLIGHT || WPSL)
         public static Type CreateType(this TypeBuilder tb)
         {
             return tb.CreateTypeInfo().AsType();
         }
 #endif
 
-#if NET35 || NET40 || SILVERLIGHT
+#if NET35 || NET40 || SILVERLIGHT || WPSL
         public static PropertyBuilder DefineProperty(this TypeBuilder tb, string name, PropertyAttributes attributes, CallingConventions callingConvention, Type returnType, Type[] parameterTypes)
         {
             return tb.DefineProperty(name, attributes, returnType, parameterTypes);

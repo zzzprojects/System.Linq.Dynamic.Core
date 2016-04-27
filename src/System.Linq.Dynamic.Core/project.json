@@ -13,6 +13,12 @@
     "compilationOptions": {
     },
 
+    "packInclude": {
+        "lib/sl50/": [
+            "../../src/System.Linq.Dynamic.Core.SL50/Bin/Release/*.dll"
+        ]
+    },
+
     "dependencies": {
         "JetBrains.Annotations": "10.1.4"
     },
