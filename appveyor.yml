@@ -4,6 +4,9 @@ install:
 - dnvm upgrade -r clr
 - dnu restore
 
+before_build:
+  - nuget restore
+
 build:
   verbosity: minimal
 
