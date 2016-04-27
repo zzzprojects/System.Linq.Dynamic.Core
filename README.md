@@ -1,6 +1,6 @@
 # System.Linq.Dynamic.Core
 
-This is a **dotnet CORE port** of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
+This is a **.NET Core port** of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
 The following frameworks are supported:
 - net35

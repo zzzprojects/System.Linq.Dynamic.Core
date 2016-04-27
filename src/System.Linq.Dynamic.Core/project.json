@@ -1,8 +1,8 @@
 {
     "version": "1.0.1",
     "title": "System.Linq.Dynamic.Core",
-    "description": "This is a .NET core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
-    "summary": "This is a .NET core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
+    "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
+    "summary": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "tags": [ "system", "linq", "dynamic", "dnx", "core" ],
     "authors": [ "Microsoft", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
     "owners": [ "Stef Heyenrath" ],
