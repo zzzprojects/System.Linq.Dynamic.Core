@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F3415BB6-D7CA-4CCC-92EA-F48EDC20176E}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.Linq.Dynamic.Core.SL50</RootNamespace>
+    <AssemblyName>System.Linq.Dynamic.Core.SL50</AssemblyName>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <!-- This property group is only here to support building this project using the 
+       MSBuild 3.5 toolset. In order to work correctly with this older toolset, it needs 
+       to set the TargetFrameworkVersion to v3.5 -->
+  <PropertyGroup Condition="'$(MSBuildToolsVersion)' == '3.5'">
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG;SILVERLIGHT;ENABLE_LINQ_PARTIAL_TRUST</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;ENABLE_LINQ_PARTIAL_TRUST</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Annotations.PCL328, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JetBrains.Annotations.10.1.4\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core">
+      <HintPath>$(TargetFrameworkDirectory)System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\System.Linq.Dynamic.Core\AppDomain.cs">
+      <Link>AppDomain.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\BasicQueryable.cs">
+      <Link>BasicQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\ClassFactory.cs">
+      <Link>ClassFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\IntrospectionExtensions.cs">
+      <Link>Compatibility\IntrospectionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\TypeBuilderExtensions.cs">
+      <Link>Compatibility\TypeBuilderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicClass.cs">
+      <Link>DynamicClass.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicClassFactory.cs">
+      <Link>DynamicClassFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicExpression.cs">
+      <Link>DynamicExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicLinqTypeAttribute.cs">
+      <Link>DynamicLinqTypeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicLinqTypeProvider.cs">
+      <Link>DynamicLinqTypeProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicOrdering.cs">
+      <Link>DynamicOrdering.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicProperty.cs">
+      <Link>DynamicProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicQueryable.cs">
+      <Link>DynamicQueryable.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Exceptions\ParseException.cs">
+      <Link>Exceptions\ParseException.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\ExpressionParser.cs">
+      <Link>ExpressionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Extensions\QueryableExtensions.cs">
+      <Link>Extensions\QueryableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\GlobalConfig.cs">
+      <Link>GlobalConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\GroupResult.cs">
+      <Link>GroupResult.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\IDynamicLinkTypeProvider.cs">
+      <Link>IDynamicLinkTypeProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Res.cs">
+      <Link>Res.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Validation\Check.cs">
+      <Link>Validation\Check.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Validation\CoreStrings.cs">
+      <Link>Validation\CoreStrings.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

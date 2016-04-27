@@ -12,7 +12,7 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// The key value of the group. (TODO : check for DNXCORE50 || DOTNET5_4)
         /// </summary>
-#if NET35
+#if NET35 || SILVERLIGHT
         public object Key { get; internal set; }
 #else
         public dynamic Key { get; internal set; }
@@ -36,6 +36,9 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// Returns a string showing the key of the group and the number of items in the group.
         /// </summary>
-        public override string ToString() { return string.Format(CultureInfo.CurrentCulture, "{0} ({1})", Key, Count); }
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.CurrentCulture, "{0} ({1})", Key, Count);
+        }
     }
 }
