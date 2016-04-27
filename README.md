@@ -1,5 +1,7 @@
 # System.Linq.Dynamic.Core
 
+[![Build status](https://ci.appveyor.com/api/projects/status/0c4v2bsvdqd57600?svg=true)](https://ci.appveyor.com/project/StefH/system-linq-dynamic-core)
+
 This is a **.NET Core port** of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
 The following frameworks are supported:
