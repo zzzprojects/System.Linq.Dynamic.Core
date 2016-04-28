@@ -2501,9 +2501,17 @@ namespace System.Linq.Dynamic.Core
             d.Add(KEYWORD_IIF, KEYWORD_IIF);
             d.Add(KEYWORD_NEW, KEYWORD_NEW);
 
-            foreach (Type type in _predefinedTypes) d.Add(type.Name, type);
+            foreach (Type type in _predefinedTypes)
+            {
+                d[type.FullName] = type;
+                d[type.Name] = type;
+            }
             foreach (KeyValuePair<string, Type> pair in _predefinedTypesShorthands) d.Add(pair.Key, pair.Value);
-            foreach (Type type in GlobalConfig.CustomTypeProvider.GetCustomTypes()) d.Add(type.Name, type);
+            foreach (Type type in GlobalConfig.CustomTypeProvider.GetCustomTypes())
+            {
+                d[type.FullName] = type;
+                d[type.Name] = type;
+            }
 
             return d;
         }
