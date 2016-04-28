@@ -282,27 +282,29 @@ namespace System.Linq.Dynamic.Core
             try
             {
                 Type efType;
-                //EF5, System.Data.Objects.DataClasses.EdmFunctionAttribute
-                efType = Type.GetType("System.Data.Objects.EntityFunctions");
+                //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
+                //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
+                efType = Type.GetType("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
                     _predefinedTypes.Add(efType);
-                efType = Type.GetType("System.Data.Objects.SqlClient.SqlFunctions");
+                efType = Type.GetType("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
                     _predefinedTypes.Add(efType);
-                efType = Type.GetType("System.Data.Objects.SqlClient.SqlSpatialFunctions");
+                efType = Type.GetType("System.Data.Objects.SqlClient.SqlSpatialFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
                     _predefinedTypes.Add(efType);
+
                 //EF6,System.Data.Entity.DbFunctionAttribute
-                efType = Type.GetType("System.Data.Entity.Core.Objects.EntityFunctions");
+                efType = Type.GetType("System.Data.Entity.Core.Objects.EntityFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
                     _predefinedTypes.Add(efType);
-                efType = Type.GetType("System.Data.Entity.DbFunctions");
+                efType = Type.GetType("System.Data.Entity.DbFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
                     _predefinedTypes.Add(efType);
-                efType = Type.GetType("System.Data.Entity.SqlServer.SqlFunctions");
+                efType = Type.GetType("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
                     _predefinedTypes.Add(efType);
-                efType = Type.GetType("System.Data.Entity.SqlServer.SqlSpatialFunctions");
+                efType = Type.GetType("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
                     _predefinedTypes.Add(efType);
             }
