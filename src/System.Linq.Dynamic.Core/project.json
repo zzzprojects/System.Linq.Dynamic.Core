@@ -27,7 +27,6 @@
                 "JetBrains.Annotations": "10.1.4"
             },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "net45": {
@@ -35,7 +34,6 @@
                 "JetBrains.Annotations": "10.1.4"
             },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "net451": {
@@ -43,7 +41,6 @@
                 "JetBrains.Annotations": "10.1.4"
             },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "net452": {
@@ -51,7 +48,6 @@
                 "JetBrains.Annotations": "10.1.4"
             },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "net461": {
@@ -59,7 +55,6 @@
                 "JetBrains.Annotations": "10.1.4"
             },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "dnx451": {
@@ -67,7 +62,6 @@
                 "JetBrains.Annotations": "10.1.4"
             },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "dnx452": {
@@ -75,7 +69,6 @@
                 "JetBrains.Annotations": "10.1.4"
             },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "dnxcore5": {

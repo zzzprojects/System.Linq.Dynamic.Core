@@ -227,10 +227,7 @@ namespace System.Linq.Dynamic.Core
             typeof(Guid),
             typeof(Math),
             typeof(Convert),
-            typeof(Uri),
-#if !(NET35 || SILVERLIGHT || NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
-			typeof(Data.Objects.EntityFunctions)
-#endif
+            typeof(Uri)
         };
 
         // These aliases are supposed to simply the where clause and make it more human readable
@@ -278,6 +275,40 @@ namespace System.Linq.Dynamic.Core
         readonly int _textLen;
         char _ch;
         Token _token;
+
+        static ExpressionParser()
+        {
+#if !(NET35 || SILVERLIGHT || NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
+            try
+            {
+                Type efType;
+                //EF5, System.Data.Objects.DataClasses.EdmFunctionAttribute
+                efType = Type.GetType("System.Data.Objects.EntityFunctions");
+                if (efType != null)
+                    _predefinedTypes.Add(efType);
+                efType = Type.GetType("System.Data.Objects.SqlClient.SqlFunctions");
+                if (efType != null)
+                    _predefinedTypes.Add(efType);
+                efType = Type.GetType("System.Data.Objects.SqlClient.SqlSpatialFunctions");
+                if (efType != null)
+                    _predefinedTypes.Add(efType);
+                //EF6,System.Data.Entity.DbFunctionAttribute
+                efType = Type.GetType("System.Data.Entity.Core.Objects.EntityFunctions");
+                if (efType != null)
+                    _predefinedTypes.Add(efType);
+                efType = Type.GetType("System.Data.Entity.DbFunctions");
+                if (efType != null)
+                    _predefinedTypes.Add(efType);
+                efType = Type.GetType("System.Data.Entity.SqlServer.SqlFunctions");
+                if (efType != null)
+                    _predefinedTypes.Add(efType);
+                efType = Type.GetType("System.Data.Entity.SqlServer.SqlSpatialFunctions");
+                if (efType != null)
+                    _predefinedTypes.Add(efType);
+            }
+            catch { }
+#endif
+        }
 
         public ExpressionParser(ParameterExpression[] parameters, string expression, object[] values)
         {
