@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DB9A5C42-3F8B-4546-96F2-DD35BCACA018}"
 EndProject
@@ -21,9 +21,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src-console", "src-console", "{C98BB543-9BDA-4EE3-927D-0F10CC24A49B}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.Linq.Dynamic.Core", "src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.xproj", "{CE1620BD-A313-4223-B991-467DA346B2ED}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F3415BB6-D7CA-4CCC-92EA-F48EDC20176E} = {F3415BB6-D7CA-4CCC-92EA-F48EDC20176E}
-	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.Linq.Dynamic.Core.ConsoleTestApp", "src-console\System.Linq.Dynamic.Core.ConsoleTestApp\System.Linq.Dynamic.Core.ConsoleTestApp.xproj", "{E1B36B40-0134-46C4-922B-7EC1FF6CD90F}"
 EndProject
