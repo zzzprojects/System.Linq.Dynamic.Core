@@ -13,68 +13,51 @@
     "compilationOptions": {
     },
 
+    "dependencies": {
+        "JetBrains.Annotations": {
+            "version": "10.1.4",
+            "type": "build"
+        }
+    },
+
     "frameworks": {
         "net35": {
             "frameworkAssemblies": {
             },
             "dependencies": {
-                "JetBrains.Annotations": "10.1.4",
                 "NetLegacySupport.ConcurrentDictionary": "1.1.0"
             }
         },
         "net40": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
             }
         },
         "net45": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
             }
         },
         "net451": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
             }
         },
         "net452": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
             }
         },
         "net461": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
             }
         },
         "dnx451": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
             }
         },
         "dnx452": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
             }
         },
         "dnxcore5": {
             "dependencies": {
-                "JetBrains.Annotations": "10.1.4",
-
                 "Microsoft.CSharp": "4.0.1-beta-*",
 
                 "System.Collections.Concurrent": "4.0.11-beta-*",
@@ -107,8 +90,6 @@
         },
         "dotnet54": {
             "dependencies": {
-                "JetBrains.Annotations": "10.1.4",
-
                 "Microsoft.CSharp": "4.0.1-beta-*",
 
                 "System.Collections.Concurrent": "4.0.11-beta-*",
@@ -144,7 +125,6 @@
                 "define": [ "SILVERLIGHT" ]
             },
             "dependencies": {
-                "JetBrains.Annotations": "10.1.4",
                 "Portable.ConcurrentDictionary": "1.0.1"
             },
             "frameworkAssemblies": {
