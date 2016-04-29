@@ -38,7 +38,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "{0} ({1})", Key, Count);
+            return string.Format(CultureInfo.CurrentCulture, "{0} ({1})", ((object)Key).ToString(), Count);
         }
     }
 }
