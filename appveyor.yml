@@ -15,5 +15,5 @@ build_script:
 - cmd: dnu build test\System.Linq.Dynamic.Core.Tests
 
 test_script:
-- cmd: dnx -p dnx452 test/System.Linq.Dynamic.Core.Tests test
-- cmd: dnx -p dnxcore50 test/System.Linq.Dynamic.Core.Tests test
+- cmd: dnx --framework dnx452 -p test/System.Linq.Dynamic.Core.Tests test
+- cmd: dnx --framework dnxcore50 -p test/System.Linq.Dynamic.Core.Tests test
