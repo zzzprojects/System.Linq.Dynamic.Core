@@ -4,8 +4,7 @@
     "dependencies": {
         "System.Linq.Dynamic.Core": "1.0.1-*",
         "Linq.PropertyTranslator.Core": "1.0.0-*",
-        "QueryInterceptor.Core": "1.0.1",
-
+        "QueryInterceptor.Core": "1.0.2",
         "xunit": "2.1.0",
         "xunit.runner.dnx": "2.1.0-rc1-build204"
     },

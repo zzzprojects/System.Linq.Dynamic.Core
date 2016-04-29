@@ -205,7 +205,8 @@ namespace System.Linq.Dynamic.Core
             { "bool", typeof(bool) },
             { "float", typeof(float) },
         };
-        static readonly Dictionary<Type, int> _predefinedTypes = new Dictionary<Type, int>() {
+
+        static readonly Dictionary<Type, int> _predefinedTypes = new Dictionary<Type, int> {
             { typeof(object), 0 },
             { typeof(bool), 0 },
             { typeof(char), 0 },
@@ -279,38 +280,33 @@ namespace System.Linq.Dynamic.Core
         static ExpressionParser()
         {
 #if !(NET35 || SILVERLIGHT || NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
+            //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
+            //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
+            //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
+            UpdatePredefinedTypes("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+            UpdatePredefinedTypes("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+            UpdatePredefinedTypes("System.Data.Objects.SqlClient.SqlSpatialFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+
+            //EF6,System.Data.Entity.DbFunctionAttribute
+            UpdatePredefinedTypes("System.Data.Entity.Core.Objects.EntityFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            UpdatePredefinedTypes("System.Data.Entity.DbFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            UpdatePredefinedTypes("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            UpdatePredefinedTypes("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+#endif
+        }
+
+        private static void UpdatePredefinedTypes(string typeName, int x)
+        {
             try
             {
-                //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
-                Type efType;
-                //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
-                //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
-                efType = Type.GetType("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+                Type efType = Type.GetType(typeName);
                 if (efType != null)
-                    _predefinedTypes.Add(efType, 1);
-                efType = Type.GetType("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-                if (efType != null)
-                    _predefinedTypes.Add(efType, 1);
-                efType = Type.GetType("System.Data.Objects.SqlClient.SqlSpatialFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-                if (efType != null)
-                    _predefinedTypes.Add(efType, 1);
-
-                //EF6,System.Data.Entity.DbFunctionAttribute
-                efType = Type.GetType("System.Data.Entity.Core.Objects.EntityFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-                if (efType != null)
-                    _predefinedTypes.Add(efType, 2);
-                efType = Type.GetType("System.Data.Entity.DbFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-                if (efType != null)
-                    _predefinedTypes.Add(efType, 2);
-                efType = Type.GetType("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-                if (efType != null)
-                    _predefinedTypes.Add(efType, 2);
-                efType = Type.GetType("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-                if (efType != null)
-                    _predefinedTypes.Add(efType, 2);
+                    _predefinedTypes.Add(efType, x);
             }
-            catch { }
-#endif
+            catch
+            {
+                // in case of exception, do not add
+            }
         }
 
         public ExpressionParser(ParameterExpression[] parameters, string expression, object[] values)
@@ -2502,7 +2498,7 @@ namespace System.Linq.Dynamic.Core
             d.Add(KEYWORD_IIF, KEYWORD_IIF);
             d.Add(KEYWORD_NEW, KEYWORD_NEW);
 
-             foreach (Type type in _predefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
+            foreach (Type type in _predefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
             {
                 d[type.FullName] = type;
                 d[type.Name] = type;
