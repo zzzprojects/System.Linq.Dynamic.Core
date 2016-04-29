@@ -13,137 +13,69 @@
     "compilationOptions": {
     },
 
+    "dependencies": {
+        "JetBrains.Annotations": {
+            "version": "10.1.4",
+            "type": "build"
+        }
+    },
+
     "frameworks": {
         "net35": {
             "frameworkAssemblies": {
             },
             "dependencies": {
-                "JetBrains.Annotations": "10.1.4",
                 "NetLegacySupport.ConcurrentDictionary": "1.1.0"
             }
         },
         "net40": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "net45": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "net451": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "net452": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "net461": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "dnx451": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "dnx452": {
-            "dependencies": {
-                "JetBrains.Annotations": "10.1.4"
-            },
             "frameworkAssemblies": {
-                "System.Data.Entity": ""
             }
         },
         "dnxcore5": {
             "dependencies": {
-                "JetBrains.Annotations": "10.1.4",
-
-                "Microsoft.CSharp": "4.0.1-beta-*",
-
-                "System.Collections.Concurrent": "4.0.11-beta-*",
-
                 "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
-
-                "System.Runtime.Extensions": "4.0.11-beta-*",
-                "System.Runtime.InteropServices": "4.0.21-beta-*",
-                "System.Runtime.Loader": "4.0.0-beta-*",
-
-                "System.Runtime.Serialization.Primitives": "4.1.0-beta-*",
-                "System.Runtime.Serialization.Xml": "4.1.0-beta-*",
-
-                "System.Reflection.Primitives": "4.0.1-beta-*",
-                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
-                "System.Reflection.Emit": "4.0.1-beta-*",
-
-                "System.Linq": "4.0.1-beta-*",
-                "System.Linq.Expressions": "4.0.11-beta-*",
-                "System.Linq.Queryable": "4.0.1-beta-*",
-
-                "System.Globalization": "4.0.11-beta-*",
-
-                "System.Diagnostics.Debug": "4.0.11-beta-*",
-                "System.Diagnostics.Tools": "4.0.1-beta-*",
-                "System.Diagnostics.Tracing": "4.0.21-beta-*",
-
-                "System.Threading": "4.0.11-beta-*"
+                "System.Collections.Concurrent": "4.0.11-*",
+                "System.Dynamic.Runtime": "4.0.11-*",
+                "System.Reflection.Emit": "4.0.1-*",
+                "System.Reflection.TypeExtensions": "4.1.0-*",
+                "System.Linq.Expressions": "4.0.11-*",
+                "System.Linq.Queryable": "4.0.1-*"
             }
         },
         "dotnet54": {
             "dependencies": {
-                "JetBrains.Annotations": "10.1.4",
-
-                "Microsoft.CSharp": "4.0.1-beta-*",
-
-                "System.Collections.Concurrent": "4.0.11-beta-*",
-
                 "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
-
-                "System.Runtime.Extensions": "4.0.11-beta-*",
-                "System.Runtime.InteropServices": "4.0.21-beta-*",
-                "System.Runtime.Loader": "4.0.0-beta-*",
-
-                "System.Runtime.Serialization.Primitives": "4.1.0-beta-*",
-                "System.Runtime.Serialization.Xml": "4.1.0-beta-*",
-
-                "System.Reflection.Primitives": "4.0.1-beta-*",
-                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
-                "System.Reflection.Emit": "4.0.1-beta-*",
-
-                "System.Linq": "4.0.1-beta-*",
-                "System.Linq.Expressions": "4.0.11-beta-*",
-                "System.Linq.Queryable": "4.0.1-beta-*",
-
-                "System.Globalization": "4.0.11-beta-*",
-
-                "System.Diagnostics.Debug": "4.0.11-beta-*",
-                "System.Diagnostics.Tools": "4.0.1-beta-*",
-                "System.Diagnostics.Tracing": "4.0.21-beta-*",
-
-                "System.Threading": "4.0.11-beta-*"
+                "System.Collections.Concurrent": "4.0.11-*",
+                "System.Dynamic.Runtime": "4.0.11-*",
+                "System.Reflection.Emit": "4.0.1-*",
+                "System.Reflection.TypeExtensions": "4.1.0-*",
+                "System.Linq.Expressions": "4.0.11-*",
+                "System.Linq.Queryable": "4.0.1-*"
             }
         },
         "sl5": {
@@ -151,7 +83,6 @@
                 "define": [ "SILVERLIGHT" ]
             },
             "dependencies": {
-                "JetBrains.Annotations": "10.1.4",
                 "Portable.ConcurrentDictionary": "1.0.1"
             },
             "frameworkAssemblies": {
