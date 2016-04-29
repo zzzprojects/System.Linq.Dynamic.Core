@@ -205,29 +205,29 @@ namespace System.Linq.Dynamic.Core
             { "bool", typeof(bool) },
             { "float", typeof(float) },
         };
-        static readonly HashSet<Type> _predefinedTypes = new HashSet<Type>() {
-            typeof(object),
-            typeof(bool),
-            typeof(char),
-            typeof(string),
-            typeof(sbyte),
-            typeof(byte),
-            typeof(short),
-            typeof(ushort),
-            typeof(int),
-            typeof(uint),
-            typeof(long),
-            typeof(ulong),
-            typeof(float),
-            typeof(double),
-            typeof(decimal),
-            typeof(DateTime),
-            typeof(DateTimeOffset),
-            typeof(TimeSpan),
-            typeof(Guid),
-            typeof(Math),
-            typeof(Convert),
-            typeof(Uri)
+        static readonly Dictionary<Type, int> _predefinedTypes = new Dictionary<Type, int>() {
+            { typeof(object), 0 },
+            { typeof(bool), 0 },
+            { typeof(char), 0 },
+            { typeof(string), 0 },
+            { typeof(sbyte), 0 },
+            { typeof(byte), 0 },
+            { typeof(short), 0 },
+            { typeof(ushort), 0 },
+            { typeof(int), 0 },
+            { typeof(uint), 0 },
+            { typeof(long), 0 },
+            { typeof(ulong), 0 },
+            { typeof(float), 0 },
+            { typeof(double), 0 },
+            { typeof(decimal), 0 },
+            { typeof(DateTime), 0 },
+            { typeof(DateTimeOffset), 0 },
+            { typeof(TimeSpan), 0 },
+            { typeof(Guid), 0 },
+            { typeof(Math), 0 },
+            { typeof(Convert), 0 },
+            { typeof(Uri), 0 }
         };
 
         // These aliases are supposed to simply the where clause and make it more human readable
@@ -281,32 +281,33 @@ namespace System.Linq.Dynamic.Core
 #if !(NET35 || SILVERLIGHT || NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
             try
             {
+                //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
                 Type efType;
                 //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
                 //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
                 efType = Type.GetType("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
-                    _predefinedTypes.Add(efType);
+                    _predefinedTypes.Add(efType, 1);
                 efType = Type.GetType("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
-                    _predefinedTypes.Add(efType);
+                    _predefinedTypes.Add(efType, 1);
                 efType = Type.GetType("System.Data.Objects.SqlClient.SqlSpatialFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
-                    _predefinedTypes.Add(efType);
+                    _predefinedTypes.Add(efType, 1);
 
                 //EF6,System.Data.Entity.DbFunctionAttribute
                 efType = Type.GetType("System.Data.Entity.Core.Objects.EntityFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
-                    _predefinedTypes.Add(efType);
+                    _predefinedTypes.Add(efType, 2);
                 efType = Type.GetType("System.Data.Entity.DbFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
-                    _predefinedTypes.Add(efType);
+                    _predefinedTypes.Add(efType, 2);
                 efType = Type.GetType("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
-                    _predefinedTypes.Add(efType);
+                    _predefinedTypes.Add(efType, 2);
                 efType = Type.GetType("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
                 if (efType != null)
-                    _predefinedTypes.Add(efType);
+                    _predefinedTypes.Add(efType, 2);
             }
             catch { }
 #endif
@@ -1359,7 +1360,7 @@ namespace System.Linq.Dynamic.Core
 
         static bool IsPredefinedType(Type type)
         {
-            if (_predefinedTypes.Contains(type)) return true;
+            if (_predefinedTypes.ContainsKey(type)) return true;
             if (GlobalConfig.CustomTypeProvider.GetCustomTypes().Contains(type)) return true;
 
             return false;
@@ -2501,7 +2502,7 @@ namespace System.Linq.Dynamic.Core
             d.Add(KEYWORD_IIF, KEYWORD_IIF);
             d.Add(KEYWORD_NEW, KEYWORD_NEW);
 
-            foreach (Type type in _predefinedTypes)
+             foreach (Type type in _predefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
             {
                 d[type.FullName] = type;
                 d[type.Name] = type;
