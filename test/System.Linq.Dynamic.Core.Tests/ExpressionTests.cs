@@ -8,6 +8,121 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class ExpressionTests
     {
+        //[Fact]
+        //public void ExpressionTests_DoubleQualifiers()
+        //{
+        //    //Arrange
+        //    var values = new[] { 1d, 2D, 3d }.AsQueryable();
+        //    var resultValues = new[] { 2d, 3d }.AsQueryable();
+
+        //    //Act
+        //    var result = values.Where("it == 2d or it == 3D").ToDynamicArray<double>();
+
+        //    //Assert
+        //    Assert.Equal(resultValues.ToArray(), result);
+        //}
+
+        //[Fact]
+        //public void ExpressionTests_DoubleQualifiers_Negative()
+        //{
+        //    //Arrange
+        //    var values = new[] { -1d, -2D, -3d }.AsQueryable();
+        //    var resultValues = new[] { -2d, -3d }.AsQueryable();
+
+        //    //Act
+        //    var result = values.Where("it == -2d or it == -3D").ToDynamicArray<double>();
+
+        //    //Assert
+        //    Assert.Equal(resultValues.ToArray(), result);
+        //}
+
+        [Fact]
+        public void ExpressionTests_FloatQualifiers()
+        {
+            //Arrange
+            var values = new[] { 1f, 2F, 3F }.AsQueryable();
+            var resultValues = new[] { 2f, 3f }.AsQueryable();
+
+            //Act
+            var result = values.Where("it == 2F or it == 3f").ToDynamicArray<float>();
+
+            //Assert
+            Assert.Equal(resultValues.ToArray(), result);
+        }
+
+        //[Fact]
+        //public void ExpressionTests_FloatQualifiers_Negative()
+        //{
+        //    //Arrange
+        //    var values = new[] { -1f, -2F, -3F }.AsQueryable();
+        //    var resultValues = new[] { -2f, -3f }.AsQueryable();
+
+        //    //Act
+        //    var result = values.Where("it == -2F or it == -3f").ToDynamicArray<float>();
+
+        //    //Assert
+        //    Assert.Equal(resultValues.ToArray(), result);
+        //}
+
+        [Fact]
+        public void ExpressionTests_IntegerQualifiers()
+        {
+            //Arrange
+            var valuesL = new[] { 1L, 2L, 3L }.AsQueryable();
+            var resultValuesL = new[] { 2L, 3L }.AsQueryable();
+
+            var valuesU = new[] { 1U, 2U, 3U }.AsQueryable();
+            var resultValuesU = new[] { 2U, 3U }.AsQueryable();
+
+            var valuesUL = new[] { 1UL, 2UL, 3UL }.AsQueryable();
+            var resultValuesUL = new[] { 2UL, 3UL }.AsQueryable();
+
+            //Act
+            var resultL = valuesL.Where("it in (2L, 3L)").ToDynamicArray<long>();
+            var resultU = valuesU.Where("it in (2U, 3U)").ToDynamicArray<uint>();
+            var resultUL = valuesUL.Where("it in (2UL, 3UL)").ToDynamicArray<ulong>();
+
+            //Assert
+            Assert.Equal(resultValuesL.ToArray(), resultL);
+            Assert.Equal(resultValuesU.ToArray(), resultU);
+            Assert.Equal(resultValuesUL.ToArray(), resultUL);
+        }
+
+        [Fact]
+        public void ExpressionTests_IntegerQualifiers_Negative()
+        {
+            //Arrange
+            var valuesL = new[] { -1L, -2L, -3L }.AsQueryable();
+            var resultValuesL = new[] { -2L, -3L }.AsQueryable();
+
+            //Act
+            var resultL = valuesL.Where("it <= -2L").ToDynamicArray<long>();
+            //var resultIn = valuesL.Where("it in (-2L, -3L)").ToDynamicArray<long>();
+
+            //Assert
+            Assert.Equal(resultValuesL.ToArray(), resultL);
+            // Assert.Equal(resultValuesL.ToArray(), resultIn);
+        }
+
+        [Fact]
+        public void ExpressionTests_IntegerQualifiers_Exceptions()
+        {
+            //Arrange
+            var values = new[] { 1L, 2L, 3L }.AsQueryable();
+
+            //Assert
+            Assert.Throws<ParseException>(() => values.Where("it in (2LL)"));
+            Assert.Throws<ParseException>(() => values.Where("it in (2UU)"));
+            Assert.Throws<ParseException>(() => values.Where("it in (2LU)"));
+            Assert.Throws<ParseException>(() => values.Where("it in (2B)"));
+
+            Assert.Throws<ParseException>(() => values.Where("it < -2LL"));
+            Assert.Throws<ParseException>(() => values.Where("it < -2UL"));
+            Assert.Throws<ParseException>(() => values.Where("it < -2UU"));
+            Assert.Throws<ParseException>(() => values.Where("it < -2LU"));
+            Assert.Throws<ParseException>(() => values.Where("it < -2B"));
+        }
+
         [Fact]
         public void ExpressionTests_NullCoalescing()
         {

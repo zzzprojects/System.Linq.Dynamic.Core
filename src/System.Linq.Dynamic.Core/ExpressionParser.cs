@@ -848,16 +848,38 @@ namespace System.Linq.Dynamic.Core
         Expression ParseIntegerLiteral()
         {
             ValidateToken(TokenId.IntegerLiteral);
+
             string text = _token.text;
+            string qualifier = null;
+            char last = text[text.Length - 1];
+
+            if (char.IsLetter(last))
+            {
+                int pos = text.Length - 1, count = 0;
+                while (char.IsLetter(text[pos]))
+                {
+                    ++count;
+                    --pos;
+                }
+                qualifier = text.Substring(text.Length - count, count);
+                text = text.Substring(0, text.Length - count);
+            }
+
             if (text[0] != '-')
             {
                 ulong value;
                 if (!ulong.TryParse(text, out value))
                     throw ParseError(Res.InvalidIntegerLiteral, text);
                 NextToken();
-                if (value <= (ulong)int.MaxValue) return CreateLiteral((int)value, text);
-                if (value <= (ulong)uint.MaxValue) return CreateLiteral((uint)value, text);
-                if (value <= (ulong)long.MaxValue) return CreateLiteral((long)value, text);
+                if (!string.IsNullOrEmpty(qualifier))
+                {
+                    if (qualifier == "U") return CreateLiteral((uint)value, text);
+                    if (qualifier == "L") return CreateLiteral((long)value, text);
+                    else if (qualifier == "UL") return CreateLiteral(value, text);
+                }
+                if (value <= int.MaxValue) return CreateLiteral((int)value, text);
+                if (value <= uint.MaxValue) return CreateLiteral((uint)value, text);
+                if (value <= long.MaxValue) return CreateLiteral((long)value, text);
                 return CreateLiteral(value, text);
             }
             else
@@ -866,8 +888,16 @@ namespace System.Linq.Dynamic.Core
                 if (!long.TryParse(text, out value))
                     throw ParseError(Res.InvalidIntegerLiteral, text);
                 NextToken();
-                if (value >= int.MinValue && value <= int.MaxValue)
-                    return CreateLiteral((int)value, text);
+                if (!string.IsNullOrEmpty(qualifier))
+                {
+                    if (qualifier == "L")
+                        return CreateLiteral(value, text);
+                    else
+                        throw ParseError(Res.InvalidIntegerLiteral, qualifier);
+                }
+
+                if (value <= int.MaxValue) return CreateLiteral((int)value, text);
+
                 return CreateLiteral(value, text);
             }
         }
@@ -882,6 +912,11 @@ namespace System.Linq.Dynamic.Core
             {
                 float f;
                 if (float.TryParse(text.Substring(0, text.Length - 1), out f)) value = f;
+            }
+            else if (last == 'D' || last == 'd')
+            {
+                double d;
+                if (double.TryParse(text.Substring(0, text.Length - 1), out d)) value = d;
             }
             else
             {
@@ -2422,6 +2457,7 @@ namespace System.Linq.Dynamic.Core
                         t = TokenId.Identifier;
                         break;
                     }
+
                     if (char.IsDigit(_ch))
                     {
                         t = TokenId.IntegerLiteral;
@@ -2429,6 +2465,19 @@ namespace System.Linq.Dynamic.Core
                         {
                             NextChar();
                         } while (char.IsDigit(_ch));
+
+                        if (_ch == 'U' || _ch == 'L')
+                        {
+                            NextChar();
+                            if (_ch == 'L')
+                            {
+                                if (_text[_textPos - 1] == 'U') NextChar();
+                                else throw ParseError(_textPos, Res.InvalidIntegerQualifier, _text.Substring(_textPos - 1, 2));
+                            }
+                            ValidateExpression();
+                            break;
+                        }
+
                         if (_ch == '.')
                         {
                             t = TokenId.RealLiteral;
@@ -2439,6 +2488,7 @@ namespace System.Linq.Dynamic.Core
                                 NextChar();
                             } while (char.IsDigit(_ch));
                         }
+
                         if (_ch == 'E' || _ch == 'e')
                         {
                             t = TokenId.RealLiteral;
@@ -2450,9 +2500,12 @@ namespace System.Linq.Dynamic.Core
                                 NextChar();
                             } while (char.IsDigit(_ch));
                         }
+
                         if (_ch == 'F' || _ch == 'f') NextChar();
+                        if (_ch == 'D' || _ch == 'd') NextChar();
                         break;
                     }
+
                     if (_textPos == _textLen)
                     {
                         t = TokenId.End;
@@ -2460,6 +2513,7 @@ namespace System.Linq.Dynamic.Core
                     }
                     throw ParseError(_textPos, Res.InvalidCharacter, _ch);
             }
+
             _token.pos = tokenPos;
             _token.text = _text.Substring(tokenPos, _textPos - tokenPos);
             _token.id = GetAliasedTokenId(t, _token.text);
@@ -2476,6 +2530,11 @@ namespace System.Linq.Dynamic.Core
             string id = _token.text;
             if (id.Length > 1 && id[0] == '@') id = id.Substring(1);
             return id;
+        }
+
+        void ValidateExpression()
+        {
+            if (char.IsLetterOrDigit(_ch)) throw ParseError(_textPos, Res.ExpressionExpected);
         }
 
         void ValidateDigit()

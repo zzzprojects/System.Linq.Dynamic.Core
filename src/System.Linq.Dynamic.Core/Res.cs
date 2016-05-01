@@ -7,6 +7,7 @@
         public const string ExpressionExpected = "Expression expected";
         public const string InvalidCharacterLiteral = "Character literal must contain exactly one character";
         public const string InvalidIntegerLiteral = "Invalid integer literal '{0}'";
+        public const string InvalidIntegerQualifier = "Invalid integer literal qualifier '{0}'";
         public const string InvalidRealLiteral = "Invalid real literal '{0}'";
         public const string UnknownIdentifier = "Unknown identifier '{0}'";
         public const string NoItInScope = "No 'it' is in scope";
