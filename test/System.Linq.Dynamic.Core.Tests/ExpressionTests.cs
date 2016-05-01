@@ -97,11 +97,11 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             var resultL = valuesL.Where("it <= -2L").ToDynamicArray<long>();
-            //var resultIn = valuesL.Where("it in (-2L, -3L)").ToDynamicArray<long>();
+            var resultIn = valuesL.Where("it in (-2L, -3L)").ToDynamicArray<long>();
 
             //Assert
             Assert.Equal(resultValuesL.ToArray(), resultL);
-            // Assert.Equal(resultValuesL.ToArray(), resultIn);
+            Assert.Equal(resultValuesL.ToArray(), resultIn);
         }
 
         [Fact]

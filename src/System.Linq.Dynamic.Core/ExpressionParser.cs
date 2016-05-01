@@ -483,7 +483,9 @@ namespace System.Linq.Dynamic.Core
                     while (_token.id != TokenId.CloseParen)
                     {
                         NextToken();
-                        Expression right = ParsePrimary();
+
+                        //we need to parse unary expressions because otherwise 'in' clause will fail in use cases like 'in (-1, -1)' or 'in (!true)'
+                        Expression right = ParseUnary();
 
                         //check for direct type match
                         if (identifier.Type != right.Type)
@@ -752,13 +754,11 @@ namespace System.Linq.Dynamic.Core
         // -, !, not unary operators
         Expression ParseUnary()
         {
-            if (_token.id == TokenId.Minus || _token.id == TokenId.Exclamation ||
-                TokenIdentifierIs("not"))
+            if (_token.id == TokenId.Minus || _token.id == TokenId.Exclamation || TokenIdentifierIs("not"))
             {
                 Token op = _token;
                 NextToken();
-                if (op.id == TokenId.Minus && (_token.id == TokenId.IntegerLiteral ||
-                    _token.id == TokenId.RealLiteral))
+                if (op.id == TokenId.Minus && (_token.id == TokenId.IntegerLiteral || _token.id == TokenId.RealLiteral))
                 {
                     _token.text = "-" + _token.text;
                     _token.pos = op.pos;
@@ -870,12 +870,14 @@ namespace System.Linq.Dynamic.Core
                 ulong value;
                 if (!ulong.TryParse(text, out value))
                     throw ParseError(Res.InvalidIntegerLiteral, text);
+
                 NextToken();
                 if (!string.IsNullOrEmpty(qualifier))
                 {
                     if (qualifier == "U") return CreateLiteral((uint)value, text);
                     if (qualifier == "L") return CreateLiteral((long)value, text);
-                    else if (qualifier == "UL") return CreateLiteral(value, text);
+
+                    return CreateLiteral(value, text);
                 }
                 if (value <= int.MaxValue) return CreateLiteral((int)value, text);
                 if (value <= uint.MaxValue) return CreateLiteral((uint)value, text);
@@ -887,13 +889,14 @@ namespace System.Linq.Dynamic.Core
                 long value;
                 if (!long.TryParse(text, out value))
                     throw ParseError(Res.InvalidIntegerLiteral, text);
+
                 NextToken();
                 if (!string.IsNullOrEmpty(qualifier))
                 {
                     if (qualifier == "L")
                         return CreateLiteral(value, text);
-                    else
-                        throw ParseError(Res.InvalidIntegerLiteral, qualifier);
+
+                    throw ParseError(Res.MinusCannotBeAppliedToUnsignedInteger);
                 }
 
                 if (value <= int.MaxValue) return CreateLiteral((int)value, text);
