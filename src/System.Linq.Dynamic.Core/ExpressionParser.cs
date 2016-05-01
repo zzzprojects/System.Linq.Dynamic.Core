@@ -874,14 +874,17 @@ namespace System.Linq.Dynamic.Core
                 NextToken();
                 if (!string.IsNullOrEmpty(qualifier))
                 {
-                    if (qualifier == "U") return CreateLiteral((uint)value, text);
-                    if (qualifier == "L") return CreateLiteral((long)value, text);
+                    if (qualifier == "U" || qualifier == "u") return CreateLiteral((uint)value, text);
+                    if (qualifier == "L" || qualifier == "l") return CreateLiteral((long)value, text);
 
+                    // in case of UL, just return
                     return CreateLiteral(value, text);
                 }
+
                 if (value <= int.MaxValue) return CreateLiteral((int)value, text);
                 if (value <= uint.MaxValue) return CreateLiteral((uint)value, text);
                 if (value <= long.MaxValue) return CreateLiteral((long)value, text);
+
                 return CreateLiteral(value, text);
             }
             else
@@ -893,8 +896,14 @@ namespace System.Linq.Dynamic.Core
                 NextToken();
                 if (!string.IsNullOrEmpty(qualifier))
                 {
-                    if (qualifier == "L")
+                    if (qualifier == "L" || qualifier == "l")
                         return CreateLiteral(value, text);
+
+                    if (qualifier == "F" || qualifier == "f")
+                        return TryParseAsFloat(text, qualifier[0]);
+
+                    if (qualifier == "D" || qualifier == "d")
+                        return TryParseAsDouble(text, qualifier[0]);
 
                     throw ParseError(Res.MinusCannotBeAppliedToUnsignedInteger);
                 }
@@ -905,30 +914,75 @@ namespace System.Linq.Dynamic.Core
             }
         }
 
+        //Expression ParseRealLiteral()
+        //{
+        //    ValidateToken(TokenId.RealLiteral);
+        //    string text = _token.text;
+        //    object value = null;
+        //    char last = text[text.Length - 1];
+        //    if (last == 'F' || last == 'f')
+        //    {
+        //        float f;
+        //        if (float.TryParse(text.Substring(0, text.Length - 1), out f)) value = f;
+        //    }
+        //    else if (last == 'D' || last == 'd')
+        //    {
+        //        double d;
+        //        if (double.TryParse(text.Substring(0, text.Length - 1), out d)) value = d;
+        //    }
+        //    else
+        //    {
+        //        double d;
+        //        if (double.TryParse(text, out d)) value = d;
+        //    }
+        //    if (value == null) throw ParseError(Res.InvalidRealLiteral, text);
+        //    NextToken();
+        //    return CreateLiteral(value, text);
+        //}
+
         Expression ParseRealLiteral()
         {
             ValidateToken(TokenId.RealLiteral);
+
             string text = _token.text;
-            object value = null;
-            char last = text[text.Length - 1];
-            if (last == 'F' || last == 'f')
+            char qualifier = text[text.Length - 1];
+
+            NextToken();
+            return TryParseAsFloat(text, qualifier);
+        }
+
+        Expression TryParseAsFloat(string text, char qualifier)
+        {
+            if (qualifier == 'F' || qualifier == 'f')
             {
                 float f;
-                if (float.TryParse(text.Substring(0, text.Length - 1), out f)) value = f;
+                if (float.TryParse(text.Substring(0, text.Length - 1), out f))
+                {
+                    return CreateLiteral(f, text);
+                }
             }
-            else if (last == 'D' || last == 'd')
+
+            // not possible to find float qualifier, so try to parse as double
+            return TryParseAsDouble(text, qualifier);
+        }
+
+        Expression TryParseAsDouble(string text, char qualifier)
+        {
+            double d;
+            if (qualifier == 'D' || qualifier == 'd')
             {
-                double d;
-                if (double.TryParse(text.Substring(0, text.Length - 1), out d)) value = d;
+                if (double.TryParse(text.Substring(0, text.Length - 1), out d))
+                {
+                    return CreateLiteral(d, text);
+                }
             }
-            else
+
+            if (double.TryParse(text, out d))
             {
-                double d;
-                if (double.TryParse(text, out d)) value = d;
+                return CreateLiteral(d, text);
             }
-            if (value == null) throw ParseError(Res.InvalidRealLiteral, text);
-            NextToken();
-            return CreateLiteral(value, text);
+
+            throw ParseError(Res.InvalidRealLiteral, text);
         }
 
         Expression CreateLiteral(object value, string text)

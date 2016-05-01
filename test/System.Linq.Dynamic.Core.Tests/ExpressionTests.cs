@@ -8,33 +8,49 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class ExpressionTests
     {
-        //[Fact]
-        //public void ExpressionTests_DoubleQualifiers()
-        //{
-        //    //Arrange
-        //    var values = new[] { 1d, 2D, 3d }.AsQueryable();
-        //    var resultValues = new[] { 2d, 3d }.AsQueryable();
+        [Fact]
+        public void ExpressionTests_Double()
+        {
+            //Arrange
+            var values = new[] { 1d, 2D, 3d }.AsQueryable();
+            var resultValues = new[] { 2d, 3d }.AsQueryable();
 
-        //    //Act
-        //    var result = values.Where("it == 2d or it == 3D").ToDynamicArray<double>();
+            //Act
+            var result1 = values.Where("it == 2 or it == 3").ToDynamicArray<double>();
+            //var result2 = values.Where("it > 1.99").ToDynamicArray<double>();
 
-        //    //Assert
-        //    Assert.Equal(resultValues.ToArray(), result);
-        //}
+            //Assert
+            Assert.Equal(resultValues.ToArray(), result1);
+            //Assert.Equal(resultValues.ToArray(), result2);
+        }
 
-        //[Fact]
-        //public void ExpressionTests_DoubleQualifiers_Negative()
-        //{
-        //    //Arrange
-        //    var values = new[] { -1d, -2D, -3d }.AsQueryable();
-        //    var resultValues = new[] { -2d, -3d }.AsQueryable();
+        [Fact]
+        public void ExpressionTests_DoubleQualifiers()
+        {
+            //Arrange
+            var values = new[] { 1d, 2D, 3d }.AsQueryable();
+            var resultValues = new[] { 2d, 3d }.AsQueryable();
 
-        //    //Act
-        //    var result = values.Where("it == -2d or it == -3D").ToDynamicArray<double>();
+            //Act
+            var result = values.Where("it == 2d or it == 3D").ToDynamicArray<double>();
 
-        //    //Assert
-        //    Assert.Equal(resultValues.ToArray(), result);
-        //}
+            //Assert
+            Assert.Equal(resultValues.ToArray(), result);
+        }
+
+        [Fact]
+        public void ExpressionTests_DoubleQualifiers_Negative()
+        {
+            //Arrange
+            var values = new[] { -1d, -2D, -3d }.AsQueryable();
+            var resultValues = new[] { -2d, -3d }.AsQueryable();
+
+            //Act
+            var result = values.Where("it == -2d or it == -3D").ToDynamicArray<double>();
+
+            //Assert
+            Assert.Equal(resultValues.ToArray(), result);
+        }
 
         [Fact]
         public void ExpressionTests_FloatQualifiers()
@@ -50,19 +66,19 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(resultValues.ToArray(), result);
         }
 
-        //[Fact]
-        //public void ExpressionTests_FloatQualifiers_Negative()
-        //{
-        //    //Arrange
-        //    var values = new[] { -1f, -2F, -3F }.AsQueryable();
-        //    var resultValues = new[] { -2f, -3f }.AsQueryable();
+        [Fact]
+        public void ExpressionTests_FloatQualifiers_Negative()
+        {
+            //Arrange
+            var values = new[] { -1f, -2F, -3F }.AsQueryable();
+            var resultValues = new[] { -2f, -3f }.AsQueryable();
 
-        //    //Act
-        //    var result = values.Where("it == -2F or it == -3f").ToDynamicArray<float>();
+            //Act
+            var result = values.Where("it == -2F or it == -3f").ToDynamicArray<float>();
 
-        //    //Assert
-        //    Assert.Equal(resultValues.ToArray(), result);
-        //}
+            //Assert
+            Assert.Equal(resultValues.ToArray(), result);
+        }
 
         [Fact]
         public void ExpressionTests_IntegerQualifiers()
