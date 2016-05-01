@@ -9,7 +9,33 @@ namespace System.Linq.Dynamic.Core.Tests
     public class ExpressionTests
     {
         [Fact]
-        public void ExpressionTests_ParseConditionalOr1()
+        public void ExpressionTests_NullCoalescing()
+        {
+            //Arrange
+            var testModels = User.GenerateSampleModels(3, true);
+            testModels[0].NullableInt = null;
+            testModels[1].NullableInt = null;
+            testModels[2].NullableInt = 5;
+
+            var expectedResult1 = testModels.AsQueryable().Select(u => new { UserName = u.UserName, X = u.NullableInt ?? (3 * u.Income) }).Cast<object>().ToArray();
+            var expectedResult2 = testModels.AsQueryable().Where(u => (u.NullableInt ?? 10) == 10).ToArray();
+            var expectedResult3 = testModels.Select(m => m.NullableInt ?? 10).ToArray();
+
+            //Act
+            var result1 = testModels.AsQueryable().Select("new (UserName, NullableInt ?? (3 * Income) as X)");
+            var result2 = testModels.AsQueryable().Where("(NullableInt ?? 10) == 10");
+            var result3a = testModels.AsQueryable().Select("NullableInt ?? @0", 10);
+            var result3b = testModels.AsQueryable().Select<int>("NullableInt ?? @0", 10);
+
+            //Assert
+            Assert.Equal(expectedResult1.ToString(), result1.ToDynamicArray().ToString());
+            Assert.Equal(expectedResult2, result2.ToDynamicArray<User>());
+            Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
+            Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
+        }
+
+        [Fact]
+        public void ExpressionTests_ConditionalOr1()
         {
             //Arrange
             int[] values = { 1, 2, 3, 4, 5 };
@@ -24,7 +50,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_ParseConditionalOr2()
+        public void ExpressionTests_ConditionalOr2()
         {
             //Arrange
             int[] values = { 1, 2, 3, 4, 5 };
@@ -39,7 +65,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_ParseConditionalAnd1()
+        public void ExpressionTests_ConditionalAnd1()
         {
             //Arrange
             var values = new[] { new { s = "s", i = 1 }, new { s = "abc", i = 2 } };
@@ -54,7 +80,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_ParseConditionalAnd2()
+        public void ExpressionTests_ConditionalAnd2()
         {
             //Arrange
             var values = new[] { new { s = "s", i = 1 }, new { s = "abc", i = 2 } };

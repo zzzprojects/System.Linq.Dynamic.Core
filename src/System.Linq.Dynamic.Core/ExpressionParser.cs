@@ -51,7 +51,8 @@ namespace System.Linq.Dynamic.Core
             GreaterThanEqual,
             DoubleBar,
             DoubleGreaterThan,
-            DoubleLessThan
+            DoubleLessThan,
+            NullCoalescing
         }
 
         interface ILogicalSignatures
@@ -407,7 +408,7 @@ namespace System.Linq.Dynamic.Core
         Expression ParseExpression()
         {
             int errorPos = _token.pos;
-            Expression expr = ParseConditionalOr();
+            Expression expr = ParseNullCoalescing();
             if (_token.id == TokenId.Question)
             {
                 NextToken();
@@ -416,6 +417,19 @@ namespace System.Linq.Dynamic.Core
                 NextToken();
                 Expression expr2 = ParseExpression();
                 expr = GenerateConditional(expr, expr1, expr2, errorPos);
+            }
+            return expr;
+        }
+
+        // ?? (null-coalescing) operator
+        Expression ParseNullCoalescing()
+        {
+            Expression expr = ParseConditionalOr();
+            if (_token.id == TokenId.NullCoalescing)
+            {
+                NextToken();
+                Expression right = ParseExpression();
+                expr = Expression.Coalesce(expr, right);
             }
             return expr;
         }
@@ -1383,11 +1397,16 @@ namespace System.Linq.Dynamic.Core
         static bool TryGetMemberName(Expression expression, out string memberName)
         {
             var memberExpression = expression as MemberExpression;
+            if (memberExpression == null && expression.NodeType == ExpressionType.Coalesce)
+            {
+                memberExpression = ((expression as BinaryExpression).Left) as MemberExpression;
+            }
             if (memberExpression != null)
             {
                 memberName = memberExpression.Member.Name;
                 return true;
             }
+
 #if NETFX_CORE
             var indexExpression = expression as IndexExpression;
             if (indexExpression != null && indexExpression.Indexer.DeclaringType == typeof(DynamicObjectClass))
@@ -2350,7 +2369,15 @@ namespace System.Linq.Dynamic.Core
                     break;
                 case '?':
                     NextChar();
-                    t = TokenId.Question;
+                    if (_ch == '?')
+                    {
+                        NextChar();
+                        t = TokenId.NullCoalescing;
+                    }
+                    else
+                    {
+                        t = TokenId.Question;
+                    }
                     break;
                 case '[':
                     NextChar();

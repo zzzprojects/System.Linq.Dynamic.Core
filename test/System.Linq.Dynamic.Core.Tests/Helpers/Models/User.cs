@@ -8,6 +8,8 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
 
         public string UserName { get; set; }
 
+        public int? NullableInt { get; set; }
+
         public int Income { get; set; }
 
         public UserProfile Profile { get; set; }

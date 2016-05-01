@@ -19,7 +19,7 @@ namespace System.Linq.Dynamic.Core.Tests
     {
         BlogContext _context;
 
-#region Entities Test Support
+        #region Entities Test Support
 
         static readonly Random Rnd = new Random(1);
 
@@ -77,9 +77,31 @@ namespace System.Linq.Dynamic.Core.Tests
             _context.SaveChanges();
         }
 
-#endregion
+        #endregion
 
-#region Select Tests
+        #region Select Tests
+
+        [Fact]
+        public void Entities_Select_SingleColumn_NullCoalescing()
+        {
+            //Arrange
+            var blog1 = new Blog { BlogId = 1000, Name = "Blog1", NullableInt = null };
+            var blog2 = new Blog { BlogId = 2000, Name = "Blog2", NullableInt = 5 };
+            _context.Blogs.Add(blog1);
+            _context.Blogs.Add(blog2);
+            _context.SaveChanges();
+
+            var expected1 = _context.Blogs.Select(x => x.NullableInt ?? 10).ToArray();
+            var expected2 = _context.Blogs.Select(x => x.NullableInt ?? 9 + x.BlogId).ToArray();
+
+            //Act
+            var test1 = _context.Blogs.Select<int>("NullableInt ?? 10").ToArray();
+            var test2 = _context.Blogs.Select<int>("NullableInt ?? 9 + BlogId").ToArray();
+
+            //Assert
+            Assert.Equal(expected1, test1);
+            Assert.Equal(expected2, test2);
+        }
 
         [Fact]
         public void Entities_Select_SingleColumn()
@@ -106,7 +128,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             var test = _context.Blogs.Select("new (\"x\" as X, BlogId, Name)").ToDynamicArray();
-            
+
             //Assert
             Assert.Equal(
                 expected,
@@ -156,9 +178,9 @@ namespace System.Linq.Dynamic.Core.Tests
         //    }
         //}
 
-#endregion
+        #endregion
 
-#region GroupBy Tests
+        #region GroupBy Tests
 
         [Fact]
         public void Entities_GroupBy_SingleKey()
@@ -309,9 +331,9 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
-#endregion
+        #endregion
 
-#region Executor Tests
+        #region Executor Tests
 
         [Fact]
         public void FirstOrDefault_AsStringExpressions()
@@ -331,7 +353,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(firstExpected.ToArray(), firstTest.ToArray());
         }
 
-#endregion
+        #endregion
     }
 }
 #endif
