@@ -183,6 +183,8 @@ namespace System.Linq.Dynamic.Core
             void OrderBy(object selector);
             void OrderByDescending(object selector);
             void Contains(object selector);
+            void Skip(int count);
+            void Take(int count);
 
             //Executors
             void Single();
@@ -1389,7 +1391,7 @@ namespace System.Linq.Dynamic.Core
 
             _parent = _it;
 
-            if (methodName == "Contains")
+            if (methodName == "Contains" || methodName == "Skip" || methodName == "Take")
             {
                 //for any method that acts on the parent element type, we need to specify the outerIt as scope.
                 _it = outerIt;
@@ -1426,7 +1428,7 @@ namespace System.Linq.Dynamic.Core
                 typeArgs = new[] { elementType };
             }
 
-            if (signature.Name == "Contains")
+            if (signature.Name == "Contains" || signature.Name == "Take" || signature.Name == "Skip")
             {
                 args = new[] { instance, args[0] };
             }

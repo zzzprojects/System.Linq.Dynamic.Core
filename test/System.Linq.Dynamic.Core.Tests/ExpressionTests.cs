@@ -9,6 +9,34 @@ namespace System.Linq.Dynamic.Core.Tests
     public class ExpressionTests
     {
         [Fact]
+        public void ExpressionTests_SkipAndTake()
+        {
+            //Arrange
+            var samples = User.GenerateSampleModels(3);
+            samples[0].Roles = null;
+            samples[1].Roles = new List<Role> { new Role(), new Role() };
+
+            var sampleQuery = samples.AsQueryable();
+
+            //Act
+            var expectedResult = sampleQuery.Select(x => new { SecondRole = x.Roles != null ? x.Roles.Skip(1).Take(1) : null }).ToArray();
+
+            var result = sampleQuery.Select("new ( iif(Roles != null, Roles.Skip(1).Take(1), null) as SecondRole )");
+
+            //Assert
+            var resultArray = result.ToDynamicArray();
+            for (int i = 0; i < expectedResult.Count(); i++)
+            {
+                var expectedEntry = expectedResult[i];
+                var entry = resultArray[i];
+                if (expectedEntry.SecondRole == null)
+                    Assert.Null(entry.SecondRole);
+                else
+                    Assert.Equal(expectedEntry.SecondRole.ToString(), entry.SecondRole.ToString());
+            }
+        }
+
+        [Fact]
         public void ExpressionTests_StringConcatenation()
         {
             //Arrange
