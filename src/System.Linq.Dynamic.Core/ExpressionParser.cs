@@ -254,14 +254,16 @@ namespace System.Linq.Dynamic.Core
         static readonly Expression FalseLiteral = Expression.Constant(false);
         static readonly Expression NullLiteral = Expression.Constant(null);
 
-        const string KEYWORD_IT = "it";
-        const string KEYWORD_PARENT = "parent";
-        const string KEYWORD_ROOT = "root";
         const string SYMBOL_IT = "$";
         const string SYMBOL_PARENT = "^";
         const string SYMBOL_ROOT = "~";
+
+        const string KEYWORD_IT = "it";
+        const string KEYWORD_PARENT = "parent";
+        const string KEYWORD_ROOT = "root";
         const string KEYWORD_IIF = "iif";
         const string KEYWORD_NEW = "new";
+        const string KEYWORD_ISNULL = "isnull";
 
         static Dictionary<string, object> _keywords;
 
@@ -446,6 +448,18 @@ namespace System.Linq.Dynamic.Core
                 expr = Expression.Coalesce(expr, right);
             }
             return expr;
+        }
+
+        // isnull(a,b) operator
+        Expression ParseIsNull()
+        {
+            int errorPos = _token.pos;
+            NextToken();
+            Expression[] args = ParseArgumentList();
+            if (args.Length != 2)
+                throw ParseError(errorPos, Res.IsNullRequiresTwoArgs);
+
+            return Expression.Coalesce(args[0], args[1]);
         }
 
         // ||, or operator
@@ -1034,6 +1048,7 @@ namespace System.Linq.Dynamic.Core
                 if (value == (object)SYMBOL_ROOT) return ParseRoot();
                 if (value == (object)KEYWORD_IIF) return ParseIif();
                 if (value == (object)KEYWORD_NEW) return ParseNew();
+                if (value == (object)KEYWORD_ISNULL) return ParseIsNull();
 
                 NextToken();
 
@@ -1785,11 +1800,7 @@ namespace System.Linq.Dynamic.Core
             {
                 if (ce == NullLiteral)
                 {
-#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
                     if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
-#else
-                    if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
-#endif
                         return Expression.Constant(null, type);
                 }
                 else
@@ -1807,6 +1818,10 @@ namespace System.Linq.Dynamic.Core
                             case TypeCode.Int64:
                             case TypeCode.UInt64:
                                 value = ParseNumber(text, target);
+
+                                // Make sure an enum value stays an enum value
+                                if (target.IsEnum)
+                                    value = Enum.ToObject(target, value);
                                 break;
                             case TypeCode.Double:
                                 if (target == typeof(decimal)) value = ParseNumber(text, target);
@@ -2654,6 +2669,7 @@ namespace System.Linq.Dynamic.Core
             d.Add(SYMBOL_ROOT, SYMBOL_ROOT);
             d.Add(KEYWORD_IIF, KEYWORD_IIF);
             d.Add(KEYWORD_NEW, KEYWORD_NEW);
+            d.Add(KEYWORD_ISNULL, KEYWORD_ISNULL);
 
             foreach (Type type in _predefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
             {

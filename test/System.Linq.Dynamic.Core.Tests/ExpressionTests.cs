@@ -209,6 +209,46 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_IsNull_Simple()
+        {
+            //Arrange
+            var baseQuery = new int?[] { 1, 2, null, 3, 4 }.AsQueryable();
+            var expectedResult = new int[] { 1, 2, 0, 3, 4 };
+
+            // Act
+            var result1 = baseQuery.Select("isnull(it, 0)");
+
+            //Assert
+            Assert.Equal(expectedResult, result1.ToDynamicArray<int>());
+        }
+
+        [Fact]
+        public void ExpressionTests_IsNull_Complex()
+        {
+            //Arrange
+            var testModels = User.GenerateSampleModels(3, true);
+            testModels[0].NullableInt = null;
+            testModels[1].NullableInt = null;
+            testModels[2].NullableInt = 5;
+
+            var expectedResult1 = testModels.AsQueryable().Select(u => new { UserName = u.UserName, X = u.NullableInt ?? (3 * u.Income) }).Cast<object>().ToArray();
+            var expectedResult2 = testModels.AsQueryable().Where(u => (u.NullableInt ?? 10) == 10).ToArray();
+            var expectedResult3 = testModels.Select(m => m.NullableInt ?? 10).ToArray();
+
+            //Act
+            var result1 = testModels.AsQueryable().Select("new (UserName, isnull(NullableInt, (3 * Income)) as X)");
+            var result2 = testModels.AsQueryable().Where("isnull(NullableInt, 10) == 10");
+            var result3a = testModels.AsQueryable().Select("isnull(NullableInt, @0)", 10);
+            var result3b = testModels.AsQueryable().Select<int>("isnull(NullableInt, @0)", 10);
+
+            //Assert
+            Assert.Equal(expectedResult1.ToString(), result1.ToDynamicArray().ToString());
+            Assert.Equal(expectedResult2, result2.ToArray());
+            Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
+            Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
+        }
+
+        [Fact]
         public void ExpressionTests_ConditionalOr1()
         {
             //Arrange

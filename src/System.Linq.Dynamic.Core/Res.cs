@@ -15,6 +15,7 @@
         public const string NoParentInScope = "No 'parent' is in scope";
         public const string NoRootInScope = "No 'root' is in scope";
         public const string IifRequiresThreeArgs = "The 'iif' function requires three arguments";
+        public const string IsNullRequiresTwoArgs = "The 'isnull' function requires two arguments";
         public const string FirstExprMustBeBool = "The first expression must be of type 'Boolean'";
         public const string BothTypesConvertToOther = "Both of the types '{0}' and '{1}' convert to the other";
         public const string NeitherTypeConvertsToOther = "Neither of the types '{0}' and '{1}' converts to the other";
