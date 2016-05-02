@@ -53,5 +53,10 @@
         /// 
         /// </summary>
         public static bool UseDynamicObjectClassForAnonymousTypes { get; set; }
+
+        /// <summary>
+        /// The DecimalSeparators to use, can be '.' or ','
+        /// </summary>
+        //public static char NumberDecimalSeparator { get; set; }
     }
 }

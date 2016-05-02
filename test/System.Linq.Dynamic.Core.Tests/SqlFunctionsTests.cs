@@ -86,10 +86,10 @@ namespace System.Linq.Dynamic.Core.Tests
 
             try
             {
-                System.Data.Objects.EntityFunctions.AddDays(DateTime.Now, 1);
+                //System.Data.Objects.EntityFunctions.AddDays(DateTime.Now, 1);
                 System.Data.Entity.Core.Objects.EntityFunctions.AddDays(DateTime.Now, 1);
 
-                System.Data.Objects.SqlClient.SqlFunctions.DateAdd("day", 1, DateTime.Now);
+                //System.Data.Objects.SqlClient.SqlFunctions.DateAdd("day", 1, DateTime.Now);
                 System.Data.Entity.DbFunctions.AddDays(DateTime.Now, 1);
                 System.Data.Entity.SqlServer.SqlFunctions.DateAdd("day", 1, DateTime.Now);
             }

@@ -277,6 +277,16 @@ namespace System.Linq.Dynamic.Core
         readonly int _textLen;
         char _ch;
         Token _token;
+        private static char NumberDecimalSeparatorFromCulture = '.';
+
+        private static char NumberDecimalSeparator
+        {
+            get
+            {
+                return NumberDecimalSeparatorFromCulture;
+                //return GlobalConfig.NumberDecimalSeparator != default(char) ? GlobalConfig.NumberDecimalSeparator : NumberDecimalSeparatorFromCulture;
+            }
+        }
 
         static ExpressionParser()
         {
@@ -294,6 +304,10 @@ namespace System.Linq.Dynamic.Core
             UpdatePredefinedTypes("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
             UpdatePredefinedTypes("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
 #endif
+
+            // detect NumberDecimalSeparator from current culture
+            NumberFormatInfo numberFormatInfo = CultureInfo.CurrentCulture.NumberFormat;
+            NumberDecimalSeparatorFromCulture = numberFormatInfo.NumberDecimalSeparator[0];
         }
 
         private static void UpdatePredefinedTypes(string typeName, int x)
@@ -2535,7 +2549,7 @@ namespace System.Linq.Dynamic.Core
                             break;
                         }
 
-                        if (_ch == '.')
+                        if (_ch == NumberDecimalSeparator)
                         {
                             t = TokenId.RealLiteral;
                             NextChar();

@@ -16,13 +16,49 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultValues = new[] { 2d, 3d }.AsQueryable();
 
             //Act
-            var result1 = values.Where("it == 2 or it == 3").ToDynamicArray<double>();
-            //var result2 = values.Where("it > 1.99").ToDynamicArray<double>();
+            var result1 = values.Where("it == 2 or it == 3");
+            var result2 = values.Where("it > 1.99");
 
             //Assert
-            Assert.Equal(resultValues.ToArray(), result1);
-            //Assert.Equal(resultValues.ToArray(), result2);
+            Assert.Equal(resultValues.ToArray(), result1.ToArray());
+            Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
+
+        [Fact]
+        public void ExpressionTests_Double_Negative()
+        {
+            //Arrange
+            var values = new[] { -1d, -2D, -3d }.AsQueryable();
+            var resultValues = new[] { -2d, -3d }.AsQueryable();
+
+            //Act
+            var result1 = values.Where("it == -2 or it == -3");
+            var result2 = values.Where("it == -2.00 or it == -3.0");
+
+            //Assert
+            Assert.Equal(resultValues.ToArray(), result1.ToArray());
+            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+        }
+
+        //[Fact]
+        //public void ExpressionTests_Double2()
+        //{
+        //    GlobalConfig.NumberDecimalSeparator = ',';
+
+        //    //Arrange
+        //    var values = new[] { 1d, 2D, 3d }.AsQueryable();
+        //    var resultValues = new[] { 2d, 3d }.AsQueryable();
+
+        //    //Act
+        //    var result1 = values.Where("it == 2 or it == 3");
+        //    var result2 = values.Where("it > 1,99");
+
+        //    //Assert
+        //    Assert.Equal(resultValues.ToArray(), result1.ToArray());
+        //    Assert.Equal(resultValues.ToArray(), result2.ToArray());
+
+        //    GlobalConfig.NumberDecimalSeparator = default(char);
+        //}
 
         [Fact]
         public void ExpressionTests_DoubleQualifiers()
@@ -32,10 +68,11 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultValues = new[] { 2d, 3d }.AsQueryable();
 
             //Act
-            var result = values.Where("it == 2d or it == 3D").ToDynamicArray<double>();
+            var result1 = values.Where("it == 2d or it == 3D");
+            var result2 = values.Where("it == 2.00d or it == 3.0D");
 
             //Assert
-            Assert.Equal(resultValues.ToArray(), result);
+            Assert.Equal(resultValues.ToArray(), result1.ToArray());
         }
 
         [Fact]
@@ -46,10 +83,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultValues = new[] { -2d, -3d }.AsQueryable();
 
             //Act
-            var result = values.Where("it == -2d or it == -3D").ToDynamicArray<double>();
+            var result1 = values.Where("it == -2d or it == -3D");
+            var result2 = values.Where("it == -2.00d or it == -3.0D");
 
             //Assert
-            Assert.Equal(resultValues.ToArray(), result);
+            Assert.Equal(resultValues.ToArray(), result1.ToArray());
+            Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
         [Fact]
@@ -60,10 +99,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultValues = new[] { 2f, 3f }.AsQueryable();
 
             //Act
-            var result = values.Where("it == 2F or it == 3f").ToDynamicArray<float>();
+            var result1 = values.Where("it == 2F or it == 3f");
+            var result2 = values.Where("it == 2.0F or it == 3.00f");
 
             //Assert
-            Assert.Equal(resultValues.ToArray(), result);
+            Assert.Equal(resultValues.ToArray(), result1.ToArray());
+            Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
         [Fact]
@@ -74,10 +115,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultValues = new[] { -2f, -3f }.AsQueryable();
 
             //Act
-            var result = values.Where("it == -2F or it == -3f").ToDynamicArray<float>();
+            var result1 = values.Where("it == -2F or it == -3f");
+            var result2 = values.Where("it == -2.0F or it == -3.0f");
 
             //Assert
-            Assert.Equal(resultValues.ToArray(), result);
+            Assert.Equal(resultValues.ToArray(), result1.ToArray());
+            Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
         [Fact]
@@ -94,14 +137,14 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultValuesUL = new[] { 2UL, 3UL }.AsQueryable();
 
             //Act
-            var resultL = valuesL.Where("it in (2L, 3L)").ToDynamicArray<long>();
-            var resultU = valuesU.Where("it in (2U, 3U)").ToDynamicArray<uint>();
-            var resultUL = valuesUL.Where("it in (2UL, 3UL)").ToDynamicArray<ulong>();
+            var resultL = valuesL.Where("it in (2L, 3L)");
+            var resultU = valuesU.Where("it in (2U, 3U)");
+            var resultUL = valuesUL.Where("it in (2UL, 3UL)");
 
             //Assert
-            Assert.Equal(resultValuesL.ToArray(), resultL);
-            Assert.Equal(resultValuesU.ToArray(), resultU);
-            Assert.Equal(resultValuesUL.ToArray(), resultUL);
+            Assert.Equal(resultValuesL.ToArray(), resultL.ToArray());
+            Assert.Equal(resultValuesU.ToArray(), resultU.ToArray());
+            Assert.Equal(resultValuesUL.ToArray(), resultUL.ToArray());
         }
 
         [Fact]
@@ -112,8 +155,8 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultValuesL = new[] { -2L, -3L }.AsQueryable();
 
             //Act
-            var resultL = valuesL.Where("it <= -2L").ToDynamicArray<long>();
-            var resultIn = valuesL.Where("it in (-2L, -3L)").ToDynamicArray<long>();
+            var resultL = valuesL.Where("it <= -2L");
+            var resultIn = valuesL.Where("it in (-2L, -3L)");
 
             //Assert
             Assert.Equal(resultValuesL.ToArray(), resultL);
