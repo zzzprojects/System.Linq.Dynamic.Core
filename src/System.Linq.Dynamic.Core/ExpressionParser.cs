@@ -281,16 +281,7 @@ namespace System.Linq.Dynamic.Core
         readonly int _textLen;
         char _ch;
         Token _token;
-        private static char NumberDecimalSeparatorFromCulture = '.';
-
-        private static char NumberDecimalSeparator
-        {
-            get
-            {
-                return NumberDecimalSeparatorFromCulture;
-                //return GlobalConfig.NumberDecimalSeparator != default(char) ? GlobalConfig.NumberDecimalSeparator : NumberDecimalSeparatorFromCulture;
-            }
-        }
+        private static char NumberDecimalSeparator = '.';
 
         static ExpressionParser()
         {
@@ -308,10 +299,9 @@ namespace System.Linq.Dynamic.Core
             UpdatePredefinedTypes("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
             UpdatePredefinedTypes("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
 #endif
-
             // detect NumberDecimalSeparator from current culture
-            NumberFormatInfo numberFormatInfo = CultureInfo.CurrentCulture.NumberFormat;
-            NumberDecimalSeparatorFromCulture = numberFormatInfo.NumberDecimalSeparator[0];
+            //NumberFormatInfo numberFormatInfo = CultureInfo.CurrentCulture.NumberFormat;
+            //NumberDecimalSeparatorFromCulture = numberFormatInfo.NumberDecimalSeparator[0];
         }
 
         private static void UpdatePredefinedTypes(string typeName, int x)
@@ -953,32 +943,6 @@ namespace System.Linq.Dynamic.Core
             }
         }
 
-        //Expression ParseRealLiteral()
-        //{
-        //    ValidateToken(TokenId.RealLiteral);
-        //    string text = _token.text;
-        //    object value = null;
-        //    char last = text[text.Length - 1];
-        //    if (last == 'F' || last == 'f')
-        //    {
-        //        float f;
-        //        if (float.TryParse(text.Substring(0, text.Length - 1), out f)) value = f;
-        //    }
-        //    else if (last == 'D' || last == 'd')
-        //    {
-        //        double d;
-        //        if (double.TryParse(text.Substring(0, text.Length - 1), out d)) value = d;
-        //    }
-        //    else
-        //    {
-        //        double d;
-        //        if (double.TryParse(text, out d)) value = d;
-        //    }
-        //    if (value == null) throw ParseError(Res.InvalidRealLiteral, text);
-        //    NextToken();
-        //    return CreateLiteral(value, text);
-        //}
-
         Expression ParseRealLiteral()
         {
             ValidateToken(TokenId.RealLiteral);
@@ -995,7 +959,7 @@ namespace System.Linq.Dynamic.Core
             if (qualifier == 'F' || qualifier == 'f')
             {
                 float f;
-                if (float.TryParse(text.Substring(0, text.Length - 1), out f))
+                if (float.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out f))
                 {
                     return CreateLiteral(f, text);
                 }
@@ -1010,13 +974,13 @@ namespace System.Linq.Dynamic.Core
             double d;
             if (qualifier == 'D' || qualifier == 'd')
             {
-                if (double.TryParse(text.Substring(0, text.Length - 1), out d))
+                if (double.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Number, CultureInfo.InvariantCulture, out d))
                 {
                     return CreateLiteral(d, text);
                 }
             }
 
-            if (double.TryParse(text, out d))
+            if (double.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out d))
             {
                 return CreateLiteral(d, text);
             }
