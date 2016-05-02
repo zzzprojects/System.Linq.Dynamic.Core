@@ -9,6 +9,21 @@ namespace System.Linq.Dynamic.Core.Tests
     public class ExpressionTests
     {
         [Fact]
+        public void ExpressionTests_StringConcatenation()
+        {
+            //Arrange
+            var baseQuery = new[] { new { First = "FirstName", Last = "LastName" } }.AsQueryable();
+
+            //Act
+            var result1 = baseQuery.Select<string>("it.First + \" \" + it.Last");
+            var result2 = baseQuery.Select<string>("it.First & \" \" & it.Last");
+
+            //Assert
+            Assert.Equal("FirstName LastName", result1.First());
+            Assert.Equal("FirstName LastName", result2.First());
+        }
+
+        [Fact]
         public void ExpressionTests_Double()
         {
             //Arrange

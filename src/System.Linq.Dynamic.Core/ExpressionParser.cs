@@ -591,7 +591,16 @@ namespace System.Linq.Dynamic.Core
                 switch (op.id)
                 {
                     case TokenId.Amphersand:
-                        left = Expression.And(left, right);
+                        // When at least one side of the operator is a string, consider it's a VB-style concatenation operator.
+                        // Doesn't break any other function since logical AND with a string is invalid anyway.
+                        if (left.Type == typeof(string) || right.Type == typeof(string))
+                        {
+                            left = GenerateStringConcat(left, right);
+                        }
+                        else
+                        {
+                            left = Expression.And(left, right);
+                        }
                         break;
                     case TokenId.Bar:
                         left = Expression.Or(left, right);
@@ -2298,9 +2307,10 @@ namespace System.Linq.Dynamic.Core
 
         static Expression GenerateStringConcat(Expression left, Expression right)
         {
+            // Allow concat String with something else
             return Expression.Call(
                 null,
-                typeof(string).GetMethod("Concat", new[] { typeof(object), typeof(object) }),
+                typeof(string).GetMethod("Concat", new[] { left.Type, right.Type }),
                 new[] { left, right });
         }
 
