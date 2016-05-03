@@ -1,10 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
-using System.Reflection;
 using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core
@@ -99,11 +96,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.Condition(count, x => x > 0, nameof(count));
 
-            return source.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), "Take",
-                    new[] { source.ElementType },
-                    source.Expression, Expression.Constant(count)));
+            return Queryable.Take((IQueryable<object>)source, count);
         }
 
         public static IQueryable<TSource> Take<TSource>([NotNull] this IQueryable<TSource> source, int count)
@@ -129,11 +122,7 @@ namespace System.Linq.Dynamic.Core
             if (count == 0)
                 return source;
 
-            return source.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), "Skip",
-                    new[] { source.ElementType },
-                    source.Expression, Expression.Constant(count)));
+            return Queryable.Skip((IQueryable<object>)source, count);
         }
 
         public static IQueryable<TSource> Skip<TSource>([NotNull] this IQueryable<TSource> source, int count)
@@ -153,9 +142,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return source.Provider.CreateQuery(Expression.Call(
-                typeof(Queryable), "Reverse",
-                new[] { source.ElementType }, source.Expression));
+            return Queryable.Reverse((IQueryable<object>)source);
         }
         #endregion
 
@@ -169,17 +156,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return (bool)source.Provider.Execute(
-                Expression.Call(
-                    typeof(Queryable), "Any",
-                    new[] { source.ElementType }, source.Expression));
-
-            //return (bool) source.Provider.Execute(
-            //   Expression.Call(
-            //       null,
-            //       MethodInfoHelper.GetMethodInfoOf(() => BasicQueryable.Any(default(IQueryable))),
-            //       new Expression[] { source.Expression }
-            //       ));
+            return Queryable.Any((IQueryable<object>)source);
         }
 
         public static bool Any<TSource>([NotNull] this IQueryable<TSource> source)
@@ -198,10 +175,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return (int)source.Provider.Execute(
-                Expression.Call(
-                    typeof(Queryable), "Count",
-                    new[] { source.ElementType }, source.Expression));
+            return Queryable.Count((IQueryable<object>)source);
         }
 
         public static int Count<TSource>([NotNull] this IQueryable<TSource> source)

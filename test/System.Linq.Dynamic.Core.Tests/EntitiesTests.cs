@@ -80,75 +80,75 @@ namespace System.Linq.Dynamic.Core.Tests
         #endregion
 
         #region Any
-        //[Fact]
-        //public void Entities_Any()
-        //{
-        //    //Arrange
-        //    PopulateTestData(1, 0);
+        [Fact]
+        public void Entities_Any()
+        {
+            //Arrange
+            PopulateTestData(1, 0);
 
-        //    var expectedQueryable1 = _context.Blogs.Where(b => b.BlogId > 0);
-        //    bool expectedAny1 = expectedQueryable1.Any();
+            var expectedQueryable1 = _context.Blogs.Where(b => b.BlogId > 0);
+            bool expectedAny1 = expectedQueryable1.Any();
 
-        //    var expectedQueryable2 = _context.Blogs.Where(b => b.BlogId > 9999);
-        //    bool expectedAny2 = expectedQueryable2.Any();
+            var expectedQueryable2 = _context.Blogs.Where(b => b.BlogId > 9999);
+            bool expectedAny2 = expectedQueryable2.Any();
 
-        //    //Act
-        //    IQueryable queryable1 = _context.Blogs.Where("BlogId > 0");
-        //    bool any1 = queryable1.Any();
+            //Act
+            IQueryable queryable1 = _context.Blogs.Where("BlogId > 0");
+            bool any1 = queryable1.Any();
 
-        //    IQueryable queryable2 = _context.Blogs.Where("BlogId > 9999");
-        //    bool any2 = queryable2.Any();
+            IQueryable queryable2 = _context.Blogs.Where("BlogId > 9999");
+            bool any2 = queryable2.Any();
 
-        //    //Assert
-        //    Assert.Equal(expectedAny1, any1);
-        //    Assert.Equal(expectedAny2, any2);
-        //}
+            //Assert
+            Assert.Equal(expectedAny1, any1);
+            Assert.Equal(expectedAny2, any2);
+        }
         #endregion
 
         #region Paging
-        //[Fact]
-        //public void Entities_Page()
-        //{
-        //    //Arrange
-        //    const int total = 33;
-        //    const int page = 2;
-        //    const int pageSize = 10;
-        //    PopulateTestData(total, 0);
+        [Fact]
+        public void Entities_Page()
+        {
+            //Arrange
+            const int total = 33;
+            const int page = 2;
+            const int pageSize = 10;
+            PopulateTestData(total, 0);
 
-        //    //Act
-        //    IQueryable queryable = _context.Blogs.Select("it");
-        //    bool any = queryable.Any();
-        //    var count = queryable.Count();
-        //    var result = queryable.Page(page, pageSize);
+            //Act
+            IQueryable queryable = _context.Blogs.Select("it");
+            bool any = queryable.Any();
+            var count = queryable.Count();
+            var result = queryable.Page(page, pageSize);
 
-        //    //Assert
-        //    Assert.Equal(true, any);
-        //    Assert.Equal(total, count);
-        //    Assert.Equal(_context.Blogs.Page(page, pageSize).ToArray(), result.ToDynamicArray<Blog>());
-        //}
+            //Assert
+            Assert.Equal(true, any);
+            Assert.Equal(total, count);
+            Assert.Equal(_context.Blogs.Page(page, pageSize).ToArray(), result.ToDynamicArray<Blog>());
+        }
 
-        //[Fact]
-        //public void Entities_PageResult()
-        //{
-        //    //Arrange
-        //    const int total = 44;
-        //    const int page = 2;
-        //    const int pageSize = 10;
-        //    PopulateTestData(total, 0);
+        [Fact]
+        public void Entities_PageResult()
+        {
+            //Arrange
+            const int total = 44;
+            const int page = 2;
+            const int pageSize = 10;
+            PopulateTestData(total, 0);
 
-        //    //Act
-        //    IQueryable queryable = _context.Blogs.Select("it");
-        //    var count = queryable.Count();
-        //    var result = queryable.PageResult(page, pageSize);
+            //Act
+            IQueryable queryable = _context.Blogs.Select("it");
+            var count = queryable.Count();
+            var result = queryable.PageResult(page, pageSize);
 
-        //    //Assert
-        //    Assert.Equal(total, count);
-        //    Assert.Equal(page, result.CurrentPage);
-        //    Assert.Equal(pageSize, result.PageSize);
-        //    Assert.Equal(total, result.RowCount);
-        //    Assert.Equal(5, result.PageCount);
-        //    Assert.Equal(_context.Blogs.Page(page, pageSize).ToArray(), result.Queryable.ToDynamicArray<Blog>());
-        //}
+            //Assert
+            Assert.Equal(total, count);
+            Assert.Equal(page, result.CurrentPage);
+            Assert.Equal(pageSize, result.PageSize);
+            Assert.Equal(total, result.RowCount);
+            Assert.Equal(5, result.PageCount);
+            Assert.Equal(_context.Blogs.Page(page, pageSize).ToArray(), result.Queryable.ToDynamicArray<Blog>());
+        }
         #endregion
 
         #region Select Tests
