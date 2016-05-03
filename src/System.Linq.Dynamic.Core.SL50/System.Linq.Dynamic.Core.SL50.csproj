@@ -122,6 +122,12 @@
     <Compile Include="..\System.Linq.Dynamic.Core\IDynamicLinkTypeProvider.cs">
       <Link>IDynamicLinkTypeProvider.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\MethodInfoHelper.cs">
+      <Link>MethodInfoHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\PagedResult.cs">
+      <Link>PagedResult.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\Res.cs">
       <Link>Res.cs</Link>
     </Compile>

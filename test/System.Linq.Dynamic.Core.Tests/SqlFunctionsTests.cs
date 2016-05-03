@@ -23,7 +23,7 @@ namespace System.Linq.Dynamic.Core.Tests
             _context = new BlogContext(builder.Options);
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
-            _context.EnableLogging();
+            //_context.EnableLogging();
         }
 
         // Use TestCleanup to run code after each test has run

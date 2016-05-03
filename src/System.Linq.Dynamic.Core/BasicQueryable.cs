@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
+using System.Reflection;
 using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core
@@ -15,6 +18,77 @@ namespace System.Linq.Dynamic.Core
     {
         #region IQueryable Adjustors
         /// <summary>
+        /// Returns the elements as paged.
+        /// </summary>
+        /// <param name="source">The sequence to return elements from.</param>
+        /// <param name="page">The page to return.</param>
+        /// <param name="pageSize">The number of elements per page.</param>
+        /// <returns>A <see cref="IQueryable"/> that contains the paged elements.</returns>
+        public static IQueryable Page([NotNull] this IQueryable source, int page, int pageSize)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.Condition(page, p => p > 0, nameof(page));
+            Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
+
+            return source.Skip((page - 1) * pageSize).Take(pageSize);
+        }
+
+        public static IQueryable<TSource> Page<TSource>([NotNull] this IQueryable<TSource> source, int page, int pageSize)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.Condition(page, p => p > 0, nameof(page));
+            Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
+
+            return Queryable.Take(Queryable.Skip(source, (page - 1) * pageSize), pageSize);
+        }
+
+        /// <summary>
+        /// Returns the elements as paged and include the CurrentPage, PageCount, PageSize and RowCount.
+        /// http://weblogs.asp.net/gunnarpeipman/returning-paged-results-from-repositories-using-pagedresult-lt-t-gt
+        /// </summary>
+        /// <param name="source">The sequence to return elements from.</param>
+        /// <param name="page">The page to return.</param>
+        /// <param name="pageSize">The number of elements per page.</param>
+        /// <returns>PagedResult</returns>
+        public static PagedResult PageResult([NotNull] this IQueryable source, int page, int pageSize)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.Condition(page, p => p > 0, nameof(page));
+            Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
+
+            var result = new PagedResult
+            {
+                CurrentPage = page,
+                PageSize = pageSize,
+                RowCount = source.Count()
+            };
+
+            result.PageCount = (int)Math.Ceiling((double)result.RowCount / pageSize);
+            result.Queryable = Page(source, page, pageSize);
+
+            return result;
+        }
+
+        public static PagedResult<TSource> PageResult<TSource>([NotNull] this IQueryable<TSource> source, int page, int pageSize)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.Condition(page, p => p > 0, nameof(page));
+            Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
+
+            var result = new PagedResult<TSource>
+            {
+                CurrentPage = page,
+                PageSize = pageSize,
+                RowCount = Queryable.Count(source)
+            };
+
+            result.PageCount = (int)Math.Ceiling((double)result.RowCount / pageSize);
+            result.Queryable = Page(source, page, pageSize);
+
+            return result;
+        }
+
+        /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
         /// <param name="source">The sequence to return elements from.</param>
@@ -23,13 +97,21 @@ namespace System.Linq.Dynamic.Core
         public static IQueryable Take([NotNull] this IQueryable source, int count)
         {
             Check.NotNull(source, nameof(source));
-            Check.Condition(count, x => x > 0, nameof(source));
+            Check.Condition(count, x => x > 0, nameof(count));
 
             return source.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Take",
                     new[] { source.ElementType },
                     source.Expression, Expression.Constant(count)));
+        }
+
+        public static IQueryable<TSource> Take<TSource>([NotNull] this IQueryable<TSource> source, int count)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.Condition(count, x => x > 0, nameof(count));
+
+            return Queryable.Take(source, count);
         }
 
         /// <summary>
@@ -41,7 +123,7 @@ namespace System.Linq.Dynamic.Core
         public static IQueryable Skip([NotNull] this IQueryable source, int count)
         {
             Check.NotNull(source, nameof(source));
-            Check.Condition(count, x => x >= 0, nameof(source));
+            Check.Condition(count, x => x >= 0, nameof(count));
 
             //no need to skip if count is zero
             if (count == 0)
@@ -52,6 +134,14 @@ namespace System.Linq.Dynamic.Core
                     typeof(Queryable), "Skip",
                     new[] { source.ElementType },
                     source.Expression, Expression.Constant(count)));
+        }
+
+        public static IQueryable<TSource> Skip<TSource>([NotNull] this IQueryable<TSource> source, int count)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.Condition(count, x => x >= 0, nameof(count));
+
+            return count == 0 ? source : Queryable.Skip(source, count);
         }
 
         /// <summary>
@@ -83,6 +173,20 @@ namespace System.Linq.Dynamic.Core
                 Expression.Call(
                     typeof(Queryable), "Any",
                     new[] { source.ElementType }, source.Expression));
+
+            //return (bool) source.Provider.Execute(
+            //   Expression.Call(
+            //       null,
+            //       MethodInfoHelper.GetMethodInfoOf(() => BasicQueryable.Any(default(IQueryable))),
+            //       new Expression[] { source.Expression }
+            //       ));
+        }
+
+        public static bool Any<TSource>([NotNull] this IQueryable<TSource> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Queryable.Any(source);
         }
 
         /// <summary>
@@ -98,6 +202,13 @@ namespace System.Linq.Dynamic.Core
                 Expression.Call(
                     typeof(Queryable), "Count",
                     new[] { source.ElementType }, source.Expression));
+        }
+
+        public static int Count<TSource>([NotNull] this IQueryable<TSource> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Queryable.Count(source);
         }
 
         /// <summary>
@@ -137,6 +248,13 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType }, source.Expression));
         }
 
+        public static TSource Single<TSource>([NotNull] this IQueryable<TSource> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Queryable.Single(source);
+        }
+
         /// <summary>
         /// Returns the only element of a sequence, or a default value if the sequence
         /// is empty; this method throws an exception if there is more than one element
@@ -157,6 +275,13 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType }, source.Expression));
         }
 
+        public static TSource SingleOrDefault<TSource>([NotNull] this IQueryable<TSource> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Queryable.SingleOrDefault(source);
+        }
+
         /// <summary>
         /// Returns the first element of a sequence.
         /// </summary>
@@ -173,6 +298,13 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.Execute(Expression.Call(
                 typeof(Queryable), "First",
                 new[] { source.ElementType }, source.Expression));
+        }
+
+        public static TSource First<TSource>([NotNull] this IQueryable<TSource> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Queryable.First(source);
         }
 
         /// <summary>
@@ -193,6 +325,13 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType }, source.Expression));
         }
 
+        public static TSource FirstOrDefault<TSource>([NotNull] this IQueryable<TSource> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Queryable.FirstOrDefault(source);
+        }
+
         /// <summary>
         /// Returns the last element of a sequence.
         /// </summary>
@@ -211,6 +350,13 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType }, source.Expression));
         }
 
+        public static TSource Last<TSource>([NotNull] this IQueryable<TSource> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Queryable.Last(source);
+        }
+
         /// <summary>
         /// Returns the last element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
@@ -227,6 +373,13 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.Execute(Expression.Call(
                 typeof(Queryable), "LastOrDefault",
                 new[] { source.ElementType }, source.Expression));
+        }
+
+        public static TSource LastOrDefault<TSource>([NotNull] this IQueryable<TSource> source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Queryable.LastOrDefault(source);
         }
 
 #if NET35
