@@ -6,8 +6,8 @@ install:
 - dnvm upgrade -r clr
 
 before_build:
-- nuget restore
-- cmd: dnu restore
+- cmd: dnu restore src\System.Linq.Dynamic.Core
+- cmd: dnu restore test\System.Linq.Dynamic.Core.Tests
 
 build:
   verbosity: minimal
