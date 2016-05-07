@@ -1,11 +1,13 @@
 os: Visual Studio 2015
 
+version: 1.0.1.{build}
+
 install:
 - dnvm upgrade -r clr
-- dnu restore
 
 before_build:
-  - nuget restore
+- nuget restore
+- cmd: dnu restore
 
 build:
   verbosity: minimal
