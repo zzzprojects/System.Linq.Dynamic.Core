@@ -17,6 +17,18 @@
         }
 
 
+"dotnet5.1": {
+            "dependencies": {
+                "System.Collections": "4.0.10",
+                "System.Collections.Concurrent": "4.0.10",
+                "System.Dynamic.Runtime": "4.0.0",
+                "System.Reflection.Emit": "4.0.0",
+                "System.Reflection.TypeExtensions": "4.0.0",
+                "System.Linq.Expressions": "4.0.0",
+                "System.Linq.Queryable": "4.0.0*"
+            }
+        },
+
 ,
         "dotnet": {
             "dependencies": {
