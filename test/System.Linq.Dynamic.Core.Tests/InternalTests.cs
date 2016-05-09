@@ -1,4 +1,5 @@
-﻿#if !(NET35 || NET452 || DNX452 || DNXCORE50 || DOTNET5_4 || NETSTANDARD || PORTABLE)
+﻿
+#if !(NET35 || NET452 || DNX452 || DNXCORE50 || DOTNET5_4 || DOTNET5_1 || NETSTANDARD || PORTABLE)
 using System.Threading.Tasks;
 #endif
 
@@ -6,7 +7,7 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class InternalTests
     {
-#if !(NET452 || NET35|| DNX452 || DNXCORE50 || DOTNET5_4 || NETSTANDARD || PORTABLE)
+#if !(NET452 || NET35|| DNX452 || DNXCORE50 || DOTNET5_4 || DOTNET5_1 || NETSTANDARD || PORTABLE)
         [Fact]
         public void ClassFactory_LoadTest()
         {

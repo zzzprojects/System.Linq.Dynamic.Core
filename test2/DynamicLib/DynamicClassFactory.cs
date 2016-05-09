@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using ReflectionBridge.Extensions;
 
-//,
 namespace System.Linq.Dynamic.Core
 {
     /// <summary>
@@ -16,38 +15,60 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public static class DynamicClassFactory
     {
-        private static readonly ConcurrentDictionary<string, Type> GeneratedTypes = new ConcurrentDictionary<string, Type>();
+        private static readonly ConcurrentDictionary<string, Type> GeneratedTypes =
+            new ConcurrentDictionary<string, Type>();
 
         private static readonly ModuleBuilder ModuleBuilder;
 
         // Some objects we cache
-        private static readonly CustomAttributeBuilder CompilerGeneratedAttributeBuilder = new CustomAttributeBuilder(typeof(CompilerGeneratedAttribute).GetConstructor(Type.EmptyTypes), new object[0]);
-        private static readonly CustomAttributeBuilder DebuggerBrowsableAttributeBuilder = new CustomAttributeBuilder(typeof(DebuggerBrowsableAttribute).GetConstructor(new[] { typeof(DebuggerBrowsableState) }), new object[] { DebuggerBrowsableState.Never });
-        private static readonly CustomAttributeBuilder DebuggerHiddenAttributeBuilder = new CustomAttributeBuilder(typeof(DebuggerHiddenAttribute).GetConstructor(Type.EmptyTypes), new object[0]);
+        private static readonly CustomAttributeBuilder CompilerGeneratedAttributeBuilder =
+            new CustomAttributeBuilder(typeof (CompilerGeneratedAttribute).GetConstructor(Type.EmptyTypes),
+                new object[0]);
 
-        private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
-#if DNXCORE50 || DOTNET5_4
-        private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public);
+        private static readonly CustomAttributeBuilder DebuggerBrowsableAttributeBuilder =
+            new CustomAttributeBuilder(
+                typeof (DebuggerBrowsableAttribute).GetConstructor(new[] {typeof (DebuggerBrowsableState)}),
+                new object[] {DebuggerBrowsableState.Never});
+
+        private static readonly CustomAttributeBuilder DebuggerHiddenAttributeBuilder =
+            new CustomAttributeBuilder(typeof (DebuggerHiddenAttribute).GetConstructor(Type.EmptyTypes), new object[0]);
+
+        private static readonly ConstructorInfo ObjectCtor = typeof (object).GetConstructor(Type.EmptyTypes);
+#if DNXCORE50 || DOTNET5_4 || DOTNET5_1
+        private static readonly MethodInfo ObjectToString = typeof (object).GetMethod("ToString",
+            BindingFlags.Instance | BindingFlags.Public);
 #else
         private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null);
 #endif
 
-        private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(Type.EmptyTypes);
-#if DNXCORE50 || DOTNET5_4
-        private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod("Append", new[] { typeof(string) });
-        private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod("Append", new[] { typeof(object) });
+        private static readonly ConstructorInfo StringBuilderCtor =
+            typeof (StringBuilder).GetConstructor(Type.EmptyTypes);
+
+#if DNXCORE50 || DOTNET5_4 || DOTNET5_1
+        private static readonly MethodInfo StringBuilderAppendString = typeof (StringBuilder).GetMethod("Append",
+            new[] {typeof (string)});
+
+        private static readonly MethodInfo StringBuilderAppendObject = typeof (StringBuilder).GetMethod("Append",
+            new[] {typeof (object)});
 #else
         private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod("Append", BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null);
         private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod("Append", BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(object) }, null);
 #endif
 
-        private static readonly Type EqualityComparer = typeof(EqualityComparer<>);
+        private static readonly Type EqualityComparer = typeof (EqualityComparer<>);
 
-#if DNXCORE50 || DOTNET5_4
-        private static readonly Type EqualityComparerGenericArgument = TypeExtensions.GetGenericArguments(EqualityComparer)[0];
-        private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public);
-        private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument });
-        private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", new[] { EqualityComparerGenericArgument });
+#if DNXCORE50 || DOTNET5_4 || DOTNET5_1
+        private static readonly Type EqualityComparerGenericArgument =
+            TypeExtensions.GetGenericArguments(EqualityComparer)[0];
+
+        private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default",
+            BindingFlags.Static | BindingFlags.Public);
+
+        private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals",
+            new[] {EqualityComparerGenericArgument, EqualityComparerGenericArgument});
+
+        private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode",
+            new[] {EqualityComparerGenericArgument});
 #else
         private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
         private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public, null, Type.EmptyTypes, null);
@@ -97,9 +118,13 @@ namespace System.Linq.Dynamic.Core
                     {
                         int index = Interlocked.Increment(ref _index);
 
-                        string name = names.Length != 0 ? $"<>f__AnonymousType{index}`{names.Length}" : $"<>f__AnonymousType{index}";
+                        string name = names.Length != 0
+                            ? $"<>f__AnonymousType{index}`{names.Length}"
+                            : $"<>f__AnonymousType{index}";
 
-                        TypeBuilder tb = ModuleBuilder.DefineType(name, TypeAttributes.AnsiClass | TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoLayout | TypeAttributes.BeforeFieldInit, typeof(DynamicClass));
+                        TypeBuilder tb = ModuleBuilder.DefineType(name,
+                            TypeAttributes.AnsiClass | TypeAttributes.Public | TypeAttributes.Class |
+                            TypeAttributes.AutoLayout | TypeAttributes.BeforeFieldInit, typeof (DynamicClass));
                         tb.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
 
                         GenericTypeParameterBuilder[] generics;
@@ -123,7 +148,9 @@ namespace System.Linq.Dynamic.Core
                         }
 
                         // .ctor default
-                        ConstructorBuilder constructorDef = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, Type.EmptyTypes);
+                        ConstructorBuilder constructorDef =
+                            tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig,
+                                CallingConventions.HasThis, Type.EmptyTypes);
                         constructorDef.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
 
                         ILGenerator ilgeneratorConstructorDef = constructorDef.GetILGenerator();
@@ -132,7 +159,9 @@ namespace System.Linq.Dynamic.Core
                         ilgeneratorConstructorDef.Emit(OpCodes.Ret);
 
                         // .ctor
-                        ConstructorBuilder constructor = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, generics);
+                        ConstructorBuilder constructor =
+                            tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig,
+                                CallingConventions.HasThis, generics);
                         constructor.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
 
                         ILGenerator ilgeneratorConstructor = constructor.GetILGenerator();
@@ -145,7 +174,8 @@ namespace System.Linq.Dynamic.Core
                         for (int i = 0; i < names.Length; i++)
                         {
                             // field
-                            fields[i] = tb.DefineField($"<{names[i]}>i__Field", generics[i], FieldAttributes.Private | FieldAttributes.InitOnly);
+                            fields[i] = tb.DefineField($"<{names[i]}>i__Field", generics[i],
+                                FieldAttributes.Private | FieldAttributes.InitOnly);
                             fields[i].SetCustomAttribute(DebuggerBrowsableAttributeBuilder);
 
                             // .ctor
@@ -166,21 +196,24 @@ namespace System.Linq.Dynamic.Core
                             }
                             else if (i < 255)
                             {
-                                ilgeneratorConstructor.Emit(OpCodes.Ldarg_S, (byte)(i + 1));
+                                ilgeneratorConstructor.Emit(OpCodes.Ldarg_S, (byte) (i + 1));
                             }
                             else
                             {
                                 // Ldarg uses a ushort, but the Emit only accepts short, so we use a unchecked(...), cast to short and let the CLR interpret it as ushort.
-                                ilgeneratorConstructor.Emit(OpCodes.Ldarg, unchecked((short)(i + 1)));
+                                ilgeneratorConstructor.Emit(OpCodes.Ldarg, unchecked((short) (i + 1)));
                             }
 
                             ilgeneratorConstructor.Emit(OpCodes.Stfld, fields[i]);
 
-                            PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.Standard | CallingConventions.HasThis, generics[i], Type.EmptyTypes);
+                            PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None,
+                                CallingConventions.Standard | CallingConventions.HasThis, generics[i], Type.EmptyTypes);
                             property.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
 
                             // getter
-                            MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.Standard | CallingConventions.HasThis, generics[i], new Type[0]);
+                            MethodBuilder getter = tb.DefineMethod($"get_{names[i]}",
+                                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
+                                CallingConventions.Standard | CallingConventions.HasThis, generics[i], new Type[0]);
                             getter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
 
 
@@ -193,7 +226,9 @@ namespace System.Linq.Dynamic.Core
                             property.SetGetMethod(getter);
 
                             // setter
-                            MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.Standard | CallingConventions.HasThis, null, new[] { generics[i] });
+                            MethodBuilder setter = tb.DefineMethod($"set_{names[i]}",
+                                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
+                                CallingConventions.Standard | CallingConventions.HasThis, null, new[] {generics[i]});
                             setter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
                             setter.DefineParameter(1, ParameterAttributes.In, generics[i].Name);
 
@@ -207,15 +242,20 @@ namespace System.Linq.Dynamic.Core
                         }
 
                         // ToString()
-                        MethodBuilder toString = tb.DefineMethod("ToString", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.Standard | CallingConventions.HasThis, typeof(string), Type.EmptyTypes);
+                        MethodBuilder toString = tb.DefineMethod("ToString",
+                            MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig,
+                            CallingConventions.Standard | CallingConventions.HasThis, typeof (string), Type.EmptyTypes);
                         toString.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
                         ILGenerator ilgeneratorToString = toString.GetILGenerator();
-                        ilgeneratorToString.DeclareLocal(typeof(StringBuilder));
+                        ilgeneratorToString.DeclareLocal(typeof (StringBuilder));
                         ilgeneratorToString.Emit(OpCodes.Newobj, StringBuilderCtor);
                         ilgeneratorToString.Emit(OpCodes.Stloc_0);
 
                         // Equals
-                        MethodBuilder equals = tb.DefineMethod("Equals", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.Standard | CallingConventions.HasThis, typeof(bool), new[] { typeof(object) });
+                        MethodBuilder equals = tb.DefineMethod("Equals",
+                            MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig,
+                            CallingConventions.Standard | CallingConventions.HasThis, typeof (bool),
+                            new[] {typeof (object)});
                         equals.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
                         equals.DefineParameter(1, ParameterAttributes.None, "value");
                         ILGenerator ilgeneratorEquals = equals.GetILGenerator();
@@ -228,10 +268,12 @@ namespace System.Linq.Dynamic.Core
                         Label equalsLabel = ilgeneratorEquals.DefineLabel();
 
                         // GetHashCode()
-                        MethodBuilder getHashCode = tb.DefineMethod("GetHashCode", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.Standard | CallingConventions.HasThis, typeof(int), Type.EmptyTypes);
+                        MethodBuilder getHashCode = tb.DefineMethod("GetHashCode",
+                            MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig,
+                            CallingConventions.Standard | CallingConventions.HasThis, typeof (int), Type.EmptyTypes);
                         getHashCode.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
                         ILGenerator ilgeneratorGetHashCode = getHashCode.GetILGenerator();
-                        ilgeneratorGetHashCode.DeclareLocal(typeof(int));
+                        ilgeneratorGetHashCode.DeclareLocal(typeof (int));
 
                         if (names.Length == 0)
                         {
@@ -245,7 +287,7 @@ namespace System.Linq.Dynamic.Core
 
                             for (int i = 0; i < names.Length; i++)
                             {
-                                initHash = unchecked(initHash * (-1521134295) + fields[i].Name.GetHashCode());
+                                initHash = unchecked(initHash*(-1521134295) + fields[i].Name.GetHashCode());
                             }
 
                             // Note that the CSC seems to generate a different seed for every anonymous class
@@ -254,14 +296,16 @@ namespace System.Linq.Dynamic.Core
 
                         for (int i = 0; i < names.Length; i++)
                         {
-#if DNXCORE50 || DOTNET5_4
+#if DNXCORE50 || DOTNET5_4 || DOTNET5_1
                             Type equalityComparerT = EqualityComparer.MakeGenericType(generics[i].AsType());
 #else
                             Type equalityComparerT = EqualityComparer.MakeGenericType(generics[i]);
 #endif
                             // Equals()
-                            MethodInfo equalityComparerTDefault = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerDefault);
-                            MethodInfo equalityComparerTEquals = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerEquals);
+                            MethodInfo equalityComparerTDefault = TypeBuilder.GetMethod(equalityComparerT,
+                                EqualityComparerDefault);
+                            MethodInfo equalityComparerTEquals = TypeBuilder.GetMethod(equalityComparerT,
+                                EqualityComparerEquals);
                             ilgeneratorEquals.Emit(OpCodes.Brfalse_S, equalsLabel);
                             ilgeneratorEquals.Emit(OpCodes.Call, equalityComparerTDefault);
                             ilgeneratorEquals.Emit(OpCodes.Ldarg_0);
@@ -271,7 +315,8 @@ namespace System.Linq.Dynamic.Core
                             ilgeneratorEquals.Emit(OpCodes.Callvirt, equalityComparerTEquals);
 
                             // GetHashCode();
-                            MethodInfo equalityComparerTGetHashCode = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerGetHashCode);
+                            MethodInfo equalityComparerTGetHashCode = TypeBuilder.GetMethod(equalityComparerT,
+                                EqualityComparerGetHashCode);
                             ilgeneratorGetHashCode.Emit(OpCodes.Stloc_0);
                             ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4, -1521134295);
                             ilgeneratorGetHashCode.Emit(OpCodes.Ldloc_0);
@@ -290,7 +335,7 @@ namespace System.Linq.Dynamic.Core
                             ilgeneratorToString.Emit(OpCodes.Ldloc_0);
                             ilgeneratorToString.Emit(OpCodes.Ldarg_0);
                             ilgeneratorToString.Emit(OpCodes.Ldfld, fields[i]);
-#if DNXCORE50 || DOTNET5_4
+#if DNXCORE50 || DOTNET5_4 || DOTNET5_1
                             ilgeneratorToString.Emit(OpCodes.Box, generics[i].AsType());
 #else
                             ilgeneratorToString.Emit(OpCodes.Box, generics[i]);
@@ -333,7 +378,7 @@ namespace System.Linq.Dynamic.Core
                         ilgeneratorToString.Emit(OpCodes.Callvirt, ObjectToString);
                         ilgeneratorToString.Emit(OpCodes.Ret);
 
-#if DNXCORE50 || DOTNET5_4
+#if DNXCORE50 || DOTNET5_4 || DOTNET5_1
                         type = tb.CreateTypeInfo().AsType();
 #else
                         type = tb.CreateType();
@@ -358,10 +403,9 @@ namespace System.Linq.Dynamic.Core
                 {
                     var x = parameter.GetCustomAttributes(false);
 
-                    
+
                     if (x == null)
                     {
-                        
                     }
                 }
             }

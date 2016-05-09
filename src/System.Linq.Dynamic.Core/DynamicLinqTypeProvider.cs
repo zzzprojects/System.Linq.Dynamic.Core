@@ -8,21 +8,19 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public class DefaultDynamicLinqCustomTypeProvider : IDynamicLinkCustomTypeProvider
     {
-        HashSet<Type> _customTypes;
+        private HashSet<Type> _customTypes;
 
         /// <summary>
         /// Returns a list of custom types that Dynamic Linq will understand.
         /// </summary>
         public virtual HashSet<Type> GetCustomTypes()
         {
-            if (_customTypes == null) _customTypes = new HashSet<Type>(FindTypesMarkedWithAttribute());
-
-            return _customTypes;
+            return _customTypes ?? (_customTypes = new HashSet<Type>(FindTypesMarkedWithAttribute()));
         }
 
-        static IEnumerable<Type> FindTypesMarkedWithAttribute()
+        private static IEnumerable<Type> FindTypesMarkedWithAttribute()
         {
-#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || NETSTANDARD)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || DOTNET5_1 || NETSTANDARD)
             return AppDomain.CurrentDomain.GetAssemblies()
 #if !(NET35)
                 .Where(x => !x.IsDynamic)
@@ -32,7 +30,7 @@ namespace System.Linq.Dynamic.Core
 #else
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var definedTypes = assemblies.SelectMany(x => x.DefinedTypes);
-            return definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(DynamicLinqTypeAttribute))).Select(x => x.AsType());
+            return definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof (DynamicLinqTypeAttribute))).Select(x => x.AsType());
 #endif
         }
     }

@@ -11,7 +11,8 @@ The following frameworks are supported:
 - net46x
 - dnx45x
 - dnxcore50
-- dotnet54
+- dotnet5.4
+- dotnet5.1
 - SilverLight 5.0
 
 <br>

@@ -1,8 +1,10 @@
-﻿#if DNXCORE50 || DOTNET5_4 || NETFX || NETSTANDARD
+﻿#if DNXCORE50 || DOTNET5_4 || DOTNET5_1 || NETFX || NETSTANDARD
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+#if !DOTNET5_1
 using Microsoft.Extensions.PlatformAbstractions;
+#endif
 
 namespace System.Linq.Dynamic.Core
 {
@@ -18,7 +20,7 @@ namespace System.Linq.Dynamic.Core
             CurrentDomain = new AppDomain();
         }
 
-#if (NETSTANDARD)
+#if (NETSTANDARD || DOTNET5_1)
         public Assembly[] GetAssemblies()
         {
             return new List<Assembly>().ToArray(); // TODO
@@ -26,21 +28,26 @@ namespace System.Linq.Dynamic.Core
 #elif DNXCORE50 || DOTNET5_4
         public Assembly[] GetAssemblies()
         {
-            var assemblyNames = PlatformServices.Default.LibraryManager.GetLibraries().SelectMany(lib => lib.Assemblies).Distinct().ToArray();
+            var assemblyNames =
+                PlatformServices.Default.LibraryManager.GetLibraries()
+                    .SelectMany(lib => lib.Assemblies)
+                    .Distinct()
+                    .ToArray();
 
             var assemblies = new List<Assembly>();
             foreach (var assembly in assemblyNames.Select(Assembly.Load))
             {
                 try
                 {
-                    var dummy = assembly.DefinedTypes.ToArray(); // just load all types and skip this assembly of one or more types cannot be resolved
+                    var dummy = assembly.DefinedTypes.ToArray();
+                    // just load all types and skip this assembly of one or more types cannot be resolved
                     assemblies.Add(assembly);
                 }
                 catch (Exception)
                 {
                 }
             }
-            
+
             return assemblies.ToArray();
         }
 #else
@@ -67,10 +74,12 @@ namespace System.Linq.Dynamic.Core
             return assemblies;
         }
 #endif
+
         public AssemblyBuilder DefineDynamicAssembly(AssemblyName name, AssemblyBuilderAccess access)
         {
             return AssemblyBuilder.DefineDynamicAssembly(name, access);
         }
     }
 }
+
 #endif

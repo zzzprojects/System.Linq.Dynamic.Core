@@ -76,7 +76,8 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(testList.OrderByDescending(x => x.Profile.Age).ToArray(), orderByAgeDesc.ToArray());
 
             Assert.Equal(testList.OrderBy(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex.ToArray());
-            Assert.Equal(testList.OrderByDescending(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex2.ToArray());
+            Assert.Equal(testList.OrderByDescending(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(),
+                orderByComplex2.ToArray());
         }
 
         [Fact]
@@ -121,8 +122,19 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Act
             var users = User.GenerateSampleModels(2);
-            users[0].Roles = new List<Role> { new Role { Name = "Admin", Permissions = new List<Permission> { new Permission { Name = "p-Admin" }, new Permission { Name = "p-User" } } } };
-            users[1].Roles = new List<Role> { new Role { Name = "Guest", Permissions = new List<Permission> { new Permission { Name = "p-Guest" } } } };
+            users[0].Roles = new List<Role>
+            {
+                new Role
+                {
+                    Name = "Admin",
+                    Permissions =
+                        new List<Permission> {new Permission {Name = "p-Admin"}, new Permission {Name = "p-User"}}
+                }
+            };
+            users[1].Roles = new List<Role>
+            {
+                new Role {Name = "Guest", Permissions = new List<Permission> {new Permission {Name = "p-Guest"}}}
+            };
 
             var query = users.AsQueryable();
 
@@ -139,8 +151,19 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Act
             var users = User.GenerateSampleModels(2);
-            users[0].Roles = new List<Role> { new Role { Name = "Admin", Permissions = new List<Permission> { new Permission { Name = "p-Admin" }, new Permission { Name = "p-User" } } } };
-            users[1].Roles = new List<Role> { new Role { Name = "Guest", Permissions = new List<Permission> { new Permission { Name = "p-Guest" } } } };
+            users[0].Roles = new List<Role>
+            {
+                new Role
+                {
+                    Name = "Admin",
+                    Permissions =
+                        new List<Permission> {new Permission {Name = "p-Admin"}, new Permission {Name = "p-User"}}
+                }
+            };
+            users[1].Roles = new List<Role>
+            {
+                new Role {Name = "Guest", Permissions = new List<Permission> {new Permission {Name = "p-Guest"}}}
+            };
 
             var query = users.AsQueryable();
 
@@ -157,14 +180,25 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Act
             var users = User.GenerateSampleModels(2);
-            users[0].Roles = new List<Role> { new Role { Name = "Admin", Permissions = new List<Permission> { new Permission { Name = "p-Admin" }, new Permission { Name = "p-User" } } } };
-            users[1].Roles = new List<Role> { new Role { Name = "Guest", Permissions = new List<Permission> { new Permission { Name = "p-Guest" } } } };
+            users[0].Roles = new List<Role>
+            {
+                new Role
+                {
+                    Name = "Admin",
+                    Permissions =
+                        new List<Permission> {new Permission {Name = "p-Admin"}, new Permission {Name = "p-User"}}
+                }
+            };
+            users[1].Roles = new List<Role>
+            {
+                new Role {Name = "Guest", Permissions = new List<Permission> {new Permission {Name = "p-Guest"}}}
+            };
 
             var query = users.AsQueryable();
 
             // Assign
             var queryNormal = query.SelectMany(u => u.Roles.SelectMany(r => r.Permissions)).ToList();
-            var queryDynamic = query.SelectMany(typeof(Permission), "Roles.SelectMany(Permissions)").ToDynamicList();
+            var queryDynamic = query.SelectMany(typeof (Permission), "Roles.SelectMany(Permissions)").ToDynamicList();
 
             // Assert
             Assert.Equal(queryNormal, queryDynamic);
@@ -174,34 +208,37 @@ namespace System.Linq.Dynamic.Core.Tests
         public void SelectMany_WithResultProjection()
         {
             //Arrange
-            List<int> rangeOfInt = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            List<double> rangeOfDouble = new List<double> { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
-            List<KeyValuePair<int, double>> range = rangeOfInt.SelectMany(e => rangeOfDouble, (x, y) => new KeyValuePair<int, double>(x, y)).ToList();
+            List<int> rangeOfInt = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            List<double> rangeOfDouble = new List<double> {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
+            List<KeyValuePair<int, double>> range =
+                rangeOfInt.SelectMany(e => rangeOfDouble, (x, y) => new KeyValuePair<int, double>(x, y)).ToList();
 
             //Act
             IEnumerable rangeResult = rangeOfInt.AsQueryable()
-                .SelectMany("@0", "new(x as _A, y as _B)", new object[] { rangeOfDouble })
+                .SelectMany("@0", "new(x as _A, y as _B)", new object[] {rangeOfDouble})
                 .Select("it._A * it._B");
 
             //Assert
-            Assert.Equal(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
+            Assert.Equal(range.Select(t => t.Key*t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
         }
 
         [Fact]
         public void SelectMany_WithResultProjection_CustomParameterNames()
         {
             //Arrange
-            List<int> rangeOfInt = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            List<double> rangeOfDouble = new List<double> { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
-            List<KeyValuePair<int, double>> range = rangeOfInt.SelectMany(e => rangeOfDouble, (x, y) => new KeyValuePair<int, double>(x, y)).ToList();
+            List<int> rangeOfInt = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+            List<double> rangeOfDouble = new List<double> {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
+            List<KeyValuePair<int, double>> range =
+                rangeOfInt.SelectMany(e => rangeOfDouble, (x, y) => new KeyValuePair<int, double>(x, y)).ToList();
 
             //Act
             IEnumerable rangeResult = rangeOfInt.AsQueryable()
-                .SelectMany("@0", "new(VeryNiceName as _A, OtherName as _X)", "VeryNiceName", "OtherName", new object[] { rangeOfDouble })
+                .SelectMany("@0", "new(VeryNiceName as _A, OtherName as _X)", "VeryNiceName", "OtherName",
+                    new object[] {rangeOfDouble})
                 .Select("it._A * it._X");
 
             //Assert
-            Assert.Equal(range.Select(t => t.Key * t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
+            Assert.Equal(range.Select(t => t.Key*t.Value).ToArray(), rangeResult.Cast<double>().ToArray());
         }
 
         [Fact]
@@ -212,7 +249,8 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            string includesX = ", it.Company as TEntity__Company, it.Company.MainCompany as TEntity__Company_MainCompany, it.Country as TEntity__Country, it.Function as TEntity__Function, it.SubFunction as TEntity__SubFunction";
+            string includesX =
+                ", it.Company as TEntity__Company, it.Company.MainCompany as TEntity__Company_MainCompany, it.Country as TEntity__Country, it.Function as TEntity__Function, it.SubFunction as TEntity__SubFunction";
             string select = $"new (\"__Key__\" as __Key__, it AS TEntity__{includesX})";
 
             var userNames = qry.Select(select).ToDynamicList();
@@ -242,7 +280,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Select_TResult()
         {
             //Arrange
-            List<int> range = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            List<int> range = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             var testList = User.GenerateSampleModels(100);
             var qry = testList.AsQueryable();
 
@@ -252,7 +290,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var userProfiles = qry.Select<UserProfile>("Profile").ToList();
 
             //Assert
-            Assert.Equal(range.Select(x => x * x).ToList(), rangeResult);
+            Assert.Equal(range.Select(x => x*x).ToList(), rangeResult);
             Assert.Equal(testList.Select(x => x.UserName).ToList(), userNames);
             Assert.Equal(testList.Select(x => x.Profile).ToList(), userProfiles);
         }
@@ -261,17 +299,17 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Select_IntoType()
         {
             //Arrange
-            List<int> range = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            List<int> range = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             var testList = User.GenerateSampleModels(10);
             var qry = testList.AsQueryable();
 
             //Act
-            IEnumerable rangeResult = range.AsQueryable().Select(typeof(int), "it * it");
-            var userNames = qry.Select(typeof(string), "UserName");
-            var userProfiles = qry.Select(typeof(UserProfile), "Profile");
+            IEnumerable rangeResult = range.AsQueryable().Select(typeof (int), "it * it");
+            var userNames = qry.Select(typeof (string), "UserName");
+            var userProfiles = qry.Select(typeof (UserProfile), "Profile");
 
             //Assert
-            Assert.Equal(range.Select(x => x * x).Cast<object>().ToList(), rangeResult.ToDynamicList());
+            Assert.Equal(range.Select(x => x*x).Cast<object>().ToList(), rangeResult.ToDynamicList());
             Assert.Equal(testList.Select(x => x.UserName).Cast<object>().ToList(), userNames.ToDynamicList());
             Assert.Equal(testList.Select(x => x.Profile).Cast<object>().ToList(), userProfiles.ToDynamicList());
         }
@@ -280,7 +318,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Select()
         {
             //Arrange
-            List<int> range = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            List<int> range = new List<int> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
             var testList = User.GenerateSampleModels(100);
             var qry = testList.AsQueryable();
 
@@ -291,16 +329,18 @@ namespace System.Linq.Dynamic.Core.Tests
             var userRoles = qry.Select("new (UserName, Roles.Select(Id) AS RoleIds)");
 
             //Assert
-            Assert.Equal(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
+            Assert.Equal(range.Select(x => x*x).ToArray(), rangeResult.Cast<int>().ToArray());
 
-#if NET35 || DNXCORE50 || DOTNET5_4
+#if NET35 || DNXCORE50 || DOTNET5_4 || DOTNET5_1
             Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.AsEnumerable().Cast<string>().ToArray());
             Assert.Equal(testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.Cast<object>().Select(x => x.ToString()).ToArray());
             Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().GetDynamicProperty<IEnumerable<Guid>>("RoleIds")));
 #else
             Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.Cast<string>().ToArray());
-            Assert.Equal(testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
+            Assert.Equal(
+                testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }")
+                    .ToArray(),
                 userFirstName.AsEnumerable().Select(x => x.ToString()).Cast<string>().ToArray());
             Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().RoleIds));
 #endif
@@ -356,12 +396,12 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => qry.GroupBy("new (Id, UserName"));
             Assert.Throws<ParseException>(() => qry.GroupBy("new (Id, UserName, Bad)"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.GroupBy((IQueryable<string>)null, "Id"));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.GroupBy((IQueryable<string>) null, "Id"));
             Assert.Throws<ArgumentNullException>(() => qry.GroupBy(null));
             Assert.Throws<ArgumentException>(() => qry.GroupBy(""));
             Assert.Throws<ArgumentException>(() => qry.GroupBy(" "));
 
-            Assert.Throws<ArgumentNullException>(() => qry.GroupBy("Id", (string)null));
+            Assert.Throws<ArgumentNullException>(() => qry.GroupBy("Id", (string) null));
             Assert.Throws<ArgumentException>(() => qry.GroupBy("Id", ""));
             Assert.Throws<ArgumentException>(() => qry.GroupBy("Id", " "));
         }
@@ -408,12 +448,12 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(sel.Skip(1).First().Subgroups.Count(), 2);
         }
 
-        class Person
+        private class Person
         {
             public string Name { get; set; }
         }
 
-        class Pet
+        private class Pet
         {
             public string Name { get; set; }
             public Person Owner { get; set; }
@@ -423,17 +463,17 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Join()
         {
             //Arrange
-            Person magnus = new Person { Name = "Hedlund, Magnus" };
-            Person terry = new Person { Name = "Adams, Terry" };
-            Person charlotte = new Person { Name = "Weiss, Charlotte" };
+            Person magnus = new Person {Name = "Hedlund, Magnus"};
+            Person terry = new Person {Name = "Adams, Terry"};
+            Person charlotte = new Person {Name = "Weiss, Charlotte"};
 
-            Pet barley = new Pet { Name = "Barley", Owner = terry };
-            Pet boots = new Pet { Name = "Boots", Owner = terry };
-            Pet whiskers = new Pet { Name = "Whiskers", Owner = charlotte };
-            Pet daisy = new Pet { Name = "Daisy", Owner = magnus };
+            Pet barley = new Pet {Name = "Barley", Owner = terry};
+            Pet boots = new Pet {Name = "Boots", Owner = terry};
+            Pet whiskers = new Pet {Name = "Whiskers", Owner = charlotte};
+            Pet daisy = new Pet {Name = "Daisy", Owner = magnus};
 
-            List<Person> people = new List<Person> { magnus, terry, charlotte };
-            List<Pet> pets = new List<Pet> { barley, boots, whiskers, daisy };
+            List<Person> people = new List<Person> {magnus, terry, charlotte};
+            List<Pet> pets = new List<Pet> {barley, boots, whiskers, daisy};
 
 
             //Act
@@ -442,7 +482,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 person => person,
                 pet => pet.Owner,
                 (person, pet) =>
-                new { OwnerName = person.Name, Pet = pet.Name });
+                    new {OwnerName = person.Name, Pet = pet.Name});
 
             var dynamicQuery = people.AsQueryable().Join(
                 pets,
@@ -453,7 +493,7 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             var realResult = realQuery.ToArray();
 
-#if DNXCORE50 || DOTNET5_4
+#if DNXCORE50 || DOTNET5_4 || DOTNET5_1
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
             Assert.Equal(realResult.Length, dynamicResult.Length);
@@ -473,6 +513,5 @@ namespace System.Linq.Dynamic.Core.Tests
             }
 #endif
         }
-
     }
 }
