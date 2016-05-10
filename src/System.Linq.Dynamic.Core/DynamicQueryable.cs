@@ -202,7 +202,15 @@ namespace System.Linq.Dynamic.Core
             //http://stackoverflow.com/a/3001674/2465182
 
             // if resultType is not specified, create one based on the lambda.Body.Type
-            resultType = resultType ?? lambda.Body.Type.GetTypeInfo().GetGenericTypeArguments()[0];
+            if (resultType == null)
+            {
+                // SelectMany assumes that lambda.Body.Type is a generic type and throws an exception on
+                // lambda.Body.Type.GetGenericArguments()[0] when used over an array as GetGenericArguments() returns an empty array.
+                if (lambda.Body.Type.IsArray)
+                    resultType = lambda.Body.Type.GetElementType();
+                else
+                    resultType = lambda.Body.Type.GetGenericArguments()[0];
+            }
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
             Type enumerableType = typeof(IEnumerable<>).MakeGenericType(resultType);
