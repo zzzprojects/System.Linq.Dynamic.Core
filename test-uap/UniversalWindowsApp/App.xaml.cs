@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -35,12 +38,40 @@ namespace UniversalWindowsApp
             this.InitializeComponent();
             this.Suspending += OnSuspending;
 
-            Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
-
             var containsList = new List<int> {0, 1, 2, 3};
             var q = containsList.AsQueryable().Where("it > 1");
             var a = q.ToDynamicArray<int>();
             int y = 0;
+
+            var asm  = GetAssemblyListAsync().Result;
+            int r = 0;
+        }
+
+        private static async Task<List<Assembly>> GetAssemblyListAsync()
+        {
+            List<Assembly> assemblies = new List<Assembly>();
+
+            var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
+            if (files == null)
+                return assemblies;
+
+            foreach (var file in files.Where(file => file.FileType == ".dll" || file.FileType == ".exe"))
+            {
+                try
+                {
+                    var assembly = Assembly.Load(new AssemblyName(file.DisplayName));
+
+                    // just load all types and skip this assembly of one or more types cannot be resolved
+                    var dummy = assembly.DefinedTypes.ToArray();
+                    assemblies.Add(assembly);
+                }
+                catch (Exception ex)
+                {
+                    Debug.Write(ex.Message);
+                }
+            }
+
+            return assemblies;
         }
 
         /// <summary>
