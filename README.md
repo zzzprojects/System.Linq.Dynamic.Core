@@ -13,6 +13,7 @@ The following frameworks are supported:
 - dnxcore50
 - dotnet5.4
 - dotnet5.1
+- uap10.0
 - SilverLight 5.0
 
 <br>

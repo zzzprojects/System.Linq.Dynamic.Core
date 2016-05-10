@@ -1,8 +1,8 @@
-﻿#if DNXCORE50 || DOTNET5_4 || DOTNET5_1 || NETFX || NETSTANDARD
+﻿#if DNXCORE50 || DOTNET5_4 || DOTNET5_1 || UAP10_0 || NETFX || NETSTANDARD
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-#if !DOTNET5_1
+#if !(DOTNET5_1 || UAP10_0)
 using Microsoft.Extensions.PlatformAbstractions;
 #endif
 
@@ -20,7 +20,7 @@ namespace System.Linq.Dynamic.Core
             CurrentDomain = new AppDomain();
         }
 
-#if (NETSTANDARD || DOTNET5_1)
+#if (NETSTANDARD || DOTNET5_1 || UAP10_0)
         public Assembly[] GetAssemblies()
         {
             return new List<Assembly>().ToArray(); // TODO

@@ -319,7 +319,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var testResult = testListQry.OrderBy("Roles.First().Name").Select("Id");
 
             //Assert
-#if NET35 || DNX452 || DNXCORE50 || DOTNET5_4 || DOTNET5_1
+#if NET35 || DNX452 || DNXCORE50 || DOTNET5_4 || DOTNET5_1 || UAP10_0
             Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
 #else
             Assert.Equal(realResult, testResult.ToDynamicArray().Cast<Guid>());
@@ -378,7 +378,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var testResult = testListQry.OrderBy("Roles.Last().Name").Select("Id");
 
             //Assert
-#if NET35 || DNX452 || DNXCORE50 || DOTNET5_4 || DOTNET5_1
+#if NET35 || DNX452 || DNXCORE50 || DOTNET5_4 || DOTNET5_1 || UAP10_0
             Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
 #else
             Assert.Equal(realResult, testResult.ToDynamicArray().Cast<Guid>());
@@ -398,7 +398,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var testResult = testListQry.OrderBy("Roles.Single().Name").Select("Id");
 
             //Assert
-#if NET35 || DNX452 || DNXCORE50 || DOTNET5_4 || DOTNET5_1
+#if NET35 || DNX452 || DNXCORE50 || DOTNET5_4 || DOTNET5_1 || UAP10_0
             Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
 #else
             Assert.Equal(realResult, testResult.ToDynamicArray());

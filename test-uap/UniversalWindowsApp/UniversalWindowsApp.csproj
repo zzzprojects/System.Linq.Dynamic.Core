@@ -131,7 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Linq.Dynamic.Core">
-      <HintPath>..\..\artifacts\bin\System.Linq.Dynamic.Core\(Configuration)\dotnet5.1\System.Linq.Dynamic.Core.dll</HintPath>
+      <HintPath>..\..\artifacts\bin\System.Linq.Dynamic.Core\$(Configuration)\UAP10.0\System.Linq.Dynamic.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
