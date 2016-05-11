@@ -20,7 +20,7 @@ namespace System.Linq.Dynamic.Core
 
         private static IEnumerable<Type> FindTypesMarkedWithAttribute()
         {
-#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             return AppDomain.CurrentDomain.GetAssemblies()
 #if !(NET35)
                 .Where(x => !x.IsDynamic)

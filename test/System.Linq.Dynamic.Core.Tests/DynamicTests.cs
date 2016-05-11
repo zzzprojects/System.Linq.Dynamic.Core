@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Exceptions;
-using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Linq.PropertyTranslator.Core;
 using QueryInterceptor.Core;
@@ -382,7 +381,7 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
 
-#if NET35 || DNXCORE50 || DOTNET5_4 || DOTNET5_1 || UAP10_0
+#if NET35 || DNXCORE50
             Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.AsEnumerable().Cast<string>().ToArray());
             Assert.Equal(testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.Cast<object>().Select(x => x.ToString()).ToArray());
@@ -544,7 +543,7 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             var realResult = realQuery.ToArray();
 
-#if DNXCORE50 || DOTNET5_4 || DOTNET5_1 || UAP10_0
+#if DNXCORE50
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
             Assert.Equal(realResult.Length, dynamicResult.Length);
