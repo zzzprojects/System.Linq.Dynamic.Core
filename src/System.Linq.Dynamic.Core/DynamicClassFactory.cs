@@ -60,8 +60,8 @@ namespace System.Linq.Dynamic.Core
 
         static DynamicClassFactory()
         {
-            AssemblyName assemblyName = new AssemblyName("System.Linq.Dynamic.Core.DynamicClasses, Version=1.0.0.0");
-            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+            var assemblyName = new AssemblyName("System.Linq.Dynamic.Core.DynamicClasses, Version=1.0.0.0");
+            var assemblyBuilder = AssemblyBuilderFactory.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
 
             ModuleBuilder = assemblyBuilder.DefineDynamicModule("System.Linq.Dynamic.Core.DynamicClasses");
         }

@@ -74,11 +74,6 @@ namespace System.Linq.Dynamic.Core
             return assemblies;
         }
 #endif
-
-        public AssemblyBuilder DefineDynamicAssembly(AssemblyName name, AssemblyBuilderAccess access)
-        {
-            return AssemblyBuilder.DefineDynamicAssembly(name, access);
-        }
     }
 }
 

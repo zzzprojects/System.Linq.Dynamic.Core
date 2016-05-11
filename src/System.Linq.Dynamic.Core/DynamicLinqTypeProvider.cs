@@ -30,7 +30,7 @@ namespace System.Linq.Dynamic.Core
 #else
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var definedTypes = assemblies.SelectMany(x => x.DefinedTypes);
-            return definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof (DynamicLinqTypeAttribute))).Select(x => x.AsType());
+            return definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(DynamicLinqTypeAttribute))).Select(x => x.AsType());
 #endif
         }
     }
