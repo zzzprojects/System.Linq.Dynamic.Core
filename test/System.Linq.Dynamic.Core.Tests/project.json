@@ -18,6 +18,7 @@
             "dependencies": {
                 "EntityFramework.Core": "7.0.0-rc1-*",
                 "EntityFramework.InMemory": "7.0.0-rc1-*",
+                "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-*",
                 "EntityFramework.Sqlite": "7.0.0-rc1-*",
 
                 "System.Linq.Parallel": "4.0.1-beta-*",
@@ -29,6 +30,7 @@
             "dependencies": {
                 "EntityFramework.Core": "7.0.0-rc1-*",
                 "EntityFramework.InMemory": "7.0.0-rc1-*",
+                "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-*",
                 "EntityFramework.Sqlite": "7.0.0-rc1-*",
 
                 "System.Linq.Parallel": "4.0.1-beta-*",

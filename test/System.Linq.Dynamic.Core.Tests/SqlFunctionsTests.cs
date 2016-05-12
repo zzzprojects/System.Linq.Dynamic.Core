@@ -19,6 +19,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite($"Filename=SqlFunctionsTests_{Guid.NewGuid()}.db");
+            //builder.UseSqlServer(@"Data Source=(LocalDb)\v11.0;Initial Catalog=unittestdb;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\SqlFunctionsTests_{Guid.NewGuid()}.mdf");
 
             _context = new BlogContext(builder.Options);
             _context.Database.EnsureDeleted();
@@ -105,6 +106,30 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(expected.Name, test.Name);
             Assert.Equal(expected.c, test.c);
+        }
+
+        //[Fact]
+        public void SqlFunctions_StringConvert()
+        {
+            //Arrange
+            PopulateTestData(1, 0);
+
+            const string search = "1";
+            var expected = _context.Blogs.Where(b => System.Data.Entity.SqlServer.SqlFunctions.StringConvert((double)b.BlogId).Contains(search)).ToList();
+
+            try
+            {
+                System.Data.Entity.SqlServer.SqlFunctions.StringConvert(1d);
+            }
+            catch
+            {
+            }
+
+            //Act
+            var result = _context.Blogs.Where("System.Data.Entity.SqlServer.SqlFunctions.StringConvert((double) BlogId).Contains(@0)", search).ToDynamicList<Blog>();
+
+            //Assert
+            Assert.Equal(expected, result);
         }
     }
 }
