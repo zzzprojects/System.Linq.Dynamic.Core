@@ -1,4 +1,4 @@
-﻿using System.Linq.Dynamic.Core;
+﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
 
 namespace UniversalWindowsApp
 {

@@ -38,40 +38,23 @@ namespace UniversalWindowsApp
             this.InitializeComponent();
             this.Suspending += OnSuspending;
 
+            GlobalConfig.CustomTypeProvider = new WindowsAppCustomTypeProvider();
+            
             var containsList = new List<int> {0, 1, 2, 3};
             var q = containsList.AsQueryable().Where("it > 1");
             var a = q.ToDynamicArray<int>();
+
+
+            var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };
+            var qry = lst.AsQueryable();
+
+            //Act
+            var result1 = qry.Where("it < TestEnum.Var4").ToDynamicList();
+            var result2 = qry.Where("TestEnum.Var4 > it").ToDynamicList();
+            var result3 = qry.Where("it = Var5").ToDynamicList();
+            var result4 = qry.Where("it = @0", TestEnum.Var5).ToDynamicList();
+            var result5 = qry.Where("it = @0", 8).ToDynamicList();
             int y = 0;
-
-            var asm  = GetAssemblyListAsync().Result;
-            int r = 0;
-        }
-
-        private static async Task<List<Assembly>> GetAssemblyListAsync()
-        {
-            List<Assembly> assemblies = new List<Assembly>();
-
-            var files = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFilesAsync();
-            if (files == null)
-                return assemblies;
-
-            foreach (var file in files.Where(file => file.FileType == ".dll" || file.FileType == ".exe"))
-            {
-                try
-                {
-                    var assembly = Assembly.Load(new AssemblyName(file.DisplayName));
-
-                    // just load all types and skip this assembly of one or more types cannot be resolved
-                    var dummy = assembly.DefinedTypes.ToArray();
-                    assemblies.Add(assembly);
-                }
-                catch (Exception ex)
-                {
-                    Debug.Write(ex.Message);
-                }
-            }
-
-            return assemblies;
         }
 
         /// <summary>
