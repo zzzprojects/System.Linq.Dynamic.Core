@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace System.Linq.Dynamic.Core
+namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
     /// Interface for providing custom types for Dynamic Linq.

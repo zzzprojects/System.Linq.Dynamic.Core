@@ -1,4 +1,6 @@
-﻿namespace System.Linq.Dynamic.Core
+﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+
+namespace System.Linq.Dynamic.Core
 {
     /// <summary>
     /// Static configuration class for Dynamic Linq.
@@ -8,16 +10,20 @@
         static IDynamicLinkCustomTypeProvider _customTypeProvider;
 
         /// <summary>
-        /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.  Defaults to <see cref="DefaultDynamicLinqCustomTypeProvider" />.
+        /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
         /// </summary>
         public static IDynamicLinkCustomTypeProvider CustomTypeProvider
         {
             get
             {
-                if (_customTypeProvider == null) _customTypeProvider = new DefaultDynamicLinqCustomTypeProvider();
-
+#if !(DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+                // only use DefaultDynamicLinqCustomTypeProvider if not WINDOWS_APP || UAP10_0 || NETSTANDARD
+                return _customTypeProvider ?? (_customTypeProvider = new DefaultDynamicLinqCustomTypeProvider());
+#else
                 return _customTypeProvider;
+#endif
             }
+
             set
             {
                 if (_customTypeProvider != value)

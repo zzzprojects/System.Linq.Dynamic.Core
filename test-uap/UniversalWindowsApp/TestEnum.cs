@@ -1,6 +1,6 @@
-﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+﻿using System.Linq.Dynamic.Core;
 
-namespace System.Linq.Dynamic.Core.Tests.Helpers
+namespace UniversalWindowsApp
 {
     [DynamicLinqType]
     public enum TestEnum

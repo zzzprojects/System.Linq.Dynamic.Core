@@ -1467,7 +1467,8 @@ namespace System.Linq.Dynamic.Core
         static bool IsPredefinedType(Type type)
         {
             if (_predefinedTypes.ContainsKey(type)) return true;
-            if (GlobalConfig.CustomTypeProvider.GetCustomTypes().Contains(type)) return true;
+
+            if (GlobalConfig.CustomTypeProvider != null && GlobalConfig.CustomTypeProvider.GetCustomTypes().Contains(type)) return true;
 
             return false;
         }
@@ -2653,11 +2654,17 @@ namespace System.Linq.Dynamic.Core
                 d[type.FullName] = type;
                 d[type.Name] = type;
             }
-            foreach (KeyValuePair<string, Type> pair in _predefinedTypesShorthands) d.Add(pair.Key, pair.Value);
-            foreach (Type type in GlobalConfig.CustomTypeProvider.GetCustomTypes())
+
+            foreach (KeyValuePair<string, Type> pair in _predefinedTypesShorthands)
+                d.Add(pair.Key, pair.Value);
+
+            if (GlobalConfig.CustomTypeProvider != null)
             {
-                d[type.FullName] = type;
-                d[type.Name] = type;
+                foreach (Type type in GlobalConfig.CustomTypeProvider.GetCustomTypes())
+                {
+                    d[type.FullName] = type;
+                    d[type.Name] = type;
+                }
             }
 
             return d;

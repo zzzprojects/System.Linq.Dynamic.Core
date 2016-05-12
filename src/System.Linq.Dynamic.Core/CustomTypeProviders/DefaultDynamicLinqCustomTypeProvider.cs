@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿#if !(WINDOWS_APP || UAP10_0 || NETSTANDARD)
+using System.Collections.Generic;
 
-namespace System.Linq.Dynamic.Core
+namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
     /// The default <see cref="IDynamicLinkCustomTypeProvider"/>. Scans the current <see cref="AppDomain"/> for all types marked with 
@@ -8,30 +9,32 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public class DefaultDynamicLinqCustomTypeProvider : IDynamicLinkCustomTypeProvider
     {
+        private readonly IAssemblyHelper _assemblyHelper = new DefaultAssemblyHelper();
         private HashSet<Type> _customTypes;
 
         /// <summary>
-        /// Returns a list of custom types that Dynamic Linq will understand.
+        /// Returns a list of custom types that System.Linq.Dynamic.Core will understand.
         /// </summary>
         public virtual HashSet<Type> GetCustomTypes()
         {
             return _customTypes ?? (_customTypes = new HashSet<Type>(FindTypesMarkedWithAttribute()));
         }
 
-        private static IEnumerable<Type> FindTypesMarkedWithAttribute()
+        private IEnumerable<Type> FindTypesMarkedWithAttribute()
         {
-#if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
-            return AppDomain.CurrentDomain.GetAssemblies()
-#if !(NET35)
-                .Where(x => !x.IsDynamic)
+            var assemblies = _assemblyHelper.GetAssemblies();
+#if !NET35
+            assemblies = assemblies.Where(x => !x.IsDynamic).ToArray();
 #endif
-                .SelectMany(x => x.GetTypes())
-                .Where(x => x.GetCustomAttributes(typeof(DynamicLinqTypeAttribute), false).Any());
-#else
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+#if (DNXCORE50 || DOTNET5_4 || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             var definedTypes = assemblies.SelectMany(x => x.DefinedTypes);
             return definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(DynamicLinqTypeAttribute))).Select(x => x.AsType());
+#else
+            var definedTypes = assemblies.SelectMany(x => x.GetTypes());
+            return definedTypes.Where(x => x.GetCustomAttributes(typeof(DynamicLinqTypeAttribute), false).Any());
 #endif
         }
     }
 }
+#endif
