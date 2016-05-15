@@ -65,8 +65,8 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\System.Linq.Dynamic.Core\AppDomain.cs">
-      <Link>AppDomain.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\AssemblyBuilderFactory.cs">
+      <Link>AssemblyBuilderFactory.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\BasicQueryable.cs">
       <Link>BasicQueryable.cs</Link>
@@ -83,8 +83,14 @@
     <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs">
       <Link>CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\DynamicLinqTypeAttribute.cs">
+      <Link>CustomTypeProviders\DynamicLinqTypeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\IDynamicLinkTypeProvider.cs">
       <Link>CustomTypeProviders\IDynamicLinkTypeProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DefaultAssemblyHelper.cs">
+      <Link>DefaultAssemblyHelper.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicClass.cs">
       <Link>DynamicClass.cs</Link>
@@ -94,9 +100,6 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicExpression.cs">
       <Link>DynamicExpression.cs</Link>
-    </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\DynamicLinqTypeAttribute.cs">
-      <Link>DynamicLinqTypeAttribute.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicOrdering.cs">
       <Link>DynamicOrdering.cs</Link>
@@ -121,6 +124,9 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\GroupResult.cs">
       <Link>GroupResult.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\IAssemblyHelper.cs">
+      <Link>IAssemblyHelper.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\PagedResult.cs">
       <Link>PagedResult.cs</Link>
