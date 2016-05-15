@@ -19,7 +19,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite($"Filename=SqlFunctionsTests_{Guid.NewGuid()}.db");
-            //builder.UseSqlServer(@"Data Source=(LocalDb)\v11.0;Initial Catalog=unittestdb;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|\SqlFunctionsTests_{Guid.NewGuid()}.mdf");
+            //builder.UseSqlServer($"Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=unittestdb;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|SqlFunctionsTests_{Guid.NewGuid()}.mdf");
 
             _context = new BlogContext(builder.Options);
             _context.Database.EnsureDeleted();
