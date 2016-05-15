@@ -99,14 +99,6 @@ namespace System.Linq.Dynamic.Core
             return Queryable.Take((IQueryable<object>)source, count);
         }
 
-        public static IQueryable<TSource> Take<TSource>([NotNull] this IQueryable<TSource> source, int count)
-        {
-            Check.NotNull(source, nameof(source));
-            Check.Condition(count, x => x > 0, nameof(count));
-
-            return Queryable.Take(source, count);
-        }
-
         /// <summary>
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
         /// </summary>
@@ -123,14 +115,6 @@ namespace System.Linq.Dynamic.Core
                 return source;
 
             return Queryable.Skip((IQueryable<object>)source, count);
-        }
-
-        public static IQueryable<TSource> Skip<TSource>([NotNull] this IQueryable<TSource> source, int count)
-        {
-            Check.NotNull(source, nameof(source));
-            Check.Condition(count, x => x >= 0, nameof(count));
-
-            return count == 0 ? source : Queryable.Skip(source, count);
         }
 
         /// <summary>
@@ -159,13 +143,6 @@ namespace System.Linq.Dynamic.Core
             return Queryable.Any((IQueryable<object>)source);
         }
 
-        public static bool Any<TSource>([NotNull] this IQueryable<TSource> source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            return Queryable.Any(source);
-        }
-
         /// <summary>
         /// Returns the number of elements in a sequence.
         /// </summary>
@@ -176,13 +153,6 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
 
             return Queryable.Count((IQueryable<object>)source);
-        }
-
-        public static int Count<TSource>([NotNull] this IQueryable<TSource> source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            return Queryable.Count(source);
         }
 
         /// <summary>
@@ -222,13 +192,6 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType }, source.Expression));
         }
 
-        public static TSource Single<TSource>([NotNull] this IQueryable<TSource> source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            return Queryable.Single(source);
-        }
-
         /// <summary>
         /// Returns the only element of a sequence, or a default value if the sequence
         /// is empty; this method throws an exception if there is more than one element
@@ -249,13 +212,6 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType }, source.Expression));
         }
 
-        public static TSource SingleOrDefault<TSource>([NotNull] this IQueryable<TSource> source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            return Queryable.SingleOrDefault(source);
-        }
-
         /// <summary>
         /// Returns the first element of a sequence.
         /// </summary>
@@ -272,13 +228,6 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.Execute(Expression.Call(
                 typeof(Queryable), "First",
                 new[] { source.ElementType }, source.Expression));
-        }
-
-        public static TSource First<TSource>([NotNull] this IQueryable<TSource> source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            return Queryable.First(source);
         }
 
         /// <summary>
@@ -299,13 +248,6 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType }, source.Expression));
         }
 
-        public static TSource FirstOrDefault<TSource>([NotNull] this IQueryable<TSource> source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            return Queryable.FirstOrDefault(source);
-        }
-
         /// <summary>
         /// Returns the last element of a sequence.
         /// </summary>
@@ -324,13 +266,6 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType }, source.Expression));
         }
 
-        public static TSource Last<TSource>([NotNull] this IQueryable<TSource> source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            return Queryable.Last(source);
-        }
-
         /// <summary>
         /// Returns the last element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
@@ -347,13 +282,6 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.Execute(Expression.Call(
                 typeof(Queryable), "LastOrDefault",
                 new[] { source.ElementType }, source.Expression));
-        }
-
-        public static TSource LastOrDefault<TSource>([NotNull] this IQueryable<TSource> source)
-        {
-            Check.NotNull(source, nameof(source));
-
-            return Queryable.LastOrDefault(source);
         }
 
 #if NET35
