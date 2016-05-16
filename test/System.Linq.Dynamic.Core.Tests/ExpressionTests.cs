@@ -421,6 +421,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.False(notFound2.Any());
         }
 
+#if !NETSTANDARD
         [Fact]
         public void ExpressionTests_Enum()
         {
@@ -442,7 +443,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(TestEnum.Var5, result4.Single());
             Assert.Equal(TestEnum.Var5, result5.Single());
         }
-
+#endif
         [Fact]
         public void ExpressionTests_CompareWithGuid()
         {

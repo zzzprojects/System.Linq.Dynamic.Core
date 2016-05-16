@@ -1,4 +1,4 @@
-﻿#if !(NET35 || DNX452 || DNXCORE50)
+﻿#if !(NET35 || NETSTANDARD)
 using System.Threading.Tasks;
 #endif
 
@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class InternalTests
     {
-#if !(DNX452 || DNXCORE50)
+#if !(NETSTANDARD)
         [Fact]
         public void ClassFactory_LoadTest()
         {

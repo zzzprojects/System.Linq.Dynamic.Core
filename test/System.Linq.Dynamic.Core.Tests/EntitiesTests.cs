@@ -1,5 +1,4 @@
-﻿#if (!NETSTANDARD)
-using System.Collections;
+﻿using System.Collections;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 #if (NETSTANDARD)
 using Microsoft.EntityFrameworkCore;
@@ -163,12 +162,12 @@ namespace System.Linq.Dynamic.Core.Tests
             _context.Blogs.Add(blog2);
             _context.SaveChanges();
 
-            var expected1 = _context.Blogs.Select(x => x.NullableInt ?? 10).ToArray();
-            var expected2 = _context.Blogs.Select(x => x.NullableInt ?? 9 + x.BlogId).ToArray();
+            var expected1 = _context.Blogs.Select(x => (int?) (x.NullableInt ?? 10)).ToArray();
+            var expected2 = _context.Blogs.Select(x => (int?)(x.NullableInt ?? 9 + x.BlogId)).ToArray();
 
             //Act
-            var test1 = _context.Blogs.Select<int>("NullableInt ?? 10").ToArray();
-            var test2 = _context.Blogs.Select<int>("NullableInt ?? 9 + BlogId").ToArray();
+            var test1 = _context.Blogs.Select<int?>("NullableInt ?? 10").ToArray();
+            var test2 = _context.Blogs.Select<int?>("NullableInt ?? 9 + BlogId").ToArray();
 
             //Assert
             Assert.Equal(expected1, test1);
@@ -223,32 +222,32 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expected, test);
         }
 
-        // TODO : EF issue !!! https://github.com/aspnet/EntityFramework/issues/4968
-        //[Fact]
-        //public void Entities_Select_BlogAndPosts()
-        //{
-        //    //Arrange
-        //    PopulateTestData(5, 5);
+        // fixed : EF issue !!! https://github.com/aspnet/EntityFramework/issues/4968
+        [Fact]
+        public void Entities_Select_BlogAndPosts()
+        {
+            //Arrange
+            PopulateTestData(5, 5);
 
-        //    var expected = _context.Blogs.Select(x => new { x.BlogId, x.Name, x.Posts }).ToArray();
+            var expected = _context.Blogs.Select(x => new { x.BlogId, x.Name, x.Posts }).ToArray();
 
-        //    //Act
-        //    var test = _context.Blogs.Select("new (BlogId, Name, Posts)").ToDynamicArray();
+            //Act
+            var test = _context.Blogs.Select("new (BlogId, Name, Posts)").ToDynamicArray();
 
-        //    //Assert
-        //    Assert.Equal(expected.Length, test.Length);
-        //    for (int i = 0; i < expected.Length; i++)
-        //    {
-        //        var expectedRow = expected[i];
-        //        var testRow = test[i];
+            //Assert
+            Assert.Equal(expected.Length, test.Length);
+            for (int i = 0; i < expected.Length; i++)
+            {
+                var expectedRow = expected[i];
+                var testRow = test[i];
 
-        //        Assert.Equal(expectedRow.BlogId, testRow.BlogId);
-        //        Assert.Equal(expectedRow.Name, testRow.Name);
+                Assert.Equal(expectedRow.BlogId, testRow.BlogId);
+                Assert.Equal(expectedRow.Name, testRow.Name);
 
-        //        Assert.True(expectedRow.Posts != null);
-        //        Assert.Equal(expectedRow.Posts.ToList(), testRow.Posts);
-        //    }
-        //}
+                Assert.True(expectedRow.Posts != null);
+                Assert.Equal(expectedRow.Posts.ToList(), testRow.Posts);
+            }
+        }
 
         #endregion
 
@@ -285,10 +284,11 @@ namespace System.Linq.Dynamic.Core.Tests
             //Arrange
             PopulateTestData(5, 15);
 
-            var expected = _context.Posts.GroupBy(x => new { x.BlogId, x.PostDate }).ToArray();
+            var expected = _context.Posts.GroupBy(x => new { x.BlogId, x.PostDate }).OrderBy(x => x.Key.PostDate).ToArray();
 
             //Act
-            var test = _context.Posts.GroupBy("new (BlogId, PostDate)").ToDynamicArray();
+            var test = _context.Posts.GroupBy("new (BlogId, PostDate)").OrderBy("Key.PostDate").ToDynamicArray();
+
 
             //Assert
             Assert.Equal(expected.Length, test.Length);
@@ -428,4 +428,3 @@ namespace System.Linq.Dynamic.Core.Tests
         #endregion
     }
 }
-#endif

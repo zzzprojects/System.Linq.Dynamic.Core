@@ -1,4 +1,4 @@
-﻿#if !(WINDOWS_APP || UAP10_0 || NETSTANDARD)
+﻿#if !(WINDOWS_APP || UAP10_0)
 using System.Collections.Generic;
 
 namespace System.Linq.Dynamic.Core.CustomTypeProviders

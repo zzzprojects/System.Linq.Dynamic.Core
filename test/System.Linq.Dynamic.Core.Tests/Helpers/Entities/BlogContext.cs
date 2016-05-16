@@ -1,15 +1,13 @@
 ﻿#if NETSTANDARD
+using System.Linq.Dynamic.Core.Tests.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 #elif NET4
 using System.Data.Entity;
 using SQLite.CodeFirst;
 #else
-using System.Linq.Dynamic.Core.Tests.Logging;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
 #endif
 
 namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.Storage.Internal;
+using Microsoft.Extensions.Logging;
 
 namespace System.Linq.Dynamic.Core.Tests.Logging
 {
@@ -6,8 +7,8 @@ namespace System.Linq.Dynamic.Core.Tests.Logging
     {
         private static readonly string[] Categories =
         {
-            typeof(Microsoft.Data.Entity.Storage.Internal.RelationalCommandBuilderFactory).FullName,
-            //typeof(Microsoft.Data.Entity.Storage.Internal.SqliteRelationalConnection).FullName
+            typeof(RelationalCommandBuilderFactory).FullName,
+            typeof(SqliteRelationalConnection).FullName
         };
 
         public ILogger CreateLogger(string name)
