@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
+#if WINDOWS_APP
+using System.Linq;
+#endif
 
 namespace System.Linq.Dynamic.Core
 {
@@ -306,16 +309,19 @@ namespace System.Linq.Dynamic.Core
             }
         }
 
-#if !NET35
         /// <summary>
         /// Creates an array of dynamic objects from a <see cref="IEnumerable"/>.
         /// </summary>
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
         /// <returns>An array that contains the elements from the input sequence.</returns>
+#if NET35
+        public static object[] ToDynamicArray([NotNull] this IEnumerable source)
+#else
         public static dynamic[] ToDynamicArray([NotNull] this IEnumerable source)
+#endif
         {
             Check.NotNull(source, nameof(source));
-            return source.Cast<object>().ToArray();
+            return CastToArray<object>(source);
         }
 
         /// <summary>
@@ -327,7 +333,7 @@ namespace System.Linq.Dynamic.Core
         public static T[] ToDynamicArray<T>([NotNull] this IEnumerable source)
         {
             Check.NotNull(source, nameof(source));
-            return source.Cast<T>().ToArray();
+            return CastToArray<T>(source);
         }
 
         /// <summary>
@@ -335,10 +341,18 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
         /// <returns>A List that contains the elements from the input sequence.</returns>
+#if NET35
+        public static List<object> ToDynamicList([NotNull] this IEnumerable source)
+#else
         public static List<dynamic> ToDynamicList([NotNull] this IEnumerable source)
+#endif
         {
             Check.NotNull(source, nameof(source));
-            return source.Cast<object>().ToList();
+#if NET35
+            return CastToList<object>(source);
+#else
+            return CastToList<dynamic>(source);
+#endif
         }
 
         /// <summary>
@@ -350,9 +364,18 @@ namespace System.Linq.Dynamic.Core
         public static List<T> ToDynamicList<T>([NotNull] this IEnumerable source)
         {
             Check.NotNull(source, nameof(source));
+            return CastToList<T>(source);
+        }
+
+        private static T[] CastToArray<T>(IEnumerable source)
+        {
+            return source.Cast<T>().ToArray();
+        }
+
+        private static List<T> CastToList<T>(IEnumerable source)
+        {
             return source.Cast<T>().ToList();
         }
-#endif
-        #endregion
+#endregion
     }
 }

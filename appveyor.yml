@@ -1,21 +1,31 @@
 os: Visual Studio 2015
 
-version: 1.0.1.{build}
+version: 1.0.2.{build}
+
+configuration:
+- Debug
+- Release
+
+platform: Any CPU
+
+init:
+- ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
 
 install:
-- dnvm upgrade -r clr
+- ps: Start-FileDownload 'https://dotnetcli.blob.core.windows.net/dotnet/beta/Installers/Latest/dotnet-dev-win-x64.latest.exe'
+- cmd: dotnet-dev-win-x64.latest.exe /quiet
+- cmd: dnvm upgrade -u -r clr
 
-before_build:
-- cmd: dnu restore src\System.Linq.Dynamic.Core
-- cmd: dnu restore test\System.Linq.Dynamic.Core.Tests
-
-build:
-  verbosity: minimal
+environment:
+  PATH: $(PATH);$(PROGRAMFILES)\dotnet\
 
 build_script:
-- cmd: dnu build src\System.Linq.Dynamic.Core
-- cmd: dnu build test\System.Linq.Dynamic.Core.Tests
+- appveyor-retry dotnet restore .\src\System.Linq.Dynamic.Core  -v Minimal
+- dotnet build src\System.Linq.Dynamic.Core\project.json -c %CONFIGURATION%
+- dotnet pack -c %CONFIGURATION% --no-build --version-suffix %LABEL% -o .\artifacts .\src\System.Linq.Dynamic.Core\project.json
 
-test_script:
-- cmd: dnx --framework dnx452 -p test/System.Linq.Dynamic.Core.Tests test
-- cmd: dnx --framework dnxcore50 -p test/System.Linq.Dynamic.Core.Tests test
+artifacts:
+- path: artifacts\**\*.*
+
+cache:
+- '%USERPROFILE%\.nuget\packages'

@@ -1,5 +1,4 @@
-﻿using System.Resources;
-using System.Reflection;
+﻿using System.Reflection;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -12,7 +11,9 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Copyright © Stef Heyenrath 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: NeutralResourcesLanguage("en")]
+#if !NETSTANDARD
+[assembly: System.Resources.NeutralResourcesLanguage("en")]
+#endif
 
 // Version information for an assembly consists of the following four values:
 //

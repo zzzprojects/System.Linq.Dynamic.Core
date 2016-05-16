@@ -1,6 +1,3 @@
 {
-    "projects": [ "src", "src-console", "test", "test-uap", "test2", "web" ],
-    "sdk": {
-        "version": "1.0.0-rc1-update2"
-    }
+    "projects": [ "src", "src-console", "test", "test-uap", "test2", "web" ]
 }

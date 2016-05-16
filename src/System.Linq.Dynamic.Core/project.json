@@ -1,16 +1,23 @@
 {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
-    "summary": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
-    "tags": [ "system", "linq", "dynamic", "dnx", "core" ],
     "authors": [ "Microsoft", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
-    "owners": [ "Stef Heyenrath" ],
-    "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
-    "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-    "releaseNotes": "Fixed issues",
 
-    "compilationOptions": {
+    "packOptions": {
+        "summary": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
+        "tags": [ "system", "linq", "dynamic", "dnx", "core" ],
+        "owners": [ "Stef Heyenrath" ],
+        "repository": {
+            "type": "git",
+            "url": "https://github.com/StefH/System.Linq.Dynamic.Core"
+        },
+        "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
+        "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
+        "releaseNotes": "netstandard"
+    },
+
+    "buildOptions": {
     },
 
     "dependencies": {
@@ -52,8 +59,45 @@
             "frameworkAssemblies": {
             }
         },
-        "dnx452": {
-            "frameworkAssemblies": {
+        "netcore45": {
+            "buildOptions": { "define": [ "WINDOWS_APP" ] },
+            "dependencies": {
+                "System.Collections.Concurrent": "4.0.10",
+                "System.Runtime": "4.0.20",
+                "System.Dynamic.Runtime": "4.0.0",
+                "System.Reflection.Emit": "4.0.0",
+                "System.Reflection.TypeExtensions": "4.0.0",
+                "System.Linq": "4.0.0",
+                "System.Linq.Expressions": "4.0.0",
+                "System.Linq.Queryable": "4.0.0",
+                "System.Threading": "4.0.10"
+            }
+        },
+        "netcore451": {
+            "buildOptions": { "define": [ "WINDOWS_APP" ] },
+            "dependencies": {
+                "System.Collections.Concurrent": "4.0.10",
+                "System.Runtime": "4.0.20",
+                "System.Dynamic.Runtime": "4.0.0",
+                "System.Reflection.Emit": "4.0.0",
+                "System.Reflection.TypeExtensions": "4.0.0",
+                "System.Linq": "4.0.0",
+                "System.Linq.Expressions": "4.0.0",
+                "System.Linq.Queryable": "4.0.0",
+                "System.Threading": "4.0.10"
+            }
+        },
+        "netcore50": {
+            "buildOptions": { "define": [ "WINDOWS_APP" ] },
+            "dependencies": {
+                "System.Collections.Concurrent": "4.0.11-beta-*",
+                "System.Runtime": "4.0.20",
+                "System.Dynamic.Runtime": "4.0.11-beta-*",
+                "System.Reflection.Emit": "4.0.1-beta-*",
+                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
+                "System.Linq.Expressions": "4.0.11-beta-*",
+                "System.Linq.Queryable": "4.0.1-beta-*",
+                "System.Threading": "4.0.11-beta-*"
             }
         },
         "dnxcore5": {
@@ -67,76 +111,104 @@
                 "System.Linq.Queryable": "4.0.1-beta-*"
             }
         },
-        "netcore45": {
-            "compilationOptions": {
-                "define": [ "WINDOWS_APP" ]
+        "netstandard1.3": {
+            "buildOptions": { "define": [ "NETSTANDARD" ] },
+            "NETStandard.Library": {
+                "version": "1.5.0-rc2-*"
             },
+            "imports": [
+                "dotnet5.4",
+                "portable-win81+wp81",
+                "portable-net45+wp8",
+                "portable-net45+win8+wp8",
+                "portable-wp81+wpa81",
+                "portable-win81+wp81+wpa81",
+                "portable-net45+win8+wpa81+wp8",
+                "portable-net45+win8",
+                "portable-net45+win8+wpa81",
+                "portable-win81+wpa81",
+                "portable-net451+win81",
+                "portable-net451+win81+wpa81"
+            ],
             "dependencies": {
-                "System.Collections": "4.0.10",
-                "System.Collections.Concurrent": "4.0.10",
-                "System.Dynamic.Runtime": "4.0.0",
-                "System.Reflection.Emit": "4.0.0",
-                "System.Reflection.TypeExtensions": "4.0.0",
-                "System.Linq.Expressions": "4.0.10",
-                "System.Linq.Queryable": "4.0.0"
+                "System.Collections.Concurrent": "4.0.12-rc2-*",
+                "System.Diagnostics.Debug": "4.0.11-rc2-*",
+                "System.Dynamic.Runtime": "4.0.11-rc2-*",
+                "System.Globalization": "4.0.11-rc2-*",
+                "System.Linq.Expressions": "4.0.11-rc2-*",
+                "System.Linq.Queryable": "4.0.1-rc2-*",
+                "System.Reflection.Emit": "4.0.1-rc2-*",
+                "System.Reflection.TypeExtensions": "4.1.0-rc2-*",
+                "System.Runtime.Extensions": "4.1.0-rc2-*",
+                "System.Threading": "4.0.11-rc2-*"
             }
         },
-        "netcore451": {
-            "compilationOptions": {
-                "define": [ "WINDOWS_APP" ]
+        "netstandard1.4": {
+            "buildOptions": { "define": [ "NETSTANDARD" ] },
+            "NETStandard.Library": {
+                "version": "1.5.0-rc2-*"
             },
+            "imports": [
+                "dotnet5.5",
+                "portable-win81+wp81",
+                "portable-net45+wp8",
+                "portable-net45+win8+wp8",
+                "portable-wp81+wpa81",
+                "portable-win81+wp81+wpa81",
+                "portable-net45+win8+wpa81+wp8",
+                "portable-net45+win8",
+                "portable-net45+win8+wpa81",
+                "portable-win81+wpa81",
+                "portable-net451+win81",
+                "portable-net451+win81+wpa81"
+            ],
             "dependencies": {
-                "System.Collections.Concurrent": "4.0.11-beta-*",
-                "System.Runtime": "4.0.20",
-                "System.Dynamic.Runtime": "4.0.11-beta-*",
-                "System.Reflection.Emit": "4.0.1-beta-*",
-                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
-                "System.Linq.Expressions": "4.0.11-beta-*",
-                "System.Linq.Queryable": "4.0.1-beta-*",
-                "System.Threading": "4.0.11-beta-*"
+                "System.Collections.Concurrent": "4.0.12-rc2-*",
+                "System.Diagnostics.Debug": "4.0.11-rc2-*",
+                "System.Dynamic.Runtime": "4.0.11-rc2-*",
+                "System.Globalization": "4.0.11-rc2-*",
+                "System.Linq.Expressions": "4.0.11-rc2-*",
+                "System.Linq.Queryable": "4.0.1-rc2-*",
+                "System.Reflection.Emit": "4.0.1-rc2-*",
+                "System.Reflection.TypeExtensions": "4.1.0-rc2-*",
+                "System.Runtime.Extensions": "4.1.0-rc2-*",
+                "System.Threading": "4.0.11-rc2-*"
             }
         },
-        "netcore50": {
-            "compilationOptions": {
-                "define": [ "WINDOWS_APP" ]
+        "netstandard1.5": {
+            "buildOptions": { "define": [ "NETSTANDARD" ] },
+            "NETStandard.Library": {
+                "version": "1.5.0-rc2-*"
             },
+            "imports": [
+                "dotnet5.5",
+                "portable-win81+wp81",
+                "portable-net45+wp8",
+                "portable-net45+win8+wp8",
+                "portable-wp81+wpa81",
+                "portable-win81+wp81+wpa81",
+                "portable-net45+win8+wpa81+wp8",
+                "portable-net45+win8",
+                "portable-net45+win8+wpa81",
+                "portable-win81+wpa81",
+                "portable-net451+win81",
+                "portable-net451+win81+wpa81"
+            ],
             "dependencies": {
-                "System.Collections.Concurrent": "4.0.11-beta-*",
-                "System.Runtime": "4.0.20",
-                "System.Dynamic.Runtime": "4.0.11-beta-*",
-                "System.Reflection.Emit": "4.0.1-beta-*",
-                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
-                "System.Linq.Expressions": "4.0.11-beta-*",
-                "System.Linq.Queryable": "4.0.1-beta-*",
-                "System.Threading": "4.0.11-beta-*"
-            }
-        },
-        "dotnet5.1": {
-            "dependencies": {
-                "System.Collections": "4.0.10",
-                "System.Collections.Concurrent": "4.0.10",
-                "System.Dynamic.Runtime": "4.0.0",
-                "System.Reflection.Emit": "4.0.0",
-                "System.Reflection.TypeExtensions": "4.0.0",
-                "System.Linq.Expressions": "4.0.10",
-                "System.Linq.Queryable": "4.0.0"
-            }
-        },
-        "dotnet5.4": {
-            "dependencies": {
-                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
-                "System.Collections.Concurrent": "4.0.11-beta-*",
-                "System.Dynamic.Runtime": "4.0.11-beta-*",
-                "System.Reflection.Emit": "4.0.1-beta-*",
-                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
-                "System.Linq.Expressions": "4.0.11-beta-*",
-                "System.Linq.Queryable": "4.0.1-beta-*"
+                "System.Collections.Concurrent": "4.0.12-rc2-*",
+                "System.Diagnostics.Debug": "4.0.11-rc2-*",
+                "System.Dynamic.Runtime": "4.0.11-rc2-*",
+                "System.Globalization": "4.0.11-rc2-*",
+                "System.Linq.Expressions": "4.0.11-rc2-*",
+                "System.Linq.Queryable": "4.0.1-rc2-*",
+                "System.Reflection.Emit": "4.0.1-rc2-*",
+                "System.Reflection.TypeExtensions": "4.1.0-rc2-*",
+                "System.Runtime.Extensions": "4.1.0-rc2-*",
+                "System.Threading": "4.0.11-rc2-*"
             }
         },
         "sl5": {
-            "compilationOptions": {
-                "define": [ "SILVERLIGHT" ]
-            },
+            "buildOptions": { "define": [ "SILVERLIGHT" ] },
             "dependencies": {
                 "Portable.ConcurrentDictionary": "1.0.1"
             },

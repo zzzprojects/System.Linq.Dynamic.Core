@@ -1,4 +1,61 @@
-﻿,
+﻿"dotnet5.1": {
+            "dependencies": {
+                "System.Collections": "4.0.10",
+                "System.Collections.Concurrent": "4.0.10",
+                "System.Dynamic.Runtime": "4.0.0",
+                "System.Reflection.Emit": "4.0.0",
+                "System.Reflection.TypeExtensions": "4.0.0",
+                "System.Linq.Expressions": "4.0.10",
+                "System.Linq.Queryable": "4.0.0"
+            }
+        },
+        "dotnet5.4": {
+            "dependencies": {
+                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
+                "System.Collections.Concurrent": "4.0.11-beta-*",
+                "System.Dynamic.Runtime": "4.0.11-beta-*",
+                "System.Reflection.Emit": "4.0.1-beta-*",
+                "System.Reflection.TypeExtensions": "4.1.0-beta-*",
+                "System.Linq.Expressions": "4.0.11-beta-*",
+                "System.Linq.Queryable": "4.0.1-beta-*"
+            }
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+,
         ".NETPortable,Version=v4.0,Profile=Profile24": {
             "compilationOptions": {
                 "define": [ "SILVERLIGHT" ]
