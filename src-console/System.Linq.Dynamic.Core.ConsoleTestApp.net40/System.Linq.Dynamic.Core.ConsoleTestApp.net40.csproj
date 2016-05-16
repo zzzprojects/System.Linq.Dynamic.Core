@@ -47,12 +47,12 @@
       <HintPath>..\..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ReflectionBridge, Version=0.0.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ReflectionBridge.0.0.9\lib\net40\ReflectionBridge.dll</HintPath>
+    <Reference Include="ReflectionBridge, Version=0.0.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ReflectionBridge.0.0.11\lib\net40\ReflectionBridge.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SQLite.CodeFirst, Version=1.1.11.0, Culture=neutral, PublicKeyToken=eb96ba0a78d831a7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SQLite.CodeFirst.1.1.11.0\lib\net40\SQLite.CodeFirst.dll</HintPath>
+    <Reference Include="SQLite.CodeFirst, Version=1.2.0.12, Culture=neutral, PublicKeyToken=eb96ba0a78d831a7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SQLite.CodeFirst.1.2.0.12\lib\net40\SQLite.CodeFirst.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

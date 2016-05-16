@@ -1,46 +1,50 @@
 {
-    "version": "1.0.0.0-*",
+    "version": "1.0.0-*",
     "authors": [ "Stef Heyenrath" ],
+
+    "buildOptions": {
+        "emitEntryPoint": true,
+        "compile": [
+            "../../test/System.Linq.Dynamic.Core.Tests/Helpers/*.cs",
+            "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Models/*.cs",
+            "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Blog.cs",
+            "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Post.cs"
+        ]
+    },
+
     "dependencies": {
-        "System.Linq.Dynamic.Core": "1.0.1-*"
-    },
-
-    "compilationOptions": {
-        "emitEntryPoint": true
-    },
-
-    "compile": [
-        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/*.cs",
-        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Models/*.cs",
-        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Blog.cs",
-        "../../test/System.Linq.Dynamic.Core.Tests/Helpers/Entities/Post.cs"
-    ],
-
-    "commands": {
-        "ConsoleTestApp": "run"
+        "Microsoft.NETCore.App": {
+            "type": "platform",
+            "version": "1.0.0-rc2-*"
+        },
+        "System.Linq.Dynamic.Core": { "target": "project" }
     },
 
     "frameworks": {
-        "dnxcore5": {
+        "netcoreapp1.5": {
+            "imports": [
+                "dotnet5.4",
+                "portable-net451+win8"
+            ],
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-*",
+                "Microsoft.CSharp": "4.0.1-rc2-*",
 
-                "System.Runtime": "4.0.21-beta-*",
-                "System.Runtime.Extensions": "4.0.11-beta-*",
-                "System.Runtime.Serialization.Primitives": "4.1.0-beta-*",
+                "System.Runtime": "4.1.0-rc2-*",
+                "System.Runtime.Extensions": "4.1.0-rc2-*",
+                "System.Runtime.Serialization.Primitives": "4.1.1-rc2-*",
 
-                "System.Console": "4.0.0-beta-*",
+                "System.Console": "4.0.0-rc2-*",
 
-                "System.Linq.Queryable": "4.0.1-beta-*",
+                "System.Linq.Queryable": "4.0.1-rc2-*",
 
-                "System.IO": "4.0.11-beta-*",
-                "System.IO.FileSystem": "4.0.1-beta-*",
+                "System.IO": "4.1.0-rc2-*",
+                "System.IO.FileSystem": "4.0.1-rc2-*",
 
-                "System.Globalization": "4.0.11-beta-*",
+                "System.Globalization": "4.0.11-rc2-*",
 
-                "System.Resources.ResourceManager": "4.0.1-beta-*",
+                "System.Resources.ResourceManager": "4.0.1-rc2-*",
 
-                "System.Text.RegularExpressions": "4.0.11-beta-*"
+                "System.Text.RegularExpressions": "4.0.12-rc2-*"
             }
         }
     }

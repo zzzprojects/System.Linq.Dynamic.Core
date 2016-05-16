@@ -10,7 +10,7 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
     public class Program
     {
         static readonly Random Rnd = new Random(1);
-        private static BlogContext context = new BlogContext();
+        private static readonly BlogContext context = new BlogContext();
 
         public static void Main(string[] args)
         {
@@ -52,7 +52,7 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
         {
             for (int i = 0; i < blogCount; i++)
             {
-                var blog = new Blog { Name = "Blog" + (i + 1) };
+                var blog = new Blog { Name = "Blog" + (i + 1), Created = DateTime.Today.AddDays(-Rnd.Next(0, 100)) };
 
                 context.Blogs.Add(blog);
 
