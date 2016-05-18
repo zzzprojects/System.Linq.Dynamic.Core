@@ -11,13 +11,15 @@ The following frameworks are supported:
 - net46x
 - dnx45x
 - dnxcore50
-- dotnet5.4
-- dotnet5.1
-- uap10.0
+- netstandard1.3
+- netstandard1.4
+- netstandard1.5
 - netcore45
 - netcore451
 - netcore50
+- uap10.0
 - SilverLight 5.0
+
 
 <br>
 This fork takes the basic library to a new level.  Contains XML Documentation and examples on how to use Dynamic Linq. Also adds unit testing to help ensure that it works properly.
