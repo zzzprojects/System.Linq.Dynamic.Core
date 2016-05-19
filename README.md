@@ -10,7 +10,6 @@ The following frameworks are supported:
 - net45x
 - net46x
 - dnx45x
-- dnxcore50
 - netstandard1.3
 - netstandard1.4
 - netstandard1.5
