@@ -96,10 +96,13 @@ namespace System.Linq.Dynamic.Core
         {
             void F(bool x, bool y);
             void F(bool? x, bool? y);
-            void F(DateTime x, string y);
-            void F(DateTime? x, string y);
-            void F(string x, DateTime y);
-            void F(string x, DateTime? y);
+
+            // Disabled 4 lines below because of : https://github.com/StefH/System.Linq.Dynamic.Core/issues/19
+            //void F(DateTime x, string y);
+            //void F(DateTime? x, string y);
+            //void F(string x, DateTime y);
+            //void F(string x, DateTime? y);
+
             void F(Guid x, Guid y);
             void F(Guid? x, Guid? y);
             void F(Guid x, string y);
@@ -614,8 +617,7 @@ namespace System.Linq.Dynamic.Core
                 Token op = _token;
                 NextToken();
                 Expression right = ParseShift();
-                bool isEquality = op.id == TokenId.Equal || op.id == TokenId.DoubleEqual ||
-                                  op.id == TokenId.ExclamationEqual || op.id == TokenId.LessGreater;
+                bool isEquality = op.id == TokenId.Equal || op.id == TokenId.DoubleEqual || op.id == TokenId.ExclamationEqual;
                 if (isEquality && ((!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType) || (left.Type == typeof(Guid) && right.Type == typeof(Guid))))
                 {
                     if (left.Type != right.Type)
@@ -1114,6 +1116,7 @@ namespace System.Linq.Dynamic.Core
                     throw ParseError(errorPos, Res.NeitherTypeConvertsToOther, type1, type2);
                 }
             }
+
             return Expression.Condition(test, expr1, expr2);
         }
 
@@ -1587,17 +1590,17 @@ namespace System.Linq.Dynamic.Core
 
         void CheckAndPromoteOperand(Type signatures, string opName, ref Expression expr, int errorPos)
         {
-            Expression[] args = new[] { expr };
+            Expression[] args = { expr };
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
-                throw ParseError(errorPos, Res.IncompatibleOperand,
-                    opName, GetTypeName(args[0].Type));
+                throw ParseError(errorPos, Res.IncompatibleOperand, opName, GetTypeName(args[0].Type));
             expr = args[0];
         }
 
         void CheckAndPromoteOperands(Type signatures, string opName, ref Expression left, ref Expression right, int errorPos)
         {
-            Expression[] args = new[] { left, right };
+            Expression[] args = { left, right };
+
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
                 throw IncompatibleOperandsError(opName, left, right, errorPos);
@@ -1636,6 +1639,22 @@ namespace System.Linq.Dynamic.Core
 #endif
         }
 
+        /*
+         * 
+         BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly |
+                (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
+            foreach (Type t in SelfAndBaseTypes(type))
+            {
+                MemberInfo[] members = t.FindMembers(MemberTypes.Method,
+                    flags, Type.FilterNameIgnoreCase, methodName);
+                int count = FindBestMethod(members.Cast<MethodBase>(), args, out method);
+                if (count != 0) return count;
+            }
+            method = null;
+            return 0;
+            
+             */
+
         int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)
         {
 #if !(NETFX_CORE || DNXCORE50 || DOTNET5_4 || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
@@ -1651,13 +1670,14 @@ namespace System.Linq.Dynamic.Core
             method = null;
             return 0;
 #else
-            method = null;
             foreach (Type t in SelfAndBaseTypes(type))
             {
-                var methods = t.GetTypeInfo().DeclaredMethods.Where(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == methodName.ToLowerInvariant());
+                MethodInfo[] methods = t.GetTypeInfo().DeclaredMethods.Where(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == methodName.ToLowerInvariant()).ToArray();
                 int count = FindBestMethod(methods, args, out method);
                 if (count != 0) return count;
             }
+
+            method = null;
             return 0;
 #endif
         }
@@ -1738,6 +1758,7 @@ namespace System.Linq.Dynamic.Core
                     Where(m => applicable.All(n => m == n || IsBetterThan(args, m, n))).
                     ToArray();
             }
+
             if (applicable.Length == 1)
             {
                 MethodData md = applicable[0];
@@ -1748,6 +1769,7 @@ namespace System.Linq.Dynamic.Core
             {
                 method = null;
             }
+
             return applicable.Length;
         }
 
@@ -2195,16 +2217,16 @@ namespace System.Linq.Dynamic.Core
         {
             if (left.Type == typeof(string))
             {
-                return Expression.GreaterThan(
-                    GenerateStaticMethodCall("Compare", left, right),
-                    Expression.Constant(0)
-                );
+                return Expression.GreaterThan(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
             }
-            else if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
+
+            if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
             {
-                return Expression.GreaterThan(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
-                    right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
+                var leftPart = left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left;
+                var rightPart = right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right;
+                return Expression.GreaterThan(leftPart, rightPart);
             }
+
             return Expression.GreaterThan(left, right);
         }
 
@@ -2212,16 +2234,15 @@ namespace System.Linq.Dynamic.Core
         {
             if (left.Type == typeof(string))
             {
-                return Expression.GreaterThanOrEqual(
-                    GenerateStaticMethodCall("Compare", left, right),
-                    Expression.Constant(0)
-                );
+                return Expression.GreaterThanOrEqual(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
             }
-            else if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
+
+            if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
             {
                 return Expression.GreaterThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
+
             return Expression.GreaterThanOrEqual(left, right);
         }
 
@@ -2229,16 +2250,15 @@ namespace System.Linq.Dynamic.Core
         {
             if (left.Type == typeof(string))
             {
-                return Expression.LessThan(
-                    GenerateStaticMethodCall("Compare", left, right),
-                    Expression.Constant(0)
-                );
+                return Expression.LessThan(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
             }
-            else if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
+
+            if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
             {
                 return Expression.LessThan(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
+
             return Expression.LessThan(left, right);
         }
 
@@ -2246,16 +2266,15 @@ namespace System.Linq.Dynamic.Core
         {
             if (left.Type == typeof(string))
             {
-                return Expression.LessThanOrEqual(
-                    GenerateStaticMethodCall("Compare", left, right),
-                    Expression.Constant(0)
-                );
+                return Expression.LessThanOrEqual(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
             }
-            else if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
+
+            if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
             {
                 return Expression.LessThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
+
             return Expression.LessThanOrEqual(left, right);
         }
 
@@ -2276,10 +2295,7 @@ namespace System.Linq.Dynamic.Core
         static Expression GenerateStringConcat(Expression left, Expression right)
         {
             // Allow concat String with something else
-            return Expression.Call(
-                null,
-                typeof(string).GetMethod("Concat", new[] { left.Type, right.Type }),
-                new[] { left, right });
+            return Expression.Call(null, typeof(string).GetMethod("Concat", new[] { left.Type, right.Type }), new[] { left, right });
         }
 
         static MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
@@ -2292,10 +2308,9 @@ namespace System.Linq.Dynamic.Core
             return Expression.Call(null, GetStaticMethod(methodName, left, right), new[] { left, right });
         }
 
-
         static void OptimizeForEqualityIfPossible(ref Expression left, ref Expression right)
         {
-            // The goal here is to provide the way to convert some types from the string form in a way that is compatible with Linq-to-Entities.
+            // The goal here is to provide the way to convert some types from the string form in a way that is compatible with Linq to Entities.
             //
             // The Expression.Call(typeof(Guid).GetMethod("Parse"), right); does the job only for Linq to Object but Linq to Entities.
             //
@@ -2304,14 +2319,17 @@ namespace System.Linq.Dynamic.Core
             {
                 right = OptimizeStringForEqualityIfPossible((string)((ConstantExpression)right).Value, leftType) ?? right;
             }
+
             if (leftType == typeof(string) && left.NodeType == ExpressionType.Constant)
             {
                 left = OptimizeStringForEqualityIfPossible((string)((ConstantExpression)left).Value, rightType) ?? left;
             }
         }
+
         static Expression OptimizeStringForEqualityIfPossible(string text, Type type)
         {
             DateTime dateTime;
+
             if (type == typeof(DateTime) &&
                 DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
                 return Expression.Constant(dateTime, typeof(DateTime));

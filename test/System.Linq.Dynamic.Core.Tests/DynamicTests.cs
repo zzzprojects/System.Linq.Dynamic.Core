@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Linq.PropertyTranslator.Core;
 using QueryInterceptor.Core;
@@ -11,19 +12,50 @@ namespace System.Linq.Dynamic.Core.Tests
     public class DynamicTests
     {
         [Fact]
+        // https://github.com/StefH/System.Linq.Dynamic.Core/issues/19
+        public void Where_DateTime_NotEquals_Null()
+        {
+            //Arrange
+            IQueryable<Post> queryable = new[] { new Post() }.AsQueryable();
+
+            //Act
+            var expected = queryable.Where(p => p.PostDate != null).ToArray();
+            var result1 = queryable.Where("PostDate != null").ToArray();
+            var result2 = queryable.Where("null != PostDate").ToArray();
+
+            //Assert
+            Assert.Equal(expected, result1);
+            Assert.Equal(expected, result2);
+        }
+
+        [Fact]
+        public void Where_DateTime_Equals_Null()
+        {
+            //Arrange
+            IQueryable<Post> queryable = new[] { new Post() }.AsQueryable();
+
+            //Act
+            var expected = queryable.Where(p => p.PostDate == null).ToArray();
+            var result1 = queryable.Where("PostDate == null").ToArray();
+            var result2 = queryable.Where("null == PostDate").ToArray();
+
+            //Assert
+            Assert.Equal(expected, result1);
+            Assert.Equal(expected, result2);
+        }
+
+        [Fact]
         public void Where()
         {
             //Arrange
             var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
             var qry = testList.AsQueryable();
 
-
             //Act
             var userById = qry.Where("Id=@0", testList[10].Id);
             var userByUserName = qry.Where("UserName=\"User5\"");
             var nullProfileCount = qry.Where("Profile=null");
             var userByFirstName = qry.Where("Profile!=null && Profile.FirstName=@0", testList[1].Profile.FirstName);
-
 
             //Assert
             Assert.Equal(testList[10], userById.Single());
