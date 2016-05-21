@@ -6,6 +6,7 @@
             "type": "platform",
             "version": "1.0.0-rc2-*"
         },
+        "System.AppDomain.NetCoreApp": { "target": "project" },
         "System.Linq.Dynamic.Core": { "target": "project" },
 
         "Linq.PropertyTranslator.Core": "1.0.1",
