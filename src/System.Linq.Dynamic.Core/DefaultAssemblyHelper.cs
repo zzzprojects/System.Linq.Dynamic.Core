@@ -29,7 +29,7 @@ namespace System.Linq.Dynamic.Core
             return assemblies.ToArray();
         }
 
-#elif (DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#elif (DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD || WPSL)
         public Assembly[] GetAssemblies()
         {
             return new Assembly[0];

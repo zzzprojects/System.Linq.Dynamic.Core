@@ -34,20 +34,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\System.Linq.Dynamic.Core\AppDomain.cs">
-      <Link>AppDomain.cs</Link>
-    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\BasicQueryable.cs">
       <Link>BasicQueryable.cs</Link>
-    </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\ClassFactory.cs">
-      <Link>ClassFactory.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\IntrospectionExtensions.cs">
       <Link>Compatibility\IntrospectionExtensions.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\TypeBuilderExtensions.cs">
       <Link>Compatibility\TypeBuilderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs">
+      <Link>CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\DynamicLinqTypeAttribute.cs">
+      <Link>CustomTypeProviders\DynamicLinqTypeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\IDynamicLinkTypeProvider.cs">
+      <Link>CustomTypeProviders\IDynamicLinkTypeProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DefaultAssemblyHelper.cs">
+      <Link>DefaultAssemblyHelper.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicClass.cs">
       <Link>DynamicClass.cs</Link>
@@ -57,12 +63,6 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicExpression.cs">
       <Link>DynamicExpression.cs</Link>
-    </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\DynamicLinqTypeAttribute.cs">
-      <Link>DynamicLinqTypeAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\DynamicLinqTypeProvider.cs">
-      <Link>DynamicLinqTypeProvider.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicOrdering.cs">
       <Link>DynamicOrdering.cs</Link>
@@ -88,8 +88,11 @@
     <Compile Include="..\System.Linq.Dynamic.Core\GroupResult.cs">
       <Link>GroupResult.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\IDynamicLinkTypeProvider.cs">
-      <Link>IDynamicLinkTypeProvider.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\IAssemblyHelper.cs">
+      <Link>IAssemblyHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\PagedResult.cs">
+      <Link>PagedResult.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\Res.cs">
       <Link>Res.cs</Link>
@@ -105,6 +108,10 @@
   <ItemGroup>
     <Reference Include="JetBrains.Annotations.PCL328, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\packages\JetBrains.Annotations.10.1.4\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Portable.ConcurrentDictionary, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Portable.ConcurrentDictionary.1.0.1\lib\portable-net45+win+wpa81+wp80\Portable.ConcurrentDictionary.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

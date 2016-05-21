@@ -51,8 +51,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="Portable.ConcurrentDictionary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Portable.ConcurrentDictionary.1.0.0\lib\sl50\Portable.ConcurrentDictionary.dll</HintPath>
+    <Reference Include="Portable.ConcurrentDictionary, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Portable.ConcurrentDictionary.1.0.1\lib\sl50\Portable.ConcurrentDictionary.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Windows" />
