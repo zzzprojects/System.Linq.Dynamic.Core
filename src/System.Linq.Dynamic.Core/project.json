@@ -120,7 +120,6 @@
                 "portable-net451+win81+wpa81"
             ],
             "dependencies": {
-                "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc2-final",
                 "System.Collections.Concurrent": "4.0.12-rc2-*",
                 "System.Diagnostics.Debug": "4.0.11-rc2-*",
                 "System.Dynamic.Runtime": "4.0.11-rc2-*",

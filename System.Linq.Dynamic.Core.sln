@@ -42,6 +42,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test-uap", "test-uap", "{E43ECBC5-D65A-4EE3-AF5D-5F74E9A4009A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalWindowsApp", "test-uap\UniversalWindowsApp\UniversalWindowsApp.csproj", "{A7D5D859-8216-427B-83DF-8604623F4775}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE1620BD-A313-4223-B991-467DA346B2ED} = {CE1620BD-A313-4223-B991-467DA346B2ED}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

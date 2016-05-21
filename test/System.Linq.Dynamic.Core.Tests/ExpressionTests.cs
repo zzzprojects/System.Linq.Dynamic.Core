@@ -421,10 +421,11 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.False(notFound2.Any());
         }
 
-#if !NETSTANDARD
         [Fact]
         public void ExpressionTests_Enum()
         {
+            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+
             //Arrange
             var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };
             var qry = lst.AsQueryable();
@@ -443,7 +444,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(TestEnum.Var5, result4.Single());
             Assert.Equal(TestEnum.Var5, result5.Single());
         }
-#endif
+
         [Fact]
         public void ExpressionTests_CompareWithGuid()
         {
