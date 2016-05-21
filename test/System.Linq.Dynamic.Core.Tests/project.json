@@ -6,8 +6,9 @@
             "type": "platform",
             "version": "1.0.0-rc2-*"
         },
-        "System.AppDomain.NetCoreApp": { "target": "project" },
         "System.Linq.Dynamic.Core": { "target": "project" },
+
+        "System.AppDomain.NetCoreApp": "1.0.0",
 
         "Linq.PropertyTranslator.Core": "1.0.1",
         "QueryInterceptor.Core": "1.0.3",
@@ -17,7 +18,7 @@
     },
 
     "frameworks": {
-        "netcoreapp1.5": {
+        "netcoreapp1.0": {
             "buildOptions": { "define": [ "NETSTANDARD" ] },
             "imports": [
                 "dotnet5.4",
