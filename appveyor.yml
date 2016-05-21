@@ -20,9 +20,11 @@ environment:
 
 build_script:
 - appveyor-retry dotnet restore .\src\System.Linq.Dynamic.Core -v Minimal
+- appveyor-retry dotnet restore .\src\System.AppDomain.NetCoreApp -v Minimal
 - appveyor-retry dotnet restore .\test\System.Linq.Dynamic.Core.Tests  -v Minimal
 
 - dotnet build src\System.Linq.Dynamic.Core\project.json -c %CONFIGURATION%
+- dotnet build src\System.AppDomain.NetCoreApp\project.json -c %CONFIGURATION%
 - dotnet build test\System.Linq.Dynamic.Core.Tests\project.json -c %CONFIGURATION%
 
 - dotnet pack -c Release --no-build --version-suffix %LABEL% -o .\artifacts .\src\System.Linq.Dynamic.Core\project.json
