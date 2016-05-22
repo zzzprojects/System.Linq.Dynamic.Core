@@ -30,4 +30,4 @@ The binary is available on [NuGet][1] : **Install-Package System.Linq.Dynamic.Co
 Documentation can be found [here][2].
 
 [1]: https://www.nuget.org/packages/System.Linq.Dynamic.Core/ "NuGet - System Linq Dynamic Core"
-[2]: http://todo
+[2]: https://system-linq-dynamic-core.azurewebsites.net
