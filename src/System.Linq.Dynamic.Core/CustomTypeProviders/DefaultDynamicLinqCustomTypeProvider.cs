@@ -27,7 +27,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             assemblies = assemblies.Where(x => !x.IsDynamic).ToArray();
 #endif
 
-#if (DNXCORE50 || DOTNET5_4 || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             var definedTypes = assemblies.SelectMany(x => x.DefinedTypes);
             return definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(DynamicLinqTypeAttribute))).Select(x => x.AsType());
 #else

@@ -413,7 +413,7 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
 
-#if NET35 || DNXCORE50
+#if NET35 
             Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.AsEnumerable().Cast<string>().ToArray());
             Assert.Equal(testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
                 userFirstName.Cast<object>().Select(x => x.ToString()).ToArray());
@@ -575,7 +575,7 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             var realResult = realQuery.ToArray();
 
-#if DNXCORE50
+#if NETSTANDARD
             var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
 
             Assert.Equal(realResult.Length, dynamicResult.Length);

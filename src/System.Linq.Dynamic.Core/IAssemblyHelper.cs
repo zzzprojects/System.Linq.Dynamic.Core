@@ -2,6 +2,9 @@
 
 namespace System.Linq.Dynamic.Core
 {
+    /// <summary>
+    /// IAssemblyHelper interface which is used to retrieve assemblies that have been loaded into the execution context of this application domain.
+    /// </summary>
     public interface IAssemblyHelper
     {
         /// <summary>

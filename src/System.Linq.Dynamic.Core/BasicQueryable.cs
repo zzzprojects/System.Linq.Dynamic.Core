@@ -20,7 +20,7 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// Returns the elements as paged.
         /// </summary>
-        /// <param name="source">The sequence to return elements from.</param>
+        /// <param name="source">The IQueryable to return elements from.</param>
         /// <param name="page">The page to return.</param>
         /// <param name="pageSize">The number of elements per page.</param>
         /// <returns>A <see cref="IQueryable"/> that contains the paged elements.</returns>
@@ -33,6 +33,14 @@ namespace System.Linq.Dynamic.Core
             return source.Skip((page - 1) * pageSize).Take(pageSize);
         }
 
+        /// <summary>
+        /// Returns the elements as paged.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the source.</typeparam>
+        /// <param name="source">The IQueryable to return elements from.</param>
+        /// <param name="page">The page to return.</param>
+        /// <param name="pageSize">The number of elements per page.</param>
+        /// <returns>A <see cref="IQueryable{TSource}"/> that contains the paged elements.</returns>
         public static IQueryable<TSource> Page<TSource>([NotNull] this IQueryable<TSource> source, int page, int pageSize)
         {
             Check.NotNull(source, nameof(source));
@@ -44,9 +52,8 @@ namespace System.Linq.Dynamic.Core
 
         /// <summary>
         /// Returns the elements as paged and include the CurrentPage, PageCount, PageSize and RowCount.
-        /// http://weblogs.asp.net/gunnarpeipman/returning-paged-results-from-repositories-using-pagedresult-lt-t-gt
         /// </summary>
-        /// <param name="source">The sequence to return elements from.</param>
+        /// <param name="source">The IQueryable to return elements from.</param>
         /// <param name="page">The page to return.</param>
         /// <param name="pageSize">The number of elements per page.</param>
         /// <returns>PagedResult</returns>
@@ -69,6 +76,14 @@ namespace System.Linq.Dynamic.Core
             return result;
         }
 
+        /// <summary>
+        /// Returns the elements as paged and include the CurrentPage, PageCount, PageSize and RowCount.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the source.</typeparam>
+        /// <param name="source">The IQueryable to return elements from.</param>
+        /// <param name="page">The page to return.</param>
+        /// <param name="pageSize">The number of elements per page.</param>
+        /// <returns>PagedResult{TSource}</returns>
         public static PagedResult<TSource> PageResult<TSource>([NotNull] this IQueryable<TSource> source, int page, int pageSize)
         {
             Check.NotNull(source, nameof(source));
@@ -376,6 +391,6 @@ namespace System.Linq.Dynamic.Core
         {
             return source.Cast<T>().ToList();
         }
-#endregion
+        #endregion
     }
 }

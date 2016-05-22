@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpTOC>
+
+  <HelpTOCNode Id="ec1a1e69-14f9-49ae-93f2-881fb438cace" Title="System.Linq.Dynamic.Core" Url="html/de47654c-7ae4-9302-3061-ea6307706cb8.htm">
+    <HelpTOCNode Id="de52fbc1-916c-478b-b55d-e395dc9a93ff" Title="BasicQueryable Class" Url="html/6db4123f-c56f-4f90-46c1-4f4a77e3cb26.htm">
+      <HelpTOCNode Id="ed04b238-8662-46b1-aad2-397b58fe4efe" Title="BasicQueryable Methods" Url="html/612dff78-22b8-2188-bd48-81f7badc74a8.htm">
+        <HelpTOCNode Title="Any Method " Url="html/4a33925a-ce52-875f-fa57-e840ac5e56ab.htm" />
+        <HelpTOCNode Title="AsEnumerable Method " Url="html/47ee195b-de60-2117-8810-bf42efaa5479.htm" />
+        <HelpTOCNode Title="Count Method " Url="html/3831f6dd-7028-5439-1111-eac85eea9788.htm" />
+        <HelpTOCNode Title="First Method " Url="html/e2589bb1-b0c2-fc06-beca-a6a5e73b2c03.htm" />
+        <HelpTOCNode Title="FirstOrDefault Method " Url="html/acab1200-571d-8d9d-739b-5ddcad0fb2db.htm" />
+        <HelpTOCNode Title="Last Method " Url="html/7f17e10d-8168-7021-3c4f-e0235210e591.htm" />
+        <HelpTOCNode Title="LastOrDefault Method " Url="html/61e8dda0-ca30-f49d-22f8-1510d1bf742e.htm" />
+        <HelpTOCNode Id="b47c7b9f-a24e-48d1-b0de-2912d4a92ab4" Title="Page Method " Url="html/3747c9fa-ed10-c607-2928-b5417aa31514.htm">
+          <HelpTOCNode Title="Page Method (IQueryable, Int32, Int32)" Url="html/d90b2708-4e91-d5d7-078e-71e61d83dc98.htm" />
+          <HelpTOCNode Title="Page(TSource) Method (IQueryable(TSource), Int32, Int32)" Url="html/6c0ef4d6-1fb5-b3ee-af4f-cb4c8c610a76.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="166c9ec2-c7c9-4d11-a679-ee4d019c42c7" Title="PageResult Method " Url="html/c7df23fd-ae86-6810-a60c-8919f74c42d8.htm">
+          <HelpTOCNode Title="PageResult Method (IQueryable, Int32, Int32)" Url="html/98ca77fd-91af-5304-bb9f-60f192d02e72.htm" />
+          <HelpTOCNode Title="PageResult(TSource) Method (IQueryable(TSource), Int32, Int32)" Url="html/0f10a239-09e5-75e8-1aca-4594a3b973ad.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="Reverse Method " Url="html/df0ff68a-ec90-514e-d625-5e791d62d272.htm" />
+        <HelpTOCNode Title="Single Method " Url="html/809da7fa-3b98-7eb6-c1f4-edf4c8acb980.htm" />
+        <HelpTOCNode Title="SingleOrDefault Method " Url="html/be1b403a-2228-0c7d-a30a-25310249bb07.htm" />
+        <HelpTOCNode Title="Skip Method " Url="html/80e4f92b-c379-4b82-0309-2b6bdccfbac2.htm" />
+        <HelpTOCNode Title="Sum Method " Url="html/edf8e076-51c5-d4b1-a31c-805f8cbc7f04.htm" />
+        <HelpTOCNode Title="Take Method " Url="html/f5239c20-dce0-9cd7-61f3-03e602577fc7.htm" />
+        <HelpTOCNode Id="7f58b377-7986-45e5-815b-9f73b1b141b1" Title="ToDynamicArray Method " Url="html/3b8ea2ce-c33b-12ac-bc6e-9bad8dfd5d01.htm">
+          <HelpTOCNode Title="ToDynamicArray Method (IEnumerable)" Url="html/0df4cd9c-19aa-cb67-1b54-f53696325d95.htm" />
+          <HelpTOCNode Title="ToDynamicArray(T) Method (IEnumerable)" Url="html/3d1a6c6f-70fc-4432-1abd-ac3b218a7244.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="daf338f8-1b61-4e7e-997c-17be26add35b" Title="ToDynamicList Method " Url="html/3ab237c9-3076-e07c-5630-b1c8cc8e4983.htm">
+          <HelpTOCNode Title="ToDynamicList Method (IEnumerable)" Url="html/686c052e-b65a-59fb-d227-89a1cf8a4c10.htm" />
+          <HelpTOCNode Title="ToDynamicList(T) Method (IEnumerable)" Url="html/9b05637c-fbca-ff92-db06-222058b93ecf.htm" />
+        </HelpTOCNode>
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="4100e5dc-75e5-43ec-95f3-bcef08b310fa" Title="DynamicClass Class" Url="html/e342c1b4-0ab2-9ff9-bbcb-78004b2d924d.htm">
+      <HelpTOCNode Title="DynamicClass Constructor " Url="html/3944ac97-d70b-410f-89de-bbf48afaf980.htm" />
+      <HelpTOCNode Id="bcd8570d-48e0-4c8f-a59c-acd64d67a313" Title="DynamicClass Methods" Url="html/3c0f5b0c-c3a6-cf67-bf11-b7997ecc1d2b.htm">
+        <HelpTOCNode Id="ffff3d3b-3fd1-4ed0-8fc4-080257351f49" Title="GetDynamicProperty Method " Url="html/19094ec6-f658-b7bd-19a4-d2b31cb5c273.htm">
+          <HelpTOCNode Title="GetDynamicProperty(T) Method (String)" Url="html/abed9fc0-95c6-224f-5165-b325ce9c44be.htm" />
+          <HelpTOCNode Title="GetDynamicProperty Method (String)" Url="html/22627380-0909-0888-9e19-9cc8c752d929.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="454df6e1-e365-42c1-bae7-62bfaef21db3" Title="SetDynamicProperty Method " Url="html/14c9927d-0431-df48-84c4-54e06fdbb536.htm">
+          <HelpTOCNode Title="SetDynamicProperty Method (String, Object)" Url="html/5dcef9cf-6cc2-d6cb-338d-1a31481a7d3b.htm" />
+          <HelpTOCNode Title="SetDynamicProperty(T) Method (String, T)" Url="html/96d1bb48-00fa-59b3-316d-50c4cfd3c66b.htm" />
+        </HelpTOCNode>
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="16aed9a6-54a1-4c21-a6ee-041e6a5e2e6a" Title="DynamicProperty Class" Url="html/e7f88c42-6076-1782-76c7-7f00bb2ba6b4.htm">
+      <HelpTOCNode Title="DynamicProperty Constructor " Url="html/2f28da13-3fcd-926c-2fa5-034bbc5cf86d.htm" />
+      <HelpTOCNode Id="bd199300-a3e9-4e49-90ca-879534bb3d52" Title="DynamicProperty Properties" Url="html/19b5d1da-767b-33fa-2450-d623c55c4fc0.htm">
+        <HelpTOCNode Title="Name Property " Url="html/70888c8c-cd18-0b35-48c1-2b02ec97be69.htm" />
+        <HelpTOCNode Title="Type Property " Url="html/2d25accc-7354-7edc-1a2b-86ddd65740ce.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="DynamicProperty Methods" Url="html/6ce00864-df23-80ac-8d41-76c6c94319ed.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Id="ba1b6a7d-af14-48e6-bc18-0fbf869e1819" Title="DynamicQueryable Class" Url="html/6052a193-d975-d798-033f-60b414a5c5af.htm">
+      <HelpTOCNode Id="68ae3305-91d0-447f-b998-f003a6cc6252" Title="DynamicQueryable Methods" Url="html/ee9c605e-ff74-f4f8-4336-707484b4d382.htm">
+        <HelpTOCNode Id="b5de4628-045b-4f74-9e29-48d4943687ae" Title="GroupBy Method " Url="html/ead8c263-6bca-7413-96eb-4340cc1bba0a.htm">
+          <HelpTOCNode Title="GroupBy Method (IQueryable, String)" Url="html/5a1b660e-37cc-d236-3d85-d3d28c41f201.htm" />
+          <HelpTOCNode Title="GroupBy Method (IQueryable, String, Object[])" Url="html/1fd67d0b-0cdb-9fae-bf83-9b0477701816.htm" />
+          <HelpTOCNode Title="GroupBy Method (IQueryable, String, String)" Url="html/d47431ae-5238-944a-739d-06fa3ca8049a.htm" />
+          <HelpTOCNode Title="GroupBy Method (IQueryable, String, String, Object[])" Url="html/5c3be6f7-16f3-36d2-ef7c-8a34f8715e8d.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="3e6b054c-91e7-4c43-bb1c-9eaa51264feb" Title="GroupByMany Method " Url="html/79e3fbf2-f2f1-9bb6-57e9-04a2771a00f8.htm">
+          <HelpTOCNode Title="GroupByMany(TElement) Method (IEnumerable(TElement), Func(TElement, Object)[])" Url="html/e8ecfa8a-401c-84ec-a4a8-abd13d92073e.htm" />
+          <HelpTOCNode Title="GroupByMany(TElement) Method (IEnumerable(TElement), String[])" Url="html/519104ca-6e71-6a79-cf19-2cea457fc3f2.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="bd00d859-b4b0-4398-b1e8-e020b722645a" Title="Join Method " Url="html/b225da02-e039-1423-ce16-555d229b72a4.htm">
+          <HelpTOCNode Title="Join Method (IQueryable, IEnumerable, String, String, String, Object[])" Url="html/d9f1f856-695c-9a0d-64e8-3f4d4427eaa0.htm" />
+          <HelpTOCNode Title="Join(TElement) Method (IQueryable(TElement), IEnumerable(TElement), String, String, String, Object[])" Url="html/aad06777-7240-b25b-0ae5-4751e9d5d507.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="d2d28120-10f4-4f11-8119-6ac13c9af636" Title="OrderBy Method " Url="html/9e655c35-5f57-edd6-38df-8cd471c93e5b.htm">
+          <HelpTOCNode Title="OrderBy Method (IQueryable, String, Object[])" Url="html/7a0ed811-33f1-bbfa-b1b1-6e17bbac1377.htm" />
+          <HelpTOCNode Title="OrderBy(TSource) Method (IQueryable(TSource), String, Object[])" Url="html/3630e01a-2c1b-4d74-99dd-de7bae1e8597.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="6609cb3b-1589-43dc-98e9-2b6761843329" Title="Select Method " Url="html/aab24f51-3e8e-ada5-fb40-2869e77f5dbd.htm">
+          <HelpTOCNode Title="Select Method (IQueryable, String, Object[])" Url="html/32b70a35-c0e5-6ff3-1089-edaabad0e0ae.htm" />
+          <HelpTOCNode Title="Select(TResult) Method (IQueryable, String, Object[])" Url="html/62ef74aa-9b01-b515-6afa-87089513f5e1.htm" />
+          <HelpTOCNode Title="Select Method (IQueryable, Type, String, Object[])" Url="html/2bae6077-9453-d5b7-b27f-1c3cf479e8b3.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="5e8cf1ac-4e51-4004-bdd5-79927de51963" Title="SelectMany Method " Url="html/34dac8b5-8ff6-5059-72ba-01a08c46640c.htm">
+          <HelpTOCNode Title="SelectMany Method (IQueryable, String, Object[])" Url="html/805c90fa-621b-1d92-6540-762c0ac2d973.htm" />
+          <HelpTOCNode Title="SelectMany(TResult) Method (IQueryable, String, Object[])" Url="html/cb9d532e-35aa-cd22-3312-2fdb332ac82c.htm" />
+          <HelpTOCNode Title="SelectMany Method (IQueryable, Type, String, Object[])" Url="html/f9f848e9-05eb-072b-0518-ff9fd275fe2e.htm" />
+          <HelpTOCNode Title="SelectMany Method (IQueryable, String, String, Object[], Object[])" Url="html/68542bef-db57-b19f-b15b-18d33de21715.htm" />
+          <HelpTOCNode Title="SelectMany Method (IQueryable, String, String, String, String, Object[], Object[])" Url="html/fade968d-18ed-cf31-4009-86df4ee44489.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="0aa7463a-2c85-4884-8481-a2cfdaa81cf6" Title="Where Method " Url="html/123561e1-f0ac-5c65-7475-269ab2e4f5cc.htm">
+          <HelpTOCNode Title="Where Method (IQueryable, String, Object[])" Url="html/5c1087a2-f682-88e3-c84d-f826fa057fce.htm" />
+          <HelpTOCNode Title="Where(TSource) Method (IQueryable(TSource), String, Object[])" Url="html/45e06146-e6c2-a0d7-8b51-d174f63c4ecc.htm" />
+        </HelpTOCNode>
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="c795756d-b22c-45a8-a657-8485a3c0e1ee" Title="GlobalConfig Class" Url="html/bdbd39f1-f2b1-7aee-ece8-6025c39c41d6.htm">
+      <HelpTOCNode Id="8f7d3fc7-fc80-4e37-8b12-2a815badbb24" Title="GlobalConfig Properties" Url="html/7b60699c-98fd-d903-bd4f-9181668569cb.htm">
+        <HelpTOCNode Title="AreContextKeywordsEnabled Property " Url="html/c061afbd-911f-5acc-2a60-24847559ab0f.htm" />
+        <HelpTOCNode Title="CustomTypeProvider Property " Url="html/a37d5920-95b6-e0b8-57e4-039248c67b16.htm" />
+        <HelpTOCNode Title="UseDynamicObjectClassForAnonymousTypes Property " Url="html/c3dc1230-7613-3efb-56d5-467259db7d89.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="28c8a1cf-84da-486e-94ef-13b2be24a112" Title="GroupResult Class" Url="html/5322a78d-cbe3-7e65-f001-78f5dadfe009.htm">
+      <HelpTOCNode Title="GroupResult Constructor " Url="html/724e1f4a-6a2a-ec95-6829-67afcc95acbd.htm" />
+      <HelpTOCNode Id="e545bf49-1bac-4681-bc87-ea0b1fad11b1" Title="GroupResult Properties" Url="html/034ae87e-3b08-4832-3d16-21f20a6e540f.htm">
+        <HelpTOCNode Title="Count Property " Url="html/581b1f5b-6cd3-99b2-f883-4863377c3d48.htm" />
+        <HelpTOCNode Title="Items Property " Url="html/1cb33c56-fbd0-7439-26e9-f955171a8aa2.htm" />
+        <HelpTOCNode Title="Key Property " Url="html/de13f53d-3367-2ef2-0efd-37dba00f10d1.htm" />
+        <HelpTOCNode Title="Subgroups Property " Url="html/901a4d67-1b67-6548-5c87-421c5a788bd6.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="44e89a0f-0af4-43da-8eb3-cdd72842c61a" Title="GroupResult Methods" Url="html/53c2e70f-f99b-222f-951d-99d38056ec33.htm">
+        <HelpTOCNode Title="ToString Method " Url="html/94cfad6d-e734-f70f-3352-98a53c8d947e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="a8b76f19-5b57-433d-9713-c67061f35db8" Title="IAssemblyHelper Interface" Url="html/f7d5f52e-c819-340a-3fc4-9aa80263945a.htm">
+      <HelpTOCNode Id="338914a9-ee71-4075-96ae-448ee1337603" Title="IAssemblyHelper Methods" Url="html/1cf4ec89-2692-7736-8791-f42cacc3c7d7.htm">
+        <HelpTOCNode Title="GetAssemblies Method " Url="html/50f9cc5e-8dc9-6fcf-23a6-0a2751295c12.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="cfcd0bad-a8df-497e-b210-0bc49a508ad3" Title="PagedResult Class" Url="html/d6a52ff1-1fd8-e1b3-b372-61d314a78d5e.htm">
+      <HelpTOCNode Title="PagedResult Constructor " Url="html/6edcd149-bf11-b2c0-7675-623978830762.htm" />
+      <HelpTOCNode Id="630665ca-fdaa-4283-ae8d-78edc5fad9ed" Title="PagedResult Properties" Url="html/97aa85dd-7d55-7d4a-d16c-6151057d4e14.htm">
+        <HelpTOCNode Title="CurrentPage Property " Url="html/254eb037-08b8-6908-73ec-06a9535b513e.htm" />
+        <HelpTOCNode Title="PageCount Property " Url="html/2c9e76dc-968c-3560-149f-328975b10c91.htm" />
+        <HelpTOCNode Title="PageSize Property " Url="html/ce1cbbfd-3590-be85-de65-a92190be3d28.htm" />
+        <HelpTOCNode Title="Queryable Property " Url="html/243f0e8e-9609-2e8d-b088-2f3679df469f.htm" />
+        <HelpTOCNode Title="RowCount Property " Url="html/68df6dc2-9655-b3b2-efce-3d3ca2265965.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="PagedResult Methods" Url="html/21b9dc8f-41ac-997f-6fc3-64351b5b1e67.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Id="4e726542-fc0d-4852-8063-04f797d156f4" Title="PagedResult(TSource) Class" Url="html/5aba9200-bd4e-f860-8d36-0afe892d923e.htm">
+      <HelpTOCNode Title="PagedResult(TSource) Constructor " Url="html/fe1717f7-802b-f5a9-b54a-f764cd84365d.htm" />
+      <HelpTOCNode Id="15b9698b-f5bc-4f0d-ac2b-e03c430f9ffb" Title="PagedResult(TSource) Properties" Url="html/f8bf2a0a-9a63-8a01-4591-a46c51a49245.htm">
+        <HelpTOCNode Title="Queryable Property " Url="html/07e31581-5ef6-08c7-0908-ced5c957e39f.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="PagedResult(TSource) Methods" Url="html/82c756ac-ae74-3b28-29eb-9603454229c7.htm" />
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="ca10f442-c8e4-4d6b-91cf-c714d124146d" Title="System.Linq.Dynamic.Core.CustomTypeProviders" Url="html/2adefda4-0a38-b90a-4c33-ec6bcab66e8d.htm">
+    <HelpTOCNode Id="e403c2ad-3d57-4e4a-a454-1f81cd48bc78" Title="DefaultDynamicLinqCustomTypeProvider Class" Url="html/8c9e6389-18cd-6269-6181-8b148678cfa9.htm">
+      <HelpTOCNode Title="DefaultDynamicLinqCustomTypeProvider Constructor " Url="html/956c0694-0821-8e69-aa8f-9ae471eb2dda.htm" />
+      <HelpTOCNode Id="e53137c3-4d4e-4f52-b68d-b2598478db97" Title="DefaultDynamicLinqCustomTypeProvider Methods" Url="html/7aecbfa8-8b16-a50a-29fe-7214fbc5aa63.htm">
+        <HelpTOCNode Title="GetCustomTypes Method " Url="html/4f3b8d53-8bb0-f985-6d80-9f7dca8fbd73.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="3c49de42-8f55-4199-b351-a75e981315fc" Title="DynamicLinqTypeAttribute Class" Url="html/f3787db5-ab98-db68-694e-94d2ddd8b140.htm">
+      <HelpTOCNode Title="DynamicLinqTypeAttribute Constructor " Url="html/d6e24413-512d-f9d2-b470-e7b497242961.htm" />
+      <HelpTOCNode Title="DynamicLinqTypeAttribute Properties" Url="html/74693236-4b0a-c69f-f329-0f841107255e.htm" />
+      <HelpTOCNode Title="DynamicLinqTypeAttribute Methods" Url="html/23c1d3a3-0db1-9fb1-fe3d-1204e502f9ee.htm" />
+    </HelpTOCNode>
+    <HelpTOCNode Id="fd42c3d5-0e57-496a-a69f-9dd35e43443d" Title="IDynamicLinkCustomTypeProvider Interface" Url="html/ed8ecef6-0089-eab6-3c3c-e76b190ea7e8.htm">
+      <HelpTOCNode Id="0d213209-4806-4432-8c7a-e375c6cfe23a" Title="IDynamicLinkCustomTypeProvider Methods" Url="html/4fcb74af-e8be-d74c-c3c0-9ea78251a06b.htm">
+        <HelpTOCNode Title="GetCustomTypes Method " Url="html/625b349f-10ed-e15a-a339-63656c4d6ed0.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="df78266b-f8c3-4bf9-af17-5610689254bb" Title="System.Linq.Dynamic.Core.Exceptions" Url="html/3f310d0d-47d1-c5af-63bf-2bb2cd48f9dc.htm">
+    <HelpTOCNode Id="b243dda4-bdbf-49b7-b1aa-b2b9620bac34" Title="ParseException Class" Url="html/00382765-2e26-f538-4a2d-b2485efd1a8e.htm">
+      <HelpTOCNode Title="ParseException Constructor " Url="html/864bd614-3384-4c20-33df-896092842fd8.htm" />
+      <HelpTOCNode Id="83374d69-5a0e-4e34-b772-d46cea79d313" Title="ParseException Properties" Url="html/4f801c37-c1cf-e3cf-a94f-339d3778e54f.htm">
+        <HelpTOCNode Title="Position Property " Url="html/94081853-6911-cf5a-3e02-6c4ef8c8e633.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="8dbab4eb-8ff3-4e32-a8c1-1621132bfeb8" Title="ParseException Methods" Url="html/cb8166eb-490f-ac7a-3759-9bf25cd3c1e3.htm">
+        <HelpTOCNode Title="GetObjectData Method " Url="html/3508fc53-16f9-f409-6784-2572b063b281.htm" />
+        <HelpTOCNode Title="ToString Method " Url="html/62888e13-2fc9-e3df-0d7e-23455c12f578.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+</HelpTOC>

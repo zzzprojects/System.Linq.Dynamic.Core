@@ -56,13 +56,11 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// 
+        /// Gets or sets a value indicating whether to use dynamic object class for anonymous types.
         /// </summary>
+        /// <value>
+        /// <c>true</c> if wether to use dynamic object class for anonymous types; otherwise, <c>false</c>.
+        /// </value>
         public static bool UseDynamicObjectClassForAnonymousTypes { get; set; }
-
-        /// <summary>
-        /// The DecimalSeparators to use, can be '.' or ','
-        /// </summary>
-        //public static char NumberDecimalSeparator { get; set; }
     }
 }

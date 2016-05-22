@@ -4,7 +4,7 @@ namespace System.Linq.Dynamic.Core
 {
     internal class DefaultAssemblyHelper : IAssemblyHelper
     {
-#if DNXCORE50 || DOTNET5_4
+#if  DOTNET5_4
         public Assembly[] GetAssemblies()
         {
             var assemblyNames = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager.GetLibraries()
