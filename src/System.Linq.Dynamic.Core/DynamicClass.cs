@@ -5,7 +5,15 @@ using System.Reflection;
 namespace System.Linq.Dynamic.Core
 {
     /// <summary>
-    /// Provides a base class for dynamic objects created by using the <see cref="DynamicQueryable.Select(IQueryable,string,object[])"/> method.
+    /// Provides a base class for dynamic objects.
+    /// 
+    /// In addition to the methods defined here, the following items are added using reflection:
+    /// - default constructor
+    /// - constructor with all the properties as parameters (if not linq-to-entities)
+    /// - all properties (also with getter and setters)
+    /// - ToString() method
+    /// - Equals() method
+    /// - GetHashCode() method
     /// </summary>
     public abstract class DynamicClass
     {
