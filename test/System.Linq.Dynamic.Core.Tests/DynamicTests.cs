@@ -211,8 +211,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 new Role
                 {
                     Name = "Admin",
-                    Permissions =
-                        new List<Permission> {new Permission {Name = "p-Admin"}, new Permission {Name = "p-User"}}
+                    Permissions = new List<Permission> {new Permission {Name = "p-Admin"}, new Permission {Name = "p-User"}}
                 }
             };
             users[1].Roles = new List<Role>

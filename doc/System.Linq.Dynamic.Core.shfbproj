@@ -34,8 +34,9 @@
     <BinaryTOC>True</BinaryTOC>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="System.Linq.Dynamic.Core" isDocumented="True">This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="System.Linq.Dynamic.Core.CustomTypeProviders" isDocumented="True">Interface for providing custom types for Dynamic Linq. (Like custom enums.)</NamespaceSummaryItem>
-<NamespaceSummaryItem name="System.Linq.Dynamic.Core.Exceptions" isDocumented="True">All exceptions are defined here</NamespaceSummaryItem></NamespaceSummaries>
+      <NamespaceSummaryItem name="System.Linq.Dynamic.Core.CustomTypeProviders" isDocumented="True">Interface for providing custom types for Dynamic Linq. (Like custom enums.)</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="System.Linq.Dynamic.Core.Exceptions" isDocumented="True">All exceptions are defined here</NamespaceSummaryItem>
+    </NamespaceSummaries>
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
@@ -45,7 +46,7 @@
     <PresentationStyle>VS2013</PresentationStyle>
     <Preliminary>False</Preliminary>
     <NamingMethod>Guid</NamingMethod>
-    <HelpTitle>System.Linq.Dynamic.Core SandCastle Documentation</HelpTitle>
+    <HelpTitle>System.Linq.Dynamic.Core Documentation</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <WorkingPath>System.Linq.Dynamic.Core.SandCastle.tmp\</WorkingPath>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected, PublicCompilerGenerated</VisibleItems>

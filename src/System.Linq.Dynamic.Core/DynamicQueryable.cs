@@ -22,15 +22,17 @@ namespace System.Linq.Dynamic.Core
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
-        /// <param name="source">A <see cref="IQueryable{T}"/> to filter.</param>
+        /// <param name="source">A <see cref="IQueryable{TSource}"/> to filter.</param>
         /// <param name="predicate">An expression string to test each element for a condition.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
-        /// <returns>A <see cref="IQueryable{T}"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>A <see cref="IQueryable{TSource}"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
         /// <example>
-        /// <code>
-        /// var result1 = list.Where("NumberProperty=1");
-        /// var result2 = list.Where("NumberProperty=@0", 1);
-        /// var result3 = list.Where("NumberProperty=@0", SomeIntValue);
+        /// <code language="cs">
+        /// var result1 = queryable.Where("NumberProperty = 1");
+        /// var result2 = queryable.Where("NumberProperty = @0", 1);
+        /// var result3 = queryable.Where("StringProperty = null");
+        /// var result4 = queryable.Where("StringProperty = \"abc\"");
+        /// var result5 = queryable.Where("StringProperty = @0", "abc");
         /// </code>
         /// </example>
         public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string predicate, params object[] args)
@@ -46,13 +48,15 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
         /// <param name="predicate">An expression string to test each element for a condition.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
         /// <example>
         /// <code>
-        /// var result1 = list.Where("NumberProperty=1");
-        /// var result2 = list.Where("NumberProperty=@0", 1);
-        /// var result3 = list.Where("NumberProperty=@0", SomeIntValue);
+        /// var result1 = queryable.Where("NumberProperty = 1");
+        /// var result2 = queryable.Where("NumberProperty = @0", 1);
+        /// var result3 = queryable.Where("StringProperty = null");
+        /// var result4 = queryable.Where("StringProperty = \"abc\"");
+        /// var result5 = queryable.Where("StringProperty = @0", "abc");
         /// </code>
         /// </example>
         public static IQueryable Where([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
@@ -82,8 +86,8 @@ namespace System.Linq.Dynamic.Core
         /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a projection string on each element of source.</returns>
         /// <example>
         /// <code>
-        /// var singleField = qry.Select("StringProperty");
-        /// var dynamicObject = qry.Select("new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
+        /// var singleField = queryable.Select("StringProperty");
+        /// var dynamicObject = queryable.Select("new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
         /// </code>
         /// </example>
         public static IQueryable Select([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
@@ -103,7 +107,7 @@ namespace System.Linq.Dynamic.Core
 
         /// <summary>
         /// Projects each element of a sequence into a new class of type TResult.
-        /// Details see http://solutionizing.net/category/linq/ 
+        /// Details see <see href="http://solutionizing.net/category/linq/"/>.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="source">A sequence of values to project.</param>
@@ -111,8 +115,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
         /// <returns>An <see cref="IQueryable{TResult}"/> whose elements are the result of invoking a projection string on each element of source.</returns>
         /// <example>
-        /// <code>
-        /// var users = qry.Select&lt;User&gt;("new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
+        /// <code language="cs">
+        /// <![CDATA[
+        /// var users = queryable.Select<User>("new (Username, Pwd as Password)");
+        /// ]]>
         /// </code>
         /// </example>
         public static IQueryable<TResult> Select<TResult>([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
@@ -141,7 +147,7 @@ namespace System.Linq.Dynamic.Core
         /// <returns>An <see cref="IQueryable{TResult}"/> whose elements are the result of invoking a projection string on each element of source.</returns>
         /// <example>
         /// <code>
-        /// var users = qry.Select(typeof(User), "new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
+        /// var users = queryable.Select(typeof(User), "new (Username, Pwd as Password)");
         /// </code>
         /// </example>
         public static IQueryable Select([NotNull] this IQueryable source, [NotNull] Type resultType, [NotNull] string selector, params object[] args)
@@ -161,13 +167,17 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Projects each element of a sequence to an <see cref="IQueryable"/> and combines the 
-        /// resulting sequences into one sequence.
+        /// Projects each element of a sequence to an <see cref="IQueryable"/> and combines the resulting sequences into one sequence.
         /// </summary>
         /// <param name="source">A sequence of values to project.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+        /// <example>
+        /// <code>
+        /// var roles = users.SelectMany("Roles");
+        /// </code>
+        /// </example>
         public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -184,6 +194,11 @@ namespace System.Linq.Dynamic.Core
         /// <param name="resultType">The result type.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+        /// <example>
+        /// <code>
+        /// var permissions = users.SelectMany(typeof(Permission), "Roles.SelectMany(Permissions)");
+        /// </code>
+        /// </example>
         public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] Type resultType, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -232,6 +247,13 @@ namespace System.Linq.Dynamic.Core
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable{TResult}"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var permissions = users.SelectMany<Permission>("Roles.SelectMany(Permissions)");
+        /// ]]>
+        /// </code>
+        /// </example>
         public static IQueryable<TResult> SelectMany<TResult>([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -269,6 +291,13 @@ namespace System.Linq.Dynamic.Core
         /// projection function <paramref name="collectionSelector"/> on each element of source and then mapping
         /// each of those sequence elements and their corresponding source element to a result element.
         /// </returns>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// // TODO
+        /// ]]>
+        /// </code>
+        /// </example>
         public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string collectionSelector, [NotNull] string resultSelector, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
         {
             return SelectMany(source, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
@@ -292,6 +321,13 @@ namespace System.Linq.Dynamic.Core
         /// projection function <paramref name="collectionSelector"/> on each element of source and then mapping
         /// each of those sequence elements and their corresponding source element to a result element.
         /// </returns>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// // TODO
+        /// ]]>
+        /// </code>
+        /// </example>
         public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string collectionSelector, [NotNull] string resultSelector,
             [NotNull] string collectionParameterName, [NotNull] string resultParameterName, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
         {
@@ -336,11 +372,13 @@ namespace System.Linq.Dynamic.Core
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         /// <example>
         /// <code>
-        /// var result = list.OrderBy("NumberProperty, StringProperty DESC");
+        /// <![CDATA[
+        /// var result = queryable.OrderBy<User>("NumberProperty, StringProperty DESC");
+        /// ]]>
         /// </code>
         /// </example>
         public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string ordering, params object[] args)
@@ -357,7 +395,7 @@ namespace System.Linq.Dynamic.Core
         /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         /// <example>
         /// <code>
-        /// var result = list.OrderBy("NumberProperty, StringProperty DESC");
+        /// var result = queryable.OrderBy("NumberProperty, StringProperty DESC");
         /// </code>
         /// </example>
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, params object[] args)
@@ -398,8 +436,8 @@ namespace System.Linq.Dynamic.Core
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
         /// <example>
         /// <code>
-        /// var groupResult1 = qry.GroupBy("NumberPropertyAsKey", "StringProperty");
-        /// var groupResult2 = qry.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
+        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey", "StringProperty");
+        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
         /// </code>
         /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, object[] args)
@@ -429,8 +467,8 @@ namespace System.Linq.Dynamic.Core
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
         /// <example>
         /// <code>
-        /// var groupResult1 = qry.GroupBy("NumberPropertyAsKey", "StringProperty");
-        /// var groupResult2 = qry.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
+        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey", "StringProperty");
+        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
         /// </code>
         /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector)
@@ -452,8 +490,8 @@ namespace System.Linq.Dynamic.Core
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
         /// <example>
         /// <code>
-        /// var groupResult1 = qry.GroupBy("NumberPropertyAsKey");
-        /// var groupResult2 = qry.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
+        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey");
+        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
         /// </code>
         /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, object[] args)
@@ -480,8 +518,8 @@ namespace System.Linq.Dynamic.Core
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
         /// <example>
         /// <code>
-        /// var groupResult1 = qry.GroupBy("NumberPropertyAsKey");
-        /// var groupResult2 = qry.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
+        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey");
+        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
         /// </code>
         /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector)
