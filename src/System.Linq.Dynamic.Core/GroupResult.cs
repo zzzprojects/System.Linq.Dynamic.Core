@@ -34,8 +34,11 @@ namespace System.Linq.Dynamic.Core
         public IEnumerable<GroupResult> Subgroups { get; internal set; }
 
         /// <summary>
-        /// Returns a string showing the key of the group and the number of items in the group.
+        /// Returns a <see cref="System.String" /> showing the key of the group and the number of items in the group.
         /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
             return string.Format(CultureInfo.CurrentCulture, "{0} ({1})", ((object)Key).ToString(), Count);

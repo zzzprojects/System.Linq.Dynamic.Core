@@ -4,8 +4,7 @@ using System.Collections.Generic;
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// The default <see cref="IDynamicLinkCustomTypeProvider"/>. Scans the current <see cref="AppDomain"/> for all types marked with 
-    /// <see cref="DynamicLinqTypeAttribute"/>, and adds them as custom Dynamic Link types.
+    /// The default <see cref="IDynamicLinkCustomTypeProvider"/>. Scans the current AppDomain for all types marked with <see cref="DynamicLinqTypeAttribute"/>, and adds them as custom Dynamic Link types.
     /// </summary>
     public class DefaultDynamicLinqCustomTypeProvider : IDynamicLinkCustomTypeProvider
     {
@@ -15,6 +14,9 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// <summary>
         /// Returns a list of custom types that System.Linq.Dynamic.Core will understand.
         /// </summary>
+        /// <returns>
+        /// A <see cref="System.Collections.Generic.HashSet&lt;Type&gt;" /> list of custom types.
+        /// </returns>
         public virtual HashSet<Type> GetCustomTypes()
         {
             return _customTypes ?? (_customTypes = new HashSet<Type>(FindTypesMarkedWithAttribute()));
