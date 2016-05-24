@@ -1752,11 +1752,10 @@ namespace System.Linq.Dynamic.Core
                 Select(m => new MethodData { MethodBase = m, Parameters = m.GetParameters() }).
                 Where(m => IsApplicable(m, args)).
                 ToArray();
+
             if (applicable.Length > 1)
             {
-                applicable = applicable.
-                    Where(m => applicable.All(n => m == n || IsBetterThan(args, m, n))).
-                    ToArray();
+                applicable = applicable.Where(m => applicable.All(n => m == n || IsBetterThan(args, m, n))).ToArray();
             }
 
             if (applicable.Length == 1)
@@ -2170,35 +2169,55 @@ namespace System.Linq.Dynamic.Core
 #endif
         }
 
-        static bool IsBetterThan(Expression[] args, MethodData m1, MethodData m2)
+        static bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
         {
             bool better = false;
             for (int i = 0; i < args.Length; i++)
             {
-                int c = CompareConversions(args[i].Type,
-                    m1.Parameters[i].ParameterType,
-                    m2.Parameters[i].ParameterType);
-                if (c < 0) return false;
-                if (c > 0) better = true;
+                CompareConversionType result = CompareConversions(args[i].Type, first.Parameters[i].ParameterType, second.Parameters[i].ParameterType);
+
+                // If second is better, return false
+                if (result == CompareConversionType.Second)
+                    return false;
+
+                // If first is better, return true
+                if (result == CompareConversionType.First)
+                    return true;
+
+                // If both are same, just set better to true and continue
+                if (result == CompareConversionType.Both)
+                    better = true;
             }
+
             return better;
         }
 
-        // Return 1 if s -> t1 is a better conversion than s -> t2
-        // Return -1 if s -> t2 is a better conversion than s -> t1
-        // Return 0 if neither conversion is better
-        static int CompareConversions(Type s, Type t1, Type t2)
+        enum CompareConversionType
         {
-            if (t1 == t2) return 0;
-            if (s == t1) return 1;
-            if (s == t2) return -1;
-            bool t1t2 = IsCompatibleWith(t1, t2);
-            bool t2t1 = IsCompatibleWith(t2, t1);
-            if (t1t2 && !t2t1) return 1;
-            if (t2t1 && !t1t2) return -1;
-            if (IsSignedIntegralType(t1) && IsUnsignedIntegralType(t2)) return 1;
-            if (IsSignedIntegralType(t2) && IsUnsignedIntegralType(t1)) return -1;
-            return 0;
+            Both = 0,
+            First = 1,
+            Second = -1
+        }
+
+        // Return "First" if s -> t1 is a better conversion than s -> t2
+        // Return "Second" if s -> t2 is a better conversion than s -> t1
+        // Return "Both" if neither conversion is better
+        static CompareConversionType CompareConversions(Type source, Type first, Type second)
+        {
+            if (first == second) return CompareConversionType.Both;
+            if (source == first) return CompareConversionType.First;
+            if (source == second) return CompareConversionType.Second;
+
+            bool firstIsCompatibleWithSecond = IsCompatibleWith(first, second);
+            bool secondIsCompatibleWithFirst = IsCompatibleWith(second, first);
+
+            if (firstIsCompatibleWithSecond && !secondIsCompatibleWithFirst) return CompareConversionType.First;
+            if (secondIsCompatibleWithFirst && !firstIsCompatibleWithSecond) return CompareConversionType.Second;
+
+            if (IsSignedIntegralType(first) && IsUnsignedIntegralType(second)) return CompareConversionType.First;
+            if (IsSignedIntegralType(second) && IsUnsignedIntegralType(first)) return CompareConversionType.Second;
+
+            return CompareConversionType.Both;
         }
 
         static Expression GenerateEqual(Expression left, Expression right)
