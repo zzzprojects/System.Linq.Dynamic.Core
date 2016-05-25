@@ -12,6 +12,39 @@ namespace System.Linq.Dynamic.Core.Tests
     public class DynamicTests
     {
         [Fact]
+        public void Any()
+        {
+            const string search = "e";
+
+            // Arrange
+            var testList = User.GenerateSampleModels(10);
+            var queryable = testList.AsQueryable();
+
+            // Act
+            var expected = queryable.Where(u => u.Roles.Any(r => r.Name.Contains(search))).ToArray();
+            var result = queryable.Where("Roles.Any(Name.Contains(@0))", search).ToArray();
+
+            Assert.Equal(expected, result);
+        }
+
+        // https://dynamiclinq.codeplex.com/discussions/654313
+        [Fact]
+        public void Any_Nested()
+        {
+            const string search = "a";
+
+            // Arrange
+            var testList = User.GenerateSampleModels(10);
+            var queryable = testList.AsQueryable();
+
+            // Act
+            var expected = queryable.Where(u => u.Roles.Any(r => r.Permissions.Any(p => p.Name.Contains(search)))).ToArray();
+            var result = queryable.Where("Roles.Any(Permissions.Any(Name.Contains(@0)))", search).ToArray();
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/19
         public void Where_DateTime_NotEquals_Null()
         {
