@@ -6,7 +6,6 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class BasicTests
     {
-        #region Aggregates
 
         [Fact]
         public void Any()
@@ -28,22 +27,6 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Contains()
-        {
-            //Arrange
-            var baseQuery = User.GenerateSampleModels(100).AsQueryable();
-            var containsList = new List<string>() {"User1", "User5", "User10"};
-
-
-            //Act
-            var realQuery = baseQuery.Where(x => containsList.Contains(x.UserName)).Select(x => x.Id);
-            var testQuery = baseQuery.Where("@0.Contains(UserName)", containsList).Select("Id");
-
-            //Assert
-            Assert.Equal(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
-        }
-
-        [Fact]
         public void Count()
         {
             //Arrange
@@ -61,39 +44,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(1, resultOne);
             Assert.Equal(0, resultNone);
         }
-
-        [Fact]
-        public void In()
-        {
-            //Arrange
-            var testRange = Enumerable.Range(1, 100).ToArray();
-            var testModels = User.GenerateSampleModels(10);
-            var testModelByUsername = String.Format("Username in (\"{0}\",\"{1}\",\"{2}\")", testModels[0].UserName,
-                testModels[1].UserName, testModels[2].UserName);
-            var testInExpression = new int[] {2, 4, 6, 8};
-
-            //Act
-            var result1a = testRange.AsQueryable().Where("it in (2,4,6,8)").ToArray();
-            var result1b = testRange.AsQueryable().Where("it in (2, 4,  6, 8)").ToArray();
-            // https://github.com/NArnott/System.Linq.Dynamic/issues/52
-            var result2 = testModels.AsQueryable().Where(testModelByUsername).ToArray();
-            var result3 =
-                testModels.AsQueryable()
-                    .Where("Id in (@0, @1, @2)", testModels[0].Id, testModels[1].Id, testModels[2].Id)
-                    .ToArray();
-            var result4 = testRange.AsQueryable().Where("it in @0", testInExpression).ToArray();
-
-            //Assert
-            Assert.Equal(new int[] {2, 4, 6, 8}, result1a);
-            Assert.Equal(new int[] {2, 4, 6, 8}, result1b);
-            Assert.Equal(testModels.Take(3).ToArray(), result2);
-            Assert.Equal(testModels.Take(3).ToArray(), result3);
-            Assert.Equal(new int[] {2, 4, 6, 8}, result4);
-        }
-
-        #endregion
-
-        #region Adjustors
 
         [Fact]
         public void Page()
@@ -147,8 +97,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(pageSize, result.PageSize);
             Assert.Equal(total, result.RowCount);
             Assert.Equal(5, result.PageCount);
-            Assert.Equal(testList.Skip((page - 1)*pageSize).Take(pageSize).ToArray(),
-                result.Queryable.ToDynamicArray<User>());
+            Assert.Equal(testList.Skip((page - 1)*pageSize).Take(pageSize).ToArray(), result.Queryable.ToDynamicArray<User>());
         }
 
         [Fact]
@@ -169,8 +118,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(pageSize, result.PageSize);
             Assert.Equal(total, result.RowCount);
             Assert.Equal(5, result.PageCount);
-            Assert.Equal(testList.Skip((page - 1)*pageSize).Take(pageSize).ToArray(),
-                result.Queryable.ToDynamicArray<User>());
+            Assert.Equal(testList.Skip((page - 1)*pageSize).Take(pageSize).ToArray(), result.Queryable.ToDynamicArray<User>());
         }
 
         [Fact]
@@ -225,10 +173,6 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(testList.Reverse().ToArray(), result.Cast<User>().ToArray());
         }
-
-        #endregion
-
-        #region Executors
 
         [Fact]
         public void Single()
@@ -306,26 +250,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Null(defaultResult);
         }
 
-
-        [Fact]
-        public void First_AsStringExpression()
-        {
-            //Arrange
-            var testList = User.GenerateSampleModels(100);
-            IQueryable testListQry = testList.AsQueryable();
-
-            //Act
-            var realResult = testList.OrderBy(x => x.Roles.First().Name).Select(x => x.Id).ToArray();
-            var testResult = testListQry.OrderBy("Roles.First().Name").Select("Id");
-
-            //Assert
-#if NET35 || NETSTANDARD
-            Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
-#else
-            Assert.Equal(realResult, testResult.ToDynamicArray().Cast<Guid>());
-#endif
-        }
-
         [Fact]
         public void Last()
         {
@@ -366,45 +290,5 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Null(defaultResult);
         }
 
-        [Fact]
-        public void Last_AsStringExpression()
-        {
-            //Arrange
-            var testList = User.GenerateSampleModels(100);
-            IQueryable testListQry = testList.AsQueryable();
-
-            //Act
-            var realResult = testList.OrderBy(x => x.Roles.Last().Name).Select(x => x.Id).ToArray();
-            var testResult = testListQry.OrderBy("Roles.Last().Name").Select("Id");
-
-            //Assert
-#if NET35 || NETSTANDARD
-            Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
-#else
-            Assert.Equal(realResult, testResult.ToDynamicArray().Cast<Guid>());
-#endif
-        }
-
-        [Fact]
-        public void Single_AsStringExpression()
-        {
-            //Arrange
-            var testList = User.GenerateSampleModels(1);
-            while (testList[0].Roles.Count > 1) testList[0].Roles.RemoveAt(0);
-            IQueryable testListQry = testList.AsQueryable();
-
-            //Act
-            dynamic realResult = testList.OrderBy(x => x.Roles.Single().Name).Select(x => x.Id).ToArray();
-            var testResult = testListQry.OrderBy("Roles.Single().Name").Select("Id");
-
-            //Assert
-#if NET35 || NETSTANDARD
-            Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
-#else
-            Assert.Equal(realResult, testResult.ToDynamicArray());
-#endif
-        }
-
-        #endregion
     }
 }
