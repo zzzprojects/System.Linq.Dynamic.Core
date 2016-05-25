@@ -37,6 +37,7 @@ However, currently there are multiple nuget packages and project available:
 | [kavun/System.Linq.Dynamic.3.5][3a] | [System.Linq.Dynamic.3.5/][3b] | @kavun | only 3.5 and VB.NET |
 | [StefH/System.Linq.Dynamic][4a] | [System.Linq.Dynamic.Library][4b]  | @NArnott | removed from github + nuget ? |
 | [dynamiclinq.codeplex][5a] | - | dialectsoftware | - |
+| [dynamic-linq][6a] | - | scottgu | - |
 
 So some investigation is needed to compare functionality from all these projects and mine.
 An idea would be to analyse all the issues reported on these projects, and add unit-tests in my project to see if these issues are fixed or still need a fix.
@@ -52,6 +53,6 @@ Documentation can be found [here][1].
 [4a]: https://github.com/StefH/System.Linq.Dynamic
 [4b]: https://www.nuget.org/packages/System.Linq.Dynamic.Library
 [5a]: https://dynamiclinq.codeplex.com/
-
+[6a]: http://weblogs.asp.net/scottgu/dynamic-linq-part-1-using-the-linq-dynamic-query-library
 
 [1]: https://system-linq-dynamic-core.azurewebsites.net
