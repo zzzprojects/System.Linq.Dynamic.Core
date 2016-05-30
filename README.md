@@ -14,7 +14,6 @@ The following frameworks are supported:
 - netstandard1.3
 - netcore45
 - netcore451
-- netcore50
 - uap10.0
 - SilverLight 5.0
 

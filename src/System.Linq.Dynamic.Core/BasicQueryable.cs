@@ -4,6 +4,7 @@ using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 #if WINDOWS_APP
+using System;
 using System.Linq;
 #endif
 
@@ -145,6 +146,22 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
 
             return Queryable.Reverse((IQueryable<object>)source);
+        }
+
+        /// <summary>
+        /// Returns distinct elements from a sequence by using the default equality comparer to compare values.
+        /// </summary>
+        /// <param name="source">The sequence to remove duplicate elements from.</param>
+        /// <returns>An <see cref="IQueryable"/> that contains distinct elements from the source sequence.</returns>
+        public static IQueryable Distinct([NotNull] this IQueryable source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return source.Provider.CreateQuery(
+                Expression.Call(
+                    typeof(Queryable), "Distinct",
+                    new Type[] { source.ElementType },
+                    source.Expression));
         }
         #endregion
 
@@ -340,11 +357,11 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Creates a list of dynamic objects from a <see cref="IEnumerable"/>.
+        /// Creates an array of dynamic objects from a <see cref="IEnumerable"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
-        /// <returns>A Array{T} that contains the elements from the input sequence.</returns>
+        /// <returns>An Array{T} that contains the elements from the input sequence.</returns>
         public static T[] ToDynamicArray<T>([NotNull] this IEnumerable source)
         {
             Check.NotNull(source, nameof(source));

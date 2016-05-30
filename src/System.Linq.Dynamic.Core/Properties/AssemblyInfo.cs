@@ -11,7 +11,7 @@
 [assembly: AssemblyCopyright("Copyright © Stef Heyenrath 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-#if !NETSTANDARD
+#if !(NETSTANDARD || WINDOWS_APP)
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
 #endif
 
