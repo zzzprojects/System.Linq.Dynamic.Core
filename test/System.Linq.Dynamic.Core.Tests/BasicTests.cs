@@ -1,30 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+﻿using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
     public class BasicTests
     {
-        [Fact]
-        public void Count()
-        {
-            //Arrange
-            IQueryable testListFull = User.GenerateSampleModels(100).AsQueryable();
-            IQueryable testListOne = User.GenerateSampleModels(1).AsQueryable();
-            IQueryable testListNone = User.GenerateSampleModels(0).AsQueryable();
-
-            //Act
-            var resultFull = testListFull.Count();
-            var resultOne = testListOne.Count();
-            var resultNone = testListNone.Count();
-
-            //Assert
-            Assert.Equal(100, resultFull);
-            Assert.Equal(1, resultOne);
-            Assert.Equal(0, resultNone);
-        }
-
         [Fact]
         public void Page()
         {

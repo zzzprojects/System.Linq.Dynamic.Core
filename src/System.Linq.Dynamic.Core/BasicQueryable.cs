@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
+using System.Linq.Dynamic.Core.Extensions;
 #if WINDOWS_APP
 using System;
 using System.Linq;
@@ -17,7 +18,6 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public static class BasicQueryable
     {
-        #region IQueryable Adjustors
         /// <summary>
         /// Returns the elements as paged.
         /// </summary>
@@ -163,9 +163,7 @@ namespace System.Linq.Dynamic.Core
                     new Type[] { source.ElementType },
                     source.Expression));
         }
-        #endregion
 
-        #region Aggregates
         /// <summary>
         /// Determines whether a sequence contains any elements.
         /// </summary>
@@ -179,6 +177,31 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
+        /// Determines whether a sequence contains any elements.
+        /// </summary>
+        /// <param name="source">A sequence to check for being empty.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
+        public static bool Any([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+
+            return source.Provider.Execute<bool>(
+                Expression.Call(
+                    typeof(Queryable), "Any",
+                    new[] { source.ElementType },
+                    source.Expression,
+                    Expression.Quote(lambda)
+                )
+            );
+        }
+
+        /// <summary>
         /// Returns the number of elements in a sequence.
         /// </summary>
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
@@ -188,6 +211,31 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
 
             return Queryable.Count((IQueryable<object>)source);
+        }
+
+        /// <summary>
+        /// Returns the number of elements in a sequence.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
+        public static int Count([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, typeof(bool), predicate, args);
+
+            return source.Provider.Execute<int>(
+                Expression.Call(
+                    typeof(Queryable), "Count",
+                    new[] { source.ElementType },
+                    source.Expression,
+                    Expression.Quote(lambda)
+                )
+            );
         }
 
         /// <summary>
@@ -205,9 +253,7 @@ namespace System.Linq.Dynamic.Core
                 null,
                 source.Expression));
         }
-        #endregion
 
-        #region Executors
         /// <summary>
         /// Returns the only element of a sequence, and throws an exception if there
         /// is not exactly one element in the sequence.
@@ -408,6 +454,5 @@ namespace System.Linq.Dynamic.Core
         {
             return source.Cast<T>().ToList();
         }
-        #endregion
     }
 }
