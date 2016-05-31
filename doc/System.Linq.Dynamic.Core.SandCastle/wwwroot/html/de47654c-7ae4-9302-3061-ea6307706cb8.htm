@@ -5,7 +5,15 @@
             structures that implement <a href="http://msdn2.microsoft.com/en-us/library/bb495796" target="_blank">IQueryable</a>. It adds basic methods to <a href="http://msdn2.microsoft.com/en-us/library/bb495796" target="_blank">IQueryable</a> that would
             normally require <a href="http://msdn2.microsoft.com/en-us/library/bb351562" target="_blank">IQueryable<span id="LST2E7CEF8B_0"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST2E7CEF8B_0?cs=&lt;|vb=(Of |cpp=&lt;|nu=(|fs=&lt;'");</script>T<span id="LST2E7CEF8B_1"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST2E7CEF8B_1?cs=&gt;|vb=)|cpp=&gt;|nu=)|fs=&gt;");</script></a>.
             </div></td></tr><tr data="class; public"><td><img src="../icons/pubclass.gif" alt="Public class" title="Public class" /></td><td><a href="e342c1b4-0ab2-9ff9-bbcb-78004b2d924d.htm">DynamicClass</a></td><td><div class="summary">
-            Provides a base class for dynamic objects created by using the <a href="32b70a35-c0e5-6ff3-1089-edaabad0e0ae.htm">Select(IQueryable, String, <span id="LST2E7CEF8B_2"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST2E7CEF8B_2?cpp=array&lt;");</script>Object<span id="LST2E7CEF8B_3"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST2E7CEF8B_3?cpp=&gt;|cs=[]|vb=()|nu=[]|fs=[]");</script>)</a> method.
+            Provides a base class for dynamic objects.
+            
+            In addition to the methods defined here, the following items are added using reflection:
+            - default constructor
+            - constructor with all the properties as parameters (if not linq-to-entities)
+            - all properties (also with getter and setters)
+            - ToString() method
+            - Equals() method
+            - GetHashCode() method
             </div></td></tr><tr data="class; public"><td><img src="../icons/pubclass.gif" alt="Public class" title="Public class" /></td><td><a href="e7f88c42-6076-1782-76c7-7f00bb2ba6b4.htm">DynamicProperty</a></td><td><div class="summary">
             DynamicProperty
             </div></td></tr><tr data="class; public"><td><img src="../icons/pubclass.gif" alt="Public class" title="Public class" /></td><td><a href="6052a193-d975-d798-033f-60b414a5c5af.htm">DynamicQueryable</a></td><td><div class="summary">
@@ -19,7 +27,7 @@
             The result of a call to a <a href="6052a193-d975-d798-033f-60b414a5c5af.htm">DynamicQueryable</a>.GroupByMany() overload.
             </div></td></tr><tr data="class; public"><td><img src="../icons/pubclass.gif" alt="Public class" title="Public class" /></td><td><a href="d6a52ff1-1fd8-e1b3-b372-61d314a78d5e.htm">PagedResult</a></td><td><div class="summary">
             PagedResult
-            </div></td></tr><tr data="class; public"><td><img src="../icons/pubclass.gif" alt="Public class" title="Public class" /></td><td><a href="5aba9200-bd4e-f860-8d36-0afe892d923e.htm">PagedResult<span id="LST2E7CEF8B_4"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST2E7CEF8B_4?cs=&lt;|vb=(Of |cpp=&lt;|nu=(|fs=&lt;'");</script>TSource<span id="LST2E7CEF8B_5"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST2E7CEF8B_5?cs=&gt;|vb=)|cpp=&gt;|nu=)|fs=&gt;");</script></a></td><td><div class="summary">
+            </div></td></tr><tr data="class; public"><td><img src="../icons/pubclass.gif" alt="Public class" title="Public class" /></td><td><a href="5aba9200-bd4e-f860-8d36-0afe892d923e.htm">PagedResult<span id="LST2E7CEF8B_2"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST2E7CEF8B_2?cs=&lt;|vb=(Of |cpp=&lt;|nu=(|fs=&lt;'");</script>TSource<span id="LST2E7CEF8B_3"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST2E7CEF8B_3?cs=&gt;|vb=)|cpp=&gt;|nu=)|fs=&gt;");</script></a></td><td><div class="summary">
             PagedResult{TSource}
             </div></td></tr></table></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID1RB')" onkeypress="SectionExpandCollapse_CheckKey('ID1RB', event)" tabindex="0"><img id="ID1RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />Interfaces</span></div><div id="ID1RBSection" class="collapsibleSection"><table id="typeList" class="members"><tr><th class="iconColumn">
 					 
