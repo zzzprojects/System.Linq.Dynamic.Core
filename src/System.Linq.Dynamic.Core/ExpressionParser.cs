@@ -188,6 +188,7 @@ namespace System.Linq.Dynamic.Core
             void Contains(object selector);
             void Skip(int count);
             void Take(int count);
+            void Distinct();
 
             //Executors
             void Single();

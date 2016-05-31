@@ -16,6 +16,30 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public static class DynamicQueryable
     {
+        /// <summary>
+        /// Determines whether a sequence contains any elements.
+        /// </summary>
+        /// <param name="source">A sequence to check for being empty.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
+        public static bool Any([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpression.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+
+            return (bool)source.Provider.Execute(
+                Expression.Call(
+                    typeof(Queryable), "Any",
+                    new[] { source.ElementType },
+                    source.Expression,
+                    Expression.Quote(lambda))
+            );
+        }
+
         #region Where
 
         /// <summary>

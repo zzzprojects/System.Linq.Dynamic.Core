@@ -6,26 +6,6 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class BasicTests
     {
-
-        [Fact]
-        public void Any()
-        {
-            //Arrange
-            IQueryable testListFull = User.GenerateSampleModels(100).AsQueryable();
-            IQueryable testListOne = User.GenerateSampleModels(1).AsQueryable();
-            IQueryable testListNone = User.GenerateSampleModels(0).AsQueryable();
-
-            //Act
-            var resultFull = testListFull.Any();
-            var resultOne = testListOne.Any();
-            var resultNone = testListNone.Any();
-
-            //Assert
-            Assert.True(resultFull);
-            Assert.True(resultOne);
-            Assert.False(resultNone);
-        }
-
         [Fact]
         public void Count()
         {
