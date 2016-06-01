@@ -37,5 +37,21 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public void Count_Predicate_WithArgs()
+        {
+            const int value = 50;
+
+            //Arrange
+            var queryable = User.GenerateSampleModels(100).AsQueryable();
+
+            //Act
+            int expected = queryable.Count(u => u.Income > value);
+            int result = (queryable as IQueryable).Count("Income > @0", value);
+
+            //Assert
+            Assert.Equal(expected, result);
+        }
     }
 }

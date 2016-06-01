@@ -39,6 +39,22 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Any_Predicate_WithArgs()
+        {
+            const int value = 50;
+
+            //Arrange
+            var queryable = User.GenerateSampleModels(100).AsQueryable();
+
+            //Act
+            bool expected = queryable.Any(u => u.Income > value);
+            bool result = (queryable as IQueryable).Any("Income > @0", value);
+
+            //Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
         public void Any_Dynamic_Select()
         {
             // Arrange

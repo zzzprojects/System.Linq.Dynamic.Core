@@ -152,6 +152,13 @@ namespace System.Linq.Dynamic.Core
         /// Returns distinct elements from a sequence by using the default equality comparer to compare values.
         /// </summary>
         /// <param name="source">The sequence to remove duplicate elements from.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Distinct();
+        /// var result2 = queryable.Select("Roles.Distinct()");
+        /// </code>
+        /// </example>
         /// <returns>An <see cref="IQueryable"/> that contains distinct elements from the source sequence.</returns>
         public static IQueryable Distinct([NotNull] this IQueryable source)
         {
@@ -168,6 +175,12 @@ namespace System.Linq.Dynamic.Core
         /// Determines whether a sequence contains any elements.
         /// </summary>
         /// <param name="source">A sequence to check for being empty.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result = queryable.Any();
+        /// </code>
+        /// </example>
         /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
         public static bool Any([NotNull] this IQueryable source)
         {
@@ -182,6 +195,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A sequence to check for being empty.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Any("Income > 50");
+        /// var result2 = queryable.Any("Income > @0", 50);
+        /// var result3 = queryable.Select("Roles.Any()");
+        /// </code>
+        /// </example>
         /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
         public static bool Any([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
         {
@@ -205,6 +226,12 @@ namespace System.Linq.Dynamic.Core
         /// Returns the number of elements in a sequence.
         /// </summary>
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result = queryable.Count();
+        /// </code>
+        /// </example>
         /// <returns>The number of elements in the input sequence.</returns>
         public static int Count([NotNull] this IQueryable source)
         {
@@ -219,6 +246,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Count("Income > 50");
+        /// var result2 = queryable.Count("Income > @0", 50);
+        /// var result3 = queryable.Select("Roles.Count()");
+        /// </code>
+        /// </example>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         public static int Count([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
         {
