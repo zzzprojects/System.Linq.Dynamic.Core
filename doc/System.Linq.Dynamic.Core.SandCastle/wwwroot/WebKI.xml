@@ -1,32 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <HelpKI>
-  <HelpKINode Title="Any method" Url="html/c55f3f8e-a6b6-2ad2-ca49-392acffad496.htm" />
+  <HelpKINode Title="Any method" Url="html/7199abad-ffd3-d84e-a9b5-87e29c1da288.htm" />
   <HelpKINode Title="AreContextKeywordsEnabled property" Url="html/c061afbd-911f-5acc-2a60-24847559ab0f.htm" />
-  <HelpKINode Title="AsEnumerable method" Url="html/47ee195b-de60-2117-8810-bf42efaa5479.htm" />
-  <HelpKINode Title="BasicQueryable class">
-    <HelpKINode Title="BasicQueryable Class" Url="html/6db4123f-c56f-4f90-46c1-4f4a77e3cb26.htm" />
-    <HelpKINode Title="about BasicQueryable class" Url="html/6db4123f-c56f-4f90-46c1-4f4a77e3cb26.htm" />
-    <HelpKINode Title="methods" Url="html/612dff78-22b8-2188-bd48-81f7badc74a8.htm" />
-  </HelpKINode>
-  <HelpKINode Title="BasicQueryable.Any method" Url="html/c55f3f8e-a6b6-2ad2-ca49-392acffad496.htm" />
-  <HelpKINode Title="BasicQueryable.AsEnumerable method" Url="html/47ee195b-de60-2117-8810-bf42efaa5479.htm" />
-  <HelpKINode Title="BasicQueryable.Count method" Url="html/e86b322c-2e7e-06d9-aad6-ee28eb20a39c.htm" />
-  <HelpKINode Title="BasicQueryable.Distinct method" Url="html/11964380-22f0-142a-c9bf-51dc64fd1d62.htm" />
-  <HelpKINode Title="BasicQueryable.First method" Url="html/e2589bb1-b0c2-fc06-beca-a6a5e73b2c03.htm" />
-  <HelpKINode Title="BasicQueryable.FirstOrDefault method" Url="html/acab1200-571d-8d9d-739b-5ddcad0fb2db.htm" />
-  <HelpKINode Title="BasicQueryable.Last method" Url="html/7f17e10d-8168-7021-3c4f-e0235210e591.htm" />
-  <HelpKINode Title="BasicQueryable.LastOrDefault method" Url="html/61e8dda0-ca30-f49d-22f8-1510d1bf742e.htm" />
-  <HelpKINode Title="BasicQueryable.Page method" Url="html/3747c9fa-ed10-c607-2928-b5417aa31514.htm" />
-  <HelpKINode Title="BasicQueryable.PageResult method" Url="html/c7df23fd-ae86-6810-a60c-8919f74c42d8.htm" />
-  <HelpKINode Title="BasicQueryable.Reverse method" Url="html/df0ff68a-ec90-514e-d625-5e791d62d272.htm" />
-  <HelpKINode Title="BasicQueryable.Single method" Url="html/809da7fa-3b98-7eb6-c1f4-edf4c8acb980.htm" />
-  <HelpKINode Title="BasicQueryable.SingleOrDefault method" Url="html/be1b403a-2228-0c7d-a30a-25310249bb07.htm" />
-  <HelpKINode Title="BasicQueryable.Skip method" Url="html/80e4f92b-c379-4b82-0309-2b6bdccfbac2.htm" />
-  <HelpKINode Title="BasicQueryable.Sum method" Url="html/edf8e076-51c5-d4b1-a31c-805f8cbc7f04.htm" />
-  <HelpKINode Title="BasicQueryable.Take method" Url="html/f5239c20-dce0-9cd7-61f3-03e602577fc7.htm" />
-  <HelpKINode Title="BasicQueryable.ToDynamicArray method" Url="html/3b8ea2ce-c33b-12ac-bc6e-9bad8dfd5d01.htm" />
-  <HelpKINode Title="BasicQueryable.ToDynamicList method" Url="html/3ab237c9-3076-e07c-5630-b1c8cc8e4983.htm" />
-  <HelpKINode Title="Count method" Url="html/e86b322c-2e7e-06d9-aad6-ee28eb20a39c.htm" />
+  <HelpKINode Title="AsEnumerable method" Url="html/7c2ec062-e0e3-b552-4277-9b0711399d1e.htm" />
+  <HelpKINode Title="Count method" Url="html/c49f9809-5da8-58fb-8339-86c7093be0a8.htm" />
   <HelpKINode Title="Count property" Url="html/581b1f5b-6cd3-99b2-f883-4863377c3d48.htm" />
   <HelpKINode Title="CurrentPage property" Url="html/254eb037-08b8-6908-73ec-06a9535b513e.htm" />
   <HelpKINode Title="CustomTypeProvider property" Url="html/a37d5920-95b6-e0b8-57e4-039248c67b16.htm" />
@@ -38,7 +15,7 @@
   </HelpKINode>
   <HelpKINode Title="DefaultDynamicLinqCustomTypeProvider.DefaultDynamicLinqCustomTypeProvider constructor" Url="html/956c0694-0821-8e69-aa8f-9ae471eb2dda.htm" />
   <HelpKINode Title="DefaultDynamicLinqCustomTypeProvider.GetCustomTypes method" Url="html/4f3b8d53-8bb0-f985-6d80-9f7dca8fbd73.htm" />
-  <HelpKINode Title="Distinct method" Url="html/11964380-22f0-142a-c9bf-51dc64fd1d62.htm" />
+  <HelpKINode Title="Distinct method" Url="html/72cfe082-7b9b-1c6d-f8ec-c377fb91714d.htm" />
   <HelpKINode Title="DynamicClass class">
     <HelpKINode Title="DynamicClass Class" Url="html/e342c1b4-0ab2-9ff9-bbcb-78004b2d924d.htm" />
     <HelpKINode Title="about DynamicClass class" Url="html/e342c1b4-0ab2-9ff9-bbcb-78004b2d924d.htm" />
@@ -48,6 +25,13 @@
   <HelpKINode Title="DynamicClass.DynamicClass constructor" Url="html/3944ac97-d70b-410f-89de-bbf48afaf980.htm" />
   <HelpKINode Title="DynamicClass.GetDynamicProperty method" Url="html/19094ec6-f658-b7bd-19a4-d2b31cb5c273.htm" />
   <HelpKINode Title="DynamicClass.SetDynamicProperty method" Url="html/14c9927d-0431-df48-84c4-54e06fdbb536.htm" />
+  <HelpKINode Title="DynamicEnumerableExtensions class">
+    <HelpKINode Title="DynamicEnumerableExtensions Class" Url="html/58a7de95-1c6b-378b-31e1-88789cce70b0.htm" />
+    <HelpKINode Title="about DynamicEnumerableExtensions class" Url="html/58a7de95-1c6b-378b-31e1-88789cce70b0.htm" />
+    <HelpKINode Title="methods" Url="html/fbeffa2b-5391-c0ef-59a5-cff1df0eb0b4.htm" />
+  </HelpKINode>
+  <HelpKINode Title="DynamicEnumerableExtensions.ToDynamicArray method" Url="html/cde853fb-e83a-0911-6f76-7f04e385b62c.htm" />
+  <HelpKINode Title="DynamicEnumerableExtensions.ToDynamicList method" Url="html/8c6db65a-0c75-1a36-f23f-4d0e58deef00.htm" />
   <HelpKINode Title="DynamicLinqTypeAttribute class">
     <HelpKINode Title="DynamicLinqTypeAttribute Class" Url="html/f3787db5-ab98-db68-694e-94d2ddd8b140.htm" />
     <HelpKINode Title="about DynamicLinqTypeAttribute class" Url="html/f3787db5-ab98-db68-694e-94d2ddd8b140.htm" />
@@ -66,20 +50,36 @@
   <HelpKINode Title="DynamicProperty.DynamicProperty constructor" Url="html/2f28da13-3fcd-926c-2fa5-034bbc5cf86d.htm" />
   <HelpKINode Title="DynamicProperty.Name property" Url="html/70888c8c-cd18-0b35-48c1-2b02ec97be69.htm" />
   <HelpKINode Title="DynamicProperty.Type property" Url="html/2d25accc-7354-7edc-1a2b-86ddd65740ce.htm" />
-  <HelpKINode Title="DynamicQueryable class">
-    <HelpKINode Title="DynamicQueryable Class" Url="html/6052a193-d975-d798-033f-60b414a5c5af.htm" />
-    <HelpKINode Title="about DynamicQueryable class" Url="html/6052a193-d975-d798-033f-60b414a5c5af.htm" />
-    <HelpKINode Title="methods" Url="html/ee9c605e-ff74-f4f8-4336-707484b4d382.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions class">
+    <HelpKINode Title="DynamicQueryableExtensions Class" Url="html/a5ecbe15-aade-af7f-4860-6c5c412a34b4.htm" />
+    <HelpKINode Title="about DynamicQueryableExtensions class" Url="html/a5ecbe15-aade-af7f-4860-6c5c412a34b4.htm" />
+    <HelpKINode Title="methods" Url="html/0e9009a8-cfed-c48e-51ad-e8d7d2dbd8d3.htm" />
   </HelpKINode>
-  <HelpKINode Title="DynamicQueryable.GroupBy method" Url="html/ead8c263-6bca-7413-96eb-4340cc1bba0a.htm" />
-  <HelpKINode Title="DynamicQueryable.GroupByMany method" Url="html/79e3fbf2-f2f1-9bb6-57e9-04a2771a00f8.htm" />
-  <HelpKINode Title="DynamicQueryable.Join method" Url="html/b225da02-e039-1423-ce16-555d229b72a4.htm" />
-  <HelpKINode Title="DynamicQueryable.OrderBy method" Url="html/9e655c35-5f57-edd6-38df-8cd471c93e5b.htm" />
-  <HelpKINode Title="DynamicQueryable.Select method" Url="html/aab24f51-3e8e-ada5-fb40-2869e77f5dbd.htm" />
-  <HelpKINode Title="DynamicQueryable.SelectMany method" Url="html/34dac8b5-8ff6-5059-72ba-01a08c46640c.htm" />
-  <HelpKINode Title="DynamicQueryable.Where method" Url="html/123561e1-f0ac-5c65-7475-269ab2e4f5cc.htm" />
-  <HelpKINode Title="First method" Url="html/e2589bb1-b0c2-fc06-beca-a6a5e73b2c03.htm" />
-  <HelpKINode Title="FirstOrDefault method" Url="html/acab1200-571d-8d9d-739b-5ddcad0fb2db.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Any method" Url="html/7199abad-ffd3-d84e-a9b5-87e29c1da288.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.AsEnumerable method" Url="html/7c2ec062-e0e3-b552-4277-9b0711399d1e.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Count method" Url="html/c49f9809-5da8-58fb-8339-86c7093be0a8.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Distinct method" Url="html/72cfe082-7b9b-1c6d-f8ec-c377fb91714d.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.First method" Url="html/b4db88ae-5d05-c16e-3934-a647e67baa4d.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.FirstOrDefault method" Url="html/f8c59313-dc93-0853-6228-867bda26dcc6.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.GroupBy method" Url="html/a05fe883-3a66-89c9-9fce-6ea5c8d8d8d5.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.GroupByMany method" Url="html/55a6c83e-c581-8ac9-f803-434224d5fbc6.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Join method" Url="html/58c07e13-ecda-5b51-166e-30c41e312af7.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Last method" Url="html/eb868b13-25d4-41fb-a03f-4033e93156ab.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.LastOrDefault method" Url="html/19090cca-6242-f6f4-36b6-0be4edb8ca90.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.OrderBy method" Url="html/1480a26f-ba4e-6757-f81e-a750cb6e84be.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Page method" Url="html/e050a329-ded5-b6ad-bee5-bdcb2a97c5ee.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.PageResult method" Url="html/a8ba3814-05f4-78f5-3342-df80bc14992c.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Reverse method" Url="html/b0e704dc-35d9-b829-65eb-5c8ca6457ba9.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Select method" Url="html/09b1326f-d20c-fb04-9f6b-df23ec45a175.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.SelectMany method" Url="html/759a2119-4b7a-6819-4b57-103452d73ce7.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Single method" Url="html/fe6a70ac-d69c-e985-17ee-46b522d89000.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.SingleOrDefault method" Url="html/fb61a659-6588-79ea-a8c0-9a6d9d3cf1c1.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Skip method" Url="html/eab3892f-592a-49d0-88fa-f3d85dbd1552.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Sum method" Url="html/81582e5f-6219-ef6d-b46f-dbe6a3d3cd75.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Take method" Url="html/d484c034-9f69-29ca-2643-5b8b0c31b76f.htm" />
+  <HelpKINode Title="DynamicQueryableExtensions.Where method" Url="html/09c64b73-29db-e275-a4af-2731ed091dc5.htm" />
+  <HelpKINode Title="First method" Url="html/b4db88ae-5d05-c16e-3934-a647e67baa4d.htm" />
+  <HelpKINode Title="FirstOrDefault method" Url="html/f8c59313-dc93-0853-6228-867bda26dcc6.htm" />
   <HelpKINode Title="GetAssemblies method" Url="html/50f9cc5e-8dc9-6fcf-23a6-0a2751295c12.htm" />
   <HelpKINode Title="GetCustomTypes method">
     <HelpKINode Title="DefaultDynamicLinqCustomTypeProvider.GetCustomTypes Method " Url="html/4f3b8d53-8bb0-f985-6d80-9f7dca8fbd73.htm" />
@@ -95,8 +95,8 @@
   <HelpKINode Title="GlobalConfig.AreContextKeywordsEnabled property" Url="html/c061afbd-911f-5acc-2a60-24847559ab0f.htm" />
   <HelpKINode Title="GlobalConfig.CustomTypeProvider property" Url="html/a37d5920-95b6-e0b8-57e4-039248c67b16.htm" />
   <HelpKINode Title="GlobalConfig.UseDynamicObjectClassForAnonymousTypes property" Url="html/c3dc1230-7613-3efb-56d5-467259db7d89.htm" />
-  <HelpKINode Title="GroupBy method" Url="html/ead8c263-6bca-7413-96eb-4340cc1bba0a.htm" />
-  <HelpKINode Title="GroupByMany method" Url="html/79e3fbf2-f2f1-9bb6-57e9-04a2771a00f8.htm" />
+  <HelpKINode Title="GroupBy method" Url="html/a05fe883-3a66-89c9-9fce-6ea5c8d8d8d5.htm" />
+  <HelpKINode Title="GroupByMany method" Url="html/55a6c83e-c581-8ac9-f803-434224d5fbc6.htm" />
   <HelpKINode Title="GroupResult class">
     <HelpKINode Title="GroupResult Class" Url="html/5322a78d-cbe3-7e65-f001-78f5dadfe009.htm" />
     <HelpKINode Title="about GroupResult class" Url="html/5322a78d-cbe3-7e65-f001-78f5dadfe009.htm" />
@@ -123,13 +123,13 @@
   </HelpKINode>
   <HelpKINode Title="IDynamicLinkCustomTypeProvider.GetCustomTypes method" Url="html/625b349f-10ed-e15a-a339-63656c4d6ed0.htm" />
   <HelpKINode Title="Items property" Url="html/1cb33c56-fbd0-7439-26e9-f955171a8aa2.htm" />
-  <HelpKINode Title="Join method" Url="html/b225da02-e039-1423-ce16-555d229b72a4.htm" />
+  <HelpKINode Title="Join method" Url="html/58c07e13-ecda-5b51-166e-30c41e312af7.htm" />
   <HelpKINode Title="Key property" Url="html/de13f53d-3367-2ef2-0efd-37dba00f10d1.htm" />
-  <HelpKINode Title="Last method" Url="html/7f17e10d-8168-7021-3c4f-e0235210e591.htm" />
-  <HelpKINode Title="LastOrDefault method" Url="html/61e8dda0-ca30-f49d-22f8-1510d1bf742e.htm" />
+  <HelpKINode Title="Last method" Url="html/eb868b13-25d4-41fb-a03f-4033e93156ab.htm" />
+  <HelpKINode Title="LastOrDefault method" Url="html/19090cca-6242-f6f4-36b6-0be4edb8ca90.htm" />
   <HelpKINode Title="Name property" Url="html/70888c8c-cd18-0b35-48c1-2b02ec97be69.htm" />
-  <HelpKINode Title="OrderBy method" Url="html/9e655c35-5f57-edd6-38df-8cd471c93e5b.htm" />
-  <HelpKINode Title="Page method" Url="html/3747c9fa-ed10-c607-2928-b5417aa31514.htm" />
+  <HelpKINode Title="OrderBy method" Url="html/1480a26f-ba4e-6757-f81e-a750cb6e84be.htm" />
+  <HelpKINode Title="Page method" Url="html/e050a329-ded5-b6ad-bee5-bdcb2a97c5ee.htm" />
   <HelpKINode Title="PageCount property" Url="html/2c9e76dc-968c-3560-149f-328975b10c91.htm" />
   <HelpKINode Title="PagedResult class">
     <HelpKINode Title="PagedResult Class" Url="html/d6a52ff1-1fd8-e1b3-b372-61d314a78d5e.htm" />
@@ -162,7 +162,7 @@
   </HelpKINode>
   <HelpKINode Title="PagedResult&lt;TSource&gt;.PagedResult constructor" Url="html/fe1717f7-802b-f5a9-b54a-f764cd84365d.htm" />
   <HelpKINode Title="PagedResult&lt;TSource&gt;.Queryable property" Url="html/07e31581-5ef6-08c7-0908-ced5c957e39f.htm" />
-  <HelpKINode Title="PageResult method" Url="html/c7df23fd-ae86-6810-a60c-8919f74c42d8.htm" />
+  <HelpKINode Title="PageResult method" Url="html/a8ba3814-05f4-78f5-3342-df80bc14992c.htm" />
   <HelpKINode Title="PageSize property" Url="html/ce1cbbfd-3590-be85-de65-a92190be3d28.htm" />
   <HelpKINode Title="ParseException class">
     <HelpKINode Title="ParseException Class" Url="html/00382765-2e26-f538-4a2d-b2485efd1a8e.htm" />
@@ -180,25 +180,25 @@
     <HelpKINode Title="PagedResult(TSource).Queryable Property " Url="html/07e31581-5ef6-08c7-0908-ced5c957e39f.htm" />
     <HelpKINode Title="PagedResult.Queryable Property " Url="html/243f0e8e-9609-2e8d-b088-2f3679df469f.htm" />
   </HelpKINode>
-  <HelpKINode Title="Reverse method" Url="html/df0ff68a-ec90-514e-d625-5e791d62d272.htm" />
+  <HelpKINode Title="Reverse method" Url="html/b0e704dc-35d9-b829-65eb-5c8ca6457ba9.htm" />
   <HelpKINode Title="RowCount property" Url="html/68df6dc2-9655-b3b2-efce-3d3ca2265965.htm" />
-  <HelpKINode Title="Select method" Url="html/aab24f51-3e8e-ada5-fb40-2869e77f5dbd.htm" />
-  <HelpKINode Title="SelectMany method" Url="html/34dac8b5-8ff6-5059-72ba-01a08c46640c.htm" />
+  <HelpKINode Title="Select method" Url="html/09b1326f-d20c-fb04-9f6b-df23ec45a175.htm" />
+  <HelpKINode Title="SelectMany method" Url="html/759a2119-4b7a-6819-4b57-103452d73ce7.htm" />
   <HelpKINode Title="SetDynamicProperty method" Url="html/14c9927d-0431-df48-84c4-54e06fdbb536.htm" />
-  <HelpKINode Title="Single method" Url="html/809da7fa-3b98-7eb6-c1f4-edf4c8acb980.htm" />
-  <HelpKINode Title="SingleOrDefault method" Url="html/be1b403a-2228-0c7d-a30a-25310249bb07.htm" />
-  <HelpKINode Title="Skip method" Url="html/80e4f92b-c379-4b82-0309-2b6bdccfbac2.htm" />
+  <HelpKINode Title="Single method" Url="html/fe6a70ac-d69c-e985-17ee-46b522d89000.htm" />
+  <HelpKINode Title="SingleOrDefault method" Url="html/fb61a659-6588-79ea-a8c0-9a6d9d3cf1c1.htm" />
+  <HelpKINode Title="Skip method" Url="html/eab3892f-592a-49d0-88fa-f3d85dbd1552.htm" />
   <HelpKINode Title="Subgroups property" Url="html/901a4d67-1b67-6548-5c87-421c5a788bd6.htm" />
-  <HelpKINode Title="Sum method" Url="html/edf8e076-51c5-d4b1-a31c-805f8cbc7f04.htm" />
+  <HelpKINode Title="Sum method" Url="html/81582e5f-6219-ef6d-b46f-dbe6a3d3cd75.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core namespace" Url="html/de47654c-7ae4-9302-3061-ea6307706cb8.htm" />
-  <HelpKINode Title="System.Linq.Dynamic.Core.BasicQueryable class" Url="html/6db4123f-c56f-4f90-46c1-4f4a77e3cb26.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.CustomTypeProviders namespace" Url="html/2adefda4-0a38-b90a-4c33-ec6bcab66e8d.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider class" Url="html/8c9e6389-18cd-6269-6181-8b148678cfa9.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.CustomTypeProviders.DynamicLinqTypeAttribute class" Url="html/f3787db5-ab98-db68-694e-94d2ddd8b140.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider interface" Url="html/ed8ecef6-0089-eab6-3c3c-e76b190ea7e8.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.DynamicClass class" Url="html/e342c1b4-0ab2-9ff9-bbcb-78004b2d924d.htm" />
+  <HelpKINode Title="System.Linq.Dynamic.Core.DynamicEnumerableExtensions class" Url="html/58a7de95-1c6b-378b-31e1-88789cce70b0.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.DynamicProperty class" Url="html/e7f88c42-6076-1782-76c7-7f00bb2ba6b4.htm" />
-  <HelpKINode Title="System.Linq.Dynamic.Core.DynamicQueryable class" Url="html/6052a193-d975-d798-033f-60b414a5c5af.htm" />
+  <HelpKINode Title="System.Linq.Dynamic.Core.DynamicQueryableExtensions class" Url="html/a5ecbe15-aade-af7f-4860-6c5c412a34b4.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.Exceptions namespace" Url="html/3f310d0d-47d1-c5af-63bf-2bb2cd48f9dc.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.Exceptions.ParseException class" Url="html/00382765-2e26-f538-4a2d-b2485efd1a8e.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.GlobalConfig class" Url="html/bdbd39f1-f2b1-7aee-ece8-6025c39c41d6.htm" />
@@ -207,14 +207,14 @@
   <HelpKINode Title="System.Linq.Dynamic.Core.PagedResult class" Url="html/d6a52ff1-1fd8-e1b3-b372-61d314a78d5e.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.PagedResult(Of TSource) class" Url="html/5aba9200-bd4e-f860-8d36-0afe892d923e.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.PagedResult&lt;TSource&gt; class" Url="html/5aba9200-bd4e-f860-8d36-0afe892d923e.htm" />
-  <HelpKINode Title="Take method" Url="html/f5239c20-dce0-9cd7-61f3-03e602577fc7.htm" />
-  <HelpKINode Title="ToDynamicArray method" Url="html/3b8ea2ce-c33b-12ac-bc6e-9bad8dfd5d01.htm" />
-  <HelpKINode Title="ToDynamicList method" Url="html/3ab237c9-3076-e07c-5630-b1c8cc8e4983.htm" />
+  <HelpKINode Title="Take method" Url="html/d484c034-9f69-29ca-2643-5b8b0c31b76f.htm" />
+  <HelpKINode Title="ToDynamicArray method" Url="html/cde853fb-e83a-0911-6f76-7f04e385b62c.htm" />
+  <HelpKINode Title="ToDynamicList method" Url="html/8c6db65a-0c75-1a36-f23f-4d0e58deef00.htm" />
   <HelpKINode Title="ToString method">
     <HelpKINode Title="GroupResult.ToString Method " Url="html/94cfad6d-e734-f70f-3352-98a53c8d947e.htm" />
     <HelpKINode Title="ParseException.ToString Method " Url="html/62888e13-2fc9-e3df-0d7e-23455c12f578.htm" />
   </HelpKINode>
   <HelpKINode Title="Type property" Url="html/2d25accc-7354-7edc-1a2b-86ddd65740ce.htm" />
   <HelpKINode Title="UseDynamicObjectClassForAnonymousTypes property" Url="html/c3dc1230-7613-3efb-56d5-467259db7d89.htm" />
-  <HelpKINode Title="Where method" Url="html/123561e1-f0ac-5c65-7475-269ab2e4f5cc.htm" />
+  <HelpKINode Title="Where method" Url="html/09c64b73-29db-e275-a4af-2731ed091dc5.htm" />
 </HelpKI>
