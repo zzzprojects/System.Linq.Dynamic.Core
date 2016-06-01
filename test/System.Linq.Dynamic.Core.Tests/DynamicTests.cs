@@ -191,7 +191,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => qry.Where("Bad=3"));
             Assert.Throws<ParseException>(() => qry.Where("Id=123"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.Where(null, "Id=1"));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryableExtensions.Where(null, "Id=1"));
             Assert.Throws<ArgumentNullException>(() => qry.Where(null));
             Assert.Throws<ArgumentException>(() => qry.Where(""));
             Assert.Throws<ArgumentException>(() => qry.Where(" "));
@@ -254,7 +254,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => qry.OrderBy("Bad=3"));
             Assert.Throws<ParseException>(() => qry.Where("Id=123"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.OrderBy(null, "Id"));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryableExtensions.OrderBy(null, "Id"));
             Assert.Throws<ArgumentNullException>(() => qry.OrderBy(null));
             Assert.Throws<ArgumentException>(() => qry.OrderBy(""));
             Assert.Throws<ArgumentException>(() => qry.OrderBy(" "));
@@ -556,7 +556,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => qry.Select("new (Id, UserName"));
             Assert.Throws<ParseException>(() => qry.Select("new (Id, UserName, Bad)"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.Select(null, "Id"));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryableExtensions.Select(null, "Id"));
             Assert.Throws<ArgumentNullException>(() => qry.Select(null));
             Assert.Throws<ArgumentException>(() => qry.Select(""));
             Assert.Throws<ArgumentException>(() => qry.Select(" "));
@@ -592,7 +592,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => qry.GroupBy("new (Id, UserName"));
             Assert.Throws<ParseException>(() => qry.GroupBy("new (Id, UserName, Bad)"));
 
-            Assert.Throws<ArgumentNullException>(() => DynamicQueryable.GroupBy((IQueryable<string>)null, "Id"));
+            Assert.Throws<ArgumentNullException>(() => DynamicQueryableExtensions.GroupBy((IQueryable<string>)null, "Id"));
             Assert.Throws<ArgumentNullException>(() => qry.GroupBy(null));
             Assert.Throws<ArgumentException>(() => qry.GroupBy(""));
             Assert.Throws<ArgumentException>(() => qry.GroupBy(" "));

@@ -5,7 +5,7 @@ using System.Globalization;
 namespace System.Linq.Dynamic.Core
 {
     /// <summary>
-    /// The result of a call to a <see cref="DynamicQueryable"/>.GroupByMany() overload.
+    /// The result of a call to a <see cref="DynamicQueryableExtensions"/>.GroupByMany() overload.
     /// </summary>
     public class GroupResult
     {

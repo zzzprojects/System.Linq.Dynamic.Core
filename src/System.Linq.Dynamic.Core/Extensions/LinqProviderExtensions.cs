@@ -4,7 +4,7 @@ using System.Linq.Dynamic.Core.Validation;
 
 namespace System.Linq.Dynamic.Core.Extensions
 {
-    internal static class QueryableExtensions
+    internal static class LinqProviderExtensions
     {
         /// <summary>
         /// Check if the Provider from IQueryable is a LinqToObjects provider.

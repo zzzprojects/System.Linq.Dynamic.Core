@@ -29,7 +29,7 @@
       <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net461\System.Linq.Dynamic.Core.dll" />
     </DocumentationSources>
     <WebsiteSdkLinkType>Msdn</WebsiteSdkLinkType>
-    <HtmlSdkLinkType>None</HtmlSdkLinkType>
+    <HtmlSdkLinkType>Msdn</HtmlSdkLinkType>
     <IncludeFavorites>False</IncludeFavorites>
     <BinaryTOC>True</BinaryTOC>
     <NamespaceSummaries>

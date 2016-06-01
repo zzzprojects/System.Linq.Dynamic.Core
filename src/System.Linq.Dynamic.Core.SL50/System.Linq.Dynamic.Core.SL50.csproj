@@ -70,9 +70,6 @@
     <Compile Include="..\System.Linq.Dynamic.Core\AssemblyBuilderFactory.cs">
       <Link>AssemblyBuilderFactory.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\BasicQueryable.cs">
-      <Link>BasicQueryable.cs</Link>
-    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\ClassFactory.cs">
       <Link>ClassFactory.cs</Link>
     </Compile>
@@ -100,6 +97,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicClassFactory.cs">
       <Link>DynamicClassFactory.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicEnumerableExtensions.cs">
+      <Link>DynamicEnumerableExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicExpression.cs">
       <Link>DynamicExpression.cs</Link>
     </Compile>
@@ -109,8 +109,8 @@
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicProperty.cs">
       <Link>DynamicProperty.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\DynamicQueryable.cs">
-      <Link>DynamicQueryable.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicQueryableExtensions.cs">
+      <Link>DynamicQueryableExtensions.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\Exceptions\ParseException.cs">
       <Link>Exceptions\ParseException.cs</Link>
@@ -118,8 +118,8 @@
     <Compile Include="..\System.Linq.Dynamic.Core\ExpressionParser.cs">
       <Link>ExpressionParser.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\Extensions\QueryableExtensions.cs">
-      <Link>Extensions\QueryableExtensions.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\Extensions\LinqProviderExtensions.cs">
+      <Link>Extensions\LinqProviderExtensions.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\GlobalConfig.cs">
       <Link>GlobalConfig.cs</Link>
