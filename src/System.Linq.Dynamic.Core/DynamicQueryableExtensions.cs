@@ -96,6 +96,21 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion AsEnumerable
 
+        #region Contains
+        /// <summary>
+        /// Determines whether a sequence contains a specified element by using the default equality comparer.
+        /// </summary>
+        /// <param name="source">An  <see cref="IQueryable"/> in which to locate item.</param>
+        /// <param name="item">The object to locate in the sequence.</param>
+        /// <returns>true if the input sequence contains an element that has the specified value; otherwise, false.</returns>
+        //public static bool Contains([NotNull] this IQueryable source, object item)
+        //{
+        //    Check.NotNull(source, nameof(source));
+
+        //    return Queryable.Contains((IQueryable<object>)source, item);
+        //}
+        #endregion Contains
+
         #region Count
         /// <summary>
         /// Returns the number of elements in a sequence.
