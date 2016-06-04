@@ -1160,7 +1160,7 @@ namespace System.Linq.Dynamic.Core
             NextToken();
 
             // http://solutionizing.net/category/linq/ 
-            Type type = _resultType ?? DynamicExpression.CreateType(properties, _createParameterCtor);
+            Type type = _resultType ?? DynamicClassFactory.CreateType(properties, _createParameterCtor);
 
             var propertyTypes = type.GetProperties().Select(p => p.PropertyType).ToArray();
             var ctor = type.GetConstructor(propertyTypes);

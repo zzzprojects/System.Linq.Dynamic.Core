@@ -32,6 +32,12 @@
   </HelpKINode>
   <HelpKINode Title="DynamicEnumerableExtensions.ToDynamicArray method" Url="html/cde853fb-e83a-0911-6f76-7f04e385b62c.htm" />
   <HelpKINode Title="DynamicEnumerableExtensions.ToDynamicList method" Url="html/8c6db65a-0c75-1a36-f23f-4d0e58deef00.htm" />
+  <HelpKINode Title="DynamicExpression class">
+    <HelpKINode Title="DynamicExpression Class" Url="html/e47c70fd-5762-20b6-6d49-8008dbe559e2.htm" />
+    <HelpKINode Title="about DynamicExpression class" Url="html/e47c70fd-5762-20b6-6d49-8008dbe559e2.htm" />
+    <HelpKINode Title="methods" Url="html/5fa2aec3-6e6e-f11f-2cbf-a8cf1c0e7aa2.htm" />
+  </HelpKINode>
+  <HelpKINode Title="DynamicExpression.ParseLambda method" Url="html/78cdecef-6b9d-b156-af8d-64d2e05a62d2.htm" />
   <HelpKINode Title="DynamicLinqTypeAttribute class">
     <HelpKINode Title="DynamicLinqTypeAttribute Class" Url="html/f3787db5-ab98-db68-694e-94d2ddd8b140.htm" />
     <HelpKINode Title="about DynamicLinqTypeAttribute class" Url="html/f3787db5-ab98-db68-694e-94d2ddd8b140.htm" />
@@ -175,6 +181,7 @@
   <HelpKINode Title="ParseException.ParseException constructor" Url="html/864bd614-3384-4c20-33df-896092842fd8.htm" />
   <HelpKINode Title="ParseException.Position property" Url="html/94081853-6911-cf5a-3e02-6c4ef8c8e633.htm" />
   <HelpKINode Title="ParseException.ToString method" Url="html/62888e13-2fc9-e3df-0d7e-23455c12f578.htm" />
+  <HelpKINode Title="ParseLambda method" Url="html/78cdecef-6b9d-b156-af8d-64d2e05a62d2.htm" />
   <HelpKINode Title="Position property" Url="html/94081853-6911-cf5a-3e02-6c4ef8c8e633.htm" />
   <HelpKINode Title="Queryable property">
     <HelpKINode Title="PagedResult(TSource).Queryable Property " Url="html/07e31581-5ef6-08c7-0908-ced5c957e39f.htm" />
@@ -197,6 +204,7 @@
   <HelpKINode Title="System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider interface" Url="html/ed8ecef6-0089-eab6-3c3c-e76b190ea7e8.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.DynamicClass class" Url="html/e342c1b4-0ab2-9ff9-bbcb-78004b2d924d.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.DynamicEnumerableExtensions class" Url="html/58a7de95-1c6b-378b-31e1-88789cce70b0.htm" />
+  <HelpKINode Title="System.Linq.Dynamic.Core.DynamicExpression class" Url="html/e47c70fd-5762-20b6-6d49-8008dbe559e2.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.DynamicProperty class" Url="html/e7f88c42-6076-1782-76c7-7f00bb2ba6b4.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.DynamicQueryableExtensions class" Url="html/a5ecbe15-aade-af7f-4860-6c5c412a34b4.htm" />
   <HelpKINode Title="System.Linq.Dynamic.Core.Exceptions namespace" Url="html/3f310d0d-47d1-c5af-63bf-2bb2cd48f9dc.htm" />
