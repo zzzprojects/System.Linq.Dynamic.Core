@@ -1,5 +1,5 @@
 {
-    "version": "1.0.3.2",
+    "version": "1.0.3.3",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],

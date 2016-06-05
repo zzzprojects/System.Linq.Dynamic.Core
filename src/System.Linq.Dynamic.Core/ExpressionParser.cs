@@ -1617,44 +1617,32 @@ namespace System.Linq.Dynamic.Core
         static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
         {
 #if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
-            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly |
-                (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
+            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
             {
-                MemberInfo[] members = t.FindMembers(MemberTypes.Property | MemberTypes.Field,
-                    flags, Type.FilterNameIgnoreCase, memberName);
-                if (members.Length != 0) return members[0];
+                MemberInfo[] members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, Type.FilterNameIgnoreCase, memberName);
+                if (members.Length != 0)
+                    return members[0];
             }
             return null;
 #else
             foreach (Type t in SelfAndBaseTypes(type))
             {
+                // Try to find a property with the specified memberName
                 MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                if (member != null)
+                    return member;
 
-                if (member == null)
-                    member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                // If no property is found, try to get a field with the specified memberName
+                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                if (member != null)
+                    return member;
 
-                return member;
+                // No property or field is found, try the base type.
             }
             return null;
 #endif
         }
-
-        /*
-         * 
-         BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly |
-                (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
-            foreach (Type t in SelfAndBaseTypes(type))
-            {
-                MemberInfo[] members = t.FindMembers(MemberTypes.Method,
-                    flags, Type.FilterNameIgnoreCase, methodName);
-                int count = FindBestMethod(members.Cast<MethodBase>(), args, out method);
-                if (count != 0) return count;
-            }
-            method = null;
-            return 0;
-            
-             */
 
         int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)
         {
