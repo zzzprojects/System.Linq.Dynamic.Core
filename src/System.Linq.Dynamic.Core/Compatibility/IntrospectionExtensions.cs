@@ -18,9 +18,14 @@
 			return type;
 		}
 
-        public static Type[] GetGenericTypeArguments(this Type typeInfo)
+        public static Type[] GetGenericTypeArguments(this Type type)
         {
-            return typeInfo.GetGenericArguments();
+            return type.GetGenericArguments();
+        }
+
+        public static MethodInfo[] GetDeclaredMethods(this Type type, string name)
+        {
+            return type.GetMethods(BindingFlags.DeclaredOnly);
         }
 #else
         public static Type[] GetGenericTypeArguments(this TypeInfo typeInfo)

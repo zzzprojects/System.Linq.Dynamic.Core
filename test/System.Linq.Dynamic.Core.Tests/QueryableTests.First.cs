@@ -24,23 +24,35 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void FirstOrDefault()
+        public void First_Predicate()
         {
             //Arrange
             var testList = User.GenerateSampleModels(100);
-            IQueryable testListQry = testList.AsQueryable();
+            var queryable = testList.AsQueryable();
 
             //Act
-            var singleResult = testListQry.FirstOrDefault();
-            var defaultResult = ((IQueryable)Enumerable.Empty<User>().AsQueryable()).FirstOrDefault();
+            var expected = queryable.First(u => u.Income > 1000);
+            var result = queryable.First("Income > 1000");
 
             //Assert
-#if NET35
-            Assert.Equal(testList[0].Id, singleResult.GetDynamicProperty<Guid>("Id"));
-#else
-            Assert.Equal(testList[0].Id, singleResult.Id);
-#endif
-            Assert.Null(defaultResult);
+            Assert.Equal(expected as object, result);
+        }
+
+        [Fact]
+        public void First_Predicate_WithArgs()
+        {
+            const int value = 1000;
+
+            //Arrange
+            var testList = User.GenerateSampleModels(100);
+            var queryable = testList.AsQueryable();
+
+            //Act
+            var expected = queryable.First(u => u.Income > value);
+            var result = queryable.First("Income > @0", value);
+
+            //Assert
+            Assert.Equal(expected as object, result);
         }
 
         [Fact]
