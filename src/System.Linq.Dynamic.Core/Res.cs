@@ -2,6 +2,7 @@
 {
     internal static class Res
     {
+        public const string IQueryableProviderNotAsync = "The provider for the source IQueryable doesn't implement IAsyncQueryProvider. Only providers that implement IEntityQueryProvider can be used for Entity Framework asynchronous operations.";
         public const string DuplicateIdentifier = "The identifier '{0}' was defined more than once";
         public const string ExpressionTypeMismatch = "Expression of type '{0}' expected";
         public const string ExpressionExpected = "Expression expected";

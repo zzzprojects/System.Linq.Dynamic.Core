@@ -12,6 +12,7 @@
         "QueryInterceptor.Core": "1.0.3",
         "System.AppDomain.NetCoreApp": "1.0.1",
         "System.Linq.Dynamic.Core": { "target": "project" },
+        "System.Linq.Dynamic.Core.EF": { "target": "project" },
         "xunit": "2.1.0-rc2-build3178"
     },
 
@@ -24,6 +25,7 @@
                 "portable-net451+win8"
             ],
             "dependencies": {
+                "Microsoft.EntityFrameworkCore": "1.0.0-rc2-final",
                 "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0-rc2-final",
                 "Microsoft.EntityFrameworkCore.Sqlite": "1.0.0-rc2-final",
                 "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final",
