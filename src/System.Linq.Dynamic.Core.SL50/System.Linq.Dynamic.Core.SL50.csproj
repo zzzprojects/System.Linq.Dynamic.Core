@@ -100,8 +100,8 @@
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicEnumerableExtensions.cs">
       <Link>DynamicEnumerableExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\DynamicExpression.cs">
-      <Link>DynamicExpression.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicExpressionParser.cs">
+      <Link>DynamicExpressionParser.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicOrdering.cs">
       <Link>DynamicOrdering.cs</Link>

@@ -1,0 +1,39 @@
+﻿{
+    "version": "1.0.0-*",
+    "authors": [ "Stef Heyenrath" ],
+    "dependencies": {
+        "System.Linq.Dynamic.Core": { "target": "project" },
+        "EntityFramework.DynamicLinq": { "target": "project" },
+
+        "Linq.PropertyTranslator.Core": "1.0.1",
+        "QueryInterceptor.Core": "1.0.3",
+
+        "EntityFramework": "6.1.3",
+        "SQLite.CodeFirst": "1.2.0.12",
+
+        "xunit": "2.1.0-rc2-build3178",
+        "dotnet-test-xunit": "1.0.0-rc2-build10025"
+    },
+
+    "buildOptions": {
+        "define": [ "EF" ],
+        "compile": {
+            "include": [
+                "../System.Linq.Dynamic.Core.Tests/EntitiesTests.cs",
+                "../System.Linq.Dynamic.Core.Tests/EntitiesTests.*Async.cs",
+                "../System.Linq.Dynamic.Core.Tests/Entities/*.cs",
+                "../System.Linq.Dynamic.Core.Tests/TestHelpers/*.cs",
+                "../System.Linq.Dynamic.Core.Tests/Helpers/*/*.cs"
+            ]
+        }
+    },
+
+    "frameworks": {
+        "net452": {
+            "dependencies": {
+            }
+        }
+    },
+
+    "testRunner": "xunit"
+}

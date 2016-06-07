@@ -7,7 +7,7 @@ namespace System.Linq.Dynamic.Core
     /// <summary>
     /// Helper class to convert an expression into an LambdaExpression
     /// </summary>
-    public static class DynamicExpression
+    public static class DynamicExpressionParser
     {
         /// <summary>
         /// Parses a expression into a LambdaExpression.

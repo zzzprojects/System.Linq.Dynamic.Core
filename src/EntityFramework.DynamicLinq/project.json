@@ -1,0 +1,66 @@
+﻿{
+    "version": "1.0.0.0",
+    "title": "EntityFramework.DynamicLinq",
+    "description": "Dynamic Linq extensions for EntityFramework which adds Async support",
+    "authors": [ "Stef Heyenrath" ],
+
+    "packOptions": {
+        "summary": "Dynamic Linq extensions for EntityFramework which adds Async support",
+        "tags": [ "system", "linq", "dynamic", "entityframework", "core", "async" ],
+        "owners": [ "Stef Heyenrath" ],
+        "repository": {
+            "type": "git",
+            "url": "https://github.com/StefH/System.Linq.Dynamic.Core"
+        },
+        "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
+        "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
+        "releaseNotes": ""
+    },
+
+    "buildOptions": {
+        "xmlDoc": true,
+        "define": [ "EF" ],
+        "compile": {
+            "include": [
+                "../System.Linq.Dynamic.Core/Res.cs",
+                "../System.Linq.Dynamic.Core/Compatibility/*.cs",
+                "../System.Linq.Dynamic.Core/Extensions/*.cs",
+                "../System.Linq.Dynamic.Core/Validation/*.cs",
+
+                "../Microsoft.EntityFrameworkCore.DynamicLinq/*.cs"
+            ]
+        }
+    },
+
+    "dependencies": {
+        "JetBrains.Annotations": {
+            "version": "10.1.4",
+            "type": "build"
+        },
+        "EntityFramework": "6.1.3",
+        "System.Linq.Dynamic.Core": "1.0.3.4"
+    },
+
+    "frameworks": {
+        "net45": {
+            "frameworkAssemblies": {
+            }
+        },
+        "net451": {
+            "frameworkAssemblies": {
+            }
+        },
+        "net452": {
+            "frameworkAssemblies": {
+            }
+        },
+        "net46": {
+            "frameworkAssemblies": {
+            }
+        },
+        "net461": {
+            "frameworkAssemblies": {
+            }
+        }
+    }
+}

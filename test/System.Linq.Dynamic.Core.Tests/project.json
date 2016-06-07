@@ -4,7 +4,7 @@
     "dependencies": {
         "dotnet-test-xunit": "1.0.0-rc2-build10025",
         "Linq.PropertyTranslator.Core": "1.0.1",
-        
+
         "Microsoft.NETCore.App": {
             "type": "platform",
             "version": "1.0.0-rc2-3002702"
@@ -12,13 +12,13 @@
         "QueryInterceptor.Core": "1.0.3",
         "System.AppDomain.NetCoreApp": "1.0.1",
         "System.Linq.Dynamic.Core": { "target": "project" },
-        "System.Linq.Dynamic.Core.EF": { "target": "project" },
+        "Microsoft.EntityFrameworkCore.DynamicLinq": { "target": "project" },
         "xunit": "2.1.0-rc2-build3178"
     },
 
     "frameworks": {
         "netcoreapp1.0": {
-            "buildOptions": { "define": [ "NETSTANDARD" ] },
+            "buildOptions": { "define": [ "NETSTANDARD", "EFCORE" ] },
             "imports": [
                 "dnxcore50",
                 "dotnet5.4",

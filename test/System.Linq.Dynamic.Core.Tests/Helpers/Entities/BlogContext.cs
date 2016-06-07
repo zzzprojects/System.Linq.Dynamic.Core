@@ -1,25 +1,24 @@
-﻿#if NETSTANDARD
+﻿#if EFCORE
 using System.Linq.Dynamic.Core.Tests.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-#elif NET4
+#else
 using System.Data.Entity;
 using SQLite.CodeFirst;
-#else
 #endif
 
 namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
 {
     public class BlogContext : DbContext
     {
-#if NET4
-        public BlogContext(): base("ConnectionStringName") { }
+#if NET4 || EF
+        public BlogContext(): base("SQLiteDefaultConnection") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            var sqliteConnectionInitializer = new SqliteCreateDatabaseIfNotExists<BlogContext>(modelBuilder);
+            var sqliteConnectionInitializer = new SqliteDropCreateDatabaseAlways<BlogContext>(modelBuilder);
             Database.SetInitializer(sqliteConnectionInitializer);
         }
 #else
@@ -29,7 +28,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
         }
 #endif
 
-#if !NET4
+#if (!NET4 && !NET452)
         public void EnableLogging()
         {
             var serviceProvider = this.GetInfrastructure();

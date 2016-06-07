@@ -4,6 +4,7 @@ using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using Microsoft.EntityFrameworkCore;
 #elif NET452
 using System.Data.Entity;
+using System.Data.Common;
 #else
 using Microsoft.Data.Entity;
 #endif
@@ -28,6 +29,7 @@ namespace System.Linq.Dynamic.Core.Tests
             _context.Database.EnsureCreated();
 #else
             _context = new BlogContext();
+            //_context.Database.Delete();
             _context.Database.CreateIfNotExists();
 #endif
         }

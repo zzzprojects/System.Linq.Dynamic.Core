@@ -1,4 +1,8 @@
-﻿using System.Linq.Dynamic.Core.EF;
+﻿#if EFCORE
+using Microsoft.EntityFrameworkCore.DynamicLinq;
+#else
+using EntityFramework.DynamicLinq;
+#endif
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -35,8 +39,13 @@ namespace System.Linq.Dynamic.Core.Tests
             //Arrange
             PopulateTestData(1, 0);
 
+#if EFCORE
             var expectedAny1 = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 0);
             var expectedAny2 = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 9999);
+#else
+            var expectedAny1 = System.Data.Entity.QueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 0);
+            var expectedAny2 = System.Data.Entity.QueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 9999);
+#endif
 
             //Act
             var any1 = _context.Blogs.AsQueryable().AnyAsync("it.BlogId > 0");
