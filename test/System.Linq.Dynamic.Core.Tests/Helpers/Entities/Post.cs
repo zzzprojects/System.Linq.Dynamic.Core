@@ -10,7 +10,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
         public int BlogId { get; set; }
         public virtual Blog Blog { get; set; }
 
-        public DateTime PostDate { get; set; }
+        public DateTimeOffset PostDate { get; set; }
 
         public int NumberOfReads { get; set; }
     }

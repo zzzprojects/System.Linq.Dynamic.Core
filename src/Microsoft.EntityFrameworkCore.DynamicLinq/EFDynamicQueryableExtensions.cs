@@ -1,6 +1,7 @@
 ﻿#if EFCORE
 using Microsoft.EntityFrameworkCore.Query.Internal;
 #else
+using System.Data.Entity.Infrastructure;
 #endif
 using System.Collections.Generic;
 using System.Collections;
@@ -28,7 +29,7 @@ namespace EntityFramework.DynamicLinq
     /// </summary>
     public static class EntityFrameworkDynamicQueryableExtensions
     {
-#region AnyAsync
+        #region AnyAsync
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
         /// <summary>
@@ -89,9 +90,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<bool>(_anyPredicate, source, Expression.Quote(lambda));
         }
-#endregion AnyAsync
+        #endregion AnyAsync
 
-#region FirstAsync
+        #region FirstAsync
         private static readonly MethodInfo _first = GetMethod(nameof(Queryable.First));
 
         /// <summary>
@@ -150,9 +151,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_firstPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion FirstAsync
+        #endregion FirstAsync
 
-#region FirstOrDefaultAsync
+        #region FirstOrDefaultAsync
         private static readonly MethodInfo _firstOrDefault = GetMethod(nameof(Queryable.FirstOrDefault));
 
         /// <summary>
@@ -217,9 +218,9 @@ namespace EntityFramework.DynamicLinq
             return ExecuteAsync<dynamic>(_firstOrDefaultPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
 
-#endregion FirstOrDefault
+        #endregion FirstOrDefault
 
-#region Private Helpers
+        #region Private Helpers
         // Copied from https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
         //private static Task<dynamic> ExecuteAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         //{
@@ -242,7 +243,11 @@ namespace EntityFramework.DynamicLinq
 
         private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
+#if EFCORE
             var provider = source.Provider as IAsyncQueryProvider;
+#else
+            var provider = source.Provider as IDbAsyncQueryProvider;
+#endif
 
             if (provider != null)
             {
@@ -264,7 +269,11 @@ namespace EntityFramework.DynamicLinq
 
         private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
         {
+#if EFCORE
             var provider = source.Provider as IAsyncQueryProvider;
+#else
+            var provider = source.Provider as IDbAsyncQueryProvider;
+#endif
 
             if (provider != null)
             {
@@ -289,6 +298,6 @@ namespace EntityFramework.DynamicLinq
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
-#endregion Private Helpers
+        #endregion Private Helpers
     }
 }

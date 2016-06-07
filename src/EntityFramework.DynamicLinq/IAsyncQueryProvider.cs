@@ -1,8 +1,8 @@
-﻿using System.Data.Entity.Infrastructure;
+﻿//using System.Data.Entity.Infrastructure;
 
-namespace EntityFramework.DynamicLinq
-{
-    internal interface IAsyncQueryProvider : IDbAsyncQueryProvider
-    {
-    }
-}
+//namespace EntityFramework.DynamicLinq
+//{
+//    internal interface IAsyncQueryProvider : IDbAsyncQueryProvider
+//    {
+//    }
+//}

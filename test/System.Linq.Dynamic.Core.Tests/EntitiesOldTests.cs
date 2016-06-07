@@ -251,7 +251,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 var expectedRow = expected[i];
 
                 //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
-                var testRow = (IGrouping<DateTime, String>)test[i];
+                var testRow = (IGrouping<DateTimeOffset, string>)test[i];
 
                 Assert.Equal(expectedRow.Key, testRow.Key);
                 Assert.Equal(expectedRow.ToArray(), testRow.ToArray());
@@ -276,7 +276,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 var expectedRow = expected[i];
 
                 //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
-                var testRow = (IGrouping<DateTime, DynamicClass>)test[i];
+                var testRow = (IGrouping<DateTimeOffset, DynamicClass>)test[i];
 
                 Assert.Equal(expectedRow.Key, testRow.Key);
                 Assert.Equal(

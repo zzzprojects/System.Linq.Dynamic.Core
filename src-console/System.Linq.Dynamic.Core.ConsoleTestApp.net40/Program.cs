@@ -10,7 +10,7 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
     public class Program
     {
         static readonly Random Rnd = new Random(1);
-        private static readonly BlogContext context = new BlogContext();
+        private static readonly BlogContext context = new BlogContext("DefaultConnection");
 
         public static void Main(string[] args)
         {
@@ -31,8 +31,8 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
         {
             try
             {
-                context.Database.Delete();
-                context.Database.CreateIfNotExists();
+                //context.Database.Delete();
+                //context.Database.CreateIfNotExists();
                 PopulateTestData(10);
 
                 var expected = context.Blogs.Select(x => new { x.BlogId, x.Name, x.Posts }).ToArray();
@@ -44,7 +44,7 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
             }
             finally
             {
-                context.Database.Delete();
+                //context.Database.Delete();
             }
         }
 

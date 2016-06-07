@@ -2,17 +2,19 @@
     "version": "1.0.0-*",
     "authors": [ "Stef Heyenrath" ],
     "dependencies": {
-        "dotnet-test-xunit": "1.0.0-rc2-build10025",
-        "Linq.PropertyTranslator.Core": "1.0.1",
-
         "Microsoft.NETCore.App": {
             "type": "platform",
             "version": "1.0.0-rc2-3002702"
         },
+
+        "Linq.PropertyTranslator.Core": "1.0.1",
         "QueryInterceptor.Core": "1.0.3",
         "System.AppDomain.NetCoreApp": "1.0.1",
+
         "System.Linq.Dynamic.Core": { "target": "project" },
         "Microsoft.EntityFrameworkCore.DynamicLinq": { "target": "project" },
+
+        "dotnet-test-xunit": "1.0.0-rc2-build10025",
         "xunit": "2.1.0-rc2-build3178"
     },
 

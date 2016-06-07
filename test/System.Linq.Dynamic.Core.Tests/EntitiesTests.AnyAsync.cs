@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.DynamicLinq;
 #else
 using EntityFramework.DynamicLinq;
 #endif
+using System.Threading.Tasks;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -10,50 +11,50 @@ namespace System.Linq.Dynamic.Core.Tests
     public partial class EntitiesTests
     {
         [Fact]
-        public void Entities_AnyAsync()
+        public async Task Entities_AnyAsync()
         {
             //Arrange
             PopulateTestData(1, 0);
 
             var expectedQueryable1 = _context.Blogs.Where(b => b.BlogId > 0);
-            var expectedAny1 = expectedQueryable1.AnyAsync();
+            bool expectedAny1 = await expectedQueryable1.AnyAsync();
 
             var expectedQueryable2 = _context.Blogs.Where(b => b.BlogId > 9999);
-            var expectedAny2 = expectedQueryable2.AnyAsync();
+            bool expectedAny2 = await expectedQueryable2.AnyAsync();
 
             //Act
             IQueryable queryable1 = _context.Blogs.Where("BlogId > 0");
-            var any1 = queryable1.AnyAsync();
+            bool any1 = await queryable1.AnyAsync();
 
             IQueryable queryable2 = _context.Blogs.Where("BlogId > 9999");
-            var any2 = queryable2.AnyAsync();
+            bool any2 = await queryable2.AnyAsync();
 
             //Assert
-            Assert.Equal(expectedAny1.Result, any1.Result);
-            Assert.Equal(expectedAny2.Result, any2.Result);
+            Assert.Equal(expectedAny1, any1);
+            Assert.Equal(expectedAny2, any2);
         }
 
         [Fact]
-        public void Entities_AnyAsync_Predicate()
+        public async Task Entities_AnyAsync_Predicate()
         {
             //Arrange
             PopulateTestData(1, 0);
 
 #if EFCORE
-            var expectedAny1 = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 0);
-            var expectedAny2 = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 9999);
+            bool expectedAny1 = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 0);
+            bool expectedAny2 = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 9999);
 #else
-            var expectedAny1 = System.Data.Entity.QueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 0);
-            var expectedAny2 = System.Data.Entity.QueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 9999);
+            bool expectedAny1 = await System.Data.Entity.QueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 0);
+            bool expectedAny2 = await System.Data.Entity.QueryableExtensions.AnyAsync(_context.Blogs, b => b.BlogId > 9999);
 #endif
 
             //Act
-            var any1 = _context.Blogs.AsQueryable().AnyAsync("it.BlogId > 0");
-            var any2 = _context.Blogs.AsQueryable().AnyAsync("it.BlogId > 9999");
+            bool any1 = await _context.Blogs.AsQueryable().AnyAsync("it.BlogId > 0");
+            bool any2 = await _context.Blogs.AsQueryable().AnyAsync("it.BlogId > 9999");
 
             //Assert
-            Assert.Equal(expectedAny1.Result, any1.Result);
-            Assert.Equal(expectedAny2.Result, any2.Result);
+            Assert.Equal(expectedAny1, any1);
+            Assert.Equal(expectedAny2, any2);
         }
     }
 }

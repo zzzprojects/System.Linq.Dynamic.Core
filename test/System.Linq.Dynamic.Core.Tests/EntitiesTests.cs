@@ -1,12 +1,9 @@
 ﻿using System.Collections;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
-#if (NETSTANDARD)
+#if EFCORE
 using Microsoft.EntityFrameworkCore;
-#elif NET452
-using System.Data.Entity;
-using System.Data.Common;
 #else
-using Microsoft.Data.Entity;
+using System.Data.Entity;
 #endif
 using Xunit;
 
@@ -20,24 +17,28 @@ namespace System.Linq.Dynamic.Core.Tests
 
         public EntitiesTests()
         {
-#if !(NET452)
+#if EFCORE
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite($"Filename=System.Linq.Dynamic.Core.{Guid.NewGuid()}.db");
+            //builder.UseSqlServer($"Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;AttachDbFileName=.\\System.Linq.Dynamic.Core.{Guid.NewGuid()}.mdf;");
 
             _context = new BlogContext(builder.Options);
-            _context.Database.EnsureDeleted();
+            //_context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
 #else
-            _context = new BlogContext();
+            //_context = new BlogContext(@"data source=.\EntityFramework.DynamicLinq.sqlite");
+            //_context = new BlogContext($"Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;AttachDbFileName=.\\System.Linq.Dynamic.Core.{Guid.NewGuid()}.mdf;");
+            //_context = new BlogContext($"Filename=System.Linq.Dynamic.Core.{Guid.NewGuid()}.sqlitedb");
+            _context = new BlogContext($"data source=(LocalDB)\\MSSQLLocalDB;attachdbfilename=|DataDirectory|\\System.Linq.Dynamic.Core.{Guid.NewGuid()}.mdf;integrated security=True;connect timeout=30;MultipleActiveResultSets=True;App=EntityFramework");
             //_context.Database.Delete();
-            _context.Database.CreateIfNotExists();
+            //_context.Database.CreateIfNotExists();
 #endif
         }
 
         // Use TestCleanup to run code after each test has run
         public void Dispose()
         {
-#if !(NET452)
+#if EFCORE
             _context.Database.EnsureDeleted();
 #else
             _context.Database.Delete();

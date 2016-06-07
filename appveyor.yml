@@ -22,12 +22,17 @@ build_script:
 - appveyor-retry dotnet restore .\src\System.Linq.Dynamic.Core -v Minimal
 - appveyor-retry dotnet restore .\src\EntityFramework.DynamicLinq -v Minimal
 - appveyor-retry dotnet restore .\src\Microsoft.EntityFrameworkCore.DynamicLinq -v Minimal
-- appveyor-retry dotnet restore .\test\System.Linq.Dynamic.Core.Tests  -v Minimal
 
-- dotnet build src\System.Linq.Dynamic.Core\project.json -c %CONFIGURATION%
-- dotnet build src\EntityFramework.DynamicLinq\project.json -c %CONFIGURATION%
-- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\project.json -c %CONFIGURATION%
-- dotnet build test\System.Linq.Dynamic.Core.Tests\project.json -c %CONFIGURATION%
+- appveyor-retry dotnet restore .\test\System.Linq.Dynamic.Core.Tests  -v Minimal
+- appveyor-retry dotnet restore .\test\EntityFramework.DynamicLinq.Tests  -v Minimal
+
+
+- dotnet build .\src\System.Linq.Dynamic.Core\project.json -c %CONFIGURATION%
+- dotnet build .\src\EntityFramework.DynamicLinq\project.json -c %CONFIGURATION%
+- dotnet build .\src\Microsoft.EntityFrameworkCore.DynamicLinq\project.json -c %CONFIGURATION%
+
+- dotnet build .\test\System.Linq.Dynamic.Core.Tests\project.json -c %CONFIGURATION%
+- dotnet build .\test\EntityFramework.DynamicLinq.Tests\project.json -c %CONFIGURATION%
 
 - dotnet pack -c Release --no-build --version-suffix %LABEL% -o .\artifacts .\src\System.Linq.Dynamic.Core\project.json
 - dotnet pack -c Release --no-build --version-suffix %LABEL% -o .\artifacts .\src\EntityFramework.DynamicLinq\project.json
@@ -35,6 +40,7 @@ build_script:
 
 test_script:
 - dotnet test -c %CONFIGURATION% --no-build .\test\System.Linq.Dynamic.Core.Tests
+- dotnet test -c %CONFIGURATION% --no-build .\test\EntityFramework.DynamicLinq.Tests
 
 artifacts:
 - path: artifacts\**\*.*
