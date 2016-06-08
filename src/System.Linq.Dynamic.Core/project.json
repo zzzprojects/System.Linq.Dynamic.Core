@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": ""
+        "releaseNotes": "Fixed GetDeclaredMethods"
     },
 
     "buildOptions": {
