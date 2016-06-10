@@ -26,17 +26,21 @@
     <CleanIntermediates>True</CleanIntermediates>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net461\System.Linq.Dynamic.Core.xml" />
-      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net461\System.Linq.Dynamic.Core.dll" />
-    </DocumentationSources>
+<DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net461\System.Linq.Dynamic.Core.dll" />
+<DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net461\EntityFramework.DynamicLinq.xml" />
+<DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net461\EntityFramework.DynamicLinq.dll" />
+<DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\net461\Microsoft.EntityFrameworkCore.DynamicLinq.xml" />
+<DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\net461\Microsoft.EntityFrameworkCore.DynamicLinq.dll" /></DocumentationSources>
     <WebsiteSdkLinkType>Msdn</WebsiteSdkLinkType>
     <HtmlSdkLinkType>Msdn</HtmlSdkLinkType>
     <IncludeFavorites>False</IncludeFavorites>
     <BinaryTOC>True</BinaryTOC>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="System.Linq.Dynamic.Core" isDocumented="True">This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="System.Linq.Dynamic.Core.CustomTypeProviders" isDocumented="True">Interface for providing custom types for Dynamic Linq. (Like custom enums.)</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="System.Linq.Dynamic.Core.Exceptions" isDocumented="True">All exceptions are defined here</NamespaceSummaryItem>
-    </NamespaceSummaries>
+<NamespaceSummaryItem name="System.Linq.Dynamic.Core.CustomTypeProviders" isDocumented="True">Interface for providing custom types for Dynamic Linq. (Like custom enums.)</NamespaceSummaryItem>
+<NamespaceSummaryItem name="System.Linq.Dynamic.Core.Exceptions" isDocumented="True">All exceptions are defined here</NamespaceSummaryItem>
+<NamespaceSummaryItem name="EntityFramework.DynamicLinq" isDocumented="True">Dynamic Linq extensions for EntityFramework which adds Async support</NamespaceSummaryItem>
+<NamespaceSummaryItem name="Microsoft.EntityFrameworkCore.DynamicLinq" isDocumented="True">Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</NamespaceSummaryItem></NamespaceSummaries>
     <HelpFileVersion>1.0.0.0</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>
     <NamespaceGrouping>False</NamespaceGrouping>
@@ -46,7 +50,7 @@
     <PresentationStyle>VS2013</PresentationStyle>
     <Preliminary>False</Preliminary>
     <NamingMethod>Guid</NamingMethod>
-    <HelpTitle>System.Linq.Dynamic.Core Documentation</HelpTitle>
+    <HelpTitle>System.Linq.Dynamic.Core, EntityFramework.DynamicLinq and Microsoft.EntityFrameworkCore.DynamicLinq</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <WorkingPath>System.Linq.Dynamic.Core.SandCastle.tmp\</WorkingPath>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected, PublicCompilerGenerated</VisibleItems>

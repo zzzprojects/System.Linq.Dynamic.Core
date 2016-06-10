@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\System.Linq.Dynamic.Core\BasicQueryable.cs">
-      <Link>BasicQueryable.cs</Link>
-    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\IntrospectionExtensions.cs">
       <Link>Compatibility\IntrospectionExtensions.cs</Link>
     </Compile>
@@ -61,8 +58,8 @@
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicClassFactory.cs">
       <Link>DynamicClassFactory.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\DynamicExpression.cs">
-      <Link>DynamicExpression.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicEnumerableExtensions.cs">
+      <Link>DynamicEnumerableExtensions.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicOrdering.cs">
       <Link>DynamicOrdering.cs</Link>
@@ -70,8 +67,8 @@
     <Compile Include="..\System.Linq.Dynamic.Core\DynamicProperty.cs">
       <Link>DynamicProperty.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\DynamicQueryable.cs">
-      <Link>DynamicQueryable.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\DynamicQueryableExtensions.cs">
+      <Link>DynamicQueryableExtensions.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\Exceptions\ParseException.cs">
       <Link>Exceptions\ParseException.cs</Link>
@@ -79,8 +76,8 @@
     <Compile Include="..\System.Linq.Dynamic.Core\ExpressionParser.cs">
       <Link>ExpressionParser.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\Extensions\QueryableExtensions.cs">
-      <Link>Extensions\QueryableExtensions.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\Extensions\LinqProviderExtensions.cs">
+      <Link>Extensions\LinqProviderExtensions.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\GlobalConfig.cs">
       <Link>GlobalConfig.cs</Link>
@@ -118,6 +115,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
