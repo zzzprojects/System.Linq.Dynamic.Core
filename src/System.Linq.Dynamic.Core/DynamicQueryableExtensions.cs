@@ -65,7 +65,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
 
-            return Execute<bool>(_anyPredicate, source, Expression.Quote(lambda));
+            return Execute<bool>(_anyPredicate, source, lambda);
         }
         #endregion Any
 
@@ -139,7 +139,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
 
-            return Execute<int>(_countPredicate, source, Expression.Quote(lambda));
+            return Execute<int>(_countPredicate, source, lambda);
         }
         #endregion Count
 
@@ -171,6 +171,8 @@ namespace System.Linq.Dynamic.Core
         #endregion Distinct
 
         #region First
+        private static readonly MethodInfo _first = GetMethod(nameof(Queryable.First));
+
         /// <summary>
         /// Returns the first element of a sequence.
         /// </summary>
@@ -186,7 +188,8 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_first, source);
         }
-        private static readonly MethodInfo _first = GetMethod(nameof(Queryable.First));
+
+        private static readonly MethodInfo _firstPredicate = GetMethod(nameof(Queryable.First), 1);
 
         /// <summary>
         /// Returns the first element of a sequence that satisfies a specified condition.
@@ -207,9 +210,8 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
 
-            return Execute(_firstPredicate, source, Expression.Quote(lambda));
+            return Execute(_firstPredicate, source, lambda);
         }
-        private static readonly MethodInfo _firstPredicate = GetMethod(nameof(Queryable.First), 1);
         #endregion First
 
         #region FirstOrDefault
@@ -249,7 +251,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
 
-            return Execute(_firstOrDefaultPredicate, source, Expression.Quote(lambda));
+            return Execute(_firstOrDefaultPredicate, source, lambda);
         }
         private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1);
         #endregion FirstOrDefault
@@ -480,6 +482,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Join
 
         #region Last
+        private static readonly MethodInfo _last = GetMethod(nameof(Queryable.Last));
         /// <summary>
         /// Returns the last element of a sequence.
         /// </summary>
@@ -493,13 +496,12 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return source.Provider.Execute(Expression.Call(
-                typeof(Queryable), "Last",
-                new[] { source.ElementType }, source.Expression));
+            return Execute(_last, source);
         }
         #endregion Last
 
         #region LastOrDefault
+        private static readonly MethodInfo _lastDefault = GetMethod(nameof(Queryable.LastOrDefault));
         /// <summary>
         /// Returns the last element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
@@ -513,9 +515,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return source.Provider.Execute(Expression.Call(
-                typeof(Queryable), "LastOrDefault",
-                new[] { source.ElementType }, source.Expression));
+            return Execute(_lastDefault, source);
         }
         #endregion LastOrDefault
 
@@ -679,7 +679,7 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion Reverse
 
-        #region Select/SelectMany
+        #region Select
         /// <summary>
         /// Projects each element of a sequence into a new form.
         /// </summary>
@@ -702,10 +702,10 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
 
             return source.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), "Select",
-                    new[] { source.ElementType, lambda.Body.Type },
-                    source.Expression, Expression.Quote(lambda)));
+                 Expression.Call(
+                     typeof(Queryable), nameof(Queryable.Select),
+                     new[] { source.ElementType, lambda.Body.Type },
+                     source.Expression, Expression.Quote(lambda)));
         }
 
         /// <summary>
@@ -734,7 +734,7 @@ namespace System.Linq.Dynamic.Core
 
             return source.Provider.CreateQuery<TResult>(
                 Expression.Call(
-                    typeof(Queryable), "Select",
+                    typeof(Queryable), nameof(Queryable.Select),
                     new[] { source.ElementType, typeof(TResult) },
                     source.Expression, Expression.Quote(lambda)));
         }
@@ -764,11 +764,13 @@ namespace System.Linq.Dynamic.Core
 
             return source.Provider.CreateQuery(
                 Expression.Call(
-                    typeof(Queryable), "Select",
+                    typeof(Queryable), nameof(Queryable.Select),
                     new[] { source.ElementType, resultType },
                     source.Expression, Expression.Quote(lambda)));
         }
+        #endregion Select
 
+        #region SelectMany
         /// <summary>
         /// Projects each element of a sequence to an <see cref="IQueryable"/> and combines the resulting sequences into one sequence.
         /// </summary>
@@ -965,7 +967,7 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType, sourceLambdaResultType, resultLambdaResultType },
                 source.Expression, Expression.Quote(sourceSelectLambda), Expression.Quote(resultSelectLambda)));
         }
-        #endregion Select/SelectMany
+        #endregion SelectMany
 
         #region Single/SingleOrDefault
         /// <summary>
@@ -1120,6 +1122,28 @@ namespace System.Linq.Dynamic.Core
         #endregion
 
         #region Private Helpers
+        //private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source)
+        //{
+        //    if (operatorMethodInfo.IsGenericMethod)
+        //    {
+        //        operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
+        //    }
+
+        //    return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, source.Expression));
+        //}
+
+        //private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
+        //    => CreateQuery(operatorMethodInfo, source, Expression.Quote(expression));
+
+        //private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, Expression expression)
+        //{
+        //    operatorMethodInfo = operatorMethodInfo.GetGenericArguments().Length == 2
+        //            ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(object))
+        //            : operatorMethodInfo.MakeGenericMethod(source.ElementType);
+
+        //    return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+        //}
+
         // Copied from https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source)
         {

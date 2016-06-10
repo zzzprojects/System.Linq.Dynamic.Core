@@ -15,15 +15,16 @@ namespace System.Linq.Dynamic.Core.Tests
             PopulateTestData(total, 0);
 
             //Act
-            IQueryable queryable = _context.Blogs.Select("it");
+            var expected = _context.Blogs.OrderBy(b => b.BlogId).Page(page, pageSize).ToArray();
+            IOrderedQueryable queryable = _context.Blogs.Select("it").OrderBy("BlogId");
             bool any = queryable.Any();
             var count = queryable.Count();
-            var result = queryable.Page(page, pageSize);
+            var result = queryable.Page(page, pageSize).ToDynamicArray<Blog>();
 
             //Assert
             Assert.Equal(true, any);
             Assert.Equal(total, count);
-            Assert.Equal(_context.Blogs.Page(page, pageSize).ToArray(), result.ToDynamicArray<Blog>());
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -36,7 +37,8 @@ namespace System.Linq.Dynamic.Core.Tests
             PopulateTestData(total, 0);
 
             //Act
-            IQueryable queryable = _context.Blogs.Select("it");
+            var expectedResult = _context.Blogs.OrderBy(b => b.BlogId).PageResult(page, pageSize).Queryable.ToArray();
+            IQueryable queryable = _context.Blogs.Select("it").OrderBy("BlogId");
             var count = queryable.Count();
             var result = queryable.PageResult(page, pageSize);
 
@@ -46,7 +48,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(pageSize, result.PageSize);
             Assert.Equal(total, result.RowCount);
             Assert.Equal(5, result.PageCount);
-            Assert.Equal(_context.Blogs.Page(page, pageSize).ToArray(), result.Queryable.ToDynamicArray<Blog>());
+            Assert.Equal(expectedResult, result.Queryable.ToDynamicArray<Blog>());
         }
     }
 }

@@ -56,11 +56,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var testResult = testListQry.OrderBy("Roles.Single().Name").Select("Id");
 
             //Assert
-#if NET35 || NETSTANDARD
             Assert.Equal(realResult, testResult.Cast<Guid>().ToArray());
-#else
-            Assert.Equal(realResult, testResult.ToDynamicArray());
-#endif
         }
     }
 }

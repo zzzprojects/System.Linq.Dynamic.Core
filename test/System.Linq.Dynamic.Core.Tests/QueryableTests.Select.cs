@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Linq.PropertyTranslator.Core;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using QueryInterceptor.Core;
 using Xunit;
+#if EFCORE
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+#else
+using Microsoft.AspNet.Identity.EntityFramework;
+#endif
 
 namespace System.Linq.Dynamic.Core.Tests
 {

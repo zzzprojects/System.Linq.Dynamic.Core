@@ -9,6 +9,7 @@
         "QueryInterceptor.Core": "1.0.3",
 
         "EntityFramework": "6.1.3",
+        "Microsoft.AspNet.Identity.EntityFramework": "2.2.1",
         
         "xunit": "2.1.0-rc2-build3178",
         "dotnet-test-xunit": "1.0.0-rc2-build10025"
@@ -18,8 +19,10 @@
         "define": [ "EF" ],
         "compile": {
             "include": [
+                "../System.Linq.Dynamic.Core.Tests/QueryableTests.cs",
+                "../System.Linq.Dynamic.Core.Tests/QueryableTests.*.cs",
                 "../System.Linq.Dynamic.Core.Tests/EntitiesTests.cs",
-                "../System.Linq.Dynamic.Core.Tests/EntitiesTests.*Async.cs",
+                "../System.Linq.Dynamic.Core.Tests/EntitiesTests.*.cs",
                 "../System.Linq.Dynamic.Core.Tests/Entities/*.cs",
                 "../System.Linq.Dynamic.Core.Tests/TestHelpers/*.cs",
                 "../System.Linq.Dynamic.Core.Tests/Helpers/*/*.cs"
