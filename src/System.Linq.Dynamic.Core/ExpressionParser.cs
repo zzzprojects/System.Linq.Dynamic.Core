@@ -187,7 +187,9 @@ namespace System.Linq.Dynamic.Core
             void OrderByDescending(object selector);
             void Contains(object selector);
             void Skip(int count);
+            void SkipWhile(bool predicate);
             void Take(int count);
+            void TakeWhile(bool predicate);
             void Distinct();
 
             //Executors

@@ -19,6 +19,8 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public static class DynamicQueryableExtensions
     {
+        private static readonly Func<MethodInfo, bool> _predicateParameterHas2 = (mi) => mi.GetParameters()[1].ToString().Contains("Func`2");
+
         #region Any
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
@@ -1030,6 +1032,35 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion Skip
 
+        #region SkipWhile
+        private static readonly MethodInfo _skipWhilePredicate = GetMethod(nameof(Queryable.SkipWhile), 1, _predicateParameterHas2);
+
+        /// <summary>
+        /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
+        /// </summary>
+        /// <param name="source">A sequence to check for being empty.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.SkipWhile("Income > 50");
+        /// var result2 = queryable.SkipWhile("Income > @0", 50);
+        /// </code>
+        /// </example>
+        /// <returns>An <see cref="IQueryable"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
+        public static IQueryable SkipWhile([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(predicate, nameof(predicate));
+
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+
+            return CreateQuery(_skipWhilePredicate, source, lambda);
+        }
+        #endregion SkipWhile
+
         #region Sum
         /// <summary>
         /// Computes the sum of a sequence of numeric values.
@@ -1063,6 +1094,35 @@ namespace System.Linq.Dynamic.Core
             return Queryable.Take((IQueryable<object>)source, count);
         }
         #endregion Take
+
+        #region TakeWhile
+        private static readonly MethodInfo _takeWhilePredicate = GetMethod(nameof(Queryable.TakeWhile), 1, _predicateParameterHas2);
+
+        /// <summary>
+        /// Returns elements from a sequence as long as a specified condition is true.
+        /// </summary>
+        /// <param name="source">A sequence to check for being empty.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.TakeWhile("Income > 50");
+        /// var result2 = queryable.TakeWhile("Income > @0", 50);
+        /// </code>
+        /// </example>
+        /// <returns>An <see cref="IQueryable"/> that contains elements from the input sequence occurring before the element at which the test specified by predicate no longer passes.</returns>
+        public static IQueryable TakeWhile([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(predicate, nameof(predicate));
+
+            bool createParameterCtor = source.IsLinqToObjects();
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+
+            return CreateQuery(_takeWhilePredicate, source, lambda);
+        }
+        #endregion TakeWhile
 
         #region Where
         /// <summary>
@@ -1122,29 +1182,31 @@ namespace System.Linq.Dynamic.Core
         #endregion
 
         #region Private Helpers
-        //private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source)
-        //{
-        //    if (operatorMethodInfo.IsGenericMethod)
-        //    {
-        //        operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
-        //    }
+        // Code below is based on https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
 
-        //    return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, source.Expression));
-        //}
 
-        //private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
-        //    => CreateQuery(operatorMethodInfo, source, Expression.Quote(expression));
+        private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source)
+        {
+            if (operatorMethodInfo.IsGenericMethod)
+            {
+                operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
+            }
 
-        //private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, Expression expression)
-        //{
-        //    operatorMethodInfo = operatorMethodInfo.GetGenericArguments().Length == 2
-        //            ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(object))
-        //            : operatorMethodInfo.MakeGenericMethod(source.ElementType);
+            return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, source.Expression));
+        }
 
-        //    return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
-        //}
+        private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
+            => CreateQuery(operatorMethodInfo, source, Expression.Quote(expression));
 
-        // Copied from https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
+        private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, Expression expression)
+        {
+            operatorMethodInfo = operatorMethodInfo.GetGenericArguments().Length == 2
+                    ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(object))
+                    : operatorMethodInfo.MakeGenericMethod(source.ElementType);
+
+            return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+        }
+
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source)
         {
             if (operatorMethodInfo.IsGenericMethod)
