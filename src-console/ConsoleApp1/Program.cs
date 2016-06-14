@@ -16,14 +16,13 @@ namespace ConsoleApp1
         {
             var emps = new Employee[] { new Employee { Name = "a" }, new Employee { Name = "b" } }.AsQueryable();
 
-            var lambdaExpression = DynamicExpressionParser.ParseLambda(false, typeof(Employee), null, "Name");
-
             // normal
             Expression<Func<Employee, string>> exp = u => u.Name;
             var equery1 = emps.Select(exp);
             Console.WriteLine("equery1 :" + string.Join(",", equery1));
 
             // lambdaExpression
+            var lambdaExpression = DynamicExpressionParser.ParseLambda(false, typeof(Employee), null, "Name");
             var body = lambdaExpression.Body;
             var p = lambdaExpression.Parameters;
             var x = Expression.Lambda<Func<Employee, string>>(body, p);
