@@ -8,7 +8,9 @@
         "Microsoft.NETCore.App": {
             "type": "platform",
             "version": "1.0.0-rc2-3002702"
-        }
+        },
+        "System.Linq.Dynamic.Core": { "target": "project" }
+        
     },
 
   "frameworks": {
@@ -21,6 +23,9 @@
 
         "dependencies": {
             "Remotion.Linq": "2.0.2",
+
+            "System.Linq.Expressions": "4.0.11-rc2-24103",
+
             "Microsoft.EntityFrameworkCore.Sqlite": "1.0.0-rc2-final",
             "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0-rc2-final"
         }
