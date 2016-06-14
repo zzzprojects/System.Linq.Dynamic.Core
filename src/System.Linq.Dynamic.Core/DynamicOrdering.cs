@@ -6,5 +6,6 @@ namespace System.Linq.Dynamic.Core
     {
         public Expression Selector;
         public bool Ascending;
+        public string MethodName;
     }
 }

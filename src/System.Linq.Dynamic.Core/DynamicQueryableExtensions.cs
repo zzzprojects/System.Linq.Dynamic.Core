@@ -533,7 +533,9 @@ namespace System.Linq.Dynamic.Core
         /// <example>
         /// <code>
         /// <![CDATA[
-        /// var result = queryable.OrderBy<User>("NumberProperty, StringProperty DESC");
+        /// var resultSingle = queryable.OrderBy<User>("NumberProperty");
+        /// var resultSingleDescending = queryable.OrderBy<User>("NumberProperty DESC");
+        /// var resultMultiple = queryable.OrderBy<User>("NumberProperty, StringProperty");
         /// ]]>
         /// </code>
         /// </example>
@@ -543,7 +545,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Sorts the elements of a sequence in ascending or decsending order according to a key.
+        /// Sorts the elements of a sequence in ascending or descending order according to a key.
         /// </summary>
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
@@ -551,7 +553,9 @@ namespace System.Linq.Dynamic.Core
         /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         /// <example>
         /// <code>
-        /// var result = queryable.OrderBy("NumberProperty, StringProperty DESC");
+        /// var resultSingle = queryable.OrderBy("NumberProperty");
+        /// var resultSingleDescending = queryable.OrderBy("NumberProperty DESC");
+        /// var resultMultiple = queryable.OrderBy("NumberProperty, StringProperty DESC");
         /// </code>
         /// </example>
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, params object[] args)
@@ -561,18 +565,16 @@ namespace System.Linq.Dynamic.Core
 
             ParameterExpression[] parameters = { Expression.Parameter(source.ElementType, "") };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args);
-            IEnumerable<DynamicOrdering> orderings = parser.ParseOrdering();
+            IEnumerable<DynamicOrdering> dynamicOrderings = parser.ParseOrdering();
+
             Expression queryExpr = source.Expression;
-            string methodAsc = "OrderBy";
-            string methodDesc = "OrderByDescending";
-            foreach (DynamicOrdering o in orderings)
+
+            foreach (DynamicOrdering dynamicOrdering in dynamicOrderings)
             {
                 queryExpr = Expression.Call(
-                    typeof(Queryable), o.Ascending ? methodAsc : methodDesc,
-                    new[] { source.ElementType, o.Selector.Type },
-                    queryExpr, Expression.Quote(Expression.Lambda(o.Selector, parameters)));
-                methodAsc = "ThenBy";
-                methodDesc = "ThenByDescending";
+                    typeof(Queryable), dynamicOrdering.MethodName,
+                    new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                    queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
             }
 
             return (IOrderedQueryable)source.Provider.CreateQuery(queryExpr);

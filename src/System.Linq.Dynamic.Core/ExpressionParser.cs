@@ -273,6 +273,11 @@ namespace System.Linq.Dynamic.Core
         const string KEYWORD_NEW = "new";
         const string KEYWORD_ISNULL = "isnull";
 
+        static readonly string methodOrderBy = nameof(Queryable.OrderBy);
+        static readonly string methodOrderByDescending = nameof(Queryable.OrderByDescending);
+        static readonly string methodThenBy = nameof(Queryable.ThenBy);
+        static readonly string methodThenByDescending = nameof(Queryable.ThenByDescending);
+
         static Dictionary<string, object> _keywords;
 
         readonly Dictionary<string, object> _symbols;
@@ -395,7 +400,7 @@ namespace System.Linq.Dynamic.Core
 #pragma warning disable 0219
         public IEnumerable<DynamicOrdering> ParseOrdering()
         {
-            List<DynamicOrdering> orderings = new List<DynamicOrdering>();
+            var orderings = new List<DynamicOrdering>();
             while (true)
             {
                 Expression expr = ParseExpression();
@@ -409,10 +414,21 @@ namespace System.Linq.Dynamic.Core
                     NextToken();
                     ascending = false;
                 }
-                orderings.Add(new DynamicOrdering { Selector = expr, Ascending = ascending });
-                if (_token.id != TokenId.Comma) break;
+
+                string methodName;
+                if (orderings.Count == 0)
+                    methodName = ascending ? methodOrderBy : methodOrderByDescending;
+                else
+                    methodName = ascending ? methodThenBy : methodThenByDescending;
+
+                orderings.Add(new DynamicOrdering { Selector = expr, Ascending = ascending, MethodName = methodName });
+
+                if (_token.id != TokenId.Comma)
+                    break;
+
                 NextToken();
             }
+
             ValidateToken(TokenId.End, Res.SyntaxError);
             return orderings;
         }
