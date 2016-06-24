@@ -8,6 +8,28 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class ExpressionTests
     {
+        /// <summary>
+        /// https://github.com/kahanu/System.Linq.Dynamic/issues/56
+        /// </summary>
+        [Fact]
+        public void ExpressionTests_Where_DoubleDecimalCompare()
+        {
+            double d = 1000.0;
+
+            var list = new List<SimpleValuesModel>();
+            list.Add(new SimpleValuesModel { DecimalValue = 123423.234M });
+            list.Add(new SimpleValuesModel { DecimalValue = 123423423423.2342M });
+            list.Add(new SimpleValuesModel { DecimalValue = 2342342433423.23423423M });
+            list.Add(new SimpleValuesModel { DecimalValue = 123.234M });
+            list.Add(new SimpleValuesModel { DecimalValue = 100000000000.232423423434M });
+            list.Add(new SimpleValuesModel { DecimalValue = 100.232423423434M });
+
+            var expected = list.Where(x => (double)x.DecimalValue > d).ToList();
+            var result = list.AsQueryable().Where("double(DecimalValue) > @0", d).ToList();
+
+            Assert.Equal(expected, result);
+        }
+
         [Fact]
         public void ExpressionTests_SkipAndTake()
         {

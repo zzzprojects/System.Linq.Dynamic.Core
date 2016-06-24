@@ -1,5 +1,4 @@
 ﻿using System.Linq.Dynamic.Core.Exceptions;
-using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Xunit;
 
