@@ -34,7 +34,7 @@ However, currently there are multiple nuget packages and project available:
 | ------- | ----- | ------ | ------- |
 | [kahanu/System.Linq.Dynamic][2a] | [System.Linq.Dynamic][2b] | @kahanu | - |
 | [kavun/System.Linq.Dynamic.3.5][3a] | [System.Linq.Dynamic.3.5/][3b] | @kavun | only 3.5 and VB.NET |
-| [StefH/System.Linq.Dynamic][4a] | [System.Linq.Dynamic.Library][4b]  | @NArnott | removed from github + nuget ? |
+| [NArnott/System.Linq.Dynamic][4a] | [System.Linq.Dynamic.Library][4b]  | @NArnott | removed from github + nuget ? |
 | [dynamiclinq.codeplex][5a] | - | dialectsoftware | - |
 | [dynamic-linq][6a] | - | scottgu | - |
 
@@ -49,7 +49,7 @@ Documentation can be found [here][1].
 [2b]: https://www.nuget.org/packages/System.Linq.Dynamic
 [3a]: https://github.com/kavun/System.Linq.Dynamic.3.5
 [3b]: https://www.nuget.org/packages/System.Linq.Dynamic.3.5/
-[4a]: https://github.com/StefH/System.Linq.Dynamic
+[4a]: https://github.com/NArnott/System.Linq.Dynamic
 [4b]: https://www.nuget.org/packages/System.Linq.Dynamic.Library
 [5a]: https://dynamiclinq.codeplex.com/
 [6a]: http://weblogs.asp.net/scottgu/dynamic-linq-part-1-using-the-linq-dynamic-query-library
