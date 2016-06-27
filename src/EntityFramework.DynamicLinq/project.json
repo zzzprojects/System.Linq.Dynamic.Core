@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0.0",
+    "version": "1.0.1.0",
     "title": "EntityFramework.DynamicLinq",
     "description": "Dynamic Linq extensions for EntityFramework which adds Async support",
     "authors": [ "Stef Heyenrath" ],

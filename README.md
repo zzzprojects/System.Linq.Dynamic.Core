@@ -1,7 +1,12 @@
 # System.Linq.Dynamic.Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/0c4v2bsvdqd57600?svg=true)](https://ci.appveyor.com/project/StefH/system-linq-dynamic-core)
-[![Version](https://img.shields.io/nuget/v/System.Linq.Dynamic.Core.svg)](https://www.nuget.org/packages/System.Linq.Dynamic.Core)
+
+| Project | NuGet |
+| ------- | ----- |
+| System.Linq.Dynamic.Core | [![Version](https://img.shields.io/nuget/v/System.Linq.Dynamic.Core.svg)](https://www.nuget.org/packages/System.Linq.Dynamic.Core) |
+| EntityFramework.DynamicLinq | [![Version](https://img.shields.io/nuget/v/EntityFramework.DynamicLinq.svg)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
+| Microsoft.EntityFrameworkCore.DynamicLinq | [![Version](https://img.shields.io/nuget/v/Microsoft.EntityFrameworkCore.DynamicLinq.svg)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 
 This is a **.NET Core port** of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
