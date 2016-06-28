@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.1.0",
+    "version": "1.0.2.0",
     "title": "Microsoft.EntityFrameworkCore.DynamicLinq",
     "description": "Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support",
     "authors": [ "Stef Heyenrath" ],
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": ""
+        "releaseNotes": ".Net Core 1.0 RTM"
     },
 
     "buildOptions": {
@@ -35,8 +35,8 @@
             "version": "10.1.4",
             "type": "build"
         },
-        "Microsoft.EntityFrameworkCore": "1.0.0-rc2-final",
-        "System.Linq.Dynamic.Core": "1.0.4.0"
+        "Microsoft.EntityFrameworkCore": "1.0.0",
+        "System.Linq.Dynamic.Core": "1.0.5.0"
     },
 
     "frameworks": {
@@ -62,17 +62,9 @@
         },
         "netcore50": {
             "buildOptions": { "define": [ "WINDOWS_APP" ] },
-            "dependencies": {
-                "NETStandard.Library": {
-                    "version": "1.5.0-rc2-24027"
-                }
-            }
         },
         "netstandard1.3": {
             "buildOptions": { "define": [ "NETSTANDARD" ] },
-            "NETStandard.Library": {
-                "version": "1.5.0-rc2-24027"
-            },
             "imports": [
                 "dotnet5.4",
                 "portable-win81+wp81",

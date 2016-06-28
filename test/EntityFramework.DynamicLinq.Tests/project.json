@@ -11,8 +11,8 @@
         "EntityFramework": "6.1.3",
         "Microsoft.AspNet.Identity.EntityFramework": "2.2.1",
         
-        "xunit": "2.1.0-rc2-build3178",
-        "dotnet-test-xunit": "1.0.0-rc2-build10025"
+        "xunit": "2.2.0-beta3-build3301",
+        "dotnet-test-xunit": "1.0.0-rc3-build10028"
     },
 
     "buildOptions": {

@@ -7,8 +7,12 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
         public int BlogId { get; set; }
         public string Name { get; set; }
         public int? NullableInt { get; set; }
-        public DateTimeOffset Created { get; set; }
-
         public virtual ICollection<Post> Posts { get; set; }
+
+#if NET4 || NET452
+        public DateTime Created { get; set; }
+#else
+        public DateTimeOffset Created { get; set; }
+#endif
     }
 }

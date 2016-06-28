@@ -1,12 +1,12 @@
 {
-    "version": "1.0.4.0",
+    "version": "1.0.5.0",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
 
     "packOptions": {
         "summary": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
-        "tags": [ "system", "linq", "dynamic", "dnx", "core" ],
+        "tags": [ "system", "linq", "dynamic", "core" ],
         "owners": [ "Stef Heyenrath" ],
         "repository": {
             "type": "git",
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Fixed GetDeclaredMethods"
+        "releaseNotes": ".Net Core 1.0 RTM"
     },
 
     "buildOptions": {
@@ -95,40 +95,34 @@
         "netcore50": {
             "buildOptions": { "define": [ "WINDOWS_APP" ] },
             "dependencies": {
-                "NETStandard.Library": {
-                    "version": "1.5.0-rc2-24027"
-                },
-                "System.Collections.Concurrent": "4.0.12-rc2-24027",
-                "System.Diagnostics.Debug": "4.0.11-rc2-24027",
-                "System.Dynamic.Runtime": "4.0.11-rc2-24027",
-                "System.Globalization": "4.0.11-rc2-24027",
-                "System.Linq.Expressions": "4.0.11-rc2-24027",
-                "System.Linq.Queryable": "4.0.1-rc2-24027",
-                "System.Reflection.Emit": "4.0.1-rc2-24027",
-                "System.Reflection.TypeExtensions": "4.1.0-rc2-24027",
-                "System.Runtime": "4.1.0-rc2-24027",
-                "System.Threading": "4.0.11-rc2-24027"
+                "System.Collections.Concurrent": "4.0.12",
+                "System.Diagnostics.Debug": "4.0.11",
+                "System.Dynamic.Runtime": "4.0.11",
+                "System.Globalization": "4.0.11",
+                "System.Linq.Expressions": "4.1.0",
+                "System.Linq.Queryable": "4.0.1",
+                "System.Reflection.Emit": "4.0.1",
+                "System.Reflection.TypeExtensions": "4.1.0",
+                "System.Runtime.Extensions": "4.1.0",
+                "System.Threading": "4.0.11"
             }
         },
         "netstandard1.3": {
             "buildOptions": { "define": [ "NETSTANDARD" ] },
-            "NETStandard.Library": {
-                "version": "1.5.0-rc2-24027"
-            },
             "imports": [
                 "dotnet5.4"
             ],
             "dependencies": {
-                "System.Collections.Concurrent": "4.0.12-rc2-24027",
-                "System.Diagnostics.Debug": "4.0.11-rc2-24027",
-                "System.Dynamic.Runtime": "4.0.11-rc2-24027",
-                "System.Globalization": "4.0.11-rc2-24027",
-                "System.Linq.Expressions": "4.0.11-rc2-24027",
-                "System.Linq.Queryable": "4.0.1-rc2-24027",
-                "System.Reflection.Emit": "4.0.1-rc2-24027",
-                "System.Reflection.TypeExtensions": "4.1.0-rc2-24027",
-                "System.Runtime.Extensions": "4.1.0-rc2-24027",
-                "System.Threading": "4.0.11-rc2-24027"
+                "System.Collections.Concurrent": "4.0.12",
+                "System.Diagnostics.Debug": "4.0.11",
+                "System.Dynamic.Runtime": "4.0.11",
+                "System.Globalization": "4.0.11",
+                "System.Linq.Expressions": "4.1.0",
+                "System.Linq.Queryable": "4.0.1",
+                "System.Reflection.Emit": "4.0.1",
+                "System.Reflection.TypeExtensions": "4.1.0",
+                "System.Runtime.Extensions": "4.1.0",
+                "System.Threading": "4.0.11"
             }
         },
         "sl5": {
@@ -146,16 +140,17 @@
         },
         "uap10.0": {
             "dependencies": {
-                "NETStandard.Library": {
-                    "version": "1.5.0-rc2-24027"
-                },
-                "System.Collections": "4.0.11-rc2-24027",
-                "System.Collections.Concurrent": "4.0.12-rc2-24027",
-                "System.Dynamic.Runtime": "4.0.11-rc2-24027",
-                "System.Linq.Expressions": "4.0.11-rc2-24027",
-                "System.Linq.Queryable": "4.0.1-rc2-24027",
-                "System.Reflection.Emit": "4.0.1-rc2-24027",
-                "System.Reflection.TypeExtensions": "4.1.0-rc2-24027"
+                "System.Collections": "4.0.11",
+                "System.Collections.Concurrent": "4.0.12",
+                "System.Diagnostics.Debug": "4.0.11",
+                "System.Dynamic.Runtime": "4.0.11",
+                "System.Linq.Expressions": "4.1.0",
+                "System.Linq.Queryable": "4.0.1",
+                "System.Reflection.Emit": "4.0.1",
+                "System.Reflection.TypeExtensions": "4.1.0",
+                "System.Resources.ResourceManager": "4.0.1",
+                "System.Runtime.Extensions": "4.1.0",
+                "System.Threading": "4.0.11"
             }
         }
     }
