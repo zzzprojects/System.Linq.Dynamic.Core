@@ -331,7 +331,7 @@ namespace System.Linq.Dynamic.Core
 
                         type = tb.CreateType();
 
-                        type = GeneratedTypes.GetOrAdd(fullName, type);
+                        type = GeneratedTypes.GetOrAdd(fullName + "|_" + (createParameterCtor ? "1" : "0"), type);
                     }
                 }
             }

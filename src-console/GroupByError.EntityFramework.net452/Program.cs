@@ -8,26 +8,30 @@ namespace GroupByError
     {
         static void Main(string[] args)
         {
-            using (var db = new MyDbContext())
+            using (var db = new MyDbContext("Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=TestEF;Integrated Security=True;MultipleActiveResultSets=True"))
             {
                 //In memory list.
                 var ElementsList = AddElementsToList();
 
                 //Database
-                db.Database.EnsureDeleted();
-                if (db.Database.EnsureCreated())
+                db.Database.Delete();
+                if (db.Database.CreateIfNotExists())
                 {
-                    ElementsList.ForEach(e => db.Add(e));
+                    ElementsList.ForEach(e => db.Elements.Add(e));
                     db.SaveChanges();
                 }
 
                 //In memory tests.
-                //var resultList1 = ElementsList.GroupBy(el => new { el.Attribute1, el.Attribute2 }).ToArray();         //CORRECT
-                //var resultList2 = ElementsList.AsQueryable().GroupBy("new(Attribute1, Attribute2)").ToDynamicArray(); //CORRECT
+                var resultList1 = ElementsList.GroupBy(el => new { el.Attribute1, el.Attribute2 }).ToArray();         //CORRECT
+                var resultList2 = ElementsList.AsQueryable().GroupBy("new(Attribute1, Attribute2)").ToDynamicArray(); //CORRECT
 
-                //Database tests.
-                var resultDb1 = db.Element.GroupBy(el => new { el.Attribute1, el.Attribute2 }).ToArray(); //CORRECT
-                var resultDb2 = db.Element.GroupBy("new(Attribute1, Attribute2)").ToDynamicArray();       //WRONG
+                //Database tests 1.
+                var resultDb1a = db.Elements.GroupBy(el => new { el.Attribute1 }).ToArray(); //CORRECT
+                var resultDb2a = db.Elements.GroupBy("Attribute1").ToDynamicArray();         //CORRECT
+
+                //Database tests 2.
+                var resultDb1b = db.Elements.GroupBy(el => new { el.Attribute1, el.Attribute2 }).ToArray(); //CORRECT
+                var resultDb2b = db.Elements.GroupBy("new(Attribute1, Attribute2)").ToDynamicArray();       //WRONG
 
                 int x = 0;
             }

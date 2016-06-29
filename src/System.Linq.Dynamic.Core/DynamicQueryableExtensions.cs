@@ -320,7 +320,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
         /// <param name="keySelector">A string expression to specify the key for each element.</param>
-        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
         /// <example>
         /// <code>
@@ -328,7 +328,7 @@ namespace System.Linq.Dynamic.Core
         /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
         /// </code>
         /// </example>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, object[] args)
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(keySelector, nameof(keySelector));
@@ -338,30 +338,9 @@ namespace System.Linq.Dynamic.Core
 
             return source.Provider.CreateQuery(
                 Expression.Call(
-                    typeof(Queryable), "GroupBy",
+                    typeof(Queryable), nameof(Queryable.GroupBy),
                     new[] { source.ElementType, keyLambda.Body.Type },
                     new[] { source.Expression, Expression.Quote(keyLambda) }));
-        }
-
-        /// <summary>
-        /// Groups the elements of a sequence according to a specified key string function 
-        /// and creates a result value from each group and its key.
-        /// </summary>
-        /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
-        /// <param name="keySelector">A string expression to specify the key for each element.</param>
-        /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
-        /// <example>
-        /// <code>
-        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey");
-        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
-        /// </code>
-        /// </example>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector)
-        {
-            Check.NotNull(source, nameof(source));
-            Check.NotEmpty(keySelector, nameof(keySelector));
-
-            return GroupBy(source, keySelector, (object[])null);
         }
         #endregion GroupBy
 
