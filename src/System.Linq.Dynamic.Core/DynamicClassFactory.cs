@@ -15,9 +15,9 @@ using System.Linq;
 namespace System.Linq.Dynamic.Core
 {
     /// <summary>
-    /// http://stackoverflow.com/questions/29413942/c-sharp-anonymous-object-with-properties-from-dictionary
+    /// A factory to create dynamic classes, based on <see href="http://stackoverflow.com/questions/29413942/c-sharp-anonymous-object-with-properties-from-dictionary"/>.
     /// </summary>
-    internal static class DynamicClassFactory
+    public static class DynamicClassFactory
     {
         // EmptyTypes is used to indicate that we are looking for someting without any parameters. 
         private readonly static Type[] EmptyTypes = new Type[0];
@@ -61,6 +61,9 @@ namespace System.Linq.Dynamic.Core
 
         private static int _index = -1;
 
+        /// <summary>
+        /// Initializes the <see cref="DynamicClassFactory"/> class.
+        /// </summary>
         static DynamicClassFactory()
         {
             var assemblyName = new AssemblyName("System.Linq.Dynamic.Core.DynamicClasses, Version=1.0.0.0");
@@ -73,9 +76,9 @@ namespace System.Linq.Dynamic.Core
         /// Create DynamicClass Type
         /// </summary>
         /// <param name="properties">The DynamicProperties</param>
-        /// <param name="createParameterCtor">Create a .ctor with parameters.</param>
+        /// <param name="createParameterCtor">Create a .ctor with parameters. Default set to true. Note that for Linq-to-Database objects, this needs to be set to false.</param>
         /// <returns>Type</returns>
-        public static Type CreateType([NotNull] IList<DynamicProperty> properties, bool createParameterCtor)
+        public static Type CreateType([NotNull] IList<DynamicProperty> properties, bool createParameterCtor = true)
         {
             Check.HasNoNulls(properties, nameof(properties));
 
