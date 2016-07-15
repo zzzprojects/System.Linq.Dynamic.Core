@@ -15,7 +15,7 @@ using System.Linq;
 namespace System.Linq.Dynamic.Core
 {
     /// <summary>
-    /// A factory to create dynamic classes, based on <see href="http://stackoverflow.com/questions/29413942/c-sharp-anonymous-object-with-properties-from-dictionary"/>.
+    /// A factory to create dynamic classes, based on <see href="http://stackoverflow.com/questions/29413942/c-sharp-anonymous-object-with-properties-from-dictionary" />.
     /// </summary>
     public static class DynamicClassFactory
     {
@@ -73,11 +73,26 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Create DynamicClass Type
+        /// The CreateType method creates a new data class with a given set of public properties and returns the System.Type object for the newly created class. If a data class with an identical sequence of properties has already been created, the System.Type object for this class is returned.        
+        /// Data classes implement private instance variables and read/write property accessors for the specified properties.Data classes also override the Equals and GetHashCode members to implement by-value equality.
+        /// Data classes are created in an in-memory assembly in the current application domain. All data classes inherit from <see cref="DynamicClass"/> and are given automatically generated names that should be considered private (the names will be unique within the application domain but not across multiple invocations of the application). Note that once created, a data class stays in memory for the lifetime of the current application domain. There is currently no way to unload a dynamically created data class.
+        /// The dynamic expression parser uses the CreateClass methods to generate classes from data object initializers. This feature in turn is often used with the dynamic Select method to create projections.
         /// </summary>
         /// <param name="properties">The DynamicProperties</param>
-        /// <param name="createParameterCtor">Create a .ctor with parameters. Default set to true. Note that for Linq-to-Database objects, this needs to be set to false.</param>
+        /// <param name="createParameterCtor">Create a constructor with parameters. Default set to true. Note that for Linq-to-Database objects, this needs to be set to false.</param>
         /// <returns>Type</returns>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// DynamicProperty[] props = new DynamicProperty[] { new DynamicProperty("Name", typeof(string)), new DynamicProperty("Birthday", typeof(DateTime)) };
+        /// Type type = DynamicClassFactory.CreateType(props);
+        /// DynamicClass dynamicClass = Activator.CreateInstance(type) as DynamicClass;
+        /// dynamicClass.SetDynamicProperty("Name", "Albert");
+        /// dynamicClass.SetDynamicProperty("Birthday", new DateTime(1879, 3, 14));
+        /// Console.WriteLine(dynamicClass);
+        /// ]]>
+        /// </code>
+        /// </example>
         public static Type CreateType([NotNull] IList<DynamicProperty> properties, bool createParameterCtor = true)
         {
             Check.HasNoNulls(properties, nameof(properties));

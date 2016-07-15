@@ -104,24 +104,24 @@
   <HelpKINode Title="EntityFramework.DynamicLinq namespace" Url="html/144078bd-d1ad-bece-4daa-7fdd3a7ed7dc.htm" />
   <HelpKINode Title="EntityFramework.DynamicLinq.EntityFrameworkDynamicQueryableExtensions class" Url="html/52258a68-c6cd-eb94-f06c-ff2564b46af9.htm" />
   <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions class">
-    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions Class" Url="html/ed7f1515-c1bd-5914-ff3d-a11c448e1288.htm" />
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions Class" Url="html/52258a68-c6cd-eb94-f06c-ff2564b46af9.htm" />
-    <HelpKINode Title="about EntityFrameworkDynamicQueryableExtensions class" Url="html/ed7f1515-c1bd-5914-ff3d-a11c448e1288.htm" />
+    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions Class" Url="html/ed7f1515-c1bd-5914-ff3d-a11c448e1288.htm" />
     <HelpKINode Title="about EntityFrameworkDynamicQueryableExtensions class" Url="html/52258a68-c6cd-eb94-f06c-ff2564b46af9.htm" />
-    <HelpKINode Title="methods" Url="html/5df0a6ee-f8a7-59ba-5ca8-0972aade618b.htm" />
+    <HelpKINode Title="about EntityFrameworkDynamicQueryableExtensions class" Url="html/ed7f1515-c1bd-5914-ff3d-a11c448e1288.htm" />
     <HelpKINode Title="methods" Url="html/38c4b637-b07c-3339-19a3-c93c778f64f3.htm" />
+    <HelpKINode Title="methods" Url="html/5df0a6ee-f8a7-59ba-5ca8-0972aade618b.htm" />
   </HelpKINode>
   <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.AnyAsync method">
-    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.AnyAsync Method " Url="html/369e6aa6-f96f-f4dd-06f2-7560309f8ca1.htm" />
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.AnyAsync Method " Url="html/eeb7efeb-654f-1951-4973-cf8d1430fd87.htm" />
+    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.AnyAsync Method " Url="html/369e6aa6-f96f-f4dd-06f2-7560309f8ca1.htm" />
   </HelpKINode>
   <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.CountAsync method">
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.CountAsync Method " Url="html/657799f7-4fc6-c4f4-dd51-1381a708d6b1.htm" />
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.CountAsync Method " Url="html/229e1980-ce7c-a4b5-01e0-d73c4a4183ec.htm" />
   </HelpKINode>
   <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstAsync method">
-    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstAsync Method " Url="html/8d5eb1b0-1ad8-5617-e4e0-519da559cf82.htm" />
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstAsync Method " Url="html/bd57e5da-91f3-3386-eb56-0945ca4e6df8.htm" />
+    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstAsync Method " Url="html/8d5eb1b0-1ad8-5617-e4e0-519da559cf82.htm" />
   </HelpKINode>
   <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstOrDefaultAsync method">
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstOrDefaultAsync Method " Url="html/29287a92-5040-ef0a-3012-74071dbb18f6.htm" />
@@ -132,18 +132,18 @@
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.LastAsync Method " Url="html/0bc0206d-0724-3891-b8d5-51c48abff2eb.htm" />
   </HelpKINode>
   <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.LastOrDefaultAsync method">
-    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.LastOrDefaultAsync Method " Url="html/dde5b439-ba6c-42bd-a39d-e163271019dd.htm" />
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.LastOrDefaultAsync Method " Url="html/cc0ffba1-1feb-5351-ec86-dd9d01bb025c.htm" />
+    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.LastOrDefaultAsync Method " Url="html/dde5b439-ba6c-42bd-a39d-e163271019dd.htm" />
   </HelpKINode>
   <HelpKINode Title="First method" Url="html/60cf4e3d-b957-8668-65f6-d6c4150f6480.htm" />
   <HelpKINode Title="FirstAsync method">
-    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstAsync Method " Url="html/8d5eb1b0-1ad8-5617-e4e0-519da559cf82.htm" />
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstAsync Method " Url="html/bd57e5da-91f3-3386-eb56-0945ca4e6df8.htm" />
+    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstAsync Method " Url="html/8d5eb1b0-1ad8-5617-e4e0-519da559cf82.htm" />
   </HelpKINode>
   <HelpKINode Title="FirstOrDefault method" Url="html/ca3a380a-0fe3-cea2-0107-f7ca1d5bd9fe.htm" />
   <HelpKINode Title="FirstOrDefaultAsync method">
-    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstOrDefaultAsync Method " Url="html/60f75a32-d2a6-3473-c73a-ce56c1b18051.htm" />
     <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstOrDefaultAsync Method " Url="html/29287a92-5040-ef0a-3012-74071dbb18f6.htm" />
+    <HelpKINode Title="EntityFrameworkDynamicQueryableExtensions.FirstOrDefaultAsync Method " Url="html/60f75a32-d2a6-3473-c73a-ce56c1b18051.htm" />
   </HelpKINode>
   <HelpKINode Title="GetAssemblies method" Url="html/50f9cc5e-8dc9-6fcf-23a6-0a2751295c12.htm" />
   <HelpKINode Title="GetCustomTypes method">

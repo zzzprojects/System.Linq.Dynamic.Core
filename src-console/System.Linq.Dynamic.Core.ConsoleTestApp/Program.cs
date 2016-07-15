@@ -36,6 +36,13 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp
         {
             Console.WriteLine("--start");
 
+            DynamicProperty[] props = new DynamicProperty[] { new DynamicProperty("Name", typeof(string)), new DynamicProperty("Birthday", typeof(DateTime)) };
+            Type type = DynamicClassFactory.CreateType(props);
+            DynamicClass dynamicClass = Activator.CreateInstance(type) as DynamicClass;
+            dynamicClass.SetDynamicProperty("Name", "Albert");
+            dynamicClass.SetDynamicProperty("Birthday", new DateTime(1879, 3, 14));
+            Console.WriteLine(dynamicClass);
+
             GroupByAndSelect_TestDynamicSelectMember();
             //Select();
             //TestDyn();
