@@ -388,6 +388,20 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Sum_LowerCase()
+        {
+            //Arrange
+            int[] initValues = { 1, 2, 3, 4, 5 };
+            var qry = initValues.AsQueryable().Select(x => new { strValue = "str", intValue = x }).GroupBy(x => x.strValue);
+
+            //Act
+            var result = qry.Select("sum(intValue)").AsEnumerable().ToArray()[0];
+
+            //Assert
+            Assert.Equal(15, result);
+        }
+
+        [Fact]
         public void ExpressionTests_Sum2()
         {
             //Arrange
@@ -459,6 +473,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result4 = qry.Where("it = @0", TestEnum.Var5);
             var result5 = qry.Where("it = @0", 8);
             var result6 = qry.Where("it = @0", "Var5");
+            var result7 = qry.Where("it = @0", "vAR5");
 
             //Assert
             Assert.Equal(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 }, result1.ToArray());
@@ -467,6 +482,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(TestEnum.Var5, result4.Single());
             Assert.Equal(TestEnum.Var5, result5.Single());
             Assert.Equal(TestEnum.Var5, result6.Single());
+            Assert.Equal(TestEnum.Var5, result7.Single());
         }
 
         [Fact]
