@@ -458,6 +458,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result3 = qry.Where("it = Var5");
             var result4 = qry.Where("it = @0", TestEnum.Var5);
             var result5 = qry.Where("it = @0", 8);
+            var result6 = qry.Where("it = @0", "Var5");
 
             //Assert
             Assert.Equal(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 }, result1.ToArray());
@@ -465,6 +466,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(TestEnum.Var5, result3.Single());
             Assert.Equal(TestEnum.Var5, result4.Single());
             Assert.Equal(TestEnum.Var5, result5.Single());
+            Assert.Equal(TestEnum.Var5, result6.Single());
         }
 
         [Fact]

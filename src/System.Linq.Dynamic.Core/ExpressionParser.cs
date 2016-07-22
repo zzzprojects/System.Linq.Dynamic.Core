@@ -672,12 +672,28 @@ namespace System.Linq.Dynamic.Core
                         }
                         else if (IsEnumType(left.Type) && (constantExpr = right as ConstantExpression) != null)
                         {
-                            var wrt = Enum.ToObject(left.Type, constantExpr.Value);
+                            object wrt = null;
+                            if (constantExpr.Value is string)
+                            {
+                                wrt = Enum.Parse(left.Type, constantExpr.Value as string, false);
+                            }
+                            else
+                            {
+                                wrt = Enum.ToObject(left.Type, constantExpr.Value);
+                            }
                             right = Expression.Constant(wrt, left.Type);
                         }
                         else if (IsEnumType(right.Type) && (constantExpr = left as ConstantExpression) != null)
                         {
-                            var wrt = Enum.ToObject(right.Type, constantExpr.Value);
+                            object wrt = null;
+                            if (constantExpr.Value is string)
+                            {
+                                wrt = Enum.Parse(right.Type, constantExpr.Value as string, false);
+                            }
+                            else
+                            {
+                                wrt = Enum.ToObject(right.Type, constantExpr.Value);
+                            }
                             left = Expression.Constant(wrt, right.Type);
                         }
                         else
