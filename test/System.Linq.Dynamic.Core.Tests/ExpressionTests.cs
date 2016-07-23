@@ -470,6 +470,39 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_DateTimeString()
+        {
+            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+
+            //Arrange
+            var lst = new List<DateTime> { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
+            var qry = lst.AsQueryable();
+
+            //Act
+            var result1 = qry.Where("it = @0", lst[0].ToString());
+
+            //Assert
+            Assert.Equal(lst[0], result1.Single());
+        }
+
+        [Fact]
+        public void ExpressionTests_GuidString()
+        {
+            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+
+            //Arrange
+            var lst = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+            var qry = lst.AsQueryable();
+
+            //Act
+            var result1 = qry.Where("it = @0", lst[0].ToString());
+
+            //Assert
+            Assert.Equal(lst[0], result1.Single());
+        }
+
+
+        [Fact]
         public void ExpressionTests_CompareWithGuid()
         {
             //Arrange
