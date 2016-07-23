@@ -634,9 +634,11 @@ namespace System.Linq.Dynamic.Core
                    _token.id == TokenId.GreaterThan || _token.id == TokenId.GreaterThanEqual ||
                    _token.id == TokenId.LessThan || _token.id == TokenId.LessThanEqual)
             {
-				ConstantExpression constantExpr;
-	            TypeConverter typeConverter;
-				Token op = _token;
+                ConstantExpression constantExpr;
+#if !SILVERLIGHT
+                TypeConverter typeConverter;
+#endif
+                Token op = _token;
                 NextToken();
                 Expression right = ParseShift();
                 bool isEquality = op.id == TokenId.Equal || op.id == TokenId.DoubleEqual || op.id == TokenId.ExclamationEqual;
@@ -644,7 +646,7 @@ namespace System.Linq.Dynamic.Core
                 {
                     if (left.Type != right.Type)
                     {
-						if (left.Type.IsAssignableFrom(right.Type))
+                        if (left.Type.IsAssignableFrom(right.Type))
                         {
                             right = Expression.Convert(right, left.Type);
                         }
@@ -652,7 +654,7 @@ namespace System.Linq.Dynamic.Core
                         {
                             left = Expression.Convert(left, right.Type);
                         }
-						else
+                        else
                         {
                             throw IncompatibleOperandsError(op.text, left, right, op.pos);
                         }
@@ -703,15 +705,17 @@ namespace System.Linq.Dynamic.Core
                         }
                     }
                 }
-				else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeDescriptor.GetConverter(left.Type)) != null)
-				{
-					right = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), left.Type);
-				}
-				else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeDescriptor.GetConverter(right.Type)) != null)
-				{
-					left = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), right.Type);
-				}
-				else
+#if !SILVERLIGHT
+                else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeDescriptor.GetConverter(left.Type)) != null)
+                {
+                    right = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), left.Type);
+                }
+                else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeDescriptor.GetConverter(right.Type)) != null)
+                {
+                    left = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), right.Type);
+                }
+#endif
+                else
                 {
                     CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures),
                         op.text, ref left, ref right, op.pos);
@@ -1297,7 +1301,7 @@ namespace System.Linq.Dynamic.Core
                     return Expression.Constant(dateTime, type);
 
                 object[] arguments = { text, null };
-#if NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD
+#if NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD
                 MethodInfo method = type.GetMethod("TryParse", new[] { typeof(string), type.MakeByRefType() });
 #else
                 MethodInfo method = type.GetMethod("TryParse", BindingFlags.Public | BindingFlags.Static, null, new Type[] { typeof(string), type.MakeByRefType() }, null);
@@ -1591,7 +1595,7 @@ namespace System.Linq.Dynamic.Core
         static int GetNumericTypeKind(Type type)
         {
             type = GetNonNullableType(type);
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             if (type.GetTypeInfo().IsEnum) return 0;
 
             switch (Type.GetTypeCode(type))
@@ -1659,7 +1663,7 @@ namespace System.Linq.Dynamic.Core
 
         static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
         {
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
             {
@@ -1689,7 +1693,7 @@ namespace System.Linq.Dynamic.Core
 
         int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)
         {
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly |
                 (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
@@ -1718,7 +1722,7 @@ namespace System.Linq.Dynamic.Core
         {
             foreach (Type t in SelfAndBaseTypes(type))
             {
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                 MemberInfo[] members = t.GetDefaultMembers();
 #else
                 MemberInfo[] members = new MemberInfo[0];
@@ -1727,7 +1731,7 @@ namespace System.Linq.Dynamic.Core
                 {
                     IEnumerable<MethodBase> methods = members
                         .OfType<PropertyInfo>().
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                         Select(p => (MethodBase)p.GetGetMethod()).
                         Where(m => m != null);
 #else
@@ -1840,7 +1844,7 @@ namespace System.Linq.Dynamic.Core
                     {
                         Type target = GetNonNullableType(type);
                         object value = null;
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                         switch (Type.GetTypeCode(ce.Type))
                         {
                             case TypeCode.Int32:
@@ -1889,7 +1893,7 @@ namespace System.Linq.Dynamic.Core
 
         static object ParseNumber(string text, Type type)
         {
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             switch (Type.GetTypeCode(GetNonNullableType(type)))
             {
                 case TypeCode.SByte:
@@ -2000,7 +2004,7 @@ namespace System.Linq.Dynamic.Core
 
         static object ParseEnum(string name, Type type)
         {
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             if (type.IsEnum)
             {
                 MemberInfo[] memberInfos = type.FindMembers(MemberTypes.Field,
@@ -2019,7 +2023,7 @@ namespace System.Linq.Dynamic.Core
 
         static bool IsCompatibleWith(Type source, Type target)
         {
-#if !(NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             if (source == target) return true;
             if (!target.IsValueType) return target.IsAssignableFrom(source);
             Type st = GetNonNullableType(source);
