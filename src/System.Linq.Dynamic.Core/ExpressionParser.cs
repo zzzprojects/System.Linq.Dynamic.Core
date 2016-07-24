@@ -635,9 +635,7 @@ namespace System.Linq.Dynamic.Core
                    _token.id == TokenId.LessThan || _token.id == TokenId.LessThanEqual)
             {
                 ConstantExpression constantExpr;
-#if !SILVERLIGHT
                 TypeConverter typeConverter;
-#endif
                 Token op = _token;
                 NextToken();
                 Expression right = ParseShift();
@@ -705,16 +703,14 @@ namespace System.Linq.Dynamic.Core
                         }
                     }
                 }
-#if !SILVERLIGHT
-                else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeDescriptor.GetConverter(left.Type)) != null)
+                else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeConverterFactory.GetConverter(left.Type)) != null)
                 {
                     right = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), left.Type);
                 }
-                else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeDescriptor.GetConverter(right.Type)) != null)
+                else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeConverterFactory.GetConverter(right.Type)) != null)
                 {
                     left = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), right.Type);
                 }
-#endif
                 else
                 {
                     CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures),

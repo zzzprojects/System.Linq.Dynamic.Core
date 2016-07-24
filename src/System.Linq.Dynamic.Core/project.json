@@ -1,5 +1,5 @@
 {
-    "version": "1.0.5.2",
+    "version": "1.0.5.3",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Support strings as Enum Parameter Objects"
+        "releaseNotes": "Support more comparisons with strings"
     },
 
     "buildOptions": {
@@ -42,44 +42,26 @@
         },
         "net45": {
             "frameworkAssemblies": {
-            },
-            "dependencies": {
-                "System.ComponentModel.TypeConverter": "4.1.0"
             }
         },
         "net451": {
             "frameworkAssemblies": {
-            },
-            "dependencies": {
-                "System.ComponentModel.TypeConverter": "4.1.0"
             }
         },
         "net452": {
             "frameworkAssemblies": {
-            },
-            "dependencies": {
-                "System.ComponentModel.TypeConverter": "4.1.0"
             }
         },
         "net46": {
             "frameworkAssemblies": {
-            },
-            "dependencies": {
-                "System.ComponentModel.TypeConverter": "4.1.0"
             }
         },
         "net461": {
             "frameworkAssemblies": {
-            },
-            "dependencies": {
-                "System.ComponentModel.TypeConverter": "4.1.0"
             }
         },
         "dnx451": {
             "frameworkAssemblies": {
-            },
-            "dependencies": {
-                "System.ComponentModel.TypeConverter": "4.1.0"
             }
         },
         "netcore45": {
@@ -148,7 +130,7 @@
             }
         },
         "sl5": {
-            "buildOptions": { "define": [ "SILVERLIGHT" ] },
+            "buildOptions": { "define": [ "SL50", "SILVERLIGHT" ] },
             "dependencies": {
                 "Portable.ConcurrentDictionary": "1.0.2"
             },

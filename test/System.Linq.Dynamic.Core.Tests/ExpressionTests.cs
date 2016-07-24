@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
@@ -495,10 +496,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = lst.AsQueryable();
 
             //Act
-            var result1 = qry.Where("it = @0", lst[0].ToString());
+            var testValue = lst[0].ToString(CultureInfo.InvariantCulture);
+            var result1 = qry.Where("it = @0", testValue);
+            var result2 = qry.Where("@0 = it", testValue);
 
             //Assert
             Assert.Equal(lst[0], result1.Single());
+            Assert.Equal(lst[0], result2.Single());
         }
 
         [Fact]
@@ -511,12 +515,14 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = lst.AsQueryable();
 
             //Act
-            var result1 = qry.Where("it = @0", lst[0].ToString());
+            var testValue = lst[0].ToString();
+            var result1 = qry.Where("it = @0", testValue);
+            var result2 = qry.Where("@0 = it", testValue);
 
             //Assert
             Assert.Equal(lst[0], result1.Single());
+            Assert.Equal(lst[0], result2.Single());
         }
-
 
         [Fact]
         public void ExpressionTests_CompareWithGuid()
@@ -533,14 +539,18 @@ namespace System.Linq.Dynamic.Core.Tests
             //Act
             var result1 = qry.Where("it = \"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\"");
             var result2 = qry.Where("\"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\" = it");
-            var result3 = qry.Where("it = @0", "0A191E77-E32D-4DE1-8F1C-A144C2B0424D");
-            var result4 = qry.Where("it = @0", lst[2]);
+            var result3a = qry.Where("it = @0", "0A191E77-E32D-4DE1-8F1C-A144C2B0424D");
+            var result3b = qry.Where("@0 = it", "0A191E77-E32D-4DE1-8F1C-A144C2B0424D");
+            var result4a = qry.Where("it = @0", lst[2]);
+            var result4b = qry.Where("@0 = it", lst[2]);
 
             //Assert
             Assert.Equal(lst[2], result1.Single());
             Assert.Equal(lst[2], result2.Single());
-            Assert.Equal(lst[2], result3.Single());
-            Assert.Equal(lst[2], result4.Single());
+            Assert.Equal(lst[2], result3a.Single());
+            Assert.Equal(lst[2], result3b.Single());
+            Assert.Equal(lst[2], result4a.Single());
+            Assert.Equal(lst[2], result4b.Single());
         }
 
         [Fact]
