@@ -1,5 +1,6 @@
 ﻿#if !(WINDOWS_APP || UAP10_0)
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
@@ -22,21 +23,69 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             return _customTypes ?? (_customTypes = new HashSet<Type>(FindTypesMarkedWithAttribute()));
         }
 
-        private IEnumerable<Type> FindTypesMarkedWithAttribute()
+        protected IEnumerable<Type> FindTypesMarkedWithAttribute()
         {
-            var assemblies = _assemblyHelper.GetAssemblies();
+            IEnumerable<Assembly> assemblies = _assemblyHelper.GetAssemblies();
 #if !NET35
-            assemblies = assemblies.Where(x => !x.IsDynamic).ToArray();
+            assemblies = assemblies.Where(x => !x.IsDynamic);
 #endif
 
+            var definedTypes = ExceptionFriedlyGetAssemblyTypes(assemblies);
+
 #if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
-            var definedTypes = assemblies.SelectMany(x => x.DefinedTypes);
             return definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(DynamicLinqTypeAttribute))).Select(x => x.AsType());
 #else
-            var definedTypes = assemblies.SelectMany(x => x.GetTypes());
             return definedTypes.Where(x => x.GetCustomAttributes(typeof(DynamicLinqTypeAttribute), false).Any());
 #endif
         }
+
+#if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+        protected IEnumerable<TypeInfo> ExceptionFriedlyGetAssemblyTypes(IEnumerable<Assembly> assemblies)
+        {
+            foreach (var assembly in assemblies)
+            {
+                IEnumerable<TypeInfo> definedTypes = null;
+
+                try
+                {
+                    definedTypes = assembly.DefinedTypes;
+                }
+                catch (Exception)
+                { }
+
+                if (definedTypes != null)
+                {
+                    foreach (var definedType in definedTypes)
+                    {
+                        yield return definedType;
+                    }
+                }
+            }
+        }
+#else
+        protected IEnumerable<Type> ExceptionFriedlyGetAssemblyTypes(IEnumerable<Assembly> assemblies)
+        {
+            foreach (var assembly in assemblies)
+            {
+                IEnumerable<Type> definedTypes = null;
+
+                try
+                {
+                    definedTypes = assembly.GetTypes();
+                }
+                catch (Exception)
+                { }
+
+                if (definedTypes != null)
+                {
+                    foreach (var definedType in definedTypes)
+                    {
+                        yield return definedType;
+                    }
+                }
+            }
+        }
+#endif
     }
 }
 #endif
