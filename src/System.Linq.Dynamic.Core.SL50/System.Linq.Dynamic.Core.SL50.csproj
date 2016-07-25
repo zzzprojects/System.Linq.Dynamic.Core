@@ -82,6 +82,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\TypeConverterExtensions.cs">
       <Link>Compatibility\TypeConverterExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\AbstractDynamicLinqCustomTypeProvider.cs">
+      <Link>CustomTypeProviders\AbstractDynamicLinqCustomTypeProvider.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs">
       <Link>CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</Link>
     </Compile>

@@ -4,7 +4,7 @@ namespace System.Linq.Dynamic.Core
 {
     internal class DefaultAssemblyHelper : IAssemblyHelper
     {
-#if  DOTNET5_4
+#if DOTNET5_4
         public Assembly[] GetAssemblies()
         {
             var assemblyNames = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager.GetLibraries()
@@ -32,7 +32,7 @@ namespace System.Linq.Dynamic.Core
 #elif (DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD || WPSL)
         public Assembly[] GetAssemblies()
         {
-            return new Assembly[0];
+            throw new NotSupportedException();
         }
 #else
         public Assembly[] GetAssemblies()
