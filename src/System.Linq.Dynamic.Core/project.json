@@ -1,5 +1,5 @@
 {
-    "version": "1.0.5.4",
+    "version": "1.0.6.0",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
@@ -14,11 +14,12 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Exception friendly Type loading"
+        "releaseNotes": "Make library strong named"
     },
 
     "buildOptions": {
-        "xmlDoc": true
+        "xmlDoc": true,
+        "keyFile": "System.Linq.Dynamic.Core.snk"
     },
 
     "dependencies": {
