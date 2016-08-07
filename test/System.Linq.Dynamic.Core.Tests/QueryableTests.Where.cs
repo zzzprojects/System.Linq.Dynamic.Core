@@ -27,6 +27,21 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(testList[1], userByFirstName.Single());
         }
 
+        [Fact]
+        public void Where_Dynamic_SelectNewObjects()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
+            var qry = testList.AsQueryable();
+
+            //Act
+            var expectedResult = testList.Where(x => x.Income > 4000).Select(x => new { Id = x.Id, Income = x.Income + 1111 });
+            var dynamicList = qry.Where("Income > @0", 4000).ToDynamicList();
+
+            var newUsers = dynamicList.Select(x => new { Id = x.Id, Income = x.Income + 1111 });
+            Assert.Equal(newUsers.Cast<object>().ToList(), expectedResult);
+        }
+
         /// <summary>
         /// https://github.com/StefH/System.Linq.Dynamic.Core/issues/19
         /// </summary>

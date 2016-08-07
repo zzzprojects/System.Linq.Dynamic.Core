@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.2.0",
+    "version": "1.0.3.0",
     "title": "Microsoft.EntityFrameworkCore.DynamicLinq",
     "description": "Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support",
     "authors": [ "Stef Heyenrath" ],
@@ -14,12 +14,13 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": ".Net Core 1.0 RTM"
+        "releaseNotes": "Make library strong named"
     },
 
     "buildOptions": {
         "xmlDoc": true,
         "define": [ "EFCORE" ],
+        "keyFile": "Microsoft.EntityFrameworkCore.DynamicLinq.snk",
         "compile": {
             "include": [
                 "../System.Linq.Dynamic.Core/Res.cs",
@@ -36,7 +37,7 @@
             "type": "build"
         },
         "Microsoft.EntityFrameworkCore": "1.0.0",
-        "System.Linq.Dynamic.Core": "1.0.5.0"
+        "System.Linq.Dynamic.Core": "1.0.6.0"
     },
 
     "frameworks": {
