@@ -139,6 +139,15 @@
     <Compile Include="..\System.Linq.Dynamic.Core\Res.cs">
       <Link>Res.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Tokenizer\TextParser.cs">
+      <Link>Tokenizer\TextParser.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Tokenizer\Token.cs">
+      <Link>Tokenizer\Token.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\Tokenizer\TokenId.cs">
+      <Link>Tokenizer\TokenId.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\TypeConverterFactory.cs">
       <Link>TypeConverterFactory.cs</Link>
     </Compile>
