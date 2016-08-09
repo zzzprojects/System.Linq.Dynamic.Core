@@ -8,10 +8,8 @@ namespace System.Linq.Dynamic.Core.Tokenizer
     {
         private static char NumberDecimalSeparator = '.';
 
-
         // These aliases are supposed to simply the where clause and make it more human readable
         // As an addition it is compatible with the OData.Filter specification
-        //
         private static readonly Dictionary<string, TokenId> _predefinedAliases = new Dictionary<string, TokenId>
         {
             {"eq", TokenId.Equal},
@@ -26,7 +24,6 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             {"not", TokenId.Exclamation},
             {"mod", TokenId.Percent}
         };
-
 
         private readonly string _text;
         private readonly int _textLen;
