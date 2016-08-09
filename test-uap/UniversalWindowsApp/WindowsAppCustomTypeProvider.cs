@@ -4,21 +4,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace UniversalWindowsApp
 {
-    class WindowsAppCustomTypeProvider: IDynamicLinkCustomTypeProvider
+    class WindowsAppCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
     {
         public HashSet<Type> GetCustomTypes()
         {
             var assemblies = GetAssemblyListAsync().Result.Where(x => !x.IsDynamic).ToArray();
-            
-            var definedTypes = assemblies.SelectMany(x => x.DefinedTypes);
-            var types = definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(DynamicLinqTypeAttribute))).Select(x => x.AsType());
 
-            return new HashSet<Type>(types);
+            return new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
         }
 
         private static async Task<List<Assembly>> GetAssemblyListAsync()
