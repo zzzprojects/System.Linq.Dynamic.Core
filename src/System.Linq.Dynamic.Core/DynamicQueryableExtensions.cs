@@ -435,13 +435,19 @@ namespace System.Linq.Dynamic.Core
                 Expression.Parameter(outer.ElementType, "outer"), Expression.Parameter(inner.AsQueryable().ElementType, "inner")
             };
 
-            LambdaExpression resultsSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
+            LambdaExpression resultSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
 
             return outer.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Join",
-                    new[] { outer.ElementType, inner.AsQueryable().ElementType, outerSelectorLambda.Body.Type, resultsSelectorLambda.Body.Type },
-                    outer.Expression, inner.AsQueryable().Expression, Expression.Quote(outerSelectorLambda), Expression.Quote(innerSelectorLambda), Expression.Quote(resultsSelectorLambda)));
+                    new[] { outer.ElementType, inner.AsQueryable().ElementType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
+                    outer.Expression, // outer: The first sequence to join.
+                    inner.AsQueryable().Expression, // inner: The sequence to join to the first sequence.
+                    Expression.Quote(outerSelectorLambda), // outerKeySelector: A function to extract the join key from each element of the first sequence.
+                    Expression.Quote(innerSelectorLambda), // innerKeySelector: A function to extract the join key from each element of the second sequence.
+                    Expression.Quote(resultSelectorLambda) // resultSelector: A function to create a result element from two matching elements.
+                )
+            );
         }
 
         /// <summary>
