@@ -1,5 +1,5 @@
 {
-    "version": "1.0.6.1",
+    "version": "1.0.6.0",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Use string named NetLegacySupport.ConcurrentDictionary"
+        "releaseNotes": "Use strong named NetLegacySupport.ConcurrentDictionary. Fix for Take() and Skip()."
     },
 
     "buildOptions": {
