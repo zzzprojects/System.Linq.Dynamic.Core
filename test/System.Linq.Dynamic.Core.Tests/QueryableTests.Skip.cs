@@ -33,7 +33,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             IQueryable results = testUsers.Where("Income > 10");
-            dynamic result = results.FirstOrDefault();
+            var result = results.FirstOrDefault();
             Type resultType = result.GetType();
 
             Assert.Equal("System.Linq.Dynamic.Core.Tests.Helpers.Models.User", resultType.FullName);
@@ -42,6 +42,20 @@ namespace System.Linq.Dynamic.Core.Tests
             Type skipResultType = skipResult.GetType();
 
             Assert.Equal("System.Linq.Dynamic.Core.Tests.Helpers.Models.User", skipResultType.FullName);
+        }
+
+        [Fact]
+        public void SkipTestForEqualElementType()
+        {
+            // Arrange
+            var testUsers = User.GenerateSampleModels(100).AsQueryable();
+
+            // Act
+            IQueryable results = testUsers.Where("Income > 10");
+            var skipResult = results.Skip(1).Take(5);
+
+            // Assert
+            Assert.Equal(results.ElementType, skipResult.ElementType);
         }
     }
 }

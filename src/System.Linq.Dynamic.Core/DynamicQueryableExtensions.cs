@@ -1000,6 +1000,8 @@ namespace System.Linq.Dynamic.Core
         #endregion Single/SingleOrDefault
 
         #region Skip
+        private static readonly MethodInfo _skip = GetMethod(nameof(Queryable.Skip), 1);
+
         /// <summary>
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
         /// </summary>
@@ -1015,7 +1017,7 @@ namespace System.Linq.Dynamic.Core
             if (count == 0)
                 return source;
 
-            return Queryable.Skip((IQueryable<object>)source, count);
+            return CreateQuery(_skip, source, Expression.Constant(count));
         }
         #endregion Skip
 
@@ -1067,6 +1069,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Sum
 
         #region Take
+        private static readonly MethodInfo _take = GetMethod(nameof(Queryable.Take), 1);
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
@@ -1078,7 +1081,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.Condition(count, x => x > 0, nameof(count));
 
-            return Queryable.Take((IQueryable<object>)source, count);
+            return CreateQuery(_take, source, Expression.Constant(count));
         }
         #endregion Take
 
