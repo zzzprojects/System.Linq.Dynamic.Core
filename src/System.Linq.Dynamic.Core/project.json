@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Use strong named NetLegacySupport.ConcurrentDictionary. Fix for Take() and Skip()."
+        "releaseNotes": "Use strong named NetLegacySupport.ConcurrentDictionary and Portable.ConcurrentDictionary. Fix for Take() and Skip()."
     },
 
     "buildOptions": {
@@ -133,7 +133,7 @@
         "sl5": {
             "buildOptions": { "define": [ "SL50", "SILVERLIGHT" ] },
             "dependencies": {
-                "Portable.ConcurrentDictionary": "1.0.2"
+                "Portable.ConcurrentDictionary": "1.0.3"
             },
             "frameworkAssemblies": {
                 "mscorlib": "",

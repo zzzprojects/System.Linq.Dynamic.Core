@@ -4,7 +4,7 @@ using System.Linq.Dynamic.Core.Exceptions;
 
 namespace System.Linq.Dynamic.Core.Tokenizer
 {
-    public class TextParser
+    internal class TextParser
     {
         private static char NumberDecimalSeparator = '.';
 
@@ -46,8 +46,6 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             _ch = _textPos < _textLen ? _text[_textPos] : '\0';
         }
 
-
-
         private void NextChar()
         {
             if (_textPos < _textLen) _textPos++;
@@ -73,10 +71,12 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         t = TokenId.Exclamation;
                     }
                     break;
+
                 case '%':
                     NextChar();
                     t = TokenId.Percent;
                     break;
+
                 case '&':
                     NextChar();
                     if (_ch == '&')
@@ -89,14 +89,17 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         t = TokenId.Amphersand;
                     }
                     break;
+
                 case '(':
                     NextChar();
                     t = TokenId.OpenParen;
                     break;
+
                 case ')':
                     NextChar();
                     t = TokenId.CloseParen;
                     break;
+
                 case '*':
                     NextChar();
                     t = TokenId.Asterisk;
@@ -105,26 +108,32 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                     NextChar();
                     t = TokenId.Plus;
                     break;
+
                 case ',':
                     NextChar();
                     t = TokenId.Comma;
                     break;
+
                 case '-':
                     NextChar();
                     t = TokenId.Minus;
                     break;
+
                 case '.':
                     NextChar();
                     t = TokenId.Dot;
                     break;
+
                 case '/':
                     NextChar();
                     t = TokenId.Slash;
                     break;
+
                 case ':':
                     NextChar();
                     t = TokenId.Colon;
                     break;
+
                 case '<':
                     NextChar();
                     if (_ch == '=')
@@ -147,6 +156,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         t = TokenId.LessThan;
                     }
                     break;
+
                 case '=':
                     NextChar();
                     if (_ch == '=')
@@ -159,6 +169,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         t = TokenId.Equal;
                     }
                     break;
+
                 case '>':
                     NextChar();
                     if (_ch == '=')
@@ -176,6 +187,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         t = TokenId.GreaterThan;
                     }
                     break;
+
                 case '?':
                     NextChar();
                     if (_ch == '?')
@@ -188,14 +200,17 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         t = TokenId.Question;
                     }
                     break;
+
                 case '[':
                     NextChar();
                     t = TokenId.OpenBracket;
                     break;
+
                 case ']':
                     NextChar();
                     t = TokenId.CloseBracket;
                     break;
+
                 case '|':
                     NextChar();
                     if (_ch == '|')
@@ -208,6 +223,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         t = TokenId.Bar;
                     }
                     break;
+
                 case '"':
                 case '\'':
                     char quote = _ch;
@@ -221,6 +237,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                     } while (_ch == quote);
                     t = TokenId.StringLiteral;
                     break;
+
                 default:
                     if (char.IsLetter(_ch) || _ch == '@' || _ch == '_' || _ch == '$' || _ch == '^' || _ch == '~')
                     {
@@ -293,7 +310,6 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             CurrentToken.Id = GetAliasedTokenId(t, CurrentToken.Text);
         }
 
-
         public void ValidateToken(TokenId t, string errorMessage)
         {
             if (CurrentToken.Id != t) throw ParseError(errorMessage);
@@ -313,8 +329,6 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         {
             if (!char.IsDigit(_ch)) throw ParseError(_textPos, Res.DigitExpected);
         }
-
-
 
         private Exception ParseError(string format, params object[] args)
         {

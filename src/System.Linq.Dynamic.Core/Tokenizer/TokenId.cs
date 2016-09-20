@@ -1,6 +1,6 @@
 ﻿namespace System.Linq.Dynamic.Core.Tokenizer
 {
-    public enum TokenId
+    internal enum TokenId
     {
         Unknown,
         End,
