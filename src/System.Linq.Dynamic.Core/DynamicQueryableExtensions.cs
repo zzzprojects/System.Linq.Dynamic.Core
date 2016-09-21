@@ -1079,7 +1079,7 @@ namespace System.Linq.Dynamic.Core
         public static IQueryable Take([NotNull] this IQueryable source, int count)
         {
             Check.NotNull(source, nameof(source));
-            Check.Condition(count, x => x > 0, nameof(count));
+            Check.Condition(count, x => x >= 0, nameof(count));
 
             return CreateQuery(_take, source, Expression.Constant(count));
         }
