@@ -60,14 +60,46 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Method()
+        public void ExpressionTests_Method_NoParams()
         {
-            var samples1 = User.GenerateSampleModels(3).AsQueryable();
-            var samples2 = User.GenerateSampleModels(3).ToArray();
+            // Arrange
+            var users = User.GenerateSampleModels(3);
 
-            var result = samples1.Where("TestMethod(@0)", samples2);
+            // Act
+            var expected = users.Where(u => u.TestMethod1());
+            var result = users.AsQueryable().Where("TestMethod1()");
 
-            Assert.Equal(samples1.Count(), result.Count());
+            // Assert
+            Assert.Equal(expected.Count(), result.Count());
+        }
+
+        [Fact]
+        public void ExpressionTests_Method_OneParam_With_it()
+        {
+            // Arrange
+            var users = User.GenerateSampleModels(3);
+
+            // Act
+            var expected = users.Where(u => u.TestMethod2(u));
+            var result = users.AsQueryable().Where("TestMethod2(it)");
+
+            // Assert
+            Assert.Equal(expected.Count(), result.Count());
+        }
+
+        [Fact]
+        public void ExpressionTests_Method_OneParam_With_user()
+        {
+            // Arrange
+            var users = User.GenerateSampleModels(10);
+            var testUser = users[2];
+
+            // Act
+            var expected = users.Where(u => u.TestMethod3(testUser));
+            var result = users.AsQueryable().Where("TestMethod3(@0)", testUser);
+
+            // Assert
+            Assert.Equal(expected.Count(), result.Count());
         }
 
         [Fact]
