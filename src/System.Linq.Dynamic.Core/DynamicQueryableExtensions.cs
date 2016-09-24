@@ -435,13 +435,19 @@ namespace System.Linq.Dynamic.Core
                 Expression.Parameter(outer.ElementType, "outer"), Expression.Parameter(inner.AsQueryable().ElementType, "inner")
             };
 
-            LambdaExpression resultsSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
+            LambdaExpression resultSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
 
             return outer.Provider.CreateQuery(
                 Expression.Call(
                     typeof(Queryable), "Join",
-                    new[] { outer.ElementType, inner.AsQueryable().ElementType, outerSelectorLambda.Body.Type, resultsSelectorLambda.Body.Type },
-                    outer.Expression, inner.AsQueryable().Expression, Expression.Quote(outerSelectorLambda), Expression.Quote(innerSelectorLambda), Expression.Quote(resultsSelectorLambda)));
+                    new[] { outer.ElementType, inner.AsQueryable().ElementType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
+                    outer.Expression, // outer: The first sequence to join.
+                    inner.AsQueryable().Expression, // inner: The sequence to join to the first sequence.
+                    Expression.Quote(outerSelectorLambda), // outerKeySelector: A function to extract the join key from each element of the first sequence.
+                    Expression.Quote(innerSelectorLambda), // innerKeySelector: A function to extract the join key from each element of the second sequence.
+                    Expression.Quote(resultSelectorLambda) // resultSelector: A function to create a result element from two matching elements.
+                )
+            );
         }
 
         /// <summary>
@@ -994,6 +1000,8 @@ namespace System.Linq.Dynamic.Core
         #endregion Single/SingleOrDefault
 
         #region Skip
+        private static readonly MethodInfo _skip = GetMethod(nameof(Queryable.Skip), 1);
+
         /// <summary>
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
         /// </summary>
@@ -1009,7 +1017,7 @@ namespace System.Linq.Dynamic.Core
             if (count == 0)
                 return source;
 
-            return Queryable.Skip((IQueryable<object>)source, count);
+            return CreateQuery(_skip, source, Expression.Constant(count));
         }
         #endregion Skip
 
@@ -1061,6 +1069,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Sum
 
         #region Take
+        private static readonly MethodInfo _take = GetMethod(nameof(Queryable.Take), 1);
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
@@ -1070,9 +1079,9 @@ namespace System.Linq.Dynamic.Core
         public static IQueryable Take([NotNull] this IQueryable source, int count)
         {
             Check.NotNull(source, nameof(source));
-            Check.Condition(count, x => x > 0, nameof(count));
+            Check.Condition(count, x => x >= 0, nameof(count));
 
-            return Queryable.Take((IQueryable<object>)source, count);
+            return CreateQuery(_take, source, Expression.Constant(count));
         }
         #endregion Take
 

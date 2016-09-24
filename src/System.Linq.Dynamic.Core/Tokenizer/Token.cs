@@ -1,7 +1,7 @@
 ﻿
 namespace System.Linq.Dynamic.Core.Tokenizer
 {
-    public struct Token
+    internal struct Token
     {
         public TokenId Id { get; set; }
         public string Text { get; set; }
