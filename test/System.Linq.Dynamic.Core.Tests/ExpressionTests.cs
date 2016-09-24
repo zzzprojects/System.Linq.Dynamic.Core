@@ -60,6 +60,17 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Method()
+        {
+            var samples1 = User.GenerateSampleModels(3).AsQueryable();
+            var samples2 = User.GenerateSampleModels(3).ToArray();
+
+            var result = samples1.Where("TestMethod(@0)", samples2);
+
+            Assert.Equal(samples1.Count(), result.Count());
+        }
+
+        [Fact]
         public void ExpressionTests_StringConcatenation()
         {
             //Arrange
