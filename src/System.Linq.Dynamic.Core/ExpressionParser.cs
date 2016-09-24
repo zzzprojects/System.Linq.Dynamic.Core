@@ -1267,7 +1267,7 @@ namespace System.Linq.Dynamic.Core
                         throw ParseError(errorPos, Res.NoApplicableMethod, id, GetTypeName(type));
                     case 1:
                         MethodInfo method = (MethodInfo)mb;
-                        if (!IsPredefinedType(method.DeclaringType))
+                        if (!IsPredefinedType(method.DeclaringType) && !(method.IsPublic && IsPredefinedType(method.ReturnType)))
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, GetTypeName(method.DeclaringType));
 
                         if (method.ReturnType == typeof(void))

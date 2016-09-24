@@ -16,6 +16,11 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
 
         public List<Role> Roles { get; set; }
 
+        public bool TestMethod(User other)
+        {
+            return true;
+        }
+
         public static IList<User> GenerateSampleModels(int total, bool allowNullableProfiles = false)
         {
             var list = new List<User>();
