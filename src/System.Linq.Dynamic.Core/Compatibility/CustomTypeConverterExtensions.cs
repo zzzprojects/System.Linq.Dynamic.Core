@@ -2,7 +2,7 @@
 namespace System.ComponentModel
 {
 #if SILVERLIGHT
-    internal static class TypeConverterExtensions
+    internal static class CustomTypeConverterExtensions
     {
         /// <summary>
         /// Converts the given string to the type of this converter.

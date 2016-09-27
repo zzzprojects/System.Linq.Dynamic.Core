@@ -63,6 +63,9 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.Linq.Dynamic.Core.SandCastle", "doc\System.Linq.Dynamic.Core.SandCastle\System.Linq.Dynamic.Core.SandCastle.xproj", "{E9AD2D32-E69F-4F81-A6F4-AF0C27F0410C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalWindowsApp_5.2.2", "test-uap\UniversalWindowsApp_5.2.2\UniversalWindowsApp_5.2.2.csproj", "{33E3A9DB-EB1A-4F8B-867E-55E31EE5FD5A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE1620BD-A313-4223-B991-467DA346B2ED} = {CE1620BD-A313-4223-B991-467DA346B2ED}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

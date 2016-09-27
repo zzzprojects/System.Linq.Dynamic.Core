@@ -73,14 +73,14 @@
     <Compile Include="..\System.Linq.Dynamic.Core\ClassFactory.cs">
       <Link>ClassFactory.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\IntrospectionExtensions.cs">
-      <Link>Compatibility\IntrospectionExtensions.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\CustomIntrospectionExtensions.cs">
+      <Link>Compatibility\CustomIntrospectionExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\TypeBuilderExtensions.cs">
-      <Link>Compatibility\TypeBuilderExtensions.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\CustomTypeBuilderExtensions.cs">
+      <Link>Compatibility\CustomTypeBuilderExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\TypeConverterExtensions.cs">
-      <Link>Compatibility\TypeConverterExtensions.cs</Link>
+    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\CustomTypeConverterExtensions.cs">
+      <Link>Compatibility\CustomTypeConverterExtensions.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\CustomTypeProviders\AbstractDynamicLinqCustomTypeProvider.cs">
       <Link>CustomTypeProviders\AbstractDynamicLinqCustomTypeProvider.cs</Link>

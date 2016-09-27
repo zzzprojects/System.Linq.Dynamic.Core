@@ -5,7 +5,7 @@ namespace System.Reflection
     /// <summary>
     /// https://github.com/castleproject/Core/blob/netcore/src/Castle.Core/Compatibility/IntrospectionExtensions.cs
     /// </summary>
-	internal static class IntrospectionExtensions
+	internal static class CustomIntrospectionExtensions
     {
 #if NET35 || NET40 || PORTABLE || SILVERLIGHT || WPSL
         // This allows us to use the new reflection API which separates Type and TypeInfo
