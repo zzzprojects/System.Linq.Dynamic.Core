@@ -27,10 +27,10 @@
                 "portable-net451+win8"
             ],
             "dependencies": {
-                "Microsoft.EntityFrameworkCore": "1.0.0",
+                "Microsoft.EntityFrameworkCore": "1.0.1",
                 "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0",
-                "Microsoft.EntityFrameworkCore.Sqlite": "1.0.0",
-                "Microsoft.EntityFrameworkCore.SqlServer": "1.0.0",
+                "Microsoft.EntityFrameworkCore.Sqlite": "1.0.1",
+                "Microsoft.EntityFrameworkCore.SqlServer": "1.0.1",
                 "System.Linq.Parallel": "4.0.1",
                 "System.Threading.Tasks": "4.0.11"
             }

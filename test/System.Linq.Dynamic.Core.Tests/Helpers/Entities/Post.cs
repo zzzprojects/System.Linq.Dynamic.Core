@@ -12,10 +12,6 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
 
         public int NumberOfReads { get; set; }
 
-#if NET4 || NET452
         public DateTime PostDate { get; set; }
-#else
-        public DateTimeOffset PostDate { get; set; }
-#endif
     }
 }

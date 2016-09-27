@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -14,7 +15,8 @@ namespace GroupByError
                 var ElementsList = AddElementsToList();
 
                 //Database
-                db.Database.EnsureDeleted();
+                bool deleted = db.Database.EnsureDeleted();
+                Console.WriteLine("Database is deleted = {0}", deleted);
                 if (db.Database.EnsureCreated())
                 {
                     ElementsList.ForEach(e => db.Add(e));
@@ -27,7 +29,7 @@ namespace GroupByError
 
                 //Database tests.
                 var resultDb1 = db.Element.GroupBy(el => new { el.Attribute1, el.Attribute2 }).ToArray(); //CORRECT
-                var resultDb2 = db.Element.GroupBy("new(Attribute1, Attribute2)").ToDynamicArray();       //WRONG
+                var resultDb2 = db.Element.GroupBy("new(Attribute1, Attribute2)").ToDynamicArray();       //WRONG for "Microsoft.EntityFrameworkCore" version="1.0.0"
 
                 int x = 0;
             }
