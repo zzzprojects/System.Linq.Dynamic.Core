@@ -182,6 +182,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
+            Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
         [Fact]
