@@ -19,7 +19,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<int?>());
         }
 
-        [Fact]
+        // [Fact] https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
         public void Cast_To_newnullableint()
         {
             // Arrange
