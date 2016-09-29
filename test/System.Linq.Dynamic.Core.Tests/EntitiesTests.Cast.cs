@@ -1,11 +1,10 @@
-﻿using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-using Xunit;
+﻿using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class EntitiesTests
     {
-        [Fact]
+        // [Fact] https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
         public void Cast_To_nullableint()
         {
             // Arrange
