@@ -57,12 +57,8 @@
             "frameworkAssemblies": {
             }
         },
-        "dnx451": {
-            "frameworkAssemblies": {
-            }
-        },
         "netcore50": {
-            "buildOptions": { "define": [ "WINDOWS_APP" ] },
+            "buildOptions": { "define": [ "WINDOWS_APP" ] }
         },
         "netstandard1.3": {
             "buildOptions": { "define": [ "NETSTANDARD" ] },
