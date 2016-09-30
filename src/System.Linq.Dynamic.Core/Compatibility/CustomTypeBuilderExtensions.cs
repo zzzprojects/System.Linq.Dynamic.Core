@@ -5,7 +5,7 @@ namespace System.Reflection
 {
     internal static class CustomTypeBuilderExtensions
     {
-#if !(NET35 || NET40 || SILVERLIGHT || WPSL)
+#if !(NET35 || NET40 || SILVERLIGHT || WPSL || UAP10_0)
         public static Type CreateType(this TypeBuilder tb)
         {
             return tb.CreateTypeInfo().AsType();

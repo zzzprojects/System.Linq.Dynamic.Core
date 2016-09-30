@@ -15,10 +15,10 @@ The following frameworks are supported:
 - net40
 - net45x
 - net46x
-- dnx451
 - netstandard1.3
 - netcore45
 - netcore451
+- netcore50
 - uap10.0
 - SilverLight 5.0
 
@@ -28,10 +28,6 @@ This fork takes the basic library to a new level. Contains XML Documentation and
 <br>
 Some background:
 I forked from https://github.com/NArnott/System.Linq.Dynamic and added some more functionality there.<br>My fork is still visible on github [https://github.com/StefH/System.Linq.Dynamic], however I decided to start a new project + nuget to avoid confusion and create the project according to the new VS2015 + dotnet Core standards.
-
-
-
-
 
 However, currently there are multiple nuget packages and project available:
 

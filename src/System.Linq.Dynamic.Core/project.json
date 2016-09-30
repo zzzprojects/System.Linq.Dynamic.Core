@@ -1,5 +1,5 @@
 {
-    "version": "1.0.6.3",
+    "version": "1.0.6.4",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Fixed UWP Release mode issue."
+        "releaseNotes": "Fixed UWP"
     },
 
     "buildOptions": {
@@ -58,10 +58,6 @@
             }
         },
         "net461": {
-            "frameworkAssemblies": {
-            }
-        },
-        "dnx451": {
             "frameworkAssemblies": {
             }
         },
@@ -152,7 +148,6 @@
                 "System.Dynamic.Runtime": "4.0.11",
                 "System.Linq.Expressions": "4.1.0",
                 "System.Linq.Queryable": "4.0.1",
-                "System.Reflection.Emit": "4.0.1",
                 "System.Reflection.TypeExtensions": "4.1.0",
                 "System.Resources.ResourceManager": "4.0.1",
                 "System.Runtime.Extensions": "4.1.0",

@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿#if !(UAP10_0)
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Dynamic.Core.Validation;
@@ -371,3 +372,4 @@ namespace System.Linq.Dynamic.Core
         }
     }
 }
+#endif

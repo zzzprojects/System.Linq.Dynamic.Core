@@ -6,11 +6,11 @@ using System.Collections;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tokenizer;
+
 namespace System.Linq.Dynamic.Core
 {
     internal class ExpressionParser
     {
-       
         interface ILogicalSignatures
         {
             void F(bool x, bool y);
@@ -225,7 +225,7 @@ namespace System.Linq.Dynamic.Core
         ParameterExpression _parent;
         ParameterExpression _root;
 
-   
+
 
         static ExpressionParser()
         {
@@ -1133,7 +1133,27 @@ namespace System.Linq.Dynamic.Core
             _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
             _textParser.NextToken();
 
-            // http://solutionizing.net/category/linq/ 
+            return CreateNewExpression(properties, expressions);
+        }
+
+        private Expression CreateNewExpression(List<DynamicProperty> properties, List<Expression> expressions)
+        {
+#if UAP10_0
+            // http://solutionizing.net/category/linq/
+            Type type = _resultType ?? typeof(DynamicClass);
+            var parameters = new List<Expression>();
+            var constructorKeyValuePair = typeof(KeyValuePair<string, object>).GetTypeInfo().DeclaredConstructors.First();
+            for (int i = 0; i < properties.Count; i++)
+            {
+                // Just convert the expression always to an object expression.
+                var boxingExpression = Expression.Convert(expressions[i], typeof(object));
+                var parameter = Expression.New(constructorKeyValuePair, new[] { (Expression)Expression.Constant(properties[i].Name), boxingExpression });
+                parameters.Add(parameter);
+            }
+            var constructor = type.GetTypeInfo().DeclaredConstructors.First(x => x.GetParameters().Count() == properties.Count());
+            return Expression.New(constructor, parameters);
+#else
+            // http://solutionizing.net/category/linq/
             Type type = _resultType ?? DynamicClassFactory.CreateType(properties, _createParameterCtor);
 
             var propertyTypes = type.GetProperties().Select(p => p.PropertyType).ToArray();
@@ -1145,6 +1165,7 @@ namespace System.Linq.Dynamic.Core
             for (int i = 0; i < bindings.Length; i++)
                 bindings[i] = Expression.Bind(type.GetProperty(properties[i].Name), expressions[i]);
             return Expression.MemberInit(Expression.New(type), bindings);
+#endif
         }
 
         Expression ParseLambdaInvocation(LambdaExpression lambda)
@@ -2332,9 +2353,9 @@ namespace System.Linq.Dynamic.Core
             return null;
         }
 
-        
 
-  
+
+
 
         bool TokenIdentifierIs(string id)
         {
@@ -2348,10 +2369,6 @@ namespace System.Linq.Dynamic.Core
             if (id.Length > 1 && id[0] == '@') id = id.Substring(1);
             return id;
         }
-
-     
-
-     
 
         Exception ParseError(string format, params object[] args)
         {
@@ -2406,7 +2423,6 @@ namespace System.Linq.Dynamic.Core
 
             return d;
         }
-
 
         internal static void ResetDynamicLinqTypes()
         {

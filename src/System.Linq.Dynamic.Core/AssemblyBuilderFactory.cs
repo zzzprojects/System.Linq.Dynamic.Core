@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿#if !UAP10_0
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace System.Linq.Dynamic.Core
@@ -21,3 +22,4 @@ namespace System.Linq.Dynamic.Core
         }
     }
 }
+#endif

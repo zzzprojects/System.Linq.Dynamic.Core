@@ -53,8 +53,8 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].OwnerName);
-                Assert.Equal(realResult[i].Pet, dynamicResult[i].Pet);
+                Assert.Equal(realResult[i].OwnerName, ((dynamic) dynamicResult[i]).OwnerName);
+                Assert.Equal(realResult[i].Pet, ((dynamic) dynamicResult[i]).Pet);
             }
 #endif
         }

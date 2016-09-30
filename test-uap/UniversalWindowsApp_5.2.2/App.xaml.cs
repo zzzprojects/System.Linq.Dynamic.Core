@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Linq.Dynamic.Core;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace UniversalWindowsApp_522
@@ -30,6 +23,38 @@ namespace UniversalWindowsApp_522
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            GlobalConfig.CustomTypeProvider = new WindowsAppCustomTypeProvider();
+
+            var containsList = new List<int> { 0, 1, 2, 3 };
+            var q = containsList.AsQueryable().Where("it > 1");
+            var a = q.ToDynamicArray<int>();
+
+
+            var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };
+            var qry = lst.AsQueryable();
+
+            //Act
+            var result1 = qry.Where("it < TestEnum.Var4").ToDynamicList();
+            var result2 = qry.Where("TestEnum.Var4 > it").ToDynamicList();
+            var result3 = qry.Where("it = Var5").ToDynamicList();
+            var result4 = qry.Where("it = @0", TestEnum.Var5).ToDynamicList();
+            var result5 = qry.Where("it = @0", 8).ToDynamicList();
+
+            var resultNewList1 = containsList.AsQueryable().Select("new (it as i)").ToDynamicList();
+            var resultNew1 = resultNewList1[0];
+            int i1 = resultNew1.i;
+
+            var resultNewList4 = containsList.AsQueryable().Select("new (it as a, it as b, \"c\" as c, 200 as d, 300 as e)").ToDynamicList();
+            var resultNew4 = resultNewList4[0];
+            int a4 = resultNew4.a;
+            int b4 = resultNew4.b;
+            string c4 = resultNew4.c;
+            int d4 = resultNew4.d;
+            int e4 = resultNew4.e;
+
+            var resultNewList5 = containsList.AsQueryable().Select("new (it as a, it as b, \"c\" as c, 200 as d, 300 as e, 400 as f)").ToDynamicList();
+            int y = 0;
         }
 
         /// <summary>
