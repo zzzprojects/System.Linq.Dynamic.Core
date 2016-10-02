@@ -45,15 +45,20 @@ namespace UniversalWindowsApp_522
             var resultNew1 = resultNewList1[0];
             int i1 = resultNew1.i;
 
-            var resultNewList4 = containsList.AsQueryable().Select("new (it as a, it as b, \"c\" as c, 200 as d, 300 as e)").ToDynamicList();
-            var resultNew4 = resultNewList4[0];
+            var resultNew4List = containsList.AsQueryable().Select("new (it as a, it as b, \"c\" as c, 200 as d)").ToDynamicList();
+            var resultNew4 = resultNew4List[0];
             int a4 = resultNew4.a;
             int b4 = resultNew4.b;
             string c4 = resultNew4.c;
             int d4 = resultNew4.d;
-            int e4 = resultNew4.e;
 
-            var resultNewList5 = containsList.AsQueryable().Select("new (it as a, it as b, \"c\" as c, 200 as d, 300 as e, 400 as f)").ToDynamicList();
+            var resultNewList5TestClass = containsList.AsQueryable().Select<TestClass>("new (it as a, it as b, \"c\" as c, 200 as d)").ToList();
+            var firstTestClass = resultNewList5TestClass.First();
+
+            var resultNewList4WithMyClass = containsList.AsQueryable().Select<TestClassWithConstructor>("new (it as a, it as b, \"c\" as c, 200 as d)").ToList();
+            var firstTestClassWithConstructor = resultNewList4WithMyClass.First();
+
+            var resultNewList5 = containsList.AsQueryable().Select("new (it as a, it as b, \"c\" as c, 200 as d, 300 as e)").ToDynamicList();
             int y = 0;
         }
 
