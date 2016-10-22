@@ -53,6 +53,9 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EntityFramework.DynamicLinq.Tests", "test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.xproj", "{3577BAD5-CD9B-4B8F-B326-DF11836E9E1F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupByError.Microsoft.EntityFrameworkCore.net452", "src-console\GroupByError.net452\GroupByError.Microsoft.EntityFrameworkCore.net452.csproj", "{8289B567-A687-4503-A4C3-4A5D4D1DF5A6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE1620BD-A313-4223-B991-467DA346B2ED} = {CE1620BD-A313-4223-B991-467DA346B2ED}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupByError.EntityFramework.net452", "src-console\GroupByError.EntityFramework.net452\GroupByError.EntityFramework.net452.csproj", "{8289B567-A687-4503-A4C3-4A5D4D1DF999}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -68,6 +71,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalWindowsApp_5.2.2",
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroupByError.Microsoft.EntityFrameworkCore101.net452", "src-console\GroupByError.Microsoft.EntityFrameworkCore101.net452\GroupByError.Microsoft.EntityFrameworkCore101.net452.csproj", "{FC2BC135-D17D-4F7E-847E-3AC2882E2EC1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE1620BD-A313-4223-B991-467DA346B2ED} = {CE1620BD-A313-4223-B991-467DA346B2ED}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
