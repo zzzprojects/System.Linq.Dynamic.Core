@@ -1,5 +1,5 @@
 {
-    "version": "1.0.3.1",
+    "version": "1.0.3.0",
     "title": "Microsoft.EntityFrameworkCore.DynamicLinq",
     "description": "Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support",
     "authors": [ "Stef Heyenrath" ],
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Upgrade Microsoft.EntityFrameworkCore to version 1.0.1"
+        "releaseNotes": "Upgrade Microsoft.EntityFrameworkCore to version 1.0.1 and add an overload to the ToDynamicArray and ToDynamicList extension methods."
     },
 
     "buildOptions": {
@@ -37,7 +37,7 @@
             "type": "build"
         },
         "Microsoft.EntityFrameworkCore": "1.0.1",
-        "System.Linq.Dynamic.Core": "1.0.6.0"
+        "System.Linq.Dynamic.Core": "1.0.6.6"
     },
 
     "frameworks": {

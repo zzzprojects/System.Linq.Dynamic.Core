@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Make library strong named"
+        "releaseNotes": "Make library strong named and add an overload to the ToDynamicArray and ToDynamicList extension methods."
     },
 
     "buildOptions": {
@@ -39,7 +39,7 @@
             "type": "build"
         },
         "EntityFramework": "6.1.3",
-        "System.Linq.Dynamic.Core": "1.0.6.0"
+        "System.Linq.Dynamic.Core": "1.0.6.6"
     },
 
     "frameworks": {
