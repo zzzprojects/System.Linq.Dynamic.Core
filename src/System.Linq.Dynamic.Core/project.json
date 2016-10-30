@@ -1,5 +1,5 @@
 {
-    "version": "1.0.6.6",
+    "version": "1.0.6.7",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Add an overload to the ToDynamicArray and ToDynamicList extension methods."
+        "releaseNotes": "Add extensibility point for Expression optimization"
     },
 
     "buildOptions": {

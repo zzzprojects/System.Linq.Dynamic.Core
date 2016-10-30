@@ -21,6 +21,11 @@ namespace System.Linq.Dynamic.Core
     {
         private static readonly Func<MethodInfo, bool> _predicateParameterHas2 = (mi) => mi.GetParameters()[1].ToString().Contains("Func`2");
 
+        private static Expression OptimizeExpression(Expression expression)
+        {
+            return ExtensibilityPoint.QueryOptimizer != null ? ExtensibilityPoint.QueryOptimizer(expression) : expression;
+        }
+
         #region Any
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
@@ -164,11 +169,8 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return source.Provider.CreateQuery(
-                 Expression.Call(
-                     typeof(Queryable), "Distinct",
-                     new Type[] { source.ElementType },
-                     source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Distinct", new Type[] { source.ElementType }, source.Expression));
+            return source.Provider.CreateQuery(optimized);
         }
         #endregion Distinct
 
@@ -284,11 +286,12 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, keySelector, args);
             LambdaExpression elementLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, resultSelector, args);
 
-            return source.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), "GroupBy",
-                    new[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
-                    source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda)));
+            var optimized = OptimizeExpression(Expression.Call(
+                typeof(Queryable), "GroupBy",
+                new[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
+                source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda)));
+
+            return source.Provider.CreateQuery(optimized);
         }
 
         /// <summary>
@@ -336,11 +339,12 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, keySelector, args);
 
-            return source.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), nameof(Queryable.GroupBy),
-                    new[] { source.ElementType, keyLambda.Body.Type },
-                    new[] { source.Expression, Expression.Quote(keyLambda) }));
+            var optimized = OptimizeExpression(Expression.Call(
+                typeof(Queryable), nameof(Queryable.GroupBy),
+                new[] { source.ElementType, keyLambda.Body.Type },
+                new[] { source.Expression, Expression.Quote(keyLambda) }));
+
+            return source.Provider.CreateQuery(optimized);
         }
         #endregion GroupBy
 
@@ -437,17 +441,17 @@ namespace System.Linq.Dynamic.Core
 
             LambdaExpression resultSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
 
-            return outer.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), "Join",
-                    new[] { outer.ElementType, inner.AsQueryable().ElementType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
-                    outer.Expression, // outer: The first sequence to join.
-                    inner.AsQueryable().Expression, // inner: The sequence to join to the first sequence.
-                    Expression.Quote(outerSelectorLambda), // outerKeySelector: A function to extract the join key from each element of the first sequence.
-                    Expression.Quote(innerSelectorLambda), // innerKeySelector: A function to extract the join key from each element of the second sequence.
-                    Expression.Quote(resultSelectorLambda) // resultSelector: A function to create a result element from two matching elements.
-                )
-            );
+            var optimized = OptimizeExpression(Expression.Call(
+                typeof(Queryable), "Join",
+                new[] { outer.ElementType, inner.AsQueryable().ElementType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
+                outer.Expression, // outer: The first sequence to join.
+                inner.AsQueryable().Expression, // inner: The sequence to join to the first sequence.
+                Expression.Quote(outerSelectorLambda), // outerKeySelector: A function to extract the join key from each element of the first sequence.
+                Expression.Quote(innerSelectorLambda), // innerKeySelector: A function to extract the join key from each element of the second sequence.
+                Expression.Quote(resultSelectorLambda) // resultSelector: A function to create a result element from two matching elements.
+            ));
+
+            return outer.Provider.CreateQuery(optimized);
         }
 
         /// <summary>
@@ -562,7 +566,8 @@ namespace System.Linq.Dynamic.Core
                     queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
             }
 
-            return (IOrderedQueryable)source.Provider.CreateQuery(queryExpr);
+            var optimized = OptimizeExpression(queryExpr);
+            return (IOrderedQueryable)source.Provider.CreateQuery(optimized);
         }
         #endregion OrderBy
 
@@ -690,11 +695,13 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
 
-            return source.Provider.CreateQuery(
-                 Expression.Call(
-                     typeof(Queryable), nameof(Queryable.Select),
-                     new[] { source.ElementType, lambda.Body.Type },
-                     source.Expression, Expression.Quote(lambda)));
+            var optimized = OptimizeExpression(Expression.Call(
+                typeof(Queryable), nameof(Queryable.Select),
+                new[] { source.ElementType, lambda.Body.Type },
+                source.Expression, Expression.Quote(lambda))
+            );
+
+            return source.Provider.CreateQuery(optimized);
         }
 
         /// <summary>
@@ -721,11 +728,12 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, typeof(TResult), selector, args);
 
-            return source.Provider.CreateQuery<TResult>(
-                Expression.Call(
-                    typeof(Queryable), nameof(Queryable.Select),
-                    new[] { source.ElementType, typeof(TResult) },
-                    source.Expression, Expression.Quote(lambda)));
+            var optimized = OptimizeExpression(Expression.Call(
+                typeof(Queryable), nameof(Queryable.Select),
+                new[] { source.ElementType, typeof(TResult) },
+                source.Expression, Expression.Quote(lambda)));
+
+            return source.Provider.CreateQuery<TResult>(optimized);
         }
 
         /// <summary>
@@ -751,11 +759,12 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, resultType, selector, args);
 
-            return source.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), nameof(Queryable.Select),
-                    new[] { source.ElementType, resultType },
-                    source.Expression, Expression.Quote(lambda)));
+            var optimized = OptimizeExpression(Expression.Call(
+                typeof(Queryable), nameof(Queryable.Select),
+                new[] { source.ElementType, resultType },
+                source.Expression, Expression.Quote(lambda)));
+
+            return source.Provider.CreateQuery(optimized);
         }
         #endregion Select
 
@@ -827,11 +836,13 @@ namespace System.Linq.Dynamic.Core
             Type delegateType = typeof(Func<,>).MakeGenericType(inputType, enumerableType);
             lambda = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters);
 
-            return source.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), "SelectMany",
-                    new[] { source.ElementType, resultType },
-                    source.Expression, Expression.Quote(lambda)));
+            var optimized = OptimizeExpression(Expression.Call(
+                typeof(Queryable), "SelectMany",
+                new[] { source.ElementType, resultType },
+                source.Expression, Expression.Quote(lambda))
+            );
+
+            return source.Provider.CreateQuery(optimized);
         }
 
         /// <summary>
@@ -863,11 +874,13 @@ namespace System.Linq.Dynamic.Core
             Type delegateType = typeof(Func<,>).MakeGenericType(inputType, enumerableType);
             lambda = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters);
 
-            return source.Provider.CreateQuery<TResult>(
-                Expression.Call(
-                    typeof(Queryable), "SelectMany",
-                    new[] { source.ElementType, typeof(TResult) },
-                    source.Expression, Expression.Quote(lambda)));
+            var optimized = OptimizeExpression(Expression.Call(
+                typeof(Queryable), "SelectMany",
+                new[] { source.ElementType, typeof(TResult) },
+                source.Expression, Expression.Quote(lambda))
+            );
+
+            return source.Provider.CreateQuery<TResult>(optimized);
         }
 
         /// <summary>
@@ -950,11 +963,13 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression resultSelectLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, new[] { xParameter, yParameter }, null, resultSelector, resultSelectorArgs);
             Type resultLambdaResultType = resultSelectLambda.Body.Type;
 
-            return source.Provider.CreateQuery(
-                Expression.Call(
+            var optimized = OptimizeExpression(Expression.Call(
                 typeof(Queryable), "SelectMany",
                 new[] { source.ElementType, sourceLambdaResultType, resultLambdaResultType },
-                source.Expression, Expression.Quote(sourceSelectLambda), Expression.Quote(resultSelectLambda)));
+                source.Expression, Expression.Quote(sourceSelectLambda), Expression.Quote(resultSelectLambda))
+            );
+
+            return source.Provider.CreateQuery(optimized);
         }
         #endregion SelectMany
 
@@ -973,9 +988,8 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return source.Provider.Execute(Expression.Call(
-                typeof(Queryable), "Single",
-                new[] { source.ElementType }, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Single", new[] { source.ElementType }, source.Expression));
+            return source.Provider.Execute(optimized);
         }
 
         /// <summary>
@@ -993,9 +1007,8 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return source.Provider.Execute(Expression.Call(
-                typeof(Queryable), "SingleOrDefault",
-                new[] { source.ElementType }, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "SingleOrDefault", new[] { source.ElementType }, source.Expression));
+            return source.Provider.Execute(optimized);
         }
         #endregion Single/SingleOrDefault
 
@@ -1060,11 +1073,8 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            return source.Provider.Execute(
-                Expression.Call(
-                typeof(Queryable), "Sum",
-                null,
-                source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Sum", null, source.Expression));
+            return source.Provider.Execute(optimized);
         }
         #endregion Sum
 
@@ -1163,17 +1173,14 @@ namespace System.Linq.Dynamic.Core
 
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, typeof(bool), predicate, args);
-            return source.Provider.CreateQuery(
-                Expression.Call(
-                    typeof(Queryable), "Where",
-                    new[] { source.ElementType },
-                    source.Expression, Expression.Quote(lambda)));
+
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
+            return source.Provider.CreateQuery(optimized);
         }
         #endregion
 
         #region Private Helpers
         // Code below is based on https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
-
 
         private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source)
         {
@@ -1182,7 +1189,8 @@ namespace System.Linq.Dynamic.Core
                 operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
             }
 
-            return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
+            return source.Provider.CreateQuery(optimized);
         }
 
         private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
@@ -1204,7 +1212,8 @@ namespace System.Linq.Dynamic.Core
                 operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
             }
 
-            return source.Provider.Execute(Expression.Call(null, operatorMethodInfo, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
+            return source.Provider.Execute(optimized);
         }
 
         private static TResult Execute<TResult>(MethodInfo operatorMethodInfo, IQueryable source)
@@ -1214,7 +1223,8 @@ namespace System.Linq.Dynamic.Core
                 operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
             }
 
-            return source.Provider.Execute<TResult>(Expression.Call(null, operatorMethodInfo, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
+            return source.Provider.Execute<TResult>(optimized);
         }
 
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
@@ -1226,7 +1236,8 @@ namespace System.Linq.Dynamic.Core
                     ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(object))
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
-            return source.Provider.Execute(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+            return source.Provider.Execute(optimized);
         }
 
         private static TResult Execute<TResult>(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
@@ -1238,7 +1249,8 @@ namespace System.Linq.Dynamic.Core
                     ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(TResult))
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
-            return source.Provider.Execute<TResult>(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+            return source.Provider.Execute<TResult>(optimized);
         }
 
         private static MethodInfo GetMethod<TResult>(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>

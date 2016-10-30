@@ -29,6 +29,11 @@ namespace EntityFramework.DynamicLinq
     /// </summary>
     public static class EntityFrameworkDynamicQueryableExtensions
     {
+        private static Expression OptimizeExpression(Expression expression)
+        {
+            return ExtensibilityPoint.QueryOptimizer != null ? ExtensibilityPoint.QueryOptimizer(expression) : expression;
+        }
+
         #region AnyAsync
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
@@ -575,9 +580,8 @@ namespace EntityFramework.DynamicLinq
                     operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
                 }
 
-                return provider.ExecuteAsync<TResult>(
-                    Expression.Call(null, operatorMethodInfo, source.Expression),
-                    cancellationToken);
+                var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
+                return provider.ExecuteAsync<TResult>(optimized, cancellationToken);
             }
 
             throw new InvalidOperationException(Res.IQueryableProviderNotAsync);
@@ -601,12 +605,8 @@ namespace EntityFramework.DynamicLinq
                         ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(TResult))
                         : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
-                return provider.ExecuteAsync<TResult>(
-                    Expression.Call(
-                        null,
-                        operatorMethodInfo,
-                        new[] { source.Expression, expression }),
-                    cancellationToken);
+                var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+                return provider.ExecuteAsync<TResult>(optimized, cancellationToken);
             }
 
             throw new InvalidOperationException(Res.IQueryableProviderNotAsync);

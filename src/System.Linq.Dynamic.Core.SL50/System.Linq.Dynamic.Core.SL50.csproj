@@ -124,6 +124,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core\ExpressionParser.cs">
       <Link>ExpressionParser.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core\ExtensibilityPoint.cs">
+      <Link>ExtensibilityPoint.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core\Extensions\LinqProviderExtensions.cs">
       <Link>Extensions\LinqProviderExtensions.cs</Link>
     </Compile>
