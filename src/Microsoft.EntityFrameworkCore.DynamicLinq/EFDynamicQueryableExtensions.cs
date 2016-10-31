@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.Extensions;
@@ -29,9 +30,25 @@ namespace EntityFramework.DynamicLinq
     /// </summary>
     public static class EntityFrameworkDynamicQueryableExtensions
     {
+        private static readonly TraceSource _ts = new TraceSource(typeof(EntityFrameworkDynamicQueryableExtensions).Name);
+
         private static Expression OptimizeExpression(Expression expression)
         {
-            return ExtensibilityPoint.QueryOptimizer != null ? ExtensibilityPoint.QueryOptimizer(expression) : expression;
+            if (ExtensibilityPoint.QueryOptimizer != null)
+            {
+                var optimized = ExtensibilityPoint.QueryOptimizer(expression);
+
+#if !(WINDOWS_APP45x || SILVERLIGHT)
+                if (optimized != expression)
+                {
+                    _ts.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
+                    _ts.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
+                }
+#endif
+                return optimized;
+            }
+
+            return expression;
         }
 
         #region AnyAsync

@@ -1,5 +1,5 @@
 {
-    "version": "1.0.3.1",
+    "version": "1.0.3.2",
     "title": "Microsoft.EntityFrameworkCore.DynamicLinq",
     "description": "Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support",
     "authors": [ "Stef Heyenrath" ],

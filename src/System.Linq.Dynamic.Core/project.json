@@ -1,5 +1,5 @@
 {
-    "version": "1.0.6.7",
+    "version": "1.0.6.8",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
@@ -62,7 +62,7 @@
             }
         },
         "netcore45": {
-            "buildOptions": { "define": [ "WINDOWS_APP" ] },
+            "buildOptions": { "define": [ "WINDOWS_APP", "WINDOWS_APP45x" ] },
             "dependencies": {
                 "System.Collections.Concurrent": "4.0.10",
                 "System.ComponentModel.TypeConverter": "4.1.0",
@@ -77,7 +77,7 @@
             }
         },
         "netcore451": {
-            "buildOptions": { "define": [ "WINDOWS_APP" ] },
+            "buildOptions": { "define": [ "WINDOWS_APP", "WINDOWS_APP45x" ] },
             "dependencies": {
                 "System.Collections.Concurrent": "4.0.10",
                 "System.ComponentModel.TypeConverter": "4.1.0",
@@ -97,6 +97,7 @@
                 "System.Collections.Concurrent": "4.0.12",
                 "System.ComponentModel.TypeConverter": "4.1.0",
                 "System.Diagnostics.Debug": "4.0.11",
+                "System.Diagnostics.TraceSource": "4.0.0",
                 "System.Dynamic.Runtime": "4.0.11",
                 "System.Globalization": "4.0.11",
                 "System.Linq.Expressions": "4.1.0",
@@ -116,6 +117,7 @@
                 "System.Collections.Concurrent": "4.0.12",
                 "System.ComponentModel.TypeConverter": "4.1.0",
                 "System.Diagnostics.Debug": "4.0.11",
+                "System.Diagnostics.TraceSource": "4.0.0",
                 "System.Dynamic.Runtime": "4.0.11",
                 "System.Globalization": "4.0.11",
                 "System.Linq.Expressions": "4.1.0",
@@ -145,6 +147,7 @@
                 "System.Collections.Concurrent": "4.0.12",
                 "System.ComponentModel.TypeConverter": "4.1.0",
                 "System.Diagnostics.Debug": "4.0.11",
+                "System.Diagnostics.TraceSource": "4.0.0",
                 "System.Dynamic.Runtime": "4.0.11",
                 "System.Linq.Expressions": "4.1.0",
                 "System.Linq.Queryable": "4.0.1",

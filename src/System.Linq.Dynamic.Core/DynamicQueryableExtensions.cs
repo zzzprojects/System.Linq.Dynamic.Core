@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
+#if !(WINDOWS_APP45x || SILVERLIGHT)
+using System.Diagnostics;
+#endif
 using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
@@ -19,14 +22,31 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public static class DynamicQueryableExtensions
     {
+#if !(WINDOWS_APP45x || SILVERLIGHT)
+        private static readonly TraceSource _ts = new TraceSource(typeof(DynamicQueryableExtensions).Name);
+#endif
         private static readonly Func<MethodInfo, bool> _predicateParameterHas2 = (mi) => mi.GetParameters()[1].ToString().Contains("Func`2");
 
         private static Expression OptimizeExpression(Expression expression)
         {
-            return ExtensibilityPoint.QueryOptimizer != null ? ExtensibilityPoint.QueryOptimizer(expression) : expression;
+            if (ExtensibilityPoint.QueryOptimizer != null)
+            {
+                var optimized = ExtensibilityPoint.QueryOptimizer(expression);
+
+#if !(WINDOWS_APP45x || SILVERLIGHT)
+                if (optimized != expression)
+                {
+                    _ts.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
+                    _ts.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
+                }
+#endif
+                return optimized;
+            }
+
+            return expression;
         }
 
-        #region Any
+#region Any
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
         /// <summary>
@@ -74,9 +94,9 @@ namespace System.Linq.Dynamic.Core
 
             return Execute<bool>(_anyPredicate, source, lambda);
         }
-        #endregion Any
+#endregion Any
 
-        #region AsEnumerable
+#region AsEnumerable
 #if NET35
         /// <summary>
         /// Returns the input typed as <see cref="IEnumerable{T}"/> of <see cref="object"/>./>
@@ -98,9 +118,9 @@ namespace System.Linq.Dynamic.Core
                 yield return obj;
             }
         }
-        #endregion AsEnumerable
+#endregion AsEnumerable
 
-        #region Count
+#region Count
         private static readonly MethodInfo _count = GetMethod(nameof(Queryable.Count));
 
         /// <summary>
@@ -148,9 +168,9 @@ namespace System.Linq.Dynamic.Core
 
             return Execute<int>(_countPredicate, source, lambda);
         }
-        #endregion Count
+#endregion Count
 
-        #region Distinct
+#region Distinct
         private static readonly MethodInfo _distinct = GetMethod(nameof(Queryable.Distinct));
 
         /// <summary>
@@ -172,9 +192,9 @@ namespace System.Linq.Dynamic.Core
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Distinct", new Type[] { source.ElementType }, source.Expression));
             return source.Provider.CreateQuery(optimized);
         }
-        #endregion Distinct
+#endregion Distinct
 
-        #region First
+#region First
         private static readonly MethodInfo _first = GetMethod(nameof(Queryable.First));
 
         /// <summary>
@@ -216,9 +236,9 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_firstPredicate, source, lambda);
         }
-        #endregion First
+#endregion First
 
-        #region FirstOrDefault
+#region FirstOrDefault
         /// <summary>
         /// Returns the first element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
@@ -258,9 +278,9 @@ namespace System.Linq.Dynamic.Core
             return Execute(_firstOrDefaultPredicate, source, lambda);
         }
         private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1);
-        #endregion FirstOrDefault
+#endregion FirstOrDefault
 
-        #region GroupBy
+#region GroupBy
         /// <summary>
         /// Groups the elements of a sequence according to a specified key string function 
         /// and creates a result value from each group and its key.
@@ -346,9 +366,9 @@ namespace System.Linq.Dynamic.Core
 
             return source.Provider.CreateQuery(optimized);
         }
-        #endregion GroupBy
+#endregion GroupBy
 
-        #region GroupByMany
+#region GroupByMany
         /// <summary>
         /// Groups the elements of a sequence according to multiple specified key string functions 
         /// and creates a result value from each group (and subgroups) and its key.
@@ -407,9 +427,9 @@ namespace System.Linq.Dynamic.Core
 
             return result;
         }
-        #endregion GroupByMany
+#endregion GroupByMany
 
-        #region Join
+#region Join
         /// <summary>
         /// Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
         /// </summary>
@@ -470,9 +490,9 @@ namespace System.Linq.Dynamic.Core
         {
             return (IQueryable<TElement>)Join((IQueryable)outer, (IEnumerable)inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
-        #endregion Join
+#endregion Join
 
-        #region Last
+#region Last
         private static readonly MethodInfo _last = GetMethod(nameof(Queryable.Last));
         /// <summary>
         /// Returns the last element of a sequence.
@@ -489,9 +509,9 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_last, source);
         }
-        #endregion Last
+#endregion Last
 
-        #region LastOrDefault
+#region LastOrDefault
         private static readonly MethodInfo _lastDefault = GetMethod(nameof(Queryable.LastOrDefault));
         /// <summary>
         /// Returns the last element of a sequence, or a default value if the sequence contains no elements.
@@ -508,9 +528,9 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_lastDefault, source);
         }
-        #endregion LastOrDefault
+#endregion LastOrDefault
 
-        #region OrderBy
+#region OrderBy
         /// <summary>
         /// Sorts the elements of a sequence in ascending or descending order according to a key.
         /// </summary>
@@ -569,9 +589,9 @@ namespace System.Linq.Dynamic.Core
             var optimized = OptimizeExpression(queryExpr);
             return (IOrderedQueryable)source.Provider.CreateQuery(optimized);
         }
-        #endregion OrderBy
+#endregion OrderBy
 
-        #region Page/PageResult
+#region Page/PageResult
         /// <summary>
         /// Returns the elements as paged.
         /// </summary>
@@ -657,9 +677,9 @@ namespace System.Linq.Dynamic.Core
 
             return result;
         }
-        #endregion Page/PageResult
+#endregion Page/PageResult
 
-        #region Reverse
+#region Reverse
         /// <summary>
         /// Inverts the order of the elements in a sequence.
         /// </summary>
@@ -671,9 +691,9 @@ namespace System.Linq.Dynamic.Core
 
             return Queryable.Reverse((IQueryable<object>)source);
         }
-        #endregion Reverse
+#endregion Reverse
 
-        #region Select
+#region Select
         /// <summary>
         /// Projects each element of a sequence into a new form.
         /// </summary>
@@ -766,9 +786,9 @@ namespace System.Linq.Dynamic.Core
 
             return source.Provider.CreateQuery(optimized);
         }
-        #endregion Select
+#endregion Select
 
-        #region SelectMany
+#region SelectMany
         /// <summary>
         /// Projects each element of a sequence to an <see cref="IQueryable"/> and combines the resulting sequences into one sequence.
         /// </summary>
@@ -971,9 +991,9 @@ namespace System.Linq.Dynamic.Core
 
             return source.Provider.CreateQuery(optimized);
         }
-        #endregion SelectMany
+#endregion SelectMany
 
-        #region Single/SingleOrDefault
+#region Single/SingleOrDefault
         /// <summary>
         /// Returns the only element of a sequence, and throws an exception if there
         /// is not exactly one element in the sequence.
@@ -1010,9 +1030,9 @@ namespace System.Linq.Dynamic.Core
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "SingleOrDefault", new[] { source.ElementType }, source.Expression));
             return source.Provider.Execute(optimized);
         }
-        #endregion Single/SingleOrDefault
+#endregion Single/SingleOrDefault
 
-        #region Skip
+#region Skip
         private static readonly MethodInfo _skip = GetMethod(nameof(Queryable.Skip), 1);
 
         /// <summary>
@@ -1032,9 +1052,9 @@ namespace System.Linq.Dynamic.Core
 
             return CreateQuery(_skip, source, Expression.Constant(count));
         }
-        #endregion Skip
+#endregion Skip
 
-        #region SkipWhile
+#region SkipWhile
         private static readonly MethodInfo _skipWhilePredicate = GetMethod(nameof(Queryable.SkipWhile), 1, _predicateParameterHas2);
 
         /// <summary>
@@ -1061,9 +1081,9 @@ namespace System.Linq.Dynamic.Core
 
             return CreateQuery(_skipWhilePredicate, source, lambda);
         }
-        #endregion SkipWhile
+#endregion SkipWhile
 
-        #region Sum
+#region Sum
         /// <summary>
         /// Computes the sum of a sequence of numeric values.
         /// </summary>
@@ -1076,9 +1096,9 @@ namespace System.Linq.Dynamic.Core
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Sum", null, source.Expression));
             return source.Provider.Execute(optimized);
         }
-        #endregion Sum
+#endregion Sum
 
-        #region Take
+#region Take
         private static readonly MethodInfo _take = GetMethod(nameof(Queryable.Take), 1);
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
@@ -1093,9 +1113,9 @@ namespace System.Linq.Dynamic.Core
 
             return CreateQuery(_take, source, Expression.Constant(count));
         }
-        #endregion Take
+#endregion Take
 
-        #region TakeWhile
+#region TakeWhile
         private static readonly MethodInfo _takeWhilePredicate = GetMethod(nameof(Queryable.TakeWhile), 1, _predicateParameterHas2);
 
         /// <summary>
@@ -1122,9 +1142,9 @@ namespace System.Linq.Dynamic.Core
 
             return CreateQuery(_takeWhilePredicate, source, lambda);
         }
-        #endregion TakeWhile
+#endregion TakeWhile
 
-        #region Where
+#region Where
         /// <summary>
         /// Filters a sequence of values based on a predicate.
         /// </summary>
@@ -1177,9 +1197,9 @@ namespace System.Linq.Dynamic.Core
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
         }
-        #endregion
+#endregion
 
-        #region Private Helpers
+#region Private Helpers
         // Code below is based on https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
 
         private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source)
@@ -1258,6 +1278,6 @@ namespace System.Linq.Dynamic.Core
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
-        #endregion Private Helpers
+#endregion Private Helpers
     }
 }
