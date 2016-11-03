@@ -37,7 +37,7 @@
             "type": "build"
         },
         "Microsoft.EntityFrameworkCore": "1.0.1",
-        "System.Linq.Dynamic.Core": "1.0.6.7"
+        "System.Linq.Dynamic.Core": { "target": "project" }
     },
 
     "frameworks": {
