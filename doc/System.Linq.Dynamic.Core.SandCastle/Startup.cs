@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace System.Linq.Dynamic.Core.SandCastle
@@ -12,8 +13,15 @@ namespace System.Linq.Dynamic.Core.SandCastle
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment environment)
         {
+            bool isDev = environment.IsDevelopment();
+
+            app.UseStatusCodePages();
+
+            if (isDev)
+                app.UseDeveloperExceptionPage();
+
             // Serve my app-specific default file, if present.
             DefaultFilesOptions options = new DefaultFilesOptions();
             options.DefaultFileNames.Clear();
