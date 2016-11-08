@@ -44,35 +44,6 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_CompareWithGuid()
-        {
-            //Arrange
-            var lst = new List<Guid>
-            {
-                new Guid("{1AF7AD2B-7651-4045-962A-3D44DEE71398}"),
-                new Guid("{99610563-8F80-4497-9125-C96DEE23037D}"),
-                new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}")
-            };
-            var qry = lst.AsQueryable();
-
-            //Act
-            var result1 = qry.Where("it = \"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\"");
-            var result2 = qry.Where("\"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\" = it");
-            var result3a = qry.Where("it = @0", "0A191E77-E32D-4DE1-8F1C-A144C2B0424D");
-            var result3b = qry.Where("@0 = it", "0A191E77-E32D-4DE1-8F1C-A144C2B0424D");
-            var result4a = qry.Where("it = @0", lst[2]);
-            var result4b = qry.Where("@0 = it", lst[2]);
-
-            //Assert
-            Assert.Equal(lst[2], result1.Single());
-            Assert.Equal(lst[2], result2.Single());
-            Assert.Equal(lst[2], result3a.Single());
-            Assert.Equal(lst[2], result3b.Single());
-            Assert.Equal(lst[2], result4a.Single());
-            Assert.Equal(lst[2], result4b.Single());
-        }
-
-        [Fact]
         public void ExpressionTests_ConditionalOr1()
         {
             //Arrange
@@ -412,22 +383,45 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_GuidString()
+        public void ExpressionTests_Guid_CompareTo_String()
         {
             GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
 
             //Arrange
-            var lst = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+            var lst = new List<Guid> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
             var qry = lst.AsQueryable();
 
             //Act
-            var testValue = lst[0].ToString();
-            var result1 = qry.Where("it = @0", testValue);
-            var result2 = qry.Where("@0 = it", testValue);
+            string testValue = lst[0].ToString();
+            var result1a = qry.Where("it = \"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\"");
+            var result1b = qry.Where("it = @0", testValue);
+
+            var result2a = qry.Where("\"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\" = it");
+            var result2b = qry.Where("@0 = it", testValue);
 
             //Assert
-            Assert.Equal(lst[0], result1.Single());
-            Assert.Equal(lst[0], result2.Single());
+            Assert.Equal(lst[0], result1a.Single());
+            Assert.Equal(lst[0], result1b.Single());
+            Assert.Equal(lst[0], result2a.Single());
+            Assert.Equal(lst[0], result2b.Single());
+        }
+
+
+        [Fact]
+        public void ExpressionTests_Guid_CompareTo_Guid()
+        {
+            //Arrange
+            var lst = new List<Guid> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
+            var qry = lst.AsQueryable();
+
+            //Act
+            Guid testValue = lst[0];
+            var resulta = qry.Where("it = @0", testValue);
+            var resultb = qry.Where("@0 = it", testValue);
+
+            //Assert
+            Assert.Equal(testValue, resulta.Single());
+            Assert.Equal(testValue, resultb.Single());
         }
 
         [Fact]
