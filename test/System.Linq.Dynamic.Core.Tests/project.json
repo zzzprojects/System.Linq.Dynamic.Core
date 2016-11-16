@@ -24,12 +24,12 @@
                     "type": "platform",
                     "version": "1.1.0-preview1-001100-00"
                 },
-                "Microsoft.EntityFrameworkCore": "1.1.0-preview1-final",
-                "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0-preview1-final",
-                "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0-preview1-final",
-                "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0-preview1-final",
-                "System.Linq.Parallel": "4.3.0-preview1-24530-04",
-                "System.Threading.Tasks": "4.3.0-preview1-24530-04"
+                "Microsoft.EntityFrameworkCore": "1.1.0",
+                "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0",
+                "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0",
+                "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0",
+                "System.Linq.Parallel": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
             }
         }
     },
