@@ -1,5 +1,5 @@
 {
-    "version": "1.0.3.2",
+    "version": "1.0.3.3",
     "title": "Microsoft.EntityFrameworkCore.DynamicLinq",
     "description": "Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support",
     "authors": [ "Stef Heyenrath" ],
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Add extensibility point for Expression optimization"
+        "releaseNotes": "Upgrade Microsoft.EntityFrameworkCore to 1.1.0"
     },
 
     "buildOptions": {
