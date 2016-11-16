@@ -12,14 +12,14 @@ namespace GroupByError
             using (var db = new MyDbContext())
             {
                 //In memory list.
-                var ElementsList = AddElementsToList();
+                var list = AddElementsToList();
 
                 //Database
                 bool deleted = db.Database.EnsureDeleted();
                 Console.WriteLine("Database is deleted = {0}", deleted);
                 if (db.Database.EnsureCreated())
                 {
-                    ElementsList.ForEach(e => db.Add(e));
+                    list.ForEach(e => db.Add(e));
                     db.SaveChanges();
                 }
 
@@ -29,7 +29,7 @@ namespace GroupByError
 
                 //Database tests.
                 var resultDb1 = db.Element.GroupBy(el => new { el.Attribute1, el.Attribute2 }).ToArray(); //CORRECT
-                var resultDb2 = db.Element.GroupBy("new(Attribute1, Attribute2)").ToDynamicArray();       //WRONG for "Microsoft.EntityFrameworkCore" version="1.0.1"
+                var resultDb2 = db.Element.GroupBy("new(Attribute1, Attribute2)").ToDynamicArray();       //CORRECT for "Microsoft.EntityFrameworkCore" version="1.1.0"
 
                 int x = 0;
             }

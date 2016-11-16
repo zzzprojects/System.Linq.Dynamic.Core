@@ -36,9 +36,6 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
-#if EFCORE
-        // Error since Microsoft.EntityFrameworkCore 1.0.1 ???
-#else
         [Fact]
         public void Entities_GroupBy_MultiKey()
         {
@@ -65,7 +62,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 Assert.Equal(expectedRow.ToArray(), testRow.ToArray());
             }
         }
-#endif
+
         [Fact]
         public void Entities_GroupBy_SingleKey_SingleResult()
         {

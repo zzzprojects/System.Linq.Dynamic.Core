@@ -11,9 +11,9 @@ platform: Any CPU
 init:
 - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
 
-#install:
-#- ps: Start-FileDownload 'https://dotnetcli.blob.core.windows.net/dotnet/beta/Installers/Latest/dotnet-dev-win-x64.latest.exe'
-#- cmd: dotnet-dev-win-x64.latest.exe /quiet
+install:
+- ps: Start-FileDownload 'https://download.microsoft.com/download/3/A/A/3AA1B1E7-D3E8-4120-A803-9725589AAB8F/dotnet-dev-win-x64.1.0.0-preview2.1-003155.exe'
+- cmd: dotnet-dev-win-x64.1.0.0-preview2.1-003155 /quiet
 
 environment:
   PATH: $(PATH);$(PROGRAMFILES)\dotnet\
