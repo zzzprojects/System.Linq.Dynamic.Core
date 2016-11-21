@@ -1,6 +1,7 @@
 # System.Linq.Dynamic.Core
 
 [![Build status](https://ci.appveyor.com/api/projects/status/0c4v2bsvdqd57600?svg=true)](https://ci.appveyor.com/project/StefH/system-linq-dynamic-core)
+[![Slack Status](https://dynamiclinq.slack.com/badge.svg)](https://dynamiclinq.slack.com)
 
 | Project | NuGet |
 | ------- | ----- |
