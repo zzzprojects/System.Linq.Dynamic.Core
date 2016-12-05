@@ -607,7 +607,7 @@ namespace System.Linq.Dynamic.Core
                             object wrt = null;
                             if (constantExpr.Value is string)
                             {
-                                wrt = Enum.Parse(left.Type, constantExpr.Value as string, true);
+                                wrt = Enum.Parse(GetNonNullableType(left.Type), constantExpr.Value as string, true);
                             }
                             else
                             {
@@ -620,7 +620,7 @@ namespace System.Linq.Dynamic.Core
                             object wrt = null;
                             if (constantExpr.Value is string)
                             {
-                                wrt = Enum.Parse(right.Type, constantExpr.Value as string, true);
+                                wrt = Enum.Parse(GetNonNullableType(right.Type), constantExpr.Value as string, true);
                             }
                             else
                             {
