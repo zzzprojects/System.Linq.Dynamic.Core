@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -494,6 +495,23 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult2, result2.ToArray());
             Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
             Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
+        }
+
+        [Fact]
+        public void ExpressionTests_Indexer_Issue57()
+        {
+            var rows = new List<JObject>
+            {
+                new JObject {["Column1"] = "B", ["Column2"] = 1},
+                new JObject {["Column1"] = "B", ["Column2"] = 2},
+                new JObject {["Column1"] = "A", ["Column2"] = 1},
+                new JObject {["Column1"] = "A", ["Column2"] = 2}
+            };
+
+            var expected = rows.OrderBy(x => x["Column1"]).ToList();
+            var result = rows.AsQueryable().OrderBy(@"it[""Column1""]").ToList();
+
+            Assert.Equal(expected, result);
         }
 
         [Fact]

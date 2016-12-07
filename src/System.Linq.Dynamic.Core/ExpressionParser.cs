@@ -1682,11 +1682,11 @@ namespace System.Linq.Dynamic.Core
         {
             foreach (Type t in SelfAndBaseTypes(type))
             {
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+//#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                 MemberInfo[] members = t.GetDefaultMembers();
-#else
-                MemberInfo[] members = new MemberInfo[0];
-#endif
+//#else
+//                MemberInfo[] members = new MemberInfo[0];
+//#endif
                 if (members.Length != 0)
                 {
                     IEnumerable<MethodBase> methods = members
