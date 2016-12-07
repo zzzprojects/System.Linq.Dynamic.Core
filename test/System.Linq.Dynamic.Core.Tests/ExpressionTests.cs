@@ -329,6 +329,38 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Enum_Nullable()
+        {
+            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+
+            //Act
+            var result1a = new[] { TestEnum.Var1 }.AsQueryable().Where("it = @0", (TestEnum?)TestEnum.Var1);
+            var result1b = new[] { TestEnum.Var1 }.AsQueryable().Where("@0 = it", (TestEnum?)TestEnum.Var1);
+            var result2a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("it = @0", TestEnum.Var1);
+            var result2b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("@0 = it", TestEnum.Var1);
+            var result3a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("it = @0", (TestEnum?)TestEnum.Var1);
+            var result3b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("@0 = it", (TestEnum?)TestEnum.Var1);
+
+            var result10a = new[] { TestEnum.Var1 }.AsQueryable().Where("it = @0", "Var1");
+            var result10b = new[] { TestEnum.Var1 }.AsQueryable().Where("@0 = it", "Var1");
+            var result11a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("it = @0", "Var1");
+            var result11b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("@0 = it", "Var1");
+
+            //Assert
+            Assert.Equal(TestEnum.Var1, result1a.Single());
+            Assert.Equal(TestEnum.Var1, result1b.Single());
+            Assert.Equal(TestEnum.Var1, result2a.Single());
+            Assert.Equal(TestEnum.Var1, result2b.Single());
+            Assert.Equal((TestEnum?)TestEnum.Var1, result3a.Single());
+            Assert.Equal((TestEnum?)TestEnum.Var1, result3b.Single());
+
+            Assert.Equal(TestEnum.Var1, result10a.Single());
+            Assert.Equal(TestEnum.Var1, result10b.Single());
+            Assert.Equal((TestEnum?)TestEnum.Var1, result11a.Single());
+            Assert.Equal((TestEnum?)TestEnum.Var1, result11b.Single());
+        }
+
+        [Fact]
         public void ExpressionTests_FirstOrDefault()
         {
             // Arrange
