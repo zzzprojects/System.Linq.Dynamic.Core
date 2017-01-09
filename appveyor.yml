@@ -1,4 +1,4 @@
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 version: 1.0.6.{build}
 
@@ -12,8 +12,8 @@ init:
 - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
 
 install:
-- ps: Start-FileDownload 'https://download.microsoft.com/download/0/A/3/0A372822-205D-4A86-BFA7-084D2CBE9EDF/DotNetCore.1.0.1-SDK.1.0.0.Preview2-003133-x64.exe'
-- cmd: DotNetCore.1.0.1-SDK.1.0.0.Preview2-003133-x64 /quiet
+- ps: Start-FileDownload 'https://download.microsoft.com/download/1/4/1/141760B3-805B-4583-B17C-8C5BC5A876AB/Installers/dotnet-dev-win-x64.1.0.0-preview2-1-003177.exe'
+- cmd: dotnet-dev-win-x64.1.0.0-preview2-1-003177.exe /quiet
 
 environment:
   PATH: $(PATH);$(PROGRAMFILES)\dotnet\

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
-using Xunit.Runner.DotNet;
 
 namespace System.Linq.Dynamic.Core.Tests
 {

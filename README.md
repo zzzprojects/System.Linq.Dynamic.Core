@@ -9,17 +9,14 @@
 | EntityFramework.DynamicLinq | [![Version](https://img.shields.io/nuget/v/EntityFramework.DynamicLinq.svg)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
 | Microsoft.EntityFrameworkCore.DynamicLinq | [![Version](https://img.shields.io/nuget/v/Microsoft.EntityFrameworkCore.DynamicLinq.svg)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 
-This is a **.NET Core port** of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
+This is a **.NET Core port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
 The following frameworks are supported:
 - net35
 - net40
-- net45x
-- net46x
+- net45
+- net46
 - netstandard1.3
-- netcore45
-- netcore451
-- netcore50
 - uap10.0
 - SilverLight 5.0
 
