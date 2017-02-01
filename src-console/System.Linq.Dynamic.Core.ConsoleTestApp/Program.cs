@@ -36,14 +36,21 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp
         {
             Console.WriteLine("--start");
 
-            DynamicProperty[] props = new DynamicProperty[] { new DynamicProperty("Name", typeof(string)), new DynamicProperty("Birthday", typeof(DateTime)) };
+            DynamicProperty[] props = { new DynamicProperty("Name", typeof(string)), new DynamicProperty("Birthday", typeof(DateTime)) };
             Type type = DynamicClassFactory.CreateType(props);
             DynamicClass dynamicClass = Activator.CreateInstance(type) as DynamicClass;
-            dynamicClass.SetDynamicProperty("Name", "Albert");
-            dynamicClass.SetDynamicProperty("Birthday", new DateTime(1879, 3, 14));
+            dynamicClass.SetDynamicPropertyValue("Name", "Albert");
+            dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
             Console.WriteLine(dynamicClass);
 
-            GroupByAndSelect_TestDynamicSelectMember();
+            string n1 = dynamicClass["Name"] as string;
+            Console.WriteLine("dynamicClass[\"Name\"] = '" + n1 + "'");
+
+            dynamicClass["NameX"] = "x";
+            string n2 = dynamicClass["NameX"] as string;
+            Console.WriteLine("dynamicClass[\"NameX\"] = '" + n2 + "'");
+
+            //GroupByAndSelect_TestDynamicSelectMember();
             //Select();
             //TestDyn();
             //ExpressionTests_Enum();

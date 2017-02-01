@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -63,7 +64,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var expected = queryable.Select(x => x.Roles.Any()).ToArray();
             var result = queryable.Select("Roles.Any()").ToDynamicArray<bool>();
-            
+
             // Assert
             Assert.Equal(expected, result);
         }
@@ -99,6 +100,55 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = queryable.Where("Roles.Any(Permissions.Any(Name.Contains(@0)))", search).ToArray();
 
             Assert.Equal(expected, result);
+        }
+
+        // http://stackoverflow.com/questions/30846189/nested-any-in-is-not-working-in-dynamic-linq
+        [Fact]
+        public void Any_Dynamic_Where_Nested2()
+        {
+            // arrange
+            var list = new List<A>
+            {
+                new A {Bs = new List<B>() {new B {A = new A(), Cs = new List<C> {new C {B = new B()}}}}}
+            };
+            var queryable = list.AsQueryable();
+
+            // act : 1
+            var result1 = queryable.Where("(Name = \"\") && (Bs.Any(Cs.Any()))").ToList();
+            var expected1 = queryable.Where(a => a.Name == "" && a.Bs.Any(b => b.Cs.Any()));
+            Assert.Equal(expected1, result1);
+
+            // act : 2
+            var result2 = queryable.Where("(Bs.Any(Cs.Any())) && (Name = \"\")").ToList();
+            var expected2 = queryable.Where(a => a.Bs.Any(b => b.Cs.Any() && a.Name == ""));
+            Assert.Equal(expected2, result2);
+        }
+
+        class A
+        {
+            public string Name { get; set; }
+            public IList<B> Bs
+            {
+                get { return bs; }
+                set { bs = value; }
+            }
+            private IList<B> bs = new List<B>(0);
+        }
+
+        class B
+        {
+            public A A { get; set; }
+            public IList<C> Cs
+            {
+                get { return cs; }
+                set { cs = value; }
+            }
+            private IList<C> cs = new List<C>(0);
+        }
+
+        class C
+        {
+            public B B { get; set; }
         }
     }
 }
