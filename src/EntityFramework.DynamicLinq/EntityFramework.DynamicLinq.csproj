@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
     <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
@@ -27,7 +27,6 @@
     <DefaultLanguage>en-us</DefaultLanguage>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />
     <Compile Include="..\System.Linq.Dynamic.Core\Res.cs;..\System.Linq.Dynamic.Core\Compatibility\*.cs;..\System.Linq.Dynamic.Core\Extensions\*.cs;..\System.Linq.Dynamic.Core\Validation\*.cs;..\Microsoft.EntityFrameworkCore.DynamicLinq\*.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />
   </ItemGroup>
   <ItemGroup>
