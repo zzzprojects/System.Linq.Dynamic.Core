@@ -42,6 +42,13 @@ test_script:
 - dotnet test -c %CONFIGURATION% --no-build .\test\System.Linq.Dynamic.Core.Tests
 - dotnet test -c %CONFIGURATION% --no-build .\test\EntityFramework.DynamicLinq.Tests
 
+after_test:
+  - nuget.exe install OpenCover -ExcludeVersion
+  - OpenCover\tools\OpenCover.Console.exe -register:user -target:"xunit-console.exe" -targetargs:"\".\test\System.Linq.Dynamic.Core.Tests\bin\%CONFIGURATION%\System.Linq.Dynamic.Core.Tests.dll\" --result=myresults.xml;format=AppVeyor" -returntargetcode -filter:"+[System.Linq.Dynamic.Core]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:coverage.xml
+  - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+  - pip install codecov
+  - codecov -f "coverage.xml"
+
 artifacts:
 - path: artifacts\**\*.*
 
