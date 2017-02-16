@@ -44,7 +44,7 @@ test_script:
 
 after_test:
   - nuget.exe install OpenCover -ExcludeVersion
-  - OpenCover\tools\OpenCover.Console.exe -register:user -target:"xunit.console.x64.exe" -targetargs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\EntityFramework.DynamicLinq.Tests.dll\" --result=myresults.xml;format=AppVeyor" -returntargetcode -filter:"+[System.Linq.Dynamic.Core]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:coverage.xml
+  - OpenCover\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\EntityFramework.DynamicLinq.Tests.dll\" --result=myresults.xml;format=AppVeyor" -returntargetcode -filter:"+[System.Linq.Dynamic.Core]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -output:coverage.xml
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "coverage.xml"
