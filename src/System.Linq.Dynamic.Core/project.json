@@ -45,22 +45,6 @@
             "frameworkAssemblies": {
             }
         },
-        "net451": {
-            "frameworkAssemblies": {
-            }
-        },
-        "net452": {
-            "frameworkAssemblies": {
-            }
-        },
-        "net46": {
-            "frameworkAssemblies": {
-            }
-        },
-        "net461": {
-            "frameworkAssemblies": {
-            }
-        },
         "netcore45": {
             "buildOptions": { "define": [ "WINDOWS_APP", "WINDOWS_APP45x" ] },
             "dependencies": {

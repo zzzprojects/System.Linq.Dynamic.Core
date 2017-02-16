@@ -13,8 +13,7 @@ This is a **.NET Core port** of the the Microsoft assembly for the .Net 4.0 Dyna
 The following frameworks are supported:
 - net35
 - net40
-- net45x
-- net46x
+- net45 and up
 - netstandard1.3
 - netcore45
 - netcore451
