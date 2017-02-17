@@ -1,39 +1,47 @@
 {
-  "version": "1.0.0-*",
-  "authors": [ "Stef Heyenrath" ],
-  "dependencies": {
-    "Newtonsoft.Json": "9.0.1",
-    "Linq.PropertyTranslator.Core": "1.0.3",
-    "QueryInterceptor.Core": "1.0.5",
-    "System.AppDomain.NetCoreApp": "1.0.1",
-    "System.Linq.Dynamic.Core": { "target": "project" },
-    "Microsoft.EntityFrameworkCore.DynamicLinq": { "target": "project" },
-    "dotnet-test-xunit": "2.2.0-preview2-build1029",
-    "xunit": "2.2.0-beta2-build3300"
-  },
+    "version": "1.0.0-*",
+    "authors": [ "Stef Heyenrath" ],
+    "dependencies": {
+        "dotnet-test-xunit": "2.2.0-preview2-build1029",
+        "Linq.PropertyTranslator.Core": "1.0.3",
+        "Newtonsoft.Json": "9.0.1",
+        "QueryInterceptor.Core": "1.0.5",
+        "System.Linq.Dynamic.Core": { "target": "project" },
+        "xunit": "2.2.0-beta2-build3300"
+    },
 
-  "frameworks": {
-    "netcoreapp1.0": {
-      "buildOptions": { "define": [ "NETSTANDARD", "EFCORE" ] },
-      "imports": [
-        "dnxcore50",
-        "dotnet5.4",
-        "portable-net451+win8"
-      ],
-      "dependencies": {
-        "Microsoft.NETCore.App": {
-          "type": "platform",
-          "version": "1.0.1"
+    "frameworks": {
+        "net461": {
+            "buildOptions": { "define": [ "EF" ] },
+            "dependencies": {
+                "EntityFramework": "6.1.3",
+                "EntityFramework.DynamicLinq": { "target": "project" },
+                "Microsoft.AspNet.Identity.EntityFramework": "2.2.1"
+            } 
         },
-        "Microsoft.EntityFrameworkCore": "1.1.0",
-        "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0",
-        "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0",
-        "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0",
-        "System.Linq.Parallel": "4.3.0",
-        "System.Threading.Tasks": "4.3.0"
-      }
-    }
-  },
+        "netcoreapp1.0": {
+            "buildOptions": { "define": [ "NETSTANDARD", "EFCORE" ] },
+            "imports": [
+                "dnxcore50",
+                "dotnet5.4",
+                "portable-net451+win8"
+            ],
+            "dependencies": {
+                "Microsoft.NETCore.App": {
+                    "type": "platform",
+                    "version": "1.0.1"
+                },
+                "Microsoft.EntityFrameworkCore.DynamicLinq": { "target": "project" },
+                "System.AppDomain.NetCoreApp": "1.0.1",
+                "Microsoft.EntityFrameworkCore": "1.1.0",
+                "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.1.0",
+                "Microsoft.EntityFrameworkCore.Sqlite": "1.1.0",
+                "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0",
+                "System.Linq.Parallel": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        }
+    },
 
-  "testRunner": "xunit"
+    "testRunner": "xunit"
 }

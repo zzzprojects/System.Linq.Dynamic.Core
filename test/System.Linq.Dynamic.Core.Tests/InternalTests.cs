@@ -1,12 +1,12 @@
-﻿#if !(NET35 || NETSTANDARD)
+﻿//#if !(NET35 || NETSTANDARD)
 using System.Threading.Tasks;
-#endif
+//#endif
 
 namespace System.Linq.Dynamic.Core.Tests
 {
     public class InternalTests
     {
-#if !(NETSTANDARD)
+#if ABC
         [Fact]
         public void ClassFactory_LoadTest()
         {

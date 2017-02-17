@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿#if EFCORE
+using Microsoft.Extensions.Logging;
 
 namespace System.Linq.Dynamic.Core.Tests.Logging
 {
@@ -19,3 +20,4 @@ namespace System.Linq.Dynamic.Core.Tests.Logging
         }
     }
 }
+#endif
