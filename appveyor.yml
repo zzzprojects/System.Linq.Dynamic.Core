@@ -46,7 +46,7 @@ test_script:
 after_test:
   - nuget.exe install OpenCover -ExcludeVersion
   - nuget.exe install coveralls.net -ExcludeVersion
-  - OpenCover\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\EntityFramework.DynamicLinq.Tests.dll\" -noshadow -appveyor" -returntargetcode -filter:"+[System.Linq.Dynamic.Core]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -searchdirs:".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64" -output:coverage.xml
+  - OpenCover\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\EntityFramework.DynamicLinq.Tests.dll\" -noshadow -appveyor" -returntargetcode -filter:"+[System.Linq.Dynamic.Core]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -searchdirs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\"" -output:coverage.xml
   - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
   - codecov -f "coverage.xml"
