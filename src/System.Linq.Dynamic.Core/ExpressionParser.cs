@@ -439,7 +439,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         // in operator for literals - example: "x in (1,2,3,4)"
-        // in operator to mimic contains - example: "x in @0", compare to @0.contains(x)
+        // in operator to mimic contains - example: "x in @0", compare to @0.Contains(x)
         // Adapted from ticket submitted by github user mlewis9548 
         Expression ParseIn()
         {
@@ -571,7 +571,7 @@ namespace System.Linq.Dynamic.Core
                 _textParser.NextToken();
                 Expression right = ParseShift();
                 bool isEquality = op.Id == TokenId.Equal || op.Id == TokenId.DoubleEqual || op.Id == TokenId.ExclamationEqual;
-                if (isEquality && ((!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType) || (left.Type == typeof(Guid) && right.Type == typeof(Guid))))
+                if (isEquality && (!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType || left.Type == typeof(Guid) && right.Type == typeof(Guid)))
                 {
                     if (left.Type != right.Type)
                     {
@@ -1243,7 +1243,7 @@ namespace System.Linq.Dynamic.Core
                     return Expression.Convert(expr, type);
 
                 if ((IsNumericType(exprType) || IsEnumType(exprType)) &&
-                    (IsNumericType(type)) || IsEnumType(type))
+                    IsNumericType(type) || IsEnumType(type))
                     return Expression.ConvertChecked(expr, type);
             }
 
@@ -1386,7 +1386,7 @@ namespace System.Linq.Dynamic.Core
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
 
             Type[] typeArgs;
-            if ((new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending" }).Contains(signature.Name))
+            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending" }.Contains(signature.Name))
             {
                 typeArgs = new[] { elementType, args[0].Type };
             }
@@ -1507,7 +1507,7 @@ namespace System.Linq.Dynamic.Core
             var memberExpression = expression as MemberExpression;
             if (memberExpression == null && expression.NodeType == ExpressionType.Coalesce)
             {
-                memberExpression = ((expression as BinaryExpression).Left) as MemberExpression;
+                memberExpression = (expression as BinaryExpression).Left as MemberExpression;
             }
 
             if (memberExpression != null)
