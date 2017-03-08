@@ -44,8 +44,8 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(realResult.Length, dynamicResult.Length);
             for (int i = 0; i < realResult.Length; i++)
             {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicProperty<string>("OwnerName"));
-                Assert.Equal(realResult[i].Pet, dynamicResult[i].GetDynamicProperty<string>("Pet"));
+                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.Equal(realResult[i].Pet, dynamicResult[i].GetDynamicPropertyValue<string>("Pet"));
             }
 #else
             var dynamicResult = dynamicQuery.ToDynamicArray();

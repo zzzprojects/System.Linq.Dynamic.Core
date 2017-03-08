@@ -1,6 +1,8 @@
 ﻿#if EFCORE
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DynamicLinq;
 #else
+using System.Data.Entity;
 using EntityFramework.DynamicLinq;
 #endif
 using System.Threading.Tasks;

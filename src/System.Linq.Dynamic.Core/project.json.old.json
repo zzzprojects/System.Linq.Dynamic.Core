@@ -1,5 +1,5 @@
 {
-    "version": "1.0.6.8",
+    "version": "1.0.6.10",
     "title": "System.Linq.Dynamic.Core",
     "description": "This is a .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.",
     "authors": [ "Microsoft", "Scott Guthrie", "King Wilder", "Nathan Arnott", "Stef Heyenrath" ],
@@ -14,7 +14,7 @@
         },
         "projectUrl": "https://github.com/StefH/System.Linq.Dynamic.Core",
         "licenseUrl": "https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt",
-        "releaseNotes": "Add extensibility point for Expression optimization"
+        "releaseNotes": "Add [] to DynamicClass"
     },
 
     "buildOptions": {
@@ -45,22 +45,6 @@
             "frameworkAssemblies": {
             }
         },
-        "net451": {
-            "frameworkAssemblies": {
-            }
-        },
-        "net452": {
-            "frameworkAssemblies": {
-            }
-        },
-        "net46": {
-            "frameworkAssemblies": {
-            }
-        },
-        "net461": {
-            "frameworkAssemblies": {
-            }
-        },
         "netcore45": {
             "buildOptions": { "define": [ "WINDOWS_APP", "WINDOWS_APP45x" ] },
             "dependencies": {
@@ -70,6 +54,7 @@
                 "System.Linq": "4.0.0",
                 "System.Linq.Expressions": "4.0.0",
                 "System.Linq.Queryable": "4.0.0",
+                "System.ObjectModel": "4.0.0",
                 "System.Reflection.Emit": "4.0.0",
                 "System.Reflection.TypeExtensions": "4.0.0",
                 "System.Runtime": "4.0.20",
@@ -85,6 +70,7 @@
                 "System.Linq": "4.0.0",
                 "System.Linq.Expressions": "4.0.0",
                 "System.Linq.Queryable": "4.0.0",
+                "System.ObjectModel": "4.0.0",
                 "System.Reflection.Emit": "4.0.0",
                 "System.Reflection.TypeExtensions": "4.0.0",
                 "System.Runtime": "4.0.20",
@@ -122,6 +108,7 @@
                 "System.Globalization": "4.0.11",
                 "System.Linq.Expressions": "4.1.0",
                 "System.Linq.Queryable": "4.0.1",
+                "System.ObjectModel": "4.0.12",
                 "System.Reflection.Emit": "4.0.1",
                 "System.Reflection.TypeExtensions": "4.1.0",
                 "System.Runtime.Extensions": "4.1.0",

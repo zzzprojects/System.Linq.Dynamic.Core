@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.Internal;
+﻿#if EFCORE
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace System.Linq.Dynamic.Core.Tests.Logging
@@ -26,3 +27,4 @@ namespace System.Linq.Dynamic.Core.Tests.Logging
         }
     }
 }
+#endif

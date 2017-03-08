@@ -4,7 +4,6 @@ version: 1.0.6.{build}
 
 configuration:
 - Debug
-- Release
 
 platform: Any CPU
 
@@ -17,6 +16,8 @@ install:
 
 environment:
   PATH: $(PATH);$(PROGRAMFILES)\dotnet\
+  COVERALLS_REPO_TOKEN:
+    secure: tsTABRbCmdWFLT194XNIrpurerOfjN6cEoxt2RaSUfLmUIgra/+CwuqVkv0sPRop
 
 build_script:
 - appveyor-retry dotnet restore .\src\System.Linq.Dynamic.Core -v Minimal
@@ -41,6 +42,15 @@ build_script:
 test_script:
 - dotnet test -c %CONFIGURATION% --no-build .\test\System.Linq.Dynamic.Core.Tests
 - dotnet test -c %CONFIGURATION% --no-build .\test\EntityFramework.DynamicLinq.Tests
+
+after_test:
+  - nuget.exe install OpenCover -ExcludeVersion
+  - nuget.exe install coveralls.net -ExcludeVersion
+  - OpenCover\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\EntityFramework.DynamicLinq.Tests.dll\" -noshadow -appveyor" -returntargetcode -filter:"+[System.Linq.Dynamic.Core]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -searchdirs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\"" -output:coverage.xml
+  - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+  - pip install codecov
+  - codecov -f "coverage.xml"
+  - coveralls.net\tools\csmacnz.Coveralls.exe --opencover -i .\coverage.xml
 
 artifacts:
 - path: artifacts\**\*.*

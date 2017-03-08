@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
+using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
@@ -664,6 +666,41 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult2, result2.ToDynamicArray<User>());
             Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
             Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
+        }
+
+        //[Fact]
+        public void ExpressionTests_Select_DynamicObjects()
+        {
+            //Arrange
+            dynamic a1 = new { Name = "a", BlogId = 100 };
+            dynamic a2 = new { Name = "b", BlogId = 200 };
+            var list = new List<dynamic> { a1, a2 };
+            IQueryable qry = list.AsQueryable();
+
+            var result1 = qry.Select("new (it as x)");
+            var result = result1.Select("x.BlogId");
+
+            //Assert
+            Assert.Equal(new [] { 100, 200 }, result.ToDynamicArray<int>());
+        }
+
+        //[Fact]
+        public void ExpressionTests_Select_ExpandoObjects()
+        {
+            //Arrange
+            dynamic a = new ExpandoObject();
+            a.Name = "a";
+            a.BlogId = 100;
+            dynamic b = new ExpandoObject();
+            b.Name = "b";
+            b.BlogId = 100;
+            var list = new List<dynamic> { a, b };
+            IQueryable qry = list.AsQueryable();
+
+            var result = qry.Select("it").Select("BlogId");
+
+            //Assert
+            Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
         [Fact]
