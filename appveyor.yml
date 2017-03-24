@@ -22,17 +22,17 @@ environment:
 
 build_script:
 # Restore all
-- dotnet restore src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
+- dotnet restore src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj --framework netstandard1.3
 - dotnet restore src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj
-- dotnet restore src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
+- dotnet restore src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj --framework netstandard1.3
 
 - dotnet restore test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj
 - dotnet restore test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
 
 # Build Code
-- dotnet build src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj -c %CONFIGURATION%
+- dotnet build src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj -c %CONFIGURATION% --framework netstandard1.3
 - dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
-- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj -c %CONFIGURATION%
+- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj -c %CONFIGURATION% --framework netstandard1.3
 
 # Build Tests
 - dotnet build test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj -c %CONFIGURATION%
