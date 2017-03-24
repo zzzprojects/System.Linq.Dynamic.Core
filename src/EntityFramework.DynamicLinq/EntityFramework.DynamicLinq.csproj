@@ -5,7 +5,7 @@
     <VersionPrefix>1.0.4.0</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
     <TargetFrameworks>net45;net46</TargetFrameworks>
-    <DefineConstants>$(DefineConstants);EF</DefineConstants>
+    <DefineConstants>EF</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>EntityFramework.DynamicLinq</AssemblyName>
     <AssemblyOriginatorKeyFile>EntityFramework.DynamicLinq.snk</AssemblyOriginatorKeyFile>
