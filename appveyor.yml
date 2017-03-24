@@ -42,6 +42,15 @@ test_script:
 - dotnet test -c %CONFIGURATION% --no-build test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj
 - dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
 
+after_test:
+  - nuget.exe install OpenCover -ExcludeVersion
+  - nuget.exe install coveralls.net -ExcludeVersion
+  - pip install codecov
+
+  - cmd: '"OpenCover\tools\OpenCover.Console.exe" -target:dotnet.exe -targetargs:"test test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj --configuration %CONFIGURATION% --framework netcoreapp1.1" -searchdirs:test\System.Linq.Dynamic.Core.Tests\bin\%CONFIGURATION%\netcoreapp1.1 -output:coverage.xml -register:user -filter:+[System.Linq.Dynamic.Core]* -returntargetcode -oldstyle'
+  - codecov -f "coverage.xml"
+  - coveralls.net\tools\csmacnz.Coveralls.exe --opencover -i .\coverage.xml
+
 artifacts:
 - path: artifacts\**\*.*
 
