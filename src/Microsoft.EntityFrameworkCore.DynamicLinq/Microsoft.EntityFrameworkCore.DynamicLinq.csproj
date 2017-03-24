@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
     <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
-    <VersionPrefix>1.0.3.3</VersionPrefix>
+    <VersionPrefix>1.0.4.0</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
     <TargetFrameworks>net451;net46;netstandard1.3;uap10.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
@@ -27,6 +27,7 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
     <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
@@ -37,28 +38,38 @@
     <DefineConstants>$(DefineConstants);UAP10_0</DefineConstants>
     <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
   </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="..\System.Linq.Dynamic.Core\Res.cs;..\System.Linq.Dynamic.Core\Compatibility\*.cs;..\System.Linq.Dynamic.Core\Extensions\*.cs;..\System.Linq.Dynamic.Core\Validation\*.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />
+    <Compile Include="..\System.Linq.Dynamic.Core\Res.cs" />
+    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\*.cs" />
+    <Compile Include="..\System.Linq.Dynamic.Core\Extensions\*.cs" />
+    <Compile Include="..\System.Linq.Dynamic.Core\Validation\*.cs" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
   </ItemGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -66,6 +77,7 @@
       <Version>4.1.2</Version>
     </PackageReference>
   </ItemGroup>
+  
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -73,6 +85,7 @@
       <Version>4.1.2</Version>
     </PackageReference>
   </ItemGroup>
+  
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
   </PropertyGroup>
