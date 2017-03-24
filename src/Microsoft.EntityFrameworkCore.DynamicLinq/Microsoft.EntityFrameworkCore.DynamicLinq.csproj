@@ -4,7 +4,7 @@
     <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
     <VersionPrefix>1.0.4.0</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
-    <TargetFrameworks>net451;net46;netstandard1.3;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net451;net46;netstandard1.3</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>

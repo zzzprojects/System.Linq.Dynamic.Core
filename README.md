@@ -17,8 +17,8 @@ The following frameworks are supported:
 - net40
 - net45 and up
 - netstandard1.3
-- uap10.0
-- SilverLight 5.0
+- uap10.0 (todo)
+- SilverLight 5.0 (todo)
 
 <br>
 This fork takes the basic library to a new level. Contains XML Documentation and examples on how to use it. Also adds unit testing to help ensure that it works properly.
