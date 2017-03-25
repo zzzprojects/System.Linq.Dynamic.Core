@@ -574,7 +574,7 @@ namespace System.Linq.Dynamic.Core
 
             ParameterExpression[] parameters = { Expression.Parameter(source.ElementType, "") };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args);
-            IEnumerable<DynamicOrdering> dynamicOrderings = parser.ParseOrdering();
+            IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering();
 
             Expression queryExpr = source.Expression;
 
@@ -1142,7 +1142,70 @@ namespace System.Linq.Dynamic.Core
 
             return CreateQuery(_takeWhilePredicate, source, lambda);
         }
-#endregion TakeWhile
+        #endregion TakeWhile
+
+#region ThenBy
+        /// <summary>
+        /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of source.</typeparam>
+        /// <param name="source">A sequence of values to order.</param>
+        /// <param name="ordering">An expression string to indicate values to order by.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>A <see cref="IOrderedQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// var result = queryable.OrderBy<User>("LastName");
+        /// var resultSingle = result.ThenBy<User>("NumberProperty");
+        /// var resultSingleDescending = result.ThenBy<User>("NumberProperty DESC");
+        /// var resultMultiple = result.ThenBy<User>("NumberProperty, StringProperty");
+        /// ]]>
+        /// </code>
+        /// </example>
+        public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] string ordering, params object[] args)
+        {
+            return (IOrderedQueryable<TSource>)ThenBy((IOrderedQueryable)source, ordering, args);
+        }
+
+        /// <summary>
+        /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+        /// </summary>
+        /// <param name="source">A sequence of values to order.</param>
+        /// <param name="ordering">An expression string to indicate values to order by.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+        /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+        /// <example>
+        /// <code>
+        /// var result = queryable.OrderBy("LastName");
+        /// var resultSingle = result.OrderBy("NumberProperty");
+        /// var resultSingleDescending = result.OrderBy("NumberProperty DESC");
+        /// var resultMultiple = result.OrderBy("NumberProperty, StringProperty DESC");
+        /// </code>
+        /// </example>
+        public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] string ordering, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(ordering, nameof(ordering));
+
+            ParameterExpression[] parameters = { Expression.Parameter(source.ElementType, "") };
+            ExpressionParser parser = new ExpressionParser(parameters, ordering, args);
+            IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering(forceThenBy: true);
+
+            Expression queryExpr = source.Expression;
+
+            foreach (DynamicOrdering dynamicOrdering in dynamicOrderings)
+            {
+                queryExpr = Expression.Call(
+                    typeof(Queryable), dynamicOrdering.MethodName,
+                    new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                    queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
+            }
+
+            var optimized = OptimizeExpression(queryExpr);
+            return (IOrderedQueryable)source.Provider.CreateQuery(optimized);
+        }
+#endregion OrderBy
 
 #region Where
         /// <summary>
