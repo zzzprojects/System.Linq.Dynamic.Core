@@ -1,0 +1,3 @@
+{
+    "projects": [ "src", "src-console", "test", "test-uap", "test2", "web" ]
+}
