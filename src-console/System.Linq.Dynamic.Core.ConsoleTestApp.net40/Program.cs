@@ -31,8 +31,8 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
         {
             try
             {
-                //context.Database.Delete();
-                //context.Database.CreateIfNotExists();
+                // context.Database.Delete();
+                context.Database.CreateIfNotExists();
                 PopulateTestData(10);
 
                 var expected = context.Blogs.Select(x => new { x.BlogId, x.Name, x.Posts }).ToArray();
