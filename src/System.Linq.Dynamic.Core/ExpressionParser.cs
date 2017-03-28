@@ -141,6 +141,8 @@ namespace System.Linq.Dynamic.Core
             void SelectMany(object selector);
             void OrderBy(object selector);
             void OrderByDescending(object selector);
+            void ThenBy(object selector);
+            void ThenByDescending(object selector);
             void Contains(object selector);
             void Skip(int count);
             void SkipWhile(bool predicate);
@@ -330,7 +332,7 @@ namespace System.Linq.Dynamic.Core
         }
 
 #pragma warning disable 0219
-        public IEnumerable<DynamicOrdering> ParseOrdering()
+        public IList<DynamicOrdering> ParseOrdering(bool forceThenBy = false)
         {
             var orderings = new List<DynamicOrdering>();
             while (true)
@@ -348,10 +350,10 @@ namespace System.Linq.Dynamic.Core
                 }
 
                 string methodName;
-                if (orderings.Count == 0)
-                    methodName = ascending ? methodOrderBy : methodOrderByDescending;
-                else
+                if (forceThenBy || orderings.Count > 0)
                     methodName = ascending ? methodThenBy : methodThenByDescending;
+                else
+                    methodName = ascending ? methodOrderBy : methodOrderByDescending;
 
                 orderings.Add(new DynamicOrdering { Selector = expr, Ascending = ascending, MethodName = methodName });
 
@@ -1386,7 +1388,7 @@ namespace System.Linq.Dynamic.Core
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
 
             Type[] typeArgs;
-            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending" }.Contains(signature.Name))
+            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending" }.Contains(signature.Name))
             {
                 typeArgs = new[] { elementType, args[0].Type };
             }

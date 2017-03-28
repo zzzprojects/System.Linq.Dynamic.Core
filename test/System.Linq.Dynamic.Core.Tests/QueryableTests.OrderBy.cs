@@ -22,7 +22,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(testList.OrderBy(x => x.Id).ToArray(), orderById.ToArray());
             Assert.Equal(testList.OrderBy(x => x.Profile.Age).ToArray(), orderByAge.ToArray());
             Assert.Equal(testList.OrderBy(x => x.Profile.Age).ThenBy(x => x.Id).ToArray(), orderByComplex1.ToArray());
-            
         }
 
         [Fact]
