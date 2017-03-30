@@ -19,6 +19,7 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.*.cs" />
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\*.cs" />
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\TestHelpers\*.cs" />
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\*.cs" />
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\*\*.cs" />
   </ItemGroup>
 

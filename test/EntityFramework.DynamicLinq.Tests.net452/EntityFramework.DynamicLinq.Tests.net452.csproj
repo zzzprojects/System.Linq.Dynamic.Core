@@ -80,6 +80,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\ComplexTests.cs">
       <Link>ComplexTests.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\DynamicExpressionParserTests.cs">
+      <Link>DynamicExpressionParserTests.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.Any.cs">
       <Link>EntitiesTests.Any.cs</Link>
     </Compile>
@@ -178,6 +181,9 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Entities\Post.cs">
       <Link>Helpers\Entities\Post.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\ModelWithEnum.cs">
+      <Link>Helpers\Models\ModelWithEnum.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\Permission.cs">
       <Link>Helpers\Models\Permission.cs</Link>

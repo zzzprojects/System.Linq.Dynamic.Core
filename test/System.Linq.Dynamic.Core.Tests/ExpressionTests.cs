@@ -338,7 +338,9 @@ namespace System.Linq.Dynamic.Core.Tests
         // [Fact]
         public void ExpressionTests_Enum_IN()
         {
+#if NETSTANDARD
             GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
 
             //Arrange
             var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
