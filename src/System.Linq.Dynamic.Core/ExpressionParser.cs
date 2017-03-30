@@ -834,14 +834,7 @@ namespace System.Linq.Dynamic.Core
             _textParser.ValidateToken(TokenId.StringLiteral);
             char quote = _textParser.CurrentToken.Text[0];
             string s = _textParser.CurrentToken.Text.Substring(1, _textParser.CurrentToken.Text.Length - 2);
-            int start = 0;
-            while (true)
-            {
-                int i = s.IndexOf(quote, start);
-                if (i < 0) break;
-                s = s.Remove(i, 1);
-                start = i + 1;
-            }
+
             if (quote == '\'')
             {
                 if (s.Length != 1)
@@ -1684,11 +1677,11 @@ namespace System.Linq.Dynamic.Core
         {
             foreach (Type t in SelfAndBaseTypes(type))
             {
-//#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+                //#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                 MemberInfo[] members = t.GetDefaultMembers();
-//#else
-//                MemberInfo[] members = new MemberInfo[0];
-//#endif
+                //#else
+                //                MemberInfo[] members = new MemberInfo[0];
+                //#endif
                 if (members.Length != 0)
                 {
                     IEnumerable<MethodBase> methods = members

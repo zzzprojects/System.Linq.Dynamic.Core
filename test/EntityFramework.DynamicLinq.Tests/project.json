@@ -25,6 +25,7 @@
                 "../System.Linq.Dynamic.Core.Tests/EntitiesTests.*.cs",
                 "../System.Linq.Dynamic.Core.Tests/Entities/*.cs",
                 "../System.Linq.Dynamic.Core.Tests/TestHelpers/*.cs",
+                "../System.Linq.Dynamic.Core.Tests/Helpers/*.cs",
                 "../System.Linq.Dynamic.Core.Tests/Helpers/*/*.cs"
             ]
         }
