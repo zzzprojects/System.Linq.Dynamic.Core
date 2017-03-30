@@ -28,6 +28,27 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Where_Dynamic_StringQuoted()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(2, allowNullableProfiles: true);
+            testList[0].UserName = @"This \""is\"" a test.";
+            var qry = testList.AsQueryable();
+
+            //Act
+            var result1a = qry.Where(@"UserName == ""This \""is\"" a test.""").ToArray();
+            var result1b = qry.Where("UserName == \"This \\\"is\\\" a test.\"").ToArray();
+            var result2 = qry.Where("UserName == @0", @"This \""is\"" a test.").ToArray();
+            var expected = qry.Where(x => x.UserName == @"This \""is\"" a test.").ToArray();
+
+            //Assert
+            Assert.Equal(1, expected.Length);
+            Assert.Equal(expected, result1a);
+            Assert.Equal(expected, result1b);
+            Assert.Equal(expected, result2);
+        }
+
+        [Fact]
         public void Where_Dynamic_SelectNewObjects()
         {
             //Arrange

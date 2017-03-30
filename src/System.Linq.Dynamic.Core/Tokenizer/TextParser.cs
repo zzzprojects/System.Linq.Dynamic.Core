@@ -229,12 +229,27 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                     char quote = _ch;
                     do
                     {
-                        NextChar();
-                        while (_textPos < _textLen && _ch != quote) NextChar();
+                        bool escaped;
+
+                        do
+                        {
+                            escaped = false;
+                            NextChar();
+
+                            if (_ch == '\\')
+                            {
+                                escaped = true;
+                                if (_textPos < _textLen) NextChar();
+                            }
+                        }
+                        while (_textPos < _textLen && (_ch != quote || escaped));
+
                         if (_textPos == _textLen)
                             throw ParseError(_textPos, Res.UnterminatedStringLiteral);
+
                         NextChar();
                     } while (_ch == quote);
+
                     t = TokenId.StringLiteral;
                     break;
 

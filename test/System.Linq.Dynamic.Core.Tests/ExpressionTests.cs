@@ -335,6 +335,22 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(TestEnum.Var5, result7.Single());
         }
 
+        // [Fact]
+        public void ExpressionTests_Enum_IN()
+        {
+            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+
+            //Arrange
+            var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
+            var model2 = new ModelWithEnum { TestEnum = TestEnum.Var2 };
+            var model3 = new ModelWithEnum { TestEnum = TestEnum.Var3 };
+            var qry = new [] { model1, model2, model3 }.AsQueryable();
+
+            // Act
+            //var expected = qry.Where(x => x.TestEnum )
+            //var result = qry.Where("TestEnum IN (@0)", new[] { TestEnum.Var1, TestEnum.Var2 });
+        }
+
         [Fact]
         public void ExpressionTests_Enum_Nullable()
         {
