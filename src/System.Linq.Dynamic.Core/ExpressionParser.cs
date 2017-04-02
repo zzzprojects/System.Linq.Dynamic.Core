@@ -149,6 +149,7 @@ namespace System.Linq.Dynamic.Core
             void Take(int count);
             void TakeWhile(bool predicate);
             void Distinct();
+            void GroupBy(object selector);
 
             //Executors
             void Single();
@@ -222,6 +223,7 @@ namespace System.Linq.Dynamic.Core
 
         readonly Dictionary<string, object> _symbols;
         IDictionary<string, object> _externals;
+        readonly Dictionary<string, object> _internals;
         readonly Dictionary<Expression, string> _literals;
         ParameterExpression _it;
         ParameterExpression _parent;
@@ -269,6 +271,7 @@ namespace System.Linq.Dynamic.Core
         {
             if (_keywords == null) _keywords = CreateKeywords();
             _symbols = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            _internals = new Dictionary<string, object>();
             _literals = new Dictionary<Expression, string>();
             if (parameters != null) ProcessParameters(parameters);
             if (values != null) ProcessValues(values);
@@ -388,12 +391,30 @@ namespace System.Linq.Dynamic.Core
         // ?? (null-coalescing) operator
         Expression ParseNullCoalescing()
         {
-            Expression expr = ParseConditionalOr();
+            Expression expr = ParseLambda();
             if (_textParser.CurrentToken.Id == TokenId.NullCoalescing)
             {
                 _textParser.NextToken();
                 Expression right = ParseExpression();
                 expr = Expression.Coalesce(expr, right);
+            }
+            return expr;
+        }
+
+        // => operator - Added Support for projection operator
+        Expression ParseLambda()
+        {
+            Expression expr = ParseConditionalOr();
+            if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == expr.Type)
+            {
+                _textParser.NextToken();
+                if (_textParser.CurrentToken.Id == TokenId.Identifier ||
+                    _textParser.CurrentToken.Id == TokenId.OpenParen)
+                {
+                    var right = ParseExpression();
+                    return Expression.Lambda(right, new[] {(ParameterExpression) expr});
+                }
+                _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
             }
             return expr;
         }
@@ -1003,7 +1024,8 @@ namespace System.Linq.Dynamic.Core
             }
 
             if (_symbols.TryGetValue(_textParser.CurrentToken.Text, out value) ||
-                _externals != null && _externals.TryGetValue(_textParser.CurrentToken.Text, out value))
+                _externals != null && _externals.TryGetValue(_textParser.CurrentToken.Text, out value) || 
+                _internals.TryGetValue(_textParser.CurrentToken.Text, out value))
             {
                 Expression expr = value as Expression;
                 if (expr == null)
@@ -1093,7 +1115,9 @@ namespace System.Linq.Dynamic.Core
         Expression ParseNew()
         {
             _textParser.NextToken();
-            _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
+            if (_textParser.CurrentToken.Id != TokenId.OpenParen &&
+                _textParser.CurrentToken.Id != TokenId.OpenCurlyParen)
+                throw ParseError(Res.OpenParenExpected);
             _textParser.NextToken();
 
             var properties = new List<DynamicProperty>();
@@ -1125,7 +1149,9 @@ namespace System.Linq.Dynamic.Core
                 _textParser.NextToken();
             }
 
-            _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
+            if (_textParser.CurrentToken.Id != TokenId.CloseParen &&
+                _textParser.CurrentToken.Id != TokenId.CloseCurlyParen)
+                throw ParseError(Res.CloseParenOrCommaExpected);
             _textParser.NextToken();
 
             return CreateNewExpression(properties, expressions);
@@ -1134,7 +1160,7 @@ namespace System.Linq.Dynamic.Core
         private Expression CreateNewExpression(List<DynamicProperty> properties, List<Expression> expressions)
         {
             // http://solutionizing.net/category/linq/
-            Type type = _resultType;
+            Type type = null; //_resultType;
 
             if (type == null)
             {
@@ -1323,7 +1349,19 @@ namespace System.Linq.Dynamic.Core
             MemberInfo member = FindPropertyOrField(type, id, instance == null);
             if (member == null)
             {
-                throw ParseError(errorPos, Res.UnknownPropertyOrField, id, GetTypeName(type));
+                if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
+                {
+                    // This might be an internal variable for use within a lambda expression, so store it as such
+                    _internals.Add(id, _it);
+                    _textParser.NextToken();
+                    var right = ParseExpression();
+                    return right;
+                }
+                else
+                {
+                    throw ParseError(errorPos, Res.UnknownPropertyOrField, id, GetTypeName(type));
+                }
+
             }
 
             var property = member as PropertyInfo;
@@ -1381,7 +1419,7 @@ namespace System.Linq.Dynamic.Core
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
 
             Type[] typeArgs;
-            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending" }.Contains(signature.Name))
+            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(signature.Name))
             {
                 typeArgs = new[] { elementType, args[0].Type };
             }

@@ -100,6 +100,16 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                     t = TokenId.CloseParen;
                     break;
 
+                case '{':
+                    NextChar();
+                    t = TokenId.OpenCurlyParen;
+                    break;
+
+                case '}':
+                    NextChar();
+                    t = TokenId.CloseCurlyParen;
+                    break;
+
                 case '*':
                     NextChar();
                     t = TokenId.Asterisk;
@@ -163,6 +173,11 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                     {
                         NextChar();
                         t = TokenId.DoubleEqual;
+                    }
+                    else if (_ch == '>')
+                    {
+                        NextChar();
+                        t = TokenId.Lambda;
                     }
                     else
                     {

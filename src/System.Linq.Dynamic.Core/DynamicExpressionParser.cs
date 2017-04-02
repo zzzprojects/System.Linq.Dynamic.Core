@@ -17,6 +17,24 @@ namespace System.Linq.Dynamic.Core
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        public static LambdaExpression ParseLambda([CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        {
+            Check.NotEmpty(expression, nameof(expression));
+
+
+            var parser = new ExpressionParser(new ParameterExpression[0], expression, values);
+
+            return Expression.Lambda(parser.Parse(resultType, true));
+        }
+
+        /// <summary>
+        /// Parses a expression into a LambdaExpression. (Also create a constructor for all the parameters.)
+        /// </summary>
+        /// <param name="itType">The main type from the dynamic class expression.</param>
+        /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
+        /// <returns>The generated <see cref="LambdaExpression"/></returns>
         public static LambdaExpression ParseLambda([NotNull] Type itType, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
         {
             Check.NotNull(itType, nameof(itType));
