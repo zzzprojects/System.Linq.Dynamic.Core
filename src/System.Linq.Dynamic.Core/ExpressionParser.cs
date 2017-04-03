@@ -1116,8 +1116,23 @@ namespace System.Linq.Dynamic.Core
         {
             _textParser.NextToken();
             if (_textParser.CurrentToken.Id != TokenId.OpenParen &&
-                _textParser.CurrentToken.Id != TokenId.OpenCurlyParen)
-                throw ParseError(Res.OpenParenExpected);
+                _textParser.CurrentToken.Id != TokenId.OpenCurlyParen &&
+                _textParser.CurrentToken.Id != TokenId.Identifier)
+                throw ParseError(Res.OpenParenOrIdentifierExpected);
+
+            Type newType = null;
+            if (_textParser.CurrentToken.Id == TokenId.Identifier)
+            {
+                var newTypeName = _textParser.CurrentToken.Text;
+                newType = FindType(newTypeName);
+                if (newType == null)
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, newTypeName);
+                _textParser.NextToken();
+                if (_textParser.CurrentToken.Id != TokenId.OpenParen &&
+                    _textParser.CurrentToken.Id != TokenId.OpenCurlyParen)
+                    throw ParseError(Res.OpenParenExpected);
+            }
+
             _textParser.NextToken();
 
             var properties = new List<DynamicProperty>();
@@ -1154,13 +1169,13 @@ namespace System.Linq.Dynamic.Core
                 throw ParseError(Res.CloseParenOrCommaExpected);
             _textParser.NextToken();
 
-            return CreateNewExpression(properties, expressions);
+            return CreateNewExpression(properties, expressions, newType);
         }
 
-        private Expression CreateNewExpression(List<DynamicProperty> properties, List<Expression> expressions)
+        private Expression CreateNewExpression(List<DynamicProperty> properties, List<Expression> expressions, Type newType)
         {
             // http://solutionizing.net/category/linq/
-            Type type = null; //_resultType;
+            Type type = newType ?? _resultType;
 
             if (type == null)
             {
@@ -1387,6 +1402,28 @@ namespace System.Linq.Dynamic.Core
                 }
                 type = type.GetTypeInfo().BaseType;
             }
+            return null;
+        }
+
+        Type FindType(string name)
+        {
+            object type;
+            _keywords.TryGetValue(name, out type);
+            var result = type as Type;
+            if (result != null)
+                return result;
+            if (_it != null && _it.Type.Name == name)
+                return _it.Type;
+            if (_parent != null && _parent.Type.Name == name)
+                return _parent.Type;
+            if (_root != null && _root.Type.Name == name)
+                return _root.Type;
+            if (_it != null && _it.Type.Namespace + "." + _it.Type.Name == name)
+                return _it.Type;
+            if (_parent != null && _parent.Type.Namespace + "." + _parent.Type.Name == name)
+                return _parent.Type;
+            if (_root != null && _root.Type.Namespace + "." + _root.Type.Name == name)
+                return _root.Type;
             return null;
         }
 
@@ -2397,10 +2434,6 @@ namespace System.Linq.Dynamic.Core
 #endif
             return null;
         }
-
-
-
-
 
         bool TokenIdentifierIs(string id)
         {
