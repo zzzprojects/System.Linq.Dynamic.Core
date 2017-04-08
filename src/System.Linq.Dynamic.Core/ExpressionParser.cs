@@ -325,7 +325,7 @@ namespace System.Linq.Dynamic.Core
             int exprPos = _textParser.CurrentToken.Pos;
             Expression expr = ParseExpression();
             if (resultType != null)
-                if ((expr = PromoteExpression(expr, resultType, true)) == null)
+                if ((expr = PromoteExpression(expr, resultType, true, false)) == null)
                     throw ParseError(exprPos, Res.ExpressionTypeMismatch, GetTypeName(resultType));
             _textParser.ValidateToken(TokenId.End, Res.SyntaxError);
             return expr;
@@ -596,11 +596,11 @@ namespace System.Linq.Dynamic.Core
                     if (left.Type != right.Type)
                     {
                         Expression e;
-                        if ((e = PromoteExpression(right, left.Type, true)) != null)
+                        if ((e = PromoteExpression(right, left.Type, true, false)) != null)
                         {
                             right = e;
                         }
-                        else if ((e = PromoteExpression(left, right.Type, true)) != null)
+                        else if ((e = PromoteExpression(left, right.Type, true, false)) != null)
                         {
                             left = e;
                         }
@@ -1067,8 +1067,8 @@ namespace System.Linq.Dynamic.Core
                 throw ParseError(errorPos, Res.FirstExprMustBeBool);
             if (expr1.Type != expr2.Type)
             {
-                Expression expr1As2 = expr2 != NullLiteral ? PromoteExpression(expr1, expr2.Type, true) : null;
-                Expression expr2As1 = expr1 != NullLiteral ? PromoteExpression(expr2, expr1.Type, true) : null;
+                Expression expr1As2 = expr2 != NullLiteral ? PromoteExpression(expr1, expr2.Type, true, false) : null;
+                Expression expr2As1 = expr1 != NullLiteral ? PromoteExpression(expr2, expr1.Type, true, false) : null;
                 if (expr1As2 != null && expr2As1 == null)
                 {
                     expr1 = expr1As2;
@@ -1448,7 +1448,7 @@ namespace System.Linq.Dynamic.Core
             {
                 if (expr.Type.GetArrayRank() != 1 || args.Length != 1)
                     throw ParseError(errorPos, Res.CannotIndexMultiDimArray);
-                Expression index = PromoteExpression(args[0], typeof(int), true);
+                Expression index = PromoteExpression(args[0], typeof(int), true, false);
                 if (index == null)
                     throw ParseError(errorPos, Res.InvalidIndex);
                 return Expression.ArrayIndex(expr, index);
@@ -1771,7 +1771,7 @@ namespace System.Linq.Dynamic.Core
             {
                 ParameterInfo pi = method.Parameters[i];
                 if (pi.IsOut) return false;
-                Expression promoted = PromoteExpression(args[i], pi.ParameterType, false);
+                Expression promoted = PromoteExpression(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
                 if (promoted == null) return false;
                 promotedArgs[i] = promoted;
             }
@@ -1779,7 +1779,7 @@ namespace System.Linq.Dynamic.Core
             return true;
         }
 
-        Expression PromoteExpression(Expression expr, Type type, bool exact)
+        Expression PromoteExpression(Expression expr, Type type, bool exact, bool convertExpr)
         {
             if (expr.Type == type) return expr;
 
@@ -1837,7 +1837,7 @@ namespace System.Linq.Dynamic.Core
 
             if (IsCompatibleWith(expr.Type, type))
             {
-                if (type.GetTypeInfo().IsValueType || exact)
+                if (type.GetTypeInfo().IsValueType || exact || (expr.Type.GetTypeInfo().IsValueType && convertExpr))
                     return Expression.Convert(expr, type);
 
                 return expr;
