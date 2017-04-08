@@ -39,7 +39,7 @@ build_script:
 - dotnet build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj -c %CONFIGURATION%
 
 test_script:
-- dotnet test -c %CONFIGURATION% --no-build test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj
+#- dotnet test -c %CONFIGURATION% --no-build test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj
 - dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
 
 after_test:
