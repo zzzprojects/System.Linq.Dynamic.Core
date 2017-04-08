@@ -1,3 +1,12 @@
+# 1.0.6.13 (08 April 2017)
+
+ - [#68](https://github.com/StefH/System.Linq.Dynamic.Core/pull/68) - Work on #66 -> Should work now. Tests will follow on VS2017 support! contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+
+Commits: a02f3d64fa...9fa29d7b3b
+
+
+# vNext
+
  - [#69](https://github.com/StefH/System.Linq.Dynamic.Core/pull/69) - Fix - when method has object parameter and ValueType value is passed into this method, result is exception in System.Dynamic.Utils.ExpressionUtils.ValidateOneArgument. contributed by David Cizek ([DavidCizek](https://github.com/DavidCizek))
  - [#65](https://github.com/StefH/System.Linq.Dynamic.Core/issues/65) - Support embedded quotes in string literal +enhancement
  - [#62](https://github.com/StefH/System.Linq.Dynamic.Core/issues/62) - OrderBy Chaining +fix
