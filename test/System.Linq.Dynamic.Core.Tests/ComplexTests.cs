@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using System.Linq.Dynamic.Core.Tests.Entities;
 using System.Linq.Expressions;
+using NFluent;
 using Xunit;
+using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
@@ -13,7 +15,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void GroupByAndSelect_Test_Illegal_one_byte_branch_at_position_9_Requested_branch_was_143()
         {
-            var testList = new List<Entities.Employee>();
+            var testList = new List<Employee>();
             var qry = testList.AsQueryable();
 
             string keySelector = "new (new (Company.Name as CompanyName) as GroupByFields)";
@@ -32,7 +34,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void GroupByAndSelect_Test_GroupByWithSelect()
         {
-            var testList = new List<Entities.Employee>();
+            var testList = new List<Employee>();
             var qry = testList.AsQueryable();
 
             string keySelector = "new (new (Company.Name as CompanyName) as GroupByFields)";
@@ -96,36 +98,54 @@ namespace System.Linq.Dynamic.Core.Tests
 #endif
         }
 
-        [Fact]
-        public void ComplexString1()
+        private class ComplexParseLambda1Result
         {
-            //Arrange
-            var testList = User.GenerateSampleModels(51);
-            var qry = testList.AsQueryable();
-
-            var externals = new Dictionary<string, object>();
-            externals.Add("Users", qry);
-
-            var query = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k=>k.Income) As TotalIncome))";
-            var expression = DynamicExpressionParser.ParseLambda(null, query, externals);
-            var del =  expression.Compile();
-            var selectQry = del.DynamicInvoke();
+            public int? Age;
+            public int TotalIncome;
         }
 
         [Fact]
-        public void ComplexString2()
+        public void ComplexParseLambda1()
         {
             //Arrange
             var testList = User.GenerateSampleModels(51);
             var qry = testList.AsQueryable();
 
-            var externals = new Dictionary<string, object>();
-            externals.Add("Users", qry);
+            var externals = new Dictionary<string, object>
+            {
+                { "Users", qry }
+            };
 
-            var query = "Users.Select(j => new User(j.Income As Income))";
-            var expression = DynamicExpressionParser.ParseLambda(null, query, externals);
-            var del = expression.Compile();
-            var res = del.DynamicInvoke();
+            string query = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            Delegate del = expression.Compile();
+            IEnumerable<dynamic> result = del.DynamicInvoke() as IEnumerable<dynamic>;
+
+            var expected = qry.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>().ToArray();
+
+            Check.That(result).IsNotNull();
+            Check.That(result).HasSize(expected.Length);
+            Check.That(result.ToArray()[0]).Equals(expected[0]);
+        }
+
+        [Fact]
+        public void ComplexParseLambda2()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            var externals = new Dictionary<string, object>
+            {
+                {"Users", qry}
+            };
+
+            string query = "Users.Select(j => new User(j.Income As Income))";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            Delegate del = expression.Compile();
+            object result = del.DynamicInvoke();
+
+            Assert.NotNull(result);
         }
     }
 }

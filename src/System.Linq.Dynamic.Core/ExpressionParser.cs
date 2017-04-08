@@ -412,7 +412,7 @@ namespace System.Linq.Dynamic.Core
                     _textParser.CurrentToken.Id == TokenId.OpenParen)
                 {
                     var right = ParseExpression();
-                    return Expression.Lambda(right, new[] {(ParameterExpression) expr});
+                    return Expression.Lambda(right, new[] { (ParameterExpression)expr });
                 }
                 _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
             }
@@ -1024,7 +1024,7 @@ namespace System.Linq.Dynamic.Core
             }
 
             if (_symbols.TryGetValue(_textParser.CurrentToken.Text, out value) ||
-                _externals != null && _externals.TryGetValue(_textParser.CurrentToken.Text, out value) || 
+                _externals != null && _externals.TryGetValue(_textParser.CurrentToken.Text, out value) ||
                 _internals.TryGetValue(_textParser.CurrentToken.Text, out value))
             {
                 Expression expr = value as Expression;

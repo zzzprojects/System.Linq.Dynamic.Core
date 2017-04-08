@@ -3,6 +3,7 @@
     "authors": [ "Stef Heyenrath" ],
     "dependencies": {
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
+        "NFluent": "2.0.0-alpha",
         "Linq.PropertyTranslator.Core": "1.0.3",
         "Newtonsoft.Json": "9.0.1",
         "QueryInterceptor.Core": "1.0.5",
