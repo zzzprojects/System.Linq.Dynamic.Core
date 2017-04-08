@@ -13,6 +13,8 @@
         Amphersand,
         OpenParen,
         CloseParen,
+        OpenCurlyParen,
+        CloseCurlyParen,
         Asterisk,
         Plus,
         Comma,
@@ -36,6 +38,7 @@
         DoubleBar,
         DoubleGreaterThan,
         DoubleLessThan,
-        NullCoalescing
+        NullCoalescing,
+        Lambda
     }
 }

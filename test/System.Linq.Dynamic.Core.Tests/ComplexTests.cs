@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using System.Linq.Expressions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -93,6 +94,38 @@ namespace System.Linq.Dynamic.Core.Tests
                 realQry.Select(x => x.TotalIncome).ToArray(),
                 selectQry.AsEnumerable().Select(x => x.TotalIncome).Cast<int>().ToArray());
 #endif
+        }
+
+        [Fact]
+        public void ComplexString1()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            var externals = new Dictionary<string, object>();
+            externals.Add("Users", qry);
+
+            var query = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k=>k.Income) As TotalIncome))";
+            var expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            var del =  expression.Compile();
+            var selectQry = del.DynamicInvoke();
+        }
+
+        [Fact]
+        public void ComplexString2()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            var externals = new Dictionary<string, object>();
+            externals.Add("Users", qry);
+
+            var query = "Users.Select(j => new User(j.Income As Income))";
+            var expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            var del = expression.Compile();
+            var res = del.DynamicInvoke();
         }
     }
 }

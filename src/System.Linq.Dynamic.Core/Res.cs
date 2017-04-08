@@ -55,5 +55,6 @@
         public const string IdentifierExpected = "Identifier expected";
         public const string OpenParenOrIdentifierExpected = "'(' or Identifier expected";
         public const string IdentifierImplementingInterfaceExpected = "Identifier implementing interface '{0}' expected";
+        public const string TypeNotFound = "Type '{0}' not Found";
     }
 }
