@@ -26,6 +26,7 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
+    <DebugType>full</DebugType>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
