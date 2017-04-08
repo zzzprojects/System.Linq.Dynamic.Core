@@ -1,4 +1,4 @@
-# 1.0.6.13 (08 April 2017)
+# 1.0.6.13 (08 april 2017)
 
  - [#68](https://github.com/StefH/System.Linq.Dynamic.Core/pull/68) - Work on #66 -> Should work now. Tests will follow on VS2017 support! contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
 

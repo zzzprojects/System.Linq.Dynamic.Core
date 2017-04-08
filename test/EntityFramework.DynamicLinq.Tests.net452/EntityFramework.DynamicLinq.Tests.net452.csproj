@@ -51,6 +51,9 @@
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NFluent, Version=1.4.0.1, Culture=neutral, PublicKeyToken=18828b37b84b1437, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NFluent.2.0.0-alpha\lib\net40\NFluent.dll</HintPath>
+    </Reference>
     <Reference Include="QueryInterceptor.Core, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\QueryInterceptor.Core.1.0.5.0\lib\net452\QueryInterceptor.Core.dll</HintPath>
     </Reference>
@@ -181,6 +184,9 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Entities\Post.cs">
       <Link>Helpers\Entities\Post.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\Methods.cs">
+      <Link>Helpers\Models\Methods.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\ModelWithEnum.cs">
       <Link>Helpers\Models\ModelWithEnum.cs</Link>
