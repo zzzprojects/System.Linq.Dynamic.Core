@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
+    <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
+    <VersionPrefix>1.0.4.0</VersionPrefix>
+    <Authors>Stef Heyenrath</Authors>
+    <TargetFrameworks>net45;net46</TargetFrameworks>
+    <DefineConstants>EF</DefineConstants>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>EntityFramework.DynamicLinq</AssemblyName>
+    <AssemblyOriginatorKeyFile>EntityFramework.DynamicLinq.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
+    <PackageReleaseNotes>Upgraded to VS2017 structure.</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <DefaultLanguage>en-us</DefaultLanguage>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\System.Linq.Dynamic.Core\Res.cs" />
+    <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\*.cs" />
+    <Compile Include="..\System.Linq.Dynamic.Core\Extensions\*.cs" />
+    <Compile Include="..\System.Linq.Dynamic.Core\Validation\*.cs" />
+    <Compile Include="..\Microsoft.EntityFrameworkCore.DynamicLinq\*.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="EntityFramework">
+      <Version>6.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+</Project>

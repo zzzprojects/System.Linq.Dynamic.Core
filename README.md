@@ -10,18 +10,15 @@
 | EntityFramework.DynamicLinq | [![NuGet Badge](https://buildstats.info/nuget/EntityFramework.DynamicLinq)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
 | Microsoft.EntityFrameworkCore.DynamicLinq | [![NuGet Badge](https://buildstats.info/nuget/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 
-This is a **.NET Core port** of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
+This is a **.NET Core port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
 The following frameworks are supported:
 - net35
 - net40
 - net45 and up
 - netstandard1.3
-- netcore45
-- netcore451
-- netcore50
-- uap10.0
-- SilverLight 5.0
+- uap10.0 (todo)
+- SilverLight 5.0 (todo)
 
 <br>
 This fork takes the basic library to a new level. Contains XML Documentation and examples on how to use it. Also adds unit testing to help ensure that it works properly.

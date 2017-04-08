@@ -172,7 +172,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_DateTimeString()
         {
+#if NETSTANDARD
             GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
 
             //Arrange
             var lst = new List<DateTime> { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
@@ -306,7 +308,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Enum()
         {
+#if NETSTANDARD
             GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
 
             //Arrange
             var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };
@@ -334,7 +338,9 @@ namespace System.Linq.Dynamic.Core.Tests
         // [Fact]
         public void ExpressionTests_Enum_IN()
         {
+#if NETSTANDARD
             GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
 
             //Arrange
             var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
@@ -350,7 +356,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Enum_Nullable()
         {
+#if NETSTANDARD
             GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
 
             //Act
             var result1a = new[] { TestEnum.Var1 }.AsQueryable().Where("it = @0", (TestEnum?)TestEnum.Var1);
@@ -436,7 +444,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Guid_CompareTo_String()
         {
+#if NETSTANDARD
             GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
 
             //Arrange
             var lst = new List<Guid> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
@@ -850,14 +860,15 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             double d = 1000.0;
 
-            var list = new List<SimpleValuesModel>();
-            list.Add(new SimpleValuesModel { DecimalValue = 123423.234M });
-            list.Add(new SimpleValuesModel { DecimalValue = 123423423423.2342M });
-            list.Add(new SimpleValuesModel { DecimalValue = 2342342433423.23423423M });
-            list.Add(new SimpleValuesModel { DecimalValue = 123.234M });
-            list.Add(new SimpleValuesModel { DecimalValue = 100000000000.232423423434M });
-            list.Add(new SimpleValuesModel { DecimalValue = 100.232423423434M });
-
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { DecimalValue = 123423.234M },
+                new SimpleValuesModel { DecimalValue = 123423423423.2342M },
+                new SimpleValuesModel { DecimalValue = 2342342433423.23423423M },
+                new SimpleValuesModel { DecimalValue = 123.234M },
+                new SimpleValuesModel { DecimalValue = 100000000000.232423423434M },
+                new SimpleValuesModel { DecimalValue = 100.232423423434M }
+            };
             var expected = list.Where(x => (double)x.DecimalValue > d).ToList();
             var result = list.AsQueryable().Where("double(DecimalValue) > @0", d).ToList();
 

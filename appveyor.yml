@@ -1,6 +1,6 @@
-os: Visual Studio 2015
+os: Visual Studio 2017
 
-version: 1.0.6.{build}
+version: 1.0.7.{build}
 
 configuration:
 - Debug
@@ -11,8 +11,9 @@ init:
 - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
 
 install:
-- ps: Start-FileDownload 'https://download.microsoft.com/download/0/A/3/0A372822-205D-4A86-BFA7-084D2CBE9EDF/DotNetCore.1.0.1-SDK.1.0.0.Preview2-003133-x64.exe'
-- cmd: DotNetCore.1.0.1-SDK.1.0.0.Preview2-003133-x64 /quiet
+  - ps: Start-FileDownload 'https://download.microsoft.com/download/8/F/9/8F9659B9-E628-4D1A-B6BF-C3004C8C954B/dotnet-1.1.1-sdk-win-x64.exe'
+  - cmd: dotnet-1.1.1-sdk-win-x64.exe /quiet
+  - ps: $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
 
 environment:
   PATH: $(PATH);$(PROGRAMFILES)\dotnet\
@@ -20,40 +21,32 @@ environment:
     secure: tsTABRbCmdWFLT194XNIrpurerOfjN6cEoxt2RaSUfLmUIgra/+CwuqVkv0sPRop
 
 build_script:
-- appveyor-retry dotnet restore .\src\System.Linq.Dynamic.Core -v Minimal
-- appveyor-retry dotnet restore .\src\EntityFramework.DynamicLinq -v Minimal
-- appveyor-retry dotnet restore .\src\Microsoft.EntityFrameworkCore.DynamicLinq -v Minimal
+# Restore all
+- dotnet restore src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
+- dotnet restore src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj
+- dotnet restore src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
 
-- appveyor-retry dotnet restore .\test\System.Linq.Dynamic.Core.Tests  -v Minimal
-- appveyor-retry dotnet restore .\test\EntityFramework.DynamicLinq.Tests  -v Minimal
+- dotnet restore test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj
+- dotnet restore test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
 
+# Build Code
+- dotnet build src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj -c %CONFIGURATION% --framework netstandard1.3
+- dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
+- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj -c %CONFIGURATION% --framework netstandard1.3
 
-- dotnet build .\src\System.Linq.Dynamic.Core\project.json -c %CONFIGURATION%
-- dotnet build .\src\EntityFramework.DynamicLinq\project.json -c %CONFIGURATION%
-- dotnet build .\src\Microsoft.EntityFrameworkCore.DynamicLinq\project.json -c %CONFIGURATION%
-
-- dotnet build .\test\System.Linq.Dynamic.Core.Tests\project.json -c %CONFIGURATION%
-- dotnet build .\test\EntityFramework.DynamicLinq.Tests\project.json -c %CONFIGURATION%
-
-- dotnet pack -c Release --no-build --version-suffix %LABEL% -o .\artifacts .\src\System.Linq.Dynamic.Core\project.json
-- dotnet pack -c Release --no-build --version-suffix %LABEL% -o .\artifacts .\src\EntityFramework.DynamicLinq\project.json
-- dotnet pack -c Release --no-build --version-suffix %LABEL% -o .\artifacts .\src\Microsoft.EntityFrameworkCore.DynamicLinq\project.json
+# Build Tests
+- dotnet build test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj -c %CONFIGURATION%
+- dotnet build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj -c %CONFIGURATION%
 
 test_script:
-- dotnet test -c %CONFIGURATION% --no-build .\test\System.Linq.Dynamic.Core.Tests
-- dotnet test -c %CONFIGURATION% --no-build .\test\EntityFramework.DynamicLinq.Tests
+- dotnet test -c %CONFIGURATION% --no-build test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj
+- dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
 
 after_test:
   - nuget.exe install OpenCover -ExcludeVersion
   - nuget.exe install coveralls.net -ExcludeVersion
-  - OpenCover\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\EntityFramework.DynamicLinq.Tests.dll\" -noshadow -appveyor" -returntargetcode -filter:"+[System.Linq.Dynamic.Core]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -hideskipped:All -searchdirs:"\".\test\EntityFramework.DynamicLinq.Tests\bin\%CONFIGURATION%\net461\win7-x64\"" -output:coverage.xml
-  - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
   - pip install codecov
+
+  - cmd: '"OpenCover\tools\OpenCover.Console.exe" -target:dotnet.exe -targetargs:"test test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj --configuration %CONFIGURATION% --framework netcoreapp1.1" -searchdirs:test\System.Linq.Dynamic.Core.Tests\bin\%CONFIGURATION%\netcoreapp1.1 -output:coverage.xml -register:user -filter:+[System.Linq.Dynamic.Core]* -returntargetcode -oldstyle'
   - codecov -f "coverage.xml"
   - coveralls.net\tools\csmacnz.Coveralls.exe --opencover -i .\coverage.xml
-
-artifacts:
-- path: artifacts\**\*.*
-
-cache:
-- '%USERPROFILE%\.nuget\packages'
