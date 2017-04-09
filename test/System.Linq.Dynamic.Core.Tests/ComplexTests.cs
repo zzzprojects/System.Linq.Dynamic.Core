@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NFluent;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Entities;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
@@ -7,6 +8,28 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class ComplexTests
     {
+        public class Claim
+        {
+            public decimal? Balance { get; set; }
+            public List<string> Tags { get; set; }
+        }
+
+        [Fact]
+        // http://stackoverflow.com/questions/43272152/generate-dynamic-linq-query-using-outerit
+        public void OuterIt_StackOverFlow_Question_43272152()
+        {
+            var claim1 = new Claim { Balance = 100, Tags = new List<string> { "Blah", "Blah Blah" } };
+            var claim2 = new Claim { Balance = 500, Tags = new List<string> { "Dummy Tag", "Dummy tag 1", "New" } };
+
+            var claims = new List<Claim>() { claim1, claim2 };
+
+            var tags = new List<string> { "New", "Blah" };
+            var parameters = new List<object> { tags };
+            var query = claims.AsQueryable().Where("Tags.Any(@0.Contains(it)) AND Balance > 100", parameters.ToArray()).ToArray();
+
+            Check.That(query).ContainsExactly(new [] { claim2 });
+        }
+
         /// <summary>
         /// groupByExpressionX	"new (new (Company.Name as CompanyName) as GroupByFields)"	string
         /// </summary>
