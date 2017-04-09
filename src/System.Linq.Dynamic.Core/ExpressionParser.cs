@@ -417,7 +417,7 @@ namespace System.Linq.Dynamic.Core
         // => operator - Added Support for projection operator
         Expression ParseLambdaOperator()
         {
-            Expression expr = ParseConditionalOr();
+            Expression expr = ParseOrOperator();
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == expr.Type)
             {
                 _textParser.NextToken();
@@ -445,14 +445,14 @@ namespace System.Linq.Dynamic.Core
         }
 
         // ||, or operator
-        Expression ParseConditionalOr()
+        Expression ParseOrOperator()
         {
-            Expression left = ParseConditionalAnd();
+            Expression left = ParseAndOperator();
             while (_textParser.CurrentToken.Id == TokenId.DoubleBar || TokenIdentifierIs("or"))
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
-                Expression right = ParseConditionalAnd();
+                Expression right = ParseAndOperator();
                 CheckAndPromoteOperands(typeof(ILogicalSignatures), op.Text, ref left, ref right, op.Pos);
                 left = Expression.OrElse(left, right);
             }
@@ -460,14 +460,14 @@ namespace System.Linq.Dynamic.Core
         }
 
         // &&, and operator
-        Expression ParseConditionalAnd()
+        Expression ParseAndOperator()
         {
             Expression left = ParseIn();
             while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand || TokenIdentifierIs("and"))
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
-                Expression right = ParseComparison();
+                Expression right = ParseComparisonOperator();
                 CheckAndPromoteOperands(typeof(ILogicalSignatures), op.Text, ref left, ref right, op.Pos);
                 left = Expression.AndAlso(left, right);
             }
@@ -479,7 +479,7 @@ namespace System.Linq.Dynamic.Core
         // Adapted from ticket submitted by github user mlewis9548 
         Expression ParseIn()
         {
-            Expression left = ParseLogicalAndOr();
+            Expression left = ParseLogicalAndOrOperator();
             Expression accumulate = left;
 
             while (TokenIdentifierIs("in"))
@@ -557,14 +557,14 @@ namespace System.Linq.Dynamic.Core
         }
 
         // &, | bitwise operators
-        Expression ParseLogicalAndOr()
+        Expression ParseLogicalAndOrOperator()
         {
-            Expression left = ParseComparison();
+            Expression left = ParseComparisonOperator();
             while (_textParser.CurrentToken.Id == TokenId.Amphersand || _textParser.CurrentToken.Id == TokenId.Bar)
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
-                Expression right = ParseComparison();
+                Expression right = ParseComparisonOperator();
 
                 if (left.Type.GetTypeInfo().IsEnum)
                 {
@@ -600,9 +600,9 @@ namespace System.Linq.Dynamic.Core
         }
 
         // =, ==, !=, <>, >, >=, <, <= operators
-        Expression ParseComparison()
+        Expression ParseComparisonOperator()
         {
-            Expression left = ParseShift();
+            Expression left = ParseShiftOperator();
             while (_textParser.CurrentToken.Id == TokenId.Equal || _textParser.CurrentToken.Id == TokenId.DoubleEqual ||
                    _textParser.CurrentToken.Id == TokenId.ExclamationEqual || _textParser.CurrentToken.Id == TokenId.LessGreater ||
                    _textParser.CurrentToken.Id == TokenId.GreaterThan || _textParser.CurrentToken.Id == TokenId.GreaterThanEqual ||
@@ -612,7 +612,7 @@ namespace System.Linq.Dynamic.Core
                 TypeConverter typeConverter;
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
-                Expression right = ParseShift();
+                Expression right = ParseShiftOperator();
                 bool isEquality = op.Id == TokenId.Equal || op.Id == TokenId.DoubleEqual || op.Id == TokenId.ExclamationEqual;
 
                 if (isEquality && (!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType || left.Type == typeof(Guid) && right.Type == typeof(Guid)))
@@ -728,7 +728,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         // <<, >> operators
-        Expression ParseShift()
+        Expression ParseShiftOperator()
         {
             Expression left = ParseAdditive();
             while (_textParser.CurrentToken.Id == TokenId.DoubleLessThan || _textParser.CurrentToken.Id == TokenId.DoubleGreaterThan)
@@ -1113,6 +1113,7 @@ namespace System.Linq.Dynamic.Core
             Expression[] args = ParseArgumentList();
             if (args.Length != 3)
                 throw ParseError(errorPos, Res.IifRequiresThreeArgs);
+
             return GenerateConditional(args[0], args[1], args[2], errorPos);
         }
 
@@ -1138,6 +1139,7 @@ namespace System.Linq.Dynamic.Core
                     string type2 = expr2 != NullLiteral ? expr2.Type.Name : "null";
                     if (expr1As2 != null)
                         throw ParseError(errorPos, Res.BothTypesConvertToOther, type1, type2);
+
                     throw ParseError(errorPos, Res.NeitherTypeConvertsToOther, type1, type2);
                 }
             }
@@ -1257,6 +1259,7 @@ namespace System.Linq.Dynamic.Core
             MethodBase method;
             if (FindMethod(lambda.Type, "Invoke", false, args, out method) != 1)
                 throw ParseError(errorPos, Res.ArgsIncompatibleWithLambda);
+
             return Expression.Invoke(lambda, args);
         }
 
@@ -1268,6 +1271,7 @@ namespace System.Linq.Dynamic.Core
             {
                 if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
                     throw ParseError(errorPos, Res.TypeHasNoNullableForm, GetTypeName(type));
+
                 type = typeof(Nullable<>).MakeGenericType(type);
                 _textParser.NextToken();
             }

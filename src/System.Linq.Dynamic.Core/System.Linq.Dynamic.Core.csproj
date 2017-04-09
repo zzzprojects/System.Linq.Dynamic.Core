@@ -11,7 +11,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageTags>system;linq;dynamic;core;NETStandard</PackageTags>
-    <PackageReleaseNotes>Upgraded to VS2017 structure.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfixes</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
@@ -27,6 +27,10 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
     <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net20' ">
+    <DefineConstants>NET35</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
@@ -53,12 +57,15 @@
     <LanguageTargets>$(MSBuildProgramFiles32)\MSBuild\Microsoft\Silverlight\v5.0\Microsoft.Silverlight.CSharp.targets</LanguageTargets>
   </PropertyGroup>
   
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net35|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
-  </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="10.4.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net20' ">
+    <PackageReference Include="NetLegacySupport.ConcurrentDictionary">
+      <Version>1.1.1</Version>
+    </PackageReference>
+    <Reference Include="System" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
