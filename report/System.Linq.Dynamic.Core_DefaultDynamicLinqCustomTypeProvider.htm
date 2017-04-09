@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html data-ng-app="coverageApp">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE,chrome=1" />
+<title>System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider - Coverage Report</title>
+<link rel="stylesheet" type="text/css" href="report.css" />
+</head><body data-ng-controller="DetailViewCtrl"><div class="container"><div class="containerleft">
+<h1>Summary</h1>
+<table class="overview table-fixed">
+<colgroup>
+<col class="column135" />
+<col />
+</colgroup>
+<tbody>
+<tr><th>Class:</th><td>System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider</td></tr>
+<tr><th>Assembly:</th><td>System.Linq.Dynamic.Core</td></tr>
+<tr><th>File(s):</th><td><a href="#CUsersStefDocumentsGitHubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs" data-ng-click="navigateToHash('#CUsersStefDocumentsGitHubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs')">C:\Users\Stef\Documents\GitHub\System.Linq.Dynamic.Core\src\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</a></td></tr>
+<tr><th>Covered lines:</th><td>0</td></tr>
+<tr><th>Uncovered lines:</th><td>8</td></tr>
+<tr><th>Coverable lines:</th><td>8</td></tr>
+<tr><th>Total lines:</th><td>32</td></tr>
+<tr><th>Line coverage:</th><td>0%</td></tr>
+<tr><th>Branch coverage:</th><td>0%</td></tr>
+</tbody>
+</table>
+<h1>Metrics</h1>
+<table class="overview table-fixed">
+<thead><tr><th>Method</th><th>Cyclomatic complexity <a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" class="info">&nbsp;</a></th><th>NPath complexity <a href="https://modess.io/npath-complexity-cyclomatic-complexity-explained" class="info">&nbsp;</a></th><th>Sequence coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" class="info">&nbsp;</a></th><th>Branch coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" class="info">&nbsp;</a></th></tr></thead>
+<tbody>
+<tr><td title="System.Collections.Generic.HashSet`1&lt;System.Type&gt; System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider::GetCustomTypes()">GetCustomTypes()</td><td>2</td><td>2</td><td>0</td><td>0</td></tr>
+<tr><td title="System.Void System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider::.ctor()">.ctor()</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+</tbody>
+</table>
+<h1>File(s)</h1>
+<h2 id="CUsersStefDocumentsGitHubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs">C:\Users\Stef\Documents\GitHub\System.Linq.Dynamic.Core\src\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</h2>
+<table class="lineAnalysis">
+<thead><tr><th></th><th>#</th><th>Line</th><th></th><th>Line coverage</th></tr></thead>
+<tbody>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line1"></a><code>1</code></td><td></td><td class="lightgray"><code>#if&nbsp;!(WINDOWS_APP&nbsp;||&nbsp;UAP10_0)</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line2"></a><code>2</code></td><td></td><td class="lightgray"><code>using&nbsp;System.Collections.Generic;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line3"></a><code>3</code></td><td></td><td class="lightgray"><code>using&nbsp;System.Reflection;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line4"></a><code>4</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line5"></a><code>5</code></td><td></td><td class="lightgray"><code>namespace&nbsp;System.Linq.Dynamic.Core.CustomTypeProviders</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line6"></a><code>6</code></td><td></td><td class="lightgray"><code>{</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line7"></a><code>7</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;summary&gt;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line8"></a><code>8</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;The&nbsp;default&nbsp;&lt;see&nbsp;cref=&quot;IDynamicLinkCustomTypeProvider&quot;/&gt;.&nbsp;Scans&nbsp;the&nbsp;current&nbsp;AppDomain&nbsp;for&nbsp;all&nbsp;types&nbsp;marked&nbsp;with&nbsp;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line9"></a><code>9</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;/summary&gt;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line10"></a><code>10</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;class&nbsp;DefaultDynamicLinqCustomTypeProvider&nbsp;:&nbsp;AbstractDynamicLinqCustomTypeProvider,&nbsp;IDynamicLinkCustomTypePro</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line11"></a><code>11</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line12"></a><code>12</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;readonly&nbsp;IAssemblyHelper&nbsp;_assemblyHelper&nbsp;=&nbsp;new&nbsp;DefaultAssemblyHelper();</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line13"></a><code>13</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;HashSet&lt;Type&gt;&nbsp;_customTypes;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line14"></a><code>14</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line15"></a><code>15</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;summary&gt;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line16"></a><code>16</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;custom&nbsp;types&nbsp;that&nbsp;System.Linq.Dynamic.Core&nbsp;will&nbsp;understand.</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line17"></a><code>17</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;/summary&gt;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line18"></a><code>18</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;returns&gt;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line19"></a><code>19</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;A&nbsp;&lt;see&nbsp;cref=&quot;System.Collections.Generic.HashSet&amp;lt;Type&amp;gt;&quot;&nbsp;/&gt;&nbsp;list&nbsp;of&nbsp;custom&nbsp;types.</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line20"></a><code>20</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;///&nbsp;&lt;/returns&gt;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line21"></a><code>21</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;virtual&nbsp;HashSet&lt;Type&gt;&nbsp;GetCustomTypes()</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line22"></a><code>22</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
+<tr title="0 of 2 branches are covered" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line23"></a><code>23</code></td><td class="branch0">&nbsp;</td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(_customTypes&nbsp;!=&nbsp;null)</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line24"></a><code>24</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;_customTypes;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line25"></a><code>25</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IEnumerable&lt;Assembly&gt;&nbsp;assemblies&nbsp;=&nbsp;_assemblyHelper.GetAssemblies();</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line27"></a><code>27</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_customTypes&nbsp;=&nbsp;new&nbsp;HashSet&lt;Type&gt;(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line28"></a><code>28</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;_customTypes;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line29"></a><code>29</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line30"></a><code>30</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line31"></a><code>31</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line32"></a><code>32</code></td><td></td><td class="lightgray"><code>#endif</code></td></tr>
+</tbody>
+</table>
+<div class="footer">Generated by: ReportGenerator 2.5.6.0<br />9-4-2017 - 10:04:47<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="http://www.palmmedia.de">www.palmmedia.de</a></div></div>
+<div class="containerright">
+<div class="containerrightfixed">
+<h1>Methods/Properties</h1>
+<a class="method" href="#file0_line12" data-ng-click="navigateToHash('#file0_line12')" title=".ctor()">.ctor()</a><br />
+<a class="method" href="#file0_line22" data-ng-click="navigateToHash('#file0_line22')" title="GetCustomTypes()">GetCustomTypes()</a><br />
+<br/></div>
+</div></div>
+<script type="text/javascript" src="combined.js"></script>
+</body></html>

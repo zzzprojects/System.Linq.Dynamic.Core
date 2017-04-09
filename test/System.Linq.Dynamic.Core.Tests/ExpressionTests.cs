@@ -7,6 +7,7 @@ using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using NFluent;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
@@ -643,6 +644,34 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(expected.Count(), result.Count());
+        }
+
+        [Fact]
+        public void ExpressionTests_NewAnonymousType_Paren()
+        {
+            //Arrange
+            var users = User.GenerateSampleModels(1);
+
+            //Act
+            var expectedResult = users.Select(x => new { x.Id, I = x.Income }).FirstOrDefault();
+            var result = users.AsQueryable().Select("new (Id, Income as I)").FirstOrDefault();
+
+            //Assert
+            Check.That(result).Equals(expectedResult);
+        }
+
+        [Fact]
+        public void ExpressionTests_NewAnonymousType_CurlyParen()
+        {
+            //Arrange
+            var users = User.GenerateSampleModels(1);
+
+            //Act
+            var expectedResult = users.Select(x => new { x.Id, I = x.Income }).FirstOrDefault();
+            var result = users.AsQueryable().Select("new { Id, Income as I }").FirstOrDefault();
+
+            //Assert
+            Check.That(result).Equals(expectedResult);
         }
 
         [Fact]
