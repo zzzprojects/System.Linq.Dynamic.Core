@@ -25,7 +25,7 @@ This fork takes the basic library to a new level. Contains XML Documentation and
 
 <br>
 Some background:
-I forked from https://github.com/NArnott/System.Linq.Dynamic and added some more functionality there.<br>My fork is still visible on github [https://github.com/StefH/System.Linq.Dynamic], however I decided to start a new project + nuget to avoid confusion and create the project according to the new VS2015 + dotnet Core standards.
+I forked from https://github.com/NArnott/System.Linq.Dynamic and added some more functionality there.<br>My fork is still visible on github [https://github.com/StefH/System.Linq.Dynamic], however I decided to start a new project + nuget to avoid confusion and create the project according to the new VS2017 + .NET Core rules / standards.
 
 However, currently there are multiple nuget packages and project available:
 
