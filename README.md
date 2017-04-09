@@ -17,7 +17,7 @@ The following frameworks are supported:
 - net40
 - net45 and up
 - netstandard1.3
-- uap10.0 (todo)
+- uap10.0
 - SilverLight 5.0 (todo)
 
 <br>
