@@ -7,7 +7,8 @@ namespace System.Linq.Dynamic.Core.Tests
     {
         public HashSet<Type> GetCustomTypes()
         {
-            var thisType = this.GetType();
+            var thisType = GetType();
+
 #if NETSTANDARD
             var assemblies = AppDomain.NetCoreApp.AppDomain.CurrentDomain.GetAssemblies(thisType).Where(x => !x.IsDynamic).ToArray();
 #else

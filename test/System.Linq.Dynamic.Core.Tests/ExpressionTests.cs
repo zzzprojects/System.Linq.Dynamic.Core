@@ -313,11 +313,11 @@ namespace System.Linq.Dynamic.Core.Tests
             GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
-            //Arrange
+            // Arrange
             var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };
             var qry = lst.AsQueryable();
 
-            //Act
+            // Act
             var result1 = qry.Where("it < TestEnum.Var4");
             var result2 = qry.Where("TestEnum.Var4 > it");
             var result3 = qry.Where("it = Var5");
@@ -325,33 +325,18 @@ namespace System.Linq.Dynamic.Core.Tests
             var result5 = qry.Where("it = @0", 8);
             var result6 = qry.Where("it = @0", "Var5");
             var result7 = qry.Where("it = @0", "vAR5");
+            var result8 = qry.Where("Var5 = it");
 
-            //Assert
-            Assert.Equal(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 }, result1.ToArray());
-            Assert.Equal(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 }, result2.ToArray());
-            Assert.Equal(TestEnum.Var5, result3.Single());
-            Assert.Equal(TestEnum.Var5, result4.Single());
-            Assert.Equal(TestEnum.Var5, result5.Single());
-            Assert.Equal(TestEnum.Var5, result6.Single());
-            Assert.Equal(TestEnum.Var5, result7.Single());
-        }
-
-        // [Fact]
-        public void ExpressionTests_Enum_IN()
-        {
-#if NETSTANDARD
-            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
-
-            //Arrange
-            var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
-            var model2 = new ModelWithEnum { TestEnum = TestEnum.Var2 };
-            var model3 = new ModelWithEnum { TestEnum = TestEnum.Var3 };
-            var qry = new [] { model1, model2, model3 }.AsQueryable();
-
-            // Act
-            //var expected = qry.Where(x => x.TestEnum )
-            //var result = qry.Where("TestEnum IN (@0)", new[] { TestEnum.Var1, TestEnum.Var2 });
+            // Assert
+            Check.That(result1.ToArray()).ContainsExactly(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 });
+            Check.That(result2.ToArray()).ContainsExactly(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 });
+            Check.That(result3.Single()).Equals(TestEnum.Var5);
+            Check.That(result3.Single()).Equals(TestEnum.Var5);
+            Check.That(result4.Single()).Equals(TestEnum.Var5);
+            Check.That(result5.Single()).Equals(TestEnum.Var5);
+            Check.That(result6.Single()).Equals(TestEnum.Var5);
+            Check.That(result7.Single()).Equals(TestEnum.Var5);
+            Check.That(result8.Single()).Equals(TestEnum.Var5);
         }
 
         [Fact]
@@ -484,6 +469,56 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(testValue, resulta.Single());
             Assert.Equal(testValue, resultb.Single());
+        }
+
+        [Fact]
+        public void ExpressionTests_In_Enum()
+        {
+#if NETSTANDARD
+            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
+            // Arrange
+            var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
+            var model2 = new ModelWithEnum { TestEnum = TestEnum.Var2 };
+            var model3 = new ModelWithEnum { TestEnum = TestEnum.Var3 };
+            var qry = new[] { model1, model2, model3 }.AsQueryable();
+
+            // Act
+            var expected = qry.Where(x => new[] { TestEnum.Var1, TestEnum.Var2 }.Contains(x.TestEnum)).ToArray();
+            var result1 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
+            var result2 = qry.Where("it.TestEnum in (0, 1)").ToArray();
+
+            // Assert
+            Check.That(result1).ContainsExactly(expected);
+            Check.That(result2).ContainsExactly(expected);
+        }
+
+        [Fact]
+        public void ExpressionTests_In_String()
+        {
+            //Arrange
+            var testRange = Enumerable.Range(1, 100).ToArray();
+            var testModels = User.GenerateSampleModels(10);
+            var testModelByUsername = string.Format("Username in (\"{0}\",\"{1}\",\"{2}\")", testModels[0].UserName, testModels[1].UserName, testModels[2].UserName);
+            var testInExpression = new int[] { 2, 4, 6, 8 };
+
+            //Act
+            var result1a = testRange.AsQueryable().Where("it in (2,4,6,8)").ToArray();
+            var result1b = testRange.AsQueryable().Where("it in (2, 4,  6, 8)").ToArray();
+            // https://github.com/NArnott/System.Linq.Dynamic/issues/52
+            var result2 = testModels.AsQueryable().Where(testModelByUsername).ToArray();
+            var result3 =
+                testModels.AsQueryable()
+                    .Where("Id in (@0, @1, @2)", testModels[0].Id, testModels[1].Id, testModels[2].Id)
+                    .ToArray();
+            var result4 = testRange.AsQueryable().Where("it in @0", testInExpression).ToArray();
+
+            //Assert
+            Assert.Equal(new int[] { 2, 4, 6, 8 }, result1a);
+            Assert.Equal(new int[] { 2, 4, 6, 8 }, result1b);
+            Assert.Equal(testModels.Take(3).ToArray(), result2);
+            Assert.Equal(testModels.Take(3).ToArray(), result3);
+            Assert.Equal(new int[] { 2, 4, 6, 8 }, result4);
         }
 
         [Fact]
@@ -728,7 +763,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = result1.Select("x.BlogId");
 
             //Assert
-            Assert.Equal(new [] { 100, 200 }, result.ToDynamicArray<int>());
+            Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
         //[Fact]

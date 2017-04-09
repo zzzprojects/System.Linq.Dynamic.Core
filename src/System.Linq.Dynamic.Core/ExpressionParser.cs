@@ -269,12 +269,18 @@ namespace System.Linq.Dynamic.Core
 
         public ExpressionParser(ParameterExpression[] parameters, string expression, object[] values)
         {
-            if (_keywords == null) _keywords = CreateKeywords();
+            if (_keywords == null)
+                _keywords = CreateKeywords();
+
             _symbols = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             _internals = new Dictionary<string, object>();
             _literals = new Dictionary<Expression, string>();
-            if (parameters != null) ProcessParameters(parameters);
-            if (values != null) ProcessValues(values);
+
+            if (parameters != null)
+                ProcessParameters(parameters);
+
+            if (values != null)
+                ProcessValues(values);
 
             _textParser = new TextParser(expression);
         }
@@ -326,7 +332,7 @@ namespace System.Linq.Dynamic.Core
             _createParameterCtor = createParameterCtor;
 
             int exprPos = _textParser.CurrentToken.Pos;
-            Expression expr = ParseExpression();
+            Expression expr = ParseConditionalOperator();
 
             if (resultType != null)
             {
@@ -347,7 +353,7 @@ namespace System.Linq.Dynamic.Core
             var orderings = new List<DynamicOrdering>();
             while (true)
             {
-                Expression expr = ParseExpression();
+                Expression expr = ParseConditionalOperator();
                 bool ascending = true;
                 if (TokenIdentifierIs("asc") || TokenIdentifierIs("ascending"))
                 {
@@ -379,37 +385,37 @@ namespace System.Linq.Dynamic.Core
 #pragma warning restore 0219
 
         // ?: operator
-        Expression ParseExpression()
+        Expression ParseConditionalOperator()
         {
             int errorPos = _textParser.CurrentToken.Pos;
-            Expression expr = ParseNullCoalescing();
+            Expression expr = ParseNullCoalescingOperator();
             if (_textParser.CurrentToken.Id == TokenId.Question)
             {
                 _textParser.NextToken();
-                Expression expr1 = ParseExpression();
+                Expression expr1 = ParseConditionalOperator();
                 _textParser.ValidateToken(TokenId.Colon, Res.ColonExpected);
                 _textParser.NextToken();
-                Expression expr2 = ParseExpression();
+                Expression expr2 = ParseConditionalOperator();
                 expr = GenerateConditional(expr, expr1, expr2, errorPos);
             }
             return expr;
         }
 
         // ?? (null-coalescing) operator
-        Expression ParseNullCoalescing()
+        Expression ParseNullCoalescingOperator()
         {
-            Expression expr = ParseLambda();
+            Expression expr = ParseLambdaOperator();
             if (_textParser.CurrentToken.Id == TokenId.NullCoalescing)
             {
                 _textParser.NextToken();
-                Expression right = ParseExpression();
+                Expression right = ParseConditionalOperator();
                 expr = Expression.Coalesce(expr, right);
             }
             return expr;
         }
 
         // => operator - Added Support for projection operator
-        Expression ParseLambda()
+        Expression ParseLambdaOperator()
         {
             Expression expr = ParseConditionalOr();
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == expr.Type)
@@ -418,7 +424,7 @@ namespace System.Linq.Dynamic.Core
                 if (_textParser.CurrentToken.Id == TokenId.Identifier ||
                     _textParser.CurrentToken.Id == TokenId.OpenParen)
                 {
-                    var right = ParseExpression();
+                    var right = ParseConditionalOperator();
                     return Expression.Lambda(right, new[] { (ParameterExpression)expr });
                 }
                 _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
@@ -483,7 +489,6 @@ namespace System.Linq.Dynamic.Core
                 _textParser.NextToken();
                 if (_textParser.CurrentToken.Id == TokenId.OpenParen) //literals (or other inline list)
                 {
-                    Expression identifier = left;
                     while (_textParser.CurrentToken.Id != TokenId.CloseParen)
                     {
                         _textParser.NextToken();
@@ -491,30 +496,37 @@ namespace System.Linq.Dynamic.Core
                         //we need to parse unary expressions because otherwise 'in' clause will fail in use cases like 'in (-1, -1)' or 'in (!true)'
                         Expression right = ParseUnary();
 
-                        //check for direct type match
-                        if (identifier.Type != right.Type)
+                        // if the identifier is an Enum, try to convert the right-side also to an Enum.
+                        if (left.Type.GetTypeInfo().IsEnum && right is ConstantExpression)
                         {
-                            //check for nullable type match
-
-                            if (!identifier.Type.GetTypeInfo().IsGenericType || identifier.Type.GetGenericTypeDefinition() != typeof(Nullable<>)
-                                || identifier.Type.GetTypeInfo().GetGenericTypeArguments()[0] != right.Type)
-                            {
-                                throw ParseError(op.Pos, Res.ExpressionTypeMismatch, identifier.Type);
-                            }
+                            right = ParseEnumToConstantExpression(op.Pos, left.Type, right as ConstantExpression);
                         }
 
-                        CheckAndPromoteOperands(typeof(IEqualitySignatures), "==", ref identifier, ref right, op.Pos);
+                        // else, check for direct type match
+                        else if (left.Type != right.Type)
+                        {
+                            //check for nullable type match
+                            if (!left.Type.GetTypeInfo().IsGenericType ||
+                                left.Type.GetGenericTypeDefinition() != typeof(Nullable<>) ||
+                                left.Type.GetTypeInfo().GetGenericTypeArguments()[0] != right.Type)
+                            {
+                                throw ParseError(op.Pos, Res.ExpressionTypeMismatch, left.Type);
+                            }
+
+                            CheckAndPromoteOperands(typeof(IEqualitySignatures), "==", ref left, ref right, op.Pos);
+                        }
 
                         if (accumulate.Type != typeof(bool))
                         {
-                            accumulate = GenerateEqual(identifier, right);
+                            accumulate = GenerateEqual(left, right);
                         }
                         else
                         {
-                            accumulate = Expression.OrElse(accumulate, GenerateEqual(identifier, right));
+                            accumulate = Expression.OrElse(accumulate, GenerateEqual(left, right));
                         }
 
-                        if (_textParser.CurrentToken.Id == TokenId.End) throw ParseError(op.Pos, Res.CloseParenOrCommaExpected);
+                        if (_textParser.CurrentToken.Id == TokenId.End)
+                            throw ParseError(op.Pos, Res.CloseParenOrCommaExpected);
                     }
                 }
                 else if (_textParser.CurrentToken.Id == TokenId.Identifier) //a single argument
@@ -578,6 +590,7 @@ namespace System.Linq.Dynamic.Core
                             left = Expression.And(left, right);
                         }
                         break;
+
                     case TokenId.Bar:
                         left = Expression.Or(left, right);
                         break;
@@ -601,6 +614,7 @@ namespace System.Linq.Dynamic.Core
                 _textParser.NextToken();
                 Expression right = ParseShift();
                 bool isEquality = op.Id == TokenId.Equal || op.Id == TokenId.DoubleEqual || op.Id == TokenId.ExclamationEqual;
+
                 if (isEquality && (!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType || left.Type == typeof(Guid) && right.Type == typeof(Guid)))
                 {
                     if (left.Type != right.Type)
@@ -634,29 +648,11 @@ namespace System.Linq.Dynamic.Core
                         }
                         else if (IsEnumType(left.Type) && (constantExpr = right as ConstantExpression) != null)
                         {
-                            object wrt = null;
-                            if (constantExpr.Value is string)
-                            {
-                                wrt = Enum.Parse(GetNonNullableType(left.Type), constantExpr.Value as string, true);
-                            }
-                            else
-                            {
-                                wrt = Enum.ToObject(left.Type, constantExpr.Value);
-                            }
-                            right = Expression.Constant(wrt, left.Type);
+                            right = ParseEnumToConstantExpression(op.Pos, left.Type, constantExpr);
                         }
                         else if (IsEnumType(right.Type) && (constantExpr = left as ConstantExpression) != null)
                         {
-                            object wrt = null;
-                            if (constantExpr.Value is string)
-                            {
-                                wrt = Enum.Parse(GetNonNullableType(right.Type), constantExpr.Value as string, true);
-                            }
-                            else
-                            {
-                                wrt = Enum.ToObject(right.Type, constantExpr.Value);
-                            }
-                            left = Expression.Constant(wrt, right.Type);
+                            left = ParseEnumToConstantExpression(op.Pos, right.Type, constantExpr);
                         }
                         else
                         {
@@ -677,6 +673,7 @@ namespace System.Linq.Dynamic.Core
                     CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures),
                         op.Text, ref left, ref right, op.Pos);
                 }
+
                 switch (op.Id)
                 {
                     case TokenId.Equal:
@@ -701,7 +698,33 @@ namespace System.Linq.Dynamic.Core
                         break;
                 }
             }
+
             return left;
+        }
+
+        private ConstantExpression ParseEnumToConstantExpression(int pos, Type leftType, ConstantExpression constantExpr)
+        {
+            return Expression.Constant(ParseConstantExpressionToEnum(pos, leftType, constantExpr), leftType);
+        }
+
+        private object ParseConstantExpressionToEnum(int pos, Type leftType, ConstantExpression constantExpr)
+        {
+            object parsedEnum = null;
+            try
+            {
+                if (constantExpr.Value is string)
+                {
+                    return parsedEnum = Enum.Parse(GetNonNullableType(leftType), constantExpr.Value as string, true);
+                }
+                else
+                {
+                    return parsedEnum = Enum.ToObject(leftType, constantExpr.Value);
+                }
+            }
+            catch
+            {
+                throw ParseError(pos, Res.ExpressionTypeMismatch, leftType);
+            }
         }
 
         // <<, >> operators
@@ -800,6 +823,7 @@ namespace System.Linq.Dynamic.Core
                     _textParser.CurrentToken.Pos = op.Pos;
                     return ParsePrimary();
                 }
+
                 Expression expr = ParseUnary();
                 if (op.Id == TokenId.Minus)
                 {
@@ -811,8 +835,10 @@ namespace System.Linq.Dynamic.Core
                     CheckAndPromoteOperand(typeof(INotSignatures), op.Text, ref expr, op.Pos);
                     expr = Expression.Not(expr);
                 }
+
                 return expr;
             }
+
             return ParsePrimary();
         }
 
@@ -999,7 +1025,7 @@ namespace System.Linq.Dynamic.Core
         {
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
             _textParser.NextToken();
-            Expression e = ParseExpression();
+            Expression e = ParseConditionalOperator();
             _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrOperatorExpected);
             _textParser.NextToken();
             return e;
@@ -1148,7 +1174,7 @@ namespace System.Linq.Dynamic.Core
             while (true)
             {
                 int exprPos = _textParser.CurrentToken.Pos;
-                Expression expr = ParseExpression();
+                Expression expr = ParseConditionalOperator();
                 string propName;
                 if (TokenIdentifierIs("as"))
                 {
@@ -1341,6 +1367,7 @@ namespace System.Linq.Dynamic.Core
                 {
                     case 0:
                         throw ParseError(errorPos, Res.NoApplicableMethod, id, GetTypeName(type));
+
                     case 1:
                         MethodInfo method = (MethodInfo)mb;
                         if (!IsPredefinedType(method.DeclaringType) && !(method.IsPublic && IsPredefinedType(method.ReturnType)))
@@ -1350,6 +1377,7 @@ namespace System.Linq.Dynamic.Core
                             throw ParseError(errorPos, Res.MethodIsVoid, id, GetTypeName(method.DeclaringType));
 
                         return Expression.Call(instance, method, args);
+
                     default:
                         throw ParseError(errorPos, Res.AmbiguousMethodInvocation, id, GetTypeName(type));
                 }
@@ -1376,8 +1404,8 @@ namespace System.Linq.Dynamic.Core
                     // This might be an internal variable for use within a lambda expression, so store it as such
                     _internals.Add(id, _it);
                     _textParser.NextToken();
-                    var right = ParseExpression();
-                    return right;
+
+                    return ParseConditionalOperator();
                 }
                 else
                 {
@@ -1511,10 +1539,14 @@ namespace System.Linq.Dynamic.Core
             List<Expression> argList = new List<Expression>();
             while (true)
             {
-                argList.Add(ParseExpression());
-                if (_textParser.CurrentToken.Id != TokenId.Comma) break;
+                argList.Add(ParseConditionalOperator());
+
+                if (_textParser.CurrentToken.Id != TokenId.Comma)
+                    break;
+
                 _textParser.NextToken();
             }
+
             return argList.ToArray();
         }
 
@@ -1679,6 +1711,7 @@ namespace System.Linq.Dynamic.Core
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
                 throw ParseError(errorPos, Res.IncompatibleOperand, opName, GetTypeName(args[0].Type));
+
             expr = args[0];
         }
 
@@ -1689,6 +1722,7 @@ namespace System.Linq.Dynamic.Core
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
                 throw IncompatibleOperandsError(opName, left, right, errorPos);
+
             left = args[0];
             right = args[1];
         }
@@ -1863,7 +1897,8 @@ namespace System.Linq.Dynamic.Core
 
         Expression PromoteExpression(Expression expr, Type type, bool exact, bool convertExpr)
         {
-            if (expr.Type == type) return expr;
+            if (expr.Type == type)
+                return expr;
 
             var ce = expr as ConstantExpression;
 
@@ -1881,6 +1916,7 @@ namespace System.Linq.Dynamic.Core
                     {
                         Type target = GetNonNullableType(type);
                         object value = null;
+
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                         switch (Type.GetTypeCode(ce.Type))
                         {
@@ -1894,22 +1930,32 @@ namespace System.Linq.Dynamic.Core
                                 if (target.IsEnum)
                                     value = Enum.ToObject(target, value);
                                 break;
+
                             case TypeCode.Double:
                                 if (target == typeof(decimal)) value = ParseNumber(text, target);
                                 break;
+
                             case TypeCode.String:
                                 value = ParseEnum(text, target);
                                 break;
                         }
 #else
                         if (ce.Type == typeof(Int32) || ce.Type == typeof(UInt32) || ce.Type == typeof(Int64) || ce.Type == typeof(UInt64))
+                        {
                             value = ParseNumber(text, target);
+
+                            // Make sure an enum value stays an enum value
+                            if (target.GetTypeInfo().IsEnum)
+                                value = Enum.ToObject(target, value);
+                        }
                         else if (ce.Type == typeof(Double))
                         {
                             if (target == typeof(decimal)) value = ParseNumber(text, target);
                         }
                         else if (ce.Type == typeof(String))
+                        {
                             value = ParseEnum(text, target);
+                        }
 #endif
                         if (value != null)
                             return Expression.Constant(value, type);
@@ -2039,20 +2085,22 @@ namespace System.Linq.Dynamic.Core
             return null;
         }
 
-        static object ParseEnum(string name, Type type)
+        static object ParseEnum(string value, Type type)
         {
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             if (type.IsEnum)
             {
                 MemberInfo[] memberInfos = type.FindMembers(MemberTypes.Field,
                     BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static,
-                    Type.FilterNameIgnoreCase, name);
-                if (memberInfos.Length != 0) return ((FieldInfo)memberInfos[0]).GetValue(null);
+                    Type.FilterNameIgnoreCase, value);
+
+                if (memberInfos.Length != 0)
+                    return ((FieldInfo)memberInfos[0]).GetValue(null);
             }
 #else
             if (type.GetTypeInfo().IsEnum)
             {
-                return Enum.Parse(type, name, true);
+                return Enum.Parse(type, value, true);
             }
 #endif
             return null;
@@ -2406,7 +2454,9 @@ namespace System.Linq.Dynamic.Core
             //
             // The Expression.Call(typeof(Guid).GetMethod("Parse"), right); does the job only for Linq to Object but Linq to Entities.
             //
-            Type leftType = left.Type, rightType = right.Type;
+            Type leftType = left.Type;
+            Type rightType = right.Type;
+
             if (rightType == typeof(string) && right.NodeType == ExpressionType.Constant)
             {
                 right = OptimizeStringForEqualityIfPossible((string)((ConstantExpression)right).Value, leftType) ?? right;
