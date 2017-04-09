@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Entities;
-using System.Linq.Expressions;
-using NFluent;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
@@ -96,56 +94,6 @@ namespace System.Linq.Dynamic.Core.Tests
                 realQry.Select(x => x.TotalIncome).ToArray(),
                 selectQry.AsEnumerable().Select(x => x.TotalIncome).Cast<int>().ToArray());
 #endif
-        }
-
-        private class ComplexParseLambda1Result
-        {
-            public int? Age;
-            public int TotalIncome;
-        }
-
-        [Fact]
-        public void ComplexParseLambda1()
-        {
-            //Arrange
-            var testList = User.GenerateSampleModels(51);
-            var qry = testList.AsQueryable();
-
-            var externals = new Dictionary<string, object>
-            {
-                { "Users", qry }
-            };
-
-            string query = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
-            Delegate del = expression.Compile();
-            IEnumerable<dynamic> result = del.DynamicInvoke() as IEnumerable<dynamic>;
-
-            var expected = qry.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>().ToArray();
-
-            Check.That(result).IsNotNull();
-            Check.That(result).HasSize(expected.Length);
-            Check.That(result.ToArray()[0]).Equals(expected[0]);
-        }
-
-        [Fact]
-        public void ComplexParseLambda2()
-        {
-            //Arrange
-            var testList = User.GenerateSampleModels(51);
-            var qry = testList.AsQueryable();
-
-            var externals = new Dictionary<string, object>
-            {
-                {"Users", qry}
-            };
-
-            string query = "Users.Select(j => new User(j.Income As Income))";
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
-            Delegate del = expression.Compile();
-            object result = del.DynamicInvoke();
-
-            Assert.NotNull(result);
         }
     }
 }

@@ -327,10 +327,17 @@ namespace System.Linq.Dynamic.Core
 
             int exprPos = _textParser.CurrentToken.Pos;
             Expression expr = ParseExpression();
+
             if (resultType != null)
+            {
                 if ((expr = PromoteExpression(expr, resultType, true, false)) == null)
+                {
                     throw ParseError(exprPos, Res.ExpressionTypeMismatch, GetTypeName(resultType));
+                }
+            }
+
             _textParser.ValidateToken(TokenId.End, Res.SyntaxError);
+
             return expr;
         }
 
