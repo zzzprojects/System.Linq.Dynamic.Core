@@ -1283,7 +1283,7 @@ namespace System.Linq.Dynamic.Core
             {
                 Expression[] args = shorthand ? new[] { ParseStringLiteral() } : ParseArgumentList();
 
-                // If only 1 argument, and if the type is a Nullable, just make Nullable
+                // If only 1 argument, and if the type is a ValueType and argType is also a ValueType, just Convert
                 if (args.Length == 1)
                 {
                     Type argType = args[0].Type;

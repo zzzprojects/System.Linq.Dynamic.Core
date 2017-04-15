@@ -21,7 +21,7 @@
 <tr><th>Coverable lines:</th><td>25</td></tr>
 <tr><th>Total lines:</th><td>95</td></tr>
 <tr><th>Line coverage:</th><td>92%</td></tr>
-<tr><th>Branch coverage:</th><td>50%</td></tr>
+<tr><th>Branch coverage:</th><td>83.3%</td></tr>
 </tbody>
 </table>
 <h1>Metrics</h1>
@@ -29,7 +29,7 @@
 <thead><tr><th>Method</th><th>Cyclomatic complexity <a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" class="info">&nbsp;</a></th><th>NPath complexity <a href="https://modess.io/npath-complexity-cyclomatic-complexity-explained" class="info">&nbsp;</a></th><th>Sequence coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" class="info">&nbsp;</a></th><th>Branch coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" class="info">&nbsp;</a></th></tr></thead>
 <tbody>
 <tr><td title="System.Collections.Generic.IEnumerable`1&lt;System.Type&gt; System.Linq.Dynamic.Core.CustomTypeProviders.AbstractDynamicLinqCustomTypeProvider::FindTypesMarkedWithDynamicLinqTypeAttribute(System.Collections.Generic.IEnumerable`1&lt;System.Reflection.Assembly&gt;)">FindTypesMarkedWithDynamicLinqTypeAttribute(...)</td><td>4</td><td>0</td><td>100</td><td>100</td></tr>
-<tr><td title="GetAssemblyTypes()">GetAssemblyTypes()</td><td>6</td><td>2</td><td>92</td><td>66.67</td></tr>
+<tr><td title="GetAssemblyTypes()">GetAssemblyTypes()</td><td>6</td><td>8</td><td>92</td><td>85.71</td></tr>
 </tbody>
 </table>
 <h1>File(s)</h1>
@@ -79,7 +79,7 @@
 <tr data-coverage="{'AllTestMethods': {'VC': '14', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">14</td><td class="rightmargin right"><a id="file0_line40"></a><code>40</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '14', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">14</td><td class="rightmargin right"><a id="file0_line41"></a><code>41</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Check.NotNull(assemblies,&nbsp;nameof(assemblies));</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line42"></a><code>42</code></td><td></td><td class="lightgray"><code></code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '4858', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">4858</td><td class="rightmargin right"><a id="file0_line43"></a><code>43</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(var&nbsp;assembly&nbsp;in&nbsp;assemblies)</code></td></tr>
+<tr title="2 of 2 branches are covered" data-coverage="{'AllTestMethods': {'VC': '4858', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">4858</td><td class="rightmargin right"><a id="file0_line43"></a><code>43</code></td><td class="branch100">&nbsp;</td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(var&nbsp;assembly&nbsp;in&nbsp;assemblies)</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '2408', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2408</td><td class="rightmargin right"><a id="file0_line44"></a><code>44</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '2408', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2408</td><td class="rightmargin right"><a id="file0_line45"></a><code>45</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IEnumerable&lt;TypeInfo&gt;&nbsp;definedTypes&nbsp;=&nbsp;null;</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line46"></a><code>46</code></td><td></td><td class="lightgray"><code></code></td></tr>
@@ -92,7 +92,7 @@
 <tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line53"></a><code>53</code></td><td></td><td class="lightgray"><code></code></td></tr>
 <tr title="1 of 2 branches are covered" data-coverage="{'AllTestMethods': {'VC': '2408', 'LVS': 'orange'}}"><td class="orange">&nbsp;</td><td class="leftmargin rightmargin right">2408</td><td class="rightmargin right"><a id="file0_line54"></a><code>54</code></td><td class="branch50">&nbsp;</td><td class="lightorange"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(definedTypes&nbsp;!=&nbsp;null)</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '2408', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2408</td><td class="rightmargin right"><a id="file0_line55"></a><code>55</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '543872', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">543872</td><td class="rightmargin right"><a id="file0_line56"></a><code>56</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(var&nbsp;definedType&nbsp;in&nbsp;definedTypes)</code></td></tr>
+<tr title="2 of 2 branches are covered" data-coverage="{'AllTestMethods': {'VC': '543872', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">543872</td><td class="rightmargin right"><a id="file0_line56"></a><code>56</code></td><td class="branch100">&nbsp;</td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foreach&nbsp;(var&nbsp;definedType&nbsp;in&nbsp;definedTypes)</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '268324', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">268324</td><td class="rightmargin right"><a id="file0_line57"></a><code>57</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '268324', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">268324</td><td class="rightmargin right"><a id="file0_line58"></a><code>58</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yield&nbsp;return&nbsp;definedType;</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '268324', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">268324</td><td class="rightmargin right"><a id="file0_line59"></a><code>59</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
@@ -134,7 +134,7 @@
 <tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line95"></a><code>95</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
 </tbody>
 </table>
-<div class="footer">Generated by: ReportGenerator 2.5.6.0<br />15-4-2017 - 14:35:42<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="http://www.palmmedia.de">www.palmmedia.de</a></div></div>
+<div class="footer">Generated by: ReportGenerator 2.5.6.0<br />15-4-2017 - 16:28:26<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="http://www.palmmedia.de">www.palmmedia.de</a></div></div>
 <div class="containerright">
 <div class="containerrightfixed">
 <h1>Methods/Properties</h1>
