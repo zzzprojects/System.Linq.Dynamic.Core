@@ -1597,9 +1597,17 @@ namespace System.Linq.Dynamic.Core
             return false;
         }
 
-        static bool IsNullableType(Type type)
+        public static bool IsNullableType(Type type)
         {
             return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+
+        public static Type ToNullableType(Type type)
+        {
+            if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
+                throw ParseError(-1, Res.TypeHasNoNullableForm, GetTypeName(type));
+
+            return typeof(Nullable<>).MakeGenericType(type);
         }
 
         static Type GetNonNullableType(Type type)

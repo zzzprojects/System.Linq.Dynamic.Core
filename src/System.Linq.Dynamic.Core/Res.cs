@@ -38,6 +38,7 @@
         public const string AmbiguousIndexerInvocation = "Ambiguous invocation of indexer in type '{0}'";
         public const string IncompatibleOperand = "Operator '{0}' incompatible with operand type '{1}'";
         public const string IncompatibleOperands = "Operator '{0}' incompatible with operand types '{1}' and '{2}'";
+        public const string IncompatibleTypes = "Types '{0}' and '{1}' are incompatible";
         public const string UnterminatedStringLiteral = "Unterminated string literal";
         public const string InvalidCharacter = "Syntax error '{0}'";
         public const string DigitExpected = "Digit expected";
