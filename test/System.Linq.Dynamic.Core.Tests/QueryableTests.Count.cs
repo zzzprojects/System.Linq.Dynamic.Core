@@ -32,7 +32,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             int expected = queryable.Count(u => u.Income > 50);
-            int result = (queryable as IQueryable).Count("Income > 50");
+            int result = queryable.Count("Income > 50");
 
             //Assert
             Assert.Equal(expected, result);
@@ -48,7 +48,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             int expected = queryable.Count(u => u.Income > value);
-            int result = (queryable as IQueryable).Count("Income > @0", value);
+            int result = queryable.Count("Income > @0", value);
 
             //Assert
             Assert.Equal(expected, result);

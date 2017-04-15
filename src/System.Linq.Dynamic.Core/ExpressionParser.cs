@@ -1267,6 +1267,7 @@ namespace System.Linq.Dynamic.Core
         {
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
+
             if (_textParser.CurrentToken.Id == TokenId.Question)
             {
                 if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
@@ -1280,9 +1281,18 @@ namespace System.Linq.Dynamic.Core
             bool shorthand = _textParser.CurrentToken.Id == TokenId.StringLiteral;
             if (_textParser.CurrentToken.Id == TokenId.OpenParen || shorthand)
             {
-                Expression[] args = shorthand
-                    ? new[] { ParseStringLiteral() }
-                    : ParseArgumentList();
+                Expression[] args = shorthand ? new[] { ParseStringLiteral() } : ParseArgumentList();
+
+                // If only 1 argument, and if the type is a Nullable, just make Nullable
+                if (args.Length == 1)
+                {
+                    Type argType = args[0].Type;
+
+                    if (type.GetTypeInfo().IsValueType && IsNullableType(type) && argType.GetTypeInfo().IsValueType)
+                    {
+                        return Expression.Convert(args[0], type);
+                    }
+                }
 
                 MethodBase method;
                 switch (FindBestMethod(type.GetConstructors(), args, out method))
@@ -1290,13 +1300,17 @@ namespace System.Linq.Dynamic.Core
                     case 0:
                         if (args.Length == 1)
                             return GenerateConversion(args[0], type, errorPos);
+
                         throw ParseError(errorPos, Res.NoMatchingConstructor, GetTypeName(type));
+
                     case 1:
                         return Expression.New((ConstructorInfo)method, args);
+
                     default:
                         throw ParseError(errorPos, Res.AmbiguousConstructorInvocation, GetTypeName(type));
                 }
             }
+
             _textParser.ValidateToken(TokenId.Dot, Res.DotOrOpenParenOrStringLiteralExpected);
             _textParser.NextToken();
 
@@ -1311,12 +1325,10 @@ namespace System.Linq.Dynamic.Core
 
             if (exprType.GetTypeInfo().IsValueType && type.GetTypeInfo().IsValueType)
             {
-                if ((IsNullableType(exprType) || IsNullableType(type)) &&
-                    GetNonNullableType(exprType) == GetNonNullableType(type))
+                if ((IsNullableType(exprType) || IsNullableType(type)) && GetNonNullableType(exprType) == GetNonNullableType(type))
                     return Expression.Convert(expr, type);
 
-                if ((IsNumericType(exprType) || IsEnumType(exprType)) &&
-                    IsNumericType(type) || IsEnumType(type))
+                if ((IsNumericType(exprType) || IsEnumType(exprType)) && IsNumericType(type) || IsEnumType(type))
                     return Expression.ConvertChecked(expr, type);
             }
 
