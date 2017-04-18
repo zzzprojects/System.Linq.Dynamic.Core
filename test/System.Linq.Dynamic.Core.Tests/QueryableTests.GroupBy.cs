@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using NFluent;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using System.Reflection;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -21,6 +23,22 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnUserName.Count());
             Assert.Equal(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnAll.Count());
+        }
+
+        // https://github.com/StefH/System.Linq.Dynamic.Core/issues/75
+        [Fact]
+        public void GroupBy_Dynamic_Issue75()
+        {
+            var testList = User.GenerateSampleModels(100);
+
+            var resultDynamic = testList.AsQueryable().GroupBy("Profile.Age").Select("new (it.key as PropertyKey)");
+            var result = testList.GroupBy(e => e.Profile.Age).Select(e => new { PropertyKey = e.Key }).AsQueryable();
+
+            // I think this should be true, but it isn't. dynamicResult add System.Object Item [System.String] property.
+            PropertyInfo[] properties = result.ElementType.GetTypeInfo().GetProperties();
+            PropertyInfo[] propertiesDynamic = resultDynamic.ElementType.GetTypeInfo().GetProperties();
+
+            Check.That(propertiesDynamic.Length).IsStrictlyGreaterThan(properties.Length);
         }
 
         [Fact]

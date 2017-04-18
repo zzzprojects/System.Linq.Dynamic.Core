@@ -187,9 +187,14 @@ namespace System.Linq.Dynamic.Core
 
                     foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
                     {
-                        int parameters = pi.GetGetMethod().GetParameters().Length;
-                        if (parameters == 0)
-                            _propertiesDictionary.Add(pi.Name, pi.GetValue(this, null));
+                        int parameters = pi.GetIndexParameters().Length;
+                        if (parameters > 0)
+                        {
+                            // The property is an indexer, skip this.
+                            continue;
+                        }
+
+                        _propertiesDictionary.Add(pi.Name, pi.GetValue(this, null));
                     }
                 }
 
