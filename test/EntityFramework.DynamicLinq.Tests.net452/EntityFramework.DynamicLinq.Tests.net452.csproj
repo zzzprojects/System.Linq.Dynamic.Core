@@ -245,6 +245,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.GroupByMany.cs">
       <Link>QueryableTests.GroupByMany.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.GroupJoin.cs">
+      <Link>QueryableTests.GroupJoin.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Join.cs">
       <Link>QueryableTests.Join.cs</Link>
     </Compile>
