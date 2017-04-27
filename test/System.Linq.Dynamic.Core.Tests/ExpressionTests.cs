@@ -318,25 +318,48 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = lst.AsQueryable();
 
             // Act
-            var result1 = qry.Where("it < TestEnum.Var4");
-            var result2 = qry.Where("TestEnum.Var4 > it");
-            var result3 = qry.Where("it = Var5");
-            var result4 = qry.Where("it = @0", TestEnum.Var5);
-            var result5 = qry.Where("it = @0", 8);
-            var result6 = qry.Where("it = @0", "Var5");
-            var result7 = qry.Where("it = @0", "vAR5");
-            var result8 = qry.Where("Var5 = it");
+            var resultLessThan = qry.Where("it < TestEnum.Var4");
+            var resultLessThanEqual = qry.Where("it <= TestEnum.Var4");
+
+            var resultGreaterThan = qry.Where("TestEnum.Var4 > it");
+            var resultGreaterThanEqual = qry.Where("TestEnum.Var4 >= it");
+
+            var resultEqualItLeft = qry.Where("it = Var5");
+            var resultEqualItRight = qry.Where("Var5 = it");
+
+            var resultEqualEnumParamLeft = qry.Where("@0 = it", TestEnum.Var5);
+            var resultEqualEnumParamRight = qry.Where("it = @0", TestEnum.Var5);
+
+            var resultEqualIntParamLeft = qry.Where("@0 = it", 8);
+            var resultEqualIntParamRight = qry.Where("it = @0", 8);
+
+            var resultEqualStringParamRight = qry.Where("it = @0", "Var5");
+            var resultEqualStringParamLeft = qry.Where("@0 = it", "Var5");
+
+            var resultEqualStringMixedCaseParamLeft = qry.Where("@0 = it", "vAR5");
+            var resultEqualStringMixedCaseParamRight = qry.Where("it = @0", "vAR5");
+
 
             // Assert
-            Check.That(result1.ToArray()).ContainsExactly(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 });
-            Check.That(result2.ToArray()).ContainsExactly(new[] { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3 });
-            Check.That(result3.Single()).Equals(TestEnum.Var5);
-            Check.That(result3.Single()).Equals(TestEnum.Var5);
-            Check.That(result4.Single()).Equals(TestEnum.Var5);
-            Check.That(result5.Single()).Equals(TestEnum.Var5);
-            Check.That(result6.Single()).Equals(TestEnum.Var5);
-            Check.That(result7.Single()).Equals(TestEnum.Var5);
-            Check.That(result8.Single()).Equals(TestEnum.Var5);
+            Check.That(resultLessThan.ToArray()).ContainsExactly(TestEnum.Var1, TestEnum.Var2, TestEnum.Var3);
+            Check.That(resultLessThanEqual.ToArray()).ContainsExactly(TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4);
+            Check.That(resultGreaterThan.ToArray()).ContainsExactly(TestEnum.Var1, TestEnum.Var2, TestEnum.Var3);
+            Check.That(resultGreaterThanEqual.ToArray()).ContainsExactly(TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4);
+
+            Check.That(resultEqualItLeft.Single()).Equals(TestEnum.Var5);
+            Check.That(resultEqualItRight.Single()).Equals(TestEnum.Var5);
+
+            Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum.Var5);
+            Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnum.Var5);
+
+            Check.That(resultEqualIntParamLeft.Single()).Equals(TestEnum.Var5);
+            Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum.Var5);
+
+            Check.That(resultEqualStringParamLeft.Single()).Equals(TestEnum.Var5);
+            Check.That(resultEqualStringParamRight.Single()).Equals(TestEnum.Var5);
+
+            Check.That(resultEqualStringMixedCaseParamLeft.Single()).Equals(TestEnum.Var5);
+            Check.That(resultEqualStringMixedCaseParamRight.Single()).Equals(TestEnum.Var5);
         }
 
         [Fact]
@@ -576,6 +599,38 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = rows.AsQueryable().OrderBy(@"it[""Column1""]").ToList();
 
             Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void ExpressionTests_Integer()
+        {
+            // Arrange
+            var qry = new[] { 1, 2, 3, 4, 5, 6 }.AsQueryable();
+
+            // Act
+            var resultLessThan = qry.Where("it < 4");
+            var resultLessThanEqual = qry.Where("it <= 4");
+
+            var resultGreaterThan = qry.Where("4 > it");
+            var resultGreaterThanEqual = qry.Where("4 >= it");
+
+            var resultEqualItLeft = qry.Where("it = 5");
+            var resultEqualItRight = qry.Where("5 = it");
+
+            var resultEqualIntParamLeft = qry.Where("@0 = it", 5);
+            var resultEqualIntParamRight = qry.Where("it = @0", 5);
+
+            // Assert
+            Check.That(resultLessThan.ToArray()).ContainsExactly(1, 2, 3);
+            Check.That(resultLessThanEqual.ToArray()).ContainsExactly(1, 2, 3, 4);
+            Check.That(resultGreaterThan.ToArray()).ContainsExactly(1, 2, 3);
+            Check.That(resultGreaterThanEqual.ToArray()).ContainsExactly(1, 2, 3, 4);
+
+            Check.That(resultEqualItLeft.Single()).Equals(5);
+            Check.That(resultEqualItRight.Single()).Equals(5);
+
+            Check.That(resultEqualIntParamLeft.Single()).Equals(5);
+            Check.That(resultEqualIntParamRight.Single()).Equals(5);
         }
 
         [Fact]
@@ -847,18 +902,45 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_StringCompare()
+        {
+            // Arrange
+            var baseQuery = new[] { "1", "2", "3", "4" }.AsQueryable();
+
+            // Act
+            var resultGreaterThan = baseQuery.Where("it > @0", "2");
+            var resultGreaterThanEqual = baseQuery.Where("it >= @0", "2");
+
+            var resultLessThan = baseQuery.Where("it < @0", "3");
+            var resultLessThanEqual = baseQuery.Where("it <= @0", "3");
+
+            // Assert
+            Check.That(resultGreaterThan.ToArray()).ContainsExactly("3", "4");
+            Check.That(resultGreaterThanEqual.ToArray()).ContainsExactly("2", "3", "4");
+
+            Check.That(resultLessThan.ToArray()).ContainsExactly("1", "2");
+            Check.That(resultLessThanEqual.ToArray()).ContainsExactly("1", "2", "3");
+        }
+
+        [Fact]
         public void ExpressionTests_StringConcatenation()
         {
-            //Arrange
+            // Arrange
             var baseQuery = new[] { new { First = "FirstName", Last = "LastName" } }.AsQueryable();
 
-            //Act
-            var result1 = baseQuery.Select<string>("it.First + \" \" + it.Last");
-            var result2 = baseQuery.Select<string>("it.First & \" \" & it.Last");
+            // Act
+            var resultAddWithPlus = baseQuery.Select<string>("it.First + \" \" + it.Last");
+            var resultAddWithAmp = baseQuery.Select<string>("it.First & \" \" & it.Last");
 
-            //Assert
-            Assert.Equal("FirstName LastName", result1.First());
-            Assert.Equal("FirstName LastName", result2.First());
+            var resultAddWithPlusAndParams = baseQuery.Select<string>("it.First + @0 + \" \" + @1", "x", "y");
+            var resultAddWithAmpAndParams = baseQuery.Select<string>("it.First & @0 & \" \" & @1", "x", "y");
+
+            // Assert
+            Assert.Equal("FirstName LastName", resultAddWithPlus.First());
+            Assert.Equal("FirstName LastName", resultAddWithAmp.First());
+
+            Assert.Equal("FirstNamex y", resultAddWithPlusAndParams.First());
+            Assert.Equal("FirstNamex y", resultAddWithAmpAndParams.First());
         }
 
         [Fact]
