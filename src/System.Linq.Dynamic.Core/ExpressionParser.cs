@@ -927,11 +927,15 @@ namespace System.Linq.Dynamic.Core
             string text = _textParser.CurrentToken.Text;
             string qualifier = null;
             char last = text[text.Length - 1];
+            bool isHexadecimal = text.StartsWith(text[0] == '-' ? "-0x" : "0x", StringComparison.CurrentCultureIgnoreCase);
+            char[] qualifierLetters = isHexadecimal
+                                          ? new[] { 'U', 'u', 'L', 'l' }
+                                          : new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd' };
 
-            if (char.IsLetter(last))
+            if (qualifierLetters.Contains(last))
             {
                 int pos = text.Length - 1, count = 0;
-                while (char.IsLetter(text[pos]))
+                while (qualifierLetters.Contains(text[pos]))
                 {
                     ++count;
                     --pos;
@@ -942,8 +946,13 @@ namespace System.Linq.Dynamic.Core
 
             if (text[0] != '-')
             {
+                if (isHexadecimal)
+                {
+                    text = text.Substring(2);
+                }
+
                 ulong value;
-                if (!ulong.TryParse(text, out value))
+                if (!ulong.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, CultureInfo.CurrentCulture, out value))
                     throw ParseError(Res.InvalidIntegerLiteral, text);
 
                 _textParser.NextToken();
@@ -964,9 +973,19 @@ namespace System.Linq.Dynamic.Core
             }
             else
             {
+                if (isHexadecimal)
+                {
+                    text = text.Substring(3);
+                }
+
                 long value;
-                if (!long.TryParse(text, out value))
+                if (!long.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, CultureInfo.CurrentCulture, out value))
                     throw ParseError(Res.InvalidIntegerLiteral, text);
+
+                if (isHexadecimal)
+                {
+                    value = -value;
+                }
 
                 _textParser.NextToken();
                 if (!string.IsNullOrEmpty(qualifier))

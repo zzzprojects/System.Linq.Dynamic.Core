@@ -638,6 +638,29 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_HexadecimalInteger()
+        {
+            //Arrange
+            var values = new[] { 1, 2, 3 };
+
+            //Act
+            var result = values.AsQueryable().Select("it * 0x1000abEF").Cast<int>();
+            var resultNeg = values.AsQueryable().Select("it * -0xaBcDeF").Cast<int>();
+            var resultU = values.AsQueryable().Select("uint(it) * 0x12345678U").Cast<uint>();
+            var resultL = values.AsQueryable().Select("it * 0x1234567890abcdefL").Cast<long>();
+            var resultLNeg = values.AsQueryable().Select("it * -0x0ABCDEF987654321L").Cast<long>();
+            var resultUL = values.AsQueryable().Select("ulong(it) * 0x1000abEFUL").Cast<ulong>();
+
+            //Assert
+            Assert.Equal(values.Select(it => it * 0x1000abEF), result);
+            Assert.Equal(values.Select(it => it * -0xaBcDeF), resultNeg);
+            Assert.Equal(values.Select(it => (uint)it * 0x12345678U), resultU);
+            Assert.Equal(values.Select(it => it * 0x1234567890abcdefL), resultL);
+            Assert.Equal(values.Select(it => it * -0x0ABCDEF987654321L), resultLNeg);
+            Assert.Equal(values.Select(it => (ulong)it * 0x1000abEFUL), resultUL);
+        }
+
+        [Fact]
         public void ExpressionTests_LogicalAndOr()
         {
             //Arrange
