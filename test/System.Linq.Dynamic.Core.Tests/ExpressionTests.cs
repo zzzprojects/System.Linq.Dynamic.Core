@@ -788,19 +788,34 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Shift()
         {
+            ExpressionTests_ShiftInternal<sbyte, int>();
+            ExpressionTests_ShiftInternal<byte, int>();
+            ExpressionTests_ShiftInternal<short, int>();
+            ExpressionTests_ShiftInternal<ushort, int>();
+            ExpressionTests_ShiftInternal<int, int>();
+            ExpressionTests_ShiftInternal<uint, uint>();
+            ExpressionTests_ShiftInternal<long, long>();
+            ExpressionTests_ShiftInternal<ulong, ulong>();
+        }
+
+        private static void ExpressionTests_ShiftInternal<TItemType, TResult>()
+        {
             //Arrange
-            var lst = new List<int> { 10, 20, 30 };
+            var lst = new[] { 10, 20, 30 }.Select(item => (TItemType)Convert.ChangeType(item, typeof(TItemType)));
             var qry = lst.AsQueryable();
+            int? nullableShift = 2;
 
             //Act
             var result1 = qry.Select("it << 1");
             var result2 = qry.Select("it >> 1");
             var result3 = qry.Where("it << 2 = 80");
+            var result4 = qry.Where("it << @0 = 80", nullableShift);
 
             //Assert
-            Assert.Equal(new object[] { 20, 40, 60 }, result1.Cast<object>().ToArray());
-            Assert.Equal(new object[] { 5, 10, 15 }, result2.Cast<object>().ToArray());
-            Assert.Equal(20, result3.Single());
+            Assert.Equal(new[] { 20, 40, 60 }.Select(item => Convert.ChangeType(item, typeof(TResult))).ToArray(), result1.Cast<object>().ToArray());
+            Assert.Equal(new[] { 5, 10, 15 }.Select(item => Convert.ChangeType(item, typeof(TResult))).ToArray(), result2.Cast<object>().ToArray());
+            Assert.Equal(Convert.ChangeType(20, typeof(TItemType)), result3.Single());
+            Assert.Equal(Convert.ChangeType(20, typeof(TItemType)), result4.Single());
         }
 
         [Fact]

@@ -17,6 +17,26 @@ namespace System.Linq.Dynamic.Core
             void F(bool? x, bool? y);
         }
 
+        interface IShiftSignatures
+        {
+            void F(int x, int y);
+            void F(uint x, int y);
+            void F(long x, int y);
+            void F(ulong x, int y);
+            void F(int? x, int y);
+            void F(uint? x, int y);
+            void F(long? x, int y);
+            void F(ulong? x, int y);
+            void F(int x, int? y);
+            void F(uint x, int? y);
+            void F(long x, int? y);
+            void F(ulong x, int? y);
+            void F(int? x, int? y);
+            void F(uint? x, int? y);
+            void F(long? x, int? y);
+            void F(ulong? x, int? y);
+        }
+
         interface IArithmeticSignatures
         {
             void F(int x, int y);
@@ -739,11 +759,11 @@ namespace System.Linq.Dynamic.Core
                 switch (op.Id)
                 {
                     case TokenId.DoubleLessThan:
-                        CheckAndPromoteOperands(typeof(IArithmeticSignatures), op.Text, ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(IShiftSignatures), op.Text, ref left, ref right, op.Pos);
                         left = Expression.LeftShift(left, right);
                         break;
                     case TokenId.DoubleGreaterThan:
-                        CheckAndPromoteOperands(typeof(IArithmeticSignatures), op.Text, ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(IShiftSignatures), op.Text, ref left, ref right, op.Pos);
                         left = Expression.RightShift(left, right);
                         break;
                 }
