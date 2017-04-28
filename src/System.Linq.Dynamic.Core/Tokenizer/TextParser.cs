@@ -290,6 +290,19 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                             NextChar();
                         } while (char.IsDigit(_ch));
 
+                        bool hexInteger = false;
+                        if (_ch == 'X' || _ch == 'x')
+                        {
+                            NextChar();
+                            ValidateHexChar();
+                            do
+                            {
+                                NextChar();
+                            } while (IsHexChar(_ch));
+
+                            hexInteger = true;
+                        }
+
                         if (_ch == 'U' || _ch == 'L')
                         {
                             NextChar();
@@ -299,6 +312,11 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                                 else throw ParseError(_textPos, Res.InvalidIntegerQualifier, _text.Substring(_textPos - 1, 2));
                             }
                             ValidateExpression();
+                            break;
+                        }
+
+                        if (hexInteger)
+                        {
                             break;
                         }
 
@@ -365,6 +383,11 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             if (!char.IsDigit(_ch)) throw ParseError(_textPos, Res.DigitExpected);
         }
 
+        private void ValidateHexChar()
+        {
+            if (!IsHexChar(_ch)) throw ParseError(_textPos, Res.HexCharExpected);
+        }
+
         private Exception ParseError(string format, params object[] args)
         {
             return ParseError(CurrentToken.Pos, format, args);
@@ -379,6 +402,22 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         {
             TokenId id;
             return t == TokenId.Identifier && _predefinedAliases.TryGetValue(alias, out id) ? id : t;
+        }
+
+        private static bool IsHexChar(char c)
+        {
+            if (char.IsDigit(c))
+            {
+                return true;
+            }
+
+            if (c <= '\x007f')
+            {
+                c |= (char)0x20;
+                return c >= 'a' && c <= 'f';
+            }
+
+            return false;
         }
     }
 }

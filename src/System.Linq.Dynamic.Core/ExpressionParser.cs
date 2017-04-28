@@ -927,11 +927,15 @@ namespace System.Linq.Dynamic.Core
             string text = _textParser.CurrentToken.Text;
             string qualifier = null;
             char last = text[text.Length - 1];
+            bool isHexadecimal = text.StartsWith(text[0] == '-' ? "-0x" : "0x", StringComparison.CurrentCultureIgnoreCase);
+            char[] qualifierLetters = isHexadecimal
+                                          ? new[] { 'U', 'u', 'L', 'l' }
+                                          : new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd' };
 
-            if (char.IsLetter(last))
+            if (qualifierLetters.Contains(last))
             {
                 int pos = text.Length - 1, count = 0;
-                while (char.IsLetter(text[pos]))
+                while (qualifierLetters.Contains(text[pos]))
                 {
                     ++count;
                     --pos;
@@ -942,8 +946,13 @@ namespace System.Linq.Dynamic.Core
 
             if (text[0] != '-')
             {
+                if (isHexadecimal)
+                {
+                    text = text.Substring(2);
+                }
+
                 ulong value;
-                if (!ulong.TryParse(text, out value))
+                if (!ulong.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, CultureInfo.CurrentCulture, out value))
                     throw ParseError(Res.InvalidIntegerLiteral, text);
 
                 _textParser.NextToken();
@@ -964,9 +973,19 @@ namespace System.Linq.Dynamic.Core
             }
             else
             {
+                if (isHexadecimal)
+                {
+                    text = text.Substring(3);
+                }
+
                 long value;
-                if (!long.TryParse(text, out value))
+                if (!long.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, CultureInfo.CurrentCulture, out value))
                     throw ParseError(Res.InvalidIntegerLiteral, text);
+
+                if (isHexadecimal)
+                {
+                    value = -value;
+                }
 
                 _textParser.NextToken();
                 if (!string.IsNullOrEmpty(qualifier))
@@ -1172,6 +1191,7 @@ namespace System.Linq.Dynamic.Core
             _textParser.NextToken();
             if (_textParser.CurrentToken.Id != TokenId.OpenParen &&
                 _textParser.CurrentToken.Id != TokenId.OpenCurlyParen &&
+                _textParser.CurrentToken.Id != TokenId.OpenBracket &&
                 _textParser.CurrentToken.Id != TokenId.Identifier)
                 throw ParseError(Res.OpenParenOrIdentifierExpected);
 
@@ -1184,8 +1204,19 @@ namespace System.Linq.Dynamic.Core
                     throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, newTypeName);
                 _textParser.NextToken();
                 if (_textParser.CurrentToken.Id != TokenId.OpenParen &&
+                    _textParser.CurrentToken.Id != TokenId.OpenBracket &&
                     _textParser.CurrentToken.Id != TokenId.OpenCurlyParen)
                     throw ParseError(Res.OpenParenExpected);
+            }
+
+            bool arrayInitializer = false;
+            if (_textParser.CurrentToken.Id == TokenId.OpenBracket)
+            {
+                _textParser.NextToken();
+                _textParser.ValidateToken(TokenId.CloseBracket, Res.CloseBracketExpected);
+                _textParser.NextToken();
+                _textParser.ValidateToken(TokenId.OpenCurlyParen, Res.OpenCurlyParenExpected);
+                arrayInitializer = true;
             }
 
             _textParser.NextToken();
@@ -1193,25 +1224,29 @@ namespace System.Linq.Dynamic.Core
             var properties = new List<DynamicProperty>();
             var expressions = new List<Expression>();
 
-            while (true)
+            while (_textParser.CurrentToken.Id != TokenId.CloseParen
+                   && _textParser.CurrentToken.Id != TokenId.CloseCurlyParen)
             {
                 int exprPos = _textParser.CurrentToken.Pos;
                 Expression expr = ParseConditionalOperator();
-                string propName;
-                if (TokenIdentifierIs("as"))
+                if (!arrayInitializer)
                 {
-                    _textParser.NextToken();
-                    propName = GetIdentifier();
-                    _textParser.NextToken();
-                }
-                else
-                {
-                    if (!TryGetMemberName(expr, out propName))
-                        throw ParseError(exprPos, Res.MissingAsClause);
+                    string propName;
+                    if (TokenIdentifierIs("as"))
+                    {
+                        _textParser.NextToken();
+                        propName = GetIdentifier();
+                        _textParser.NextToken();
+                    }
+                    else
+                    {
+                        if (!TryGetMemberName(expr, out propName)) throw ParseError(exprPos, Res.MissingAsClause);
+                    }
+
+                    properties.Add(new DynamicProperty(propName, expr.Type));
                 }
 
                 expressions.Add(expr);
-                properties.Add(new DynamicProperty(propName, expr.Type));
 
                 if (_textParser.CurrentToken.Id != TokenId.Comma)
                     break;
@@ -1224,7 +1259,31 @@ namespace System.Linq.Dynamic.Core
                 throw ParseError(Res.CloseParenOrCommaExpected);
             _textParser.NextToken();
 
+            if (arrayInitializer)
+            {
+                return CreateArrayInitializerExpression(expressions, newType);
+            }
+
             return CreateNewExpression(properties, expressions, newType);
+        }
+
+        private Expression CreateArrayInitializerExpression(List<Expression> expressions, Type newType)
+        {
+            if (expressions.Count == 0)
+            {
+                return Expression.NewArrayInit(newType ?? typeof(object));
+            }
+
+            if (newType != null)
+            {
+                return Expression.NewArrayInit(
+                    newType,
+                    expressions.Select(expression => PromoteExpression(expression, newType, true, true)));
+            }
+
+            return Expression.NewArrayInit(
+                expressions.All(expression => expression.Type == expressions[0].Type) ? expressions[0].Type : typeof(object),
+                expressions);
         }
 
         private Expression CreateNewExpression(List<DynamicProperty> properties, List<Expression> expressions, Type newType)
