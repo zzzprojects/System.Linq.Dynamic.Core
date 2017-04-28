@@ -104,6 +104,18 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void TextParser_Parse_HexadecimalIntegerLiteral()
+        {
+            // Assign + Act
+            var textParser = new TextParser(" 0x1234567890AbCdEfL ");
+
+            // Assert
+            Check.That(textParser.CurrentToken.Id).Equals(TokenId.IntegerLiteral);
+            Check.That(textParser.CurrentToken.Pos).Equals(1);
+            Check.That(textParser.CurrentToken.Text).Equals("0x1234567890AbCdEfL");
+        }
+
+        [Fact]
         public void TextParser_Parse_LessGreater()
         {
             // Assign + Act
