@@ -1051,5 +1051,22 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(expectedResult.Count(), result.Count());
         }
+
+        [Fact]
+        public void ExpressionTests_ArrayInitializer()
+        {
+            //Arrange
+            var list = new[] { 0, 1, 2, 3, 4 };
+
+            //Act
+            var result1 = list.AsQueryable().SelectMany("new[] {}");
+            var result2 = list.AsQueryable().SelectMany("new[] { it + 1, it + 2 }");
+            var result3 = list.AsQueryable().SelectMany("new long[] { it + 1, byte(it + 2), short(it + 3) }");
+
+            //Assert
+            Assert.Equal(result1.Count(), 0);
+            Assert.Equal(result2.Cast<int>(), list.SelectMany(item => new[] { item + 1, item + 2 }));
+            Assert.Equal(result3.Cast<long>(), list.SelectMany(item => new long[] { item + 1, (byte)(item + 2), (short)(item + 3) }));
+        }
     }
 }

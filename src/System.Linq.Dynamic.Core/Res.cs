@@ -47,12 +47,14 @@
         public const string ParseExceptionFormat = "{0} (at index {1})";
         public const string ColonExpected = "':' expected";
         public const string OpenParenExpected = "'(' expected";
+        public const string OpenCurlyParenExpected = "'{' expected";
         public const string CloseParenOrOperatorExpected = "')' or operator expected";
         public const string CloseParenOrCommaExpected = "')' or ',' expected";
         public const string DotOrOpenParenExpected = "'.' or '(' expected";
         public const string DotOrOpenParenOrStringLiteralExpected = "'.' or '(' or string literal expected";
         public const string OpenBracketExpected = "'[' expected";
         public const string CloseBracketOrCommaExpected = "']' or ',' expected";
+        public const string CloseBracketExpected = "']' expected";
         public const string IdentifierExpected = "Identifier expected";
         public const string OpenParenOrIdentifierExpected = "'(' or Identifier expected";
         public const string IdentifierImplementingInterfaceExpected = "Identifier implementing interface '{0}' expected";
