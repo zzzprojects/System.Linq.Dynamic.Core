@@ -293,6 +293,8 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         bool hexInteger = false;
                         if (_ch == 'X' || _ch == 'x')
                         {
+                            NextChar();
+                            ValidateHexChar();
                             do
                             {
                                 NextChar();
@@ -379,6 +381,11 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         private void ValidateDigit()
         {
             if (!char.IsDigit(_ch)) throw ParseError(_textPos, Res.DigitExpected);
+        }
+
+        private void ValidateHexChar()
+        {
+            if (!IsHexChar(_ch)) throw ParseError(_textPos, Res.HexCharExpected);
         }
 
         private Exception ParseError(string format, params object[] args)

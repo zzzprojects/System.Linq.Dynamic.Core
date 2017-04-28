@@ -30,6 +30,9 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(result2.Cast<int>(), list.SelectMany(item => new[] { item + 1, item + 2 }));
             Assert.Equal(result3.Cast<long>(), list.SelectMany(item => new long[] { item + 1, (byte)(item + 2), (short)(item + 3) }));
             Assert.Equal(result4.SelectMany("it").Cast<int>(), list.SelectMany(item => new[] { new[] { item + 1, item + 2 }, new[] { item + 3, item + 4 } }).SelectMany(item => item));
+
+            Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new[ {}"));
+            Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new] {}"));
         }
 
         [Fact]
@@ -510,6 +513,9 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(values.Select(it => it * 0x1234567890abcdefL), resultL);
             Assert.Equal(values.Select(it => it * -0x0ABCDEF987654321L), resultLNeg);
             Assert.Equal(values.Select(it => (ulong)it * 0x1000abEFUL), resultUL);
+
+            Assert.Throws<ParseException>(() => values.AsQueryable().Where("it < 0x 11a"));
+            Assert.Throws<ParseException>(() => values.AsQueryable().Where("it < 11a"));
         }
 
         [Fact]

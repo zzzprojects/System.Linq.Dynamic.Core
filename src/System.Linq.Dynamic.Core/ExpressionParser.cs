@@ -1213,17 +1213,9 @@ namespace System.Linq.Dynamic.Core
             if (_textParser.CurrentToken.Id == TokenId.OpenBracket)
             {
                 _textParser.NextToken();
-                if (_textParser.CurrentToken.Id != TokenId.CloseBracket)
-                {
-                    throw ParseError(Res.CloseBracketExpected);
-                }
-
+                _textParser.ValidateToken(TokenId.CloseBracket, Res.CloseBracketExpected);
                 _textParser.NextToken();
-                if (_textParser.CurrentToken.Id != TokenId.OpenCurlyParen)
-                {
-                    throw ParseError(Res.OpenCurlyParenExpected);
-                }
-
+                _textParser.ValidateToken(TokenId.OpenCurlyParen, Res.OpenCurlyParenExpected);
                 arrayInitializer = true;
             }
 

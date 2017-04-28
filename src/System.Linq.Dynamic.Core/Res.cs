@@ -42,6 +42,7 @@
         public const string UnterminatedStringLiteral = "Unterminated string literal";
         public const string InvalidCharacter = "Syntax error '{0}'";
         public const string DigitExpected = "Digit expected";
+        public const string HexCharExpected = "Hexadecimal character expected";
         public const string SyntaxError = "Syntax error";
         public const string TokenExpected = "{0} expected";
         public const string ParseExceptionFormat = "{0} (at index {1})";
