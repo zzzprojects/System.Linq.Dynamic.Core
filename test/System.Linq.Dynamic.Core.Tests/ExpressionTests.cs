@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
-using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
@@ -1012,6 +1011,16 @@ namespace System.Linq.Dynamic.Core.Tests
             ExpressionTests_ShiftInternal<uint, uint>();
             ExpressionTests_ShiftInternal<long, long>();
             ExpressionTests_ShiftInternal<ulong, ulong>();
+        }
+
+        [Fact]
+        public void ExpressionTests_Shift_Exception()
+        {
+            // Assign
+            var qry = new[] { 10, 20, 30 }.AsQueryable();
+
+            // Act and Assert
+            Check.ThatCode(() => qry.Select("it <<< 1")).Throws<ParseException>();
         }
 
         private static void ExpressionTests_ShiftInternal<TItemType, TResult>()
