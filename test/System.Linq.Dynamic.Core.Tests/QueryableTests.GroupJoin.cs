@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -151,6 +153,22 @@ namespace System.Linq.Dynamic.Core.Tests
                     Assert.Equal(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
                 }
             }
+        }
+
+        [Fact]
+        public void GroupJoinOnNullableType_NotSameTypesThrowsException()
+        {
+            var person = new Person { Id = 1, Name = "Hedlund, Magnus" };
+            var people = new List<Person> { person };
+            var pets = new List<Pet> { new Pet { Name = "Daisy", OwnerId = person.Id } };
+
+            Check.ThatCode(() =>
+                people.AsQueryable()
+                    .GroupJoin(
+                        pets,
+                        "it.Id",
+                        "Name", // This is wrong
+                        "new(outer.Name as OwnerName, inner as Pets)")).Throws<ParseException>();
         }
     }
 }
