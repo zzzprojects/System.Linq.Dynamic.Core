@@ -14,6 +14,28 @@ namespace System.Linq.Dynamic.Core.Tests
     public class ExpressionTests
     {
         [Fact]
+        public void ExpressionTests_ArrayInitializer()
+        {
+            //Arrange
+            var list = new[] { 0, 1, 2, 3, 4 };
+
+            //Act
+            var result1 = list.AsQueryable().SelectMany("new[] {}");
+            var result2 = list.AsQueryable().SelectMany("new[] { it + 1, it + 2 }");
+            var result3 = list.AsQueryable().SelectMany("new long[] { it + 1, byte(it + 2), short(it + 3) }");
+            var result4 = list.AsQueryable().SelectMany("new[] { new[] { it + 1, it + 2 }, new[] { it + 3, it + 4 } }");
+
+            //Assert
+            Assert.Equal(result1.Count(), 0);
+            Assert.Equal(result2.Cast<int>(), list.SelectMany(item => new[] { item + 1, item + 2 }));
+            Assert.Equal(result3.Cast<long>(), list.SelectMany(item => new long[] { item + 1, (byte)(item + 2), (short)(item + 3) }));
+            Assert.Equal(result4.SelectMany("it").Cast<int>(), list.SelectMany(item => new[] { new[] { item + 1, item + 2 }, new[] { item + 3, item + 4 } }).SelectMany(item => item));
+
+            Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new[ {}"));
+            Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new] {}"));
+        }
+
+        [Fact]
         public void ExpressionTests_Cast_To_nullableint()
         {
             //Arrange
@@ -491,7 +513,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(lst[0], result2b.Single());
         }
 
-
         [Fact]
         public void ExpressionTests_Guid_CompareTo_Guid()
         {
@@ -507,6 +528,32 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(testValue, resulta.Single());
             Assert.Equal(testValue, resultb.Single());
+        }
+
+        [Fact]
+        public void ExpressionTests_HexadecimalInteger()
+        {
+            //Arrange
+            var values = new[] { 1, 2, 3 };
+
+            //Act
+            var result = values.AsQueryable().Select("it * 0x1000abEF").Cast<int>();
+            var resultNeg = values.AsQueryable().Select("it * -0xaBcDeF").Cast<int>();
+            var resultU = values.AsQueryable().Select("uint(it) * 0x12345678U").Cast<uint>();
+            var resultL = values.AsQueryable().Select("it * 0x1234567890abcdefL").Cast<long>();
+            var resultLNeg = values.AsQueryable().Select("it * -0x0ABCDEF987654321L").Cast<long>();
+            var resultUL = values.AsQueryable().Select("ulong(it) * 0x1000abEFUL").Cast<ulong>();
+
+            //Assert
+            Assert.Equal(values.Select(it => it * 0x1000abEF), result);
+            Assert.Equal(values.Select(it => it * -0xaBcDeF), resultNeg);
+            Assert.Equal(values.Select(it => (uint)it * 0x12345678U), resultU);
+            Assert.Equal(values.Select(it => it * 0x1234567890abcdefL), resultL);
+            Assert.Equal(values.Select(it => it * -0x0ABCDEF987654321L), resultLNeg);
+            Assert.Equal(values.Select(it => (ulong)it * 0x1000abEFUL), resultUL);
+
+            Assert.Throws<ParseException>(() => values.AsQueryable().Where("it < 0x 11a"));
+            Assert.Throws<ParseException>(() => values.AsQueryable().Where("it < 11a"));
         }
 
         [Fact]
