@@ -431,6 +431,75 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion GroupByMany
 
+        #region GroupJoin
+        /// <summary>
+        /// Correlates the elements of two sequences based on equality of keys and groups the results. The default equality comparer is used to compare keys.
+        /// </summary>
+        /// <param name="outer">The first sequence to join.</param>
+        /// <param name="inner">The sequence to join to the first sequence.</param>
+        /// <param name="outerKeySelector">A dynamic function to extract the join key from each element of the first sequence.</param>
+        /// <param name="innerKeySelector">A dynamic function to extract the join key from each element of the second sequence.</param>
+        /// <param name="resultSelector">A dynamic function to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>An <see cref="IQueryable"/> obtained by performing a grouped join on two sequences.</returns>
+        public static IQueryable GroupJoin([NotNull] this IQueryable outer, [NotNull] IEnumerable inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, [NotNull] string resultSelector, params object[] args)
+        {
+            Check.NotNull(outer, nameof(outer));
+            Check.NotNull(inner, nameof(inner));
+            Check.NotEmpty(outerKeySelector, nameof(outerKeySelector));
+            Check.NotEmpty(innerKeySelector, nameof(innerKeySelector));
+            Check.NotEmpty(resultSelector, nameof(resultSelector));
+
+            Type outerType = outer.ElementType;
+            Type innerType = inner.AsQueryable().ElementType;
+
+            bool createParameterCtor = outer.IsLinqToObjects();
+            LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, null, outerKeySelector, args);
+            LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, null, innerKeySelector, args);
+
+            Type outerSelectorReturnType = outerSelectorLambda.Body.Type;
+            Type innerSelectorReturnType = innerSelectorLambda.Body.Type;
+
+            // If types are not the same, try to convert to Nullable and generate new LambdaExpression
+            if (outerSelectorReturnType != innerSelectorReturnType)
+            {
+                if (ExpressionParser.IsNullableType(outerSelectorReturnType) && !ExpressionParser.IsNullableType(innerSelectorReturnType))
+                {
+                    innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
+                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
+                }
+                else if (!ExpressionParser.IsNullableType(outerSelectorReturnType) && ExpressionParser.IsNullableType(innerSelectorReturnType))
+                {
+                    outerSelectorReturnType = ExpressionParser.ToNullableType(outerSelectorReturnType);
+                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
+                }
+
+                // If types are still not the same, throw an Exception
+                if (outerSelectorReturnType != innerSelectorReturnType)
+                {
+                    throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.IncompatibleTypes, outerType, innerType), -1);
+                }
+            }
+
+            ParameterExpression[] parameters =
+            {
+                Expression.Parameter(outerType, "outer"),
+                Expression.Parameter(typeof(IEnumerable<>).MakeGenericType(inner.AsQueryable().ElementType), "inner")
+            };
+
+            LambdaExpression resultSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
+
+            return outer.Provider.CreateQuery(Expression.Call(
+                typeof(Queryable),
+                "GroupJoin", new[] { outer.ElementType, innerType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
+                outer.Expression,
+                Expression.Constant(inner),
+                Expression.Quote(outerSelectorLambda),
+                Expression.Quote(innerSelectorLambda),
+                Expression.Quote(resultSelectorLambda)));
+        }
+        #endregion
+
         #region Join
         /// <summary>
         /// Correlates the elements of two sequences based on matching keys. The default equality comparer is used to compare keys.
