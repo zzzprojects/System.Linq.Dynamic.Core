@@ -152,17 +152,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void JoinOnNullableType_NotSameTypesThrowsException()
         {
-            Person magnus = new Person { Id = 1, Name = "Hedlund, Magnus" };
-            Person terry = new Person { Id = 2, Name = "Adams, Terry" };
-            Person charlotte = new Person { Id = 3, Name = "Weiss, Charlotte" };
-
-            Pet barley = new Pet { Name = "Barley", OwnerId = terry.Id };
-            Pet boots = new Pet { Name = "Boots", OwnerId = terry.Id };
-            Pet whiskers = new Pet { Name = "Whiskers", OwnerId = charlotte.Id };
-            Pet daisy = new Pet { Name = "Daisy", OwnerId = magnus.Id };
-
-            var people = new List<Person> { magnus, terry, charlotte };
-            var pets = new List<Pet> { barley, boots, whiskers, daisy };
+            var person = new Person { Id = 1, Name = "Hedlund, Magnus" };
+            var people = new List<Person> { person };
+            var pets = new List<Pet> { new Pet { Name = "Daisy", OwnerId = person.Id } };
 
             Check.ThatCode(() =>
                 people.AsQueryable()
