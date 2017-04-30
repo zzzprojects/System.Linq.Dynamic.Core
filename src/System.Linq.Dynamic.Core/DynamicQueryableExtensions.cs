@@ -457,41 +457,19 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, null, innerKeySelector, args);
 
-            Type outerSelectorReturnType = outerSelectorLambda.Body.Type;
-            Type innerSelectorReturnType = innerSelectorLambda.Body.Type;
-
-            // If types are not the same, try to convert to Nullable and generate new LambdaExpression
-            if (outerSelectorReturnType != innerSelectorReturnType)
-            {
-                if (ExpressionParser.IsNullableType(outerSelectorReturnType) && !ExpressionParser.IsNullableType(innerSelectorReturnType))
-                {
-                    innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
-                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
-                }
-                else if (!ExpressionParser.IsNullableType(outerSelectorReturnType) && ExpressionParser.IsNullableType(innerSelectorReturnType))
-                {
-                    outerSelectorReturnType = ExpressionParser.ToNullableType(outerSelectorReturnType);
-                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
-                }
-
-                // If types are still not the same, throw an Exception
-                if (outerSelectorReturnType != innerSelectorReturnType)
-                {
-                    throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.IncompatibleTypes, outerType, innerType), -1);
-                }
-            }
+            CheckOuterAndInnerTypes(createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
 
             ParameterExpression[] parameters =
             {
                 Expression.Parameter(outerType, "outer"),
-                Expression.Parameter(typeof(IEnumerable<>).MakeGenericType(inner.AsQueryable().ElementType), "inner")
+                Expression.Parameter(typeof(IEnumerable<>).MakeGenericType(innerType), "inner")
             };
 
             LambdaExpression resultSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
 
             return outer.Provider.CreateQuery(Expression.Call(
-                typeof(Queryable),
-                "GroupJoin", new[] { outer.ElementType, innerType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
+                typeof(Queryable), "GroupJoin",
+                new[] { outer.ElementType, innerType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
                 outer.Expression,
                 Expression.Constant(inner),
                 Expression.Quote(outerSelectorLambda),
@@ -528,29 +506,7 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, null, innerKeySelector, args);
 
-            Type outerSelectorReturnType = outerSelectorLambda.Body.Type;
-            Type innerSelectorReturnType = innerSelectorLambda.Body.Type;
-
-            // If types are not the same, try to convert to Nullable and generate new LambdaExpression
-            if (outerSelectorReturnType != innerSelectorReturnType)
-            {
-                if (ExpressionParser.IsNullableType(outerSelectorReturnType) && !ExpressionParser.IsNullableType(innerSelectorReturnType))
-                {
-                    innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
-                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
-                }
-                else if (!ExpressionParser.IsNullableType(outerSelectorReturnType) && ExpressionParser.IsNullableType(innerSelectorReturnType))
-                {
-                    outerSelectorReturnType = ExpressionParser.ToNullableType(outerSelectorReturnType);
-                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
-                }
-
-                // If types are still not the same, throw an Exception
-                if (outerSelectorReturnType != innerSelectorReturnType)
-                {
-                    throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.IncompatibleTypes, outerType, innerType), -1);
-                }
-            }
+            CheckOuterAndInnerTypes(createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
 
             ParameterExpression[] parameters =
             {
@@ -1361,8 +1317,34 @@ namespace System.Linq.Dynamic.Core
         #endregion
 
         #region Private Helpers
-        // Code below is based on https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
+        private static void CheckOuterAndInnerTypes(bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object[] args)
+        {
+            Type outerSelectorReturnType = outerSelectorLambda.Body.Type;
+            Type innerSelectorReturnType = innerSelectorLambda.Body.Type;
 
+            // If types are not the same, try to convert to Nullable and generate new LambdaExpression
+            if (outerSelectorReturnType != innerSelectorReturnType)
+            {
+                if (ExpressionParser.IsNullableType(outerSelectorReturnType) && !ExpressionParser.IsNullableType(innerSelectorReturnType))
+                {
+                    innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
+                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
+                }
+                else if (!ExpressionParser.IsNullableType(outerSelectorReturnType) && ExpressionParser.IsNullableType(innerSelectorReturnType))
+                {
+                    outerSelectorReturnType = ExpressionParser.ToNullableType(outerSelectorReturnType);
+                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
+                }
+
+                // If types are still not the same, throw an Exception
+                if (outerSelectorReturnType != innerSelectorReturnType)
+                {
+                    throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.IncompatibleTypes, outerType, innerType), -1);
+                }
+            }
+        }
+
+        // Code below is based on https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
         private static IQueryable CreateQuery(MethodInfo operatorMethodInfo, IQueryable source)
         {
             if (operatorMethodInfo.IsGenericMethod)
