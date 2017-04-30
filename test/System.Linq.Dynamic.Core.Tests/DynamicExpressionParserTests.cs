@@ -71,9 +71,31 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.NotNull(result);
         }
 
+        [Fact]
+        public void Parse_Lambda3()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(5);
+            var qry = testList.AsQueryable();
+
+            var externals = new Dictionary<string, object>
+            {
+                {"Users", qry}
+            };
+
+            // Act
+            string query = "Users.Select(j => j)";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            Delegate del = expression.Compile();
+            object result = del.DynamicInvoke();
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/58
         [Fact]
-        public void Parse_Lambda3_Issue58()
+        public void Parse_Lambda4_Issue58()
         {
             var expressionParams = new ParameterExpression[]
             {

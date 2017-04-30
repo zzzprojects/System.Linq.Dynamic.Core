@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -19,11 +20,17 @@ namespace System.Linq.Dynamic.Core.Tests
                 new Tuple<int, int, int>(2, 3, 7)
             };
 
-            var sel = lst.AsQueryable().GroupByMany("Item1", "Item2");
+            var sel = lst.AsQueryable().GroupByMany("Item1", "Item2").ToList();
 
-            Assert.Equal(sel.Count(), 2);
-            Assert.Equal(sel.First().Subgroups.Count(), 1);
-            Assert.Equal(sel.Skip(1).First().Subgroups.Count(), 2);
+            Check.That(sel.Count).Equals(2);
+
+            var firstGroupResult = sel.First();
+            Check.That(firstGroupResult.ToString()).Equals("1 (3)");
+            Check.That(firstGroupResult.Subgroups.Count()).Equals(1);
+
+            var skippedGroupResult = sel.Skip(1).First();
+            Check.That(skippedGroupResult.ToString()).Equals("2 (4)");
+            Check.That(skippedGroupResult.Subgroups.Count()).Equals(2);
         }
     }
 }

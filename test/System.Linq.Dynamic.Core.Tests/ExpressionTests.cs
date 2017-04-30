@@ -48,6 +48,21 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Conditional()
+        {
+            //Arrange
+            int[] values = { 1, 2, 3, 4, 5 };
+            var qry = values.AsQueryable();
+
+            //Act
+            var realResult = values.Select(x => x == 2 ? 99 : 100).ToList();
+            var result = qry.Select("it == 2 ? 99 : 100").ToDynamicList<int>();
+
+            //Assert
+            Check.That(result).ContainsExactly(realResult);
+        }
+
+        [Fact]
         public void ExpressionTests_ConditionalOr1()
         {
             //Arrange
@@ -585,6 +600,16 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_IsNull_ThrowsException()
+        {
+            // Arrange
+            var baseQuery = new int?[] { 1, 2, null, 3, 4 }.AsQueryable();
+
+            // Act + Assert
+            Check.ThatCode(() => baseQuery.Select("isnull(it, 0, 4)")).Throws<ParseException>();
+        }
+
+        [Fact]
         public void ExpressionTests_Indexer_Issue57()
         {
             var rows = new List<JObject>
@@ -736,6 +761,82 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expected.Count(), result.Count());
         }
 
+
+        [Fact]
+        public void ExpressionTests_MethodCall_ValueTypeToValueTypeParameter()
+        {
+            //Arrange
+            var list = new int[] { 0, 1, 2, 3, 4 };
+
+            //Act
+            var methods = new Methods();
+            var expectedResult = list.Where(x => methods.Method1(x));
+            var result = list.AsQueryable().Where("@0.Method1(it)", methods);
+
+            //Assert
+            Assert.Equal(expectedResult.Count(), result.Count());
+        }
+
+        [Fact]
+        public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast()
+        {
+            //Arrange
+            var list = new int[] { 0, 1, 2, 3, 4 };
+
+            //Act
+            var methods = new Methods();
+            var expectedResult = list.Where(x => methods.Method2(x));
+            var result = list.AsQueryable().Where("@0.Method2(object(it))", methods);
+
+            //Assert
+            Assert.Equal(expectedResult.Count(), result.Count());
+        }
+
+        [Fact]
+        public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast()
+        {
+            //Arrange
+            var list = new int[] { 0, 1, 2, 3, 4 };
+
+            //Act
+            var methods = new Methods();
+            var expectedResult = list.Where(x => methods.Method2(x));
+            var result = list.AsQueryable().Where("@0.Method2(it)", methods);
+
+            //Assert
+            Assert.Equal(expectedResult.Count(), result.Count());
+        }
+
+        [Fact]
+        public void ExpressionTests_MethodCall_NullableValueTypeToObjectParameter()
+        {
+            //Arrange
+            var list = new int?[] { 0, 1, 2, 3, 4, null };
+
+            //Act
+            var methods = new Methods();
+            var expectedResult = list.Where(x => methods.Method2(x));
+            var result = list.AsQueryable().Where("@0.Method2(it)", methods);
+
+            //Assert
+            Assert.Equal(expectedResult.Count(), result.Count());
+        }
+
+        [Fact]
+        public void ExpressionTests_MethodCall_ReferenceTypeToObjectParameter()
+        {
+            //Arrange
+            var list = new int[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
+
+            //Act
+            var methods = new Methods();
+            var expectedResult = list.Where(x => methods.Method3(x));
+            var result = list.AsQueryable().Where("@0.Method3(it)", methods);
+
+            //Assert
+            Assert.Equal(expectedResult.Count(), result.Count());
+        }
+
         [Fact]
         public void ExpressionTests_NewAnonymousType_Paren()
         {
@@ -803,6 +904,19 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult2, result2.ToDynamicArray<User>());
             Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
             Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
+        }
+
+        [Fact]
+        public void ExpressionTests_OrderBy()
+        {
+            //Arrange
+            var qry = User.GenerateSampleModels(100).AsQueryable();
+
+            //Act
+            var orderBy = qry.OrderBy("Id asc, Profile.Age desc");
+
+            //Assert
+            Check.That(qry.OrderBy(x => x.Id).ThenByDescending(x => x.Profile.Age).ToArray()).ContainsExactly(orderBy.ToArray());
         }
 
         //[Fact]
@@ -1034,81 +1148,6 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = list.AsQueryable().Where("double(DecimalValue) > @0", d).ToList();
 
             Assert.Equal(expected, result);
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_ValueTypeToValueTypeParameter()
-        {
-            //Arrange
-            var list = new int[] { 0, 1, 2, 3, 4 };
-
-            //Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method1(x));
-            var result = list.AsQueryable().Where("@0.Method1(it)", methods);
-
-            //Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast()
-        {
-            //Arrange
-            var list = new int[] { 0, 1, 2, 3, 4 };
-
-            //Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method2(x));
-            var result = list.AsQueryable().Where("@0.Method2(object(it))", methods);
-
-            //Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast()
-        {
-            //Arrange
-            var list = new int[] { 0, 1, 2, 3, 4 };
-
-            //Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method2(x));
-            var result = list.AsQueryable().Where("@0.Method2(it)", methods);
-
-            //Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_NullableValueTypeToObjectParameter()
-        {
-            //Arrange
-            var list = new int?[] { 0, 1, 2, 3, 4, null };
-
-            //Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method2(x));
-            var result = list.AsQueryable().Where("@0.Method2(it)", methods);
-
-            //Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_ReferenceTypeToObjectParameter()
-        {
-            //Arrange
-            var list = new int[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
-
-            //Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method3(x));
-            var result = list.AsQueryable().Where("@0.Method3(it)", methods);
-
-            //Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
         }
     }
 }
