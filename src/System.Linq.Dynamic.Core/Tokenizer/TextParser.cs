@@ -117,6 +117,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                     NextChar();
                     tokenId = TokenId.Asterisk;
                     break;
+
                 case '+':
                     NextChar();
                     tokenId = TokenId.Plus;
