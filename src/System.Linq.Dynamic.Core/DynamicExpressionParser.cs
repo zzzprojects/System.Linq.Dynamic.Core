@@ -98,7 +98,7 @@ namespace System.Linq.Dynamic.Core
         [PublicAPI]
         public static LambdaExpression ParseLambda(bool createParameterCtor, [NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
         {
-            Check.NotEmpty(parameters, nameof(parameters));
+            Check.NotNull(parameters, nameof(parameters));
             Check.Condition(parameters, p => p.Count(x => x == null) == 0, nameof(parameters));
             Check.NotEmpty(expression, nameof(expression));
 

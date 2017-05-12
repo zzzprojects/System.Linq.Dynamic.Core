@@ -24,6 +24,20 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Parse_EmptyParameterList()
+        {
+            // Arrange
+            var pEmpty = new ParameterExpression[] { };
+
+            // Act
+            var @delegate = DynamicExpressionParser.ParseLambda(pEmpty, null, "1+2").Compile();
+            int? result = @delegate.DynamicInvoke() as int?;
+
+            // Assert
+            Check.That(result).Equals(3);
+        }
+
+        [Fact]
         public void Parse_Lambda1()
         {
             // Arrange
