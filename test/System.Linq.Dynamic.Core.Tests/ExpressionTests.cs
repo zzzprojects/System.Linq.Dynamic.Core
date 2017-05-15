@@ -1205,5 +1205,22 @@ namespace System.Linq.Dynamic.Core.Tests
 
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public void ExpressionTests_Where_WithCachedLambda()
+        {
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { IntValue = 1 },
+                new SimpleValuesModel { IntValue = 3 },
+                new SimpleValuesModel { IntValue = 2 },
+                new SimpleValuesModel { IntValue = 3 }
+            };
+
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(SimpleValuesModel), typeof(bool), "IntValue == 3");
+            var res = DynamicQueryableExtensions.Where(list.AsQueryable(), lambda);
+
+            Assert.Equal(res.Count(), 2);
+        }
     }
 }
