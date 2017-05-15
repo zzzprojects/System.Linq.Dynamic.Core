@@ -1314,6 +1314,20 @@ namespace System.Linq.Dynamic.Core
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
         }
+        
+        /// <summary>
+        /// Filters a sequence of values based on a predicate.
+        /// </summary>
+        /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
+        /// <param name="lambda">A cached Lambda Expression.</param>
+        public static IQueryable Where(this IQueryable source, LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(lambda, nameof(lambda));
+            
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
+            return source.Provider.CreateQuery(optimized);
+        }
         #endregion
 
         #region Private Helpers
