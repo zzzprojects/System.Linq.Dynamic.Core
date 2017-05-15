@@ -96,6 +96,20 @@ namespace System.Linq.Dynamic.Core
 
             return Execute<bool>(_anyPredicate, source, lambda);
         }
+
+        /// <summary>
+        /// Determines whether a sequence contains any elements.
+        /// </summary>
+        /// <param name="source">A sequence to check for being empty.</param>
+        /// <param name="lambda">A cached Lambda Expression.</param>
+        /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
+        public static bool Any([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(lambda, nameof(lambda));
+
+            return Execute<bool>(_anyPredicate, source, lambda);
+        }
         #endregion Any
 
         #region AsEnumerable
@@ -167,6 +181,20 @@ namespace System.Linq.Dynamic.Core
 
             bool createParameterCtor = source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+
+            return Execute<int>(_countPredicate, source, lambda);
+        }
+
+        /// <summary>
+        /// Returns the number of elements in a sequence.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="lambda">A cached Lambda Expression.</param>
+        /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
+        public static int Count([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(lambda, nameof(lambda));
 
             return Execute<int>(_countPredicate, source, lambda);
         }
@@ -1320,7 +1348,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
-        public static IQueryable Where(this IQueryable source, LambdaExpression lambda)
+        public static IQueryable Where([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(lambda, nameof(lambda));
