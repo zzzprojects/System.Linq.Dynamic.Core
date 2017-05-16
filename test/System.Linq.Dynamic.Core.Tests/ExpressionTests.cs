@@ -1226,6 +1226,24 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var res3 = DynamicQueryableExtensions.Count(list.AsQueryable(), lambda);
             Assert.Equal(res3, 2);
+
+            var res4 = DynamicQueryableExtensions.First(list.AsQueryable(), lambda);
+            Assert.Equal(res4, list[1]);
+
+            var res5 = DynamicQueryableExtensions.FirstOrDefault(list.AsQueryable(), lambda);
+            Assert.Equal(res5, list[1]);
+
+            var res6 = DynamicQueryableExtensions.Last(list.AsQueryable(), lambda);
+            Assert.Equal(res6, list[3]);
+
+            var res7 = DynamicQueryableExtensions.LastOrDefault(list.AsQueryable(), lambda);
+            Assert.Equal(res7, list[3]);
+
+            var res8 = DynamicQueryableExtensions.Single(list.AsQueryable().Take(2), lambda);
+            Assert.Equal(res8, list[1]);
+
+            var res9 = DynamicQueryableExtensions.SingleOrDefault(list.AsQueryable().Take(2), lambda);
+            Assert.Equal(res9, list[1]);
         }
     }
 }
