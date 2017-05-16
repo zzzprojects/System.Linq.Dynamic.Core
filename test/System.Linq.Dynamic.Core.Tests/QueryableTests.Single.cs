@@ -24,6 +24,21 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Single_Predicate()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100);
+            var testListQry = testList.AsQueryable();
+
+            //Act
+            var expected = testListQry.Single(u => u.UserName == "User4");
+            var result = testListQry.Single("UserName == \"User4\"");
+
+            //Assert
+            Assert.Equal(expected as object, result);
+        }
+
+        [Fact]
         public void SingleOrDefault()
         {
             //Arrange
@@ -41,6 +56,21 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(testList[0].Id, singleResult.Id);
 #endif
             Assert.Null(defaultResult);
+        }
+
+        [Fact]
+        public void SingleOrDefault_Predicate()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100);
+            var testListQry = testList.AsQueryable();
+
+            //Act
+            var expected = testListQry.SingleOrDefault(u => u.UserName == "User4");
+            var result = testListQry.SingleOrDefault("UserName == \"User4\"");
+
+            //Assert
+            Assert.Equal(expected as object, result);
         }
 
         [Fact]

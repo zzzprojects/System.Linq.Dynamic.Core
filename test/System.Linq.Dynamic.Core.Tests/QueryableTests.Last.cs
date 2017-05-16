@@ -25,6 +25,21 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Last_Predicate()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100);
+            var queryable = testList.AsQueryable();
+
+            //Act
+            var expected = queryable.Last(u => u.Income > 1000);
+            var result = queryable.Last("Income > 1000");
+
+            //Assert
+            Assert.Equal(expected as object, result);
+        }
+
+        [Fact]
         public void LastOrDefault()
         {
             //Arrange
@@ -43,6 +58,21 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(realResult.Id, singleResult.Id);
 #endif
             Assert.Null(defaultResult);
+        }
+
+        [Fact]
+        public void LastOrDefault_Predicate()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100);
+            var queryable = testList.AsQueryable();
+
+            //Act
+            var expected = queryable.LastOrDefault(u => u.Income > 1000);
+            var result = queryable.LastOrDefault("Income > 1000");
+
+            //Assert
+            Assert.Equal(expected as object, result);
         }
 
         [Fact]

@@ -1205,5 +1205,45 @@ namespace System.Linq.Dynamic.Core.Tests
 
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public void ExpressionTests_Where_WithCachedLambda()
+        {
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { IntValue = 1 },
+                new SimpleValuesModel { IntValue = 3 },
+                new SimpleValuesModel { IntValue = 2 },
+                new SimpleValuesModel { IntValue = 3 }
+            };
+
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(SimpleValuesModel), typeof(bool), "IntValue == 3");
+            var res = DynamicQueryableExtensions.Where(list.AsQueryable(), lambda);
+            Assert.Equal(res.Count(), 2);
+
+            var res2 = DynamicQueryableExtensions.Any(list.AsQueryable(), lambda);
+            Assert.True(res2);
+
+            var res3 = DynamicQueryableExtensions.Count(list.AsQueryable(), lambda);
+            Assert.Equal(res3, 2);
+
+            var res4 = DynamicQueryableExtensions.First(list.AsQueryable(), lambda);
+            Assert.Equal(res4, list[1]);
+
+            var res5 = DynamicQueryableExtensions.FirstOrDefault(list.AsQueryable(), lambda);
+            Assert.Equal(res5, list[1]);
+
+            var res6 = DynamicQueryableExtensions.Last(list.AsQueryable(), lambda);
+            Assert.Equal(res6, list[3]);
+
+            var res7 = DynamicQueryableExtensions.LastOrDefault(list.AsQueryable(), lambda);
+            Assert.Equal(res7, list[3]);
+
+            var res8 = DynamicQueryableExtensions.Single(list.AsQueryable().Take(2), lambda);
+            Assert.Equal(res8, list[1]);
+
+            var res9 = DynamicQueryableExtensions.SingleOrDefault(list.AsQueryable().Take(2), lambda);
+            Assert.Equal(res9, list[1]);
+        }
     }
 }
