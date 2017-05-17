@@ -12,7 +12,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
-    <PackageReleaseNotes>Upgrade to VS2017</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfixes and new Features. For details see the release notes.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>

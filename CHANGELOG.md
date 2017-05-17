@@ -1,3 +1,24 @@
+# 1.0.7.0 (17 mei 2017)
+
+ - [#80](https://github.com/StefH/System.Linq.Dynamic.Core/pull/80) - [Feature] Usage of cached Lambda Expressions contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+ - [#79](https://github.com/StefH/System.Linq.Dynamic.Core/issues/79) - DynamicExpressionParser does not allow empty parameter lists. +fix
+ - [#78](https://github.com/StefH/System.Linq.Dynamic.Core/pull/78) - New feature: GroupJoin contributed by ([Maschmi](https://github.com/Maschmi)) +enhancement
+ - [#77](https://github.com/StefH/System.Linq.Dynamic.Core/pull/77) - New features: Hexadecimal integers and array initializers contributed by David Cizek ([DavidCizek](https://github.com/DavidCizek))
+ - [#76](https://github.com/StefH/System.Linq.Dynamic.Core/pull/76) - Fix - shift operators work only for int, short, ushort, byte, sbyte. contributed by David Cizek ([DavidCizek](https://github.com/DavidCizek))
+ - [#75](https://github.com/StefH/System.Linq.Dynamic.Core/issues/75) - GroupBy clause add an "Item" property when projects the query
+ - [#74](https://github.com/StefH/System.Linq.Dynamic.Core/issues/74) - Join on nullable and not nullable type throws exception +fix
+ - [#73](https://github.com/StefH/System.Linq.Dynamic.Core/issues/73) - [Feature] Extend OrderBy functionality +enhancement
+ - [#70](https://github.com/StefH/System.Linq.Dynamic.Core/issues/70) - Move all tests into 1 test project +enhancement
+ - [#67](https://github.com/StefH/System.Linq.Dynamic.Core/issues/67) - Convert Project to VS2017 +enhancement
+ - [#66](https://github.com/StefH/System.Linq.Dynamic.Core/issues/66) - Is there Way to enter a Complex query
+ - [#63](https://github.com/StefH/System.Linq.Dynamic.Core/issues/63) - Syntax IN dont work with Enums
+ - [#58](https://github.com/StefH/System.Linq.Dynamic.Core/issues/58) - Parse Lambda
+ - [#49](https://github.com/StefH/System.Linq.Dynamic.Core/issues/49) - .Contains("") operation Exception
+ - [#44](https://github.com/StefH/System.Linq.Dynamic.Core/issues/44) - Casting a int to a nullable int will throw an error when using linq to entities"Only parameterless constructors and initializers are supported in LINQ to Entities"
+
+Commits: a02f3d64fa...c21b1be15c
+
+
 # 1.0.6.13 (08 april 2017)
 
  - [#68](https://github.com/StefH/System.Linq.Dynamic.Core/pull/68) - Work on #66 -> Should work now. Tests will follow on VS2017 support! contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
