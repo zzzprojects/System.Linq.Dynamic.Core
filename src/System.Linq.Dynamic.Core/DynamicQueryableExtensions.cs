@@ -200,6 +200,46 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion Count
 
+        #region DefaultIfEmpty
+        private static readonly MethodInfo _defaultIfEmpty = GetMethod(nameof(Queryable.DefaultIfEmpty));
+        private static readonly MethodInfo _defaultIfEmptyWithParam = GetMethod(nameof(Queryable.DefaultIfEmpty), 1);
+
+        /// <summary>
+        /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> to return a default value for if empty.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.DefaultIfEmpty();
+        /// </code>
+        /// </example>
+        /// <returns>An <see cref="IQueryable"/> that contains default if source is empty; otherwise, source.</returns>
+        public static IQueryable DefaultIfEmpty([NotNull] this IQueryable source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return CreateQuery(_defaultIfEmpty, source);
+        }
+
+        /// <summary>
+        /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> to return a default value for if empty.</param>
+        /// <param name="defaultValue">The value to return if the sequence is empty.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.DefaultIfEmpty(new Employee());
+        /// </code>
+        /// </example>
+        /// <returns>An <see cref="IQueryable"/> that contains defaultValue if source is empty; otherwise, source.</returns>
+        public static IQueryable DefaultIfEmpty([NotNull] this IQueryable source, [CanBeNull] object defaultValue)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return CreateQuery(_defaultIfEmptyWithParam, source, Expression.Constant(defaultValue));
+        }
+        #endregion
+
         #region Distinct
         private static readonly MethodInfo _distinct = GetMethod(nameof(Queryable.Distinct));
 
@@ -219,8 +259,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Distinct", new Type[] { source.ElementType }, source.Expression));
-            return source.Provider.CreateQuery(optimized);
+            return CreateQuery(_distinct, source);
         }
         #endregion Distinct
 
@@ -285,6 +324,8 @@ namespace System.Linq.Dynamic.Core
         #endregion First
 
         #region FirstOrDefault
+        private static readonly MethodInfo _firstOrDefault = GetMethod(nameof(Queryable.FirstOrDefault));
+
         /// <summary>
         /// Returns the first element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
@@ -300,7 +341,6 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_firstOrDefault, source);
         }
-        private static readonly MethodInfo _firstOrDefault = GetMethod(nameof(Queryable.FirstOrDefault));
 
         /// <summary>
         /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
@@ -424,8 +464,7 @@ namespace System.Linq.Dynamic.Core
 
             var optimized = OptimizeExpression(Expression.Call(
                 typeof(Queryable), nameof(Queryable.GroupBy),
-                new[] { source.ElementType, keyLambda.Body.Type },
-                new[] { source.Expression, Expression.Quote(keyLambda) }));
+                new[] { source.ElementType, keyLambda.Body.Type }, source.Expression, Expression.Quote(keyLambda)));
 
             return source.Provider.CreateQuery(optimized);
         }
@@ -1539,7 +1578,7 @@ namespace System.Linq.Dynamic.Core
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
         }
-        
+
         /// <summary>
         /// Filters a sequence of values based on a predicate.
         /// </summary>
@@ -1549,7 +1588,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(lambda, nameof(lambda));
-            
+
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
         }
@@ -1604,7 +1643,7 @@ namespace System.Linq.Dynamic.Core
                     ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(object))
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
-            return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+            return source.Provider.CreateQuery(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
         }
 
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source)
@@ -1638,7 +1677,7 @@ namespace System.Linq.Dynamic.Core
                     ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(object))
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
-            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
             return source.Provider.Execute(optimized);
         }
 
@@ -1651,15 +1690,15 @@ namespace System.Linq.Dynamic.Core
                     ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(TResult))
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
-            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+            var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
             return source.Provider.Execute<TResult>(optimized);
         }
 
         private static MethodInfo GetMethod<TResult>(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            GetMethod(name, parameterCount, mi => (mi.ReturnType == typeof(TResult)) && ((predicate == null) || predicate(mi)));
+            GetMethod(name, parameterCount, mi => mi.ReturnType == typeof(TResult) && (predicate == null || predicate(mi)));
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
+            typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.GetParameters().Length == parameterCount + 1 && (predicate == null || predicate(mi)));
         #endregion Private Helpers
     }
 }

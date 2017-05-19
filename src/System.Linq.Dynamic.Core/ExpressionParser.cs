@@ -123,65 +123,66 @@ namespace System.Linq.Dynamic.Core
 
         interface IEnumerableSignatures
         {
-            void Where(bool predicate);
+            void All(bool predicate);
             void Any();
             void Any(bool predicate);
-            void First(bool predicate);
-            void FirstOrDefault(bool predicate);
-            void Single(bool predicate);
-            void SingleOrDefault(bool predicate);
-            void Last(bool predicate);
-            void LastOrDefault(bool predicate);
-            void All(bool predicate);
+            void Average(decimal? selector);
+            void Average(decimal selector);
+            void Average(double? selector);
+            void Average(double selector);
+            void Average(float? selector);
+            void Average(float selector);
+            void Average(int? selector);
+            void Average(int selector);
+            void Average(long? selector);
+            void Average(long selector);
+            void Contains(object selector);
             void Count();
             void Count(bool predicate);
-            void Min(object selector);
+            void DefaultIfEmpty();
+            void DefaultIfEmpty(object defaultValue);
+            void Distinct();
+            void First(bool predicate);
+            void FirstOrDefault(bool predicate);
+            void GroupBy(object selector);
+            void Last(bool predicate);
+            void LastOrDefault(bool predicate);
             void Max(object selector);
-            void Sum(int selector);
-            void Sum(int? selector);
-            void Sum(long selector);
-            void Sum(long? selector);
-            void Sum(float selector);
-            void Sum(float? selector);
-            void Sum(double selector);
-            void Sum(double? selector);
-            void Sum(decimal selector);
-            void Sum(decimal? selector);
-            void Average(int selector);
-            void Average(int? selector);
-            void Average(long selector);
-            void Average(long? selector);
-            void Average(float selector);
-            void Average(float? selector);
-            void Average(double selector);
-            void Average(double? selector);
-            void Average(decimal selector);
-            void Average(decimal? selector);
-            void Select(object selector);
-            void SelectMany(object selector);
+            void Min(object selector);
             void OrderBy(object selector);
             void OrderByDescending(object selector);
-            void ThenBy(object selector);
-            void ThenByDescending(object selector);
-            void Contains(object selector);
+            void Select(object selector);
+            void SelectMany(object selector);
+            void Single(bool predicate);
+            void SingleOrDefault(bool predicate);
             void Skip(int count);
             void SkipWhile(bool predicate);
+            void Sum(decimal? selector);
+            void Sum(decimal selector);
+            void Sum(double? selector);
+            void Sum(double selector);
+            void Sum(float? selector);
+            void Sum(float selector);
+            void Sum(int? selector);
+            void Sum(int selector);
+            void Sum(long? selector);
+            void Sum(long selector);
             void Take(int count);
             void TakeWhile(bool predicate);
-            void Distinct();
-            void GroupBy(object selector);
+            void ThenBy(object selector);
+            void ThenByDescending(object selector);
+            void Where(bool predicate);
 
-            //Executors
-            void Single();
-            void SingleOrDefault();
+            // Executors
             void First();
             void FirstOrDefault();
             void Last();
             void LastOrDefault();
+            void Single();
+            void SingleOrDefault();
         }
 
         // These shorthands have different name than actual type and therefore not recognized by default from the _predefinedTypes
-        //
         static readonly Dictionary<string, Type> _predefinedTypesShorthands = new Dictionary<string, Type>
         {
             { "int", typeof(int) },
@@ -248,8 +249,6 @@ namespace System.Linq.Dynamic.Core
         ParameterExpression _it;
         ParameterExpression _parent;
         ParameterExpression _root;
-
-
 
         static ExpressionParser()
         {
@@ -1603,17 +1602,20 @@ namespace System.Linq.Dynamic.Core
                 typeArgs = new[] { elementType };
             }
 
-            if (signature.Name == "Contains" || signature.Name == "Take" || signature.Name == "Skip")
-            {
-                args = new[] { instance, args[0] };
-            }
-            else if (args.Length == 0)
+            if (args.Length == 0)
             {
                 args = new[] { instance };
             }
             else
             {
-                args = new[] { instance, Expression.Lambda(args[0], innerIt) };
+                if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(signature.Name))
+                {
+                    args = new[] { instance, args[0] };
+                }
+                else
+                {
+                    args = new[] { instance, Expression.Lambda(args[0], innerIt) };
+                }
             }
 
             return Expression.Call(typeof(Enumerable), signature.Name, typeArgs, args);

@@ -64,16 +64,17 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Select_Dynamic_WithIncludes()
         {
-            //Arrange
-            var testList = new List<Entities.Employee>();
-            var qry = testList.AsQueryable();
+            // Arrange
+            var qry = new List<Entities.Employee>().AsQueryable();
 
-            //Act
+            // Act
             string includesX =
                 ", it.Company as TEntity__Company, it.Company.MainCompany as TEntity__Company_MainCompany, it.Country as TEntity__Country, it.Function as TEntity__Function, it.SubFunction as TEntity__SubFunction";
             string select = $"new (\"__Key__\" as __Key__, it AS TEntity__{includesX})";
 
             var userNames = qry.Select(select).ToDynamicList();
+
+            // Assert
             Assert.NotNull(userNames);
         }
 

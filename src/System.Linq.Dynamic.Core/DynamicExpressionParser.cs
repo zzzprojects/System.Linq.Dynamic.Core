@@ -17,7 +17,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda([CanBeNull] Type resultType, string expression, params object[] values)
         {
             return ParseLambda(true, resultType, expression, values);
         }
@@ -31,7 +31,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(bool createParameterCtor, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda(bool createParameterCtor, [CanBeNull] Type resultType, string expression, params object[] values)
         {
             Check.NotEmpty(expression, nameof(expression));
 
@@ -49,7 +49,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] Type itType, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda([NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
         {
             return ParseLambda(true, itType, resultType, expression, values);
         }
@@ -64,7 +64,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(bool createParameterCtor, [NotNull] Type itType, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda(bool createParameterCtor, [NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
         {
             Check.NotNull(itType, nameof(itType));
             Check.NotEmpty(expression, nameof(expression));
@@ -81,7 +81,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda([NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, string expression, params object[] values)
         {
             return ParseLambda(true, parameters, resultType, expression, values);
         }
@@ -96,7 +96,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(bool createParameterCtor, [NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda(bool createParameterCtor, [NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, string expression, params object[] values)
         {
             Check.NotNull(parameters, nameof(parameters));
             Check.Condition(parameters, p => p.Count(x => x == null) == 0, nameof(parameters));
