@@ -599,7 +599,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             public TestEnum A { get; set; }
 
-            public TestEnum B { get; set; }
+            public TestEnum2 B { get; set; }
 
             public int Id { get; set; }
         }
