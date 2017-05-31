@@ -590,15 +590,22 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(1, result2b.Id);
         }
 
+        public enum TestEnum2 : sbyte
+        {
+            Var2 = 1
+        }
+
         public class TestEnumClass
         {
             public TestEnum A { get; set; }
+
+            public TestEnum B { get; set; }
 
             public int Id { get; set; }
         }
 
         [Fact]
-        public void ExpressionA()
+        public void ExpressionTests_Test_BinaryAndOr()
         {
             // Arrange
             var lst = new List<TestEnumClass> { new TestEnumClass { A = TestEnum.Var2, Id = 1 } };
@@ -613,6 +620,15 @@ namespace System.Linq.Dynamic.Core.Tests
             var result5 = qry.FirstOrDefault("(it.A & @0) == 0", (sbyte)1);
             var result6 = qry.FirstOrDefault("(it.A & @0) == 0", (ushort)1);
             var result7 = qry.FirstOrDefault("(it.A & @0) == 0", (short)1);
+
+            var result10 = qry.FirstOrDefault("(it.B & @0) == 0", 1);
+            var result11 = qry.FirstOrDefault("(it.B & @0) == 0", (uint)1);
+            var result12 = qry.FirstOrDefault("(it.B & @0) == 0", (long)1);
+            var result13 = qry.FirstOrDefault("(it.B & @0) == 0", (ulong)1);
+            var result14 = qry.FirstOrDefault("(it.B & @0) == 0", (byte)1);
+            var result15 = qry.FirstOrDefault("(it.B & @0) == 0", (sbyte)1);
+            var result16 = qry.FirstOrDefault("(it.B & @0) == 0", (ushort)1);
+            var result17 = qry.FirstOrDefault("(it.B & @0) == 0", (short)1);
         }
 
         [Fact]
