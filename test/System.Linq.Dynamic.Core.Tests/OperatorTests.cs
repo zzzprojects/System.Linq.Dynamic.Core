@@ -28,5 +28,20 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(6.0m, result);
         }
+        public class TestGuidNullClass
+        {
+            public Guid? GuidNull { get; set; }
+        }
+
+        [Fact]
+        public void GuidNull_Null_Equals_Test()
+        {
+            //Arrange
+            var models = new TestGuidNullClass[] { new TestGuidNullClass() { } }.AsQueryable();
+
+            //Act
+            var result1 = models.Where("it.GuidNull == null");
+            var result2 = models.Where("null == it.GuidNull");
+        }
     }
 }

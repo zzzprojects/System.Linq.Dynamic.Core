@@ -83,8 +83,12 @@ namespace System.Linq.Dynamic.Core
             void F(Guid? x, Guid? y);
             void F(Guid x, string y);
             void F(Guid? x, string y);
+            void F(Guid x, object y);
+            void F(Guid? x, object y);
             void F(string x, Guid y);
             void F(string x, Guid? y);
+            void F(object x, Guid y);
+            void F(object x, Guid? y);
         }
 
         interface IAddSignatures : IArithmeticSignatures
