@@ -2019,7 +2019,7 @@ namespace System.Linq.Dynamic.Core
 
             if (ce != null)
             {
-                if (ce == NullLiteral)
+                if (ce == NullLiteral || ce.Value == null)
                 {
                     if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
                         return Expression.Constant(null, type);

@@ -580,12 +580,12 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var result2a = qry.FirstOrDefault("it.GuidNull = null");
             var result2b = qry.FirstOrDefault("null = it.GuidNull");
-            // var result1a = qry.FirstOrDefault("it.GuidNull = @0", null); TODO: fails?
-            // var result1b = qry.FirstOrDefault("@0 = it.GuidNull", null); TODO: fails?
+            var result1a = qry.FirstOrDefault("it.GuidNull = @0", new object[] { null });
+            var result1b = qry.FirstOrDefault("@0 = it.GuidNull", new object[] { null });
 
             // Assert
-            // Assert.Equal(1, result1a.Id);
-            // Assert.Equal(1, result1b.Id);
+            Assert.Equal(1, result1a.Id);
+            Assert.Equal(1, result1b.Id);
             Assert.Equal(1, result2a.Id);
             Assert.Equal(1, result2b.Id);
         }
