@@ -530,6 +530,67 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_GuidNullable_CompareTo_Guid()
+        {
+            //Arrange
+            var lst = new List<Guid?> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
+            var qry = lst.AsQueryable();
+
+            //Act
+            Guid testValue = new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}");
+            var resulta = qry.Where("it = @0", testValue);
+            var resultb = qry.Where("@0 = it", testValue);
+
+            //Assert
+            Assert.Equal(testValue, resulta.Single());
+            Assert.Equal(testValue, resultb.Single());
+        }
+
+        [Fact]
+        public void ExpressionTests_GuidNullable_CompareTo_GuidNullable()
+        {
+            //Arrange
+            var lst = new List<Guid?> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
+            var qry = lst.AsQueryable();
+
+            //Act
+            Guid? testValue = lst[0];
+            var resulta = qry.Where("it = @0", testValue);
+            var resultb = qry.Where("@0 = it", testValue);
+
+            //Assert
+            Assert.Equal(testValue, resulta.Single());
+            Assert.Equal(testValue, resultb.Single());
+        }
+
+        public class TestGuidNullClass
+        {
+            public Guid? GuidNull { get; set; }
+
+            public int Id { get; set; }
+        }
+
+        [Fact]
+        public void ExpressionTests_Guid_CompareTo_Null()
+        {
+            // Arrange
+            var lst = new List<TestGuidNullClass> { new TestGuidNullClass { GuidNull = null, Id = 1 }, new TestGuidNullClass { GuidNull = new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Id = 2 } };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var result2a = qry.FirstOrDefault("it.GuidNull = null");
+            var result2b = qry.FirstOrDefault("null = it.GuidNull");
+            // var result1a = qry.FirstOrDefault("it.GuidNull = @0", null); TODO: fails?
+            // var result1b = qry.FirstOrDefault("@0 = it.GuidNull", null); TODO: fails?
+
+            // Assert
+            // Assert.Equal(1, result1a.Id);
+            // Assert.Equal(1, result1b.Id);
+            Assert.Equal(1, result2a.Id);
+            Assert.Equal(1, result2b.Id);
+        }
+
+        [Fact]
         public void ExpressionTests_HexadecimalInteger()
         {
             //Arrange
@@ -584,7 +645,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var testRange = Enumerable.Range(1, 100).ToArray();
             var testModels = User.GenerateSampleModels(10);
             var testModelByUsername = string.Format("Username in (\"{0}\",\"{1}\",\"{2}\")", testModels[0].UserName, testModels[1].UserName, testModels[2].UserName);
-            var testInExpression = new int[] { 2, 4, 6, 8 };
+            var testInExpression = new[] { 2, 4, 6, 8 };
 
             //Act
             var result1a = testRange.AsQueryable().Where("it in (2,4,6,8)").ToArray();
@@ -598,11 +659,11 @@ namespace System.Linq.Dynamic.Core.Tests
             var result4 = testRange.AsQueryable().Where("it in @0", testInExpression).ToArray();
 
             //Assert
-            Assert.Equal(new int[] { 2, 4, 6, 8 }, result1a);
-            Assert.Equal(new int[] { 2, 4, 6, 8 }, result1b);
+            Assert.Equal(new[] { 2, 4, 6, 8 }, result1a);
+            Assert.Equal(new[] { 2, 4, 6, 8 }, result1b);
             Assert.Equal(testModels.Take(3).ToArray(), result2);
             Assert.Equal(testModels.Take(3).ToArray(), result3);
-            Assert.Equal(new int[] { 2, 4, 6, 8 }, result4);
+            Assert.Equal(new[] { 2, 4, 6, 8 }, result4);
         }
 
         [Fact]
@@ -610,7 +671,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             //Arrange
             var baseQuery = new int?[] { 1, 2, null, 3, 4 }.AsQueryable();
-            var expectedResult = new int[] { 1, 2, 0, 3, 4 };
+            var expectedResult = new[] { 1, 2, 0, 3, 4 };
 
             // Act
             var result1 = baseQuery.Select("isnull(it, 0)");
@@ -812,7 +873,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_MethodCall_ValueTypeToValueTypeParameter()
         {
             //Arrange
-            var list = new int[] { 0, 1, 2, 3, 4 };
+            var list = new[] { 0, 1, 2, 3, 4 };
 
             //Act
             var methods = new Methods();
@@ -827,7 +888,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast()
         {
             //Arrange
-            var list = new int[] { 0, 1, 2, 3, 4 };
+            var list = new[] { 0, 1, 2, 3, 4 };
 
             //Act
             var methods = new Methods();
@@ -842,7 +903,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast()
         {
             //Arrange
-            var list = new int[] { 0, 1, 2, 3, 4 };
+            var list = new[] { 0, 1, 2, 3, 4 };
 
             //Act
             var methods = new Methods();
@@ -872,7 +933,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_MethodCall_ReferenceTypeToObjectParameter()
         {
             //Arrange
-            var list = new int[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
+            var list = new[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
 
             //Act
             var methods = new Methods();

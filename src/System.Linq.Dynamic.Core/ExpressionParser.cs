@@ -1438,7 +1438,11 @@ namespace System.Linq.Dynamic.Core
 
         Expression ParseMemberAccess(Type type, Expression instance)
         {
-            if (instance != null) type = instance.Type;
+            if (instance != null)
+            {
+                type = instance.Type;
+            }
+
             int errorPos = _textParser.CurrentToken.Pos;
             string id = GetIdentifier();
             _textParser.NextToken();
@@ -1501,16 +1505,15 @@ namespace System.Linq.Dynamic.Core
 
                     return ParseConditionalOperator();
                 }
-                else
-                {
-                    throw ParseError(errorPos, Res.UnknownPropertyOrField, id, GetTypeName(type));
-                }
 
+                throw ParseError(errorPos, Res.UnknownPropertyOrField, id, GetTypeName(type));
             }
 
             var property = member as PropertyInfo;
             if (property != null)
+            {
                 return Expression.Property(instance, property);
+            }
 
             return Expression.Field(instance, (FieldInfo)member);
         }
