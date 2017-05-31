@@ -83,12 +83,8 @@ namespace System.Linq.Dynamic.Core
             void F(Guid? x, Guid? y);
             void F(Guid x, string y);
             void F(Guid? x, string y);
-            void F(Guid x, object y);
-            void F(Guid? x, object y);
             void F(string x, Guid y);
             void F(string x, Guid? y);
-            void F(object x, Guid y);
-            void F(object x, Guid? y);
         }
 
         interface IAddSignatures : IArithmeticSignatures
@@ -1830,7 +1826,9 @@ namespace System.Linq.Dynamic.Core
 
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
-                throw IncompatibleOperandsError(opName, left, right, errorPos);
+            {
+                 throw IncompatibleOperandsError(opName, left, right, errorPos);
+            }
 
             left = args[0];
             right = args[1];
@@ -1972,6 +1970,11 @@ namespace System.Linq.Dynamic.Core
             if (applicable.Length > 1)
             {
                 applicable = applicable.Where(m => applicable.All(n => m == n || IsBetterThan(args, m, n))).ToArray();
+            }
+            
+            if (args.Length == 2 && applicable.Length > 1 && (args[0].Type == typeof(Guid?) || args[1].Type == typeof(Guid?)))
+            {
+                applicable = applicable.Take(1).ToArray();
             }
 
             if (applicable.Length == 1)
