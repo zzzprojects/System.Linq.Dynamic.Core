@@ -590,6 +590,31 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(1, result2b.Id);
         }
 
+        public class TestEnumClass
+        {
+            public TestEnum A { get; set; }
+
+            public int Id { get; set; }
+        }
+
+        [Fact]
+        public void ExpressionA()
+        {
+            // Arrange
+            var lst = new List<TestEnumClass> { new TestEnumClass { A = TestEnum.Var2, Id = 1 } };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var result0 = qry.FirstOrDefault("(it.A & @0) == 0", 1);
+            var result1 = qry.FirstOrDefault("(it.A & @0) == 0", (uint)1);
+            var result2 = qry.FirstOrDefault("(it.A & @0) == 0", (long)1);
+            var result3 = qry.FirstOrDefault("(it.A & @0) == 0", (ulong)1);
+            var result4 = qry.FirstOrDefault("(it.A & @0) == 0", (byte)1);
+            var result5 = qry.FirstOrDefault("(it.A & @0) == 0", (sbyte)1);
+            var result6 = qry.FirstOrDefault("(it.A & @0) == 0", (ushort)1);
+            var result7 = qry.FirstOrDefault("(it.A & @0) == 0", (short)1);
+        }
+
         [Fact]
         public void ExpressionTests_HexadecimalInteger()
         {

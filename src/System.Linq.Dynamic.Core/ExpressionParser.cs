@@ -606,11 +606,13 @@ namespace System.Linq.Dynamic.Core
                         }
                         else
                         {
+                            ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                             left = Expression.And(left, right);
                         }
                         break;
 
                     case TokenId.Bar:
+                        ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                         left = Expression.Or(left, right);
                         break;
                 }
@@ -2677,6 +2679,53 @@ namespace System.Linq.Dynamic.Core
         internal static void ResetDynamicLinqTypes()
         {
             _keywords = null;
+        }
+
+        static void ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right)
+        {
+            if (left.Type == right.Type)
+                return;
+
+            if (left.Type == typeof(UInt64) || right.Type == typeof(UInt64))
+            {
+                right = right.Type != typeof(UInt64) ? Expression.Convert(right, typeof(UInt64)) : right;
+                left = left.Type != typeof(UInt64) ? Expression.Convert(left, typeof(UInt64)) : left;
+            }
+            else if (left.Type == typeof(Int64) || right.Type == typeof(Int64))
+            {
+                right = right.Type != typeof(Int64) ? Expression.Convert(right, typeof(Int64)) : right;
+                left = left.Type != typeof(Int64) ? Expression.Convert(left, typeof(Int64)) : left;
+            }
+            else if (left.Type == typeof(UInt32) || right.Type == typeof(UInt32))
+            {
+                right = right.Type != typeof(UInt32) ? Expression.Convert(right, typeof(UInt32)) : right;
+                left = left.Type != typeof(UInt32) ? Expression.Convert(left, typeof(UInt32)) : left;
+            }
+            else if (left.Type == typeof(Int32) || right.Type == typeof(Int32))
+            {
+                right = right.Type != typeof(Int32) ? Expression.Convert(right, typeof(Int32)) : right;
+                left = left.Type != typeof(Int32) ? Expression.Convert(left, typeof(Int32)) : left;
+            }
+            else if (left.Type == typeof(UInt16) || right.Type == typeof(UInt16))
+            {
+                right = right.Type != typeof(UInt16) ? Expression.Convert(right, typeof(UInt16)) : right;
+                left = left.Type != typeof(UInt16) ? Expression.Convert(left, typeof(UInt16)) : left;
+            }
+            else if (left.Type == typeof(Int16) || right.Type == typeof(Int16))
+            {
+                right = right.Type != typeof(Int16) ? Expression.Convert(right, typeof(Int16)) : right;
+                left = left.Type != typeof(Int16) ? Expression.Convert(left, typeof(Int16)) : left;
+            }
+            else if (left.Type == typeof(Byte) || right.Type == typeof(Byte))
+            {
+                right = right.Type != typeof(Byte) ? Expression.Convert(right, typeof(Byte)) : right;
+                left = left.Type != typeof(Byte) ? Expression.Convert(left, typeof(Byte)) : left;
+            }
+            else if (left.Type == typeof(SByte) || right.Type == typeof(SByte))
+            {
+                right = right.Type != typeof(SByte) ? Expression.Convert(right, typeof(SByte)) : right;
+                left = left.Type != typeof(SByte) ? Expression.Convert(left, typeof(SByte)) : left;
+            }
         }
     }
 }
