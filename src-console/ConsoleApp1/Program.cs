@@ -14,7 +14,7 @@ namespace ConsoleApp1
     {
         public static void Main(string[] args)
         {
-            var emps = new Employee[] { new Employee { Name = "a" }, new Employee { Name = "b" } }.AsQueryable();
+            var emps = new[] { new Employee { Name = "a" }, new Employee { Name = "b" } }.AsQueryable();
 
             // normal
             Expression<Func<Employee, string>> exp = u => u.Name;

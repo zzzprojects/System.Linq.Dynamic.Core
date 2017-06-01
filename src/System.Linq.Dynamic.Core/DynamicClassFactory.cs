@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core
     public static class DynamicClassFactory
     {
         // EmptyTypes is used to indicate that we are looking for someting without any parameters. 
-        private readonly static Type[] EmptyTypes = new Type[0];
+        private static readonly Type[] EmptyTypes = new Type[0];
 
         private static readonly ConcurrentDictionary<string, Type> GeneratedTypes = new ConcurrentDictionary<string, Type>();
 
@@ -98,24 +98,20 @@ namespace System.Linq.Dynamic.Core
         {
             Check.HasNoNulls(properties, nameof(properties));
 
-            var types = properties.Select(p => p.Type).ToArray();
-            var names = properties.Select(p => p.Name).ToArray();
+            Type[] types = properties.Select(p => p.Type).ToArray();
+            string[] names = properties.Select(p => p.Name).ToArray();
 
-            // Anonymous classes are generics based. The generic classes are distinguished by number of parameters and name of parameters.
-            // The specific types of the parameters are the generic arguments.
-            // We recreate this by creating a fullName composed of all the property names, separated by a "|".
-            string fullName = string.Join("|", names.Select(Escape).ToArray());
+            string key = GenerateKey(properties, createParameterCtor);
 
             Type type;
-
-            if (!GeneratedTypes.TryGetValue(fullName, out type))
+            if (!GeneratedTypes.TryGetValue(key, out type))
             {
                 // We create only a single class at a time, through this lock
                 // Note that this is a variant of the double-checked locking.
                 // It is safe because we are using a thread safe class.
                 lock (GeneratedTypes)
                 {
-                    if (!GeneratedTypes.TryGetValue(fullName, out type))
+                    if (!GeneratedTypes.TryGetValue(key, out type))
                     {
                         int index = Interlocked.Increment(ref _index);
 
@@ -350,7 +346,7 @@ namespace System.Linq.Dynamic.Core
 
                         type = tb.CreateType();
 
-                        type = GeneratedTypes.GetOrAdd(fullName + "|_" + (createParameterCtor ? "1" : "0"), type);
+                        type = GeneratedTypes.GetOrAdd(key, type);
                     }
                 }
             }
@@ -361,6 +357,20 @@ namespace System.Linq.Dynamic.Core
             }
 
             return type;
+        }
+
+        /// <summary>
+        /// Generates the key.
+        /// Anonymous classes are generics based. The generic classes are distinguished by number of parameters and name of parameters. The specific types of the parameters are the generic arguments.
+        /// </summary>
+        /// <param name="dynamicProperties">The dynamic propertys.</param>
+        /// <param name="createParameterCtor">if set to <c>true</c> [create parameter ctor].</param>
+        /// <returns></returns>
+        private static string GenerateKey(IEnumerable<DynamicProperty> dynamicProperties, bool createParameterCtor)
+        {
+            // We recreate this by creating a fullName composed of all the property names and types, separated by a "|".
+            // And append and extra field depending on createParameterCtor.
+            return string.Format("{0}_{1}", string.Join("|", dynamicProperties.Select(p => Escape(p.Name) + "~" + p.Type.FullName).ToArray()), createParameterCtor ? "c" : string.Empty);
         }
 
         private static string Escape(string str)

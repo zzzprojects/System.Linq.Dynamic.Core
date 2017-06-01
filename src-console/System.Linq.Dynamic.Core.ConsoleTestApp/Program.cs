@@ -38,6 +38,13 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp
 
             DynamicProperty[] props = { new DynamicProperty("Name", typeof(string)), new DynamicProperty("Birthday", typeof(DateTime)) };
             Type type = DynamicClassFactory.CreateType(props);
+
+            DynamicProperty[] props2 = { new DynamicProperty("Name", typeof(string)), new DynamicProperty("Birthday", typeof(DateTime)) };
+            Type type2 = DynamicClassFactory.CreateType(props2);
+
+            DynamicProperty[] props3 = { new DynamicProperty("Name", typeof(int)), new DynamicProperty("Birthday", typeof(DateTime)) };
+            Type type3 = DynamicClassFactory.CreateType(props3);
+            
             DynamicClass dynamicClass = Activator.CreateInstance(type) as DynamicClass;
             dynamicClass.SetDynamicPropertyValue("Name", "Albert");
             dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
