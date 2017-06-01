@@ -1,4 +1,11 @@
-# 1.0.7.1 (31 mei 2017)
+# 1.0.7.2 (01 juni 2017)
+
+ - [#86](https://github.com/StefH/System.Linq.Dynamic.Core/pull/86) - [Fix] Fixed null in Parameter and added functionality Binary And and Or with different Types contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+
+Commits: a02f3d64fa...35bdf2c0c7
+
+
+# 1.0.7.1 (31 mei 2017) (31 mei 2017)
 
  - [#85](https://github.com/StefH/System.Linq.Dynamic.Core/pull/85) - [Fix] Guid? == null comparison contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
  - [#82](https://github.com/StefH/System.Linq.Dynamic.Core/issues/82) - [Feature] Add DefaultIfEmpty +enhancement
