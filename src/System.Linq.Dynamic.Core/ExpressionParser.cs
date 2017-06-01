@@ -2721,11 +2721,6 @@ namespace System.Linq.Dynamic.Core
                 right = right.Type != typeof(Byte) ? Expression.Convert(right, typeof(Byte)) : right;
                 left = left.Type != typeof(Byte) ? Expression.Convert(left, typeof(Byte)) : left;
             }
-            else if (left.Type == typeof(SByte) || right.Type == typeof(SByte))
-            {
-                right = right.Type != typeof(SByte) ? Expression.Convert(right, typeof(SByte)) : right;
-                left = left.Type != typeof(SByte) ? Expression.Convert(left, typeof(SByte)) : left;
-            }
         }
     }
 }

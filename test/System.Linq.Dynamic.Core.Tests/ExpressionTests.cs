@@ -34,6 +34,127 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new] {}"));
         }
 
+        public enum TestEnum2 : sbyte
+        {
+            Var1 = 0,
+            Var2 = 1,
+            Var3 = 2,
+            Var4 = 4,
+            Var5 = 8,
+            Var6 = 16,
+        }
+
+        public class TestEnumClass
+        {
+            public TestEnum A { get; set; }
+
+            public TestEnum2 B { get; set; }
+
+            public int Id { get; set; }
+        }
+
+        [Fact]
+        public void ExpressionTests_BinaryAndNumericConvert()
+        {
+            // Arrange
+            var lst = new List<TestEnumClass>
+            {
+                new TestEnumClass {A = TestEnum.Var3, B = TestEnum2.Var3, Id = 1},
+                new TestEnumClass {A = TestEnum.Var4, B = TestEnum2.Var4, Id = 2},
+                new TestEnumClass {A = TestEnum.Var2, B = TestEnum2.Var2, Id = 3}
+            };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var result0 = qry.FirstOrDefault("(it.A & @0) == 1", 1);
+            var result1 = qry.FirstOrDefault("(it.A & @0) == 1", (uint)1);
+            var result2 = qry.FirstOrDefault("(it.A & @0) == 1", (long)1);
+            var result3 = qry.FirstOrDefault("(it.A & @0) == 1", (ulong)1);
+            var result4 = qry.FirstOrDefault("(it.A & @0) == 1", (byte)1);
+            var result5 = qry.FirstOrDefault("(it.A & @0) == 1", (sbyte)1);
+            var result6 = qry.FirstOrDefault("(it.A & @0) == 1", (ushort)1);
+            var result7 = qry.FirstOrDefault("(it.A & @0) == 1", (short)1);
+
+            var result10 = qry.FirstOrDefault("(it.B & @0) == 1", 1);
+            var result11 = qry.FirstOrDefault("(it.B & @0) == 1", (uint)1);
+            var result12 = qry.FirstOrDefault("(it.B & @0) == 1", (long)1);
+            var result13 = qry.FirstOrDefault("(it.B & @0) == 1", (ulong)1);
+            var result14 = qry.FirstOrDefault("(it.B & @0) == 1", (byte)1);
+            var result15 = qry.FirstOrDefault("(it.B & @0) == 1", (sbyte)1);
+            var result16 = qry.FirstOrDefault("(it.B & @0) == 1", (ushort)1);
+            var result17 = qry.FirstOrDefault("(it.B & @0) == 1", (short)1);
+
+            //Assert
+            Assert.Equal(3, result0.Id);
+            Assert.Equal(3, result1.Id);
+            Assert.Equal(3, result2.Id);
+            Assert.Equal(3, result3.Id);
+            Assert.Equal(3, result4.Id);
+            Assert.Equal(3, result5.Id);
+            Assert.Equal(3, result6.Id);
+            Assert.Equal(3, result7.Id);
+
+            Assert.Equal(3, result10.Id);
+            Assert.Equal(3, result11.Id);
+            Assert.Equal(3, result12.Id);
+            Assert.Equal(3, result13.Id);
+            Assert.Equal(3, result14.Id);
+            Assert.Equal(3, result15.Id);
+            Assert.Equal(3, result16.Id);
+            Assert.Equal(3, result17.Id);
+        }
+
+        [Fact]
+        public void ExpressionTests_BinaryOrNumericConvert()
+        {
+            // Arrange
+            var lst = new List<TestEnumClass>
+            {
+                new TestEnumClass {A = TestEnum.Var3, B = TestEnum2.Var3, Id = 1},
+                new TestEnumClass {A = TestEnum.Var4, B = TestEnum2.Var4, Id = 2},
+                new TestEnumClass {A = TestEnum.Var2, B = TestEnum2.Var2, Id = 3}
+            };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var result0 = qry.FirstOrDefault("(it.A | @0) == 1", 1);
+            var result1 = qry.FirstOrDefault("(it.A | @0) == 1", (uint)1);
+            var result2 = qry.FirstOrDefault("(it.A | @0) == 1", (long)1);
+            var result3 = qry.FirstOrDefault("(it.A | @0) == 1", (ulong)1);
+            var result4 = qry.FirstOrDefault("(it.A | @0) == 1", (byte)1);
+            var result5 = qry.FirstOrDefault("(it.A | @0) == 1", (sbyte)1);
+            var result6 = qry.FirstOrDefault("(it.A | @0) == 1", (ushort)1);
+            var result7 = qry.FirstOrDefault("(it.A | @0) == 1", (short)1);
+
+            var result10 = qry.FirstOrDefault("(it.B | @0) == 1", 1);
+            var result11 = qry.FirstOrDefault("(it.B | @0) == 1", (uint)1);
+            var result12 = qry.FirstOrDefault("(it.B | @0) == 1", (long)1);
+            var result13 = qry.FirstOrDefault("(it.B | @0) == 1", (ulong)1);
+            var result14 = qry.FirstOrDefault("(it.B | @0) == 1", (byte)1);
+            var result15 = qry.FirstOrDefault("(it.B | @0) == 1", (sbyte)1);
+            var result16 = qry.FirstOrDefault("(it.B | @0) == 1", (ushort)1);
+            var result17 = qry.FirstOrDefault("(it.B | @0) == 1", (short)1);
+
+            //Assert
+            Assert.Equal(3, result0.Id);
+            Assert.Equal(3, result1.Id);
+            Assert.Equal(3, result2.Id);
+            Assert.Equal(3, result3.Id);
+            Assert.Equal(3, result4.Id);
+            Assert.Equal(3, result5.Id);
+            Assert.Equal(3, result6.Id);
+            Assert.Equal(3, result7.Id);
+
+            Assert.Equal(3, result10.Id);
+            Assert.Equal(3, result11.Id);
+            Assert.Equal(3, result12.Id);
+            Assert.Equal(3, result13.Id);
+            Assert.Equal(3, result14.Id);
+            Assert.Equal(3, result15.Id);
+            Assert.Equal(3, result16.Id);
+            Assert.Equal(3, result17.Id);
+        }
+
         [Fact]
         public void ExpressionTests_Cast_To_nullableint()
         {
@@ -588,47 +709,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(1, result1b.Id);
             Assert.Equal(1, result2a.Id);
             Assert.Equal(1, result2b.Id);
-        }
-
-        public enum TestEnum2 : sbyte
-        {
-            Var2 = 1
-        }
-
-        public class TestEnumClass
-        {
-            public TestEnum A { get; set; }
-
-            public TestEnum2 B { get; set; }
-
-            public int Id { get; set; }
-        }
-
-        [Fact]
-        public void ExpressionTests_Test_BinaryAndOr()
-        {
-            // Arrange
-            var lst = new List<TestEnumClass> { new TestEnumClass { A = TestEnum.Var2, Id = 1 } };
-            var qry = lst.AsQueryable();
-
-            // Act
-            var result0 = qry.FirstOrDefault("(it.A & @0) == 0", 1);
-            var result1 = qry.FirstOrDefault("(it.A & @0) == 0", (uint)1);
-            var result2 = qry.FirstOrDefault("(it.A & @0) == 0", (long)1);
-            var result3 = qry.FirstOrDefault("(it.A & @0) == 0", (ulong)1);
-            var result4 = qry.FirstOrDefault("(it.A & @0) == 0", (byte)1);
-            var result5 = qry.FirstOrDefault("(it.A & @0) == 0", (sbyte)1);
-            var result6 = qry.FirstOrDefault("(it.A & @0) == 0", (ushort)1);
-            var result7 = qry.FirstOrDefault("(it.A & @0) == 0", (short)1);
-
-            var result10 = qry.FirstOrDefault("(it.B & @0) == 0", 1);
-            var result11 = qry.FirstOrDefault("(it.B & @0) == 0", (uint)1);
-            var result12 = qry.FirstOrDefault("(it.B & @0) == 0", (long)1);
-            var result13 = qry.FirstOrDefault("(it.B & @0) == 0", (ulong)1);
-            var result14 = qry.FirstOrDefault("(it.B & @0) == 0", (byte)1);
-            var result15 = qry.FirstOrDefault("(it.B & @0) == 0", (sbyte)1);
-            var result16 = qry.FirstOrDefault("(it.B & @0) == 0", (ushort)1);
-            var result17 = qry.FirstOrDefault("(it.B & @0) == 0", (short)1);
         }
 
         [Fact]
