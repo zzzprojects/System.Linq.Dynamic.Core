@@ -24,7 +24,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_EmptyParameterList()
+        public void ParseLambda_EmptyParameterList()
         {
             // Arrange
             var pEmpty = new ParameterExpression[] { };
@@ -38,7 +38,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_Lambda1()
+        public void ParseLambda_1()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -64,7 +64,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_Lambda2()
+        public void ParseLambda_2()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -86,7 +86,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_Lambda3()
+        public void ParseLambda_3()
         {
             // Arrange
             var testList = User.GenerateSampleModels(5);
@@ -109,15 +109,15 @@ namespace System.Linq.Dynamic.Core.Tests
 
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/58
         [Fact]
-        public void Parse_Lambda4_Issue58()
+        public void ParseLambda_4_Issue58()
         {
-            var expressionParams = new ParameterExpression[]
+            var expressionParams = new[]
             {
                 Expression.Parameter(typeof (MyClass), "myObj")
             };
 
             var myClassInstance = new MyClass();
-            var invokersMerge = new List<object>() { myClassInstance };
+            var invokersMerge = new List<object> { myClassInstance };
 
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(false, expressionParams, null, "myObj.Foo()");
             Delegate del = expression.Compile();
@@ -127,7 +127,57 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_ParameterExpressionMethodCall_ReturnsIntExpression()
+        public void ParseLambda_ParameterName()
+        {
+            // Arrange
+            var parameters = new[]
+            {
+                Expression.Parameter(typeof(int), "x")
+            };
+
+            // Assert
+            var expressionX = DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "x == 42");
+            var expressionIT = DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42");
+
+            // Assert
+            Assert.Equal(typeof(bool), expressionX.Body.Type);
+            Assert.Equal(typeof(bool), expressionIT.Body.Type);
+        }
+
+        [Fact]
+        public void ParseLambda_ParameterName_Empty()
+        {
+            // Arrange
+            var parameters = new[]
+            {
+                Expression.Parameter(typeof(int), "")
+            };
+
+            // Assert
+            var expression = DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42");
+
+            // Assert
+            Assert.Equal(typeof(bool), expression.Body.Type);
+        }
+
+        [Fact]
+        public void ParseLambda_ParameterName_Null()
+        {
+            // Arrange
+            var parameters = new[]
+            {
+                Expression.Parameter(typeof(int), null)
+            };
+
+            // Assert
+            var expression = DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42");
+
+            // Assert
+            Assert.Equal(typeof(bool), expression.Body.Type);
+        }
+
+        [Fact]
+        public void ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(true,
                 new[] { Expression.Parameter(typeof(int), "x") },
@@ -137,7 +187,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_TupleToStringMethodCall_ReturnsStringLambdaExpression()
+        public void ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(
                 typeof(Tuple<int>),
@@ -147,21 +197,21 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_StringLiteral_ReturnsBooleanLambdaExpression()
+        public void ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(Boolean), "Property1 == \"test\"");
             Assert.Equal(typeof(Boolean), expression.Body.Type);
         }
 
         [Fact]
-        public void Parse_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
+        public void ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(Boolean), "Property1 == \"\"");
             Assert.Equal(typeof(Boolean), expression.Body.Type);
         }
 
         [Fact]
-        public void Parse_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression()
+        public void ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
             string expectedRightValue = "\"test \\\"string\"";
             var expression = DynamicExpressionParser.ParseLambda(
@@ -175,7 +225,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
+        public void ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
             string expectedRightValue = "\"\\\"test\"";
             var expression = DynamicExpressionParser.ParseLambda(
@@ -189,7 +239,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_StringLiteral_MissingClosingQuote()
+        public void ParseLambda_StringLiteral_MissingClosingQuote()
         {
             string expectedRightValue = "\"test\\\"";
 
@@ -200,7 +250,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Parse_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
+        public void ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
         {
             string expectedRightValue = "\"test\\string\"";
             var expression = DynamicExpressionParser.ParseLambda(
@@ -213,28 +263,14 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedRightValue, rightValue);
         }
 
-        //[Fact]
-        //public void ParseLambda_DelegateTypeMethodCall_ReturnsEventHandlerLambdaExpression()
-        //{
-        //    var expression = DynamicExpressionParser.ParseLambda(true,
-        //        typeof(EventHandler),
-        //        null,
-        //        new[] { Expression.Parameter(typeof(object), "sender"), Expression.Parameter(typeof(EventArgs), "e") },
-        //        "sender.ToString()");
-
-        //    Assert.Equal(typeof(void), expression.ReturnType);
-        //    Assert.Equal(typeof(EventHandler), expression.Type);
-        //}
-
-        //[Fact] this should fail : not allowed
-        //public void ParseLambda_VoidMethodCall_ReturnsActionDelegate()
-        //{
-        //    var expression = DynamicExpressionParser.ParseLambda(
-        //        typeof(IO.FileStream),
-        //        null,
-        //        "it.Close()");
-        //    Assert.Equal(typeof(void), expression.ReturnType);
-        //    Assert.Equal(typeof(Action<IO.FileStream>), expression.Type);
-        //}
+        [Fact]
+        public void ParseLambda_IllegalMethodCall_ThrowsException()
+        {
+            Check.ThatCode(() =>
+            {
+                DynamicExpressionParser.ParseLambda(typeof(IO.FileStream), null, "it.Close()");
+            })
+            .Throws<ParseException>().WithMessage("Methods on type 'Stream' are not accessible");
+        }
     }
 }

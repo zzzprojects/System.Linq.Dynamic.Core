@@ -10,7 +10,7 @@ namespace System.Linq.Dynamic.Core
     public static class DynamicExpressionParser
     {
         /// <summary>
-        /// Parses a expression into a LambdaExpression. (Also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.)
+        /// Parses an expression into a LambdaExpression. (Also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.)
         /// </summary>
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
@@ -23,7 +23,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Parses a expression into a LambdaExpression.
+        /// Parses an expression into a LambdaExpression.
         /// </summary>
         /// <param name="createParameterCtor">if set to <c>true</c> then also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.</param>
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
@@ -41,7 +41,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Parses a expression into a LambdaExpression. (Also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.)
+        /// Parses an expression into a LambdaExpression. (Also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.)
         /// </summary>
         /// <param name="itType">The main type from the dynamic class expression.</param>
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
@@ -55,7 +55,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Parses a expression into a LambdaExpression.
+        /// Parses an expression into a LambdaExpression.
         /// </summary>
         /// <param name="createParameterCtor">if set to <c>true</c> then also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.</param>
         /// <param name="itType">The main type from the dynamic class expression.</param>
@@ -73,7 +73,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Parses a expression into a LambdaExpression. (Also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.)
+        /// Parses an expression into a LambdaExpression. (Also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.)
         /// </summary>
         /// <param name="parameters">A array from ParameterExpressions.</param>
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
@@ -87,7 +87,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Parses a expression into a LambdaExpression.
+        /// Parses an expression into a LambdaExpression.
         /// </summary>
         /// <param name="createParameterCtor">if set to <c>true</c> then also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.</param>
         /// <param name="parameters">A array from ParameterExpressions.</param>

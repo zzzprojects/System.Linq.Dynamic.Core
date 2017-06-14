@@ -306,15 +306,21 @@ namespace System.Linq.Dynamic.Core
 
         void ProcessParameters(ParameterExpression[] parameters)
         {
-            foreach (ParameterExpression pe in parameters)
-                if (!string.IsNullOrEmpty(pe.Name))
-                    AddSymbol(pe.Name, pe);
-            if (parameters.Length == 1 && string.IsNullOrEmpty(parameters[0].Name))
+            foreach (ParameterExpression pe in parameters.Where(p => !string.IsNullOrEmpty(p.Name)))
+            {
+                AddSymbol(pe.Name, pe);
+            }
+
+            // If there is only 1 ParameterExpression, do also allow access using 'it'
+            if (parameters.Length == 1)
             {
                 _parent = _it;
                 _it = parameters[0];
+
                 if (_root == null)
+                {
                     _root = _it;
+                }
             }
         }
 
@@ -339,7 +345,10 @@ namespace System.Linq.Dynamic.Core
         void AddSymbol(string name, object value)
         {
             if (_symbols.ContainsKey(name))
+            {
                 throw ParseError(Res.DuplicateIdentifier, name);
+            }
+
             _symbols.Add(name, value);
         }
 
@@ -1832,7 +1841,7 @@ namespace System.Linq.Dynamic.Core
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
             {
-                 throw IncompatibleOperandsError(opName, left, right, errorPos);
+                throw IncompatibleOperandsError(opName, left, right, errorPos);
             }
 
             left = args[0];
@@ -1976,7 +1985,7 @@ namespace System.Linq.Dynamic.Core
             {
                 applicable = applicable.Where(m => applicable.All(n => m == n || IsBetterThan(args, m, n))).ToArray();
             }
-            
+
             if (args.Length == 2 && applicable.Length > 1 && (args[0].Type == typeof(Guid?) || args[1].Type == typeof(Guid?)))
             {
                 applicable = applicable.Take(1).ToArray();
