@@ -2633,7 +2633,7 @@ namespace System.Linq.Dynamic.Core
 
         Exception ParseError(string format, params object[] args)
         {
-            return ParseError(_textParser.CurrentToken.Pos, format, args);
+            return ParseError(_textParser?.CurrentToken.Pos ?? 0, format, args);
         }
 
         static Exception ParseError(int pos, string format, params object[] args)

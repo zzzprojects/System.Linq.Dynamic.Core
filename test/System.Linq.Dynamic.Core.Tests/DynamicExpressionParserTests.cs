@@ -24,6 +24,22 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ParseLambda_DuplicateParameterNames_ThrowsException()
+        {
+            // Arrange
+            var parameters = new[]
+            {
+                Expression.Parameter(typeof(int), "x"),
+                Expression.Parameter(typeof(int), "x")
+            };
+
+            // Act and Assert
+            Check.ThatCode(() => DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42"))
+                .Throws<ParseException>()
+                .WithMessage("The identifier 'x' was defined more than once");
+        }
+
+        [Fact]
         public void ParseLambda_EmptyParameterList()
         {
             // Arrange

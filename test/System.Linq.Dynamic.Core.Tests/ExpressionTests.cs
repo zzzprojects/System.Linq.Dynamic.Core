@@ -12,6 +12,60 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class ExpressionTests
     {
+        public enum TestEnum2 : sbyte
+        {
+            Var1 = 0,
+            Var2 = 1,
+            Var3 = 2,
+            Var4 = 4,
+            Var5 = 8,
+            Var6 = 16,
+        }
+
+        public class TestEnumClass
+        {
+            public TestEnum A { get; set; }
+
+            public TestEnum2 B { get; set; }
+
+            public int Id { get; set; }
+        }
+
+        public class TestGuidNullClass
+        {
+            public Guid? GuidNull { get; set; }
+
+            public int Id { get; set; }
+        }
+
+        [Fact]
+        public void ExpressionTests_Add_Number()
+        {
+            //Arrange
+            var values = new[] { -1, 2 }.AsQueryable();
+
+            //Act
+            var result = values.Select<int>("it + 1");
+            var expected = values.Select(i => i + 1);
+
+            //Assert
+            Check.That(result).ContainsExactly(expected);
+        }
+
+        [Fact]
+        public void ExpressionTests_Add_String()
+        {
+            //Arrange
+            var values = new[] { "a", "b" }.AsQueryable();
+
+            //Act
+            var result = values.Select<string>("it + \"z\"");
+            var expected = values.Select(i => i + "z");
+
+            //Assert
+            Check.That(result).ContainsExactly(expected);
+        }
+
         [Fact]
         public void ExpressionTests_ArrayInitializer()
         {
@@ -32,25 +86,6 @@ namespace System.Linq.Dynamic.Core.Tests
 
             Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new[ {}"));
             Assert.Throws<ParseException>(() => list.AsQueryable().SelectMany("new] {}"));
-        }
-
-        public enum TestEnum2 : sbyte
-        {
-            Var1 = 0,
-            Var2 = 1,
-            Var3 = 2,
-            Var4 = 4,
-            Var5 = 8,
-            Var6 = 16,
-        }
-
-        public class TestEnumClass
-        {
-            public TestEnum A { get; set; }
-
-            public TestEnum2 B { get; set; }
-
-            public int Id { get; set; }
         }
 
         [Fact]
@@ -380,6 +415,20 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Divide_Number()
+        {
+            //Arrange
+            var values = new[] { -10, 20 }.AsQueryable();
+
+            //Act
+            var result = values.Select<int>("it / 10");
+            var expected = values.Select(i => i / 10);
+
+            //Assert
+            Check.That(result).ContainsExactly(expected);
+        }
+
+        [Fact]
         public void ExpressionTests_Double()
         {
             //Arrange
@@ -682,13 +731,6 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(testValue, resulta.Single());
             Assert.Equal(testValue, resultb.Single());
-        }
-
-        public class TestGuidNullClass
-        {
-            public Guid? GuidNull { get; set; }
-
-            public int Id { get; set; }
         }
 
         [Fact]
@@ -1109,6 +1151,34 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Modulo_Number()
+        {
+            //Arrange
+            var values = new[] { -10, 20 }.AsQueryable();
+
+            //Act
+            var result = values.Select<int>("it % 3");
+            var expected = values.Select(i => i % 3);
+
+            //Assert
+            Check.That(result).ContainsExactly(expected);
+        }
+
+        [Fact]
+        public void ExpressionTests_Multiply_Number()
+        {
+            //Arrange
+            var values = new[] { -1, 2 }.AsQueryable();
+
+            //Act
+            var result = values.Select<int>("it * 10");
+            var expected = values.Select(i => i * 10);
+
+            //Assert
+            Check.That(result).ContainsExactly(expected);
+        }
+
+        [Fact]
         public void ExpressionTests_NullCoalescing()
         {
             //Arrange
@@ -1293,6 +1363,20 @@ namespace System.Linq.Dynamic.Core.Tests
 
             Assert.Equal("FirstNamex y", resultAddWithPlusAndParams.First());
             Assert.Equal("FirstNamex y", resultAddWithAmpAndParams.First());
+        }
+
+        [Fact]
+        public void ExpressionTests_Subtract_Number()
+        {
+            //Arrange
+            var values = new[] { -1, 2 }.AsQueryable();
+
+            //Act
+            var result = values.Select<int>("it - 10");
+            var expected = values.Select(i => i - 10);
+
+            //Assert
+            Check.That(result).ContainsExactly(expected);
         }
 
         [Fact]
