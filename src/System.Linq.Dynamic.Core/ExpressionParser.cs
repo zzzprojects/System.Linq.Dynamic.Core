@@ -975,6 +975,7 @@ namespace System.Linq.Dynamic.Core
                     return CreateLiteral(value, text);
                 }
 
+                if (value <= (int)short.MaxValue) return CreateLiteral((short)value, text);
                 if (value <= int.MaxValue) return CreateLiteral((int)value, text);
                 if (value <= uint.MaxValue) return CreateLiteral((uint)value, text);
                 if (value <= long.MaxValue) return CreateLiteral((long)value, text);

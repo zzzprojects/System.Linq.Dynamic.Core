@@ -897,97 +897,6 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Integer()
-        {
-            // Arrange
-            var qry = new[] { 1, 2, 3, 4, 5, 6 }.AsQueryable();
-
-            // Act
-            var resultLessThan = qry.Where("it < 4");
-            var resultLessThanEqual = qry.Where("it <= 4");
-
-            var resultGreaterThan = qry.Where("4 > it");
-            var resultGreaterThanEqual = qry.Where("4 >= it");
-
-            var resultEqualItLeft = qry.Where("it = 5");
-            var resultEqualItRight = qry.Where("5 = it");
-
-            var resultEqualIntParamLeft = qry.Where("@0 = it", 5);
-            var resultEqualIntParamRight = qry.Where("it = @0", 5);
-
-            // Assert
-            Check.That(resultLessThan.ToArray()).ContainsExactly(1, 2, 3);
-            Check.That(resultLessThanEqual.ToArray()).ContainsExactly(1, 2, 3, 4);
-            Check.That(resultGreaterThan.ToArray()).ContainsExactly(1, 2, 3);
-            Check.That(resultGreaterThanEqual.ToArray()).ContainsExactly(1, 2, 3, 4);
-
-            Check.That(resultEqualItLeft.Single()).Equals(5);
-            Check.That(resultEqualItRight.Single()).Equals(5);
-
-            Check.That(resultEqualIntParamLeft.Single()).Equals(5);
-            Check.That(resultEqualIntParamRight.Single()).Equals(5);
-        }
-
-        [Fact]
-        public void ExpressionTests_IntegerQualifiers()
-        {
-            //Arrange
-            var valuesL = new[] { 1L, 2L, 3L }.AsQueryable();
-            var resultValuesL = new[] { 2L, 3L }.AsQueryable();
-
-            var valuesU = new[] { 1U, 2U, 3U }.AsQueryable();
-            var resultValuesU = new[] { 2U, 3U }.AsQueryable();
-
-            var valuesUL = new[] { 1UL, 2UL, 3UL }.AsQueryable();
-            var resultValuesUL = new[] { 2UL, 3UL }.AsQueryable();
-
-            //Act
-            var resultL = valuesL.Where("it in (2L, 3L)");
-            var resultU = valuesU.Where("it in (2U, 3U)");
-            var resultUL = valuesUL.Where("it in (2UL, 3UL)");
-
-            //Assert
-            Assert.Equal(resultValuesL.ToArray(), resultL.ToArray());
-            Assert.Equal(resultValuesU.ToArray(), resultU.ToArray());
-            Assert.Equal(resultValuesUL.ToArray(), resultUL.ToArray());
-        }
-
-        [Fact]
-        public void ExpressionTests_IntegerQualifiers_Negative()
-        {
-            //Arrange
-            var valuesL = new[] { -1L, -2L, -3L }.AsQueryable();
-            var resultValuesL = new[] { -2L, -3L }.AsQueryable();
-
-            //Act
-            var resultL = valuesL.Where("it <= -2L");
-            var resultIn = valuesL.Where("it in (-2L, -3L)");
-
-            //Assert
-            Assert.Equal(resultValuesL.ToArray(), resultL);
-            Assert.Equal(resultValuesL.ToArray(), resultIn);
-        }
-
-        [Fact]
-        public void ExpressionTests_IntegerQualifiers_Exceptions()
-        {
-            //Arrange
-            var values = new[] { 1L, 2L, 3L }.AsQueryable();
-
-            //Assert
-            Assert.Throws<ParseException>(() => values.Where("it in (2LL)"));
-            Assert.Throws<ParseException>(() => values.Where("it in (2UU)"));
-            Assert.Throws<ParseException>(() => values.Where("it in (2LU)"));
-            Assert.Throws<ParseException>(() => values.Where("it in (2B)"));
-
-            Assert.Throws<ParseException>(() => values.Where("it < -2LL"));
-            Assert.Throws<ParseException>(() => values.Where("it < -2UL"));
-            Assert.Throws<ParseException>(() => values.Where("it < -2UU"));
-            Assert.Throws<ParseException>(() => values.Where("it < -2LU"));
-            Assert.Throws<ParseException>(() => values.Where("it < -2B"));
-        }
-
-        [Fact]
         public void ExpressionTests_LogicalAndOr()
         {
             //Arrange
@@ -1427,6 +1336,112 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(6.0f, result);
             Assert.Equal(6.0f, result2);
+        }
+
+
+        [Fact]
+        public void ExpressionTests_Type_Integer()
+        {
+            // Arrange
+            var qry = new[] { 1, 2, 3, 4, 5, 6 }.AsQueryable();
+
+            // Act
+            var resultLessThan = qry.Where("it < 4");
+            var resultLessThanEqual = qry.Where("it <= 4");
+
+            var resultGreaterThan = qry.Where("4 > it");
+            var resultGreaterThanEqual = qry.Where("4 >= it");
+
+            var resultEqualItLeft = qry.Where("it = 5");
+            var resultEqualItRight = qry.Where("5 = it");
+
+            var resultEqualIntParamLeft = qry.Where("@0 = it", 5);
+            var resultEqualIntParamRight = qry.Where("it = @0", 5);
+
+            // Assert
+            Check.That(resultLessThan.ToArray()).ContainsExactly(1, 2, 3);
+            Check.That(resultLessThanEqual.ToArray()).ContainsExactly(1, 2, 3, 4);
+            Check.That(resultGreaterThan.ToArray()).ContainsExactly(1, 2, 3);
+            Check.That(resultGreaterThanEqual.ToArray()).ContainsExactly(1, 2, 3, 4);
+
+            Check.That(resultEqualItLeft.Single()).Equals(5);
+            Check.That(resultEqualItRight.Single()).Equals(5);
+
+            Check.That(resultEqualIntParamLeft.Single()).Equals(5);
+            Check.That(resultEqualIntParamRight.Single()).Equals(5);
+        }
+
+        [Fact]
+        public void ExpressionTests_Type_Integer_Qualifiers()
+        {
+            //Arrange
+            var valuesL = new[] { 1L, 2L, 3L }.AsQueryable();
+            var resultValuesL = new[] { 2L, 3L }.AsQueryable();
+
+            var valuesU = new[] { 1U, 2U, 3U }.AsQueryable();
+            var resultValuesU = new[] { 2U, 3U }.AsQueryable();
+
+            var valuesUL = new[] { 1UL, 2UL, 3UL }.AsQueryable();
+            var resultValuesUL = new[] { 2UL, 3UL }.AsQueryable();
+
+            //Act
+            var resultL = valuesL.Where("it in (2L, 3L)");
+            var resultU = valuesU.Where("it in (2U, 3U)");
+            var resultUL = valuesUL.Where("it in (2UL, 3UL)");
+
+            //Assert
+            Assert.Equal(resultValuesL.ToArray(), resultL.ToArray());
+            Assert.Equal(resultValuesU.ToArray(), resultU.ToArray());
+            Assert.Equal(resultValuesUL.ToArray(), resultUL.ToArray());
+        }
+
+        [Fact]
+        public void ExpressionTests_Type_Integer_Qualifiers_Negative()
+        {
+            //Arrange
+            var valuesL = new[] { -1L, -2L, -3L }.AsQueryable();
+            var resultValuesL = new[] { -2L, -3L }.AsQueryable();
+
+            //Act
+            var resultL = valuesL.Where("it <= -2L");
+            var resultIn = valuesL.Where("it in (-2L, -3L)");
+
+            //Assert
+            Assert.Equal(resultValuesL.ToArray(), resultL);
+            Assert.Equal(resultValuesL.ToArray(), resultIn);
+        }
+
+        [Fact]
+        public void ExpressionTests_Type_Integer_Qualifiers_Exceptions()
+        {
+            //Arrange
+            var values = new[] { 1L, 2L, 3L }.AsQueryable();
+
+            //Assert
+            Assert.Throws<ParseException>(() => values.Where("it in (2LL)"));
+            Assert.Throws<ParseException>(() => values.Where("it in (2UU)"));
+            Assert.Throws<ParseException>(() => values.Where("it in (2LU)"));
+            Assert.Throws<ParseException>(() => values.Where("it in (2B)"));
+
+            Assert.Throws<ParseException>(() => values.Where("it < -2LL"));
+            Assert.Throws<ParseException>(() => values.Where("it < -2UL"));
+            Assert.Throws<ParseException>(() => values.Where("it < -2UU"));
+            Assert.Throws<ParseException>(() => values.Where("it < -2LU"));
+            Assert.Throws<ParseException>(() => values.Where("it < -2B"));
+        }
+
+        [Fact]
+        public void ExpressionTests_Type_Short()
+        {
+            // Arrange
+            var qry = new short[] { 1, 2, 3, 4, 5, 6, 7 }.AsQueryable();
+
+            // Act
+            var result = qry.Where("it in (1,2)");
+            var resultExpected = qry.Where(x => x == 1 || x == 2);
+
+            // Assert
+            Check.That(resultExpected.ToArray()).ContainsExactly(result.ToDynamicArray<short>());
         }
 
         [Fact]

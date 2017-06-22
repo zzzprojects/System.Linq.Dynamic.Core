@@ -1,3 +1,3 @@
 https://github.com/GitTools/GitReleaseNotes
 
-GitReleaseNotes.exe . /OutputFile CHANGELOG.md /Version 1.0.7.4
+GitReleaseNotes.exe . /OutputFile CHANGELOG.md /Version 1.0.7.5
