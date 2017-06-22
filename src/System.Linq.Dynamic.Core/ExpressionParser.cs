@@ -534,12 +534,12 @@ namespace System.Linq.Dynamic.Core
                         else if (left.Type != right.Type)
                         {
                             //check for nullable type match
-                            if (!left.Type.GetTypeInfo().IsGenericType ||
-                                left.Type.GetGenericTypeDefinition() != typeof(Nullable<>) ||
-                                left.Type.GetTypeInfo().GetGenericTypeArguments()[0] != right.Type)
-                            {
-                                throw ParseError(op.Pos, Res.ExpressionTypeMismatch, left.Type);
-                            }
+                            //if (!left.Type.GetTypeInfo().IsGenericType ||
+                            //    left.Type.GetGenericTypeDefinition() != typeof(Nullable<>) ||
+                            //    left.Type.GetTypeInfo().GetGenericTypeArguments()[0] != right.Type)
+                            //{
+                            //    throw ParseError(op.Pos, Res.ExpressionTypeMismatch, left.Type);
+                            //}
 
                             CheckAndPromoteOperands(typeof(IEqualitySignatures), "==", ref left, ref right, op.Pos);
                         }
@@ -739,17 +739,14 @@ namespace System.Linq.Dynamic.Core
 
         private object ParseConstantExpressionToEnum(int pos, Type leftType, ConstantExpression constantExpr)
         {
-            object parsedEnum = null;
             try
             {
                 if (constantExpr.Value is string)
                 {
-                    return parsedEnum = Enum.Parse(GetNonNullableType(leftType), constantExpr.Value as string, true);
+                    return Enum.Parse(GetNonNullableType(leftType), (string)constantExpr.Value, true);
                 }
-                else
-                {
-                    return parsedEnum = Enum.ToObject(leftType, constantExpr.Value);
-                }
+
+                return Enum.ToObject(leftType, constantExpr.Value);
             }
             catch
             {
@@ -975,7 +972,7 @@ namespace System.Linq.Dynamic.Core
                     return CreateLiteral(value, text);
                 }
 
-                if (value <= (int)short.MaxValue) return CreateLiteral((short)value, text);
+                // if (value <= (int)short.MaxValue) return CreateLiteral((short)value, text);
                 if (value <= int.MaxValue) return CreateLiteral((int)value, text);
                 if (value <= uint.MaxValue) return CreateLiteral((uint)value, text);
                 if (value <= long.MaxValue) return CreateLiteral((long)value, text);

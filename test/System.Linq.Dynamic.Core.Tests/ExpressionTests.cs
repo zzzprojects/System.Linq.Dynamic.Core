@@ -802,6 +802,20 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_In_Short()
+        {
+            // Arrange
+            var qry = new short[] { 1, 2, 3, 4, 5, 6, 7 }.AsQueryable();
+
+            // Act
+            var result = qry.Where("it in (1,2)");
+            var resultExpected = qry.Where(x => x == 1 || x == 2);
+
+            // Assert
+            Check.That(resultExpected.ToArray()).ContainsExactly(result.ToDynamicArray<short>());
+        }
+
+        [Fact]
         public void ExpressionTests_In_String()
         {
             //Arrange
@@ -1428,20 +1442,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => values.Where("it < -2UU"));
             Assert.Throws<ParseException>(() => values.Where("it < -2LU"));
             Assert.Throws<ParseException>(() => values.Where("it < -2B"));
-        }
-
-        [Fact]
-        public void ExpressionTests_Type_Short()
-        {
-            // Arrange
-            var qry = new short[] { 1, 2, 3, 4, 5, 6, 7 }.AsQueryable();
-
-            // Act
-            var result = qry.Where("it in (1,2)");
-            var resultExpected = qry.Where(x => x == 1 || x == 2);
-
-            // Assert
-            Check.That(resultExpected.ToArray()).ContainsExactly(result.ToDynamicArray<short>());
         }
 
         [Fact]
