@@ -657,6 +657,38 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_DecimalQualifiers()
+        {
+            //Arrange
+            var values = new[] { 1m, 2M, 3M }.AsQueryable();
+            var resultValues = new[] { 2m, 3m }.AsQueryable();
+
+            //Act
+            var result1 = values.Where("it == 2M or it == 3m");
+            var result2 = values.Where("it == 2.0M or it == 3.00m");
+
+            //Assert
+            Assert.Equal(resultValues.ToArray(), result1.ToArray());
+            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+        }
+
+        [Fact]
+        public void ExpressionTests_DecimalQualifiers_Negative()
+        {
+            //Arrange
+            var values = new[] { -1m, -2M, -3M }.AsQueryable();
+            var resultValues = new[] { -2m, -3m }.AsQueryable();
+
+            //Act
+            var result1 = values.Where("it == -2M or it == -3m");
+            var result2 = values.Where("it == -2.0M or it == -3.0m");
+
+            //Assert
+            Assert.Equal(resultValues.ToArray(), result1.ToArray());
+            Assert.Equal(resultValues.ToArray(), result2.ToArray());
+        }
+
+        [Fact]
         public void ExpressionTests_Guid_CompareTo_String()
         {
 #if NETSTANDARD

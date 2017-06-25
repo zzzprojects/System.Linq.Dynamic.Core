@@ -132,6 +132,30 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void TextParser_Parse_RealLiteralFloatQualifier()
+        {
+            // Assign + Act
+            var textParser = new TextParser(" 12.5f ");
+
+            // Assert
+            Check.That(textParser.CurrentToken.Id).Equals(TokenId.RealLiteral);
+            Check.That(textParser.CurrentToken.Pos).Equals(1);
+            Check.That(textParser.CurrentToken.Text).Equals("12.5f");
+        }
+
+        [Fact]
+        public void TextParser_Parse_RealLiteralDecimalQualifier()
+        {
+            // Assign + Act
+            var textParser = new TextParser(" 12.5m ");
+
+            // Assert
+            Check.That(textParser.CurrentToken.Id).Equals(TokenId.RealLiteral);
+            Check.That(textParser.CurrentToken.Pos).Equals(1);
+            Check.That(textParser.CurrentToken.Text).Equals("12.5m");
+        }
+
+        [Fact]
         public void TextParser_Parse_Percent()
         {
             // Assign + Act
