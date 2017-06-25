@@ -937,7 +937,7 @@ namespace System.Linq.Dynamic.Core
             bool isHexadecimal = text.StartsWith(text[0] == '-' ? "-0x" : "0x", StringComparison.CurrentCultureIgnoreCase);
             char[] qualifierLetters = isHexadecimal
                                           ? new[] { 'U', 'u', 'L', 'l' }
-                                          : new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd' };
+                                          : new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
 
             if (qualifierLetters.Contains(last))
             {
@@ -1007,6 +1007,9 @@ namespace System.Linq.Dynamic.Core
                     if (qualifier == "D" || qualifier == "d")
                         return TryParseAsDouble(text, qualifier[0]);
 
+                    if (qualifier == "M" || qualifier == "m")
+                        return TryParseAsDecimal(text, qualifier[0]);
+
                     throw ParseError(Res.MinusCannotBeAppliedToUnsignedInteger);
                 }
 
@@ -1035,6 +1038,21 @@ namespace System.Linq.Dynamic.Core
                 if (float.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out f))
                 {
                     return CreateLiteral(f, text);
+                }
+            }
+
+            // not possible to find float qualifier, so try to parse as double
+            return TryParseAsDecimal(text, qualifier);
+        }
+
+        Expression TryParseAsDecimal(string text, char qualifier)
+        {
+            if (qualifier == 'M' || qualifier == 'm')
+            {
+                decimal d;
+                if (decimal.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Number, CultureInfo.InvariantCulture, out d))
+                {
+                    return CreateLiteral(d, text);
                 }
             }
 

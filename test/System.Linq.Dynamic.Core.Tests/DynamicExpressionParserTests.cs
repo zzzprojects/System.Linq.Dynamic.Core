@@ -193,6 +193,23 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ParseLambda_RealNumbers()
+        {
+            var parameters = new ParameterExpression[0];
+
+            var result1 = DynamicExpressionParser.ParseLambda(parameters, typeof(double), "0.10");
+            var result2 = DynamicExpressionParser.ParseLambda(parameters, typeof(double), "0.10d");
+            var result3 = DynamicExpressionParser.ParseLambda(parameters, typeof(float), "0.10f");
+            var result4 = DynamicExpressionParser.ParseLambda(parameters, typeof(decimal), "0.10m");
+
+            // Assert
+            Assert.Equal(0.10d, result1.Compile().DynamicInvoke());
+            Assert.Equal(0.10d, result2.Compile().DynamicInvoke());
+            Assert.Equal(0.10f, result3.Compile().DynamicInvoke());
+            Assert.Equal(0.10m, result4.Compile().DynamicInvoke());
+        }
+
+        [Fact]
         public void ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(true,
