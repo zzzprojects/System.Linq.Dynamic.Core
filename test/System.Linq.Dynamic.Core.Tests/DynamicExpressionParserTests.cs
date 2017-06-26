@@ -193,6 +193,16 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression()
+        {
+            var expression = DynamicExpressionParser.ParseLambda(true,
+                new[] { Expression.Parameter(typeof(int), "x") },
+                typeof(int),
+                "x + 1");
+            Assert.Equal(typeof(int), expression.Body.Type);
+        }
+
+        [Fact]
         public void ParseLambda_RealNumbers()
         {
             var parameters = new ParameterExpression[0];
@@ -207,26 +217,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(0.10d, result2.Compile().DynamicInvoke());
             Assert.Equal(0.10f, result3.Compile().DynamicInvoke());
             Assert.Equal(0.10m, result4.Compile().DynamicInvoke());
-        }
-
-        [Fact]
-        public void ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression()
-        {
-            var expression = DynamicExpressionParser.ParseLambda(true,
-                new[] { Expression.Parameter(typeof(int), "x") },
-                typeof(int),
-                "x + 1");
-            Assert.Equal(typeof(int), expression.Body.Type);
-        }
-
-        [Fact]
-        public void ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
-        {
-            var expression = DynamicExpressionParser.ParseLambda(
-                typeof(Tuple<int>),
-                typeof(string),
-                "it.ToString()");
-            Assert.Equal(typeof(string), expression.ReturnType);
         }
 
         [Fact]
@@ -294,6 +284,16 @@ namespace System.Linq.Dynamic.Core.Tests
             string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
             Assert.Equal(typeof(Boolean), expression.Body.Type);
             Assert.Equal(expectedRightValue, rightValue);
+        }
+
+        [Fact]
+        public void ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
+        {
+            var expression = DynamicExpressionParser.ParseLambda(
+                typeof(Tuple<int>),
+                typeof(string),
+                "it.ToString()");
+            Assert.Equal(typeof(string), expression.ReturnType);
         }
 
         [Fact]
