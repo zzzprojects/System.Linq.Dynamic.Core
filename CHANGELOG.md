@@ -1,25 +1,32 @@
-# 1.0.7.3 (01 juni 2017)
+# 1.0.7.4 (27 juni 2017)
 
+ - [#92](https://github.com/StefH/System.Linq.Dynamic.Core/pull/92) - [Feature] Adds support for decimal qualifiers. Resolves #91 contributed by Pablo Ferraris ([pferraris](https://github.com/pferraris))
+ - [#91](https://github.com/StefH/System.Linq.Dynamic.Core/issues/91) - [Bug] Support for decimal qualifiers 'M' & 'm' +fix
+ - [#90](https://github.com/StefH/System.Linq.Dynamic.Core/issues/90) - [Bug] ParseIntegerLiteral Int16 +fix
+ - [#89](https://github.com/StefH/System.Linq.Dynamic.Core/issues/89) - [Question] System.Linq.Dynamic.Core.Exceptions.ParseException: 'No 'it' is in scope'
+ - [#88](https://github.com/StefH/System.Linq.Dynamic.Core/issues/88) - [Question] FileNotFoundException: Could not load file or assembly 'System.Linq.Dynamic.Core'
+ - [#87](https://github.com/StefH/System.Linq.Dynamic.Core/issues/87) - [Question] Memory leak in Join method
  - [#84](https://github.com/StefH/System.Linq.Dynamic.Core/issues/84) - [Bug] DynamicClassFactory not caching generated types +fix
+ - [#83](https://github.com/StefH/System.Linq.Dynamic.Core/issues/83) - [Bug] Problem with DynamicExpressionParser.ParseLambda & external ParameterExpression
 
-Commits: a02f3d64fa...a1096799c2
+Commits: a02f3d64fa...ab249d498a
 
 
-# 1.0.7.3 (01 juni 2017)
+# 1.0.7.3 (01 juni 2017) (01 juni 2017)
 
  - [#86](https://github.com/StefH/System.Linq.Dynamic.Core/pull/86) - [Fix] Fixed null in Parameter and added functionality Binary And and Or with different Types contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
 
 Commits: a02f3d64fa...a1096799c2
 
 
-# 1.0.7.2 (01 juni 2017)
+# 1.0.7.2 (01 juni 2017) (01 juni 2017)
 
  - [#86](https://github.com/StefH/System.Linq.Dynamic.Core/pull/86) - [Fix] Fixed null in Parameter and added functionality Binary And and Or with different Types contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
 
 Commits: a02f3d64fa...35bdf2c0c7
 
 
-# 1.0.7.1 (31 mei 2017)
+# 1.0.7.1 (31 mei 2017) (31 mei 2017)
 
  - [#85](https://github.com/StefH/System.Linq.Dynamic.Core/pull/85) - [Fix] Guid? == null comparison contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
  - [#82](https://github.com/StefH/System.Linq.Dynamic.Core/issues/82) - [Feature] Add DefaultIfEmpty +enhancement
@@ -29,7 +36,7 @@ Commits: a02f3d64fa...35bdf2c0c7
 Commits: a02f3d64fa...4252212620
 
 
-# 1.0.7.0 (17 mei 2017)
+# 1.0.7.0 (17 mei 2017) (17 mei 2017)
 
  - [#80](https://github.com/StefH/System.Linq.Dynamic.Core/pull/80) - [Feature] Usage of cached Lambda Expressions contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
  - [#79](https://github.com/StefH/System.Linq.Dynamic.Core/issues/79) - DynamicExpressionParser does not allow empty parameter lists. +fix
