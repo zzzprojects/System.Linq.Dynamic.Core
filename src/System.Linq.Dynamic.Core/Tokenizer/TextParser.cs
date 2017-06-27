@@ -346,6 +346,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
                         if (_ch == 'F' || _ch == 'f') NextChar();
                         if (_ch == 'D' || _ch == 'd') NextChar();
+                        if (_ch == 'M' || _ch == 'm') NextChar();
                         break;
                     }
 
