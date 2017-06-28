@@ -1,8 +1,9 @@
 # 1.0.7.5 (28 juni 2017)
 
  - [#72](https://github.com/StefH/System.Linq.Dynamic.Core/issues/72) - [Bug] Re-enable support for uap10.0 +fix
+ - [#33](https://github.com/StefH/System.Linq.Dynamic.Core/issues/33) - Package 1.0.6.3 install fails for UWP App +fix
 
-Commits: a02f3d64fa...4bfd7a5628
+Commits: a02f3d64fa...a41b67a2ef
 
 
 # 1.0.7.4 (27 juni 2017) (27 juni 2017)
