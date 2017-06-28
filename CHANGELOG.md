@@ -1,4 +1,11 @@
-# 1.0.7.4 (27 juni 2017)
+# 1.0.7.5 (28 juni 2017)
+
+ - [#72](https://github.com/StefH/System.Linq.Dynamic.Core/issues/72) - [Bug] Re-enable support for uap10.0 +fix
+
+Commits: a02f3d64fa...4bfd7a5628
+
+
+# 1.0.7.4 (27 juni 2017) (27 juni 2017)
 
  - [#92](https://github.com/StefH/System.Linq.Dynamic.Core/pull/92) - [Feature] Adds support for decimal qualifiers. Resolves #91 contributed by Pablo Ferraris ([pferraris](https://github.com/pferraris))
  - [#91](https://github.com/StefH/System.Linq.Dynamic.Core/issues/91) - [Bug] Support for decimal qualifiers 'M' & 'm' +fix
