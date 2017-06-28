@@ -2,9 +2,9 @@
   <PropertyGroup>
     <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
     <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
-    <VersionPrefix>1.0.4.4</VersionPrefix>
+    <VersionPrefix>1.0.4.5</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
-    <TargetFrameworks>net451;net46;netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>net451;net46;netstandard1.3;uap10.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
@@ -28,15 +28,16 @@
     <DefaultLanguage>en-us</DefaultLanguage>
     <DebugType>full</DebugType>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
     <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
-    <DefineConstants>$(DefineConstants);UAP10_0</DefineConstants>
+    <DefineConstants>$(DefineConstants);WINDOWS_UWP;UAP10_0</DefineConstants>
     <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
   </PropertyGroup>
 
@@ -90,4 +91,8 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="5.3.3" />
+  </ItemGroup>
 </Project>
