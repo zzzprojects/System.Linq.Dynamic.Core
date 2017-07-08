@@ -1,4 +1,19 @@
-# 1.0.7.5 (28 juni 2017)
+# 1.0.7.6 (08 juli 2017)
+
+ - [#94](https://github.com/StefH/System.Linq.Dynamic.Core/issues/94) - [Bug] ParseException: Operator '==' incompatible with operand types 'ObjectId' and 'ObjectId' +fix
+
+Commits: a02f3d64fa...5e4d7f6e30
+
+
+# 1.0.7.6 (08 juli 2017) (08 juli 2017)
+
+ - [#93](https://github.com/StefH/System.Linq.Dynamic.Core/pull/93) - [Bug] Fix uap10 build in appveyor contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#33](https://github.com/StefH/System.Linq.Dynamic.Core/issues/33) - Package 1.0.6.3 install fails for UWP App +fix
+
+Commits: a02f3d64fa...5e4d7f6e30
+
+
+# 1.0.7.5 (28 juni 2017) (28 juni 2017)
 
  - [#72](https://github.com/StefH/System.Linq.Dynamic.Core/issues/72) - [Bug] Re-enable support for uap10.0 +fix
  - [#33](https://github.com/StefH/System.Linq.Dynamic.Core/issues/33) - Package 1.0.6.3 install fails for UWP App +fix
