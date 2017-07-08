@@ -700,8 +700,24 @@ namespace System.Linq.Dynamic.Core
                 }
                 else
                 {
-                    CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures),
-                        op.Text, ref left, ref right, op.Pos);
+                    bool typesAreSameAndImplementCorrectInterface = false;
+                    if (left.Type == right.Type)
+                    {
+                        var interfaces = left.Type.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType);
+                        if (isEquality)
+                        {
+                            typesAreSameAndImplementCorrectInterface = interfaces.Any(x => x.GetGenericTypeDefinition() == typeof(IEquatable<>));
+                        }
+                        else
+                        {
+                            typesAreSameAndImplementCorrectInterface = interfaces.Any(x => x.GetGenericTypeDefinition() == typeof(IComparable<>));
+                        }
+                    }
+
+                    if (!typesAreSameAndImplementCorrectInterface)
+                    {
+                        CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures), op.Text, ref left, ref right, op.Pos);
+                    }
                 }
 
                 switch (op.Id)
@@ -1551,6 +1567,7 @@ namespace System.Linq.Dynamic.Core
             {
                 if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == generic)
                     return type;
+
                 if (generic.GetTypeInfo().IsInterface)
                 {
                     foreach (Type intfType in type.GetInterfaces())
@@ -1559,8 +1576,10 @@ namespace System.Linq.Dynamic.Core
                         if (found != null) return found;
                     }
                 }
+
                 type = type.GetTypeInfo().BaseType;
             }
+
             return null;
         }
 
@@ -1843,9 +1862,12 @@ namespace System.Linq.Dynamic.Core
         void CheckAndPromoteOperand(Type signatures, string opName, ref Expression expr, int errorPos)
         {
             Expression[] args = { expr };
+
             MethodBase method;
             if (FindMethod(signatures, "F", false, args, out method) != 1)
-                throw ParseError(errorPos, Res.IncompatibleOperand, opName, GetTypeName(args[0].Type));
+            {
+                throw IncompatibleOperandError(opName, expr, errorPos);
+            }
 
             expr = args[0];
         }
@@ -1864,9 +1886,14 @@ namespace System.Linq.Dynamic.Core
             right = args[1];
         }
 
-        static Exception IncompatibleOperandsError(string opName, Expression left, Expression right, int pos)
+        static Exception IncompatibleOperandError(string opName, Expression expr, int errorPos)
         {
-            return ParseError(pos, Res.IncompatibleOperands, opName, GetTypeName(left.Type), GetTypeName(right.Type));
+            return ParseError(errorPos, Res.IncompatibleOperand, opName, GetTypeName(expr.Type));
+        }
+
+        static Exception IncompatibleOperandsError(string opName, Expression left, Expression right, int errorPos)
+        {
+            return ParseError(errorPos, Res.IncompatibleOperands, opName, GetTypeName(left.Type), GetTypeName(right.Type));
         }
 
         static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
@@ -2107,8 +2134,10 @@ namespace System.Linq.Dynamic.Core
 
             if (IsCompatibleWith(expr.Type, type))
             {
-                if (type.GetTypeInfo().IsValueType || exact || (expr.Type.GetTypeInfo().IsValueType && convertExpr))
+                if (type.GetTypeInfo().IsValueType || exact || expr.Type.GetTypeInfo().IsValueType && convertExpr)
+                {
                     return Expression.Convert(expr, type);
+                }
 
                 return expr;
             }

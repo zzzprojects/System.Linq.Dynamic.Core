@@ -7,6 +7,7 @@ using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using NFluent;
+using MongoDB.Bson;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
@@ -36,6 +37,13 @@ namespace System.Linq.Dynamic.Core.Tests
             public Guid? GuidNull { get; set; }
 
             public int Id { get; set; }
+        }
+
+        public class TestObjectIdClass
+        {
+            public int Id { get; set; }
+
+            public ObjectId ObjectId { get; set; }
         }
 
         [Fact]
@@ -941,6 +949,51 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = rows.AsQueryable().OrderBy(@"it[""Column1""]").ToList();
 
             Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void ExpressionTests_IComparable_GreaterThan()
+        {
+            // Assign
+            const string id = "111111111111111111111111";
+            var queryable = new[] { new TestObjectIdClass { Id = 1, ObjectId = ObjectId.Parse(id) }, new TestObjectIdClass { Id = 2, ObjectId = ObjectId.Parse("221111111111111111111111") } }.AsQueryable();
+
+            // Act
+            var result = queryable.Where(x => x.ObjectId > ObjectId.Parse(id)).ToArray();
+            var dynamicResult = queryable.Where("it.ObjectId > @0", ObjectId.Parse(id)).ToArray();
+
+            // Assert
+            Check.That(dynamicResult).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_IEquatable_Equal()
+        {
+            // Assign
+            const string id = "111111111111111111111111";
+            var queryable = new[] { new TestObjectIdClass { Id = 1, ObjectId = ObjectId.Parse(id) }, new TestObjectIdClass { Id = 2, ObjectId = ObjectId.Parse("221111111111111111111111") } }.AsQueryable();
+
+            // Act
+            var result = queryable.First(x => x.ObjectId == ObjectId.Parse(id));
+            var dynamicResult = queryable.First("it.ObjectId == @0", ObjectId.Parse(id));
+
+            // Assert
+            Check.That(dynamicResult.Id).Equals(result.Id);
+        }
+
+        [Fact]
+        public void ExpressionTests_IEquatable_NotEqual()
+        {
+            // Assign
+            const string id = "111111111111111111111111";
+            var queryable = new[] { new TestObjectIdClass { Id = 1, ObjectId = ObjectId.Parse(id) }, new TestObjectIdClass { Id = 2, ObjectId = ObjectId.Parse("221111111111111111111111") } }.AsQueryable();
+
+            // Act
+            var result = queryable.First(x => x.ObjectId != ObjectId.Parse(id));
+            var dynamicResult = queryable.First("it.ObjectId != @0", ObjectId.Parse(id));
+
+            // Assert
+            Check.That(dynamicResult.Id).Equals(result.Id);
         }
 
         [Fact]
