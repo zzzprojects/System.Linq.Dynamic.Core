@@ -25,9 +25,9 @@ namespace System.Linq.Dynamic.Core
     public static class DynamicQueryableExtensions
     {
 #if !(WINDOWS_APP45x || SILVERLIGHT)
-        private static readonly TraceSource _ts = new TraceSource(typeof(DynamicQueryableExtensions).Name);
+        private static readonly TraceSource TraceSource = new TraceSource(typeof(DynamicQueryableExtensions).Name);
 #endif
-        private static readonly Func<MethodInfo, bool> _predicateParameterHas2 = (mi) => mi.GetParameters()[1].ToString().Contains("Func`2");
+        private static readonly Func<MethodInfo, bool> PredicateParameterHas2 = mi => mi.GetParameters()[1].ToString().Contains("Func`2");
 
         private static Expression OptimizeExpression(Expression expression)
         {
@@ -38,8 +38,8 @@ namespace System.Linq.Dynamic.Core
 #if !(WINDOWS_APP45x || SILVERLIGHT)
                 if (optimized != expression)
                 {
-                    _ts.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
-                    _ts.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
+                    TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
+                    TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
                 }
 #endif
                 return optimized;
@@ -1373,7 +1373,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Skip
 
         #region SkipWhile
-        private static readonly MethodInfo _skipWhilePredicate = GetMethod(nameof(Queryable.SkipWhile), 1, _predicateParameterHas2);
+        private static readonly MethodInfo _skipWhilePredicate = GetMethod(nameof(Queryable.SkipWhile), 1, PredicateParameterHas2);
 
         /// <summary>
         /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
@@ -1434,7 +1434,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Take
 
         #region TakeWhile
-        private static readonly MethodInfo _takeWhilePredicate = GetMethod(nameof(Queryable.TakeWhile), 1, _predicateParameterHas2);
+        private static readonly MethodInfo _takeWhilePredicate = GetMethod(nameof(Queryable.TakeWhile), 1, PredicateParameterHas2);
 
         /// <summary>
         /// Returns elements from a sequence as long as a specified condition is true.

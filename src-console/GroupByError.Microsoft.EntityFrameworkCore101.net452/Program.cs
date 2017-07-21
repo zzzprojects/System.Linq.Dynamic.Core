@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace GroupByError
 {
@@ -30,6 +31,8 @@ namespace GroupByError
                 //Database tests.
                 var resultDb1 = db.Element.GroupBy(el => new { el.Attribute1, el.Attribute2 }).ToArray(); //CORRECT
                 var resultDb2 = db.Element.GroupBy("new(Attribute1, Attribute2)").ToDynamicArray();       //CORRECT for "Microsoft.EntityFrameworkCore" version="1.1.0"
+
+                var test = db.Element.ToListAsync();
 
                 int x = 0;
             }

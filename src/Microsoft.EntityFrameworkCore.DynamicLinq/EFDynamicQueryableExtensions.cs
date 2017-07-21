@@ -4,12 +4,9 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Data.Entity.Infrastructure;
 #endif
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -30,7 +27,7 @@ namespace EntityFramework.DynamicLinq
     /// </summary>
     public static class EntityFrameworkDynamicQueryableExtensions
     {
-        private static readonly TraceSource _ts = new TraceSource(typeof(EntityFrameworkDynamicQueryableExtensions).Name);
+        private static readonly TraceSource TraceSource = new TraceSource(typeof(EntityFrameworkDynamicQueryableExtensions).Name);
 
         private static Expression OptimizeExpression(Expression expression)
         {
@@ -41,8 +38,8 @@ namespace EntityFramework.DynamicLinq
 #if !(WINDOWS_APP45x || SILVERLIGHT)
                 if (optimized != expression)
                 {
-                    _ts.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
-                    _ts.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
+                    TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
+                    TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
                 }
 #endif
                 return optimized;
@@ -71,6 +68,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation.
         ///     The task result contains <c>true</c> if the source sequence contains any elements; otherwise, <c>false</c>.
         /// </returns>
+        [PublicAPI]
         public static Task<bool> AnyAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(source, nameof(source));
@@ -98,6 +96,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains <c>true</c> if any elements in the source sequence pass the test in the specified
         ///     predicate; otherwise, <c>false</c>.
         /// </returns>
+        [PublicAPI]
         public static Task<bool> AnyAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             return AnyAsync(source, predicate, default(CancellationToken), args);
@@ -123,6 +122,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains <c>true</c> if any elements in the source sequence pass the test in the specified
         ///     predicate; otherwise, <c>false</c>.
         /// </returns>
+        [PublicAPI]
         public static Task<bool> AnyAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -155,6 +155,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation.
         ///     The task result contains the number of elements in the input sequence.
         /// </returns>
+        [PublicAPI]
         public static Task<int> CountAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(source, nameof(source));
@@ -182,6 +183,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate
         ///     function.
         /// </returns>
+        [PublicAPI]
         public static Task<int> CountAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             return CountAsync(source, default(CancellationToken), predicate, args);
@@ -207,6 +209,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate
         ///     function.
         /// </returns>
+        [PublicAPI]
         public static Task<int> CountAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -239,6 +242,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation.
         ///     The task result contains the first element in <paramref name="source" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> FirstAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(source, nameof(source));
@@ -265,6 +269,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the first element in <paramref name="source" /> that passes the test in
         ///     <paramref name="predicate" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> FirstAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             return FirstAsync(source, default(CancellationToken), predicate, args);
@@ -290,6 +295,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the first element in <paramref name="source" /> that passes the test in
         ///     <paramref name="predicate" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> FirstAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -322,6 +328,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains <c>default</c> if
         ///     <paramref name="source" /> is empty; otherwise, the first element in <paramref name="source" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> FirstOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(source, nameof(source));
@@ -351,6 +358,7 @@ namespace EntityFramework.DynamicLinq
         ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first
         ///     element in <paramref name="source" /> that passes the test specified by <paramref name="predicate" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> FirstOrDefaultAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             return FirstOrDefaultAsync(source, default(CancellationToken), predicate, args);
@@ -378,6 +386,7 @@ namespace EntityFramework.DynamicLinq
         ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the first
         ///     element in <paramref name="source" /> that passes the test specified by <paramref name="predicate" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> FirstOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -410,6 +419,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation.
         ///     The task result contains the last element in <paramref name="source" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> LastAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(source, nameof(source));
@@ -436,6 +446,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the last element in <paramref name="source" /> that passes the test in
         ///     <paramref name="predicate" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> LastAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             return LastAsync(source, default(CancellationToken), predicate, args);
@@ -461,6 +472,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the last element in <paramref name="source" /> that passes the test in
         ///     <paramref name="predicate" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> LastAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -493,6 +505,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains <c>default</c> if
         ///     <paramref name="source" /> is empty; otherwise, the last element in <paramref name="source" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> LastOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(source, nameof(source));
@@ -522,6 +535,7 @@ namespace EntityFramework.DynamicLinq
         ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the last
         ///     element in <paramref name="source" /> that passes the test specified by <paramref name="predicate" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> LastOrDefaultAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             return LastOrDefaultAsync(source, default(CancellationToken), predicate, args);
@@ -549,6 +563,7 @@ namespace EntityFramework.DynamicLinq
         ///     is empty or if no element passes the test specified by <paramref name="predicate" /> ; otherwise, the last
         ///     element in <paramref name="source" /> that passes the test specified by <paramref name="predicate" />.
         /// </returns>
+        [PublicAPI]
         public static Task<dynamic> LastOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
