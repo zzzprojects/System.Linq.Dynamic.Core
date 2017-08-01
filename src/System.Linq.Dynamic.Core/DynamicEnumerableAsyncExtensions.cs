@@ -46,7 +46,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
         /// <returns>An Array{T} that contains the elements from the input sequence.</returns>
         [PublicAPI]
-        public static Task<T[]> ToDynamicArray<T>([NotNull] this IEnumerable source)
+        public static Task<T[]> ToDynamicArrayAsync<T>([NotNull] this IEnumerable source)
         {
             Check.NotNull(source, nameof(source));
             return CastToArrayAsync<T>(source);
