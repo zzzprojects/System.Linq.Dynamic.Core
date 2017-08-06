@@ -1,11 +1,27 @@
 ﻿using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
     public class OperatorTests
     {
+        [Fact]
+        public void Operator_NullPropagation()
+        {
+            // Arrange
+            var users = new[]
+            {
+                new User { Income = 1, Profile = new UserProfile { FirstName = "F1" } },
+                new User { Income = 2, Profile = new UserProfile { FirstName = "F2" } },
+                new User { Income = 3, Profile = null }
+            }.AsQueryable();
+
+            // Act
+            Check.ThatCode(() => users.Select("Profile?.Age")).Throws<NotSupportedException>();
+        }
+
         [Fact]
         public void Operator_Multiplication_Single_Float_ParseException()
         {

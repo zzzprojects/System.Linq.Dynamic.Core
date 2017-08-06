@@ -94,6 +94,18 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void TextParser_Parse_NullPropagation()
+        {
+            // Assign + Act
+            var textParser = new TextParser(" ?. ");
+
+            // Assert
+            Check.That(textParser.CurrentToken.Id).Equals(TokenId.NullPropagation);
+            Check.That(textParser.CurrentToken.Pos).Equals(1);
+            Check.That(textParser.CurrentToken.Text).Equals("?.");
+        }
+
+        [Fact]
         public void TextParser_Parse_RealLiteral()
         {
             // Assign + Act
