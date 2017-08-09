@@ -214,6 +214,11 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                         NextChar();
                         tokenId = TokenId.NullCoalescing;
                     }
+                    else if (_ch == '.')
+                    {
+                        NextChar();
+                        tokenId = TokenId.NullPropagation;
+                    }
                     else
                     {
                         tokenId = TokenId.Question;

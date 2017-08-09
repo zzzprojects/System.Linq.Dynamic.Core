@@ -39,6 +39,7 @@
         DoubleGreaterThan,
         DoubleLessThan,
         NullCoalescing,
-        Lambda
+        Lambda,
+        NullPropagation
     }
 }

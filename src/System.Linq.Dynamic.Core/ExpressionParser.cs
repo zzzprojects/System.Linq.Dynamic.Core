@@ -895,6 +895,10 @@ namespace System.Linq.Dynamic.Core
                     _textParser.NextToken();
                     expr = ParseMemberAccess(null, expr);
                 }
+                else if (_textParser.CurrentToken.Id == TokenId.NullPropagation)
+                {
+                    throw new NotSupportedException("An expression tree lambda may not contain a null propagating operator");
+                }
                 else if (_textParser.CurrentToken.Id == TokenId.OpenBracket)
                 {
                     expr = ParseElementAccess(expr);
