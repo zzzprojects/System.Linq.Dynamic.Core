@@ -1,3 +1,13 @@
+# 1.0.7.7 (29 August 2017)
+
+ - [#102](https://github.com/StefH/System.Linq.Dynamic.Core/issues/102) - Aggregate method does not work with Average function
+ - [#100](https://github.com/StefH/System.Linq.Dynamic.Core/pull/100) - Feature: NullPropagation operator contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#99](https://github.com/StefH/System.Linq.Dynamic.Core/pull/99) - Added DynamicEnumerable Async extension methods contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#97](https://github.com/StefH/System.Linq.Dynamic.Core/issues/97) - Dynamic Select with string Concatenation
+
+Commits: a02f3d64fa...0f30f422b4
+
+
 # 1.0.7.6 (08 juli 2017)
 
  - [#94](https://github.com/StefH/System.Linq.Dynamic.Core/issues/94) - [Bug] ParseException: Operator '==' incompatible with operand types 'ObjectId' and 'ObjectId' +fix
@@ -80,7 +90,7 @@ Commits: a02f3d64fa...4252212620
 Commits: a02f3d64fa...c21b1be15c
 
 
-# 1.0.6.13 (08 april 2017)
+# 1.0.6.13 (08 April 2017)
 
  - [#68](https://github.com/StefH/System.Linq.Dynamic.Core/pull/68) - Work on #66 -> Should work now. Tests will follow on VS2017 support! contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
 
