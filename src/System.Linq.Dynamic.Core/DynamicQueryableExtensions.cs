@@ -48,6 +48,60 @@ namespace System.Linq.Dynamic.Core
             return expression;
         }
 
+        #region Aggregate
+        /// <summary>
+        /// Dynamically runs an aggregate function on the IQueryable.
+        /// </summary>
+        /// <param name="source">The IQueryable data source.</param>
+        /// <param name="function">The name of the function to run. Can be Sum, Average, Min or Max.</param>
+        /// <param name="member">The name of the property to aggregate over.</param>
+        /// <returns>The value of the aggregate function run over the specified property.</returns>
+        public static object Aggregate([NotNull] this IQueryable source, [NotNull] string function, [NotNull] string member)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(function, nameof(function));
+            Check.NotEmpty(member, nameof(member));
+
+            // Properties
+            PropertyInfo property = source.ElementType.GetProperty(member);
+            ParameterExpression parameter = Expression.Parameter(source.ElementType, "s");
+            Expression selector = Expression.Lambda(Expression.MakeMemberAccess(parameter, property), parameter);
+            // We've tried to find an expression of the type Expression<Func<TSource, TAcc>>,
+            // which is expressed as ( (TSource s) => s.Price );
+
+            var methods = typeof(Queryable).GetMethods().Where(x => x.Name == function && x.IsGenericMethod);
+
+            // Method
+            MethodInfo aggregateMethod = methods.SingleOrDefault(m =>
+            {
+                ParameterInfo lastParameter = m.GetParameters().LastOrDefault();
+
+                return lastParameter != null ? ExpressionParser.GetUnderlyingType(lastParameter.ParameterType) == property.PropertyType : false;
+            });
+
+            // Sum, Average
+            if (aggregateMethod != null)
+            {
+                return source.Provider.Execute(
+                    Expression.Call(
+                        null,
+                        aggregateMethod.MakeGenericMethod(new[] { source.ElementType }),
+                        new[] { source.Expression, Expression.Quote(selector) }));
+            }
+            // Min, Max
+            else
+            {
+                aggregateMethod = methods.SingleOrDefault(m => m.Name == function && m.GetGenericArguments().Length == 2);
+
+                return source.Provider.Execute(
+                    Expression.Call(
+                        null,
+                        aggregateMethod.MakeGenericMethod(new[] { source.ElementType, property.PropertyType }),
+                        new[] { source.Expression, Expression.Quote(selector) }));
+            }
+        }
+        #endregion Aggregate
+
         #region Any
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 

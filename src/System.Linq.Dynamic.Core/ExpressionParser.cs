@@ -6,6 +6,7 @@ using System.Collections;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tokenizer;
+using System.Linq.Dynamic.Core.Validation;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -1745,20 +1746,40 @@ namespace System.Linq.Dynamic.Core
 
         public static bool IsNullableType(Type type)
         {
+            Check.NotNull(type, nameof(type));
+
             return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         public static Type ToNullableType(Type type)
         {
+            Check.NotNull(type, nameof(type));
+
             if (!type.GetTypeInfo().IsValueType || IsNullableType(type))
                 throw ParseError(-1, Res.TypeHasNoNullableForm, GetTypeName(type));
 
             return typeof(Nullable<>).MakeGenericType(type);
         }
 
-        static Type GetNonNullableType(Type type)
+        public static Type GetNonNullableType(Type type)
         {
+            Check.NotNull(type, nameof(type));
+
             return IsNullableType(type) ? type.GetTypeInfo().GetGenericTypeArguments()[0] : type;
+        }
+
+        public static Type GetUnderlyingType(Type type)
+        {
+            Check.NotNull(type, nameof(type));
+
+            var genericTypeArguments = type.GetGenericArguments();
+            if (genericTypeArguments.Any())
+            {
+                var outerType = GetUnderlyingType(genericTypeArguments.LastOrDefault());
+                return Nullable.GetUnderlyingType(type) == outerType ? type : outerType;
+            }
+
+            return type;
         }
 
         static string GetTypeName(Type type)
