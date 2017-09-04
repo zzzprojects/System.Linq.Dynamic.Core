@@ -15,18 +15,32 @@
 
 This is a **.NET Core port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
+
+# Functionality
+With this library it's possible to write Dynamic LINQ queries (string based), example:
+```csharp
+var query = db.Customers
+    .Where("City == @0 and Orders.Count >= @1", "London", 10)
+    .OrderBy("CompanyName")
+    .Select("new(CompanyName as Name, Phone)");
+```
+
+See the [Wiki][2] and [API Documentation][1] for more code examples and usage details.
+
+
+# Development Details
+
+## Frameworks
 The following frameworks are supported:
 - net35
 - net40
 - net45 and up
 - netstandard1.3
-- uap10.0 (todo)
-- SilverLight 5.0 (todo)
+- uap10.0
 
-<br>
+## Fork details
 This fork takes the basic library to a new level. Contains XML Documentation and examples on how to use it. Also adds unit testing to help ensure that it works properly.
 
-<br>
 Some background:
 I forked from https://github.com/NArnott/System.Linq.Dynamic and added some more functionality there.<br>My fork is still visible on github [https://github.com/StefH/System.Linq.Dynamic], however I decided to start a new project + nuget to avoid confusion and create the project according to the new VS2017 + .NET Core rules / standards.
 
@@ -40,13 +54,6 @@ However, currently there are multiple nuget packages and project available:
 | [dynamiclinq.codeplex][5a] | - | dialectsoftware | - |
 | [dynamic-linq][6a] | - | scottgu | - |
 
-So some investigation is needed to compare functionality from all these projects and mine.
-An idea would be to analyse all the issues reported on these projects, and add unit-tests in my project to see if these issues are fixed or still need a fix.
-
-Suggestions and comments are welcome.
-
-Documentation can be found [here][1].
-
 [2a]: https://github.com/kahanu/System.Linq.Dynamic
 [2b]: https://www.nuget.org/packages/System.Linq.Dynamic
 [3a]: https://github.com/kavun/System.Linq.Dynamic.3.5
@@ -57,3 +64,4 @@ Documentation can be found [here][1].
 [6a]: http://weblogs.asp.net/scottgu/dynamic-linq-part-1-using-the-linq-dynamic-query-library
 
 [1]: https://system-linq-dynamic-core.azurewebsites.net
+[2]: https://github.com/StefH/System.Linq.Dynamic.Core/wiki/Dynamic-Expressions
