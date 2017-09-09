@@ -54,6 +54,48 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ParseLambdaComplex_1()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            // Act
+            string query = "GroupBy(x => new { x.Profile.Age }, it).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
+            Delegate del = expression.Compile();
+            IEnumerable<dynamic> result = del.DynamicInvoke(qry) as IEnumerable<dynamic>;
+
+            var expected = qry.GroupBy(x => new { x.Profile.Age }, x => x).OrderBy(gg => gg.Key.Age).Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>().ToArray();
+
+            // Assert
+            Check.That(result).IsNotNull();
+            Check.That(result).HasSize(expected.Length);
+            Check.That(result.ToArray()[0]).Equals(expected[0]);
+        }
+
+        [Fact]
+        public void ParseLambdaComplex_2()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            // Act
+            string query = "OrderBy(gg => gg.Income).ToList()";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
+            Delegate del = expression.Compile();
+            IEnumerable<dynamic> result = del.DynamicInvoke(qry) as IEnumerable<dynamic>;
+
+            var expected = qry.OrderBy(gg => gg.Income).ToList();
+
+            // Assert
+            Check.That(result).IsNotNull();
+            Check.That(result).HasSize(expected.Count);
+            Check.That(result.ToArray()[0]).Equals(expected[0]);
+        }
+
+        [Fact]
         public void ParseLambda_1()
         {
             // Arrange

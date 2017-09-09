@@ -145,7 +145,8 @@ namespace System.Linq.Dynamic.Core
             void Distinct();
             void First(bool predicate);
             void FirstOrDefault(bool predicate);
-            void GroupBy(object selector);
+            void GroupBy(object keySelector);
+            void GroupBy(object keySelector, object elementSelector);
             void Last(bool predicate);
             void LastOrDefault(bool predicate);
             void Max(object selector);
@@ -181,6 +182,7 @@ namespace System.Linq.Dynamic.Core
             void LastOrDefault();
             void Single();
             void SingleOrDefault();
+            void ToList();
         }
 
         // These shorthands have different name than actual type and therefore not recognized by default from the _predefinedTypes
@@ -1641,7 +1643,14 @@ namespace System.Linq.Dynamic.Core
             Type[] typeArgs;
             if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(signature.Name))
             {
-                typeArgs = new[] { elementType, args[0].Type };
+                if (args.Length == 2)
+                {
+                    typeArgs = new[] { elementType, args[0].Type, args[1].Type };
+                }
+                else
+                {
+                    typeArgs = new[] { elementType, args[0].Type };
+                }
             }
             else if (signature.Name == "SelectMany")
             {
@@ -1668,7 +1677,14 @@ namespace System.Linq.Dynamic.Core
                 }
                 else
                 {
-                    args = new[] { instance, Expression.Lambda(args[0], innerIt) };
+                    if (args.Length == 2)
+                    {
+                        args = new[] { instance, Expression.Lambda(args[0], innerIt), Expression.Lambda(args[1], innerIt) };
+                    }
+                    else
+                    {
+                        args = new[] {instance, Expression.Lambda(args[0], innerIt)};
+                    }
                 }
             }
 
