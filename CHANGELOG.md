@@ -1,11 +1,11 @@
-# 1.0.7.8 (12 September 2017)
+# 1.0.7.9 (12 September 2017)
 
  - [#104](https://github.com/StefH/System.Linq.Dynamic.Core/issues/104) - Add PDB to nuget package +enhancement
  - [#103](https://github.com/StefH/System.Linq.Dynamic.Core/pull/103) - support group by with 2 parameters, add tolist contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
  - [#102](https://github.com/StefH/System.Linq.Dynamic.Core/issues/102) - Aggregate method does not work with Average function
  - [#101](https://github.com/StefH/System.Linq.Dynamic.Core/issues/101) - Question: OrderBy does not work with navigation properties
 
-Commits: a02f3d64fa...7868d6213c
+Commits: a02f3d64fa...2b49cde9f4
 
 
 # 1.0.7.7 (29 August 2017)
