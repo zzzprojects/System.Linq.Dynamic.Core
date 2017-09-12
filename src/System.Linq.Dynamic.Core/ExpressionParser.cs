@@ -182,6 +182,7 @@ namespace System.Linq.Dynamic.Core
             void LastOrDefault();
             void Single();
             void SingleOrDefault();
+            void ToArray();
             void ToList();
         }
 

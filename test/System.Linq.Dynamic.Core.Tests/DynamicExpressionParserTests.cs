@@ -24,58 +24,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_DuplicateParameterNames_ThrowsException()
-        {
-            // Arrange
-            var parameters = new[]
-            {
-                Expression.Parameter(typeof(int), "x"),
-                Expression.Parameter(typeof(int), "x")
-            };
-
-            // Act and Assert
-            Check.ThatCode(() => DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42"))
-                .Throws<ParseException>()
-                .WithMessage("The identifier 'x' was defined more than once");
-        }
-
-        [Fact]
-        public void ParseLambda_EmptyParameterList()
-        {
-            // Arrange
-            var pEmpty = new ParameterExpression[] { };
-
-            // Act
-            var @delegate = DynamicExpressionParser.ParseLambda(pEmpty, null, "1+2").Compile();
-            int? result = @delegate.DynamicInvoke() as int?;
-
-            // Assert
-            Check.That(result).Equals(3);
-        }
-
-        [Fact]
-        public void ParseLambdaComplex_1()
-        {
-            // Arrange
-            var testList = User.GenerateSampleModels(51);
-            var qry = testList.AsQueryable();
-
-            // Act
-            string query = "GroupBy(x => new { x.Profile.Age }, it).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
-            Delegate del = expression.Compile();
-            IEnumerable<dynamic> result = del.DynamicInvoke(qry) as IEnumerable<dynamic>;
-
-            var expected = qry.GroupBy(x => new { x.Profile.Age }, x => x).OrderBy(gg => gg.Key.Age).Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>().ToArray();
-
-            // Assert
-            Check.That(result).IsNotNull();
-            Check.That(result).HasSize(expected.Length);
-            Check.That(result.ToArray()[0]).Equals(expected[0]);
-        }
-
-        [Fact]
-        public void ParseLambdaComplex_2()
+        public void ParseLambda_ToList()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -96,7 +45,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_1()
+        public void ParseLambda_Complex_1()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -121,8 +70,30 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result.ToArray()[0]).Equals(expected[0]);
         }
 
+
         [Fact]
-        public void ParseLambda_2()
+        public void ParseLambda_Complex_2()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            // Act
+            string query = "GroupBy(x => new { x.Profile.Age }, it).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
+            Delegate del = expression.Compile();
+            IEnumerable<dynamic> result = del.DynamicInvoke(qry) as IEnumerable<dynamic>;
+
+            var expected = qry.GroupBy(x => new { x.Profile.Age }, x => x).OrderBy(gg => gg.Key.Age).Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>().ToArray();
+
+            // Assert
+            Check.That(result).IsNotNull();
+            Check.That(result).HasSize(expected.Length);
+            Check.That(result.ToArray()[0]).Equals(expected[0]);
+        }
+
+        [Fact]
+        public void ParseLambda_Select_1()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -144,7 +115,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_3()
+        public void ParseLambda_Select_2()
         {
             // Arrange
             var testList = User.GenerateSampleModels(5);
@@ -182,6 +153,36 @@ namespace System.Linq.Dynamic.Core.Tests
             object result = del.DynamicInvoke(invokersMerge.ToArray());
 
             Check.That(result).Equals(42);
+        }
+
+        [Fact]
+        public void ParseLambda_DuplicateParameterNames_ThrowsException()
+        {
+            // Arrange
+            var parameters = new[]
+            {
+                Expression.Parameter(typeof(int), "x"),
+                Expression.Parameter(typeof(int), "x")
+            };
+
+            // Act and Assert
+            Check.ThatCode(() => DynamicExpressionParser.ParseLambda(parameters, typeof(bool), "it == 42"))
+                .Throws<ParseException>()
+                .WithMessage("The identifier 'x' was defined more than once");
+        }
+
+        [Fact]
+        public void ParseLambda_EmptyParameterList()
+        {
+            // Arrange
+            var pEmpty = new ParameterExpression[] { };
+
+            // Act
+            var @delegate = DynamicExpressionParser.ParseLambda(pEmpty, null, "1+2").Compile();
+            int? result = @delegate.DynamicInvoke() as int?;
+
+            // Assert
+            Check.That(result).Equals(3);
         }
 
         [Fact]
