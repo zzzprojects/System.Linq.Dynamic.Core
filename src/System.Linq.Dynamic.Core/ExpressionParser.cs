@@ -651,7 +651,8 @@ namespace System.Linq.Dynamic.Core
 
                 if (isEquality && (!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType || left.Type == typeof(Guid) && right.Type == typeof(Guid)))
                 {
-                    if (left.Type != right.Type)
+                    // If left or right is NullLiteral, just continue. Else check if the types differ.
+                    if (!(left == NullLiteral || right == NullLiteral) && left.Type != right.Type)
                     {
                         if (left.Type.IsAssignableFrom(right.Type))
                         {
@@ -1450,19 +1451,27 @@ namespace System.Linq.Dynamic.Core
         {
             Type exprType = expr.Type;
             if (exprType == type)
+            {
                 return expr;
+            }
 
             if (exprType.GetTypeInfo().IsValueType && type.GetTypeInfo().IsValueType)
             {
                 if ((IsNullableType(exprType) || IsNullableType(type)) && GetNonNullableType(exprType) == GetNonNullableType(type))
+                {
                     return Expression.Convert(expr, type);
+                }
 
                 if ((IsNumericType(exprType) || IsEnumType(exprType)) && IsNumericType(type) || IsEnumType(type))
+                {
                     return Expression.ConvertChecked(expr, type);
+                }
             }
 
             if (exprType.IsAssignableFrom(type) || type.IsAssignableFrom(exprType) || exprType.GetTypeInfo().IsInterface || type.GetTypeInfo().IsInterface)
+            {
                 return Expression.Convert(expr, type);
+            }
 
             // Try to Parse the string rather that just generate the convert statement
             if (expr.NodeType == ExpressionType.Constant && exprType == typeof(string))
@@ -1470,9 +1479,10 @@ namespace System.Linq.Dynamic.Core
                 string text = (string)((ConstantExpression)expr).Value;
 
                 // DateTime is parsed as UTC time.
-                DateTime dateTime;
-                if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
+                if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
+                {
                     return Expression.Constant(dateTime, type);
+                }
 
                 object[] arguments = { text, null };
 #if NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD
@@ -1481,7 +1491,9 @@ namespace System.Linq.Dynamic.Core
                 MethodInfo method = type.GetMethod("TryParse", BindingFlags.Public | BindingFlags.Static, null, new Type[] { typeof(string), type.MakeByRefType() }, null);
 #endif
                 if (method != null && (bool)method.Invoke(null, arguments))
+                {
                     return Expression.Constant(arguments[1], type);
+                }
             }
 
             throw ParseError(errorPos, Res.CannotConvertValue, GetTypeName(exprType), GetTypeName(type));
@@ -1684,7 +1696,7 @@ namespace System.Linq.Dynamic.Core
                     }
                     else
                     {
-                        args = new[] {instance, Expression.Lambda(args[0], innerIt)};
+                        args = new[] { instance, Expression.Lambda(args[0], innerIt) };
                     }
                 }
             }

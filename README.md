@@ -36,7 +36,7 @@ The following frameworks are supported:
 - net40
 - net45 and up
 - netstandard1.3
-- uap10.0
+- uap10.0 (broken in latest NuGet, sorry)
 
 ## Fork details
 This fork takes the basic library to a new level. Contains XML Documentation and examples on how to use it. Also adds unit testing to help ensure that it works properly.
