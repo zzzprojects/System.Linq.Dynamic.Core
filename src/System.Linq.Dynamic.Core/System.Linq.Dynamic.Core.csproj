@@ -119,8 +119,8 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
     <!--<PackageReference Include="System.Diagnostics.Contracts" Version="4.0.1" />-->
-    <!--<PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.1" />
-    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.0.1" />-->
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
     <!--<PackageReference Include="System.Threading.Overlapped" Version="4.3.0" />-->
   </ItemGroup>
 </Project>
