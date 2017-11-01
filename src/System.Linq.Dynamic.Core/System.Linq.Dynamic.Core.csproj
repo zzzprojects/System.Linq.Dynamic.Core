@@ -4,7 +4,7 @@
     <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
     <VersionPrefix>1.0.7.11</VersionPrefix>
     <Authors>Microsoft;Scott Guthrie;King Wilder;Nathan Arnott;Stef Heyenrath</Authors>
-    <TargetFrameworks>net35;net40;net45;net46;uap10.0;netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;net46;uap10.0;netstandard1.3;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>System.Linq.Dynamic.Core</AssemblyName>
     <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
@@ -104,11 +104,19 @@
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
   </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
+  </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'sl5' ">
-    <PackageReference Include="Portable.ConcurrentDictionary">
-      <Version>1.0.3</Version>
-    </PackageReference>
+    <PackageReference Include="Portable.ConcurrentDictionary" Version="1.0.3" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -118,9 +126,7 @@
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
-    <!--<PackageReference Include="System.Diagnostics.Contracts" Version="4.0.1" />-->
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
-    <!--<PackageReference Include="System.Threading.Overlapped" Version="4.3.0" />-->
   </ItemGroup>
 </Project>

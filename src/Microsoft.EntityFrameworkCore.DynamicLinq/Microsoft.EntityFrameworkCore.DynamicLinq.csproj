@@ -4,7 +4,7 @@
     <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
     <VersionPrefix>1.0.4.7</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
-    <TargetFrameworks>net451;net46;netstandard1.3;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0;uap10.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
@@ -44,6 +44,10 @@
     <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\System.Linq.Dynamic.Core\Res.cs" />
     <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\*.cs" />
@@ -78,22 +82,12 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="System.IO.Compression">
-      <Version>4.1.2</Version>
-    </PackageReference>
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="System.IO.Compression">
-      <Version>4.1.2</Version>
-    </PackageReference>
   </ItemGroup>
-  
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
-  </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />

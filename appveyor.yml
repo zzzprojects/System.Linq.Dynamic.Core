@@ -11,8 +11,8 @@ init:
 - ps: $Env:LABEL = "CI" + $Env:APPVEYOR_BUILD_NUMBER.PadLeft(5, "0")
 
 install:
-  - ps: Start-FileDownload 'https://download.microsoft.com/download/8/F/9/8F9659B9-E628-4D1A-B6BF-C3004C8C954B/dotnet-1.1.1-sdk-win-x64.exe'
-  - cmd: dotnet-1.1.1-sdk-win-x64.exe /quiet
+  - ps: Start-FileDownload 'https://download.microsoft.com/download/0/F/D/0FD852A4-7EA1-4E2A-983A-0484AC19B92C/dotnet-sdk-2.0.0-win-gs-x64.exe'
+  - cmd: dotnet-sdk-2.0.0-win-gs-x64.exe /quiet
   - ps: $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
 
 environment:
@@ -21,7 +21,7 @@ environment:
     secure: tsTABRbCmdWFLT194XNIrpurerOfjN6cEoxt2RaSUfLmUIgra/+CwuqVkv0sPRop
 
 build_script:
-# Remove UAP10 from csproj
+# Remove UAP10 and netstandard20 from csproj
 - cmd: copy /Y src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.AppVeyor.csproj src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
 - cmd: copy /Y src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.AppVeyor.csproj src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
 
