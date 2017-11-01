@@ -13,7 +13,7 @@
 | EntityFramework.DynamicLinq | [![NuGet Badge](https://buildstats.info/nuget/EntityFramework.DynamicLinq)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
 | Microsoft.EntityFrameworkCore.DynamicLinq | [![NuGet Badge](https://buildstats.info/nuget/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 
-This is a **.NET Core port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
+This is a **.NET Core/Standard port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
 
 # Functionality
@@ -36,7 +36,7 @@ The following frameworks are supported:
 - net40
 - net45 and up
 - netstandard1.3
-- uap10.0 (broken in latest NuGet, sorry)
+- uap10.0
 
 ## Fork details
 This fork takes the basic library to a new level. Contains XML Documentation and examples on how to use it. Also adds unit testing to help ensure that it works properly.
