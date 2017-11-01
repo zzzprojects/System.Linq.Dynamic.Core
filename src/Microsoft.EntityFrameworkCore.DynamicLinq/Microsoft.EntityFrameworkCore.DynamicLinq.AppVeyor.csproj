@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
-        <VersionPrefix>1.0.4.7</VersionPrefix>
+        <VersionPrefix>1.0.4.8</VersionPrefix>
         <Authors>Stef Heyenrath</Authors>
         <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
         <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
@@ -32,7 +32,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <!--<PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
         <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
@@ -42,7 +42,7 @@
         <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
         <DefineConstants>$(DefineConstants);WINDOWS_UWP;UAP10_0</DefineConstants>
         <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
-    </PropertyGroup>-->
+    </PropertyGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
         <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
@@ -67,29 +67,43 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
- </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-        <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
+    </ItemGroup>
+
+    <!--<ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+        <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
+    </ItemGroup>-->
 </Project>
