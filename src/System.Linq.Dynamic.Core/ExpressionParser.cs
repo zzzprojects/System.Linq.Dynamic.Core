@@ -577,7 +577,10 @@ namespace System.Linq.Dynamic.Core
                     var typeArgs = new[] { left.Type };
                     args = new[] { right, left };
 
-                    accumulate = Expression.Call(typeof(Enumerable), containsSignature.Name, typeArgs, args);
+                    var enumerableType = typeof(Enumerable);
+                    if (!typeof(IQueryable).IsAssignableFrom(right.Type))
+                        enumerableType = typeof(Queryable);
+                    accumulate = Expression.Call(enumerableType, containsSignature.Name, typeArgs, args);
                 }
                 else
                     throw ParseError(op.Pos, Res.OpenParenOrIdentifierExpected);
@@ -1506,7 +1509,7 @@ namespace System.Linq.Dynamic.Core
                     if (enumerableType != null)
                     {
                         Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                        return ParseAggregate(instance, elementType, id, errorPos);
+                        return ParseAggregate(instance, elementType, id, errorPos, FindGenericType(typeof(IQueryable<>), type) != null);
                     }
                 }
 
@@ -1613,7 +1616,7 @@ namespace System.Linq.Dynamic.Core
             return null;
         }
 
-        Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos)
+        Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, bool isQueryable)
         {
             var oldParent = _parent;
 
@@ -1689,7 +1692,7 @@ namespace System.Linq.Dynamic.Core
                 }
             }
 
-            return Expression.Call(typeof(Enumerable), signature.Name, typeArgs, args);
+            return Expression.Call(isQueryable ? typeof(Queryable) : typeof(Enumerable), signature.Name, typeArgs, args);
         }
 
         Expression[] ParseArgumentList()
