@@ -1,3 +1,14 @@
+# 1.0.7.11 (01 November 2017)
+
+ - [#112](https://github.com/StefH/System.Linq.Dynamic.Core/issues/112) - Support NETStandard 2.0 +enhancement
+ - [#111](https://github.com/StefH/System.Linq.Dynamic.Core/issues/111) - [Bug] Incorrect Nullable<> parsing +fix
+ - [#109](https://github.com/StefH/System.Linq.Dynamic.Core/issues/109) - Not able to build with VS2017
+ - [#108](https://github.com/StefH/System.Linq.Dynamic.Core/issues/108) - [Question] Nullable property inside Join statement
+ - [#107](https://github.com/StefH/System.Linq.Dynamic.Core/issues/107) - Type conversions generated in cases where they're not needed. +fix
+
+Commits: 8028fecce4...87cd4d11fa
+
+
 # 1.0.7.9 (12 September 2017)
 
  - [#104](https://github.com/StefH/System.Linq.Dynamic.Core/issues/104) - Add PDB to nuget package +enhancement

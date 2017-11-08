@@ -63,11 +63,16 @@ namespace System.Linq.Dynamic.Core
         private static int _index = -1;
 
         /// <summary>
+        /// The AssemblyName
+        /// </summary>
+        public static string DynamicAssemblyName = "System.Linq.Dynamic.Core.DynamicClasses, Version=1.0.0.0";
+
+        /// <summary>
         /// Initializes the <see cref="DynamicClassFactory"/> class.
         /// </summary>
         static DynamicClassFactory()
         {
-            var assemblyName = new AssemblyName("System.Linq.Dynamic.Core.DynamicClasses, Version=1.0.0.0");
+            var assemblyName = new AssemblyName(DynamicAssemblyName);
             var assemblyBuilder = AssemblyBuilderFactory.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
 
             ModuleBuilder = assemblyBuilder.DefineDynamicModule("System.Linq.Dynamic.Core.DynamicClasses");

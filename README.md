@@ -13,7 +13,7 @@
 | EntityFramework.DynamicLinq | [![NuGet Badge](https://buildstats.info/nuget/EntityFramework.DynamicLinq)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
 | Microsoft.EntityFrameworkCore.DynamicLinq | [![NuGet Badge](https://buildstats.info/nuget/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 
-This is a **.NET Core port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
+This is a **.NET Core/Standard port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
 
 # Functionality

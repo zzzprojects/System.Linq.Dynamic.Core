@@ -1,4 +1,5 @@
 ﻿using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Xunit;
@@ -10,21 +11,36 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Where_Dynamic()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
             var qry = testList.AsQueryable();
 
-            //Act
+            // Act
             var userById = qry.Where("Id=@0", testList[10].Id);
             var userByUserName = qry.Where("UserName=\"User5\"");
             var nullProfileCount = qry.Where("Profile=null");
             var userByFirstName = qry.Where("Profile!=null && Profile.FirstName=@0", testList[1].Profile.FirstName);
 
-            //Assert
+            // Assert
             Assert.Equal(testList[10], userById.Single());
             Assert.Equal(testList[5], userByUserName.Single());
             Assert.Equal(testList.Count(x => x.Profile == null), nullProfileCount.Count());
             Assert.Equal(testList[1], userByFirstName.Single());
+        }
+
+        [Fact]
+        public void Where_Dynamic_CheckCastToObject()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
+            var qry = testList.AsQueryable();
+
+            // Act
+            string dynamicExpression = qry.Where("Profile == null").Expression.ToDebugView();
+            string expresion = qry.Where(var1 => var1.Profile == null).Expression.ToDebugView();
+
+            // Assert
+            NFluent.Check.That(dynamicExpression).Equals(expresion);
         }
 
         [Fact]

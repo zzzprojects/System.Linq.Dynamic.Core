@@ -1657,6 +1657,13 @@ namespace System.Linq.Dynamic.Core
             // If types are not the same, try to convert to Nullable and generate new LambdaExpression
             if (outerSelectorReturnType != innerSelectorReturnType)
             {
+                //var outerSelectorReturnTypeInfo = outerSelectorReturnType.GetTypeInfo();
+                //var innerSelectorReturnTypeInfo = innerSelectorReturnType.GetTypeInfo();
+                //if (outerSelectorReturnTypeInfo.BaseType == typeof(DynamicClass) && innerSelectorReturnTypeInfo.BaseType == typeof(DynamicClass))
+                //{
+
+                //}
+
                 if (ExpressionParser.IsNullableType(outerSelectorReturnType) && !ExpressionParser.IsNullableType(innerSelectorReturnType))
                 {
                     innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
@@ -1671,7 +1678,7 @@ namespace System.Linq.Dynamic.Core
                 // If types are still not the same, throw an Exception
                 if (outerSelectorReturnType != innerSelectorReturnType)
                 {
-                    throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.IncompatibleTypes, outerType, innerType), -1);
+                    throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.IncompatibleTypes, outerSelectorReturnType, innerSelectorReturnType), -1);
                 }
             }
         }
