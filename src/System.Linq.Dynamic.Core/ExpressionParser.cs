@@ -519,13 +519,13 @@ namespace System.Linq.Dynamic.Core
                 var op = _textParser.CurrentToken;
 
                 _textParser.NextToken();
-                if (_textParser.CurrentToken.Id == TokenId.OpenParen) //literals (or other inline list)
+                if (_textParser.CurrentToken.Id == TokenId.OpenParen) // literals (or other inline list)
                 {
                     while (_textParser.CurrentToken.Id != TokenId.CloseParen)
                     {
                         _textParser.NextToken();
 
-                        //we need to parse unary expressions because otherwise 'in' clause will fail in use cases like 'in (-1, -1)' or 'in (!true)'
+                        // we need to parse unary expressions because otherwise 'in' clause will fail in use cases like 'in (-1, -1)' or 'in (!true)'
                         Expression right = ParseUnary();
 
                         // if the identifier is an Enum, try to convert the right-side also to an Enum.
@@ -537,14 +537,6 @@ namespace System.Linq.Dynamic.Core
                         // else, check for direct type match
                         else if (left.Type != right.Type)
                         {
-                            //check for nullable type match
-                            //if (!left.Type.GetTypeInfo().IsGenericType ||
-                            //    left.Type.GetGenericTypeDefinition() != typeof(Nullable<>) ||
-                            //    left.Type.GetTypeInfo().GetGenericTypeArguments()[0] != right.Type)
-                            //{
-                            //    throw ParseError(op.Pos, Res.ExpressionTypeMismatch, left.Type);
-                            //}
-
                             CheckAndPromoteOperands(typeof(IEqualitySignatures), "==", ref left, ref right, op.Pos);
                         }
 
@@ -558,32 +550,43 @@ namespace System.Linq.Dynamic.Core
                         }
 
                         if (_textParser.CurrentToken.Id == TokenId.End)
+                        {
                             throw ParseError(op.Pos, Res.CloseParenOrCommaExpected);
+                        }
                     }
                 }
-                else if (_textParser.CurrentToken.Id == TokenId.Identifier) //a single argument
+                else if (_textParser.CurrentToken.Id == TokenId.Identifier) // a single argument
                 {
                     Expression right = ParsePrimary();
 
                     if (!typeof(IEnumerable).IsAssignableFrom(right.Type))
+                    {
                         throw ParseError(_textParser.CurrentToken.Pos, Res.IdentifierImplementingInterfaceExpected, typeof(IEnumerable));
+                    }
 
                     var args = new[] { left };
 
-                    MethodBase containsSignature;
-                    if (FindMethod(typeof(IEnumerableSignatures), "Contains", false, args, out containsSignature) != 1)
+                    if (FindMethod(typeof(IEnumerableSignatures), "Contains", false, args, out MethodBase containsSignature) != 1)
+                    {
                         throw ParseError(op.Pos, Res.NoApplicableAggregate, "Contains");
+                    }
 
                     var typeArgs = new[] { left.Type };
+
                     args = new[] { right, left };
 
-                    var enumerableType = typeof(Enumerable);
-                    if (!typeof(IQueryable).IsAssignableFrom(right.Type))
-                        enumerableType = typeof(Queryable);
-                    accumulate = Expression.Call(enumerableType, containsSignature.Name, typeArgs, args);
+                    Type callType = typeof(Enumerable);
+                    if (!typeof(IQueryable).IsAssignableFrom(right.Type) && ContainsMethod(typeof(Queryable), containsSignature.Name, false, args))
+                    {
+                        callType = typeof(Queryable);
+                    }
+
+                    accumulate = Expression.Call(callType, containsSignature.Name, typeArgs, args);
                 }
                 else
+                {
                     throw ParseError(op.Pos, Res.OpenParenOrIdentifierExpected);
+                }
 
                 _textParser.NextToken();
             }
@@ -1608,8 +1611,7 @@ namespace System.Linq.Dynamic.Core
 
         Type FindType(string name)
         {
-            object type;
-            _keywords.TryGetValue(name, out type);
+            _keywords.TryGetValue(name, out object type);
             var result = type as Type;
             if (result != null)
                 return result;
@@ -1652,9 +1654,10 @@ namespace System.Linq.Dynamic.Core
             _it = outerIt;
             _parent = oldParent;
 
-            MethodBase signature;
-            if (FindMethod(typeof(IEnumerableSignatures), methodName, false, args, out signature) != 1)
+            if (FindMethod(typeof(IEnumerableSignatures), methodName, false, args, out MethodBase signature) != 1)
+            {
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
+            }
 
             Type[] typeArgs;
             if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(signature.Name))
@@ -1704,7 +1707,16 @@ namespace System.Linq.Dynamic.Core
                 }
             }
 
-            return Expression.Call(isQueryable ? typeof(Queryable) : typeof(Enumerable), signature.Name, typeArgs, args);
+            Type callType = typeof(Enumerable);
+            if (isQueryable)
+            {
+                if (ContainsMethod(typeof(Queryable), signature.Name, false, args))
+                {
+                    callType = typeof(Queryable);
+                }
+            }
+
+            return Expression.Call(callType, signature.Name, typeArgs, args);
         }
 
         Expression[] ParseArgumentList()
@@ -1738,9 +1750,11 @@ namespace System.Linq.Dynamic.Core
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.ValidateToken(TokenId.OpenBracket, Res.OpenParenExpected);
             _textParser.NextToken();
+
             Expression[] args = ParseArguments();
             _textParser.ValidateToken(TokenId.CloseBracket, Res.CloseBracketOrCommaExpected);
             _textParser.NextToken();
+
             if (expr.Type.IsArray)
             {
                 if (expr.Type.GetArrayRank() != 1 || args.Length != 1)
@@ -1750,20 +1764,17 @@ namespace System.Linq.Dynamic.Core
                     throw ParseError(errorPos, Res.InvalidIndex);
                 return Expression.ArrayIndex(expr, index);
             }
-            else
+
+            switch (FindIndexer(expr.Type, args, out var mb))
             {
-                MethodBase mb;
-                switch (FindIndexer(expr.Type, args, out mb))
-                {
-                    case 0:
-                        throw ParseError(errorPos, Res.NoApplicableIndexer,
-                            GetTypeName(expr.Type));
-                    case 1:
-                        return Expression.Call(expr, (MethodInfo)mb, args);
-                    default:
-                        throw ParseError(errorPos, Res.AmbiguousIndexerInvocation,
-                            GetTypeName(expr.Type));
-                }
+                case 0:
+                    throw ParseError(errorPos, Res.NoApplicableIndexer,
+                        GetTypeName(expr.Type));
+                case 1:
+                    return Expression.Call(expr, (MethodInfo)mb, args);
+                default:
+                    throw ParseError(errorPos, Res.AmbiguousIndexerInvocation,
+                        GetTypeName(expr.Type));
             }
         }
 
@@ -1844,15 +1855,6 @@ namespace System.Linq.Dynamic.Core
                 return true;
             }
 #endif
-            //#if !NET35
-            //            var dynamicExpression = expression as Expressions.DynamicExpression;
-            //            if (dynamicExpression != null)
-            //            {
-            //                memberName = ((GetMemberBinder)dynamicExpression.Binder).Name;
-            //                return true;
-            //            }
-            //#endif
-
             memberName = null;
             return false;
         }
@@ -1920,8 +1922,7 @@ namespace System.Linq.Dynamic.Core
         {
             Expression[] args = { expr };
 
-            MethodBase method;
-            if (FindMethod(signatures, "F", false, args, out method) != 1)
+            if (!ContainsMethod(signatures, "F", false, args))
             {
                 throw IncompatibleOperandError(opName, expr, errorPos);
             }
@@ -1983,57 +1984,58 @@ namespace System.Linq.Dynamic.Core
 #endif
         }
 
+        bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression[] args)
+        {
+            return FindMethod(type, methodName, staticAccess, args, out var _) == 1;
+        }
+
         int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)
         {
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
-            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly |
-                (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
+            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
             {
-                MemberInfo[] members = t.FindMembers(MemberTypes.Method,
-                    flags, Type.FilterNameIgnoreCase, methodName);
+                MemberInfo[] members = t.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName);
                 int count = FindBestMethod(members.Cast<MethodBase>(), args, out method);
-                if (count != 0) return count;
+                if (count != 0)
+                {
+                    return count;
+                }
             }
-            method = null;
-            return 0;
 #else
             foreach (Type t in SelfAndBaseTypes(type))
             {
                 MethodInfo[] methods = t.GetTypeInfo().DeclaredMethods.Where(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == methodName.ToLowerInvariant()).ToArray();
                 int count = FindBestMethod(methods, args, out method);
-                if (count != 0) return count;
+                if (count != 0)
+                {
+                    return count;
+                }
             }
-
+#endif
             method = null;
             return 0;
-#endif
         }
 
         int FindIndexer(Type type, Expression[] args, out MethodBase method)
         {
             foreach (Type t in SelfAndBaseTypes(type))
             {
-                //#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                 MemberInfo[] members = t.GetDefaultMembers();
-                //#else
-                //                MemberInfo[] members = new MemberInfo[0];
-                //#endif
                 if (members.Length != 0)
                 {
-                    IEnumerable<MethodBase> methods = members
-                        .OfType<PropertyInfo>().
+                    IEnumerable<MethodBase> methods = members.OfType<PropertyInfo>().
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
                         Select(p => (MethodBase)p.GetGetMethod()).
                         Where(m => m != null);
 #else
                     Select(p => (MethodBase)p.GetMethod);
 #endif
-
                     int count = FindBestMethod(methods, args, out method);
                     if (count != 0) return count;
                 }
             }
+
             method = null;
             return 0;
         }
@@ -2137,8 +2139,7 @@ namespace System.Linq.Dynamic.Core
                 }
                 else
                 {
-                    string text;
-                    if (_literals.TryGetValue(ce, out text))
+                    if (_literals.TryGetValue(ce, out string text))
                     {
                         Type target = GetNonNullableType(type);
                         object value = null;

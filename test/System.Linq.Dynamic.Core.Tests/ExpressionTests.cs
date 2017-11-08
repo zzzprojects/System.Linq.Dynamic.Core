@@ -87,7 +87,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result4 = list.AsQueryable().SelectMany("new[] { new[] { it + 1, it + 2 }, new[] { it + 3, it + 4 } }");
 
             //Assert
-            Assert.Equal(result1.Count(), 0);
+            Assert.Equal(0, result1.Count());
             Assert.Equal(result2.Cast<int>(), list.SelectMany(item => new[] { item + 1, item + 2 }));
             Assert.Equal(result3.Cast<long>(), list.SelectMany(item => new long[] { item + 1, (byte)(item + 2), (short)(item + 3) }));
             Assert.Equal(result4.SelectMany("it").Cast<int>(), list.SelectMany(item => new[] { new[] { item + 1, item + 2 }, new[] { item + 3, item + 4 } }).SelectMany(item => item));
@@ -1547,7 +1547,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result1 = qry.AsQueryable().Where("it = @0", new Uri("http://127.0.0.1"));
 
             //Assert
-            Assert.Equal(result1.Count(), 2);
+            Assert.Equal(2, result1.Count());
         }
 
         /// <summary>

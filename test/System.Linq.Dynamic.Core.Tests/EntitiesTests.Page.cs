@@ -22,7 +22,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = queryable.Page(page, pageSize).ToDynamicArray<Blog>();
 
             //Assert
-            Assert.Equal(true, any);
+            Assert.True(any);
             Assert.Equal(total, count);
             Assert.Equal(expected, result);
         }
