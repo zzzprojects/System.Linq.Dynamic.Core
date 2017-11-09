@@ -1713,6 +1713,11 @@ namespace System.Linq.Dynamic.Core
             {
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
             }
+            Type callType = typeof(Enumerable);
+            if (isQueryable && ContainsMethod(typeof(IQueryableSignatures), signature.Name, false, args))
+            {
+                callType = typeof(Queryable);
+            }
 
             Type[] typeArgs;
             if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(signature.Name))
@@ -1760,12 +1765,6 @@ namespace System.Linq.Dynamic.Core
                         args = new[] { instance, Expression.Lambda(args[0], innerIt) };
                     }
                 }
-            }
-
-            Type callType = typeof(Enumerable);
-            if (isQueryable && ContainsMethod(typeof(IQueryableSignatures), signature.Name, false, args))
-            {
-                callType = typeof(Queryable);
             }
 
             return Expression.Call(callType, signature.Name, typeArgs, args);
