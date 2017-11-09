@@ -186,6 +186,67 @@ namespace System.Linq.Dynamic.Core
             void ToList();
         }
 
+        interface IQueryableSignatures
+        {
+            void All(bool predicate);
+            void Any();
+            void Any(bool predicate);
+            void Average(decimal? selector);
+            void Average(decimal selector);
+            void Average(double? selector);
+            void Average(double selector);
+            void Average(float? selector);
+            void Average(float selector);
+            void Average(int? selector);
+            void Average(int selector);
+            void Average(long? selector);
+            void Average(long selector);
+            void Count();
+            void Count(bool predicate);
+            void DefaultIfEmpty();
+            void DefaultIfEmpty(object defaultValue);
+            void Distinct();
+            void First(bool predicate);
+            void FirstOrDefault(bool predicate);
+            void GroupBy(object keySelector);
+            void GroupBy(object keySelector, object elementSelector);
+            void Last(bool predicate);
+            void LastOrDefault(bool predicate);
+            void Max(object selector);
+            void Min(object selector);
+            void OrderBy(object selector);
+            void OrderByDescending(object selector);
+            void Select(object selector);
+            void SelectMany(object selector);
+            void Single(bool predicate);
+            void SingleOrDefault(bool predicate);
+            void Skip(int count);
+            void SkipWhile(bool predicate);
+            void Sum(decimal? selector);
+            void Sum(decimal selector);
+            void Sum(double? selector);
+            void Sum(double selector);
+            void Sum(float? selector);
+            void Sum(float selector);
+            void Sum(int? selector);
+            void Sum(int selector);
+            void Sum(long? selector);
+            void Sum(long selector);
+            void Take(int count);
+            void TakeWhile(bool predicate);
+            void ThenBy(object selector);
+            void ThenByDescending(object selector);
+            void Where(bool predicate);
+
+            // Executors
+            void First();
+            void FirstOrDefault();
+            void Last();
+            void LastOrDefault();
+            void Single();
+            void SingleOrDefault();
+        }
+
         // These shorthands have different name than actual type and therefore not recognized by default from the _predefinedTypes
         static readonly Dictionary<string, Type> _predefinedTypesShorthands = new Dictionary<string, Type>
         {
@@ -575,13 +636,7 @@ namespace System.Linq.Dynamic.Core
 
                     args = new[] { right, left };
 
-                    Type callType = typeof(Enumerable);
-                    if (!typeof(IQueryable).IsAssignableFrom(right.Type) && ContainsMethod(typeof(Queryable), containsSignature.Name, false, args))
-                    {
-                        callType = typeof(Queryable);
-                    }
-
-                    accumulate = Expression.Call(callType, containsSignature.Name, typeArgs, args);
+                    accumulate = Expression.Call(typeof(Enumerable), containsSignature.Name, typeArgs, args);
                 }
                 else
                 {
@@ -1708,12 +1763,9 @@ namespace System.Linq.Dynamic.Core
             }
 
             Type callType = typeof(Enumerable);
-            if (isQueryable)
+            if (isQueryable && ContainsMethod(typeof(IQueryableSignatures), signature.Name, false, args))
             {
-                if (ContainsMethod(typeof(Queryable), signature.Name, false, args))
-                {
-                    callType = typeof(Queryable);
-                }
+                callType = typeof(Queryable);
             }
 
             return Expression.Call(callType, signature.Name, typeArgs, args);
