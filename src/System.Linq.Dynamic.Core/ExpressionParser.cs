@@ -186,6 +186,67 @@ namespace System.Linq.Dynamic.Core
             void ToList();
         }
 
+        interface IQueryableSignatures
+        {
+            void All(bool predicate);
+            void Any();
+            void Any(bool predicate);
+            void Average(decimal? selector);
+            void Average(decimal selector);
+            void Average(double? selector);
+            void Average(double selector);
+            void Average(float? selector);
+            void Average(float selector);
+            void Average(int? selector);
+            void Average(int selector);
+            void Average(long? selector);
+            void Average(long selector);
+            void Count();
+            void Count(bool predicate);
+            void DefaultIfEmpty();
+            void DefaultIfEmpty(object defaultValue);
+            void Distinct();
+            void First(bool predicate);
+            void FirstOrDefault(bool predicate);
+            void GroupBy(object keySelector);
+            void GroupBy(object keySelector, object elementSelector);
+            void Last(bool predicate);
+            void LastOrDefault(bool predicate);
+            void Max(object selector);
+            void Min(object selector);
+            void OrderBy(object selector);
+            void OrderByDescending(object selector);
+            void Select(object selector);
+            void SelectMany(object selector);
+            void Single(bool predicate);
+            void SingleOrDefault(bool predicate);
+            void Skip(int count);
+            void SkipWhile(bool predicate);
+            void Sum(decimal? selector);
+            void Sum(decimal selector);
+            void Sum(double? selector);
+            void Sum(double selector);
+            void Sum(float? selector);
+            void Sum(float selector);
+            void Sum(int? selector);
+            void Sum(int selector);
+            void Sum(long? selector);
+            void Sum(long selector);
+            void Take(int count);
+            void TakeWhile(bool predicate);
+            void ThenBy(object selector);
+            void ThenByDescending(object selector);
+            void Where(bool predicate);
+
+            // Executors
+            void First();
+            void FirstOrDefault();
+            void Last();
+            void LastOrDefault();
+            void Single();
+            void SingleOrDefault();
+        }
+
         // These shorthands have different name than actual type and therefore not recognized by default from the _predefinedTypes
         static readonly Dictionary<string, Type> _predefinedTypesShorthands = new Dictionary<string, Type>
         {
@@ -575,13 +636,7 @@ namespace System.Linq.Dynamic.Core
 
                     args = new[] { right, left };
 
-                    Type callType = typeof(Enumerable);
-                    if (!typeof(IQueryable).IsAssignableFrom(right.Type) && ContainsMethod(typeof(Queryable), containsSignature.Name, false, args))
-                    {
-                        callType = typeof(Queryable);
-                    }
-
-                    accumulate = Expression.Call(callType, containsSignature.Name, typeArgs, args);
+                    accumulate = Expression.Call(typeof(Enumerable), containsSignature.Name, typeArgs, args);
                 }
                 else
                 {
@@ -1641,7 +1696,7 @@ namespace System.Linq.Dynamic.Core
 
             if (methodName == "Contains" || methodName == "Skip" || methodName == "Take")
             {
-                //for any method that acts on the parent element type, we need to specify the outerIt as scope.
+                // for any method that acts on the parent element type, we need to specify the outerIt as scope.
                 _it = outerIt;
             }
             else
@@ -1654,13 +1709,19 @@ namespace System.Linq.Dynamic.Core
             _it = outerIt;
             _parent = oldParent;
 
-            if (FindMethod(typeof(IEnumerableSignatures), methodName, false, args, out MethodBase signature) != 1)
+            if (!ContainsMethod(typeof(IEnumerableSignatures), methodName, false, args))
             {
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
             }
 
+            Type callType = typeof(Enumerable);
+            if (isQueryable && ContainsMethod(typeof(IQueryableSignatures), methodName, false, args))
+            {
+                callType = typeof(Queryable);
+            }
+
             Type[] typeArgs;
-            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(signature.Name))
+            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
             {
                 if (args.Length == 2)
                 {
@@ -1671,7 +1732,7 @@ namespace System.Linq.Dynamic.Core
                     typeArgs = new[] { elementType, args[0].Type };
                 }
             }
-            else if (signature.Name == "SelectMany")
+            else if (methodName == "SelectMany")
             {
                 var type = Expression.Lambda(args[0], innerIt).Body.Type;
                 var interfaces = type.GetInterfaces().Union(new[] { type });
@@ -1690,7 +1751,7 @@ namespace System.Linq.Dynamic.Core
             }
             else
             {
-                if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(signature.Name))
+                if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
                 {
                     args = new[] { instance, args[0] };
                 }
@@ -1707,16 +1768,7 @@ namespace System.Linq.Dynamic.Core
                 }
             }
 
-            Type callType = typeof(Enumerable);
-            if (isQueryable)
-            {
-                if (ContainsMethod(typeof(Queryable), signature.Name, false, args))
-                {
-                    callType = typeof(Queryable);
-                }
-            }
-
-            return Expression.Call(callType, signature.Name, typeArgs, args);
+            return Expression.Call(callType, methodName, typeArgs, args);
         }
 
         Expression[] ParseArgumentList()
