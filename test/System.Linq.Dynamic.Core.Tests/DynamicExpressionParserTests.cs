@@ -1,7 +1,9 @@
 ﻿using NFluent;
 using System.Collections.Generic;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Expressions;
+using System.Reflection;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
@@ -21,6 +23,29 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             public int? Age;
             public int TotalIncome;
+        }
+
+        [DynamicLinqType]
+        public class ComplexParseLambda3Result
+        {
+            public int? Age { get; set; }
+            public int TotalIncome { get; set; }
+        }
+
+        private class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+        {
+            private HashSet<Type> _customTypes;
+
+            public virtual HashSet<Type> GetCustomTypes()
+            {
+                if (_customTypes != null)
+                    return _customTypes;
+
+                _customTypes =
+                    new HashSet<Type>(
+                        FindTypesMarkedWithDynamicLinqTypeAttribute(new[] {this.GetType().GetTypeInfo().Assembly}));
+                return _customTypes;
+            }
         }
 
         [Fact]
@@ -70,7 +95,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result.ToArray()[0]).Equals(expected[0]);
         }
 
-
         [Fact]
         public void ParseLambda_Complex_2()
         {
@@ -90,6 +114,36 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result).IsNotNull();
             Check.That(result).HasSize(expected.Length);
             Check.That(result.ToArray()[0]).Equals(expected[0]);
+        }
+
+        [Fact]
+        public void ParseLambda_Complex_3()
+        {
+            GlobalConfig.CustomTypeProvider = new TestCustomTypeProvider();
+
+            // Arrange
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            var externals = new Dictionary<string, object>
+            {
+                { "Users", qry }
+            };
+
+            // Act
+            string query = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new System.Linq.Dynamic.Core.Tests.DynamicExpressionParserTests+ComplexParseLambda3Result{j.Key.Age, j.Sum(k => k.Income) As TotalIncome})";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            Delegate del = expression.Compile();
+            IEnumerable<dynamic> result = del.DynamicInvoke() as IEnumerable<dynamic>;
+
+            var expected = qry.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new ComplexParseLambda3Result { Age = j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Cast<dynamic>().ToArray();
+
+            // Assert
+            Check.That(result).IsNotNull();
+            Check.That(result).HasSize(expected.Length);
+            Check.That(result.ToArray()[0]).Equals(expected[0]);
+
+            GlobalConfig.CustomTypeProvider = null;
         }
 
         [Fact]

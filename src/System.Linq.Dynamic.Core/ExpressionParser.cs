@@ -1314,10 +1314,22 @@ namespace System.Linq.Dynamic.Core
             if (_textParser.CurrentToken.Id == TokenId.Identifier)
             {
                 var newTypeName = _textParser.CurrentToken.Text;
+                _textParser.NextToken();
+
+                while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+                {
+                    var sep = _textParser.CurrentToken.Text;
+                    _textParser.NextToken();
+                    if (_textParser.CurrentToken.Id != TokenId.Identifier)
+                        throw ParseError(Res.IdentifierExpected);
+                    newTypeName += sep + _textParser.CurrentToken.Text;
+                    _textParser.NextToken();
+                }
+
                 newType = FindType(newTypeName);
                 if (newType == null)
                     throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, newTypeName);
-                _textParser.NextToken();
+               
                 if (_textParser.CurrentToken.Id != TokenId.OpenParen &&
                     _textParser.CurrentToken.Id != TokenId.OpenBracket &&
                     _textParser.CurrentToken.Id != TokenId.OpenCurlyParen)
@@ -1414,9 +1426,13 @@ namespace System.Linq.Dynamic.Core
 #endif
                     type = typeof(DynamicClass);
                     Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
+#if NET35 || NET40
+                    ConstructorInfo constructorForKeyValuePair =
+                        typeForKeyValuePair.GetConstructors().First();
+#else
                     ConstructorInfo constructorForKeyValuePair =
                         typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
-
+#endif
                     var arrayIndexParams = new List<Expression>();
                     for (int i = 0; i < expressions.Count; i++)
                     {
@@ -1433,7 +1449,11 @@ namespace System.Linq.Dynamic.Core
                         Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
 
                     // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
+#if NET35 || NET40
+                    ConstructorInfo constructor = type.GetConstructors().First();
+#else
                     ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
+#endif
                     return Expression.New(constructor, newArrayExpression);
 #if !UAP10_0
                 }
@@ -1446,7 +1466,7 @@ namespace System.Linq.Dynamic.Core
 
             Type[] propertyTypes = type.GetProperties().Select(p => p.PropertyType).ToArray();
             ConstructorInfo ctor = type.GetConstructor(propertyTypes);
-            if (ctor != null)
+            if (ctor != null && ctor.GetParameters().Length == expressions.Count)
                 return Expression.New(ctor, expressions);
 
             MemberBinding[] bindings = new MemberBinding[properties.Count];
