@@ -1696,7 +1696,7 @@ namespace System.Linq.Dynamic.Core
 
             if (methodName == "Contains" || methodName == "Skip" || methodName == "Take")
             {
-                //for any method that acts on the parent element type, we need to specify the outerIt as scope.
+                // for any method that acts on the parent element type, we need to specify the outerIt as scope.
                 _it = outerIt;
             }
             else
@@ -1709,18 +1709,19 @@ namespace System.Linq.Dynamic.Core
             _it = outerIt;
             _parent = oldParent;
 
-            if (FindMethod(typeof(IEnumerableSignatures), methodName, false, args, out MethodBase signature) != 1)
+            if (!ContainsMethod(typeof(IEnumerableSignatures), methodName, false, args))
             {
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
             }
+
             Type callType = typeof(Enumerable);
-            if (isQueryable && ContainsMethod(typeof(IQueryableSignatures), signature.Name, false, args))
+            if (isQueryable && ContainsMethod(typeof(IQueryableSignatures), methodName, false, args))
             {
                 callType = typeof(Queryable);
             }
 
             Type[] typeArgs;
-            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(signature.Name))
+            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
             {
                 if (args.Length == 2)
                 {
@@ -1731,7 +1732,7 @@ namespace System.Linq.Dynamic.Core
                     typeArgs = new[] { elementType, args[0].Type };
                 }
             }
-            else if (signature.Name == "SelectMany")
+            else if (methodName == "SelectMany")
             {
                 var type = Expression.Lambda(args[0], innerIt).Body.Type;
                 var interfaces = type.GetInterfaces().Union(new[] { type });
@@ -1750,7 +1751,7 @@ namespace System.Linq.Dynamic.Core
             }
             else
             {
-                if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(signature.Name))
+                if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
                 {
                     args = new[] { instance, args[0] };
                 }
@@ -1767,7 +1768,7 @@ namespace System.Linq.Dynamic.Core
                 }
             }
 
-            return Expression.Call(callType, signature.Name, typeArgs, args);
+            return Expression.Call(callType, methodName, typeArgs, args);
         }
 
         Expression[] ParseArgumentList()
