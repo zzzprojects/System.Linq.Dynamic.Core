@@ -351,7 +351,10 @@ namespace System.Linq.Dynamic.Core
         }
         private readonly TextParser _textParser;
 
-        public ExpressionParser(ParameterExpression[] parameters, string expression, object[] values)
+        private readonly ParsingConfig _parsingConfig;
+
+
+        public ExpressionParser(ParameterExpression[] parameters, string expression, object[] values, ParsingConfig parsingConfig)
         {
             if (_keywords == null)
                 _keywords = CreateKeywords();
@@ -1405,29 +1408,39 @@ namespace System.Linq.Dynamic.Core
 
             if (type == null)
             {
-#if UAP10_0
-                type = typeof(DynamicClass);
-                Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
-                ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
-
-                var arrayIndexParams = new List<Expression>();
-                for (int i = 0; i < expressions.Count; i++)
+#if !UAP10_0
+                if ((_parsingConfig != null && _parsingConfig.UseDynamicObjectClassForAnonymousTypes) || (_parsingConfig == null && GlobalConfig.UseDynamicObjectClassForAnonymousTypes))
                 {
-                    // Just convert the expression always to an object expression.
-                    UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
-                    NewExpression parameter = Expression.New(constructorForKeyValuePair, new[] { (Expression)Expression.Constant(properties[i].Name), boxingExpression });
+#endif
+                    type = typeof(DynamicClass);
+                    Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
+                    ConstructorInfo constructorForKeyValuePair =
+                        typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
 
-                    arrayIndexParams.Add(parameter);
+                    var arrayIndexParams = new List<Expression>();
+                    for (int i = 0; i < expressions.Count; i++)
+                    {
+                        // Just convert the expression always to an object expression.
+                        UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
+                        NewExpression parameter = Expression.New(constructorForKeyValuePair,
+                            new[] {(Expression) Expression.Constant(properties[i].Name), boxingExpression});
+
+                        arrayIndexParams.Add(parameter);
+                    }
+
+                    // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
+                    NewArrayExpression newArrayExpression =
+                        Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
+
+                    // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
+                    ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
+                    return Expression.New(constructor, newArrayExpression);
+#if !UAP10_0
                 }
-
-                // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
-                NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
-
-                // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
-                ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
-                return Expression.New(constructor, newArrayExpression);
-#else
-                type = DynamicClassFactory.CreateType(properties, _createParameterCtor);
+                else
+                {
+                    type = DynamicClassFactory.CreateType(properties, _createParameterCtor);
+                }
 #endif
             }
 

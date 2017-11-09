@@ -861,7 +861,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(ordering, nameof(ordering));
 
             ParameterExpression[] parameters = { Expression.Parameter(source.ElementType, "") };
-            ExpressionParser parser = new ExpressionParser(parameters, ordering, args);
+            ExpressionParser parser = new ExpressionParser(parameters, ordering, args, null);
             IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering();
 
             Expression queryExpr = source.Expression;
@@ -1561,7 +1561,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(ordering, nameof(ordering));
 
             ParameterExpression[] parameters = { Expression.Parameter(source.ElementType, "") };
-            ExpressionParser parser = new ExpressionParser(parameters, ordering, args);
+            ExpressionParser parser = new ExpressionParser(parameters, ordering, args, null);
             IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering(forceThenBy: true);
 
             Expression queryExpr = source.Expression;
