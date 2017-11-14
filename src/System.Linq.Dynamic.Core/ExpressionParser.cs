@@ -1464,10 +1464,23 @@ namespace System.Linq.Dynamic.Core
 #endif
             }
 
-            Type[] propertyTypes = type.GetProperties().Select(p => p.PropertyType).ToArray();
+            IEnumerable<PropertyInfo> propertyInfos = type.GetProperties();
+#if !UAP10_0 && !NET35 && !NETSTANDARD1_3
+            if (type.BaseType == typeof(DynamicClass))
+            {
+                propertyInfos = propertyInfos.Where(x => x.Name != "Item");
+            }
+#elif NETSTANDARD
+            if (type.GetTypeInfo().BaseType == typeof(DynamicClass))
+            {
+                propertyInfos = propertyInfos.Where(x => x.Name != "Item");
+            }
+#endif
+
+            Type[] propertyTypes = propertyInfos.Select(p => p.PropertyType).ToArray();
             ConstructorInfo ctor = type.GetConstructor(propertyTypes);
             if (ctor != null && ctor.GetParameters().Length == expressions.Count)
-                return Expression.New(ctor, expressions);
+                return Expression.New(ctor, expressions, (IEnumerable<MemberInfo>) propertyInfos);
 
             MemberBinding[] bindings = new MemberBinding[properties.Count];
             for (int i = 0; i < bindings.Length; i++)
