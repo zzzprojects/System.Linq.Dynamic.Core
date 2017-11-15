@@ -317,7 +317,7 @@ namespace System.Linq.Dynamic.Core
 
         static ExpressionParser()
         {
-#if !(NET35 || SILVERLIGHT || NETFX_CORE ||WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NET35 || SILVERLIGHT || NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
             //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
             //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
@@ -331,6 +331,10 @@ namespace System.Linq.Dynamic.Core
             UpdatePredefinedTypes("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
             UpdatePredefinedTypes("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
 #endif
+
+#if NETSTANDARD2_0
+            UpdatePredefinedTypes("Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version=1.0.0.0, Culture=neutral, PublicKeyToken=974e7e1b462f3693", 3);
+#endif
             // detect NumberDecimalSeparator from current culture
             //NumberFormatInfo numberFormatInfo = CultureInfo.CurrentCulture.NumberFormat;
             //NumberDecimalSeparatorFromCulture = numberFormatInfo.NumberDecimalSeparator[0];
@@ -342,7 +346,9 @@ namespace System.Linq.Dynamic.Core
             {
                 Type efType = Type.GetType(typeName);
                 if (efType != null)
+                {
                     _predefinedTypes.Add(efType, x);
+                }
             }
             catch
             {
@@ -1584,8 +1590,7 @@ namespace System.Linq.Dynamic.Core
                 }
 
                 Expression[] args = ParseArgumentList();
-                MethodBase mb;
-                switch (FindMethod(type, id, instance == null, args, out mb))
+                switch (FindMethod(type, id, instance == null, args, out MethodBase mb))
                 {
                     case 0:
                         throw ParseError(errorPos, Res.NoApplicableMethod, id, GetTypeName(type));
@@ -2800,9 +2805,9 @@ namespace System.Linq.Dynamic.Core
         {
             var d = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                {"true", TrueLiteral},
-                {"false", FalseLiteral},
-                {"null", NullLiteral}
+                { "true", TrueLiteral },
+                { "false", FalseLiteral },
+                { "null", NullLiteral }
             };
 
             if (GlobalConfig.AreContextKeywordsEnabled)

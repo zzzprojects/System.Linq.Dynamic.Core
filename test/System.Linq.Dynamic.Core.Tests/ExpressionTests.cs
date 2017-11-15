@@ -259,7 +259,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = qry.Where("it == 2 or it == 3").ToDynamicList<int>();
 
             //Assert
-            Assert.Equal(realResult, result);
+            Check.That(realResult).ContainsExactly(result);
         }
 
         [Fact]
@@ -274,7 +274,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = qry.Where("it == 2 || it == 3").ToDynamicList<int>();
 
             //Assert
-            Assert.Equal(realResult, result);
+            Check.That(realResult).ContainsExactly(result);
         }
 
         [Fact]
@@ -289,7 +289,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = qry.Where("s == \"s\" and i == 2").ToDynamicList();
 
             //Assert
-            Assert.Equal(realResult, result);
+            Check.That(realResult).ContainsExactly(result);
         }
 
         [Fact]
@@ -304,7 +304,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = qry.Where("s == \"s\" && i == 2").ToDynamicList();
 
             //Assert
-            Assert.Equal(realResult, result);
+            Check.That(realResult).ContainsExactly(result);
         }
 
         [Fact]

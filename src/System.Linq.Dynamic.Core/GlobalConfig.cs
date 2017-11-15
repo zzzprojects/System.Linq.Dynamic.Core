@@ -7,7 +7,7 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public static class GlobalConfig
     {
-        static IDynamicLinkCustomTypeProvider _customTypeProvider;
+        private static IDynamicLinkCustomTypeProvider _customTypeProvider;
 
         /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
@@ -43,7 +43,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         public static bool AreContextKeywordsEnabled
         {
-            get { return _contextKeywordsEnabled; }
+            get => _contextKeywordsEnabled;
             set
             {
                 if (value != _contextKeywordsEnabled)
