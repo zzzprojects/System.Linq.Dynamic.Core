@@ -32,7 +32,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <!--<PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
         <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
         <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
         <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
@@ -42,7 +42,7 @@
         <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
         <DefineConstants>$(DefineConstants);WINDOWS_UWP;UAP10_0</DefineConstants>
         <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
-    </PropertyGroup>
+    </PropertyGroup>-->
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
         <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
