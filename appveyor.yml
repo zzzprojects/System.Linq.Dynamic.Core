@@ -34,21 +34,21 @@ build_script:
 - dotnet restore test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
 
 # Build Code
-- dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
-- dotnet build src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj -c %CONFIGURATION% --framework netstandard1.3
-- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj -c %CONFIGURATION% --framework netstandard1.3
+#- dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
+#- dotnet build src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj -c %CONFIGURATION% --framework netstandard1.3
+#- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj -c %CONFIGURATION% --framework netstandard1.3
 - dotnet build src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj -c %CONFIGURATION% --framework netstandard2.0
-- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj -c %CONFIGURATION% --framework netstandard2.0
 
 # Build Tests
 - dotnet build test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj -c %CONFIGURATION%
 - dotnet build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj -c %CONFIGURATION%
 
 test_script:
-#- dotnet test -c %CONFIGURATION% --no-build test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj
+# Run tests for EntityFramework.DynamicLinq
 - dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
 
 after_test:
+# Use System.Linq.Dynamic.Core.Tests as coverage tests
   - nuget.exe install OpenCover -ExcludeVersion
   - nuget.exe install coveralls.net -ExcludeVersion
   - pip install codecov

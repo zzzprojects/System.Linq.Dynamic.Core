@@ -61,7 +61,6 @@
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
