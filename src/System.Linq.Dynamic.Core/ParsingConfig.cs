@@ -1,6 +1,4 @@
-﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
-
-namespace System.Linq.Dynamic.Core
+﻿namespace System.Linq.Dynamic.Core
 {
     /// <summary>
     /// Configuration class for Dynamic Linq.
