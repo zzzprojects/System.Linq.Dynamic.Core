@@ -36,6 +36,7 @@ The following frameworks are supported:
 - net40
 - net45 and up
 - netstandard1.3
+- netstandard2.0
 - uap10.0
 
 ## Fork details
