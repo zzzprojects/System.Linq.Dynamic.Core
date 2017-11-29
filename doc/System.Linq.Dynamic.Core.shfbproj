@@ -26,11 +26,12 @@
     <CleanIntermediates>True</CleanIntermediates>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net45\System.Linq.Dynamic.Core.dll" />
-<DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net45\System.Linq.Dynamic.Core.xml" />
-<DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net45\EntityFramework.DynamicLinq.dll" />
-<DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net45\EntityFramework.DynamicLinq.xml" />
-<DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\net451\Microsoft.EntityFrameworkCore.DynamicLinq.dll" />
-<DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\net451\Microsoft.EntityFrameworkCore.DynamicLinq.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net45\System.Linq.Dynamic.Core.xml" />
+      <DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net45\EntityFramework.DynamicLinq.dll" />
+      <DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net45\EntityFramework.DynamicLinq.xml" />
+      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\net451\Microsoft.EntityFrameworkCore.DynamicLinq.dll" />
+      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\net451\Microsoft.EntityFrameworkCore.DynamicLinq.xml" />
+    </DocumentationSources>
     <WebsiteSdkLinkType>Msdn</WebsiteSdkLinkType>
     <HtmlSdkLinkType>Msdn</HtmlSdkLinkType>
     <IncludeFavorites>False</IncludeFavorites>
@@ -52,7 +53,7 @@
     <Preliminary>False</Preliminary>
     <NamingMethod>Guid</NamingMethod>
     <HelpTitle>System.Linq.Dynamic.Core, EntityFramework.DynamicLinq and Microsoft.EntityFrameworkCore.DynamicLinq</HelpTitle>
-    <ContentPlacement>AboveNamespaces</ContentPlacement>
+    <ContentPlacement>BelowNamespaces</ContentPlacement>
     <WorkingPath>System.Linq.Dynamic.Core.SandCastle.tmp\</WorkingPath>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected, PublicCompilerGenerated</VisibleItems>
   </PropertyGroup>
