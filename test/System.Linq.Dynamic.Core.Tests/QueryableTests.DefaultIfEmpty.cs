@@ -13,7 +13,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var queryable = User.GenerateSampleModels(1).AsQueryable();
 
             // Act
-            var result = ((IQueryable)queryable).DefaultIfEmpty();
+            var result = queryable.DefaultIfEmpty();
             var expected = queryable.DefaultIfEmpty();
 
             // Assert
@@ -28,7 +28,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = queryable.Select(u => u.Roles.Where(r => r.Name == "Admin").DefaultIfEmpty().FirstOrDefault()).ToDynamicArray<object>();
-            var result = ((IQueryable)queryable).Select("it.Roles.Where(r => r.Name == \"Admin\").DefaultIfEmpty().FirstOrDefault()").ToDynamicArray<object>();
+            var result = queryable.Select("it.Roles.Where(r => r.Name == \"Admin\").DefaultIfEmpty().FirstOrDefault()").ToDynamicArray<object>();
 
             // Assert
             Check.That(result).ContainsExactly(expected);
@@ -41,7 +41,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var queryable = User.GenerateSampleModels(1).Where(u => u.Income == -5).AsQueryable();
 
             // Act
-            var result = ((IQueryable)queryable).DefaultIfEmpty();
+            var result = queryable.DefaultIfEmpty();
             var expected = queryable.DefaultIfEmpty();
 
             // Assert
@@ -57,7 +57,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = queryable.Select(u => u.Roles.Where(r => r.Name == "a").DefaultIfEmpty().FirstOrDefault()).ToDynamicArray<object>();
-            var result = ((IQueryable)queryable).Select("it.Roles.Where(r => r.Name == \"a\").DefaultIfEmpty().FirstOrDefault()").ToDynamicArray<object>();
+            var result = queryable.Select("it.Roles.Where(r => r.Name == \"a\").DefaultIfEmpty().FirstOrDefault()").ToDynamicArray<object>();
 
             // Assert
             Check.That(result).ContainsExactly(expected);
@@ -71,7 +71,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var queryable = User.GenerateSampleModels(1).AsQueryable();
 
             // Act
-            var result = ((IQueryable)queryable).DefaultIfEmpty(user);
+            var result = queryable.DefaultIfEmpty(user);
             var expected = queryable.DefaultIfEmpty(user);
 
             // Assert
@@ -87,7 +87,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = queryable.Select(u => u.Roles.Where(r => r.Name == "Admin").DefaultIfEmpty(role).FirstOrDefault()).ToDynamicArray<object>();
-            var result = ((IQueryable)queryable).Select("it.Roles.Where(r => r.Name == \"Admin\").DefaultIfEmpty(@0).FirstOrDefault()", role).ToDynamicArray<object>();
+            var result = queryable.Select("it.Roles.Where(r => r.Name == \"Admin\").DefaultIfEmpty(@0).FirstOrDefault()", role).ToDynamicArray<object>();
 
             // Assert
             Check.That(result).ContainsExactly(expected);
@@ -101,7 +101,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var queryable = User.GenerateSampleModels(1).Where(u => u.Income == -5).AsQueryable();
 
             // Act
-            var result = ((IQueryable)queryable).DefaultIfEmpty(user);
+            var result = queryable.DefaultIfEmpty(user);
             var expected = queryable.DefaultIfEmpty(user);
 
             // Assert
@@ -117,7 +117,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = queryable.Select(u => u.Roles.Where(r => r.Name == "a").DefaultIfEmpty(role).FirstOrDefault()).ToDynamicArray<object>();
-            var result = ((IQueryable)queryable).Select("it.Roles.Where(r => r.Name == \"a\").DefaultIfEmpty(@0).FirstOrDefault()", role).ToDynamicArray<object>();
+            var result = queryable.Select("it.Roles.Where(r => r.Name == \"a\").DefaultIfEmpty(@0).FirstOrDefault()", role).ToDynamicArray<object>();
 
             // Assert
             Check.That(result).ContainsExactly(expected);

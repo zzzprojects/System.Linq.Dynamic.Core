@@ -1586,13 +1586,13 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var lambda = DynamicExpressionParser.ParseLambda(typeof(SimpleValuesModel), typeof(bool), "IntValue == 3");
             var res = DynamicQueryableExtensions.Where(list.AsQueryable(), lambda);
-            Assert.Equal(res.Count(), 2);
+            Assert.Equal(2, res.Count());
 
             var res2 = DynamicQueryableExtensions.Any(list.AsQueryable(), lambda);
             Assert.True(res2);
 
             var res3 = DynamicQueryableExtensions.Count(list.AsQueryable(), lambda);
-            Assert.Equal(res3, 2);
+            Assert.Equal(2, res3);
 
             var res4 = DynamicQueryableExtensions.First(list.AsQueryable(), lambda);
             Assert.Equal(res4, list[1]);

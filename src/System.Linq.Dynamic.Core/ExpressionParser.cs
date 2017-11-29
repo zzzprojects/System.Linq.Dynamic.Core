@@ -315,6 +315,10 @@ namespace System.Linq.Dynamic.Core
         ParameterExpression _parent;
         ParameterExpression _root;
 
+        private readonly TextParser _textParser;
+
+        private readonly ParsingConfig _parsingConfig;
+
         static ExpressionParser()
         {
 #if !(NET35 || SILVERLIGHT || NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
@@ -355,27 +359,30 @@ namespace System.Linq.Dynamic.Core
                 // in case of exception, do not add
             }
         }
-        private readonly TextParser _textParser;
-
-        private readonly ParsingConfig _parsingConfig;
-
 
         public ExpressionParser(ParameterExpression[] parameters, string expression, object[] values, ParsingConfig parsingConfig)
         {
             if (_keywords == null)
+            {
                 _keywords = CreateKeywords();
+            }
 
             _symbols = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             _internals = new Dictionary<string, object>();
             _literals = new Dictionary<Expression, string>();
 
             if (parameters != null)
+            {
                 ProcessParameters(parameters);
+            }
 
             if (values != null)
+            {
                 ProcessValues(values);
+            }
 
             _textParser = new TextParser(expression);
+            _parsingConfig = parsingConfig;
         }
 
         void ProcessParameters(ParameterExpression[] parameters)

@@ -1,3 +1,26 @@
+# 1.0.7.13 (29 November 2017)
+
+ - [#125](https://github.com/StefH/System.Linq.Dynamic.Core/issues/125) - Not compatable with dotnet Core 2. +fix
+ - [#124](https://github.com/StefH/System.Linq.Dynamic.Core/issues/124) - OrderBy produces error.
+ - [#123](https://github.com/StefH/System.Linq.Dynamic.Core/pull/123) - appveyor contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#122](https://github.com/StefH/System.Linq.Dynamic.Core/issues/122) - Join with int list
+ - [#121](https://github.com/StefH/System.Linq.Dynamic.Core/issues/121) - [Question] Count() method
+ - [#120](https://github.com/StefH/System.Linq.Dynamic.Core/issues/120) - Error with parsing
+ - [#117](https://github.com/StefH/System.Linq.Dynamic.Core/pull/117) - New features contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+ - [#114](https://github.com/StefH/System.Linq.Dynamic.Core/issues/114) - Dynamic Linq Query not usable with ORM Provider +fix
+
+Commits: a8113531cd...739c2ebdbf
+
+
+# 1.0.7.12 (09 November 2017)
+
+ - [#116](https://github.com/StefH/System.Linq.Dynamic.Core/pull/116) - Bugfix DynamicLinq when using IQueryable contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+ - [#115](https://github.com/StefH/System.Linq.Dynamic.Core/pull/115) - Dynamic Linq Query not usable with ORM Provider (fix for #114) contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+ - [#113](https://github.com/StefH/System.Linq.Dynamic.Core/issues/113) - .pdb is missing in nuget +fix
+
+Commits: 60d4c3845e...28d726ed2a
+
+
 # 1.0.7.11 (01 November 2017)
 
  - [#112](https://github.com/StefH/System.Linq.Dynamic.Core/issues/112) - Support NETStandard 2.0 +enhancement

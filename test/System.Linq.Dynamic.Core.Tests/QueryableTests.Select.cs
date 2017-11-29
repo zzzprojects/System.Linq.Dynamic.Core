@@ -89,7 +89,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var dynamicSelect = qry.Select("new (FirstName, LastName, FullName)").ToDynamicList();
             Assert.NotNull(dynamicSelect);
-            Assert.Equal(1, dynamicSelect.Count);
+            Assert.Single(dynamicSelect);
 
             var firstEmployee = dynamicSelect.FirstOrDefault();
             Assert.NotNull(firstEmployee);
