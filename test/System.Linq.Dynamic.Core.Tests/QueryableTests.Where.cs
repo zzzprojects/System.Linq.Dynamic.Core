@@ -58,7 +58,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var expected = qry.Where(x => x.UserName == @"This \""is\"" a test.").ToArray();
 
             //Assert
-            Assert.Equal(1, expected.Length);
+            Assert.Single(expected);
             Assert.Equal(expected, result1a);
             Assert.Equal(expected, result1b);
             Assert.Equal(expected, result2);

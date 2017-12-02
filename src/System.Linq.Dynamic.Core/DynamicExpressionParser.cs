@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Linq.Dynamic.Core.Parser;
+using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 
@@ -14,30 +15,30 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
+        /// <param name="parsingConfig">The Configuration for the parsing.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda([CanBeNull] Type resultType, string expression, ParsingConfig parsingConfig, params object[] values)
         {
-            return ParseLambda(true, resultType, expression, values);
+            Check.NotEmpty(expression, nameof(expression));
+
+            return ParseLambda(true, resultType, expression, parsingConfig, values);
         }
 
         /// <summary>
-        /// Parses an expression into a LambdaExpression.
+        /// Parses an expression into a LambdaExpression. (Also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.)
         /// </summary>
-        /// <param name="createParameterCtor">if set to <c>true</c> then also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.</param>
         /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
         /// <param name="expression">The expression.</param>
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(bool createParameterCtor, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda([CanBeNull] Type resultType, string expression, params object[] values)
         {
             Check.NotEmpty(expression, nameof(expression));
 
-            var parser = new ExpressionParser(new ParameterExpression[0], expression, values, null);
-
-            return Expression.Lambda(parser.Parse(resultType, true));
+            return ParseLambda(true, resultType, expression, null, values);
         }
 
         /// <summary>
