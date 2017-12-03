@@ -55,7 +55,9 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         public void NextToken()
         {
             while (char.IsWhiteSpace(_ch))
+            {
                 NextChar();
+            }
 
             TokenId tokenId = TokenId.Unknown;
             int tokenPos = _textPos;
@@ -372,27 +374,42 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
         public void ValidateToken(TokenId t, string errorMessage)
         {
-            if (CurrentToken.Id != t) throw ParseError(errorMessage);
+            if (CurrentToken.Id != t)
+            {
+                throw ParseError(errorMessage);
+            }
         }
 
         public void ValidateToken(TokenId t)
         {
-            if (CurrentToken.Id != t) throw ParseError(Res.SyntaxError);
+            if (CurrentToken.Id != t)
+            {
+                throw ParseError(Res.SyntaxError);
+            }
         }
 
         private void ValidateExpression()
         {
-            if (char.IsLetterOrDigit(_ch)) throw ParseError(_textPos, Res.ExpressionExpected);
+            if (char.IsLetterOrDigit(_ch))
+            {
+                throw ParseError(_textPos, Res.ExpressionExpected);
+            }
         }
 
         private void ValidateDigit()
         {
-            if (!char.IsDigit(_ch)) throw ParseError(_textPos, Res.DigitExpected);
+            if (!char.IsDigit(_ch))
+            {
+                throw ParseError(_textPos, Res.DigitExpected);
+            }
         }
 
         private void ValidateHexChar()
         {
-            if (!IsHexChar(_ch)) throw ParseError(_textPos, Res.HexCharExpected);
+            if (!IsHexChar(_ch))
+            {
+                throw ParseError(_textPos, Res.HexCharExpected);
+            }
         }
 
         private Exception ParseError(string format, params object[] args)

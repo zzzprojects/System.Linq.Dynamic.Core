@@ -15,7 +15,7 @@ namespace System.Linq.Dynamic.Core.Parser
         public const string KEYWORD_NEW = "new";
         public const string KEYWORD_ISNULL = "isnull";
 
-        private IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+        private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
         {
             { "true", Constants.TrueLiteral },
             { "false", Constants.FalseLiteral },

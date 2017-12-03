@@ -77,7 +77,7 @@ namespace System.Linq.Dynamic.Core
             {
                 ParameterInfo lastParameter = m.GetParameters().LastOrDefault();
 
-                return lastParameter != null ? ExpressionParser.GetUnderlyingType(lastParameter.ParameterType) == property.PropertyType : false;
+                return lastParameter != null ? TypeHelper.GetUnderlyingType(lastParameter.ParameterType) == property.PropertyType : false;
             });
 
             // Sum, Average

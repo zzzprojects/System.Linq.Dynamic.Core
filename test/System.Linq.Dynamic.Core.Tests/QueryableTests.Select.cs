@@ -62,6 +62,32 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Select_Dynamic_Add_Integers()
+        {
+            // Arrange
+            var range = new List<int> { 1, 2 };
+
+            // Act
+            IEnumerable rangeResult = range.AsQueryable().Select("it + 1");
+
+            // Assert
+            Assert.Equal(range.Select(x => x + 1).ToArray(), rangeResult.Cast<int>().ToArray());
+        }
+
+        [Fact]
+        public void Select_Dynamic_Add_Strings()
+        {
+            // Arrange
+            var range = new List<string> { "a", "b" };
+
+            // Act
+            IEnumerable rangeResult = range.AsQueryable().Select("it + \"c\"");
+
+            // Assert
+            Assert.Equal(range.Select(x => x + "c").ToArray(), rangeResult.Cast<string>().ToArray());
+        }
+
+        [Fact]
         public void Select_Dynamic_WithIncludes()
         {
             // Arrange
