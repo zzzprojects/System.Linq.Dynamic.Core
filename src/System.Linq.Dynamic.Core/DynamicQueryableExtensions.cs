@@ -86,20 +86,18 @@ namespace System.Linq.Dynamic.Core
                 return source.Provider.Execute(
                     Expression.Call(
                         null,
-                        aggregateMethod.MakeGenericMethod(new[] { source.ElementType }),
+                        aggregateMethod.MakeGenericMethod(source.ElementType),
                         new[] { source.Expression, Expression.Quote(selector) }));
             }
-            // Min, Max
-            else
-            {
-                aggregateMethod = methods.SingleOrDefault(m => m.Name == function && m.GetGenericArguments().Length == 2);
 
-                return source.Provider.Execute(
-                    Expression.Call(
-                        null,
-                        aggregateMethod.MakeGenericMethod(new[] { source.ElementType, property.PropertyType }),
-                        new[] { source.Expression, Expression.Quote(selector) }));
-            }
+            // Min, Max
+            aggregateMethod = methods.SingleOrDefault(m => m.Name == function && m.GetGenericArguments().Length == 2);
+
+            return source.Provider.Execute(
+                Expression.Call(
+                    null,
+                    aggregateMethod.MakeGenericMethod(source.ElementType, property.PropertyType),
+                    new[] { source.Expression, Expression.Quote(selector) }));
         }
         #endregion Aggregate
 
@@ -130,6 +128,7 @@ namespace System.Linq.Dynamic.Core
         /// Determines whether a sequence contains any elements.
         /// </summary>
         /// <param name="source">A sequence to check for being empty.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <example>
@@ -141,15 +140,21 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
-        public static bool Any([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static bool Any([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, config, args);
 
             return Execute<bool>(_anyPredicate, source, lambda);
+        }
+
+        /// <inheritdoc cref="Any(IQueryable, ParsingConfig, string, object[])"/>
+        public static bool Any([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            return Any(source, null, predicate, args);
         }
 
         /// <summary>
@@ -218,6 +223,7 @@ namespace System.Linq.Dynamic.Core
         /// Returns the number of elements in a sequence.
         /// </summary>
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <example>
@@ -229,15 +235,21 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
-        public static int Count([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static int Count([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, config, args);
 
             return Execute<int>(_countPredicate, source, lambda);
+        }
+
+        /// <inheritdoc cref="Count(IQueryable, ParsingConfig, string, object[])"/>
+        public static int Count([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            return Count(source, null, predicate, args);
         }
 
         /// <summary>
@@ -1607,7 +1619,7 @@ namespace System.Linq.Dynamic.Core
             return (IQueryable<TSource>)Where((IQueryable)source, config, predicate, args);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="DynamicQueryableExtensions.Where{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])"/>
         public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string predicate, params object[] args)
         {
             return Where(source, null, predicate, args);
@@ -1630,7 +1642,7 @@ namespace System.Linq.Dynamic.Core
         /// var result5 = queryable.Where("StringProperty = @0", "abc");
         /// </code>
         /// </example>
-        public static IQueryable Where([NotNull] this IQueryable source, ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static IQueryable Where([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
@@ -1642,7 +1654,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery(optimized);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="DynamicQueryableExtensions.Where(IQueryable, ParsingConfig, string, object[])"/>
         public static IQueryable Where([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
         {
             return Where(source, null, predicate, args);

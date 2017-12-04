@@ -88,7 +88,10 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                     Select(p => (MethodBase)p.GetMethod);
 #endif
                     int count = FindBestMethod(methods, args, out method);
-                    if (count != 0) return count;
+                    if (count != 0)
+                    {
+                        return count;
+                    }
                 }
             }
 
@@ -98,14 +101,25 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         static bool IsApplicable(MethodData method, Expression[] args)
         {
-            if (method.Parameters.Length != args.Length) return false;
+            if (method.Parameters.Length != args.Length)
+            {
+                return false;
+            }
+
             Expression[] promotedArgs = new Expression[args.Length];
             for (int i = 0; i < args.Length; i++)
             {
                 ParameterInfo pi = method.Parameters[i];
-                if (pi.IsOut) return false;
+                if (pi.IsOut)
+                {
+                    return false;
+                }
+
                 Expression promoted = ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
-                if (promoted == null) return false;
+                if (promoted == null)
+                {
+                    return false;
+                }
                 promotedArgs[i] = promoted;
             }
             method.Args = promotedArgs;
@@ -121,15 +135,21 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
                 // If second is better, return false
                 if (result == CompareConversionType.Second)
+                {
                     return false;
+                }
 
                 // If first is better, return true
                 if (result == CompareConversionType.First)
+                {
                     return true;
+                }
 
                 // If both are same, just set better to true and continue
                 if (result == CompareConversionType.Both)
+                {
                     better = true;
+                }
             }
 
             return better;
@@ -140,18 +160,39 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         // Return "Both" if neither conversion is better
         static CompareConversionType CompareConversions(Type source, Type first, Type second)
         {
-            if (first == second) return CompareConversionType.Both;
-            if (source == first) return CompareConversionType.First;
-            if (source == second) return CompareConversionType.Second;
+            if (first == second)
+            {
+                return CompareConversionType.Both;
+            }
+            if (source == first)
+            {
+                return CompareConversionType.First;
+            }
+            if (source == second)
+            {
+                return CompareConversionType.Second;
+            }
 
             bool firstIsCompatibleWithSecond = TypeHelper.IsCompatibleWith(first, second);
             bool secondIsCompatibleWithFirst = TypeHelper.IsCompatibleWith(second, first);
 
-            if (firstIsCompatibleWithSecond && !secondIsCompatibleWithFirst) return CompareConversionType.First;
-            if (secondIsCompatibleWithFirst && !firstIsCompatibleWithSecond) return CompareConversionType.Second;
+            if (firstIsCompatibleWithSecond && !secondIsCompatibleWithFirst)
+            {
+                return CompareConversionType.First;
+            }
+            if (secondIsCompatibleWithFirst && !firstIsCompatibleWithSecond)
+            {
+                return CompareConversionType.Second;
+            }
 
-            if (TypeHelper.IsSignedIntegralType(first) && TypeHelper.IsUnsignedIntegralType(second)) return CompareConversionType.First;
-            if (TypeHelper.IsSignedIntegralType(second) && TypeHelper.IsUnsignedIntegralType(first)) return CompareConversionType.Second;
+            if (TypeHelper.IsSignedIntegralType(first) && TypeHelper.IsUnsignedIntegralType(second))
+            {
+                return CompareConversionType.First;
+            }
+            if (TypeHelper.IsSignedIntegralType(second) && TypeHelper.IsUnsignedIntegralType(first))
+            {
+                return CompareConversionType.Second;
+            }
 
             return CompareConversionType.Both;
         }
@@ -160,7 +201,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         {
             if (type.GetTypeInfo().IsInterface)
             {
-                List<Type> types = new List<Type>();
+                var types = new List<Type>();
                 AddInterface(types, type);
                 return types;
             }
