@@ -27,10 +27,10 @@ namespace System.Linq.Dynamic.Core.Parser
         private readonly Dictionary<string, object> _internals;
         private readonly Dictionary<string, object> _symbols;
 
-        IDictionary<string, object> _externals;
-        ParameterExpression _it;
-        ParameterExpression _parent;
-        ParameterExpression _root;
+        private IDictionary<string, object> _externals;
+        private ParameterExpression _it;
+        private ParameterExpression _parent;
+        private ParameterExpression _root;
         private Type _resultType;
         private bool _createParameterCtor;
 

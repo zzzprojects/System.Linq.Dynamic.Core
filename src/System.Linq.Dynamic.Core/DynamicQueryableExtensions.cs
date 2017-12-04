@@ -146,7 +146,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(predicate, nameof(predicate));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, config, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
             return Execute<bool>(_anyPredicate, source, lambda);
         }
@@ -241,7 +241,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(predicate, nameof(predicate));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, config, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
             return Execute<int>(_countPredicate, source, lambda);
         }
@@ -1648,7 +1648,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(predicate, nameof(predicate));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, typeof(bool), predicate, config, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(bool), predicate, args);
 
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);

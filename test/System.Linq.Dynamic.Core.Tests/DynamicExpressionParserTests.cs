@@ -135,7 +135,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             string stringExpression = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new System.Linq.Dynamic.Core.Tests.DynamicExpressionParserTests+ComplexParseLambda3Result{j.Key.Age, j.Sum(k => k.Income) As TotalIncome})";
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, stringExpression, config, externals);
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(config, null, stringExpression, externals);
             Delegate del = expression.Compile();
             IEnumerable<dynamic> result = del.DynamicInvoke() as IEnumerable<dynamic>;
 
