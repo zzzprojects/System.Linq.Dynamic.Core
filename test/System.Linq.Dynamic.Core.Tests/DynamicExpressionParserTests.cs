@@ -334,6 +334,14 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
+        {
+            var config = new ParsingConfig();
+            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(Boolean), "Property1 == \"\"");
+            Assert.Equal(typeof(Boolean), expression.Body.Type);
+        }
+
+        [Fact]
         public void ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
             string expectedRightValue = "\"test \\\"string\"";

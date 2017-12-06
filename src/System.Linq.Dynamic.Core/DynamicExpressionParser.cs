@@ -135,7 +135,22 @@ namespace System.Linq.Dynamic.Core
         [PublicAPI]
         public static LambdaExpression ParseLambda([NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, string expression, params object[] values)
         {
-            return ParseLambda(true, parameters, resultType, expression, values);
+            return ParseLambda(null, true, parameters, resultType, expression, values);
+        }
+
+        /// <summary>
+        /// Parses an expression into a LambdaExpression. (Also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.)
+        /// </summary>
+        /// <param name="parsingConfig">The Configuration for the parsing.</param>
+        /// <param name="parameters">A array from ParameterExpressions.</param>
+        /// <param name="resultType">Type of the result. If not specified, it will be generated dynamically.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
+        /// <returns>The generated <see cref="LambdaExpression"/></returns>
+        [PublicAPI]
+        public static LambdaExpression ParseLambda([CanBeNull] ParsingConfig parsingConfig, [NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, string expression, params object[] values)
+        {
+            return ParseLambda(parsingConfig, true, parameters, resultType, expression, values);
         }
 
         /// <summary>
