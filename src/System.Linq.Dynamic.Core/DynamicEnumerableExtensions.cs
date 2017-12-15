@@ -65,11 +65,11 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(type, nameof(type));
 
-            object result = ToDynamicArrayGenericMethod.MakeGenericMethod(type).Invoke(source, new object[] { source });
+            IEnumerable result = (IEnumerable)ToDynamicArrayGenericMethod.MakeGenericMethod(type).Invoke(source, new object[] { source });
 #if NET35
-            return (object[])result;
+            return CastToArray<object>(result);
 #else
-            return (dynamic[])result;
+            return CastToArray<dynamic>(result);
 #endif
         }
 

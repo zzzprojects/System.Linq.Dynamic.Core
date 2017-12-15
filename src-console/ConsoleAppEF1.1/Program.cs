@@ -11,6 +11,14 @@ namespace ConsoleAppEF1
         {
             using (var db = new MyDbContext())
             {
+                var all = new
+                {
+                    test1 = new List<int> { 1, 2, 3 }.ToDynamicList(typeof(int)),
+                    test2 = new List<dynamic> { 4, 5, 6 }.ToDynamicList(typeof(int)),
+                    test3 = new List<object> { 7, 8, 9 }.ToDynamicList(typeof(int))
+                };
+                Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
+
                 var persons = new List<Person>
                 {
                     new Person { Name = "a", Age = 18, Address = new Address { Street = "s1" } },
