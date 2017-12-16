@@ -1,3 +1,10 @@
+# 1.0.8.0 (16 December 2017)
+
+ - [#127](https://github.com/StefH/System.Linq.Dynamic.Core/pull/127) - Refactored Parser contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+
+Commits: bd69f2d328...02fd83b24b
+
+
 # 1.0.7.13 (29 November 2017)
 
  - [#125](https://github.com/StefH/System.Linq.Dynamic.Core/issues/125) - Not compatable with dotnet Core 2. +fix
