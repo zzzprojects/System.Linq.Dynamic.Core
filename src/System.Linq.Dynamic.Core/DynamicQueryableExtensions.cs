@@ -10,6 +10,7 @@ using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
+using System.Linq.Dynamic.Core.Parser;
 #if WINDOWS_APP
 using System;
 using System.Linq;
@@ -76,7 +77,7 @@ namespace System.Linq.Dynamic.Core
             {
                 ParameterInfo lastParameter = m.GetParameters().LastOrDefault();
 
-                return lastParameter != null ? ExpressionParser.GetUnderlyingType(lastParameter.ParameterType) == property.PropertyType : false;
+                return lastParameter != null ? TypeHelper.GetUnderlyingType(lastParameter.ParameterType) == property.PropertyType : false;
             });
 
             // Sum, Average
@@ -85,20 +86,18 @@ namespace System.Linq.Dynamic.Core
                 return source.Provider.Execute(
                     Expression.Call(
                         null,
-                        aggregateMethod.MakeGenericMethod(new[] { source.ElementType }),
+                        aggregateMethod.MakeGenericMethod(source.ElementType),
                         new[] { source.Expression, Expression.Quote(selector) }));
             }
-            // Min, Max
-            else
-            {
-                aggregateMethod = methods.SingleOrDefault(m => m.Name == function && m.GetGenericArguments().Length == 2);
 
-                return source.Provider.Execute(
-                    Expression.Call(
-                        null,
-                        aggregateMethod.MakeGenericMethod(new[] { source.ElementType, property.PropertyType }),
-                        new[] { source.Expression, Expression.Quote(selector) }));
-            }
+            // Min, Max
+            aggregateMethod = methods.SingleOrDefault(m => m.Name == function && m.GetGenericArguments().Length == 2);
+
+            return source.Provider.Execute(
+                Expression.Call(
+                    null,
+                    aggregateMethod.MakeGenericMethod(source.ElementType, property.PropertyType),
+                    new[] { source.Expression, Expression.Quote(selector) }));
         }
         #endregion Aggregate
 
@@ -129,6 +128,7 @@ namespace System.Linq.Dynamic.Core
         /// Determines whether a sequence contains any elements.
         /// </summary>
         /// <param name="source">A sequence to check for being empty.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <example>
@@ -140,15 +140,21 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
-        public static bool Any([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static bool Any([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
             return Execute<bool>(_anyPredicate, source, lambda);
+        }
+
+        /// <inheritdoc cref="Any(IQueryable, ParsingConfig, string, object[])"/>
+        public static bool Any([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            return Any(source, null, predicate, args);
         }
 
         /// <summary>
@@ -217,6 +223,7 @@ namespace System.Linq.Dynamic.Core
         /// Returns the number of elements in a sequence.
         /// </summary>
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <example>
@@ -228,15 +235,21 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
-        public static int Count([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static int Count([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
             return Execute<int>(_countPredicate, source, lambda);
+        }
+
+        /// <inheritdoc cref="Count(IQueryable, ParsingConfig, string, object[])"/>
+        public static int Count([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            return Count(source, null, predicate, args);
         }
 
         /// <summary>
@@ -1585,6 +1598,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A <see cref="IQueryable{TSource}"/> to filter.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="predicate">An expression string to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable{TSource}"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
@@ -1597,18 +1611,25 @@ namespace System.Linq.Dynamic.Core
         /// var result5 = queryable.Where("StringProperty = @0", "abc");
         /// </code>
         /// </example>
-        public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string predicate, params object[] args)
+        public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
 
-            return (IQueryable<TSource>)Where((IQueryable)source, predicate, args);
+            return (IQueryable<TSource>)Where((IQueryable)source, config, predicate, args);
+        }
+
+        /// <inheritdoc cref="DynamicQueryableExtensions.Where{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])"/>
+        public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string predicate, params object[] args)
+        {
+            return Where(source, null, predicate, args);
         }
 
         /// <summary>
         /// Filters a sequence of values based on a predicate.
         /// </summary>
         /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="predicate">An expression string to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
@@ -1621,16 +1642,22 @@ namespace System.Linq.Dynamic.Core
         /// var result5 = queryable.Where("StringProperty = @0", "abc");
         /// </code>
         /// </example>
-        public static IQueryable Where([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static IQueryable Where([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
 
             bool createParameterCtor = source.IsLinqToObjects();
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, typeof(bool), predicate, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(bool), predicate, args);
 
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
+        }
+
+        /// <inheritdoc cref="DynamicQueryableExtensions.Where(IQueryable, ParsingConfig, string, object[])"/>
+        public static IQueryable Where([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            return Where(source, null, predicate, args);
         }
 
         /// <summary>
@@ -1664,12 +1691,12 @@ namespace System.Linq.Dynamic.Core
 
                 //}
 
-                if (ExpressionParser.IsNullableType(outerSelectorReturnType) && !ExpressionParser.IsNullableType(innerSelectorReturnType))
+                if (TypeHelper.IsNullableType(outerSelectorReturnType) && !TypeHelper.IsNullableType(innerSelectorReturnType))
                 {
                     innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
                     innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
                 }
-                else if (!ExpressionParser.IsNullableType(outerSelectorReturnType) && ExpressionParser.IsNullableType(innerSelectorReturnType))
+                else if (!TypeHelper.IsNullableType(outerSelectorReturnType) && TypeHelper.IsNullableType(innerSelectorReturnType))
                 {
                     outerSelectorReturnType = ExpressionParser.ToNullableType(outerSelectorReturnType);
                     outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);

@@ -21,7 +21,9 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         public virtual HashSet<Type> GetCustomTypes()
         {
             if (_customTypes != null)
+            {
                 return _customTypes;
+            }
 
             IEnumerable<Assembly> assemblies = _assemblyHelper.GetAssemblies();
             _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));

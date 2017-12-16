@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp_net452_EF6.Entities;
 using System.Linq.Dynamic.Core;
+using Newtonsoft.Json;
 
 namespace ConsoleApp_net452_EF6
 {
@@ -9,6 +11,14 @@ namespace ConsoleApp_net452_EF6
     {
         static void Main(string[] args)
         {
+            var all = new
+            {
+                test1 = new List<int> { 1, 2, 3 }.ToDynamicList(typeof(int)),
+                test2 = new List<dynamic> { 4, 5, 6 }.ToDynamicList(typeof(int)),
+                test3 = new List<object> { 7, 8, 9 }.ToDynamicList(typeof(int))
+            };
+
+            Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
             using (var context = new KendoGridDbContext())
             {
                 string search = "2";

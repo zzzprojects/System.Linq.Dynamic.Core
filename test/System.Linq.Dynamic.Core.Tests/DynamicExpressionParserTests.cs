@@ -39,11 +39,11 @@ namespace System.Linq.Dynamic.Core.Tests
             public virtual HashSet<Type> GetCustomTypes()
             {
                 if (_customTypes != null)
+                {
                     return _customTypes;
+                }
 
-                _customTypes =
-                    new HashSet<Type>(
-                        FindTypesMarkedWithDynamicLinqTypeAttribute(new[] {this.GetType().GetTypeInfo().Assembly}));
+                _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }));
                 return _customTypes;
             }
         }
@@ -119,7 +119,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_Complex_3()
         {
-            GlobalConfig.CustomTypeProvider = new TestCustomTypeProvider();
+            var config = new ParsingConfig
+            {
+                CustomTypeProvider = new TestCustomTypeProvider()
+            };
 
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -127,23 +130,23 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var externals = new Dictionary<string, object>
             {
-                { "Users", qry }
+                {"Users", qry}
             };
 
             // Act
-            string query = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new System.Linq.Dynamic.Core.Tests.DynamicExpressionParserTests+ComplexParseLambda3Result{j.Key.Age, j.Sum(k => k.Income) As TotalIncome})";
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            string stringExpression = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new System.Linq.Dynamic.Core.Tests.DynamicExpressionParserTests+ComplexParseLambda3Result{j.Key.Age, j.Sum(k => k.Income) As TotalIncome})";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(config, null, stringExpression, externals);
             Delegate del = expression.Compile();
             IEnumerable<dynamic> result = del.DynamicInvoke() as IEnumerable<dynamic>;
 
-            var expected = qry.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new ComplexParseLambda3Result { Age = j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Cast<dynamic>().ToArray();
+            var expected = qry.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age)
+                .Select(j => new ComplexParseLambda3Result { Age = j.Key.Age, TotalIncome = j.Sum(k => k.Income) })
+                .Cast<dynamic>().ToArray();
 
             // Assert
             Check.That(result).IsNotNull();
             Check.That(result).HasSize(expected.Length);
             Check.That(result.ToArray()[0]).Equals(expected[0]);
-
-            GlobalConfig.CustomTypeProvider = null;
         }
 
         [Fact]
@@ -326,6 +329,14 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
+            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(Boolean), "Property1 == \"\"");
+            Assert.Equal(typeof(Boolean), expression.Body.Type);
+        }
+
+        [Fact]
+        public void ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
+        {
+            var config = new ParsingConfig();
             var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(Boolean), "Property1 == \"\"");
             Assert.Equal(typeof(Boolean), expression.Body.Type);
         }

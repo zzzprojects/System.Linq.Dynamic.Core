@@ -21,13 +21,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var claim1 = new Claim { Balance = 100, Tags = new List<string> { "Blah", "Blah Blah" } };
             var claim2 = new Claim { Balance = 500, Tags = new List<string> { "Dummy Tag", "Dummy tag 1", "New" } };
 
-            var claims = new List<Claim>() { claim1, claim2 };
+            var claims = new List<Claim> { claim1, claim2 };
 
             var tags = new List<string> { "New", "Blah" };
             var parameters = new List<object> { tags };
             var query = claims.AsQueryable().Where("Tags.Any(@0.Contains(it)) AND Balance > 100", parameters.ToArray()).ToArray();
 
-            Check.That(query).ContainsExactly(new [] { claim2 });
+            Check.That(query).ContainsExactly(claim2);
         }
 
         /// <summary>

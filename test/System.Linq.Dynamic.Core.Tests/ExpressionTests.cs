@@ -342,51 +342,18 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_ContextKeywordsAndSymbols()
-        {
-            try
-            {
-                //Arrange
-                int[] values = { 1, 2, 3, 4, 5 };
-
-                //Act
-                GlobalConfig.AreContextKeywordsEnabled = false;
-                Assert.Throws<ParseException>(() => values.AsQueryable().Where("it = 2"));
-                Assert.Throws<ParseException>(() => values.AsQueryable().Where("root = 2"));
-                values.AsQueryable().Where("$ = 2");
-                values.AsQueryable().Where("~ = 2");
-                GlobalConfig.AreContextKeywordsEnabled = true;
-
-                var qry1 = values.AsQueryable().Where("it = 2");
-                var qry2 = values.AsQueryable().Where("$ = 2");
-
-                //Assert
-                Assert.Equal(2, qry1.Single());
-                Assert.Equal(2, qry2.Single());
-            }
-            finally
-            {
-                GlobalConfig.AreContextKeywordsEnabled = true;
-            }
-        }
-
-        [Fact]
         public void ExpressionTests_DateTimeString()
         {
-#if NETSTANDARD
-            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
-
-            //Arrange
+            // Arrange
             var lst = new List<DateTime> { DateTime.Today, DateTime.Today.AddDays(1), DateTime.Today.AddDays(2) };
             var qry = lst.AsQueryable();
 
-            //Act
+            // Act
             var testValue = lst[0].ToString(CultureInfo.InvariantCulture);
             var result1 = qry.Where("it = @0", testValue);
             var result2 = qry.Where("@0 = it", testValue);
 
-            //Assert
+            // Assert
             Assert.Equal(lst[0], result1.Single());
             Assert.Equal(lst[0], result2.Single());
         }
@@ -450,9 +417,9 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry3 = p.Where("@0.Any($ == ~.Item3)", qry);
 
             //Assert
-            Assert.Equal(qry1.Count(), 2);
-            Assert.Equal(qry2.Count(), 2);
-            Assert.Equal(qry3.Count(), 2);
+            Assert.Equal(2, qry1.Count());
+            Assert.Equal(2, qry2.Count());
+            Assert.Equal(2, qry3.Count());
         }
 
         [Fact]
@@ -556,8 +523,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Enum()
         {
-#if NETSTANDARD
-            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            var config = new ParsingConfig();
+#if NETSTANDARD            
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             // Arrange
@@ -565,26 +533,26 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = lst.AsQueryable();
 
             // Act
-            var resultLessThan = qry.Where("it < TestEnum.Var4");
-            var resultLessThanEqual = qry.Where("it <= TestEnum.Var4");
+            var resultLessThan = qry.Where(config, "it < TestEnum.Var4");
+            var resultLessThanEqual = qry.Where(config, "it <= TestEnum.Var4");
 
-            var resultGreaterThan = qry.Where("TestEnum.Var4 > it");
-            var resultGreaterThanEqual = qry.Where("TestEnum.Var4 >= it");
+            var resultGreaterThan = qry.Where(config, "TestEnum.Var4 > it");
+            var resultGreaterThanEqual = qry.Where(config, "TestEnum.Var4 >= it");
 
-            var resultEqualItLeft = qry.Where("it = Var5");
-            var resultEqualItRight = qry.Where("Var5 = it");
+            var resultEqualItLeft = qry.Where(config, "it = Var5");
+            var resultEqualItRight = qry.Where(config, "Var5 = it");
 
-            var resultEqualEnumParamLeft = qry.Where("@0 = it", TestEnum.Var5);
-            var resultEqualEnumParamRight = qry.Where("it = @0", TestEnum.Var5);
+            var resultEqualEnumParamLeft = qry.Where(config, "@0 = it", TestEnum.Var5);
+            var resultEqualEnumParamRight = qry.Where(config, "it = @0", TestEnum.Var5);
 
             var resultEqualIntParamLeft = qry.Where("@0 = it", 8);
             var resultEqualIntParamRight = qry.Where("it = @0", 8);
 
-            var resultEqualStringParamRight = qry.Where("it = @0", "Var5");
-            var resultEqualStringParamLeft = qry.Where("@0 = it", "Var5");
+            var resultEqualStringParamRight = qry.Where(config, "it = @0", "Var5");
+            var resultEqualStringParamLeft = qry.Where(config, "@0 = it", "Var5");
 
-            var resultEqualStringMixedCaseParamLeft = qry.Where("@0 = it", "vAR5");
-            var resultEqualStringMixedCaseParamRight = qry.Where("it = @0", "vAR5");
+            var resultEqualStringMixedCaseParamLeft = qry.Where(config, "@0 = it", "vAR5");
+            var resultEqualStringMixedCaseParamRight = qry.Where(config, "it = @0", "vAR5");
 
 
             // Assert
@@ -612,22 +580,23 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Enum_Nullable()
         {
+            var config = new ParsingConfig();
 #if NETSTANDARD
-            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             //Act
-            var result1a = new[] { TestEnum.Var1 }.AsQueryable().Where("it = @0", (TestEnum?)TestEnum.Var1);
-            var result1b = new[] { TestEnum.Var1 }.AsQueryable().Where("@0 = it", (TestEnum?)TestEnum.Var1);
-            var result2a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("it = @0", TestEnum.Var1);
-            var result2b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("@0 = it", TestEnum.Var1);
-            var result3a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("it = @0", (TestEnum?)TestEnum.Var1);
-            var result3b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("@0 = it", (TestEnum?)TestEnum.Var1);
+            var result1a = new[] { TestEnum.Var1 }.AsQueryable().Where(config, "it = @0", (TestEnum?)TestEnum.Var1);
+            var result1b = new[] { TestEnum.Var1 }.AsQueryable().Where(config, "@0 = it", (TestEnum?)TestEnum.Var1);
+            var result2a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "it = @0", TestEnum.Var1);
+            var result2b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "@0 = it", TestEnum.Var1);
+            var result3a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "it = @0", (TestEnum?)TestEnum.Var1);
+            var result3b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "@0 = it", (TestEnum?)TestEnum.Var1);
 
-            var result10a = new[] { TestEnum.Var1 }.AsQueryable().Where("it = @0", "Var1");
-            var result10b = new[] { TestEnum.Var1 }.AsQueryable().Where("@0 = it", "Var1");
-            var result11a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("it = @0", "Var1");
-            var result11b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where("@0 = it", "Var1");
+            var result10a = new[] { TestEnum.Var1 }.AsQueryable().Where(config, "it = @0", "Var1");
+            var result10b = new[] { TestEnum.Var1 }.AsQueryable().Where(config, "@0 = it", "Var1");
+            var result11a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "it = @0", "Var1");
+            var result11b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "@0 = it", "Var1");
 
             //Assert
             Assert.Equal(TestEnum.Var1, result1a.Single());
@@ -700,8 +669,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Guid_CompareTo_String()
         {
+            var config = new ParsingConfig();
 #if NETSTANDARD
-            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             //Arrange
@@ -710,11 +680,11 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             string testValue = lst[0].ToString();
-            var result1a = qry.Where("it = \"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\"");
-            var result1b = qry.Where("it = @0", testValue);
+            var result1a = qry.Where(config, "it = \"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\"");
+            var result1b = qry.Where(config, "it = @0", testValue);
 
-            var result2a = qry.Where("\"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\" = it");
-            var result2b = qry.Where("@0 = it", testValue);
+            var result2a = qry.Where(config, "\"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\" = it");
+            var result2b = qry.Where(config, "@0 = it", testValue);
 
             //Assert
             Assert.Equal(lst[0], result1a.Single());
@@ -823,8 +793,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_In_Enum()
         {
+            var config = new ParsingConfig();
 #if NETSTANDARD
-            GlobalConfig.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
             // Arrange
             var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
@@ -834,8 +805,8 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = qry.Where(x => new[] { TestEnum.Var1, TestEnum.Var2 }.Contains(x.TestEnum)).ToArray();
-            var result1 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
-            var result2 = qry.Where("it.TestEnum in (0, 1)").ToArray();
+            var result1 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")", config).ToArray();
+            var result2 = qry.Where("it.TestEnum in (0, 1)", config).ToArray();
 
             // Assert
             Check.That(result1).ContainsExactly(expected);
@@ -849,7 +820,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = new short[] { 1, 2, 3, 4, 5, 6, 7 }.AsQueryable();
 
             // Act
-            var result = qry.Where("it in (1,2)");
+            var result = qry.Where("it in (1, 2)");
             var resultExpected = qry.Where(x => x == 1 || x == 2);
 
             // Assert

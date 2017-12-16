@@ -27,7 +27,16 @@ namespace ConsoleAppEF2
 
         static void Main(string[] args)
         {
-            GlobalConfig.CustomTypeProvider = new C();
+            var all = new 
+            {
+                test1 = new List<int> { 1, 2, 3 }.ToDynamicList(typeof(int)),
+                test2 = new List<dynamic> { 4, 5, 6 }.ToDynamicList(typeof(int)),
+                test3 = new List<object> { 7, 8, 9 }.ToDynamicList(typeof(int))
+            };
+            Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
+
+            var config = new ParsingConfig();
+            config.CustomTypeProvider = new C();
 
             var context = new TestContext();
 
@@ -42,7 +51,7 @@ namespace ConsoleAppEF2
                 context.SaveChanges();
             }
 
-            var carFirstOrDefault = context.Cars.Where("Brand == \"Ford\"");
+            var carFirstOrDefault = context.Cars.Where(config, "Brand == \"Ford\"");
             Console.WriteLine("carFirstOrDefault {0}", JsonConvert.SerializeObject(carFirstOrDefault, Formatting.Indented));
 
             var carsLike1 =
@@ -54,16 +63,16 @@ namespace ConsoleAppEF2
             var cars2Like = context.Cars.Where(c => EF.Functions.Like(c.Brand, "%a%"));
             Console.WriteLine("cars2Like {0}", JsonConvert.SerializeObject(cars2Like, Formatting.Indented));
 
-            var dynamicCarsLike1 = context.Cars.Where("TestContext.Like(Brand, \"%a%\")");
+            var dynamicCarsLike1 = context.Cars.Where(config, "TestContext.Like(Brand, \"%a%\")");
             Console.WriteLine("dynamicCarsLike1 {0}", JsonConvert.SerializeObject(dynamicCarsLike1, Formatting.Indented));
 
-            var dynamicCarsLike2 = context.Cars.Where("TestContext.Like(Brand, \"%d%\")");
+            var dynamicCarsLike2 = context.Cars.Where(config, "TestContext.Like(Brand, \"%d%\")");
             Console.WriteLine("dynamicCarsLike2 {0}", JsonConvert.SerializeObject(dynamicCarsLike2, Formatting.Indented));
 
-            var dynamicFunctionsLike1 = context.Cars.Where("DynamicFunctions.Like(Brand, \"%a%\")");
+            var dynamicFunctionsLike1 = context.Cars.Where(config, "DynamicFunctions.Like(Brand, \"%a%\")");
             Console.WriteLine("dynamicFunctionsLike1 {0}", JsonConvert.SerializeObject(dynamicFunctionsLike1, Formatting.Indented));
 
-            var dynamicFunctionsLike2 = context.Cars.Where("DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
+            var dynamicFunctionsLike2 = context.Cars.Where(config, "DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
             Console.WriteLine("dynamicFunctionsLike2 {0}", JsonConvert.SerializeObject(dynamicFunctionsLike2, Formatting.Indented));
         }
     }

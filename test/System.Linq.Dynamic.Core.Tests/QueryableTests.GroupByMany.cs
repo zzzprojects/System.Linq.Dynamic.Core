@@ -23,7 +23,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var sel = lst.AsQueryable().GroupByMany(x => x.Item1, x => x.Item2);
 
             Assert.Equal(2, sel.Count());
-            Assert.Equal(1, sel.First().Subgroups.Count());
+            Assert.Single(sel.First().Subgroups);
             Assert.Equal(2, sel.Skip(1).First().Subgroups.Count());
         }
 
