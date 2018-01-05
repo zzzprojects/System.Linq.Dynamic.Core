@@ -1,3 +1,12 @@
+# 1.0.8.1 (05 January 2018)
+
+ - [#135](https://github.com/StefH/System.Linq.Dynamic.Core/pull/135) - Add DbGeography to predefined types to allow advanced spatial queries. contributed by ([czielin](https://github.com/czielin))
+ - [#134](https://github.com/StefH/System.Linq.Dynamic.Core/issues/134) - Accessing DbGeography methods/properties
+ - [#129](https://github.com/StefH/System.Linq.Dynamic.Core/issues/129) - ToDynamicList/ToDynamicArray cannot actually cast to specified type in .net core 2 +fix
+ 
+Commits: e584361eaa...e584361eaa
+
+
 # 1.0.8.0 (16 December 2017)
 
  - [#127](https://github.com/StefH/System.Linq.Dynamic.Core/pull/127) - Refactored Parser contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
