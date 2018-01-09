@@ -1213,11 +1213,12 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
-        //[Fact]
-        //[Trait("Issue", "136")]
+#if !NETCOREAPP1_1
+        [Fact]
+        [Trait("Issue", "136")]
         public void ExpressionTests_Select_ExpandoObjects()
         {
-            //Arrange
+            // Arrange
             dynamic a = new ExpandoObject();
             a.Name = "a";
             a.BlogId = 100;
@@ -1227,12 +1228,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var list = new List<dynamic> { a, b };
             IQueryable qry = list.AsQueryable();
 
+            // Act
             var result = qry.Select("it").Select("BlogId");
 
-            //Assert
+            // Assert
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
-
+#endif
         [Fact]
         public void ExpressionTests_Shift()
         {

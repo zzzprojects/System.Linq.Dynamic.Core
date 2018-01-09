@@ -1174,33 +1174,33 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (_parsingConfig != null && _parsingConfig.UseDynamicObjectClassForAnonymousTypes)
                 {
 #endif
-                    type = typeof(DynamicClass);
-                    Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
+                type = typeof(DynamicClass);
+                Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
 #if NET35 || NET40
                     ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetConstructors().First();
 #else
-                    ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
+                ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
 #endif
-                    var arrayIndexParams = new List<Expression>();
-                    for (int i = 0; i < expressions.Count; i++)
-                    {
-                        // Just convert the expression always to an object expression.
-                        UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
-                        NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
+                var arrayIndexParams = new List<Expression>();
+                for (int i = 0; i < expressions.Count; i++)
+                {
+                    // Just convert the expression always to an object expression.
+                    UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
+                    NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
 
-                        arrayIndexParams.Add(parameter);
-                    }
+                    arrayIndexParams.Add(parameter);
+                }
 
-                    // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
-                    NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
+                // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
+                NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
 
-                    // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
+                // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
 #if NET35 || NET40
                     ConstructorInfo constructor = type.GetConstructors().First();
 #else
-                    ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
+                ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
 #endif
-                    return Expression.New(constructor, newArrayExpression);
+                return Expression.New(constructor, newArrayExpression);
 #if !UAP10_0
                 }
 
@@ -1226,6 +1226,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 bindings[i] = Expression.Bind(type.GetProperty(properties[i].Name), expressions[i]);
             }
+
             return Expression.MemberInit(Expression.New(type), bindings);
         }
 
@@ -1406,10 +1407,10 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Constant(@enum);
             }
 
-#if NETFX_CORE
-            if (type == typeof(DynamicObjectClass))
+#if UAP10_0 || NETSTANDARD1_3
+            if (type == typeof(DynamicClass))
             {
-                return Expression.MakeIndex(instance, typeof(DynamicObjectClass).GetProperty("Item"), new[] { Expression.Constant(id) });
+                return Expression.MakeIndex(instance, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
             MemberInfo member = FindPropertyOrField(type, id, instance == null);
