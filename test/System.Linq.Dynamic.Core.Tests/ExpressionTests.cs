@@ -1213,8 +1213,8 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
-        [Fact]
-        [Trait("Issue", "136")]
+        //[Fact]
+        //[Trait("Issue", "136")]
         public void ExpressionTests_Select_ExpandoObjects()
         {
             //Arrange
