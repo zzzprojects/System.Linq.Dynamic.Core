@@ -1,9 +1,16 @@
+# 1.0.8.2 (09 January 2018)
+
+ - [#130](https://github.com/StefH/System.Linq.Dynamic.Core/issues/130) - BUG: Dynamic new in Where() causes NRE
+
+Commits: ca622f4e71...ca622f4e71
+
+
 # 1.0.8.1 (05 January 2018)
 
  - [#135](https://github.com/StefH/System.Linq.Dynamic.Core/pull/135) - Add DbGeography to predefined types to allow advanced spatial queries. contributed by ([czielin](https://github.com/czielin))
  - [#134](https://github.com/StefH/System.Linq.Dynamic.Core/issues/134) - Accessing DbGeography methods/properties
  - [#129](https://github.com/StefH/System.Linq.Dynamic.Core/issues/129) - ToDynamicList/ToDynamicArray cannot actually cast to specified type in .net core 2 +fix
- 
+
 Commits: e584361eaa...e584361eaa
 
 
