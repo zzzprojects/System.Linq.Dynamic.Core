@@ -1383,10 +1383,14 @@ namespace System.Linq.Dynamic.Core.Parser
                     case 1:
                         MethodInfo method = (MethodInfo)mb;
                         if (!_predefinedTypesHelper.IsPredefinedType(method.DeclaringType) && !(method.IsPublic && _predefinedTypesHelper.IsPredefinedType(method.ReturnType)))
+                        {
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType));
+                        }
 
                         if (method.ReturnType == typeof(void))
+                        {
                             throw ParseError(errorPos, Res.MethodIsVoid, id, TypeHelper.GetTypeName(method.DeclaringType));
+                        }
 
                         return Expression.Call(instance, method, args);
 
@@ -1409,14 +1413,28 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 #endif
             MemberInfo member = FindPropertyOrField(type, id, instance == null);
-            if (member is PropertyInfo property) return Expression.Property(instance, property);
-            if (member is FieldInfo field) return Expression.Field(instance, field);
+            if (member is PropertyInfo property)
+            {
+                return Expression.Property(instance, property);
+            }
 
-            if (type == typeof(object)) return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
+            if (member is FieldInfo field)
+            {
+                return Expression.Field(instance, field);
+            }
 
-            MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new Type[] { typeof(string) });
-            if (indexerMethod != null) return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+            if (type == typeof(object))
+            {
+                return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
+            }
+#endif
 
+            MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
+            if (indexerMethod != null)
+            {
+                return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+            }
 
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {

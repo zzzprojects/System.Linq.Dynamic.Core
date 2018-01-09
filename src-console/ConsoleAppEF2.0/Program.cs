@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
@@ -25,9 +26,32 @@ namespace ConsoleAppEF2
             }
         }
 
+        private static IEnumerable<dynamic> GetEnumerable()
+        {
+            var random = new Random((int)DateTime.Now.Ticks);
+
+            return Enumerable.Range(0, 10).Select(i => new
+            {
+                Id = i,
+                Value = random.Next(),
+            });
+        }
+
         static void Main(string[] args)
         {
-            var all = new 
+            IQueryable<dynamic> qry = GetEnumerable().AsQueryable();
+
+            var result = qry.Select("it").OrderBy("Value");
+            try
+            {
+                Console.WriteLine("result {0}", JsonConvert.SerializeObject(result, Formatting.Indented));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            var all = new
             {
                 test1 = new List<int> { 1, 2, 3 }.ToDynamicList(typeof(int)),
                 test2 = new List<dynamic> { 4, 5, 6 }.ToDynamicList(typeof(int)),
