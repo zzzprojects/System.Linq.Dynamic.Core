@@ -1213,7 +1213,8 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
-        //[Fact]
+        [Fact]
+        [Trait("Issue", "136")]
         public void ExpressionTests_Select_ExpandoObjects()
         {
             //Arrange
@@ -1222,7 +1223,7 @@ namespace System.Linq.Dynamic.Core.Tests
             a.BlogId = 100;
             dynamic b = new ExpandoObject();
             b.Name = "b";
-            b.BlogId = 100;
+            b.BlogId = 200;
             var list = new List<dynamic> { a, b };
             IQueryable qry = list.AsQueryable();
 

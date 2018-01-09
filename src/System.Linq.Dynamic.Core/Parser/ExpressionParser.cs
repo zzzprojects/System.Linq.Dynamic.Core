@@ -1409,27 +1409,25 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 #endif
             MemberInfo member = FindPropertyOrField(type, id, instance == null);
-            if (member == null)
+            if (member is PropertyInfo property) return Expression.Property(instance, property);
+            if (member is FieldInfo field) return Expression.Field(instance, field);
+
+            if (type == typeof(object)) return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
+
+            MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new Type[] { typeof(string) });
+            if (indexerMethod != null) return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+
+
+            if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {
-                if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
-                {
-                    // This might be an internal variable for use within a lambda expression, so store it as such
-                    _internals.Add(id, _it);
-                    _textParser.NextToken();
+                // This might be an internal variable for use within a lambda expression, so store it as such
+                _internals.Add(id, _it);
+                _textParser.NextToken();
 
-                    return ParseConditionalOperator();
-                }
-
-                throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
+                return ParseConditionalOperator();
             }
 
-            var property = member as PropertyInfo;
-            if (property != null)
-            {
-                return Expression.Property(instance, property);
-            }
-
-            return Expression.Field(instance, (FieldInfo)member);
+            throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
 
         Type FindType(string name)
@@ -1758,4 +1756,5 @@ namespace System.Linq.Dynamic.Core.Parser
             return new ParseException(string.Format(CultureInfo.CurrentCulture, format, args), pos);
         }
     }
+
 }
