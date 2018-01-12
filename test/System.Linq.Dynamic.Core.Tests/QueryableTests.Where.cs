@@ -122,7 +122,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             //Act
-            Assert.Throws<ParseException>(() => qry.Where("Id"));
+            Assert.Throws<InvalidOperationException>(() => qry.Where("Id"));
             Assert.Throws<ParseException>(() => qry.Where("Bad=3"));
             Assert.Throws<ParseException>(() => qry.Where("Id=123"));
 
