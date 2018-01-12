@@ -349,9 +349,9 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     var args = new[] { left };
 
-                    if (MethodFinder.FindMethod(typeof(IEnumerableSignatures), "Contains", false, args, out MethodBase containsSignature) != 1)
+                    if (MethodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, args, out MethodBase containsSignature) != 1)
                     {
-                        throw ParseError(op.Pos, Res.NoApplicableAggregate, "Contains");
+                        throw ParseError(op.Pos, Res.NoApplicableAggregate, nameof(IEnumerableSignatures.Contains));
                     }
 
                     var typeArgs = new[] { left.Type };
@@ -1153,14 +1153,10 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (newType != null)
             {
-                return Expression.NewArrayInit(
-                    newType,
-                    expressions.Select(expression => ExpressionPromoter.Promote(expression, newType, true, true)));
+                return Expression.NewArrayInit(newType, expressions.Select(expression => ExpressionPromoter.Promote(expression, newType, true, true)));
             }
 
-            return Expression.NewArrayInit(
-                expressions.All(expression => expression.Type == expressions[0].Type) ? expressions[0].Type : typeof(object),
-                expressions);
+            return Expression.NewArrayInit(expressions.All(expression => expression.Type == expressions[0].Type) ? expressions[0].Type : typeof(object), expressions);
         }
 
         private Expression CreateNewExpression(List<DynamicProperty> properties, List<Expression> expressions, Type newType)
@@ -1174,33 +1170,33 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (_parsingConfig != null && _parsingConfig.UseDynamicObjectClassForAnonymousTypes)
                 {
 #endif
-                type = typeof(DynamicClass);
-                Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
+                    type = typeof(DynamicClass);
+                    Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
 #if NET35 || NET40
                     ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetConstructors().First();
 #else
-                ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
+                    ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
 #endif
-                var arrayIndexParams = new List<Expression>();
-                for (int i = 0; i < expressions.Count; i++)
-                {
-                    // Just convert the expression always to an object expression.
-                    UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
-                    NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
+                    var arrayIndexParams = new List<Expression>();
+                    for (int i = 0; i < expressions.Count; i++)
+                    {
+                        // Just convert the expression always to an object expression.
+                        UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
+                        NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
 
-                    arrayIndexParams.Add(parameter);
-                }
+                        arrayIndexParams.Add(parameter);
+                    }
 
-                // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
-                NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
+                    // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
+                    NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
 
-                // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
+                    // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
 #if NET35 || NET40
                     ConstructorInfo constructor = type.GetConstructors().First();
 #else
-                ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
+                    ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
 #endif
-                return Expression.New(constructor, newArrayExpression);
+                    return Expression.New(constructor, newArrayExpression);
 #if !UAP10_0
                 }
 
@@ -1235,7 +1231,7 @@ namespace System.Linq.Dynamic.Core.Parser
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
             Expression[] args = ParseArgumentList();
-            if (MethodFinder.FindMethod(lambda.Type, "Invoke", false, args, out MethodBase _) != 1)
+            if (MethodFinder.FindMethod(lambda.Type, nameof(Expression.Invoke), false, args, out MethodBase _) != 1)
             {
                 throw ParseError(errorPos, Res.ArgsIncompatibleWithLambda);
             }

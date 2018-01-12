@@ -477,7 +477,7 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression elementLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, resultSelector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
-                typeof(Queryable), "GroupBy",
+                typeof(Queryable), nameof(Queryable.GroupBy),
                 new[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
                 source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda)));
 
@@ -635,7 +635,7 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression resultSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
 
             return outer.Provider.CreateQuery(Expression.Call(
-                typeof(Queryable), "GroupJoin",
+                typeof(Queryable), nameof(Queryable.GroupJoin),
                 new[] { outer.ElementType, innerType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
                 outer.Expression,
                 Expression.Constant(inner),
@@ -1146,9 +1146,13 @@ namespace System.Linq.Dynamic.Core
                 // SelectMany assumes that lambda.Body.Type is a generic type and throws an exception on
                 // lambda.Body.Type.GetGenericArguments()[0] when used over an array as GetGenericArguments() returns an empty array.
                 if (lambda.Body.Type.IsArray)
+                {
                     resultType = lambda.Body.Type.GetElementType();
+                }
                 else
+                {
                     resultType = lambda.Body.Type.GetGenericArguments()[0];
+                }
             }
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
@@ -1158,7 +1162,7 @@ namespace System.Linq.Dynamic.Core
             lambda = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters);
 
             var optimized = OptimizeExpression(Expression.Call(
-                typeof(Queryable), "SelectMany",
+                typeof(Queryable), nameof(Queryable.SelectMany),
                 new[] { source.ElementType, resultType },
                 source.Expression, Expression.Quote(lambda))
             );
@@ -1196,7 +1200,7 @@ namespace System.Linq.Dynamic.Core
             lambda = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters);
 
             var optimized = OptimizeExpression(Expression.Call(
-                typeof(Queryable), "SelectMany",
+                typeof(Queryable), nameof(Queryable.SelectMany),
                 new[] { source.ElementType, typeof(TResult) },
                 source.Expression, Expression.Quote(lambda))
             );
@@ -1285,7 +1289,7 @@ namespace System.Linq.Dynamic.Core
             Type resultLambdaResultType = resultSelectLambda.Body.Type;
 
             var optimized = OptimizeExpression(Expression.Call(
-                typeof(Queryable), "SelectMany",
+                typeof(Queryable), nameof(Queryable.SelectMany),
                 new[] { source.ElementType, sourceLambdaResultType, resultLambdaResultType },
                 source.Expression, Expression.Quote(sourceSelectLambda), Expression.Quote(resultSelectLambda))
             );
@@ -1309,7 +1313,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Single", new[] { source.ElementType }, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Single), new[] { source.ElementType }, source.Expression));
             return source.Provider.Execute(optimized);
         }
 
@@ -1370,7 +1374,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "SingleOrDefault", new[] { source.ElementType }, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.SingleOrDefault), new[] { source.ElementType }, source.Expression));
             return source.Provider.Execute(optimized);
         }
 
@@ -1478,7 +1482,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Sum", null, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Sum), null, source.Expression));
             return source.Provider.Execute(optimized);
         }
         #endregion Sum
@@ -1670,7 +1674,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(lambda, nameof(lambda));
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), "Where", new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
         }
         #endregion
