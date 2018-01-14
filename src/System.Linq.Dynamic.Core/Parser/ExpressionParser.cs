@@ -349,9 +349,9 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     var args = new[] { left };
 
-                    if (MethodFinder.FindMethod(typeof(IEnumerableSignatures), "Contains", false, args, out MethodBase containsSignature) != 1)
+                    if (MethodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, args, out MethodBase containsSignature) != 1)
                     {
-                        throw ParseError(op.Pos, Res.NoApplicableAggregate, "Contains");
+                        throw ParseError(op.Pos, Res.NoApplicableAggregate, nameof(IEnumerableSignatures.Contains));
                     }
 
                     var typeArgs = new[] { left.Type };
@@ -1153,14 +1153,10 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (newType != null)
             {
-                return Expression.NewArrayInit(
-                    newType,
-                    expressions.Select(expression => ExpressionPromoter.Promote(expression, newType, true, true)));
+                return Expression.NewArrayInit(newType, expressions.Select(expression => ExpressionPromoter.Promote(expression, newType, true, true)));
             }
 
-            return Expression.NewArrayInit(
-                expressions.All(expression => expression.Type == expressions[0].Type) ? expressions[0].Type : typeof(object),
-                expressions);
+            return Expression.NewArrayInit(expressions.All(expression => expression.Type == expressions[0].Type) ? expressions[0].Type : typeof(object), expressions);
         }
 
         private Expression CreateNewExpression(List<DynamicProperty> properties, List<Expression> expressions, Type newType)
@@ -1226,6 +1222,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 bindings[i] = Expression.Bind(type.GetProperty(properties[i].Name), expressions[i]);
             }
+
             return Expression.MemberInit(Expression.New(type), bindings);
         }
 
@@ -1234,7 +1231,7 @@ namespace System.Linq.Dynamic.Core.Parser
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
             Expression[] args = ParseArgumentList();
-            if (MethodFinder.FindMethod(lambda.Type, "Invoke", false, args, out MethodBase _) != 1)
+            if (MethodFinder.FindMethod(lambda.Type, nameof(Expression.Invoke), false, args, out MethodBase _) != 1)
             {
                 throw ParseError(errorPos, Res.ArgsIncompatibleWithLambda);
             }
@@ -1383,10 +1380,14 @@ namespace System.Linq.Dynamic.Core.Parser
                     case 1:
                         MethodInfo method = (MethodInfo)mb;
                         if (!_predefinedTypesHelper.IsPredefinedType(method.DeclaringType) && !(method.IsPublic && _predefinedTypesHelper.IsPredefinedType(method.ReturnType)))
+                        {
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType));
+                        }
 
                         if (method.ReturnType == typeof(void))
+                        {
                             throw ParseError(errorPos, Res.MethodIsVoid, id, TypeHelper.GetTypeName(method.DeclaringType));
+                        }
 
                         return Expression.Call(instance, method, args);
 
@@ -1402,34 +1403,46 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Constant(@enum);
             }
 
-#if NETFX_CORE
-            if (type == typeof(DynamicObjectClass))
+#if UAP10_0 || NETSTANDARD1_3
+            if (type == typeof(DynamicClass))
             {
-                return Expression.MakeIndex(instance, typeof(DynamicObjectClass).GetProperty("Item"), new[] { Expression.Constant(id) });
+                return Expression.MakeIndex(instance, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
             MemberInfo member = FindPropertyOrField(type, id, instance == null);
-            if (member == null)
-            {
-                if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
-                {
-                    // This might be an internal variable for use within a lambda expression, so store it as such
-                    _internals.Add(id, _it);
-                    _textParser.NextToken();
-
-                    return ParseConditionalOperator();
-                }
-
-                throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
-            }
-
-            var property = member as PropertyInfo;
-            if (property != null)
+            if (member is PropertyInfo property)
             {
                 return Expression.Property(instance, property);
             }
 
-            return Expression.Field(instance, (FieldInfo)member);
+            if (member is FieldInfo field)
+            {
+                return Expression.Field(instance, field);
+            }
+
+#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+            if (type == typeof(object))
+            {
+                return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
+            }
+#endif
+
+            MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
+            if (indexerMethod != null)
+            {
+                return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+            }
+
+            if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
+            {
+                // This might be an internal variable for use within a lambda expression, so store it as such
+                _internals.Add(id, _it);
+                _textParser.NextToken();
+
+                return ParseConditionalOperator();
+            }
+
+            throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
 
         Type FindType(string name)
@@ -1758,4 +1771,5 @@ namespace System.Linq.Dynamic.Core.Parser
             return new ParseException(string.Format(CultureInfo.CurrentCulture, format, args), pos);
         }
     }
+
 }

@@ -1,125 +1,56 @@
-﻿#if !UAP10_0 && !NET35
+﻿#if UAP10_0
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Reflection;
 
 namespace System.Linq.Dynamic.Core
 {
     /// <summary>
-    /// Provides a base class for dynamic objects.
-    /// 
-    /// In addition to the methods defined here, the following items are added using reflection:
-    /// - default constructor
-    /// - constructor with all the properties as parameters (if not linq-to-entities)
-    /// - all properties (also with getter and setters)
-    /// - ToString() method
-    /// - Equals() method
-    /// - GetHashCode() method
+    /// Provides a base class for dynamic objects for UAP10_0.
     /// </summary>
-    public abstract class DynamicClass : DynamicObject
+    public class DynamicClass : DynamicObject
     {
-        private Dictionary<string, object> _propertiesDictionary;
+        private readonly Dictionary<string, object> _properties = new Dictionary<string, object>();
 
-        private Dictionary<string, object> Properties
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DynamicClass"/> class.
+        /// </summary>
+        /// <param name="propertylist">The propertylist.</param>
+        public DynamicClass(params KeyValuePair<string, object>[] propertylist)
         {
-            get
+            foreach (var kvp in propertylist)
             {
-                if (_propertiesDictionary == null)
-                {
-                    _propertiesDictionary = new Dictionary<string, object>();
-
-                    foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                    {
-                        int parameters = pi.GetIndexParameters().Length;
-                        if (parameters > 0)
-                        {
-                            // The property is an indexer, skip this.
-                            continue;
-                        }
-
-                        _propertiesDictionary.Add(pi.Name, pi.GetValue(this, null));
-                    }
-                }
-
-                return _propertiesDictionary;
+                _properties.Add(kvp.Key, kvp.Value);
             }
-        }
-
-        /// <summary>
-        /// Gets the dynamic property by name.
-        /// </summary>
-        /// <typeparam name="T">The type.</typeparam>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <returns>T</returns>
-        public T GetDynamicPropertyValue<T>(string propertyName)
-        {
-            var type = GetType();
-            var propInfo = type.GetProperty(propertyName);
-
-            return (T)propInfo.GetValue(this, null);
-        }
-
-        /// <summary>
-        /// Gets the dynamic property value by name.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <returns>value</returns>
-        public object GetDynamicPropertyValue(string propertyName)
-        {
-            return GetDynamicPropertyValue<object>(propertyName);
-        }
-
-        /// <summary>
-        /// Sets the dynamic property value by name.
-        /// </summary>
-        /// <typeparam name="T">The type.</typeparam>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="value">The value.</param>
-        public void SetDynamicPropertyValue<T>(string propertyName, T value)
-        {
-            var type = GetType();
-            var propInfo = type.GetProperty(propertyName);
-
-            propInfo.SetValue(this, value, null);
-        }
-
-        /// <summary>
-        /// Sets the dynamic property value by name.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="value">The value.</param>
-        public void SetDynamicPropertyValue(string propertyName, object value)
-        {
-            SetDynamicPropertyValue<object>(propertyName, value);
         }
 
         /// <summary>
         /// Gets or sets the <see cref="object"/> with the specified name.
         /// </summary>
-        /// <value>The <see cref="object"/>.</value>
+        /// <value>
+        /// The <see cref="object"/>.
+        /// </value>
         /// <param name="name">The name.</param>
         /// <returns>Value from the property.</returns>
         public object this[string name]
         {
             get
             {
-                if (Properties.TryGetValue(name, out object result))
+                if (_properties.TryGetValue(name, out object result))
                 {
                     return result;
                 }
 
                 return null;
             }
-
             set
             {
-                if (Properties.ContainsKey(name))
+                if (_properties.ContainsKey(name))
                 {
-                    Properties[name] = value;
+                    _properties[name] = value;
                 }
                 else
                 {
-                    Properties.Add(name, value);
+                    _properties.Add(name, value);
                 }
             }
         }
@@ -132,7 +63,7 @@ namespace System.Linq.Dynamic.Core
         /// </returns>
         public override IEnumerable<string> GetDynamicMemberNames()
         {
-            return Properties.Keys;
+            return _properties.Keys;
         }
 
         /// <summary>
@@ -145,8 +76,8 @@ namespace System.Linq.Dynamic.Core
         /// </returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            string name = binder.Name;
-            Properties.TryGetValue(name, out result);
+            var name = binder.Name;
+            _properties.TryGetValue(name, out result);
 
             return true;
         }
@@ -162,13 +93,13 @@ namespace System.Linq.Dynamic.Core
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
             string name = binder.Name;
-            if (Properties.ContainsKey(name))
+            if (_properties.ContainsKey(name))
             {
-                Properties[name] = value;
+                _properties[name] = value;
             }
             else
             {
-                Properties.Add(name, value);
+                _properties.Add(name, value);
             }
 
             return true;
