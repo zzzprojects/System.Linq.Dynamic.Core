@@ -215,6 +215,23 @@ namespace System.Linq.Dynamic.Core.Parser
             return expr;
         }
 
+        // ?. (null-propagating) operator
+        //Expression ParseNullPropagatingOperator()
+        //{
+        //    int errorPos = _textParser.CurrentToken.Pos;
+        //    Expression expr = ParseNullCoalescingOperator();
+        //    if (_textParser.CurrentToken.Id == TokenId.Question)
+        //    {
+        //        _textParser.NextToken();
+        //        Expression expr1 = ParseConditionalOperator();
+        //        _textParser.ValidateToken(TokenId.Dot, Res.DotExpected);
+        //        _textParser.NextToken();
+        //        Expression expr2 = ParseConditionalOperator();
+        //        expr = GenerateConditional(expr, expr1, expr2, errorPos);
+        //    }
+        //    return expr;
+        //}
+
         // ?? (null-coalescing) operator
         Expression ParseNullCoalescingOperator()
         {
@@ -685,7 +702,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
                 else if (_textParser.CurrentToken.Id == TokenId.NullPropagation)
                 {
-                    throw new NotSupportedException("An expression tree lambda may not contain a null propagating operator");
+                    throw new NotSupportedException("An expression tree lambda may not contain a null propagating operator.");
                 }
                 else if (_textParser.CurrentToken.Id == TokenId.OpenBracket)
                 {

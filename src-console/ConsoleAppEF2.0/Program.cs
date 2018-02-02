@@ -26,20 +26,23 @@ namespace ConsoleAppEF2
             }
         }
 
-        private static IEnumerable<dynamic> GetEnumerable()
+        private static IQueryable GetQueryable()
         {
             var random = new Random((int)DateTime.Now.Ticks);
 
-            return Enumerable.Range(0, 10).Select(i => new
+            var x = Enumerable.Range(0, 10).Select(i => new
             {
                 Id = i,
                 Value = random.Next(),
             });
+
+            return x.AsQueryable().Select("new (it as Id, @0 as Value)", random.Next());
+            // return x.AsQueryable(); //x.AsQueryable().Select("new (Id, Value)");
         }
 
         static void Main(string[] args)
         {
-            IQueryable<dynamic> qry = GetEnumerable().AsQueryable();
+            IQueryable qry = GetQueryable();
 
             var result = qry.Select("it").OrderBy("Value");
             try
@@ -98,6 +101,22 @@ namespace ConsoleAppEF2
 
             var dynamicFunctionsLike2 = context.Cars.Where(config, "DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
             Console.WriteLine("dynamicFunctionsLike2 {0}", JsonConvert.SerializeObject(dynamicFunctionsLike2, Formatting.Indented));
+
+            var testDynamic = context.Cars.Select(c => new
+            {
+                K = c.Key,
+                C = c.Color
+            });
+
+            var testDynamicResult = testDynamic.Select("it").OrderBy("C");
+            try
+            {
+                Console.WriteLine("resultX {0}", JsonConvert.SerializeObject(testDynamicResult, Formatting.Indented));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

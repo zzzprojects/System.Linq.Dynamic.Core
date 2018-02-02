@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using System.Text;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using NFluent;
@@ -1182,6 +1183,59 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult2, result2.ToDynamicArray<User>());
             Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
             Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
+        }
+
+        // [Fact]
+        public void ExpressionTests_NullPropagating()
+        {
+            // Arrange
+            var testModels = User.GenerateSampleModels(1, true);
+            testModels[0].Profile = null;
+
+            string q = "Profile?.UserProfileDetails?.Id > 0 || Profile?.UserProfileDetails?.Id2 > 0";
+            string t = X(q);
+
+            // Act
+            // (Profile != null ? (Profile.UserProfileDetails != null ? Profile.UserProfileDetails.Id : null) : null)
+            var result = testModels.AsQueryable().Where(t);
+
+            //Assert
+            Check.That(result).IsNull();
+        }
+
+        private string X(string text)
+        {
+            var newText = new List<string>();
+            string[] spaceParts = text.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string spacePart in spaceParts)
+            {
+                string[] parts = spacePart.Split(new[] { "?." }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length > 1)
+                {
+                    var list = new List<string>();
+                    for (int i = 0; i < parts.Length; i++)
+                    {
+                        list.Add(string.Join(".", parts.Take(parts.Length - i)));
+                    }
+
+                    var stringBuilder = new StringBuilder();
+                    list.Reverse();
+                    for (int i = 0; i < list.Count - 1; i++)
+                    {
+                        stringBuilder.Append($"({list[i]} != null ? ");
+                    }
+
+                    stringBuilder.Append($"({list.Last()}) {string.Concat(Enumerable.Repeat(" : null)", parts.Length - 1))}");
+
+                    newText.Add(stringBuilder.ToString());
+                }
+                else
+                {
+                    newText.Add(spacePart);
+                }
+            }
+
+            return string.Join(" ", newText);
         }
 
         [Fact]

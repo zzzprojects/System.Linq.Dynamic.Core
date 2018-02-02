@@ -15,6 +15,7 @@
         public const string CloseParenOrOperatorExpected = "')' or operator expected";
         public const string ColonExpected = "':' expected";
         public const string DigitExpected = "Digit expected";
+        public const string DotExpected = "'.' expected";
         public const string DotOrOpenParenExpected = "'.' or '(' expected";
         public const string DotOrOpenParenOrStringLiteralExpected = "'.' or '(' or string literal expected";
         public const string DuplicateIdentifier = "The identifier '{0}' was defined more than once";

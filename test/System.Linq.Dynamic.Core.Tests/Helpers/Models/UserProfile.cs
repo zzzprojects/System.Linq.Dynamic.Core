@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
+﻿namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
 {
     public class UserProfile
     {
@@ -12,5 +7,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
         public string LastName { get; set; }
 
         public int? Age { get; set; }
+
+        public UserProfileDetails UserProfileDetails { get; set; }
     }
 }
