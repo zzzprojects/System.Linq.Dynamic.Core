@@ -11,7 +11,7 @@ namespace System.Linq.Dynamic.Core.Validation
         /// </summary>
         public static string ArgumentPropertyNull([CanBeNull] string property, [CanBeNull] string argument)
         {
-            return string.Format(CultureInfo.CurrentCulture, $"The property '{property}' of the argument '{argument}' cannot be null.", property, argument);
+            return string.Format(CultureInfo.CurrentCulture, "The property '{0}' of the argument '{1}' cannot be null.", property, argument);
         }
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace System.Linq.Dynamic.Core.Validation
         /// </summary>
         public static string ArgumentIsEmpty([CanBeNull] string argumentName)
         {
-            return string.Format(CultureInfo.CurrentCulture, $"The string argument '{argumentName}' cannot be empty.", argumentName);
+            return string.Format(CultureInfo.CurrentCulture, "The string argument '{0}' cannot be empty.", argumentName);
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace System.Linq.Dynamic.Core.Validation
         /// </summary>
         public static string InvalidEntityType([CanBeNull] Type type, [CanBeNull] string argumentName)
         {
-            return string.Format(CultureInfo.CurrentCulture, $"The entity type '{type}' provided for the argument '{argumentName}' must be a reference type.", type, argumentName);
+            return string.Format(CultureInfo.CurrentCulture, "The entity type '{0}' provided for the argument '{1}' must be a reference type.", type, argumentName);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace System.Linq.Dynamic.Core.Validation
         /// </summary>
         public static string CollectionArgumentIsEmpty([CanBeNull] string argumentName)
         {
-            return string.Format(CultureInfo.CurrentCulture, $"The collection argument '{argumentName}' must contain at least one element.", argumentName);
+            return string.Format(CultureInfo.CurrentCulture, "The collection argument '{0}' must contain at least one element.", argumentName);
         }
     }
 }

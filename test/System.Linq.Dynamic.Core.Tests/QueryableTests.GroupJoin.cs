@@ -9,7 +9,7 @@ namespace System.Linq.Dynamic.Core.Tests
     public partial class QueryableTests
     {
         [Fact]
-        public void GroupJoin()
+        public void GroupJoin_1()
         {
             //Arrange
             Person magnus = new Person { Name = "Hedlund, Magnus" };
@@ -29,13 +29,13 @@ namespace System.Linq.Dynamic.Core.Tests
                 petsList,
                 person => person,
                 pet => pet.Owner,
-                (person, pets) => new { OwnerName = person.Name, Pets = pets });
+                (person, pets) => new { OwnerName = person.Name, Pets = pets, NumberOfPets = pets.Count() });
 
             var dynamicQuery = people.AsQueryable().GroupJoin(
                 petsList,
                 "it",
                 "Owner",
-                "new(outer.Name as OwnerName, inner as Pets)");
+                "new(outer.Name as OwnerName, inner as Pets, inner.Count() as NumberOfPets)");
 
             //Assert
             var realResult = realQuery.ToArray();
@@ -47,6 +47,7 @@ namespace System.Linq.Dynamic.Core.Tests
             for (int i = 0; i < realResult.Length; i++)
             {
                 Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.Equal(realResult[i].NumberOfPets, dynamicResult[i].GetDynamicPropertyValue<int>("NumberOfPets"));
                 for (int j = 0; j < realResult[i].Pets.Count(); j++)
                 {
                     Assert.Equal(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
@@ -59,6 +60,68 @@ namespace System.Linq.Dynamic.Core.Tests
             for (int i = 0; i < realResult.Length; i++)
             {
                 Assert.Equal(realResult[i].OwnerName, ((dynamic) dynamicResult[i]).OwnerName);
+                Assert.Equal(realResult[i].NumberOfPets, ((dynamic) dynamicResult[i]).NumberOfPets);
+                for (int j = 0; j < realResult[i].Pets.Count(); j++)
+                {
+                    Assert.Equal(realResult[i].Pets.ElementAt(j).Name, (((IEnumerable<Pet>)((dynamic)dynamicResult[i]).Pets)).ElementAt(j).Name);
+                }
+            }
+#endif
+        }
+
+        [Fact]
+        public void GroupJoin_2()
+        {
+            //Arrange
+            Person magnus = new Person { Name = "Hedlund, Magnus" };
+            Person terry = new Person { Name = "Adams, Terry" };
+            Person charlotte = new Person { Name = "Weiss, Charlotte" };
+
+            Pet barley = new Pet { Name = "Barley", Owner = terry };
+            Pet boots = new Pet { Name = "Boots", Owner = terry };
+            Pet whiskers = new Pet { Name = "Whiskers", Owner = charlotte };
+            Pet daisy = new Pet { Name = "Daisy", Owner = magnus };
+
+            var people = new List<Person> { magnus, terry, charlotte };
+            var petsList = new List<Pet> { barley, boots, whiskers, daisy };
+
+            //Act
+            var realQuery = people.AsQueryable().GroupJoin(
+                petsList,
+                person => person.Id,
+                pet => pet.OwnerId,
+                (person, pets) => new { OwnerName = person.Name, Pets = pets, NumberOfPets = pets.Count() });
+
+            var dynamicQuery = people.AsQueryable().GroupJoin(
+                petsList,
+                "it.Id",
+                "OwnerId",
+                "new(outer.Name as OwnerName, inner as Pets, inner.Count() as NumberOfPets)");
+
+            //Assert
+            var realResult = realQuery.ToArray();
+
+#if NETSTANDARD
+            var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
+
+            Assert.Equal(realResult.Length, dynamicResult.Length);
+            for (int i = 0; i < realResult.Length; i++)
+            {
+                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
+                Assert.Equal(realResult[i].NumberOfPets, dynamicResult[i].GetDynamicPropertyValue<int>("NumberOfPets"));
+                for (int j = 0; j < realResult[i].Pets.Count(); j++)
+                {
+                    Assert.Equal(realResult[i].Pets.ElementAt(j).Name, dynamicResult[i].GetDynamicPropertyValue<IEnumerable<Pet>>("Pets").ElementAt(j).Name);
+                }
+            }
+#else
+            var dynamicResult = dynamicQuery.ToDynamicArray();
+
+            Assert.Equal(realResult.Length, dynamicResult.Length);
+            for (int i = 0; i < realResult.Length; i++)
+            {
+                Assert.Equal(realResult[i].OwnerName, ((dynamic) dynamicResult[i]).OwnerName);
+                Assert.Equal(realResult[i].NumberOfPets, ((dynamic) dynamicResult[i]).NumberOfPets);
                 for (int j = 0; j < realResult[i].Pets.Count(); j++)
                 {
                     Assert.Equal(realResult[i].Pets.ElementAt(j).Name, (((IEnumerable<Pet>)((dynamic)dynamicResult[i]).Pets)).ElementAt(j).Name);
