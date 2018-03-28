@@ -411,6 +411,16 @@ namespace System.Linq.Dynamic.Core.Parser
                 switch (op.Id)
                 {
                     case TokenId.Amphersand:
+                        int parseValue;
+                        if (left.Type == typeof(string) && left.NodeType == ExpressionType.Constant && int.TryParse((string)((ConstantExpression)left).Value, out parseValue) && TypeHelper.IsNumericType(right.Type))
+                        {
+                            left = Expression.Constant(parseValue);
+                        }
+                        else if (right.Type == typeof(string) && right.NodeType == ExpressionType.Constant && int.TryParse((string)((ConstantExpression)right).Value, out parseValue) && TypeHelper.IsNumericType(left.Type))
+                        {
+                            right = Expression.Constant(parseValue);
+                        }
+
                         // When at least one side of the operator is a string, consider it's a VB-style concatenation operator.
                         // Doesn't break any other function since logical AND with a string is invalid anyway.
                         if (left.Type == typeof(string) || right.Type == typeof(string))
