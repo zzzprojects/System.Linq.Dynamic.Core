@@ -1403,6 +1403,23 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_BinaryAnd()
+        {
+            // Arrange
+            var baseQuery = new[] { new { Int = 5 } }.AsQueryable();
+
+            // Act
+            var resultAddWithAmp = baseQuery.Select<int>("it.Int & @0", "4");
+            var resultAddWithAmp2 = baseQuery.Select<int>("it.Int & @0", "2");
+            var resultAddWithAmp3 = baseQuery.Select<int>("@0 & it.Int", "4");
+
+            // Assert
+            Assert.Equal(4, resultAddWithAmp.First());
+            Assert.Equal(0, resultAddWithAmp2.First());
+            Assert.Equal(4, resultAddWithAmp3.First());
+        }
+
+        [Fact]
         public void ExpressionTests_Subtract_Number()
         {
             //Arrange
