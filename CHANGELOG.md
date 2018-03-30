@@ -1,3 +1,11 @@
+# 1.0.8.3 (30 March 2018)
+
+ - [#150](https://github.com/StefH/System.Linq.Dynamic.Core/pull/150) - Feature: Support Binary & For String and Int contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988)) +feature
+ - [#137](https://github.com/StefH/System.Linq.Dynamic.Core/pull/137) - Feature: Add support for querying a IQueryable<dynamic> contributed by Nick Darvey ([NickDarvey](https://github.com/NickDarvey))
+
+Commits: 864f75f75d...7302169760
+
+
 # 1.0.8.2 (09 January 2018)
 
  - [#130](https://github.com/StefH/System.Linq.Dynamic.Core/issues/130) - BUG: Dynamic new in Where() causes NRE
@@ -27,8 +35,7 @@ Commits: bd69f2d328...02fd83b24b
  - [#124](https://github.com/StefH/System.Linq.Dynamic.Core/issues/124) - OrderBy produces error.
  - [#123](https://github.com/StefH/System.Linq.Dynamic.Core/pull/123) - appveyor contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
  - [#122](https://github.com/StefH/System.Linq.Dynamic.Core/issues/122) - Join with int list
- - [#121](https://github.com/StefH/System.Linq.Dynamic.Core/issues/121) - [Question] Count() method
- - [#120](https://github.com/StefH/System.Linq.Dynamic.Core/issues/120) - Error with parsing
+  - [#120](https://github.com/StefH/System.Linq.Dynamic.Core/issues/120) - Error with parsing
  - [#117](https://github.com/StefH/System.Linq.Dynamic.Core/pull/117) - New features contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
  - [#114](https://github.com/StefH/System.Linq.Dynamic.Core/issues/114) - Dynamic Linq Query not usable with ORM Provider +fix
 
@@ -47,9 +54,8 @@ Commits: 60d4c3845e...28d726ed2a
 # 1.0.7.11 (01 November 2017)
 
  - [#112](https://github.com/StefH/System.Linq.Dynamic.Core/issues/112) - Support NETStandard 2.0 +enhancement
- - [#111](https://github.com/StefH/System.Linq.Dynamic.Core/issues/111) - [Bug] Incorrect Nullable<> parsing +fix
+ - [#111](https://github.com/StefH/System.Linq.Dynamic.Core/issues/111) - Issue: Incorrect Nullable<> parsing +fix
  - [#109](https://github.com/StefH/System.Linq.Dynamic.Core/issues/109) - Not able to build with VS2017
- - [#108](https://github.com/StefH/System.Linq.Dynamic.Core/issues/108) - [Question] Nullable property inside Join statement
  - [#107](https://github.com/StefH/System.Linq.Dynamic.Core/issues/107) - Type conversions generated in cases where they're not needed. +fix
 
 Commits: 8028fecce4...87cd4d11fa
@@ -60,8 +66,7 @@ Commits: 8028fecce4...87cd4d11fa
  - [#104](https://github.com/StefH/System.Linq.Dynamic.Core/issues/104) - Add PDB to nuget package +enhancement
  - [#103](https://github.com/StefH/System.Linq.Dynamic.Core/pull/103) - support group by with 2 parameters, add tolist contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
  - [#102](https://github.com/StefH/System.Linq.Dynamic.Core/issues/102) - Aggregate method does not work with Average function
- - [#101](https://github.com/StefH/System.Linq.Dynamic.Core/issues/101) - Question: OrderBy does not work with navigation properties
-
+ 
 Commits: a02f3d64fa...2b49cde9f4
 
 
@@ -77,14 +82,14 @@ Commits: a02f3d64fa...0f30f422b4
 
 # 1.0.7.6 (08 juli 2017)
 
- - [#94](https://github.com/StefH/System.Linq.Dynamic.Core/issues/94) - [Bug] ParseException: Operator '==' incompatible with operand types 'ObjectId' and 'ObjectId' +fix
+ - [#94](https://github.com/StefH/System.Linq.Dynamic.Core/issues/94) - Issue: ParseException: Operator '==' incompatible with operand types 'ObjectId' and 'ObjectId' +fix
 
 Commits: a02f3d64fa...5e4d7f6e30
 
 
 # 1.0.7.6 (08 juli 2017) (08 juli 2017)
 
- - [#93](https://github.com/StefH/System.Linq.Dynamic.Core/pull/93) - [Bug] Fix uap10 build in appveyor contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#93](https://github.com/StefH/System.Linq.Dynamic.Core/pull/93) - Issue: Fix uap10 build in appveyor contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
  - [#33](https://github.com/StefH/System.Linq.Dynamic.Core/issues/33) - Package 1.0.6.3 install fails for UWP App +fix
 
 Commits: a02f3d64fa...5e4d7f6e30
@@ -92,7 +97,7 @@ Commits: a02f3d64fa...5e4d7f6e30
 
 # 1.0.7.5 (28 juni 2017) (28 juni 2017)
 
- - [#72](https://github.com/StefH/System.Linq.Dynamic.Core/issues/72) - [Bug] Re-enable support for uap10.0 +fix
+ - [#72](https://github.com/StefH/System.Linq.Dynamic.Core/issues/72) - Issue: Re-enable support for uap10.0 +fix
  - [#33](https://github.com/StefH/System.Linq.Dynamic.Core/issues/33) - Package 1.0.6.3 install fails for UWP App +fix
 
 Commits: a02f3d64fa...a41b67a2ef
@@ -100,14 +105,11 @@ Commits: a02f3d64fa...a41b67a2ef
 
 # 1.0.7.4 (27 juni 2017) (27 juni 2017)
 
- - [#92](https://github.com/StefH/System.Linq.Dynamic.Core/pull/92) - [Feature] Adds support for decimal qualifiers. Resolves #91 contributed by Pablo Ferraris ([pferraris](https://github.com/pferraris))
- - [#91](https://github.com/StefH/System.Linq.Dynamic.Core/issues/91) - [Bug] Support for decimal qualifiers 'M' & 'm' +fix
- - [#90](https://github.com/StefH/System.Linq.Dynamic.Core/issues/90) - [Bug] ParseIntegerLiteral Int16 +fix
- - [#89](https://github.com/StefH/System.Linq.Dynamic.Core/issues/89) - [Question] System.Linq.Dynamic.Core.Exceptions.ParseException: 'No 'it' is in scope'
- - [#88](https://github.com/StefH/System.Linq.Dynamic.Core/issues/88) - [Question] FileNotFoundException: Could not load file or assembly 'System.Linq.Dynamic.Core'
- - [#87](https://github.com/StefH/System.Linq.Dynamic.Core/issues/87) - [Question] Memory leak in Join method
- - [#84](https://github.com/StefH/System.Linq.Dynamic.Core/issues/84) - [Bug] DynamicClassFactory not caching generated types +fix
- - [#83](https://github.com/StefH/System.Linq.Dynamic.Core/issues/83) - [Bug] Problem with DynamicExpressionParser.ParseLambda & external ParameterExpression
+ - [#92](https://github.com/StefH/System.Linq.Dynamic.Core/pull/92) - Feature: Adds support for decimal qualifiers. Resolves #91 contributed by Pablo Ferraris ([pferraris](https://github.com/pferraris))
+ - [#91](https://github.com/StefH/System.Linq.Dynamic.Core/issues/91) - Issue: Support for decimal qualifiers 'M' & 'm' +fix
+ - [#90](https://github.com/StefH/System.Linq.Dynamic.Core/issues/90) - Issue: ParseIntegerLiteral Int16 +fix
+ - [#84](https://github.com/StefH/System.Linq.Dynamic.Core/issues/84) - Issue: DynamicClassFactory not caching generated types +fix
+ - [#83](https://github.com/StefH/System.Linq.Dynamic.Core/issues/83) - Issue: Problem with DynamicExpressionParser.ParseLambda & external ParameterExpression
 
 Commits: a02f3d64fa...ab249d498a
 
@@ -129,23 +131,22 @@ Commits: a02f3d64fa...35bdf2c0c7
 # 1.0.7.1 (31 mei 2017) (31 mei 2017)
 
  - [#85](https://github.com/StefH/System.Linq.Dynamic.Core/pull/85) - [Fix] Guid? == null comparison contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
- - [#82](https://github.com/StefH/System.Linq.Dynamic.Core/issues/82) - [Feature] Add DefaultIfEmpty +enhancement
- - [#81](https://github.com/StefH/System.Linq.Dynamic.Core/issues/81) - [Question] Create new nuget?
- - [#80](https://github.com/StefH/System.Linq.Dynamic.Core/pull/80) - [Feature] Usage of cached Lambda Expressions contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+ - [#82](https://github.com/StefH/System.Linq.Dynamic.Core/issues/82) - Feature: Add DefaultIfEmpty +enhancement
+ - [#80](https://github.com/StefH/System.Linq.Dynamic.Core/pull/80) - Feature: Usage of cached Lambda Expressions contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
 
 Commits: a02f3d64fa...4252212620
 
 
 # 1.0.7.0 (17 mei 2017) (17 mei 2017)
 
- - [#80](https://github.com/StefH/System.Linq.Dynamic.Core/pull/80) - [Feature] Usage of cached Lambda Expressions contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+ - [#80](https://github.com/StefH/System.Linq.Dynamic.Core/pull/80) - Feature: Usage of cached Lambda Expressions contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
  - [#79](https://github.com/StefH/System.Linq.Dynamic.Core/issues/79) - DynamicExpressionParser does not allow empty parameter lists. +fix
  - [#78](https://github.com/StefH/System.Linq.Dynamic.Core/pull/78) - New feature: GroupJoin contributed by ([Maschmi](https://github.com/Maschmi)) +enhancement
  - [#77](https://github.com/StefH/System.Linq.Dynamic.Core/pull/77) - New features: Hexadecimal integers and array initializers contributed by David Cizek ([DavidCizek](https://github.com/DavidCizek))
  - [#76](https://github.com/StefH/System.Linq.Dynamic.Core/pull/76) - Fix - shift operators work only for int, short, ushort, byte, sbyte. contributed by David Cizek ([DavidCizek](https://github.com/DavidCizek))
  - [#75](https://github.com/StefH/System.Linq.Dynamic.Core/issues/75) - GroupBy clause add an "Item" property when projects the query
  - [#74](https://github.com/StefH/System.Linq.Dynamic.Core/issues/74) - Join on nullable and not nullable type throws exception +fix
- - [#73](https://github.com/StefH/System.Linq.Dynamic.Core/issues/73) - [Feature] Extend OrderBy functionality +enhancement
+ - [#73](https://github.com/StefH/System.Linq.Dynamic.Core/issues/73) - Feature: Extend OrderBy functionality +enhancement
  - [#70](https://github.com/StefH/System.Linq.Dynamic.Core/issues/70) - Move all tests into 1 test project +enhancement
  - [#67](https://github.com/StefH/System.Linq.Dynamic.Core/issues/67) - Convert Project to VS2017 +enhancement
  - [#66](https://github.com/StefH/System.Linq.Dynamic.Core/issues/66) - Is there Way to enter a Complex query
