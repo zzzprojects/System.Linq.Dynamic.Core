@@ -579,6 +579,31 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_ConfigExtensions()
+        {
+            var config = new ParsingConfig();
+#if NETSTANDARD            
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
+
+            // Arrange
+            var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var r1 = qry.Any(config, "it < TestEnum.Var4");
+            var r2 = qry.First(config, "TestEnum.Var4 > it");
+            var r3 = qry.FirstOrDefault(config, "it = Var5");
+            var r4 = qry.Last(config, "@0 = it", TestEnum.Var5);
+            var r5 = qry.LastOrDefault("@0 = it", 8);
+            var r6 = qry.Single(config, "it = @0", "Var5");
+            var r7 = qry.SingleOrDefault(config, "@0 = it", "vAR5");
+            var r8 = qry.SkipWhile(config, "it < TestEnum.Var4").FirstOrDefault();
+            var r9 = qry.TakeWhile(config, "it < TestEnum.Var4").FirstOrDefault();
+            var r10 = qry.GroupBy(config, "it").FirstOrDefault();
+        }
+
+        [Fact]
         public void ExpressionTests_Enum_Nullable()
         {
             var config = new ParsingConfig();
