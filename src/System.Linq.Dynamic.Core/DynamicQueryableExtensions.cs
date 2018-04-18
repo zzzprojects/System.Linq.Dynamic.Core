@@ -11,6 +11,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Parser;
+using System.Text;
+
 #if WINDOWS_APP
 using System;
 using System.Linq;
@@ -28,7 +30,6 @@ namespace System.Linq.Dynamic.Core
 #if !(WINDOWS_APP45x || SILVERLIGHT)
         private static readonly TraceSource TraceSource = new TraceSource(typeof(DynamicQueryableExtensions).Name);
 #endif
-        private static readonly Func<MethodInfo, bool> PredicateParameterHas2 = mi => mi.GetParameters()[1].ToString().Contains("Func`2");
 
         private static Expression OptimizeExpression(Expression expression)
         {
@@ -1451,7 +1452,15 @@ namespace System.Linq.Dynamic.Core
         #endregion Skip
 
         #region SkipWhile
-        private static readonly MethodInfo _skipWhilePredicate = GetMethod(nameof(Queryable.SkipWhile), 1, PredicateParameterHas2);
+
+        private static readonly MethodInfo _skipWhilePredicate = GetMethod(nameof(Queryable.SkipWhile), 1, mi =>
+        {
+            return mi.GetParameters().Length == 2 &&
+                   mi.GetParameters()[1].ParameterType.GetTypeInfo().IsGenericType &&
+                   mi.GetParameters()[1].ParameterType.GetGenericTypeDefinition() == typeof(Expression<>) &&
+                   mi.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetTypeInfo().IsGenericType &&
+                   mi.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetGenericTypeDefinition() == typeof(Func<,>);
+        });
 
         /// <summary>
         /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
@@ -1512,7 +1521,15 @@ namespace System.Linq.Dynamic.Core
         #endregion Take
 
         #region TakeWhile
-        private static readonly MethodInfo _takeWhilePredicate = GetMethod(nameof(Queryable.TakeWhile), 1, PredicateParameterHas2);
+
+        private static readonly MethodInfo _takeWhilePredicate = GetMethod(nameof(Queryable.TakeWhile), 1, mi =>
+        {
+            return mi.GetParameters().Length == 2 &&
+                   mi.GetParameters()[1].ParameterType.GetTypeInfo().IsGenericType &&
+                   mi.GetParameters()[1].ParameterType.GetGenericTypeDefinition() == typeof(Expression<>) &&
+                   mi.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetTypeInfo().IsGenericType &&
+                   mi.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetGenericTypeDefinition() == typeof(Func<,>);
+        });
 
         /// <summary>
         /// Returns elements from a sequence as long as a specified condition is true.
@@ -1793,11 +1810,18 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.Execute<TResult>(optimized);
         }
 
-        private static MethodInfo GetMethod<TResult>(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            GetMethod(name, parameterCount, mi => mi.ReturnType == typeof(TResult) && (predicate == null || predicate(mi)));
-
-        private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.GetParameters().Length == parameterCount + 1 && (predicate == null || predicate(mi)));
+        private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null)
+        {
+            try
+            {
+                return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi =>
+                    mi.GetParameters().Length == parameterCount + 1 && (predicate == null || predicate(mi)));
+            }
+            catch (Exception ex)
+            {
+               throw new Exception("Method not found: " + name, ex);
+            }
+        }
         #endregion Private Helpers
     }
 }
