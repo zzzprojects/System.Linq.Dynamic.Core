@@ -1,14 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Validation;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
-    internal class PredefinedTypesHelper
+    internal static class PredefinedTypesHelper
     {
-        private readonly ParsingConfig _config;
-
-        // These shorthands have different name than actual type and therefore not recognized by default from the _predefinedTypes
-        public readonly IDictionary<string, Type> PredefinedTypesShorthands = new Dictionary<string, Type>
+        // These shorthands have different name than actual type and therefore not recognized by default from the PredefinedTypes.
+        public static readonly IDictionary<string, Type> PredefinedTypesShorthands = new Dictionary<string, Type>
         {
             { "int", typeof(int) },
             { "uint", typeof(uint) },
@@ -17,10 +16,10 @@ namespace System.Linq.Dynamic.Core.Parser
             { "long", typeof(long) },
             { "ulong", typeof(ulong) },
             { "bool", typeof(bool) },
-            { "float", typeof(float) },
+            { "float", typeof(float) }
         };
 
-        public readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> {
+        public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> {
             { typeof(object), 0 },
             { typeof(bool), 0 },
             { typeof(char), 0 },
@@ -45,12 +44,26 @@ namespace System.Linq.Dynamic.Core.Parser
             { typeof(Uri), 0 }
         });
 
-        public PredefinedTypesHelper(ParsingConfig config)
+        static PredefinedTypesHelper()
         {
-            _config = config;
+            //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
+            //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
+            //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
+            TryAdd("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+            TryAdd("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+            TryAdd("System.Data.Objects.SqlClient.SqlSpatialFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+
+            //EF6,System.Data.Entity.DbFunctionAttribute
+            TryAdd("System.Data.Entity.Core.Objects.EntityFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            TryAdd("System.Data.Entity.DbFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            TryAdd("System.Data.Entity.Spatial.DbGeography, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            TryAdd("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            TryAdd("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+
+            TryAdd("Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version=1.0.0.0, Culture=neutral, PublicKeyToken=974e7e1b462f3693", 3);
         }
 
-        public void TryAdd(string typeName, int x)
+        private static void TryAdd(string typeName, int x)
         {
             try
             {
@@ -66,19 +79,17 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public bool IsPredefinedType(Type type)
+        public static bool IsPredefinedType(ParsingConfig config, Type type)
         {
+            Check.NotNull(config, nameof(config));
+            Check.NotNull(type, nameof(type));
+
             if (PredefinedTypes.ContainsKey(type))
             {
                 return true;
             }
 
-            if (_config.CustomTypeProvider != null && _config.CustomTypeProvider.GetCustomTypes().Contains(type))
-            {
-                return true;
-            }
-
-            return false;
+            return config.CustomTypeProvider != null && config.CustomTypeProvider.GetCustomTypes().Contains(type);
         }
     }
 }
