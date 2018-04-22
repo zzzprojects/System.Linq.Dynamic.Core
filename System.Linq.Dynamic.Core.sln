@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test-console", "test-consol
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test-uap", "test-uap", "{ECA5702B-5D32-4888-A34E-9461FC533F23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp_netcore2.0_EF2.0.1", "src-console\ConsoleAppEF2.0\ConsoleApp_netcore2.0_EF2.0.1.csproj", "{60CE11E0-E057-45A2-8F8A-73B1BD045BFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_netcore2.0_EF2.0.1", "src-console\ConsoleAppEF2.0\ConsoleApp_netcore2.0_EF2.0.1.csproj", "{60CE11E0-E057-45A2-8F8A-73B1BD045BFB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_netcore1.1_EF1.1.2", "src-console\ConsoleAppEF1.1\ConsoleApp_netcore1.1_EF1.1.2.csproj", "{59E67CE3-5DB7-4D37-B308-E4E22E3DE4F4}"
 EndProject
@@ -48,6 +48,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp_net40_sqlite", "src-console\ConsoleApp_net40_sqlite\ConsoleApp_net40_sqlite.csproj", "{E587974C-19A9-426A-A952-216D5F883EB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp_net452_EF6", "src-console\ConsoleApp_net452_EF6\ConsoleApp_net452_EF6.csproj", "{5DC68E83-ABE0-4887-B17E-1ED4EEE89C2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_netcore2.0_EF2.0.2_InMemory", "src-console\ConsoleAppEF2.0.2_InMemory\ConsoleApp_netcore2.0_EF2.0.2_InMemory.csproj", "{437473EE-7FBB-4C28-96EC-41E1AEE161F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -251,6 +253,22 @@ Global
 		{5DC68E83-ABE0-4887-B17E-1ED4EEE89C2C}.Release|x64.Build.0 = Release|Any CPU
 		{5DC68E83-ABE0-4887-B17E-1ED4EEE89C2C}.Release|x86.ActiveCfg = Release|Any CPU
 		{5DC68E83-ABE0-4887-B17E-1ED4EEE89C2C}.Release|x86.Build.0 = Release|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Debug|ARM.Build.0 = Debug|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Debug|x64.Build.0 = Debug|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Debug|x86.Build.0 = Debug|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Release|ARM.ActiveCfg = Release|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Release|ARM.Build.0 = Release|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Release|x64.ActiveCfg = Release|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Release|x64.Build.0 = Release|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Release|x86.ActiveCfg = Release|Any CPU
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -268,6 +286,7 @@ Global
 		{0EB12661-F5CF-4071-9812-F4C8AF3D4531} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 		{E587974C-19A9-426A-A952-216D5F883EB6} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 		{5DC68E83-ABE0-4887-B17E-1ED4EEE89C2C} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
+		{437473EE-7FBB-4C28-96EC-41E1AEE161F3} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94C56722-194E-4B8B-BC23-B3F754E89A20}
