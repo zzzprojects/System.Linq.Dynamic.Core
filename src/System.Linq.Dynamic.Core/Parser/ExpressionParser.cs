@@ -22,7 +22,6 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private readonly ParsingConfig _parsingConfig;
         private readonly KeywordsHelper _keywordsHelper;
-        private readonly PredefinedTypesHelper _predefinedTypesHelper;
         private readonly TextParser _textParser;
         private readonly Dictionary<string, object> _internals;
         private readonly Dictionary<string, object> _symbols;
@@ -53,37 +52,8 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _parsingConfig = parsingConfig ?? ParsingConfig.Default;
 
-            _predefinedTypesHelper = new PredefinedTypesHelper(_parsingConfig);
-            InitPredefinedTypes();
-
-            _keywordsHelper = new KeywordsHelper(_parsingConfig, _predefinedTypesHelper);
+            _keywordsHelper = new KeywordsHelper(_parsingConfig);
             _textParser = new TextParser(expression);
-        }
-
-        void InitPredefinedTypes()
-        {
-#if !(NET35 || SILVERLIGHT || NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
-            //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
-            //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
-            //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
-            _predefinedTypesHelper.TryAdd("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
-            _predefinedTypesHelper.TryAdd("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
-            _predefinedTypesHelper.TryAdd("System.Data.Objects.SqlClient.SqlSpatialFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
-
-            //EF6,System.Data.Entity.DbFunctionAttribute
-            _predefinedTypesHelper.TryAdd("System.Data.Entity.Core.Objects.EntityFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-            _predefinedTypesHelper.TryAdd("System.Data.Entity.DbFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-            _predefinedTypesHelper.TryAdd("System.Data.Entity.Spatial.DbGeography, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-            _predefinedTypesHelper.TryAdd("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-            _predefinedTypesHelper.TryAdd("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-#endif
-
-#if NETSTANDARD2_0
-            _predefinedTypesHelper.TryAdd("Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version=1.0.0.0, Culture=neutral, PublicKeyToken=974e7e1b462f3693", 3);
-#endif
-            // detect NumberDecimalSeparator from current culture
-            //NumberFormatInfo numberFormatInfo = CultureInfo.CurrentCulture.NumberFormat;
-            //NumberDecimalSeparatorFromCulture = numberFormatInfo.NumberDecimalSeparator[0];
         }
 
         void ProcessParameters(ParameterExpression[] parameters)
@@ -1406,7 +1376,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     case 1:
                         MethodInfo method = (MethodInfo)mb;
-                        if (!_predefinedTypesHelper.IsPredefinedType(method.DeclaringType) && !(method.IsPublic && _predefinedTypesHelper.IsPredefinedType(method.ReturnType)))
+                        if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType) && !(method.IsPublic && PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.ReturnType)))
                         {
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType));
                         }
@@ -1514,7 +1484,7 @@ namespace System.Linq.Dynamic.Core.Parser
             var oldParent = _parent;
 
             ParameterExpression outerIt = _it;
-            ParameterExpression innerIt = Expression.Parameter(elementType, "");
+            ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty);
 
             _parent = _it;
 

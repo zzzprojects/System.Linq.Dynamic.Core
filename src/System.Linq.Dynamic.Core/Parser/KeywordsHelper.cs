@@ -22,7 +22,7 @@ namespace System.Linq.Dynamic.Core.Parser
             { "null", Constants.NullLiteral }
         };
 
-        public KeywordsHelper(ParsingConfig config, PredefinedTypesHelper predefinedTypesHelper)
+        public KeywordsHelper(ParsingConfig config)
         {
             if (config.AreContextKeywordsEnabled)
             {
@@ -38,13 +38,13 @@ namespace System.Linq.Dynamic.Core.Parser
             _keywords.Add(KEYWORD_NEW, KEYWORD_NEW);
             _keywords.Add(KEYWORD_ISNULL, KEYWORD_ISNULL);
 
-            foreach (Type type in predefinedTypesHelper.PredefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
+            foreach (Type type in PredefinedTypesHelper.PredefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
             {
                 _keywords[type.FullName] = type;
                 _keywords[type.Name] = type;
             }
 
-            foreach (KeyValuePair<string, Type> pair in predefinedTypesHelper.PredefinedTypesShorthands)
+            foreach (KeyValuePair<string, Type> pair in PredefinedTypesHelper.PredefinedTypesShorthands)
             {
                 _keywords.Add(pair.Key, pair.Value);
             }

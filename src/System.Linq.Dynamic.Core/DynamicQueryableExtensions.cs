@@ -65,7 +65,7 @@ namespace System.Linq.Dynamic.Core
 
             // Properties
             PropertyInfo property = source.ElementType.GetProperty(member);
-            ParameterExpression parameter = Expression.Parameter(source.ElementType, "s");
+            ParameterExpression parameter = ParameterExpressionHelper.CreateParameterExpression(source.ElementType, "s");
             Expression selector = Expression.Lambda(Expression.MakeMemberAccess(parameter, property), parameter);
             // We've tried to find an expression of the type Expression<Func<TSource, TAcc>>,
             // which is expressed as ( (TSource s) => s.Price );
@@ -140,6 +140,7 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
+        [PublicAPI]
         public static bool Any([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -235,6 +236,7 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
+        [PublicAPI]
         public static int Count([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -358,6 +360,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
+        [PublicAPI]
 #if NET35
         public static object First([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
 #else
@@ -416,6 +419,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
+        [PublicAPI]
 #if NET35
         public static object FirstOrDefault([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
 #else
@@ -466,6 +470,7 @@ namespace System.Linq.Dynamic.Core
         /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
         /// </code>
         /// </example>
+        [PublicAPI]
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -521,6 +526,7 @@ namespace System.Linq.Dynamic.Core
         /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
         /// </code>
         /// </example>
+        [PublicAPI]
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -628,8 +634,8 @@ namespace System.Linq.Dynamic.Core
 
             ParameterExpression[] parameters =
             {
-                Expression.Parameter(outerType, "outer"),
-                Expression.Parameter(typeof(IEnumerable<>).MakeGenericType(innerType), "inner")
+                ParameterExpressionHelper.CreateParameterExpression(outerType, "outer"),
+                ParameterExpressionHelper.CreateParameterExpression(typeof(IEnumerable<>).MakeGenericType(innerType), "inner")
             };
 
             LambdaExpression resultSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
@@ -677,7 +683,8 @@ namespace System.Linq.Dynamic.Core
 
             ParameterExpression[] parameters =
             {
-                Expression.Parameter(outerType, "outer"), Expression.Parameter(innerType, "inner")
+                ParameterExpressionHelper.CreateParameterExpression(outerType, "outer"),
+                ParameterExpressionHelper.CreateParameterExpression(innerType, "inner")
             };
 
             LambdaExpression resultSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, parameters, null, resultSelector, args);
@@ -873,7 +880,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(ordering, nameof(ordering));
 
-            ParameterExpression[] parameters = { Expression.Parameter(source.ElementType, "") };
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty) };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args, null);
             IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering();
 
@@ -1282,8 +1289,8 @@ namespace System.Linq.Dynamic.Core
             sourceSelectLambda = Expression.Lambda(sourceLambdaDelegateType, sourceSelectLambda.Body, sourceSelectLambda.Parameters);
 
             //we have to create additional lambda for result selection
-            ParameterExpression xParameter = Expression.Parameter(source.ElementType, collectionParameterName);
-            ParameterExpression yParameter = Expression.Parameter(sourceLambdaResultType, resultParameterName);
+            ParameterExpression xParameter = ParameterExpressionHelper.CreateParameterExpression(source.ElementType, collectionParameterName);
+            ParameterExpression yParameter = ParameterExpressionHelper.CreateParameterExpression(sourceLambdaResultType, resultParameterName);
 
             LambdaExpression resultSelectLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, new[] { xParameter, yParameter }, null, resultSelector, resultSelectorArgs);
             Type resultLambdaResultType = resultSelectLambda.Body.Type;
@@ -1577,7 +1584,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(ordering, nameof(ordering));
 
-            ParameterExpression[] parameters = { Expression.Parameter(source.ElementType, "") };
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty) };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args, null);
             IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering(forceThenBy: true);
 

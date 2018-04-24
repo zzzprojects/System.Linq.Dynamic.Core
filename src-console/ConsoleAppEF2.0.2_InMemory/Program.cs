@@ -18,9 +18,10 @@ namespace ConsoleAppEF2
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-                var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
-
-                set.Add(typeof(TestContext));
+                var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies))
+                {
+                    typeof(TestContext)
+                };
 
                 return set;
             }
@@ -62,21 +63,17 @@ namespace ConsoleAppEF2
             };
             Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
 
-            var config = new ParsingConfig();
-            config.CustomTypeProvider = new C();
+            var config = new ParsingConfig
+            {
+                CustomTypeProvider = new C()
+            };
 
             var context = new TestContext();
-
-            context.Database.EnsureCreated();
-
-            if (!context.Cars.Any())
-            {
-                context.Cars.Add(new Car { Brand = "Ford", Color = "Blue", Vin = "yes", Year = "2017" });
-                context.Cars.Add(new Car { Brand = "Fiat", Color = "Red", Vin = "yes", Year = "2016" });
-                context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "no", Year = "1979" });
-                context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979" });
-                context.SaveChanges();
-            }
+            context.Cars.Add(new Car { Brand = "Ford", Color = "Blue", Vin = "yes", Year = "2017" });
+            context.Cars.Add(new Car { Brand = "Fiat", Color = "Red", Vin = "yes", Year = "2016" });
+            context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "no", Year = "1979" });
+            context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979" });
+            context.SaveChanges();
 
             var carFirstOrDefault = context.Cars.Where(config, "Brand == \"Ford\"");
             Console.WriteLine("carFirstOrDefault {0}", JsonConvert.SerializeObject(carFirstOrDefault, Formatting.Indented));
