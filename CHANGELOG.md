@@ -1,3 +1,12 @@
+# 1.0.8.4 (25 April 2018)
+
+ - [#159](https://github.com/StefH/System.Linq.Dynamic.Core/pull/159) - Performance fix (#153) contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#153](https://github.com/StefH/System.Linq.Dynamic.Core/issues/153) - Issue: Performance while working with EF core
+ - [#151](https://github.com/StefH/System.Linq.Dynamic.Core/issues/151) - Parse Query Syntax like Code
+
+Commits: f48b512e3a...f48b512e3a
+
+
 # 1.0.8.3 (30 March 2018)
 
  - [#150](https://github.com/StefH/System.Linq.Dynamic.Core/pull/150) - Feature: Support Binary & For String and Int contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988)) +feature
@@ -66,7 +75,7 @@ Commits: 8028fecce4...87cd4d11fa
  - [#104](https://github.com/StefH/System.Linq.Dynamic.Core/issues/104) - Add PDB to nuget package +enhancement
  - [#103](https://github.com/StefH/System.Linq.Dynamic.Core/pull/103) - support group by with 2 parameters, add tolist contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
  - [#102](https://github.com/StefH/System.Linq.Dynamic.Core/issues/102) - Aggregate method does not work with Average function
- 
+
 Commits: a02f3d64fa...2b49cde9f4
 
 
