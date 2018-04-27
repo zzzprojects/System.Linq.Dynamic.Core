@@ -1,4 +1,4 @@
-# 1.0.8.4 (25 April 2018)
+# 1.0.8.5 (27 April 2018)
 
  - [#159](https://github.com/StefH/System.Linq.Dynamic.Core/pull/159) - Performance fix (#153) contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
  - [#153](https://github.com/StefH/System.Linq.Dynamic.Core/issues/153) - Issue: Performance while working with EF core

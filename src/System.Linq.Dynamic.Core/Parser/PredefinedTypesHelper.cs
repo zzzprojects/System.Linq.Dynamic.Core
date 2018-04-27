@@ -46,6 +46,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         static PredefinedTypesHelper()
         {
+#if !(NET35 || SILVERLIGHT || NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
             //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
             //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
@@ -59,8 +60,11 @@ namespace System.Linq.Dynamic.Core.Parser
             TryAdd("System.Data.Entity.Spatial.DbGeography, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
             TryAdd("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
             TryAdd("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+#endif
 
+#if NETSTANDARD2_0
             TryAdd("Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version=1.0.0.0, Culture=neutral, PublicKeyToken=974e7e1b462f3693", 3);
+#endif
         }
 
         private static void TryAdd(string typeName, int x)
