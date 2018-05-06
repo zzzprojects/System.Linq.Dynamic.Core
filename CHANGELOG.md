@@ -1,3 +1,13 @@
+# 1.0.8.6 (28 April 2018)
+
+ - [#161](https://github.com/StefH/System.Linq.Dynamic.Core/issues/161) - Error (1.0.8.3 to 1.0.8.4 on EF 6.2) "No generic method 'OrderBy' on type System.Linq.Queryable"
+ - [#160](https://github.com/StefH/System.Linq.Dynamic.Core/issues/160) - Question: Generic ParseLambda method
+ - [#158](https://github.com/StefH/System.Linq.Dynamic.Core/pull/158) - Fix157 contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+ - [#157](https://github.com/StefH/System.Linq.Dynamic.Core/issues/157) - Issue : SkipWhile Method not found in mono +fix
+
+Commits: 57e7c4378d...85c7cde282
+
+
 # 1.0.8.5 (27 April 2018)
 
  - [#159](https://github.com/StefH/System.Linq.Dynamic.Core/pull/159) - Performance fix (#153) contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
