@@ -1,3 +1,10 @@
+# 1.0.8.7 (08 May 2018)
+
+ - [#156](https://github.com/StefH/System.Linq.Dynamic.Core/pull/156) - Fix parsing config contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
+
+Commits: c17a5ebaf6...c17a5ebaf6
+
+
 # 1.0.8.6 (28 April 2018)
 
  - [#161](https://github.com/StefH/System.Linq.Dynamic.Core/issues/161) - Error (1.0.8.3 to 1.0.8.4 on EF 6.2) "No generic method 'OrderBy' on type System.Linq.Queryable"

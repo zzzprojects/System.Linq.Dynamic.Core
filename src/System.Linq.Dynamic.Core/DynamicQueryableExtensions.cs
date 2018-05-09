@@ -11,7 +11,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Parser;
-using System.Text;
 
 #if WINDOWS_APP
 using System;
@@ -617,10 +616,10 @@ namespace System.Linq.Dynamic.Core
             return GroupByManyInternal(source, selectors.ToArray(), 0);
         }
 
-        /// <inheritdoc cref="GroupByMany(IEnumerable{TElement}, ParsingConfig, string[])"/>
+        /// <inheritdoc cref="GroupByMany{TElement}(IEnumerable{TElement}, ParsingConfig, string[])"/>
         public static IEnumerable<GroupResult> GroupByMany<TElement>([NotNull] this IEnumerable<TElement> source, params string[] keySelectors)
         {
-            return GroupByMany<TElement>(source, null, keySelectors);
+            return GroupByMany(source, null, keySelectors);
         }
 
         /// <summary>
@@ -786,15 +785,14 @@ namespace System.Linq.Dynamic.Core
         /// <returns>An <see cref="IQueryable{T}"/> that has elements of type TResult obtained by performing an inner join on two sequences.</returns>
         public static IQueryable<TElement> Join<TElement>([NotNull] this IQueryable<TElement> outer, [CanBeNull] ParsingConfig config, [NotNull] IEnumerable<TElement> inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, string resultSelector, params object[] args)
         {
-            return (IQueryable<TElement>)Join((IQueryable)outer, config, (IEnumerable)inner, outerKeySelector, innerKeySelector, resultSelector, args);
+            return (IQueryable<TElement>)Join(outer, config, (IEnumerable)inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
 
-        /// <inheritdoc cref="Join(IQueryable, ParsingConfig, IEnumerable{TElement}, string, string, string, object[])"/>
+        /// <inheritdoc cref="Join{TElement}(IQueryable{TElement}, ParsingConfig, IEnumerable{TElement}, string, string, string, object[])"/>
         public static IQueryable<TElement> Join<TElement>([NotNull] this IQueryable<TElement> outer, [NotNull] IEnumerable<TElement> inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, string resultSelector, params object[] args)
         {
             return Join(outer, null, inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
-
         #endregion Join
 
         #region Last
@@ -962,10 +960,10 @@ namespace System.Linq.Dynamic.Core
             return (IOrderedQueryable<TSource>)OrderBy((IQueryable)source, ordering, args);
         }
 
-        /// <inheritdoc cref="OrderBy(IQueryable{TSource}, ParsingConfig, string, object[])"/>
+        /// <inheritdoc cref="OrderBy{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])"/>
         public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string ordering, params object[] args)
         {
-            return OrderBy(source, (ParsingConfig)null, ordering, args);
+            return OrderBy(source, null, ordering, args);
         }
 
         /// <summary>
@@ -1405,7 +1403,7 @@ namespace System.Linq.Dynamic.Core
         /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, object[])"/>
         public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string collectionSelector, [NotNull] string resultSelector, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
         {
-            return SelectMany(source, (ParsingConfig)null, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
+            return SelectMany(source, null, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
         }
 
         /// <summary>
@@ -1791,10 +1789,10 @@ namespace System.Linq.Dynamic.Core
             return (IOrderedQueryable<TSource>)ThenBy((IOrderedQueryable)source, config, ordering, args);
         }
 
-        /// <inheritdoc cref="ThenBy(IOrderedQueryable{TSource}, ParsingConfig, string, object[])"/>
+        /// <inheritdoc cref="ThenBy{TSource}(IOrderedQueryable{TSource}, ParsingConfig, string, object[])"/>
         public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] string ordering, params object[] args)
         {
-            return (IOrderedQueryable<TSource>)ThenBy<TSource>(source, (ParsingConfig)null, ordering, args);
+            return ThenBy(source, null, ordering, args);
         }
         /// <summary>
         /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
@@ -2042,7 +2040,7 @@ namespace System.Linq.Dynamic.Core
             }
             catch (Exception ex)
             {
-               throw new Exception("Method not found: " + name, ex);
+                throw new Exception("Method not found: " + name, ex);
             }
         }
         #endregion Private Helpers
