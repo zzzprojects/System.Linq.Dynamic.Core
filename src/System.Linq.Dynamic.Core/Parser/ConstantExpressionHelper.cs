@@ -1,24 +1,29 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
     internal static class ConstantExpressionHelper
     {
-        private static readonly IDictionary<Expression, string> Literals = new ConcurrentDictionary<Expression, string>();
+        private static readonly ConcurrentDictionary<object, Expression> Expressions = new ConcurrentDictionary<object, Expression>();
+        private static readonly ConcurrentDictionary<Expression, string> Literals = new ConcurrentDictionary<Expression, string>();
 
-        public static bool TryGetText(Expression expresion, out string text)
+        public static bool TryGetText(Expression expression, out string text)
         {
-            return Literals.TryGetValue(expresion, out text);
+            return Literals.TryGetValue(expression, out text);
         }
 
         public static Expression CreateLiteral(object value, string text)
         {
-            ConstantExpression expresion = Expression.Constant(value);
+            if (!Expressions.ContainsKey(value))
+            {
+                ConstantExpression constantExpression = Expression.Constant(value);
 
-            Literals.Add(expresion, text);
-            return expresion;
+                Expressions.TryAdd(value, constantExpression);
+                Literals.TryAdd(constantExpression, text);
+            }
+
+            return Expressions[value];
         }
     }
 }
