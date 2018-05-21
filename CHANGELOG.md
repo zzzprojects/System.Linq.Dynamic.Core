@@ -1,8 +1,9 @@
 # 1.0.8.8 (21 May 2018)
 
+ - [#168](https://github.com/StefH/System.Linq.Dynamic.Core/pull/168) - Fixed ConstantExpressionHelper.cs (#167) contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
  - [#167](https://github.com/StefH/System.Linq.Dynamic.Core/issues/167) - Issue: Memory leak in `ConstantExpressionHelper.cs` +fix
 
-Commits: 65a03284a0...65a03284a0
+Commits: 52bb6f3a83...52bb6f3a83
 
 
 # 1.0.8.7 (08 May 2018)
