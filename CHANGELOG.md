@@ -1,3 +1,10 @@
+# 1.0.8.8 (21 May 2018)
+
+ - [#167](https://github.com/StefH/System.Linq.Dynamic.Core/issues/167) - Issue: Memory leak in `ConstantExpressionHelper.cs` +fix
+
+Commits: 65a03284a0...65a03284a0
+
+
 # 1.0.8.7 (08 May 2018)
 
  - [#156](https://github.com/StefH/System.Linq.Dynamic.Core/pull/156) - Fix parsing config contributed by Jochen Kühner ([jogibear9988](https://github.com/jogibear9988))
