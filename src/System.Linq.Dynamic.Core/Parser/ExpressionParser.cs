@@ -499,9 +499,21 @@ namespace System.Linq.Dynamic.Core.Parser
                         }
                     }
 
+
                     if (!typesAreSameAndImplementCorrectInterface)
                     {
-                        CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures), op.Text, ref left, ref right, op.Pos);
+                        if (left.Type.GetTypeInfo().IsClass && right is ConstantExpression && HasImplicitConversion(left.Type, right.Type))
+                        {
+                            left = Expression.Convert(left, right.Type);
+                        }
+                        else if (right.Type.GetTypeInfo().IsClass && left is ConstantExpression && HasImplicitConversion(right.Type, left.Type))
+                        {
+                            right = Expression.Convert(right, left.Type);
+                        }
+                        else
+                        {
+                            CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures), op.Text, ref left, ref right, op.Pos);
+                        }
                     }
                 }
 
@@ -533,6 +545,13 @@ namespace System.Linq.Dynamic.Core.Parser
             return left;
         }
 
+        private bool HasImplicitConversion(Type baseType, Type targetType)
+        {
+            return baseType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(mi => mi.Name == "op_Implicit" && mi.ReturnType == targetType)
+                .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
+        }
+        
         private ConstantExpression ParseEnumToConstantExpression(int pos, Type leftType, ConstantExpression constantExpr)
         {
             return Expression.Constant(ParseConstantExpressionToEnum(pos, leftType, constantExpr), leftType);

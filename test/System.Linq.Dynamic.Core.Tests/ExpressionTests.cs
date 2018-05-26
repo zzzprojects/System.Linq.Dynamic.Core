@@ -1386,6 +1386,34 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_ImplicitCast()
+        {
+            //Arrange
+            Guid code1 = new Guid("651E08E3-85B1-42D1-80AF-68E28E2B7DA6");
+            Guid code2 = new Guid("6451FEB2-3226-41D0-961C-B72B7B5A0157");
+
+            var samples = User.GenerateSampleModels(3);
+            samples[0].State = new UserState() { StatusCode = code1, Description = "alive" };
+            samples[1].State = new UserState() { StatusCode = code2, Description = "deceased" };
+
+            //Act
+            string queryString = "State == @0";
+            IList<User> result = samples.AsQueryable().Where(queryString, code1).ToList();
+
+            string queryString2 = "@0 == State";
+            IList<User> result2 = samples.AsQueryable().Where(queryString2, code1).ToList();
+
+            //Assert
+            Assert.Equal(1, result.Count);
+            Assert.Equal(code1, result[0].State.StatusCode);
+            Assert.Equal("alive", result[0].State.Description);
+
+            Assert.Equal(1, result2.Count);
+            Assert.Equal(code1, result2[0].State.StatusCode);
+            Assert.Equal("alive", result2[0].State.Description);
+        }
+
+        [Fact]
         public void ExpressionTests_StringCompare()
         {
             // Arrange

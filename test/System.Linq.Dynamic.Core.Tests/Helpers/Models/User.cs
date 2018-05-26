@@ -14,6 +14,8 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
 
         public UserProfile Profile { get; set; }
 
+        public UserState State { get; set; }
+
         public List<Role> Roles { get; set; }
 
         public bool TestMethod1()
