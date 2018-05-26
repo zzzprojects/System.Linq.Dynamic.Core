@@ -1,3 +1,10 @@
+# 1.0.8.9 (26 May 2018)
+
+ - [#166](https://github.com/StefH/System.Linq.Dynamic.Core/pull/166) - Feature: Added support for implicit type conversions contributed by ([arjenvrh](https://github.com/arjenvrh))
+
+Commits: 12704c2d9a...12704c2d9a
+
+
 # 1.0.8.8 (21 May 2018)
 
  - [#168](https://github.com/StefH/System.Linq.Dynamic.Core/pull/168) - Fixed ConstantExpressionHelper.cs (#167) contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
