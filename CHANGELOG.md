@@ -1,3 +1,12 @@
+# 1.0.8.10 (05 June 2018)
+
+ - [#170](https://github.com/StefH/System.Linq.Dynamic.Core/issues/170) - Question: Support to build Expressions besides LambdaExpressions
+ - [#155](https://github.com/StefH/System.Linq.Dynamic.Core/issues/155) - Question: OrderByDescending availability
+ - [#143](https://github.com/StefH/System.Linq.Dynamic.Core/issues/143) - Question : How to orderby an attribute of a List
+
+Commits: ...
+
+
 # 1.0.8.9 (26 May 2018)
 
  - [#166](https://github.com/StefH/System.Linq.Dynamic.Core/pull/166) - Feature: Added support for implicit type conversions contributed by ([arjenvrh](https://github.com/arjenvrh))

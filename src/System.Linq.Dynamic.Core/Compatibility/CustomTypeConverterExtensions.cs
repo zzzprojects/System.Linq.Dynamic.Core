@@ -1,7 +1,6 @@
-﻿
+﻿#if SILVERLIGHT
 namespace System.ComponentModel
 {
-#if SILVERLIGHT
     internal static class CustomTypeConverterExtensions
     {
         /// <summary>
@@ -15,5 +14,5 @@ namespace System.ComponentModel
             return typeConverter.ConvertFromString(text);
         }
     }
-#endif
 }
+#endif

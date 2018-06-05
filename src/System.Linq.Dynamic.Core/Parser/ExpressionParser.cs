@@ -13,7 +13,10 @@ using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
-    internal class ExpressionParser
+    /// <summary>
+    /// ExpressionParser
+    /// </summary>
+    public class ExpressionParser
     {
         static readonly string methodOrderBy = nameof(Queryable.OrderBy);
         static readonly string methodOrderByDescending = nameof(Queryable.OrderByDescending);
@@ -33,6 +36,13 @@ namespace System.Linq.Dynamic.Core.Parser
         private Type _resultType;
         private bool _createParameterCtor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExpressionParser"/> class.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="expression">The expression.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="parsingConfig">The parsing configuration.</param>
         public ExpressionParser([CanBeNull] ParameterExpression[] parameters, [NotNull] string expression, [CanBeNull] object[] values, [CanBeNull] ParsingConfig parsingConfig)
         {
             Check.NotEmpty(expression, nameof(expression));
@@ -94,7 +104,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        void AddSymbol(string name, object value)
+        private void AddSymbol(string name, object value)
         {
             if (_symbols.ContainsKey(name))
             {
@@ -104,7 +114,13 @@ namespace System.Linq.Dynamic.Core.Parser
             _symbols.Add(name, value);
         }
 
-        public Expression Parse(Type resultType, bool createParameterCtor)
+        /// <summary>
+        /// Uses the TextParser to parse the string into the specified result type.
+        /// </summary>
+        /// <param name="resultType">Type of the result.</param>
+        /// <param name="createParameterCtor">if set to <c>true</c> [create parameter ctor].</param>
+        /// <returns>Expression</returns>
+        public Expression Parse([CanBeNull] Type resultType, bool createParameterCtor = true)
         {
             _resultType = resultType;
             _createParameterCtor = createParameterCtor;
@@ -126,7 +142,7 @@ namespace System.Linq.Dynamic.Core.Parser
         }
 
 #pragma warning disable 0219
-        public IList<DynamicOrdering> ParseOrdering(bool forceThenBy = false)
+        internal IList<DynamicOrdering> ParseOrdering(bool forceThenBy = false)
         {
             var orderings = new List<DynamicOrdering>();
             while (true)
@@ -551,7 +567,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 .Where(mi => mi.Name == "op_Implicit" && mi.ReturnType == targetType)
                 .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
         }
-        
+
         private ConstantExpression ParseEnumToConstantExpression(int pos, Type leftType, ConstantExpression constantExpr)
         {
             return Expression.Constant(ParseConstantExpressionToEnum(pos, leftType, constantExpr), leftType);
@@ -1651,7 +1667,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public static Type ToNullableType(Type type)
+        internal static Type ToNullableType(Type type)
         {
             Check.NotNull(type, nameof(type));
 
