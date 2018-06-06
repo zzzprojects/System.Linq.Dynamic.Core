@@ -1,3 +1,10 @@
+# 1.0.8.11 (06 June 2018)
+
+ - [#172](https://github.com/StefH/System.Linq.Dynamic.Core/issues/172) - Issue: DynamicQueryableExtensions.OrderBy extension method not using ParsingConfig parameter
+
+Commits: ...
+
+
 # 1.0.8.10 (05 June 2018)
 
  - [#170](https://github.com/StefH/System.Linq.Dynamic.Core/issues/170) - Question: Support to build Expressions besides LambdaExpressions

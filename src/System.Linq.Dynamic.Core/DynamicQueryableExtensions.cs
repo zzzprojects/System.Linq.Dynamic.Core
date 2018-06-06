@@ -957,7 +957,7 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [CanBeNull] ParsingConfig config, [NotNull] string ordering, params object[] args)
         {
-            return (IOrderedQueryable<TSource>)OrderBy((IQueryable)source, ordering, args);
+            return (IOrderedQueryable<TSource>)OrderBy((IQueryable)source, config, ordering, args);
         }
 
         /// <inheritdoc cref="OrderBy{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])"/>

@@ -228,6 +228,12 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserProfile.cs">
       <Link>Helpers\Models\UserProfile.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserProfileDetails.cs">
+      <Link>Helpers\Models\UserProfileDetails.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserState.cs">
+      <Link>Helpers\Models\UserState.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\TestEnum.cs">
       <Link>Helpers\TestEnum.cs</Link>
     </Compile>
