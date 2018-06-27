@@ -44,9 +44,12 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// Gets or sets a value indicating whether to use dynamic object class for anonymous types.
         /// </summary>
-        /// <value>
-        /// <c>true</c> if wether to use dynamic object class for anonymous types; otherwise, <c>false</c>.
-        /// </value>
         public bool UseDynamicObjectClassForAnonymousTypes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the EntityFramwwork version supports evaluating GroupBy at database level.
+        /// See https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.1#linq-groupby-translation
+        /// </summary>
+        public bool EvaluateGroupByAtDatabase { get; set; }
     }
 }

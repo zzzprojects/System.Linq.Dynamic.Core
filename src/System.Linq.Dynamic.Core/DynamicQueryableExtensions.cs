@@ -500,7 +500,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(keySelector, nameof(keySelector));
             Check.NotEmpty(resultSelector, nameof(resultSelector));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
             LambdaExpression elementLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, resultSelector, args);
 
@@ -570,7 +570,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(keySelector, nameof(keySelector));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
@@ -586,7 +586,6 @@ namespace System.Linq.Dynamic.Core
         {
             return GroupBy(source, (ParsingConfig)null, keySelector, args);
         }
-
         #endregion GroupBy
 
         #region GroupByMany
@@ -897,7 +896,7 @@ namespace System.Linq.Dynamic.Core
 #if NET35
         public static object LastOrDefault([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
 #else
-        public static dynamic LastOrDefault([NotNull] this IQueryable source,  [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic LastOrDefault([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
 #endif
         {
             Check.NotNull(source, nameof(source));
@@ -1580,7 +1579,7 @@ namespace System.Linq.Dynamic.Core
 #if NET35
         public static object SingleOrDefault([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
 #else
-        public static dynamic SingleOrDefault([NotNull] this IQueryable source,  [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic SingleOrDefault([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
 #endif
         {
             Check.NotNull(source, nameof(source));

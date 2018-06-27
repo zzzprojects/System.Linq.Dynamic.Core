@@ -4,7 +4,7 @@
     <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
     <VersionPrefix>1.0.8.11</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
-    <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0;uap10.0</TargetFrameworks>
+    <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
@@ -12,7 +12,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
-    <PackageReleaseNotes>Bugfixes and new Features. For details see the release notes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
