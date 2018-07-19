@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ConsoleAppEF2.Database
@@ -19,5 +20,8 @@ namespace ConsoleAppEF2.Database
 
         [Required]
         public string Color { get; set; }
+
+        [Required]
+        public DateTime DateLastModified { get; set; }
     }
 }
