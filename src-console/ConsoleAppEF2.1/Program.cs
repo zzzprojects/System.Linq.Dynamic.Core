@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using ConsoleAppEF21.Database;
@@ -39,6 +40,10 @@ namespace ConsoleAppEF21
 
         static void Main(string[] args)
         {
+            var list = new List<Car> { new Car { Key = 1 }, new Car { Key = 2 } };
+
+            var carsTest = list.AsQueryable().Where("Key = @0", "1").ToList();
+
             //IQueryable qry = GetQueryable();
 
             //var result = qry.Select("it").OrderBy("Value");
