@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
@@ -8,7 +7,7 @@ using ConsoleAppEF2.Database;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace ConsoleAppEF2
+namespace ConsoleAppEF211
 {
     class Program
     {
@@ -18,10 +17,9 @@ namespace ConsoleAppEF2
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-                var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies))
-                {
-                    typeof(TestContext)
-                };
+                var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
+
+                set.Add(typeof(TestContext));
 
                 return set;
             }
@@ -63,22 +61,23 @@ namespace ConsoleAppEF2
             };
             Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
 
-            var config = new ParsingConfig
-            {
-                CustomTypeProvider = new C()
-            };
-
-            var dateLastModified = new DateTime(2018, 1, 15);
+            var config = new ParsingConfig();
+            config.CustomTypeProvider = new C();
 
             var context = new TestContext();
-            context.Cars.Add(new Car { Brand = "Ford", Color = "Blue", Vin = "yes", Year = "2017", DateLastModified = dateLastModified });
-            context.Cars.Add(new Car { Brand = "Fiat", Color = "Red", Vin = "yes", Year = "2016", DateLastModified = dateLastModified.AddDays(1) });
-            context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "no", Year = "1979", DateLastModified = dateLastModified.AddDays(2) });
-            context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979", DateLastModified = dateLastModified.AddDays(3) });
-            context.SaveChanges();
 
-            var carDateLastModified = context.Cars.Where(config, "DateLastModified > \"2018-01-16\"");
-            Console.WriteLine("carDateLastModified {0}", JsonConvert.SerializeObject(carDateLastModified, Formatting.Indented));
+            // context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
+            var dateLastModified = new DateTime(2018, 1, 15);
+            if (!context.Cars.Any())
+            {
+                context.Cars.Add(new Car { Brand = "Ford", Color = "Blue", Vin = "yes", Year = "2017", DateLastModified = dateLastModified });
+                context.Cars.Add(new Car { Brand = "Fiat", Color = "Red", Vin = "yes", Year = "2016", DateLastModified = dateLastModified.AddDays(1) });
+                context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "no", Year = "1979", DateLastModified = dateLastModified.AddDays(2) });
+                context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979", DateLastModified = dateLastModified.AddDays(3) }); ;
+                context.SaveChanges();
+            }
 
             var carFirstOrDefault = context.Cars.Where(config, "Brand == \"Ford\"");
             Console.WriteLine("carFirstOrDefault {0}", JsonConvert.SerializeObject(carFirstOrDefault, Formatting.Indented));
