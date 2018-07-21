@@ -68,12 +68,20 @@ namespace System.Linq.Dynamic.Core.Parser
         public static Expression GenerateEqual(Expression left, Expression right)
         {
             OptimizeForEqualityIfPossible(ref left, ref right);
+            
+            WrapConstantExpression(ref left);
+            WrapConstantExpression(ref right);
+            
             return Expression.Equal(left, right);
         }
 
         public static Expression GenerateNotEqual(Expression left, Expression right)
         {
             OptimizeForEqualityIfPossible(ref left, ref right);
+            
+            WrapConstantExpression(ref left);
+            WrapConstantExpression(ref right);
+            
             return Expression.NotEqual(left, right);
         }
 
@@ -90,6 +98,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 var rightPart = right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right;
                 return Expression.GreaterThan(leftPart, rightPart);
             }
+            
+            WrapConstantExpression(ref left);
+            WrapConstantExpression(ref right);
 
             return Expression.GreaterThan(left, right);
         }
@@ -106,6 +117,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.GreaterThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
+            
+            WrapConstantExpression(ref left);
+            WrapConstantExpression(ref right);
 
             return Expression.GreaterThanOrEqual(left, right);
         }
@@ -123,6 +137,9 @@ namespace System.Linq.Dynamic.Core.Parser
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
 
+            WrapConstantExpression(ref left);
+            WrapConstantExpression(ref right);
+
             return Expression.LessThan(left, right);
         }
 
@@ -138,6 +155,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.LessThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
+
+            WrapConstantExpression(ref left);
+            WrapConstantExpression(ref right);
 
             return Expression.LessThanOrEqual(left, right);
         }
@@ -195,5 +215,52 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             return Expression.Call(null, GetStaticMethod(methodName, left, right), new[] { left, right });
         }
+        
+       static void WrapConstantExpression(ref Expression expression)
+        {
+            if (!(expression is ConstantExpression || expression is NewExpression)) return;
+
+            if (expression is ConstantExpression)
+            {
+                ConstantExpression constantExpression = expression as ConstantExpression;
+
+                if (constantExpression.Type == typeof(string)) expression = WrappedConstant((string)constantExpression.Value);
+
+                if (constantExpression.Type == typeof(Int64)) expression = WrappedConstant((Int64)constantExpression.Value);
+
+                if (constantExpression.Type == typeof(Int32)) expression = WrappedConstant((Int32)constantExpression.Value);
+
+                if (constantExpression.Type == typeof(Int16)) expression = WrappedConstant((Int16)constantExpression.Value);
+
+                if (constantExpression.Type == typeof(Guid)) expression = WrappedConstant((Guid)constantExpression.Value);
+
+                if (constantExpression.Type == typeof(DateTime)) expression = WrappedConstant((DateTime)constantExpression.Value);
+            }
+            else
+            {
+                NewExpression newExpression = expression as NewExpression;
+
+                if (newExpression.Type == typeof(Guid)) expression = WrappedConstant((Expression.Lambda<Func<Guid>>(newExpression).Compile())());
+
+                if (newExpression.Type == typeof(DateTime)) expression = WrappedConstant((Expression.Lambda<Func<DateTime>>(newExpression).Compile())());
+            }
+        }
+
+        public static MemberExpression WrappedConstant<TValue>(TValue value)
+        {
+            var wrapper = new WrappedObj<TValue>(value);
+            return Expression.Property(
+                Expression.Constant(wrapper),
+                typeof(WrappedObj<TValue>).GetProperty("Value"));
+        }
+
+        private class WrappedObj<TValue>
+        {
+            public TValue Value { get; set; }
+            public WrappedObj(TValue value)
+            {
+                this.Value = value;
+            }
+        }        
     }
 }
