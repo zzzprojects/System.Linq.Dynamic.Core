@@ -64,10 +64,7 @@ namespace ConsoleAppEF21
             //};
             // Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.None));
 
-            var config = new ParsingConfig
-            {
-                EvaluateGroupByAtDatabase = true
-            };
+            var config = ParsingConfig.DefaultEFCore21;
 
             var context = new TestContext();
             if (!context.Cars.Any())

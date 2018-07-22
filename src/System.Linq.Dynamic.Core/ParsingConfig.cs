@@ -7,7 +7,18 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public class ParsingConfig
     {
-        internal static ParsingConfig Default { get; } = new ParsingConfig();
+        /// <summary>
+        /// Default ParsingConfig
+        /// </summary>
+        public static ParsingConfig Default { get; } = new ParsingConfig();
+
+        /// <summary>
+        /// Default ParsingConfig for EntityFramework Core 2.1 and higher
+        /// </summary>
+        public static ParsingConfig DefaultEFCore21 { get; } = new ParsingConfig
+        {
+            EvaluateGroupByAtDatabase = true
+        };
 
         private IDynamicLinkCustomTypeProvider _customTypeProvider;
 
