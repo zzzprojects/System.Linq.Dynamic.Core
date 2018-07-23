@@ -224,29 +224,47 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 ConstantExpression constantExpression = expression as ConstantExpression;
 
-                if (constantExpression.Type == typeof(string)) expression = WrappedConstant((string)constantExpression.Value);
-
-                if (constantExpression.Type == typeof(Int64)) expression = WrappedConstant((Int64)constantExpression.Value);
-
-                if (constantExpression.Type == typeof(Int32)) expression = WrappedConstant((Int32)constantExpression.Value);
-
-                if (constantExpression.Type == typeof(Int16)) expression = WrappedConstant((Int16)constantExpression.Value);
-
-                if (constantExpression.Type == typeof(Guid)) expression = WrappedConstant((Guid)constantExpression.Value);
-
-                if (constantExpression.Type == typeof(DateTime)) expression = WrappedConstant((DateTime)constantExpression.Value);
+                if (constantExpression.Type == typeof(string)) 
+                {
+                    expression = WrappedConstant((string)constantExpression.Value);
+                }
+                else if (constantExpression.Type == typeof(Int64)) 
+                {
+                    expression = WrappedConstant((Int64)constantExpression.Value);
+                } 
+                else if (constantExpression.Type == typeof(Int32)) 
+                {
+                    expression = WrappedConstant((Int32)constantExpression.Value);
+                }
+                else if (constantExpression.Type == typeof(Int16)) 
+                {
+                    expression = WrappedConstant((Int16)constantExpression.Value);
+                }
+                else if (constantExpression.Type == typeof(Guid)) 
+                {
+                    expression = WrappedConstant((Guid)constantExpression.Value);
+                }
+                else if (constantExpression.Type == typeof(DateTime)) 
+                {
+                    expression = WrappedConstant((DateTime)constantExpression.Value);
+                }
             }
             else
             {
                 NewExpression newExpression = expression as NewExpression;
 
-                if (newExpression.Type == typeof(Guid)) expression = WrappedConstant((Expression.Lambda<Func<Guid>>(newExpression).Compile())());
-
-                if (newExpression.Type == typeof(DateTime)) expression = WrappedConstant((Expression.Lambda<Func<DateTime>>(newExpression).Compile())());
+                if (newExpression.Type == typeof(Guid)) 
+                {
+                    expression = WrappedConstant((Expression.Lambda<Func<Guid>>(newExpression).Compile())());
+                }
+                else if (newExpression.Type == typeof(DateTime)) 
+                {
+                    expression = WrappedConstant((Expression.Lambda<Func<DateTime>>(newExpression).Compile())());
+                }
             }
         }
 
-        public static MemberExpression WrappedConstant<TValue>(TValue value)
+        private static MemberExpression WrappedConstant<TValue>(TValue value)
         {
             var wrapper = new WrappedObj<TValue>(value);
             return Expression.Property(
