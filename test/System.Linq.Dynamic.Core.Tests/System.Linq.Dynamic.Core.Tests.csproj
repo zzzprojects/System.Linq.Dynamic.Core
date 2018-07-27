@@ -3,7 +3,6 @@
     <Authors>Stef Heyenrath</Authors>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
-    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">$(PackageTargetFallback);dnxcore50;dotnet5.4;portable-net451+win8</PackageTargetFallback>
     <DebugType>full</DebugType>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>

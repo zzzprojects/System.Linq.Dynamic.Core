@@ -26,8 +26,8 @@ environment:
 
 before_build:
 # Remove UAP10 and netstandard20 from csproj
-- cmd: copy /Y src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.AppVeyor.csproj src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
-- cmd: copy /Y src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.AppVeyor.csproj src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
+#- cmd: copy /Y src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.AppVeyor.csproj src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
+#- cmd: copy /Y src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.AppVeyor.csproj src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
 
 # Restore all
 - dotnet restore src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
@@ -43,8 +43,7 @@ build_script:
 
 # Build Code
 - dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
-- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj -c %CONFIGURATION% --framework netstandard1.3
-#- dotnet build src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj -c %CONFIGURATION% --framework netstandard1.3
+- dotnet build src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj -c %CONFIGURATION% --framework netstandard2.0
 - dotnet build src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj -c %CONFIGURATION% --framework netstandard2.0
 
 # Build Tests
@@ -52,10 +51,6 @@ build_script:
 - dotnet build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj -c %CONFIGURATION%
 
 test_script:
-# Run tests for EntityFramework.DynamicLinq
-- dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
-
-after_test:
 # Use System.Linq.Dynamic.Core.Tests as coverage tests
 - nuget.exe install OpenCover -ExcludeVersion
 - nuget.exe install coveralls.net -ExcludeVersion -Version 0.7.0
@@ -65,3 +60,6 @@ after_test:
 - codecov -f "coverage.xml"
 - coveralls.net\tools\csmacnz.Coveralls.exe --opencover -i .\coverage.xml
 - dotnet sonarscanner end /d:sonar.login="%SONAR_TOKEN%"
+
+# Run tests for EntityFramework.DynamicLinq
+- dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
