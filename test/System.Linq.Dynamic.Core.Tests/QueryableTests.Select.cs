@@ -5,6 +5,7 @@ using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Linq.PropertyTranslator.Core;
 using QueryInterceptor.Core;
 using Xunit;
+using NFluent;
 #if EFCORE
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 #else
@@ -159,6 +160,71 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(range.Select(x => x * x).Cast<object>().ToList(), rangeResult.ToDynamicList());
             Assert.Equal(testList.Select(x => x.UserName).Cast<object>().ToList(), userNames.ToDynamicList());
             Assert.Equal(testList.Select(x => x.Profile).Cast<object>().ToList(), userProfiles.ToDynamicList());
+        }
+
+        public class Example
+        {
+            public DateTime Time { get; set; }
+            public DayOfWeek? DOWNull { get; set; }
+            public DayOfWeek DOW { get; set; }
+            public int Sec { get; set; }
+            public int? SecNull { get; set; }
+        }
+
+        public class ExampleWithConstructor
+        {
+            public DateTime Time { get; set; }
+            public DayOfWeek? DOWNull { get; set; }
+            public DayOfWeek DOW { get; set; }
+            public int Sec { get; set; }
+            public int? SecNull { get; set; }
+
+            public ExampleWithConstructor(DateTime t, DayOfWeek? dn, DayOfWeek d, int s, int? sn)
+            {
+                Time = t;
+                DOWNull = dn;
+                DOW = d;
+                Sec = s;
+                SecNull = sn;
+            }
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoTypeWithNullableProperties1()
+        {
+            // Arrange
+            var dates = Enumerable.Repeat(0, 7)
+                    .Select((d, i) => new DateTime(2000, 1, 1).AddDays(i).AddSeconds(i))
+                    .AsQueryable();
+
+            // Act
+            IQueryable<Example> result = dates
+                .Select(d => new Example { Time = d, DOWNull = d.DayOfWeek, DOW = d.DayOfWeek, Sec = d.Second, SecNull = d.Second });
+            IQueryable<Example> resultDynamic = dates
+                .Select<Example>("new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
+
+            // Assert
+            Check.That(resultDynamic.First()).Equals(result.First());
+            Check.That(resultDynamic.Last()).Equals(result.Last());
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoTypeWithNullableProperties2()
+        {
+            // Arrange
+            var dates = Enumerable.Repeat(0, 7)
+                    .Select((d, i) => new DateTime(2000, 1, 1).AddDays(i).AddSeconds(i))
+                    .AsQueryable();
+
+            // Act
+            IQueryable<ExampleWithConstructor> result = dates
+                .Select(d => new ExampleWithConstructor(d, d.DayOfWeek, d.DayOfWeek, d.Second, d.Second));
+            IQueryable<ExampleWithConstructor> resultDynamic = dates
+                .Select<ExampleWithConstructor>("new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
+
+            // Assert
+            Check.That(resultDynamic.First()).Equals(result.First());
+            Check.That(resultDynamic.Last()).Equals(result.Last());
         }
 
         [Fact]
