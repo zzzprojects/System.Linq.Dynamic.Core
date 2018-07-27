@@ -25,6 +25,7 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
+    <ProjectGuid>{D3804228-91F4-4502-9595-39584E510000}</ProjectGuid>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

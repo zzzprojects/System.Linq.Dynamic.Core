@@ -8,6 +8,7 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
+    <ProjectGuid>{D3804228-91F4-4502-9595-39584EF20002}</ProjectGuid>
   </PropertyGroup>
   
   <ItemGroup>
