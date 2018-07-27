@@ -27,10 +27,10 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
     <ProjectGuid>{D3804228-91F4-4502-9595-39584E510001}</ProjectGuid>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>full</DebugType>
     <IncludeSource>True</IncludeSource>
     <IncludeSymbols>True</IncludeSymbols>
     <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
