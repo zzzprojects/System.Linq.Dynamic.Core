@@ -25,10 +25,11 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
+    <ProjectGuid>{D3804228-91F4-4502-9595-39584E510000}</ProjectGuid>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>full</DebugType>
     <IncludeSource>True</IncludeSource>
     <IncludeSymbols>True</IncludeSymbols>
     <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
@@ -48,10 +49,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="EntityFramework">
-      <Version>6.1.3</Version>
-    </PackageReference>
     <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
+      <PackageReference Include="EntityFramework" Version="6.1.3" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">

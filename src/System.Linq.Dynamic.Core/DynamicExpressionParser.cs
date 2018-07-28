@@ -11,7 +11,7 @@ namespace System.Linq.Dynamic.Core
     public static class DynamicExpressionParser
     {
         /// <summary>
-        /// *** Parses an expression into a LambdaExpression.
+        /// Parses an expression into a LambdaExpression.
         /// </summary>
         /// <param name="parsingConfig">The Configuration for the parsing.</param>
         /// <param name="createParameterCtor">if set to <c>true</c> then also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.</param>
@@ -45,7 +45,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// *** Parses an expression into a LambdaExpression.
+        /// Parses an expression into a LambdaExpression.
         /// </summary>
         /// <param name="parsingConfig">The Configuration for the parsing.</param>
         /// <param name="createParameterCtor">if set to <c>true</c> then also create a constructor for all the parameters. Note that this doesn't work for Linq-to-Database entities.</param>
