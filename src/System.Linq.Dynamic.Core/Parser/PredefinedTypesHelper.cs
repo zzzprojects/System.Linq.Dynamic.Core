@@ -62,6 +62,12 @@ namespace System.Linq.Dynamic.Core.Parser
             TryAdd("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
 #endif
 
+#if NETSTANDARD
+            // Try to add DbFunctionsExtensions and EF from EF Core 2 or higher
+            TryAdd("Microsoft.EntityFrameworkCore.DbFunctionsExtensions, Microsoft.EntityFrameworkCore", 4);
+            TryAdd("Microsoft.EntityFrameworkCore.EF, Microsoft.EntityFrameworkCore", 4);
+#endif
+
 #if NETSTANDARD2_0
             TryAdd("Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version=1.0.0.0, Culture=neutral, PublicKeyToken=974e7e1b462f3693", 3);
 #endif

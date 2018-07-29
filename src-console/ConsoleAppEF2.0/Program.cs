@@ -21,6 +21,9 @@ namespace ConsoleAppEF2
 
                 set.Add(typeof(TestContext));
 
+                //set.Add(typeof(DbFunctionsExtensions));
+                //set.Add(typeof(EF));
+
                 return set;
             }
         }
@@ -82,26 +85,29 @@ namespace ConsoleAppEF2
             var carFirstOrDefault = context.Cars.Where(config, "Brand == \"Ford\"");
             Console.WriteLine("carFirstOrDefault {0}", JsonConvert.SerializeObject(carFirstOrDefault, Formatting.Indented));
 
-            var carsLike1 =
-                from c in context.Cars
-                where EF.Functions.Like(c.Brand, "%a%")
-                select c;
-            Console.WriteLine("carsLike1 {0}", JsonConvert.SerializeObject(carsLike1, Formatting.Indented));
+            //var carsLike1 =
+            //    from c in context.Cars
+            //    where EF.Functions.Like(c.Brand, "%a%")
+            //    select c;
+            //Console.WriteLine("carsLike1 {0}", JsonConvert.SerializeObject(carsLike1, Formatting.Indented));
 
-            var cars2Like = context.Cars.Where(c => EF.Functions.Like(c.Brand, "%a%"));
-            Console.WriteLine("cars2Like {0}", JsonConvert.SerializeObject(cars2Like, Formatting.Indented));
+            //var cars2Like = context.Cars.Where(c => EF.Functions.Like(c.Brand, "%a%"));
+            //Console.WriteLine("cars2Like {0}", JsonConvert.SerializeObject(cars2Like, Formatting.Indented));
 
-            var dynamicCarsLike1 = context.Cars.Where(config, "TestContext.Like(Brand, \"%a%\")");
-            Console.WriteLine("dynamicCarsLike1 {0}", JsonConvert.SerializeObject(dynamicCarsLike1, Formatting.Indented));
+            //var dynamicCarsLike1 = context.Cars.Where(config, "TestContext.Like(Brand, \"%a%\")");
+            //Console.WriteLine("dynamicCarsLike1 {0}", JsonConvert.SerializeObject(dynamicCarsLike1, Formatting.Indented));
 
-            var dynamicCarsLike2 = context.Cars.Where(config, "TestContext.Like(Brand, \"%d%\")");
-            Console.WriteLine("dynamicCarsLike2 {0}", JsonConvert.SerializeObject(dynamicCarsLike2, Formatting.Indented));
+            //var dynamicCarsLike2 = context.Cars.Where(config, "TestContext.Like(Brand, \"%d%\")");
+            //Console.WriteLine("dynamicCarsLike2 {0}", JsonConvert.SerializeObject(dynamicCarsLike2, Formatting.Indented));
 
-            var dynamicFunctionsLike1 = context.Cars.Where(config, "DynamicFunctions.Like(Brand, \"%a%\")");
-            Console.WriteLine("dynamicFunctionsLike1 {0}", JsonConvert.SerializeObject(dynamicFunctionsLike1, Formatting.Indented));
+            var dynamicFunctionsLikeExecutedLocal = context.Cars.Where(config, "DynamicFunctions.Like(Brand, \"%a%\")");
+            Console.WriteLine("dynamicFunctionsLikeExecutedLocal {0}", JsonConvert.SerializeObject(dynamicFunctionsLikeExecutedLocal, Formatting.Indented));
 
-            var dynamicFunctionsLike2 = context.Cars.Where(config, "DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
-            Console.WriteLine("dynamicFunctionsLike2 {0}", JsonConvert.SerializeObject(dynamicFunctionsLike2, Formatting.Indented));
+            var dynamicFunctionsLikeExecutedOnServer = context.Cars.Where(config, "DbFunctionsExtensions.Like(EF.Functions, Brand, \"%a%\")");
+            Console.WriteLine("dynamicFunctionsLikeExecutedOnServer {0}", JsonConvert.SerializeObject(dynamicFunctionsLikeExecutedOnServer, Formatting.Indented));
+
+            //var dynamicFunctionsLike2 = context.Cars.Where(config, "DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
+            //Console.WriteLine("dynamicFunctionsLike2 {0}", JsonConvert.SerializeObject(dynamicFunctionsLike2, Formatting.Indented));
 
             var testDynamic = context.Cars.Select(c => new
             {
@@ -112,7 +118,7 @@ namespace ConsoleAppEF2
             var testDynamicResult = testDynamic.Select("it").OrderBy("C");
             try
             {
-                Console.WriteLine("resultX {0}", JsonConvert.SerializeObject(testDynamicResult, Formatting.Indented));
+                Console.WriteLine("testDynamicResult {0}", JsonConvert.SerializeObject(testDynamicResult, Formatting.Indented));
             }
             catch (Exception e)
             {
