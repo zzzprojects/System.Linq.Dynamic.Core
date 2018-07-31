@@ -4,7 +4,7 @@
     <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
     <VersionPrefix>1.0.8.12</VersionPrefix>
     <Authors>Microsoft;Scott Guthrie;King Wilder;Nathan Arnott;Stef Heyenrath</Authors>
-    <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0;uap10.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>System.Linq.Dynamic.Core</AssemblyName>
     <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
@@ -124,7 +124,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.10" />
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
   </ItemGroup>

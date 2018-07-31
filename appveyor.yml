@@ -26,8 +26,8 @@ environment:
 
 before_build:
 # Remove UAP10 and netstandard20 from csproj
-#- cmd: copy /Y src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.AppVeyor.csproj src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
-#- cmd: copy /Y src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.AppVeyor.csproj src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
+- cmd: copy /Y src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.AppVeyor.csproj src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
+- cmd: copy /Y src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.AppVeyor.csproj src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
 
 # Restore all
 - dotnet restore src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
