@@ -173,7 +173,7 @@ namespace System.Linq.Dynamic.Core
         [PublicAPI]
         public static LambdaExpression ParseLambda([CanBeNull] ParsingConfig parsingConfig, [NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
         {
-            return ParseLambda(true, itType, resultType, expression, parsingConfig, values);
+            return ParseLambda(parsingConfig, true, itType, resultType, expression, values);
         }
 
         /// <summary>
