@@ -97,6 +97,8 @@
     <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\TestEnum.cs">
       <Link>Helpers\TestEnum.cs</Link>
     </Compile>
+    <Compile Include="Helpers\Models\UserProfileDetails.cs" />
+    <Compile Include="Helpers\Models\UserState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
