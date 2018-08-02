@@ -42,10 +42,8 @@ before_build:
 - dotnet restore test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
 
 build_script:
-if ($env:APPVEYOR_REPO_BRANCH -eq 'master') {
-  # Begin SonarScanner
-  - dotnet sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="%SONAR_TOKEN%" /v:"%APPVEYOR_BUILD_NUMBER%" /d:sonar.cs.opencover.reportsPaths="%CD%\coverage.xml"   
-}
+# Begin SonarScanner
+- IF %APPVEYOR_REPO_BRANCH%==master dotnet sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="%SONAR_TOKEN%" /v:"%APPVEYOR_BUILD_NUMBER%" /d:sonar.cs.opencover.reportsPaths="%CD%\coverage.xml"   
 
 # Build Code
 - dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
@@ -65,10 +63,7 @@ test_script:
 - cmd: '"OpenCover\tools\OpenCover.Console.exe" -target:dotnet.exe -targetargs:"test test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj --configuration %CONFIGURATION% --framework netcoreapp1.1 --no-build" -output:coverage.xml -register:user -filter:"+[Microsoft.EntityFrameworkCore.DynamicLinq]* +[System.Linq.Dynamic.Core]* -[*Tests*]*" -nodefaultfilters -returntargetcode -oldstyle'
 - codecov -f "coverage.xml"
 - coveralls.net\tools\csmacnz.Coveralls.exe --opencover -i .\coverage.xml
-
-if ($env:APPVEYOR_REPO_BRANCH -eq 'master') {
-  - dotnet sonarscanner end /d:sonar.login="%SONAR_TOKEN%"
-}
+- IF %APPVEYOR_REPO_BRANCH%==master dotnet sonarscanner end /d:sonar.login="%SONAR_TOKEN%"
 
 # Run tests for EntityFramework.DynamicLinq
 - dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
