@@ -423,22 +423,21 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_CustomMethod()
         {
+            // Assign
             var config = new ParsingConfig
             {
                 CustomTypeProvider = new TestCustomTypeProvider()
             };
 
             var context = new CustomClassWithStaticMethod();
-            var original = $"{nameof(CustomClassWithStaticMethod)}.{nameof(CustomClassWithStaticMethod.GetAge)}(10)";
-            int result = 0;
-            Check.ThatCode(() =>
-                {
-                    var expression = System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(config, typeof(CustomClassWithStaticMethod), null, original);
-                    Delegate del = expression.Compile();
-                    result = (int) del.DynamicInvoke(context);
-                })
-                .DoesNotThrow();
+            string expression = $"{nameof(CustomClassWithStaticMethod)}.{nameof(CustomClassWithStaticMethod.GetAge)}(10)";
 
+            // Act
+            var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(CustomClassWithStaticMethod), null, expression);
+            Delegate del = lambdaExpression.Compile();
+            int result = (int)del.DynamicInvoke(context);
+
+            // Assert
             Check.That(result).IsEqualTo(10);
         }
     }
