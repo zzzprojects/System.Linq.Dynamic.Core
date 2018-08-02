@@ -17,11 +17,10 @@ install:
 - ps: $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
 - dotnet tool install --global dotnet-sonarscanner
 
-environment:
-  PATH: $(PATH);$(PROGRAMFILES)\dotnet\
-
   # https://www.appveyor.com/docs/build-configuration/#secure-variables
   # However, secure variables are not decoded during Pull Request builds which prevents someone from submitting PR with malicious build script displaying those variables. In more controlled environment through with a trusted team and private GitHub repositories there is an option on General tab of project settings to allow secure variables for PRs.
+environment:
+  PATH: $(PATH);$(PROGRAMFILES)\dotnet\
   COVERALLS_REPO_TOKEN:
     secure: tsTABRbCmdWFLT194XNIrpurerOfjN6cEoxt2RaSUfLmUIgra/+CwuqVkv0sPRop
   SONAR_TOKEN:
@@ -43,7 +42,7 @@ before_build:
 
 build_script:
 # Begin SonarScanner
-- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="%SONAR_TOKEN%" /v:"%APPVEYOR_BUILD_NUMBER%" /d:sonar.cs.opencover.reportsPaths="%CD%\coverage.xml" }'
+- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { & dotnet sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env:SONAR_TOKEN" /v:"$env:APPVEYOR_BUILD_NUMBER" /d:sonar.cs.opencover.reportsPaths="$env:CD\coverage.xml" }'
 
 # Build Code
 - dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
@@ -63,7 +62,7 @@ test_script:
 - cmd: '"OpenCover\tools\OpenCover.Console.exe" -target:dotnet.exe -targetargs:"test test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj --configuration %CONFIGURATION% --framework netcoreapp1.1 --no-build" -output:coverage.xml -register:user -filter:"+[Microsoft.EntityFrameworkCore.DynamicLinq]* +[System.Linq.Dynamic.Core]* -[*Tests*]*" -nodefaultfilters -returntargetcode -oldstyle'
 - codecov -f "coverage.xml"
 - coveralls.net\tools\csmacnz.Coveralls.exe --opencover -i .\coverage.xml
-- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { dotnet sonarscanner end /d:sonar.login="%SONAR_TOKEN%" }'
+- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { & dotnet sonarscanner end /d:sonar.login="$env:SONAR_TOKEN" }'
 
 # Run tests for EntityFramework.DynamicLinq
 - dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
