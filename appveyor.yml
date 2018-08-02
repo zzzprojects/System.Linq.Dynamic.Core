@@ -19,10 +19,14 @@ install:
 
 environment:
   PATH: $(PATH);$(PROGRAMFILES)\dotnet\
+
+  # https://www.appveyor.com/docs/build-configuration/#secure-variables
+  # However, secure variables are not decoded during Pull Request builds which prevents someone from submitting PR with malicious build script displaying those variables. In more controlled environment through with a trusted team and private GitHub repositories there is an option on General tab of project settings to allow secure variables for PRs.
   COVERALLS_REPO_TOKEN:
     secure: tsTABRbCmdWFLT194XNIrpurerOfjN6cEoxt2RaSUfLmUIgra/+CwuqVkv0sPRop
   SONAR_TOKEN:
     secure: guog1+ttdnlD8sVgvizlewksm3qbO7dy2oZUcR8WhurWYvdOByinxXo732hmSaMT
+
 
 before_build:
 # Remove UAP10 and netstandard20 from csproj
