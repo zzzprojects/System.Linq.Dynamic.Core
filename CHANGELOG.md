@@ -1,3 +1,13 @@
+# 1.0.8.13 (02 August 2018)
+
+ - [#193](https://github.com/StefH/System.Linq.Dynamic.Core/pull/193) - Fix for ParseLambda with itType and resultType: correct order of arguments contributed by Oleg ([OlegNadymov](https://github.com/OlegNadymov))
+ - [#190](https://github.com/StefH/System.Linq.Dynamic.Core/pull/190) - Add SonarCloud (#186) contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#187](https://github.com/StefH/System.Linq.Dynamic.Core/issues/187) - Add custom static classes for parsing
+ - [#186](https://github.com/StefH/System.Linq.Dynamic.Core/issues/186) - Feature: include SonarCloud code checks +feature
+
+Commits: f1cfbe2063...fa1b6f29fc
+
+
 # 1.0.8.12 (27 July 2018)
 
  - [#189](https://github.com/StefH/System.Linq.Dynamic.Core/pull/189) - Fix conversion from a non-nullable value type to the nullable value type contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
