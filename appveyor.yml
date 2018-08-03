@@ -42,7 +42,7 @@ before_build:
 
 build_script:
 # Begin SonarScanner
-- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { & dotnet sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env:SONAR_TOKEN" /v:"$env:APPVEYOR_BUILD_NUMBER" /d:sonar.cs.opencover.reportsPaths="$env:CD\coverage.xml" }'
+- dotnet sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env:SONAR_TOKEN" /v:"$env:APPVEYOR_BUILD_NUMBER" /d:sonar.cs.opencover.reportsPaths="$env:CD\coverage.xml"
 
 # Build Code
 - dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
