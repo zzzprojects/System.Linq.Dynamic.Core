@@ -1246,13 +1246,30 @@ namespace System.Linq.Dynamic.Core.Parser
             ConstructorInfo ctor = type.GetConstructor(propertyTypes);
             if (ctor != null && ctor.GetParameters().Length == expressions.Count)
             {
-                return Expression.New(ctor, expressions, (IEnumerable<MemberInfo>)propertyInfos);
+                var expressionsPromoted = new List<Expression>();
+
+                // Loop all expressions and promote if needed
+                for (int i = 0; i < propertyTypes.Length; i++)
+                {
+                    Type propertyType = propertyTypes[i];
+                    Type expressionType = expressions[i].Type;
+
+                    // Promote from Type to Nullable Type if needed
+                    expressionsPromoted.Add(ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
+                }
+
+                return Expression.New(ctor, expressionsPromoted, (IEnumerable<MemberInfo>)propertyInfos);
             }
 
             MemberBinding[] bindings = new MemberBinding[properties.Count];
             for (int i = 0; i < bindings.Length; i++)
             {
-                bindings[i] = Expression.Bind(type.GetProperty(properties[i].Name), expressions[i]);
+                PropertyInfo property = type.GetProperty(properties[i].Name);
+                Type propertyType = property.PropertyType;
+                Type expressionType = expressions[i].Type;
+
+                // Promote from Type to Nullable Type if needed
+                bindings[i] = Expression.Bind(property, ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
             }
 
             return Expression.MemberInit(Expression.New(type), bindings);

@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>This is a .NETStandard/ .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
     <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
-    <VersionPrefix>1.0.8.11</VersionPrefix>
+    <VersionPrefix>1.0.8.13</VersionPrefix>
     <Authors>Microsoft;Scott Guthrie;King Wilder;Nathan Arnott;Stef Heyenrath</Authors>
     <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -26,10 +26,11 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
+    <ProjectGuid>{D3804228-91F4-4502-9595-39584E510002}</ProjectGuid>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>full</DebugType>
     <IncludeSource>True</IncludeSource>
     <IncludeSymbols>True</IncludeSymbols>
     <PathMap>$(MSBuildProjectDirectory)=/</PathMap>

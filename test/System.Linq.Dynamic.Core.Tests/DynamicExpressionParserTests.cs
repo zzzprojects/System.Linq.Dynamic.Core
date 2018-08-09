@@ -32,6 +32,11 @@ namespace System.Linq.Dynamic.Core.Tests
             public int TotalIncome { get; set; }
         }
 
+        public class CustomClassWithStaticMethod
+        {
+            public static int GetAge(int x) => x;
+        }
+
         private class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
             private HashSet<Type> _customTypes;
@@ -44,6 +49,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 }
 
                 _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }));
+                _customTypes.Add(typeof(CustomClassWithStaticMethod));
                 return _customTypes;
             }
         }
@@ -412,6 +418,27 @@ namespace System.Linq.Dynamic.Core.Tests
                 DynamicExpressionParser.ParseLambda(typeof(IO.FileStream), null, "it.Close()");
             })
             .Throws<ParseException>().WithMessage("Methods on type 'Stream' are not accessible");
+        }
+
+        [Fact]
+        public void ParseLambda_CustomMethod()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                CustomTypeProvider = new TestCustomTypeProvider()
+            };
+
+            var context = new CustomClassWithStaticMethod();
+            string expression = $"{nameof(CustomClassWithStaticMethod)}.{nameof(CustomClassWithStaticMethod.GetAge)}(10)";
+
+            // Act
+            var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(CustomClassWithStaticMethod), null, expression);
+            Delegate del = lambdaExpression.Compile();
+            int result = (int)del.DynamicInvoke(context);
+
+            // Assert
+            Check.That(result).IsEqualTo(10);
         }
     }
 }

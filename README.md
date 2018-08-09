@@ -1,19 +1,6 @@
 # System.Linq.Dynamic.Core
 This is a **.NET Core / Standard port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/0c4v2bsvdqd57600?svg=true)](https://ci.appveyor.com/project/StefH/system-linq-dynamic-core)
-[![codecov](https://codecov.io/gh/StefH/System.Linq.Dynamic.Core/branch/master/graph/badge.svg)](https://codecov.io/gh/StefH/System.Linq.Dynamic.Core)
-[![Coverage Status](https://coveralls.io/repos/github/StefH/System.Linq.Dynamic.Core/badge.svg?branch=master)](https://coveralls.io/github/StefH/System.Linq.Dynamic.Core?branch=master)
-[![GitHub issues](https://img.shields.io/github/issues/StefH/System.Linq.Dynamic.Core.svg)](https://github.com/StefH/System.Linq.Dynamic.Core/issues)
-[![GitHub stars](https://img.shields.io/github/stars/StefH/System.Linq.Dynamic.Core.svg)](https://github.com/StefH/System.Linq.Dynamic.Core/stargazers)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/StefH/System.Linq.Dynamic.Core/master/LICENSE)
-
-| Project | NuGet |
-| ------- | ----- |
-| System.Linq.Dynamic.Core | [![NuGet Badge](https://buildstats.info/nuget/System.Linq.Dynamic.Core)](https://www.nuget.org/packages/System.Linq.Dynamic.Core) |
-| EntityFramework.DynamicLinq | [![NuGet Badge](https://buildstats.info/nuget/EntityFramework.DynamicLinq)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
-| Microsoft.EntityFrameworkCore.DynamicLinq | [![NuGet Badge](https://buildstats.info/nuget/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
-
 # Overview
 With this library it's possible to write Dynamic LINQ queries (string based) on an `IQueryable`:
 ```csharp
@@ -25,10 +12,31 @@ var query = db.Customers
 
 # How to use
 There are several documentation resources:
-
 - [Wiki][doc-wiki] : an overview from the basic functionality  (correctness ~ 80%)
 - [API Documentation][doc-api] : a low-level API description website with some code samples
 - DynamicLinqWebDocs (TODO)
+
+# Info
+| | |
+| --- | --- |
+| ***Project*** | &nbsp; |
+| &nbsp;&nbsp;**Chat** | [![Gitter](https://img.shields.io/gitter/room/system-linq-dynamic-core/Lobby.svg)](https://gitter.im/system-linq-dynamic-core/Lobby) |
+| &nbsp;&nbsp;**Issues** | [![GitHub issues](https://img.shields.io/github/issues/StefH/System.Linq.Dynamic.Core.svg)](https://github.com/StefH/System.Linq.Dynamic.Core/issues) |
+| | |
+| ***Quality*** | &nbsp; |
+| &nbsp;&nbsp;**Build** | [![Build status](https://ci.appveyor.com/api/projects/status/0c4v2bsvdqd57600?svg=true)](https://ci.appveyor.com/project/StefH/system-linq-dynamic-core) |
+| &nbsp;&nbsp;**CodeFactor** | [![CodeFactor](https://www.codefactor.io/repository/github/stefh/system.linq.dynamic.core/badge)](https://www.codefactor.io/repository/github/stefh/system.linq.dynamic.core)
+| &nbsp;&nbsp;**Sonar Quality Gate** | [![Sonar Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=alert_status)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core) |
+| &nbsp;&nbsp;**Sonar Bugs** | [![Sonar Bugs](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=bugs)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core&resolved=false&types=BUG) |
+| &nbsp;&nbsp;**Sonar Code Smells** | [![Sonar Code Smells](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=code_smells)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core&resolved=false&types=CODE_SMELL) |
+| &nbsp;&nbsp;**Sonar Coverage** | [![Sonar Coverage](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=coverage)](https://sonarcloud.io/component_measures?id=system.linq.dynamic.core&metric=coverage) |
+| &nbsp;&nbsp;**Codecov** | [![codecov](https://codecov.io/gh/StefH/System.Linq.Dynamic.Core/branch/master/graph/badge.svg)](https://codecov.io/gh/StefH/System.Linq.Dynamic.Core) |
+| &nbsp;&nbsp;**Coveralls** | [![Coverage Status](https://coveralls.io/repos/github/StefH/System.Linq.Dynamic.Core/badge.svg?branch=master)](https://coveralls.io/github/StefH/System.Linq.Dynamic.Core?branch=master) |
+| |
+| ***Nuget*** | &nbsp; |
+| &nbsp;&nbsp;**System.Linq.Dynamic.Core** | [![NuGet Badge](https://buildstats.info/nuget/System.Linq.Dynamic.Core)](https://www.nuget.org/packages/System.Linq.Dynamic.Core) |
+| &nbsp;&nbsp;**EntityFramework.DynamicLinq** | [![NuGet Badge](https://buildstats.info/nuget/EntityFramework.DynamicLinq)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
+| &nbsp;&nbsp;**Microsoft.EntityFrameworkCore.DynamicLinq** | [![NuGet Badge](https://buildstats.info/nuget/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 
 
 # Development Details
