@@ -440,7 +440,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(result).IsEqualTo(10);
         }
-
+      
         [Fact]
         public void ParseLambda_With_InnerStringLiteral()
         {
