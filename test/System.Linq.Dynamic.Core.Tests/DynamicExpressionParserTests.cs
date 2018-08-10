@@ -440,5 +440,17 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(result).IsEqualTo(10);
         }
+
+        [Fact]
+        public void ParseLambda_With_InnerStringLiteral()
+        {
+            var originalTrueValue = "simple + \"quoted\"";
+            var doubleQuotedTrueValue = "simple + \"\"quoted\"\"";
+            var expressionText = $"iif(1>0, \"{doubleQuotedTrueValue}\", \"false\")";
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(string), null, expressionText);
+            var del = lambda.Compile();
+            object result = del.DynamicInvoke(String.Empty);
+            Check.That(result).IsEqualTo(originalTrueValue);
+        }
     }
 }
