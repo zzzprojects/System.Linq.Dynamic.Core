@@ -760,9 +760,14 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 int index2 = s.IndexOf(quote, index1);
                 if (index2 < 0)
+                {
                     break;
+                }
+
                 if (index2 + 1 < s.Length && s[index2 + 1] == quote)
+                {
                     s = s.Remove(index2, 1);
+                }
                 index1 = index2 + 1;
             }
 
