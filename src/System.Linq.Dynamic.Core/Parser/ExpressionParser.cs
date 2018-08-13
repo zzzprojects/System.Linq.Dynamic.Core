@@ -755,6 +755,21 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser.ValidateToken(TokenId.StringLiteral);
             char quote = _textParser.CurrentToken.Text[0];
             string s = _textParser.CurrentToken.Text.Substring(1, _textParser.CurrentToken.Text.Length - 2);
+            int index1 = 0;
+            while (true)
+            {
+                int index2 = s.IndexOf(quote, index1);
+                if (index2 < 0)
+                {
+                    break;
+                }
+
+                if (index2 + 1 < s.Length && s[index2 + 1] == quote)
+                {
+                    s = s.Remove(index2, 1);
+                }
+                index1 = index2 + 1;
+            }
 
             if (quote == '\'')
             {
