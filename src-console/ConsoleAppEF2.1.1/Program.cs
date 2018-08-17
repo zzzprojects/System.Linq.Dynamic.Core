@@ -61,7 +61,7 @@ namespace ConsoleAppEF211
             };
             Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
 
-            var config = new ParsingConfig();
+            var config = ParsingConfig.DefaultEFCore21;
             config.CustomTypeProvider = new C();
 
             var context = new TestContext();
@@ -79,8 +79,11 @@ namespace ConsoleAppEF211
                 context.SaveChanges();
             }
 
-            var carFirstOrDefault = context.Cars.Where(config, "Brand == \"Ford\"");
-            Console.WriteLine("carFirstOrDefault {0}", JsonConvert.SerializeObject(carFirstOrDefault, Formatting.Indented));
+            var carFirstOrDefault1 = context.Cars.Where(config, "Brand == \"Ford\"");
+            Console.WriteLine("carFirstOrDefault1 {0}", JsonConvert.SerializeObject(carFirstOrDefault1, Formatting.Indented));
+
+            var carFirstOrDefault2 = context.Cars.Where(config, "Brand == @0", "Alfa");
+            Console.WriteLine("carFirstOrDefault2 {0}", JsonConvert.SerializeObject(carFirstOrDefault2, Formatting.Indented));
 
             var carsLike1 =
                 from c in context.Cars
