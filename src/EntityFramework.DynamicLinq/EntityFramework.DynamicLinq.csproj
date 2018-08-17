@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
     <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
-    <VersionPrefix>1.0.8.13</VersionPrefix>
+    <VersionPrefix>1.0.8.14</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
     <TargetFrameworks>net45;net46</TargetFrameworks>
     <DefineConstants>EF</DefineConstants>
@@ -12,7 +12,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
-    <PackageReleaseNotes>Bugfixes and new Features. For details see the release notes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
