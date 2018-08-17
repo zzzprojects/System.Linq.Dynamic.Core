@@ -1,3 +1,12 @@
+# 1.0.8.15 (17 August 2018)
+
+ - [#197](https://github.com/StefH/System.Linq.Dynamic.Core/pull/197) - Added EvaluateGroupByAtDatabase For EF Core 2.1 contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#196](https://github.com/StefH/System.Linq.Dynamic.Core/issues/196) - Question: Not applicable aggregate method 'Any' exists
+ - [#165](https://github.com/StefH/System.Linq.Dynamic.Core/issues/165) - Consider fit the rule of AnonymousTypes for EFCore2.1? +feature
+
+Commits: c730a78703...1e0ed4e692
+
+
 # 1.0.8.14 (14 August 2018)
 
  - [#195](https://github.com/StefH/System.Linq.Dynamic.Core/pull/195) - Fix the problem with inner double quotes contributed by Oleg ([OlegNadymov](https://github.com/OlegNadymov))
