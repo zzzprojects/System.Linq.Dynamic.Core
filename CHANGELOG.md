@@ -1,3 +1,10 @@
+# 1.0.8.16 (19 August 2018)
+
+ - [#198](https://github.com/StefH/System.Linq.Dynamic.Core/pull/198) - re-enable UAP10 support contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+
+Commits: eac1fdc0ea...eac1fdc0ea
+
+
 # 1.0.8.15 (17 August 2018)
 
  - [#197](https://github.com/StefH/System.Linq.Dynamic.Core/pull/197) - Added EvaluateGroupByAtDatabase For EF Core 2.1 contributed by Stef Heyenrath ([StefH](https://github.com/StefH))

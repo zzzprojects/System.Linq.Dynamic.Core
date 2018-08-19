@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
     <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
-    <VersionPrefix>1.0.8.15</VersionPrefix>
+    <VersionPrefix>1.0.8.16</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
     <TargetFrameworks>net45;net46</TargetFrameworks>
     <DefineConstants>EF</DefineConstants>
