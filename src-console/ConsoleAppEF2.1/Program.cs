@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using ConsoleAppEF2.Database;
 using ConsoleAppEF21.Database;
 using Newtonsoft.Json;
 

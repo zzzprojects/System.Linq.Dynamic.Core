@@ -90,6 +90,11 @@ namespace ConsoleAppEF2
             context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979", DateLastModified = dateLastModified.AddDays(3) });
             context.SaveChanges();
 
+            context.Brands.Add(new Brand { BrandType = "Ford", BrandName = "Fiesta" });
+            context.Brands.Add(new Brand { BrandType = "Fiat", BrandName = "Panda" });
+            context.Brands.Add(new Brand { BrandType = "Alfa", BrandName = "Romeo" });
+            context.SaveChanges();
+
             var carDateLastModified = context.Cars.Where(config, "DateLastModified > \"2018-01-16\"");
             Console.WriteLine("carDateLastModified {0}", JsonConvert.SerializeObject(carDateLastModified, Formatting.Indented));
 

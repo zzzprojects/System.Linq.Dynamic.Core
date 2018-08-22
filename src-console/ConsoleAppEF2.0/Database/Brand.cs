@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConsoleAppEF21.Database
+namespace ConsoleAppEF2.Database
 {
     public class Brand
     {
