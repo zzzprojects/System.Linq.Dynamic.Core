@@ -679,7 +679,7 @@ namespace System.Linq.Dynamic.Core
             Type outerType = outer.ElementType;
             Type innerType = inner.AsQueryable().ElementType;
 
-            bool createParameterCtor = outer.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? outer.IsLinqToObjects();
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, null, innerKeySelector, args);
 
@@ -708,7 +708,6 @@ namespace System.Linq.Dynamic.Core
         {
             return GroupJoin(outer, null, inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
-
         #endregion
 
         #region Join
@@ -736,7 +735,7 @@ namespace System.Linq.Dynamic.Core
             Type outerType = outer.ElementType;
             Type innerType = inner.AsQueryable().ElementType;
 
-            bool createParameterCtor = outer.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? outer.IsLinqToObjects();
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, null, innerKeySelector, args);
 

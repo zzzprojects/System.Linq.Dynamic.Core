@@ -24,8 +24,4 @@
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Database\" />
-    </ItemGroup>
-
 </Project>

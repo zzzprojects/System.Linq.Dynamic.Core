@@ -67,6 +67,8 @@ namespace ConsoleAppEF21
             var config = ParsingConfig.DefaultEFCore21;
 
             var context = new TestContext();
+            //context.Database.EnsureDeleted();
+            //context.Database.EnsureCreated();
             if (!context.Cars.Any())
             {
                 context.Cars.Add(new Car { Brand = "Ford", Color = "Blue", Vin = "yes", Year = "2017" });
@@ -76,13 +78,37 @@ namespace ConsoleAppEF21
                 context.SaveChanges();
             }
 
+            if (!context.Brands.Any())
+            {
+                context.Brands.Add(new Brand { BrandType = "Ford", BrandName = "Fiesta" });
+                context.Brands.Add(new Brand { BrandType = "Fiat", BrandName = "Panda" });
+                context.Brands.Add(new Brand { BrandType = "Alfa", BrandName = "Romeo" });
+                context.SaveChanges();
+            }
+
             //var g1 = context.Cars.GroupBy("new(Brand)").Select("new(Key.Brand as KeyValue1, it.Count() as CountValue1)").ToDynamicList();
             //Console.WriteLine("GroupBy @ local {0}", JsonConvert.SerializeObject(g1, Formatting.Indented));
 
             //Console.WriteLine(new string('_', 80));
 
-            var g2 = context.Cars.GroupBy("new(Brand)", config).Select("new(Key.Brand as KeyValue2, it.Count() as CountValue2)").ToDynamicList();
-            Console.WriteLine("GroupBy @ database {0}", JsonConvert.SerializeObject(g2, Formatting.Indented));
+            //var g2 = context.Cars.GroupBy("new(Brand)", config).Select("new(Key.Brand as KeyValue2, it.Count() as CountValue2)").ToDynamicList();
+            //Console.WriteLine("GroupBy @ database {0}", JsonConvert.SerializeObject(g2, Formatting.Indented));
+
+            var join1 = context.Cars.Join(
+                    context.Brands,
+                    c => c.Brand,
+                    b => b.BrandType,
+                    (c, b) => new { Brand = b, Car = c })
+                .GroupBy(g => g.Car.Year);
+            Console.WriteLine("join1 @ database {0}", JsonConvert.SerializeObject(join1, Formatting.Indented));
+
+            var join2 = context.Cars.Join(
+                    context.Brands,
+                    "it.Brand",
+                    "BrandType",
+                    "new(outer as Car, inner as Brand)")
+                .GroupBy("Car.Year");
+            Console.WriteLine("join2 @ database {0}", JsonConvert.SerializeObject(join2, Formatting.Indented));
 
             //var carFirstOrDefault = context.Cars.Where(config, "Brand == \"Ford\"");
             //Console.WriteLine("carFirstOrDefault {0}", JsonConvert.SerializeObject(carFirstOrDefault, Formatting.Indented));

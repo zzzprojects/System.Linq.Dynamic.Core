@@ -10,6 +10,8 @@ namespace ConsoleAppEF21.Database
 
         public virtual DbSet<Car> Cars { get; set; }
 
+        public virtual DbSet<Brand> Brands { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLoggerFactory(MyLoggerFactory); // Warning: Do not create a new ILoggerFactory instance each time
@@ -21,6 +23,7 @@ namespace ConsoleAppEF21.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Car>().HasKey(c => c.Key);
+            modelBuilder.Entity<Brand>().HasKey(b => b.BrandType);
         }
 
         // https://stackoverflow.com/questions/46212704/how-do-i-write-ef-functions-extension-method
