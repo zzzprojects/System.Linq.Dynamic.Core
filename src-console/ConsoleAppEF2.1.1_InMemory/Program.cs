@@ -63,6 +63,19 @@ namespace ConsoleAppEF2
             };
             Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
 
+            var anyTest = new []
+            {
+                new { id = "1", values =new [] { 1, 2, 3 } },
+                new { id = "2", values =new [] { 1, 4 } },
+                new { id = "3", values =new [] { 9, 5 } }
+            }.AsQueryable();
+
+            var any1 = anyTest.Where(x => x.values.Contains(1));
+            Console.WriteLine("any1 {0}", JsonConvert.SerializeObject(any1, Formatting.Indented));
+
+            var any2 = anyTest.Where("values.Contains(1)");
+            Console.WriteLine("any2 {0}", JsonConvert.SerializeObject(any2, Formatting.Indented));
+
             var config = new ParsingConfig
             {
                 CustomTypeProvider = new C()

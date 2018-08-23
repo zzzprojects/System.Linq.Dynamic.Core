@@ -17,13 +17,12 @@ install:
 - ps: $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
 - dotnet tool install --global dotnet-sonarscanner
 
-  # https://www.appveyor.com/docs/build-configuration/#secure-variables
-  # However, secure variables are not decoded during Pull Request builds which prevents someone from submitting PR with malicious build script displaying those variables. In more controlled environment through with a trusted team and private GitHub repositories there is an option on General tab of project settings to allow secure variables for PRs.
 environment:
   PATH: $(PATH);$(PROGRAMFILES)\dotnet\
 
   # https://www.appveyor.com/docs/build-configuration/#secure-variables
   # However, secure variables are not decoded during Pull Request builds which prevents someone from submitting PR with malicious build script displaying those variables. In more controlled environment through with a trusted team and private GitHub repositories there is an option on General tab of project settings to allow secure variables for PRs.
+  # See also https://medium.com/@stef.heyenrath/how-to-fix-sonarcloud-issue-in-a-github-pr-when-using-appveyor-integration-8909b49406b4
   COVERALLS_REPO_TOKEN:
     secure: tsTABRbCmdWFLT194XNIrpurerOfjN6cEoxt2RaSUfLmUIgra/+CwuqVkv0sPRop
   SONAR_TOKEN:
@@ -32,8 +31,8 @@ environment:
 
 before_build:
 # Remove UAP10 and netstandard20 from csproj
-#- cmd: copy /Y src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.AppVeyor.csproj src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
-#- cmd: copy /Y src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.AppVeyor.csproj src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
+- cmd: copy /Y src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.AppVeyor.csproj src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj
+- cmd: copy /Y src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.AppVeyor.csproj src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj
 
 # Restore all
 - dotnet restore src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj

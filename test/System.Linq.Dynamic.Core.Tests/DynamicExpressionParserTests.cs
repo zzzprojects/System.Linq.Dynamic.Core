@@ -454,7 +454,7 @@ namespace System.Linq.Dynamic.Core.Tests
             object result = del.DynamicInvoke(String.Empty);
             Check.That(result).IsEqualTo(originalTrueValue);
         }
-
+      
         [Fact]
         public void ParseLambda_With_If_Guid_Null()
         {
