@@ -11,6 +11,8 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class DynamicExpressionParserTests
     {
+
+
         private class MyClass
         {
             public int Foo()
@@ -451,6 +453,40 @@ namespace System.Linq.Dynamic.Core.Tests
             var del = lambda.Compile();
             object result = del.DynamicInvoke(String.Empty);
             Check.That(result).IsEqualTo(originalTrueValue);
+        }
+
+        [Fact]
+        public void ParseLambda_With_If_Guid_Null()
+        {
+            var objContext = new User();
+            var guidEmpty = Guid.Empty;
+            var someId = Guid.NewGuid();
+            var expressionText = $"iif(@0.{nameof(objContext.Id)} == null, @0.{nameof(objContext.Id)} == Guid.Parse(\"{someId}\"), {nameof(objContext.Id)}={nameof(objContext.Id)})";
+
+            var lambda = System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, objContext);
+            var boolLambda = lambda as Expression<Func<User, bool>>;
+            Check.That(boolLambda).IsNotEqualTo(null);
+
+            var del = lambda.Compile();
+            object result = del.DynamicInvoke(objContext);
+            Check.That(result).IsEqualTo(true);
+        }
+
+        [Fact]
+        public void ParseLambda_With_If_Null_Guid()
+        {
+            var objContext = new User();
+            var guidEmpty = Guid.Empty;
+            var someId = Guid.NewGuid();
+            var expressionText = $"iif(null == @0.{nameof(objContext.Id)}, @0.{nameof(objContext.Id)} == Guid.Parse(\"{someId}\"), {nameof(objContext.Id)}={nameof(objContext.Id)})";
+
+            var lambda = System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, objContext);
+            var boolLambda = lambda as Expression<Func<User, bool>>;
+            Check.That(boolLambda).IsNotEqualTo(null);
+
+            var del = lambda.Compile();
+            object result = del.DynamicInvoke(objContext);
+            Check.That(result).IsEqualTo(true);
         }
     }
 }

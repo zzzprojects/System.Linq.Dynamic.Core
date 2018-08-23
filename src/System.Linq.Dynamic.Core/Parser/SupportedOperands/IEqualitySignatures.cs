@@ -13,9 +13,13 @@
 
         void F(Guid x, Guid y);
         void F(Guid? x, Guid? y);
-        void F(Guid x, string y);
-        void F(Guid? x, string y);
-        void F(string x, Guid y);
-        void F(string x, Guid? y);
+
+        // Disabled 2 lines below according to unit test ParseLambda_With_If_Guid_Null
+        //void F(Guid x, string y);
+        //void F(Guid? x, string y);
+
+        // Disabled 2 lines below according to unit test ParseLambda_With_If_Null_Guid
+        //void F(string x, Guid y);
+        //void F(string x, Guid? y);
     }
 }
