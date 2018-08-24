@@ -456,37 +456,54 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_With_If_Guid_Null()
+        public void ParseLambda_With_Guid_Equals_Null()
         {
-            var objContext = new User();
-            var guidEmpty = Guid.Empty;
-            var someId = Guid.NewGuid();
-            var expressionText = $"iif(@0.{nameof(objContext.Id)} == null, @0.{nameof(objContext.Id)} == Guid.Parse(\"{someId}\"), {nameof(objContext.Id)}={nameof(objContext.Id)})";
+            var user = new User();
+            Guid guidEmpty = Guid.Empty;
+            Guid someId = Guid.NewGuid();
+            string expressionText = $"iif(@0.Id == null, @0.Id == Guid.Parse(\"{someId}\"), Id == Id)";
 
-            var lambda = System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, objContext);
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
             var boolLambda = lambda as Expression<Func<User, bool>>;
-            Check.That(boolLambda).IsNotEqualTo(null);
+            Assert.NotNull(boolLambda);
 
             var del = lambda.Compile();
-            object result = del.DynamicInvoke(objContext);
-            Check.That(result).IsEqualTo(true);
+            bool result = (bool) del.DynamicInvoke(user);
+            Assert.True(result);
         }
 
         [Fact]
-        public void ParseLambda_With_If_Null_Guid()
+        public void ParseLambda_With_Null_Equals_Guid()
         {
-            var objContext = new User();
-            var guidEmpty = Guid.Empty;
-            var someId = Guid.NewGuid();
-            var expressionText = $"iif(null == @0.{nameof(objContext.Id)}, @0.{nameof(objContext.Id)} == Guid.Parse(\"{someId}\"), {nameof(objContext.Id)}={nameof(objContext.Id)})";
+            var user = new User();
+            Guid guidEmpty = Guid.Empty;
+            Guid someId = Guid.NewGuid();
+            string expressionText = $"iif(null == @0.Id, @0.Id == Guid.Parse(\"{someId}\"), Id == Id)";
 
-            var lambda = System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, objContext);
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
             var boolLambda = lambda as Expression<Func<User, bool>>;
-            Check.That(boolLambda).IsNotEqualTo(null);
+            Assert.NotNull(boolLambda);
 
             var del = lambda.Compile();
-            object result = del.DynamicInvoke(objContext);
-            Check.That(result).IsEqualTo(true);
+            bool result = (bool) del.DynamicInvoke(user);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Guid_Equals_String()
+        {
+            Guid someId = Guid.NewGuid();
+            Guid anotherId = Guid.NewGuid();
+            var user = new User();
+            user.Id = someId;
+            Guid guidEmpty = Guid.Empty;
+            string expressionText = $"iif(@0.Id == \"{someId}\", Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
+
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
+
+            var del = lambda.Compile();
+            Guid result = (Guid) del.DynamicInvoke(user);
+            Assert.Equal(guidEmpty, result);
         }
     }
 }
