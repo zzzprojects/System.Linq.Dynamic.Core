@@ -80,6 +80,15 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
+        [DynamicLinqType]
+        public static class StaticHelper
+        {
+            public static Guid? GetGuid(string name)
+            {
+                return Guid.NewGuid();
+            }
+        }
+
         private class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
             private HashSet<Type> _customTypes;
@@ -607,6 +616,29 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert 2
             Assert.Equal("note1 (name1)", result);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Less_Greater()
+        {
+            // Arrange
+            Guid someId = Guid.NewGuid();
+            Guid anotherId = Guid.NewGuid();
+            var user = new User();
+            user.Id = someId;
+            Guid guidEmpty = Guid.Empty;
+            string expressionText = $"iif(@0.Id == StaticHelper.GetGuid(\"name\"), Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
+            var guidLambda = lambda as Expression<Func<User, Guid>>;
+            Assert.NotNull(guidLambda);
+
+            var del = lambda.Compile();
+            Guid result = (Guid) del.DynamicInvoke(user);
+
+            // Assert
+            Assert.Equal(anotherId, result);
         }
     }
 }
