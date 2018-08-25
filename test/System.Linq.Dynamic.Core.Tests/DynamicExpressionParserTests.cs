@@ -567,7 +567,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             string name = "name1";
-            var note = "note1";
+            string note = "note1";
             var textHolder = new TextHolder(name, note);
             string expressionText = $"Name + \" (\" + Note + \")\"";
 
@@ -591,7 +591,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             string name = "name1";
-            var note = "note1";
+            string note = "note1";
             var textHolder = new TextHolder(name, note);
             string expressionText = $"Note + \" (\" + Name + \")\"";
 
