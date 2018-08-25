@@ -80,7 +80,6 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
-        [DynamicLinqType]
         public static class StaticHelper
         {
             public static Guid? GetGuid(string name)
@@ -102,6 +101,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
                 _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }));
                 _customTypes.Add(typeof(CustomClassWithStaticMethod));
+                _customTypes.Add(typeof(StaticHelper));
                 return _customTypes;
             }
         }
@@ -621,6 +621,11 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_With_Less_Greater()
         {
+            var config = new ParsingConfig
+            {
+                CustomTypeProvider = new TestCustomTypeProvider()
+            };
+
             // Arrange
             Guid someId = Guid.NewGuid();
             Guid anotherId = Guid.NewGuid();
@@ -630,7 +635,7 @@ namespace System.Linq.Dynamic.Core.Tests
             string expressionText = $"iif(@0.Id == StaticHelper.GetGuid(\"name\"), Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
 
             // Act
-            var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
+            var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
             var guidLambda = lambda as Expression<Func<User, Guid>>;
             Assert.NotNull(guidLambda);
 
