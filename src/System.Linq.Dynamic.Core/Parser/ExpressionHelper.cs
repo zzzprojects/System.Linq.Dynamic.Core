@@ -188,7 +188,13 @@ namespace System.Linq.Dynamic.Core.Parser
 
         static MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
         {
-            return left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
+            var methodInfo = left.Type.GetMethod(methodName, new[] {left.Type, right.Type});
+            if (methodInfo == null)
+            {
+                methodInfo = right.Type.GetMethod(methodName, new[] {left.Type, right.Type});
+            }
+
+            return methodInfo;
         }
 
         static Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)

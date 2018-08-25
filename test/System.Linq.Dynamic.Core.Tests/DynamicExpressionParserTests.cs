@@ -37,6 +37,50 @@ namespace System.Linq.Dynamic.Core.Tests
             public static int GetAge(int x) => x;
         }
 
+        public class CustomTextClass
+        {
+            public CustomTextClass(string origin)
+            {
+                Origin = origin;
+            }
+
+            public string Origin { get; }
+
+            public static implicit operator string(CustomTextClass customTextValue)
+            {
+                return customTextValue?.Origin;
+            }
+
+            public static implicit operator CustomTextClass(string origin)
+            {
+                return new CustomTextClass(origin);
+            }
+
+            public override string ToString()
+            {
+                return Origin;
+            }
+        }
+
+        public class TextHolder
+        {
+            public TextHolder(string name, CustomTextClass note)
+            {
+                Name = name;
+                Note = note;
+            }
+
+            public string Name { get; }
+
+            public CustomTextClass Note { get; }
+
+            public override string ToString()
+            {
+                return Name + " (" + Note + ")";
+            }
+        }
+
+
         private class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
             private HashSet<Type> _customTypes;
@@ -516,6 +560,54 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(guidEmpty, result);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Concat_String_CustomType()
+        {
+            // Arrange
+            string name = "name1";
+            var note = "note1";
+            var textHolder = new TextHolder(name, note);
+            string expressionText = $"Name + \" (\" + Note + \")\"";
+
+            // Act 1
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(TextHolder), null, expressionText, textHolder);
+            var stringLambda = lambda as Expression<Func<TextHolder, string>>;
+
+            // Assert 1
+            Assert.NotNull(stringLambda);
+
+            // Act 2
+            var del = lambda.Compile();
+            string result = (string) del.DynamicInvoke(textHolder);
+
+            // Assert 2
+            Assert.Equal("name1 (note1)", result);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Concat_CustomType_String()
+        {
+            // Arrange
+            string name = "name1";
+            var note = "note1";
+            var textHolder = new TextHolder(name, note);
+            string expressionText = $"Note + \" (\" + Name + \")\"";
+
+            // Act 1
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(TextHolder), null, expressionText, textHolder);
+            var stringLambda = lambda as Expression<Func<TextHolder, string>>;
+
+            // Assert 1
+            Assert.NotNull(stringLambda);
+
+            // Act 2
+            var del = lambda.Compile();
+            string result = (string) del.DynamicInvoke(textHolder);
+
+            // Assert 2
+            Assert.Equal("note1 (name1)", result);
         }
     }
 }
