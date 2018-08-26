@@ -577,7 +577,7 @@ namespace System.Linq.Dynamic.Core.Tests
             string name = "name1";
             string note = "note1";
             var textHolder = new TextHolder(name, note);
-            string expressionText = $"Name + \" (\" + Note + \")\"";
+            string expressionText = "Name + \" (\" + Note + \")\"";
 
             // Act 1
             var lambda = DynamicExpressionParser.ParseLambda(typeof(TextHolder), null, expressionText, textHolder);
@@ -601,7 +601,7 @@ namespace System.Linq.Dynamic.Core.Tests
             string name = "name1";
             string note = "note1";
             var textHolder = new TextHolder(name, note);
-            string expressionText = $"Note + \" (\" + Name + \")\"";
+            string expressionText = "Note + \" (\" + Name + \")\"";
 
             // Act 1
             var lambda = DynamicExpressionParser.ParseLambda(typeof(TextHolder), null, expressionText, textHolder);
@@ -619,7 +619,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_With_Less_Greater()
+        public void ParseLambda_Operator_Less_Greater_With_Guids()
         {
             var config = new ParsingConfig
             {
