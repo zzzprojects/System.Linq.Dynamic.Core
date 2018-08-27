@@ -443,7 +443,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
                 Expression right = ParseShiftOperator();
-                bool isEquality = op.Id == TokenId.Equal || op.Id == TokenId.DoubleEqual || op.Id == TokenId.ExclamationEqual;
+                bool isEquality = op.Id == TokenId.Equal || op.Id == TokenId.DoubleEqual || op.Id == TokenId.ExclamationEqual || op.Id == TokenId.LessGreater;
 
                 if (isEquality && (!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType || left.Type == typeof(Guid) && right.Type == typeof(Guid)))
                 {

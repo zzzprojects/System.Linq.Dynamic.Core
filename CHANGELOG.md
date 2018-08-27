@@ -1,5 +1,13 @@
+# 1.0.8.17 (27 August 2018)
+
+ - [#200](https://github.com/StefH/System.Linq.Dynamic.Core/pull/200) - Fix for parsing Guid and string in the same condition contributed by Oleg ([OlegNadymov](https://github.com/OlegNadymov))
+
+Commits: b78629f5b5...b78629f5b5
+
+
 # 1.0.8.16 (19 August 2018)
 
+ - [#191](https://github.com/StefH/System.Linq.Dynamic.Core/issues/191) - Feature: re-enable support for uap10
  - [#198](https://github.com/StefH/System.Linq.Dynamic.Core/pull/198) - re-enable UAP10 support contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
 
 Commits: eac1fdc0ea...eac1fdc0ea
