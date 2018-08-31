@@ -10,6 +10,8 @@ namespace ConsoleAppEF2.Database
 
         public virtual DbSet<Car> Cars { get; set; }
 
+        public virtual DbSet<Brand> Brands { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLoggerFactory(MyLoggerFactory); // Warning: Do not create a new ILoggerFactory instance each time 
