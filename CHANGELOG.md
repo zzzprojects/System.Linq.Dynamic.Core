@@ -1,3 +1,12 @@
+# 1.0.8.18 (04 September 2018)
+
+ - [#202](https://github.com/StefH/System.Linq.Dynamic.Core/issues/202) - Feature: support Explicit cast Operator +feature
+ - [#201](https://github.com/StefH/System.Linq.Dynamic.Core/pull/201) - Fix Parsing Config not passed down to expression parser in JOIN contributed by Davvid ([david-garcia-garcia](https://github.com/david-garcia-garcia))
+ - [#165](https://github.com/StefH/System.Linq.Dynamic.Core/issues/165) - Consider fit the rule of AnonymousTypes for EFCore2.1? +feature
+
+Commits: 1442928405...47125b88c7
+
+
 # 1.0.8.17 (27 August 2018)
 
  - [#200](https://github.com/StefH/System.Linq.Dynamic.Core/pull/200) - Fix for parsing Guid and string in the same condition contributed by Oleg ([OlegNadymov](https://github.com/OlegNadymov))
