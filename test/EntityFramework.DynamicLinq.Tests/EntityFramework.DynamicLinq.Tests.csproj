@@ -10,7 +10,7 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <ProjectGuid>{D3804228-91F4-4502-9595-39584EF20000}</ProjectGuid>
+    <ProjectGuid>{BF97CB1B-5043-4256-8F42-CF3A4F3863BE}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +32,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.3" />
     <PackageReference Include="QueryInterceptor.Core" Version="1.0.5" />
