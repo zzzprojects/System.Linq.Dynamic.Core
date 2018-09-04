@@ -683,7 +683,7 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, null, innerKeySelector, args);
 
-            CheckOuterAndInnerTypes(createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
+            CheckOuterAndInnerTypes(config, createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
 
             ParameterExpression[] parameters =
             {
@@ -739,7 +739,7 @@ namespace System.Linq.Dynamic.Core
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, null, innerKeySelector, args);
 
-            CheckOuterAndInnerTypes(createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
+            CheckOuterAndInnerTypes(config, createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
 
             ParameterExpression[] parameters =
             {
@@ -1923,7 +1923,7 @@ namespace System.Linq.Dynamic.Core
         #endregion
 
         #region Private Helpers
-        private static void CheckOuterAndInnerTypes(bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object[] args)
+        private static void CheckOuterAndInnerTypes(ParsingConfig config, bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object[] args)
         {
             Type outerSelectorReturnType = outerSelectorLambda.Body.Type;
             Type innerSelectorReturnType = innerSelectorLambda.Body.Type;
@@ -1941,12 +1941,12 @@ namespace System.Linq.Dynamic.Core
                 if (TypeHelper.IsNullableType(outerSelectorReturnType) && !TypeHelper.IsNullableType(innerSelectorReturnType))
                 {
                     innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
-                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
+                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
                 }
                 else if (!TypeHelper.IsNullableType(outerSelectorReturnType) && TypeHelper.IsNullableType(innerSelectorReturnType))
                 {
                     outerSelectorReturnType = ExpressionParser.ToNullableType(outerSelectorReturnType);
-                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
+                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
                 }
 
                 // If types are still not the same, throw an Exception
