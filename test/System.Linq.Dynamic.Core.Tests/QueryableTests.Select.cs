@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Linq.PropertyTranslator.Core;
@@ -169,6 +170,16 @@ namespace System.Linq.Dynamic.Core.Tests
             public DayOfWeek DOW { get; set; }
             public int Sec { get; set; }
             public int? SecNull { get; set; }
+
+            public class NestedDto
+            {
+                public string Name { get; set; }
+
+                public class NestedDto2
+                {
+                    public string Name2 { get; set; }
+                }
+            }
         }
 
         public class ExampleWithConstructor
@@ -225,6 +236,32 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(resultDynamic.First()).Equals(result.First());
             Check.That(resultDynamic.Last()).Equals(result.Last());
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoKnownNestedType()
+        {
+            // Act
+            IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();
+            IQueryable<Example.NestedDto> projectedData = 
+                (IQueryable<Example.NestedDto>) data.Select($"new {typeof(Example.NestedDto).FullName}(~ as Name)");
+
+            // Assert
+            Check.That(projectedData.First().Name).Equals("name1");
+            Check.That(projectedData.Last().Name).Equals("name2");
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
+        {
+            // Act
+            IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();
+            IQueryable<Example.NestedDto.NestedDto2> projectedData =
+                (IQueryable<Example.NestedDto.NestedDto2>)data.Select($"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name)");
+
+            // Assert
+            Check.That(projectedData.First().Name).Equals("name1");
+            Check.That(projectedData.Last().Name).Equals("name2");
         }
 
         [Fact]
