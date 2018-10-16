@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Linq.PropertyTranslator.Core;
@@ -241,10 +240,13 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Select_Dynamic_IntoKnownNestedType()
         {
+            var config = new ParsingConfig();
+            config.AllowNewToEvaluateAnyType = true;
+
             // Act
             IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();
             IQueryable<Example.NestedDto> projectedData = 
-                (IQueryable<Example.NestedDto>) data.Select($"new {typeof(Example.NestedDto).FullName}(~ as Name)");
+                (IQueryable<Example.NestedDto>) data.Select(config, $"new {typeof(Example.NestedDto).FullName}(~ as Name)");
 
             // Assert
             Check.That(projectedData.First().Name).Equals("name1");
@@ -254,10 +256,13 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
         {
+            var config = new ParsingConfig();
+            config.AllowNewToEvaluateAnyType = true;
+
             // Act
             IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();
             IQueryable<Example.NestedDto.NestedDto2> projectedData =
-                (IQueryable<Example.NestedDto.NestedDto2>)data.Select($"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name)");
+                (IQueryable<Example.NestedDto.NestedDto2>)data.Select(config, $"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name)");
 
             // Assert
             Check.That(projectedData.First().Name).Equals("name1");
