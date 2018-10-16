@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Expressions;
+using System.Reflection;
 using ConsoleAppEF2.Database;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ConsoleAppEF2
 {
-    class Program
+    static class Program
     {
         class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
@@ -27,18 +28,124 @@ namespace ConsoleAppEF2
             }
         }
 
+        private static object GetObj()
+        {
+            return new
+            {
+                Id = 5,
+                Value = 400
+            };
+        }
+
+        class X : DynamicClass
+        {
+
+        }
+
         private static IQueryable GetQueryable()
         {
             var random = new Random((int)DateTime.Now.Ticks);
 
+            var jt = typeof(JToken);
+
+            var em = jt.GetTypeInfo().GetDeclaredMethods("op_Explicit");
+            var im = jt.GetTypeInfo().GetDeclaredMethods("op_Explicit");
+
+            var j = new JObject
+            {
+                { "Id", new JValue(9) },
+                { "Name", new JValue("Test") }
+            };
+
+            //(j["Id"] as JValue).Value
+
+            IQueryable jarray = new[] { j }.AsQueryable();
+            var jresult = jarray.Select("new (int(Id) as Id, string(Name) as Name)");
+
+            var an = jresult.Any("Id > 4");
+
+
+            var dx = new X();
+            dx["Id"] = 5;
+
+            IQueryable srcDX = new[] { dx }.AsQueryable();
+            var b = srcDX.Select("new (Id.ToString() as Id)");
+            var anyDX = b.Any("int.Parse(Id) > 4");
+
             var x = Enumerable.Range(0, 10).Select(i => new
             {
                 Id = i,
-                Value = random.Next(),
-            });
+                Value = random.Next()
+            }).AsQueryable();
 
-            return x.AsQueryable().Select("new (it as Id, @0 as Value)", random.Next());
+            //var any = x.Any("Id > 4");
+
+            //var obj = new
+            //{
+            //    Id = 5,
+            //    Value = random.Next()
+            //};
+            //var x2 = Enumerable.Range(0, 1).Select(_ => obj).AsQueryable();
+            //var any2 = x.Any("Id > 4");
+
+            //var o = GetObj();
+            //var t = o.GetType();
+            //IQueryable source = new[] { o }.AsQueryable();
+            //// source.ElementType = t;
+
+            //var x2b = new[] { o }.AsQueryable();
+            //var any2function = x2b.Any(null, "Id > 4", t);
+
+            //var any2b = x2b.Any("Id > 4");
+
+            //var x3 = new[] { obj }.AsQueryable();
+            //var any3 = x3.Any("Id > 4");
+
+            return x.Select("new (it as Id, @0 as Value)", random.Next());
             // return x.AsQueryable(); //x.AsQueryable().Select("new (Id, Value)");
+        }
+
+        public static IQueryable Transform(this IQueryable source, Type resultType)
+        {
+            var resultProperties = resultType.GetProperties().Where(p => p.CanWrite);
+
+            ParameterExpression s = Expression.Parameter(source.ElementType, "s");
+
+            var memberBindings =
+                resultProperties.Select(p =>
+                    Expression.Bind(resultType.GetMember(p.Name)[0], Expression.Property(s, p.Name))).OfType<MemberBinding>();
+
+            Expression memberInit = Expression.MemberInit(
+                Expression.New(resultType),
+                memberBindings
+            );
+
+            var memberInitLambda = Expression.Lambda(memberInit, s);
+
+            var typeArgs = new[]
+            {
+                source.ElementType,
+                memberInit.Type
+            };
+
+            var mc = Expression.Call(typeof(Queryable), "Select", typeArgs, source.Expression, memberInitLambda);
+
+            var query = source.Provider.CreateQuery(mc);
+
+            return query;
+        }
+
+        public static IQueryable<T> EmptyQueryByExample<T>(this T _) => Enumerable.Empty<T>().AsQueryable();
+
+
+        private static TResult Execute<TResult>(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, Type t = null)
+        {
+            operatorMethodInfo = operatorMethodInfo.GetGenericArguments().Length == 2
+                ? operatorMethodInfo.MakeGenericMethod(t == null ? source.ElementType : t, typeof(TResult))
+                : operatorMethodInfo.MakeGenericMethod(t == null ? source.ElementType : t);
+
+            var optimized = Expression.Call(null, operatorMethodInfo, source.Expression, expression);
+            return source.Provider.Execute<TResult>(optimized);
         }
 
         static void Main(string[] args)
@@ -63,7 +170,7 @@ namespace ConsoleAppEF2
             };
             Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
 
-            var anyTest = new []
+            var anyTest = new[]
             {
                 new { id = "1", values =new [] { 1, 2, 3 } },
                 new { id = "2", values =new [] { 1, 4 } },

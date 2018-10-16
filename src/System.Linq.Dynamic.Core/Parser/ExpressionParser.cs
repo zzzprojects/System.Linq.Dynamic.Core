@@ -1409,6 +1409,13 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
+            // Check if there are any explicit conversion operators on the source type which fit the requirement (cast to the return type).
+            bool explicitOperatorAvailable = exprType.GetTypeInfo().GetDeclaredMethods("op_Explicit").Any(m => m.ReturnType == type);
+            if (explicitOperatorAvailable)
+            {
+                return Expression.Convert(expr, type);
+            }
+
             throw ParseError(errorPos, Res.CannotConvertValue, TypeHelper.GetTypeName(exprType), TypeHelper.GetTypeName(type));
         }
 
