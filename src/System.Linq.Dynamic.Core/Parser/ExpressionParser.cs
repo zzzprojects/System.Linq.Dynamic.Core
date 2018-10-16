@@ -1542,6 +1542,18 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return _root.Type;
             }
+            if (_it != null && _it.Type.FullName == name)
+            {
+                return _it.Type;
+            }
+            if (_parent != null && _parent.Type.FullName == name)
+            {
+                return _parent.Type;
+            }
+            if (_root != null && _root.Type.FullName == name)
+            {
+                return _root.Type;
+            }
 
             return null;
         }
