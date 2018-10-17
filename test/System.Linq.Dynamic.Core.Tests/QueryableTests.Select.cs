@@ -240,6 +240,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Select_Dynamic_IntoKnownNestedType()
         {
+
+#if (DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+            return;
+#endif
             var config = new ParsingConfig();
             config.AllowNewToEvaluateAnyType = true;
 
@@ -256,17 +260,22 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
         {
+
+#if (DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+            return;
+#endif
+
             var config = new ParsingConfig();
             config.AllowNewToEvaluateAnyType = true;
 
             // Act
             IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();
             IQueryable<Example.NestedDto.NestedDto2> projectedData =
-                (IQueryable<Example.NestedDto.NestedDto2>)data.Select(config, $"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name)");
+                (IQueryable<Example.NestedDto.NestedDto2>)data.Select(config, $"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name2)");
 
             // Assert
-            Check.That(projectedData.First().Name).Equals("name1");
-            Check.That(projectedData.Last().Name).Equals("name2");
+            Check.That(projectedData.First().Name2).Equals("name1");
+            Check.That(projectedData.Last().Name2).Equals("name2");
         }
 
         [Fact]

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -7,6 +8,26 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public class ParsingConfig
     {
+        /// <summary>
+        /// Get an instance of ParsingConfig
+        /// </summary>
+        public ParsingConfig()
+        {
+#if !(DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+            AppDomain.CurrentDomain.TypeResolve += this.CurrentDomain_TypeResolve;
+#endif
+        }
+
+        /// <summary>
+        /// Cleanup
+        /// </summary>
+        ~ParsingConfig()
+        {
+#if !(DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+            AppDomain.CurrentDomain.TypeResolve -= this.CurrentDomain_TypeResolve;
+#endif
+        }
+
         /// <summary>
         /// Default ParsingConfig
         /// </summary>
@@ -67,5 +88,30 @@ namespace System.Linq.Dynamic.Core
         /// Allows the New() keyword to evaluate any available Type
         /// </summary>
         public bool AllowNewToEvaluateAnyType { get; set; } = false;
+
+#if !(DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+        /// <summary>
+        /// Custom type resolver to allow ExpressionParser to find any type
+        /// registered in the current application domain. You can add additional
+        /// type resolvers in your application.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        protected Assembly CurrentDomain_TypeResolve(object sender, ResolveEventArgs args)
+        {
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Type t = assembly.GetType(args.Name, false, true);
+
+                if (t != null)
+                {
+                    return assembly;
+                }
+            }
+
+            return null;
+        }
+#endif
     }
 }
