@@ -31,7 +31,35 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Select_Dynamic()
+        public void Select_Dynamic1()
+        {
+            // Assign
+            var qry = User.GenerateSampleModels(1).AsQueryable();
+
+            // Act
+            var userRoles1 = qry.Select("new (Roles.Select(Id) as RoleIds)");
+            var userRoles2 = qry.Select("new (Roles.Select(it.Id) as RoleIds)");
+
+            // Assert
+            Check.That(userRoles1.Count()).IsEqualTo(1);
+            Check.That(userRoles2.Count()).IsEqualTo(1);
+        }
+
+        [Fact]
+        public void Select_Dynamic2()
+        {
+            // Assign
+            var qry = User.GenerateSampleModels(1).AsQueryable();
+
+            // Act
+            var userRoles = qry.Select("new (Roles.Select(it).ToArray() as Rolez)");
+
+            // Assert
+            Check.That(userRoles.Count()).IsEqualTo(1);
+        }
+
+        [Fact]
+        public void Select_Dynamic3()
         {
             //Arrange
             List<int> range = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
