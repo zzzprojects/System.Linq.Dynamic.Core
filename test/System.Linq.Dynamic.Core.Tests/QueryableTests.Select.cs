@@ -268,17 +268,14 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Select_Dynamic_IntoKnownNestedType()
         {
-
-#if (DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
-            return;
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+#if NETSTANDARD
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
-            var config = new ParsingConfig();
-            config.AllowNewToEvaluateAnyType = true;
-
             // Act
             IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();
-            IQueryable<Example.NestedDto> projectedData = 
-                (IQueryable<Example.NestedDto>) data.Select(config, $"new {typeof(Example.NestedDto).FullName}(~ as Name)");
+            IQueryable<Example.NestedDto> projectedData =
+                (IQueryable<Example.NestedDto>)data.Select(config, $"new {typeof(Example.NestedDto).FullName}(~ as Name)");
 
             // Assert
             Check.That(projectedData.First().Name).Equals("name1");
@@ -288,13 +285,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
         {
-
-#if (DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
-            return;
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+#if NETSTANDARD
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
-
-            var config = new ParsingConfig();
-            config.AllowNewToEvaluateAnyType = true;
 
             // Act
             IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();

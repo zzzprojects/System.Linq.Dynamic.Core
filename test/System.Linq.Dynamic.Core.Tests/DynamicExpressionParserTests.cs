@@ -104,6 +104,11 @@ namespace System.Linq.Dynamic.Core.Tests
                 _customTypes.Add(typeof(StaticHelper));
                 return _customTypes;
             }
+
+            public Type ResolveType(string typeName)
+            {
+                return Type.GetType(typeName);
+            }
         }
 
         [Fact]
@@ -492,7 +497,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(result).IsEqualTo(10);
         }
-      
+
         [Fact]
         public void ParseLambda_With_InnerStringLiteral()
         {
@@ -504,7 +509,7 @@ namespace System.Linq.Dynamic.Core.Tests
             object result = del.DynamicInvoke(String.Empty);
             Check.That(result).IsEqualTo(originalTrueValue);
         }
-      
+
         [Fact]
         public void ParseLambda_With_Guid_Equals_Null()
         {
@@ -520,7 +525,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.NotNull(boolLambda);
 
             var del = lambda.Compile();
-            bool result = (bool) del.DynamicInvoke(user);
+            bool result = (bool)del.DynamicInvoke(user);
 
             // Assert
             Assert.True(result);
@@ -541,7 +546,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.NotNull(boolLambda);
 
             var del = lambda.Compile();
-            bool result = (bool) del.DynamicInvoke(user);
+            bool result = (bool)del.DynamicInvoke(user);
 
             // Assert
             Assert.True(result);
@@ -557,14 +562,14 @@ namespace System.Linq.Dynamic.Core.Tests
             user.Id = someId;
             Guid guidEmpty = Guid.Empty;
             string expressionText = $"iif(@0.Id == \"{someId}\", Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
-            
+
             // Act
             var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
             var guidLambda = lambda as Expression<Func<User, Guid>>;
             Assert.NotNull(guidLambda);
 
             var del = lambda.Compile();
-            Guid result = (Guid) del.DynamicInvoke(user);
+            Guid result = (Guid)del.DynamicInvoke(user);
 
             // Assert
             Assert.Equal(guidEmpty, result);
@@ -588,7 +593,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act 2
             var del = lambda.Compile();
-            string result = (string) del.DynamicInvoke(textHolder);
+            string result = (string)del.DynamicInvoke(textHolder);
 
             // Assert 2
             Assert.Equal("name1 (note1)", result);
@@ -612,7 +617,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act 2
             var del = lambda.Compile();
-            string result = (string) del.DynamicInvoke(textHolder);
+            string result = (string)del.DynamicInvoke(textHolder);
 
             // Assert 2
             Assert.Equal("note1 (name1)", result);
@@ -640,7 +645,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.NotNull(guidLambda);
 
             var del = lambda.Compile();
-            Guid result = (Guid) del.DynamicInvoke(user);
+            Guid result = (Guid)del.DynamicInvoke(user);
 
             // Assert
             Assert.Equal(anotherId, result);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using ConsoleAppEF2.Database;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -22,6 +23,13 @@ namespace ConsoleAppEF211
                 set.Add(typeof(TestContext));
 
                 return set;
+            }
+
+            public Type ResolveType(string typeName)
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+                return ResolveType(assemblies, typeName);
             }
         }
 

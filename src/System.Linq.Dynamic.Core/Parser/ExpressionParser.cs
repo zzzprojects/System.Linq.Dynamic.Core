@@ -1525,14 +1525,17 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return result;
             }
+
             if (_it != null && _it.Type.Name == name)
             {
                 return _it.Type;
             }
+
             if (_parent != null && _parent.Type.Name == name)
             {
                 return _parent.Type;
             }
+
             if (_root != null && _root.Type.Name == name)
             {
                 return _root.Type;
@@ -1541,17 +1544,20 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return _it.Type;
             }
+
             if (_parent != null && _parent.Type.Namespace + "." + _parent.Type.Name == name)
             {
                 return _parent.Type;
             }
+
             if (_root != null && _root.Type.Namespace + "." + _root.Type.Name == name)
             {
                 return _root.Type;
             }
-            if (this._parsingConfig.AllowNewToEvaluateAnyType && Type.GetType(name) != null)
+
+            if (_parsingConfig.AllowNewToEvaluateAnyType && _parsingConfig.CustomTypeProvider != null)
             {
-                return Type.GetType(name);
+                return _parsingConfig.CustomTypeProvider.ResolveType(name);
             }
 
             return null;

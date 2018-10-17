@@ -30,6 +30,29 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 #endif
         }
 
+        /// <summary>
+        /// Resolve any any type which is registered in the current application domain.
+        /// </summary>
+        /// <param name="assemblies">The assemblies to inspect.</param>
+        /// <param name="typeName">The typename to resolve.</param>
+        /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
+        protected Type ResolveType([NotNull] IEnumerable<Assembly> assemblies, [NotNull] string typeName)
+        {
+            Check.NotNull(assemblies, nameof(assemblies));
+            Check.NotEmpty(typeName, nameof(typeName));
+
+            foreach (Assembly assembly in assemblies)
+            {
+                Type resolvedType = assembly.GetType(typeName, false, true);
+                if (resolvedType != null)
+                {
+                    return resolvedType;
+                }
+            }
+
+            return null;
+        }
+
 #if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
         /// <summary>
         /// Gets the assembly types in an Exception friendly way.

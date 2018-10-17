@@ -17,6 +17,12 @@ namespace WindowsUniversalTestApp14393
             return new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
         }
 
+        public Type ResolveType(string typeName)
+        {
+            var assemblies = GetAssemblyListAsync().Result;
+            return ResolveType(assemblies, typeName);
+        }
+
         private static async Task<List<Assembly>> GetAssemblyListAsync()
         {
             List<Assembly> assemblies = new List<Assembly>();

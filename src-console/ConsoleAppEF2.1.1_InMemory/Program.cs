@@ -13,7 +13,17 @@ namespace ConsoleAppEF2
 {
     static class Program
     {
-        class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+        public class NestedDto
+        {
+            public string Name { get; set; }
+
+            public class NestedDto2
+            {
+                public string Name2 { get; set; }
+            }
+        }
+
+        class NetCore21CustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
             public HashSet<Type> GetCustomTypes()
             {
@@ -25,6 +35,12 @@ namespace ConsoleAppEF2
                 };
 
                 return set;
+            }
+
+            public Type ResolveType(string typeName)
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                return ResolveType(assemblies, typeName);
             }
         }
 
@@ -150,6 +166,18 @@ namespace ConsoleAppEF2
 
         static void Main(string[] args)
         {
+            var config = new ParsingConfig
+            {
+                AllowNewToEvaluateAnyType = true,
+                CustomTypeProvider = new NetCore21CustomTypeProvider()
+            };
+
+            // Act
+            var testDataAsQueryable = new List<string>() { "name1", "name2" }.AsQueryable();
+            var projectedData = (IQueryable<NestedDto>)testDataAsQueryable.Select(config, $"new {typeof(NestedDto).FullName}(~ as Name)");
+            Console.WriteLine(projectedData.First().Name);
+            Console.WriteLine(projectedData.Last().Name);
+
             IQueryable qry = GetQueryable();
 
             var result = qry.Select("it").OrderBy("Value");
@@ -183,10 +211,7 @@ namespace ConsoleAppEF2
             var any2 = anyTest.Where("values.Contains(1)");
             Console.WriteLine("any2 {0}", JsonConvert.SerializeObject(any2, Formatting.Indented));
 
-            var config = new ParsingConfig
-            {
-                CustomTypeProvider = new C()
-            };
+            
 
             var dateLastModified = new DateTime(2018, 1, 15);
 
