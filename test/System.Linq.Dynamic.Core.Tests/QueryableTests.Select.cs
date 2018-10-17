@@ -272,10 +272,11 @@ namespace System.Linq.Dynamic.Core.Tests
 #if NETSTANDARD
             config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
+            // Assign
+            var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
+
             // Act
-            IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();
-            IQueryable<Example.NestedDto> projectedData =
-                (IQueryable<Example.NestedDto>)data.Select(config, $"new {typeof(Example.NestedDto).FullName}(~ as Name)");
+            var projectedData = queryable.Select<Example.NestedDto>(config, $"new {typeof(Example.NestedDto).FullName}(~ as Name)");
 
             // Assert
             Check.That(projectedData.First().Name).Equals("name1");
@@ -290,10 +291,11 @@ namespace System.Linq.Dynamic.Core.Tests
             config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
+            // Assign
+            var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
+
             // Act
-            IQueryable<string> data = new List<string>() { "name1", "name2" }.AsQueryable();
-            IQueryable<Example.NestedDto.NestedDto2> projectedData =
-                (IQueryable<Example.NestedDto.NestedDto2>)data.Select(config, $"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name2)");
+            var projectedData = queryable.Select<Example.NestedDto.NestedDto2>(config, $"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name2)");
 
             // Assert
             Check.That(projectedData.First().Name2).Equals("name1");
