@@ -96,6 +96,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\ComplexTests.cs">
       <Link>ComplexTests.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\DefaultDynamicLinqCustomTypeProviderTests.cs">
+      <Link>DefaultDynamicLinqCustomTypeProviderTests.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\DynamicExpressionParserTests.cs">
       <Link>DynamicExpressionParserTests.cs</Link>
     </Compile>
