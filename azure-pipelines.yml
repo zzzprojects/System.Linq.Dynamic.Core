@@ -22,9 +22,10 @@ steps:
 # - https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools, else you get this error: `Since you just installed the .NET Core SDK, you will need to reopen the Command Prompt window before running the tool you installed.`
 # - https://github.com/dotnet/cli/issues/8368
 # - https://github.com/Microsoft/vsts-tasks/issues/8291
- - script: |
-     %USERPROFILE%\.dotnet\tools\dotnet-sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$(SONAR_TOKEN)" /v:"$(buildId)" /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml"
-   displayName: Begin SonarScanner
+#
+- script: |
+    %USERPROFILE%\.dotnet\tools\dotnet-sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$(SONAR_TOKEN)" /v:"$(buildId)" /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml"
+  displayName: Begin SonarScanner
 
 - task: DotNetCoreCLI@2
   displayName: Build Projects in Debug configuration
