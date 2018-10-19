@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// Interface for providing custom types for System.Linq.Dynamic.Core.
+    /// Interface for providing functionality to find custom types for or resolve any type.
     /// </summary>
     public interface IDynamicLinkCustomTypeProvider
     {
@@ -15,7 +15,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         HashSet<Type> GetCustomTypes();
 
         /// <summary>
-        /// Resolve any any type which is registered in the current application domain.
+        /// Resolve any type which is registered in the current application domain.
         /// </summary>
         /// <param name="typeName">The typename to resolve.</param>
         /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>

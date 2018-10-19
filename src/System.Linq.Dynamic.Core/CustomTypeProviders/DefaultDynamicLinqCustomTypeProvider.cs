@@ -6,24 +6,22 @@ using System.Reflection;
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// The default <see cref="IDynamicLinkCustomTypeProvider"/>. Scans the current AppDomain for all types marked with <see cref="DynamicLinqTypeAttribute"/>, and adds them as custom Dynamic Link types.
+    /// The default <see cref="IDynamicLinkCustomTypeProvider"/>.
+    /// Scans the current AppDomain for all types marked with <see cref="DynamicLinqTypeAttribute"/>, and adds them as custom Dynamic Link types.
+    ///
+    /// Also provides functionality to resolve a Type in the current Application Domain.
+    ///
+    /// This class is used as default for full .NET Framework, so not for .NET Core
     /// </summary>
     public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
     {
         private readonly IAssemblyHelper _assemblyHelper = new DefaultAssemblyHelper();
-        private HashSet<Type> _customTypes;
 
         /// <inheritdoc cref="IDynamicLinkCustomTypeProvider.GetCustomTypes"/>
         public virtual HashSet<Type> GetCustomTypes()
         {
-            if (_customTypes != null)
-            {
-                return _customTypes;
-            }
-
             IEnumerable<Assembly> assemblies = _assemblyHelper.GetAssemblies();
-            _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
-            return _customTypes;
+            return new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
         }
 
         /// <inheritdoc cref="IDynamicLinkCustomTypeProvider.ResolveType"/>

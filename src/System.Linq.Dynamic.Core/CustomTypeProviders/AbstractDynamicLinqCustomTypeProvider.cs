@@ -6,7 +6,7 @@ using System.Linq.Dynamic.Core.Validation;
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// The abstract <see cref="AbstractDynamicLinqCustomTypeProvider"/>. Find all types marked with <see cref="DynamicLinqTypeAttribute"/>.
+    /// The abstract DynamicLinqCustomTypeProvider which is used by the <see cref="IDynamicLinkCustomTypeProvider"/> and can be used by a custom TypeProvider like in .NET Core.
     /// </summary>
     public abstract class AbstractDynamicLinqCustomTypeProvider
     {
@@ -31,7 +31,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         }
 
         /// <summary>
-        /// Resolve any any type which is registered in the current application domain.
+        /// Resolve any type which is registered in the current application domain.
         /// </summary>
         /// <param name="assemblies">The assemblies to inspect.</param>
         /// <param name="typeName">The typename to resolve.</param>
@@ -71,8 +71,10 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
                 {
                     definedTypes = assembly.DefinedTypes;
                 }
-                catch (Exception)
-                { }
+                catch
+                {
+                    // Ignore error
+                }
 
                 if (definedTypes != null)
                 {
@@ -101,8 +103,10 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
                 {
                     definedTypes = assembly.GetTypes();
                 }
-                catch (Exception)
-                { }
+                catch
+                {
+                    // Ignore error
+                }
 
                 if (definedTypes != null)
                 {
