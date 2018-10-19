@@ -5,7 +5,7 @@ variables:
   Prerelease: 'ci'
   buildId: "$(Build.BuildId)"
   buildProjects: |
-    **/src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj
+    **/src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.AppVeyor.csproj
 
 #    **/src/EntityFramework.DynamicLinq/EntityFramework.DynamicLinq.csproj
 #    **/src/Microsoft.EntityFrameworkCore.DynamicLinq/Microsoft.EntityFrameworkCore.DynamicLinq.csproj
