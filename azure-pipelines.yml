@@ -31,16 +31,16 @@ steps:
 #     %USERPROFILE%\.dotnet\tools\dotnet-sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$(SONAR_TOKEN)" /v:"$(buildId)" /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml"
 #   displayName: Begin SonarScanner
 
-- task: MSBuild@1
-  displayName: Build Projects in Debug configuration
-  inputs:
-    solution: $(buildProjects)
+#- task: MSBuild@1
+  #displayName: Build Projects in Debug configuration
+  #inputs:
+   # solution: $(buildProjects)
     #msbuildLocationMethod: 'version' # Optional. Options: version, location
     #msbuildVersion: 'latest' # Optional. Options: latest, 15.0, 14.0, 12.0, 4.0
     #msbuildArchitecture: 'x86' # Optional. Options: x86, x64
     #msbuildLocation: # Optional
     #platform: # Optional
-    configuration: Debug
+    #configuration: Debug
     #msbuildArguments: # Optional
     #clean: true
     #maximumCpuCount: false # Optional
@@ -48,12 +48,12 @@ steps:
     #logProjectEvents: false # Optional
     #createLogFile: false # Optional
 
-#- task: DotNetCoreCLI@2
-  #displayName: Build Projects in Debug configuration
-  #inputs:
-   # command: 'build'
-    #arguments: /p:Configuration=Debug # https://github.com/MicrosoftDocs/vsts-docs/issues/1976
-    #projects: $(buildProjects)
+- task: DotNetCoreCLI@2
+  displayName: Build Projects in Debug configuration
+  inputs:
+    command: 'build'
+    arguments: /p:Configuration=Debug # https://github.com/MicrosoftDocs/vsts-docs/issues/1976
+    projects: $(buildProjects)
 
 # Build source, tests and run tests for net452 and netcoreapp2.1 (with coverage)
 # - script: |
