@@ -4,9 +4,7 @@ pool:
 variables:
   Prerelease: 'ci'
   buildId: "$(Build.BuildId)"
-  buildProjects: |
-    **/src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.AppVeyor.csproj
-    **/src/EntityFramework.DynamicLinq/EntityFramework.DynamicLinq.csproj
+  buildProjects: ['**/src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.AppVeyor.csproj', '**/src/EntityFramework.DynamicLinq/EntityFramework.DynamicLinq.csproj']
 
 steps:
 # Print buildId
