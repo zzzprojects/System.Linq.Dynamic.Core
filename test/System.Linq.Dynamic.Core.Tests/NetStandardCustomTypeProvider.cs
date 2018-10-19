@@ -12,9 +12,21 @@ namespace System.Linq.Dynamic.Core.Tests
 #if NETSTANDARD
             var assemblies = AppDomain.NetCoreApp.AppDomain.CurrentDomain.GetAssemblies(thisType).Where(x => !x.IsDynamic).ToArray();
 #else
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToArray();
 #endif
             return new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
+        }
+
+        public Type ResolveType(string typeName)
+        {
+            var thisType = GetType();
+
+#if NETSTANDARD
+            var assemblies = AppDomain.NetCoreApp.AppDomain.CurrentDomain.GetAssemblies(thisType).ToArray();
+#else
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToArray();
+#endif
+            return ResolveType(assemblies, typeName);
         }
     }
 }

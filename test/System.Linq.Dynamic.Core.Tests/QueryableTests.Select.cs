@@ -197,6 +197,16 @@ namespace System.Linq.Dynamic.Core.Tests
             public DayOfWeek DOW { get; set; }
             public int Sec { get; set; }
             public int? SecNull { get; set; }
+
+            public class NestedDto
+            {
+                public string Name { get; set; }
+
+                public class NestedDto2
+                {
+                    public string Name2 { get; set; }
+                }
+            }
         }
 
         public class ExampleWithConstructor
@@ -253,6 +263,43 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(resultDynamic.First()).Equals(result.First());
             Check.That(resultDynamic.Last()).Equals(result.Last());
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoKnownNestedType()
+        {
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+#if NETSTANDARD
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
+            // Assign
+            var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
+
+            // Act
+            var projectedData = queryable.Select<Example.NestedDto>(config, $"new {typeof(Example.NestedDto).FullName}(~ as Name)");
+
+            // Assert
+            Check.That(projectedData.First().Name).Equals("name1");
+            Check.That(projectedData.Last().Name).Equals("name2");
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
+        {
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+#if NETSTANDARD
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
+
+            // Assign
+            var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
+
+            // Act
+            var projectedData = queryable.Select<Example.NestedDto.NestedDto2>(config, $"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name2)");
+
+            // Assert
+            Check.That(projectedData.First().Name2).Equals("name1");
+            Check.That(projectedData.Last().Name2).Equals("name2");
         }
 
         [Fact]

@@ -697,7 +697,7 @@ namespace System.Linq.Dynamic.Core
                 typeof(Queryable), nameof(Queryable.GroupJoin),
                 new[] { outer.ElementType, innerType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
                 outer.Expression,
-                Expression.Constant(inner),
+                inner.AsQueryable().Expression,
                 Expression.Quote(outerSelectorLambda),
                 Expression.Quote(innerSelectorLambda),
                 Expression.Quote(resultSelectorLambda)));

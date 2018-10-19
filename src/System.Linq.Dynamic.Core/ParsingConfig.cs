@@ -62,5 +62,10 @@ namespace System.Linq.Dynamic.Core
         /// See https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.1#linq-groupby-translation
         /// </summary>
         public bool EvaluateGroupByAtDatabase { get; set; }
+
+        /// <summary>
+        /// Allows the New() keyword to evaluate any available Type.
+        /// </summary>
+        public bool AllowNewToEvaluateAnyType { get; set; } = false;
     }
 }
