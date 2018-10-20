@@ -46,9 +46,9 @@ steps:
   displayName: End SonarScanner
 
 - task: PublishTestResults@2
-   inputs:
-     testRunner: VSTest
-     testResultsFiles: '**/*.trx'
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
 
 # Based on https://whereslou.com/2018/09/versioning-and-publishing-nuget-packages-automatically-using-azure-devops-pipelines/
 - task: DotNetCoreCLI@2
