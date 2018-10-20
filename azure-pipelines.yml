@@ -35,20 +35,20 @@ steps:
     projects: $(buildProjects)
 
 
-# Build source, tests and run tests for netcoreapp2.1 (with coverage)
+# Build tests and run tests for netcoreapp2.1 (with coverage)
 - script: |
-     dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --no-build --configuration Debug --framework netcoreapp2.1 --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-  displayName: 'Build source, tests and run tests for netcoreapp2.1 (with coverage)'
+    dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug --framework netcoreapp2.1 --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+  displayName: 'Build tests and run tests for netcoreapp2.1 (with coverage)'
 
 # End SonarScanner
-# - script: |
-#     %USERPROFILE%\.dotnet\tools\dotnet-sonarscanner end /d:sonar.login="$(SONAR_TOKEN)"
-#   displayName: End SonarScanner
+- script: |
+    %USERPROFILE%\.dotnet\tools\dotnet-sonarscanner end /d:sonar.login="$(SONAR_TOKEN)"
+  displayName: End SonarScanner
 
-# - task: PublishTestResults@2
-#   inputs:
-#     testRunner: VSTest
-#     testResultsFiles: '**/*.trx'
+- task: PublishTestResults@2
+   inputs:
+     testRunner: VSTest
+     testResultsFiles: '**/*.trx'
 
 # Based on https://whereslou.com/2018/09/versioning-and-publishing-nuget-packages-automatically-using-azure-devops-pipelines/
 - task: DotNetCoreCLI@2
@@ -69,16 +69,16 @@ steps:
     packDirectory: '$(Build.ArtifactStagingDirectory)/packages'
     verbosityPack: 'normal'
 
-# - task: PublishBuildArtifacts@1
-#   displayName: Publish Artifacts
-#   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) # Do not run for PullRequests
-#   inputs:
-#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifacts
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) # Do not run for PullRequests
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
-# - task: DotNetCoreCLI@2
-#   displayName: Push to MyGet
-#   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) # Do not run for PullRequests
-#   inputs:
-#     command: custom
-#     custom: nuget
-#     arguments: push $(Build.ArtifactStagingDirectory)\packages\*.nupkg --source https://www.myget.org/F/wiremock-net/api/v3/index.json --no-service-endpoint --api-key $(MyGetKey)
+- task: DotNetCoreCLI@2
+  displayName: Push to MyGet
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) # Do not run for PullRequests
+  inputs:
+    command: custom
+    custom: nuget
+    arguments: push $(Build.ArtifactStagingDirectory)\packages\*.nupkg --source https://www.myget.org/F/wiremock-net/api/v3/index.json --no-service-endpoint --api-key $(MyGetKey)
