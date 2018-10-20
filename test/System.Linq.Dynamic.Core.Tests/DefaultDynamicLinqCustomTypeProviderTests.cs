@@ -1,4 +1,4 @@
-﻿#if !NETSTANDARD
+﻿#if NET452
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using NFluent;
 using Xunit;

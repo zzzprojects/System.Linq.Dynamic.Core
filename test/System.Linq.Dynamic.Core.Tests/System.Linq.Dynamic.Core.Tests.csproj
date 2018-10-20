@@ -57,6 +57,6 @@
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
-        <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
+        <DefineConstants>$(DefineConstants);NETCOREAPP;EFCORE</DefineConstants>
     </PropertyGroup>
 </Project>
