@@ -2,8 +2,9 @@ pool:
   vmImage: 'vs2017-win2016'
 
 variables:
+  Prerelease: 'ci'
   buildType: 'azure-pipelines-ci'
-  buildId: "$(Build.BuildId)"
+  buildId: "1$(Build.BuildId)"
   buildProjects: '**/src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj'
 
 steps:
@@ -81,4 +82,4 @@ steps:
   inputs:
     command: custom
     custom: nuget
-    arguments: push $(Build.ArtifactStagingDirectory)\packages\*.nupkg --source https://www.myget.org/F/wiremock-net/api/v3/index.json --no-service-endpoint --api-key $(MyGetKey)
+    arguments: push $(Build.ArtifactStagingDirectory)\packages\*.nupkg --source https://www.myget.org/F/system-linq-dynamic-core/api/v3/index.json --no-service-endpoint --api-key $(MyGetKey)
