@@ -7,7 +7,7 @@ using QueryInterceptor.Core;
 using Xunit;
 using NFluent;
 #if EFCORE
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 #else
 using Microsoft.AspNet.Identity.EntityFramework;
 #endif
