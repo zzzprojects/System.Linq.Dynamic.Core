@@ -1,7 +1,9 @@
 ﻿using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Dynamic.Core.Util;
 using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -63,7 +65,19 @@ namespace System.Linq.Dynamic.Core
 
             var parser = new ExpressionParser(parameters, expression, values, parsingConfig);
 
-            return Expression.Lambda(parser.Parse(resultType, createParameterCtor), parameters);
+            var parsedExpression = parser.Parse(resultType, createParameterCtor);
+
+            if (parsingConfig != null && parsingConfig.RenameParameterExpression && parameters.Length == 1)
+            {
+                var renamer = new ParameterExpressionRenamer(parser.ItName);
+                parsedExpression = renamer.Rename(parsedExpression, out ParameterExpression newParameterExpression);
+                    
+                return Expression.Lambda(parsedExpression, new[] { newParameterExpression });
+            }
+            else
+            {
+                return Expression.Lambda(parsedExpression, parameters);
+            }
         }
 
         /// <summary>

@@ -37,6 +37,11 @@ namespace System.Linq.Dynamic.Core.Parser
         private bool _createParameterCtor;
 
         /// <summary>
+        /// Gets name for the `it` field. By default this is set to the KeyWord value "it".
+        /// </summary>
+        public string ItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionParser"/> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
@@ -1508,6 +1513,14 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 // This might be an internal variable for use within a lambda expression, so store it as such
                 _internals.Add(id, _it);
+
+                // Also store ItName (only once)
+                if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
+                {
+                    ItName = id;
+                }
+
+                // next
                 _textParser.NextToken();
 
                 return ParseConditionalOperator();

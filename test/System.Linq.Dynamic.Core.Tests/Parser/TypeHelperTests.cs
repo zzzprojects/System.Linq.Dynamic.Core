@@ -2,7 +2,7 @@
 using System.Linq.Dynamic.Core.Parser;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Tests.Parser
 {
     public class TypeHelperTests
     {
