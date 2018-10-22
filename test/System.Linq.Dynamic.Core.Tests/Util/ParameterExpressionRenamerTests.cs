@@ -43,7 +43,6 @@ namespace System.Linq.Dynamic.Core.Tests.Util
         [Fact]
         public void ParameterExpressionRenamer_Rename_NoParameterExpressionPresent()
         {
-
             // Assign
             var expression = Expression.Add(Expression.Constant(1), Expression.Constant(2));
             var sut = new ParameterExpressionRenamer("test");

@@ -16,7 +16,6 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
-
         public class Example
         {
             public DateTime Time { get; set; }
