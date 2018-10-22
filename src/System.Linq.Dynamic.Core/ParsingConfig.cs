@@ -1,4 +1,5 @@
 ﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Dynamic.Core.Parser;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -20,7 +21,15 @@ namespace System.Linq.Dynamic.Core
             EvaluateGroupByAtDatabase = true
         };
 
+        /// <summary>
+        /// The custom type provider.
+        /// </summary>
         private IDynamicLinkCustomTypeProvider _customTypeProvider;
+
+        /// <summary>
+        /// The expression promoter.
+        /// </summary>
+        private IExpressionPromoter _expressionPromoter;
 
         /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
@@ -42,6 +51,25 @@ namespace System.Linq.Dynamic.Core
                 if (_customTypeProvider != value)
                 {
                     _customTypeProvider = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="IExpressionPromoter"/>.
+        /// </summary>
+        public IExpressionPromoter ExpressionPromoter
+        {
+            get
+            {
+                return _expressionPromoter ?? (_expressionPromoter = new ExpressionPromoter());
+            }
+
+            set
+            {
+                if (_expressionPromoter != value)
+                {
+                    _expressionPromoter = value;
                 }
             }
         }
