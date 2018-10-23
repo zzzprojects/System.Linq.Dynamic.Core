@@ -5,6 +5,7 @@ using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Linq.PropertyTranslator.Core;
 using QueryInterceptor.Core;
 using Xunit;
+using NFluent;
 #if EFCORE
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 #else
@@ -30,7 +31,35 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Select_Dynamic()
+        public void Select_Dynamic1()
+        {
+            // Assign
+            var qry = User.GenerateSampleModels(1).AsQueryable();
+
+            // Act
+            var userRoles1 = qry.Select("new (Roles.Select(Id) as RoleIds)");
+            var userRoles2 = qry.Select("new (Roles.Select(it.Id) as RoleIds)");
+
+            // Assert
+            Check.That(userRoles1.Count()).IsEqualTo(1);
+            Check.That(userRoles2.Count()).IsEqualTo(1);
+        }
+
+        [Fact]
+        public void Select_Dynamic2()
+        {
+            // Assign
+            var qry = User.GenerateSampleModels(1).AsQueryable();
+
+            // Act
+            var userRoles = qry.Select("new (Roles.Select(it).ToArray() as Rolez)");
+
+            // Assert
+            Check.That(userRoles.Count()).IsEqualTo(1);
+        }
+
+        [Fact]
+        public void Select_Dynamic3()
         {
             //Arrange
             List<int> range = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -159,6 +188,118 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(range.Select(x => x * x).Cast<object>().ToList(), rangeResult.ToDynamicList());
             Assert.Equal(testList.Select(x => x.UserName).Cast<object>().ToList(), userNames.ToDynamicList());
             Assert.Equal(testList.Select(x => x.Profile).Cast<object>().ToList(), userProfiles.ToDynamicList());
+        }
+
+        public class Example
+        {
+            public DateTime Time { get; set; }
+            public DayOfWeek? DOWNull { get; set; }
+            public DayOfWeek DOW { get; set; }
+            public int Sec { get; set; }
+            public int? SecNull { get; set; }
+
+            public class NestedDto
+            {
+                public string Name { get; set; }
+
+                public class NestedDto2
+                {
+                    public string Name2 { get; set; }
+                }
+            }
+        }
+
+        public class ExampleWithConstructor
+        {
+            public DateTime Time { get; set; }
+            public DayOfWeek? DOWNull { get; set; }
+            public DayOfWeek DOW { get; set; }
+            public int Sec { get; set; }
+            public int? SecNull { get; set; }
+
+            public ExampleWithConstructor(DateTime t, DayOfWeek? dn, DayOfWeek d, int s, int? sn)
+            {
+                Time = t;
+                DOWNull = dn;
+                DOW = d;
+                Sec = s;
+                SecNull = sn;
+            }
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoTypeWithNullableProperties1()
+        {
+            // Arrange
+            var dates = Enumerable.Repeat(0, 7)
+                    .Select((d, i) => new DateTime(2000, 1, 1).AddDays(i).AddSeconds(i))
+                    .AsQueryable();
+
+            // Act
+            IQueryable<Example> result = dates
+                .Select(d => new Example { Time = d, DOWNull = d.DayOfWeek, DOW = d.DayOfWeek, Sec = d.Second, SecNull = d.Second });
+            IQueryable<Example> resultDynamic = dates
+                .Select<Example>("new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
+
+            // Assert
+            Check.That(resultDynamic.First()).Equals(result.First());
+            Check.That(resultDynamic.Last()).Equals(result.Last());
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoTypeWithNullableProperties2()
+        {
+            // Arrange
+            var dates = Enumerable.Repeat(0, 7)
+                    .Select((d, i) => new DateTime(2000, 1, 1).AddDays(i).AddSeconds(i))
+                    .AsQueryable();
+
+            // Act
+            IQueryable<ExampleWithConstructor> result = dates
+                .Select(d => new ExampleWithConstructor(d, d.DayOfWeek, d.DayOfWeek, d.Second, d.Second));
+            IQueryable<ExampleWithConstructor> resultDynamic = dates
+                .Select<ExampleWithConstructor>("new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
+
+            // Assert
+            Check.That(resultDynamic.First()).Equals(result.First());
+            Check.That(resultDynamic.Last()).Equals(result.Last());
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoKnownNestedType()
+        {
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+#if NETSTANDARD
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
+            // Assign
+            var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
+
+            // Act
+            var projectedData = queryable.Select<Example.NestedDto>(config, $"new {typeof(Example.NestedDto).FullName}(~ as Name)");
+
+            // Assert
+            Check.That(projectedData.First().Name).Equals("name1");
+            Check.That(projectedData.Last().Name).Equals("name2");
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
+        {
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+#if NETSTANDARD
+            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+#endif
+
+            // Assign
+            var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
+
+            // Act
+            var projectedData = queryable.Select<Example.NestedDto.NestedDto2>(config, $"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name2)");
+
+            // Assert
+            Check.That(projectedData.First().Name2).Equals("name1");
+            Check.That(projectedData.Last().Name2).Equals("name2");
         }
 
         [Fact]

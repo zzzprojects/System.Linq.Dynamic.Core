@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
     <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
-    <VersionPrefix>1.0.8.11</VersionPrefix>
+    <VersionPrefix>1.0.9.0</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
     <TargetFrameworks>net45;net46</TargetFrameworks>
     <DefineConstants>EF</DefineConstants>
@@ -12,7 +12,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
-    <PackageReleaseNotes>Bugfixes and new Features. For details see the release notes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
@@ -25,10 +25,11 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
+    <ProjectGuid>{D3804228-91F4-4502-9595-39584E510000}</ProjectGuid>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>full</DebugType>
     <IncludeSource>True</IncludeSource>
     <IncludeSymbols>True</IncludeSymbols>
     <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
@@ -48,10 +49,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="EntityFramework">
-      <Version>6.1.3</Version>
-    </PackageReference>
     <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
+      <PackageReference Include="EntityFramework" Version="6.1.3" />
   </ItemGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">

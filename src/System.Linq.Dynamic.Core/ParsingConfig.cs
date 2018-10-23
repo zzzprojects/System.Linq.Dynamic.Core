@@ -7,7 +7,18 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public class ParsingConfig
     {
-        internal static ParsingConfig Default { get; } = new ParsingConfig();
+        /// <summary>
+        /// Default ParsingConfig
+        /// </summary>
+        public static ParsingConfig Default { get; } = new ParsingConfig();
+
+        /// <summary>
+        /// Default ParsingConfig for EntityFramework Core 2.1 and higher
+        /// </summary>
+        public static ParsingConfig DefaultEFCore21 { get; } = new ParsingConfig
+        {
+            EvaluateGroupByAtDatabase = true
+        };
 
         private IDynamicLinkCustomTypeProvider _customTypeProvider;
 
@@ -44,9 +55,17 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// Gets or sets a value indicating whether to use dynamic object class for anonymous types.
         /// </summary>
-        /// <value>
-        /// <c>true</c> if wether to use dynamic object class for anonymous types; otherwise, <c>false</c>.
-        /// </value>
         public bool UseDynamicObjectClassForAnonymousTypes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the EntityFramwwork version supports evaluating GroupBy at database level.
+        /// See https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.1#linq-groupby-translation
+        /// </summary>
+        public bool EvaluateGroupByAtDatabase { get; set; }
+
+        /// <summary>
+        /// Allows the New() keyword to evaluate any available Type.
+        /// </summary>
+        public bool AllowNewToEvaluateAnyType { get; set; } = false;
     }
 }

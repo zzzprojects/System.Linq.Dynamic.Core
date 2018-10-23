@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <Compile Include="..\ConsoleAppEF2.0.2_InMemory\Database\TestContext.cs" Link="Database\TestContext.cs" />
+      <Compile Include="..\ConsoleAppEF2.0\Database\Brand.cs" Link="Database\Brand.cs" />
       <Compile Include="..\ConsoleAppEF2.0\Database\Car.cs" Link="Database\Car.cs" />
     </ItemGroup>
 

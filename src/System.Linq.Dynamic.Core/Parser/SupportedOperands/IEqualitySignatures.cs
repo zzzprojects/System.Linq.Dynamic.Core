@@ -13,9 +13,11 @@
 
         void F(Guid x, Guid y);
         void F(Guid? x, Guid? y);
-        void F(Guid x, string y);
-        void F(Guid? x, string y);
-        void F(string x, Guid y);
-        void F(string x, Guid? y);
+
+        // Disabled 4 lines below because of : https://github.com/StefH/System.Linq.Dynamic.Core/pull/200
+        //void F(Guid x, string y);
+        //void F(Guid? x, string y);
+        //void F(string x, Guid y);
+        //void F(string x, Guid? y);
     }
 }
