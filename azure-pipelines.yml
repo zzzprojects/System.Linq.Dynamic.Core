@@ -5,7 +5,7 @@ variables:
   Prerelease: 'ci'
   buildType: 'azure-pipelines-ci'
   buildId: "1$(Build.BuildId)"
-  buildProjects: '**/src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj'
+  buildProjects: '**/src/**/+(System.Linq.Dynamic.Core|EntityFramework.DynamicLinq|Microsoft.EntityFrameworkCore.DynamicLinq).csproj'
 
 steps:
 # Print buildId
