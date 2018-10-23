@@ -236,7 +236,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     expression = WrappedConstant((Int32)constantExpression.Value);
                 }
-                else if (constantExpression.Type == typeof(Int16)) 
+                else if (constantExpression.Type == typeof(short)) 
                 {
                     expression = WrappedConstant((Int16)constantExpression.Value);
                 }
