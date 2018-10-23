@@ -228,7 +228,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     expression = WrappedConstant((string)constantExpression.Value);
                 }
-                else if (constantExpression.Type == typeof(Int64)) 
+                else if (constantExpression.Type == typeof(long)) 
                 {
                     expression = WrappedConstant((Int64)constantExpression.Value);
                 } 
