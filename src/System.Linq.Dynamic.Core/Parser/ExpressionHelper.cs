@@ -232,7 +232,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     expression = WrappedConstant((Int64)constantExpression.Value);
                 } 
-                else if (constantExpression.Type == typeof(Int32)) 
+                else if (constantExpression.Type == typeof(int)) 
                 {
                     expression = WrappedConstant((Int32)constantExpression.Value);
                 }
