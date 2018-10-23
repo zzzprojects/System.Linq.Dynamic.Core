@@ -443,7 +443,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
                 Expression right = ParseShiftOperator();
-                bool isEquality = op.Id == TokenId.Equal || op.Id == TokenId.DoubleEqual || op.Id == TokenId.ExclamationEqual;
+                bool isEquality = op.Id == TokenId.Equal || op.Id == TokenId.DoubleEqual || op.Id == TokenId.ExclamationEqual || op.Id == TokenId.LessGreater;
 
                 if (isEquality && (!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType || left.Type == typeof(Guid) && right.Type == typeof(Guid)))
                 {
@@ -755,6 +755,21 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser.ValidateToken(TokenId.StringLiteral);
             char quote = _textParser.CurrentToken.Text[0];
             string s = _textParser.CurrentToken.Text.Substring(1, _textParser.CurrentToken.Text.Length - 2);
+            int index1 = 0;
+            while (true)
+            {
+                int index2 = s.IndexOf(quote, index1);
+                if (index2 < 0)
+                {
+                    break;
+                }
+
+                if (index2 + 1 < s.Length && s[index2 + 1] == quote)
+                {
+                    s = s.Remove(index2, 1);
+                }
+                index1 = index2 + 1;
+            }
 
             if (quote == '\'')
             {
@@ -1246,13 +1261,30 @@ namespace System.Linq.Dynamic.Core.Parser
             ConstructorInfo ctor = type.GetConstructor(propertyTypes);
             if (ctor != null && ctor.GetParameters().Length == expressions.Count)
             {
-                return Expression.New(ctor, expressions, (IEnumerable<MemberInfo>)propertyInfos);
+                var expressionsPromoted = new List<Expression>();
+
+                // Loop all expressions and promote if needed
+                for (int i = 0; i < propertyTypes.Length; i++)
+                {
+                    Type propertyType = propertyTypes[i];
+                    Type expressionType = expressions[i].Type;
+
+                    // Promote from Type to Nullable Type if needed
+                    expressionsPromoted.Add(ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
+                }
+
+                return Expression.New(ctor, expressionsPromoted, (IEnumerable<MemberInfo>)propertyInfos);
             }
 
             MemberBinding[] bindings = new MemberBinding[properties.Count];
             for (int i = 0; i < bindings.Length; i++)
             {
-                bindings[i] = Expression.Bind(type.GetProperty(properties[i].Name), expressions[i]);
+                PropertyInfo property = type.GetProperty(properties[i].Name);
+                Type propertyType = property.PropertyType;
+                Type expressionType = expressions[i].Type;
+
+                // Promote from Type to Nullable Type if needed
+                bindings[i] = Expression.Bind(property, ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
             }
 
             return Expression.MemberInit(Expression.New(type), bindings);
@@ -1377,6 +1409,13 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
+            // Check if there are any explicit conversion operators on the source type which fit the requirement (cast to the return type).
+            bool explicitOperatorAvailable = exprType.GetTypeInfo().GetDeclaredMethods("op_Explicit").Any(m => m.ReturnType == type);
+            if (explicitOperatorAvailable)
+            {
+                return Expression.Convert(expr, type);
+            }
+
             throw ParseError(errorPos, Res.CannotConvertValue, TypeHelper.GetTypeName(exprType), TypeHelper.GetTypeName(type));
         }
 
@@ -1486,14 +1525,17 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return result;
             }
+
             if (_it != null && _it.Type.Name == name)
             {
                 return _it.Type;
             }
+
             if (_parent != null && _parent.Type.Name == name)
             {
                 return _parent.Type;
             }
+
             if (_root != null && _root.Type.Name == name)
             {
                 return _root.Type;
@@ -1502,13 +1544,20 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return _it.Type;
             }
+
             if (_parent != null && _parent.Type.Namespace + "." + _parent.Type.Name == name)
             {
                 return _parent.Type;
             }
+
             if (_root != null && _root.Type.Namespace + "." + _root.Type.Name == name)
             {
                 return _root.Type;
+            }
+
+            if (_parsingConfig.AllowNewToEvaluateAnyType && _parsingConfig.CustomTypeProvider != null)
+            {
+                return _parsingConfig.CustomTypeProvider.ResolveType(name);
             }
 
             return null;

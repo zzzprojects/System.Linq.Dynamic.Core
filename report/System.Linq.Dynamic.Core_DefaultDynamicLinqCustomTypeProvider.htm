@@ -15,11 +15,11 @@
 <tbody>
 <tr><th>Class:</th><td>System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider</td></tr>
 <tr><th>Assembly:</th><td>System.Linq.Dynamic.Core</td></tr>
-<tr><th>File(s):</th><td><a href="#CUsersStefDocumentsGitHubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs" data-ng-click="navigateToHash('#CUsersStefDocumentsGitHubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs')">C:\Users\Stef\Documents\GitHub\System.Linq.Dynamic.Core\src\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</a></td></tr>
+<tr><th>File(s):</th><td><a href="#CUsersazureuserDocumentsGithubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs" data-ng-click="navigateToHash('#CUsersazureuserDocumentsGithubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs')">C:\Users\azureuser\Documents\Github\System.Linq.Dynamic.Core\src\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</a></td></tr>
 <tr><th>Covered lines:</th><td>0</td></tr>
-<tr><th>Uncovered lines:</th><td>8</td></tr>
-<tr><th>Coverable lines:</th><td>8</td></tr>
-<tr><th>Total lines:</th><td>32</td></tr>
+<tr><th>Uncovered lines:</th><td>9</td></tr>
+<tr><th>Coverable lines:</th><td>9</td></tr>
+<tr><th>Total lines:</th><td>34</td></tr>
 <tr><th>Line coverage:</th><td>0%</td></tr>
 <tr><th>Branch coverage:</th><td>0%</td></tr>
 </tbody>
@@ -33,7 +33,7 @@
 </tbody>
 </table>
 <h1>File(s)</h1>
-<h2 id="CUsersStefDocumentsGitHubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs">C:\Users\Stef\Documents\GitHub\System.Linq.Dynamic.Core\src\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</h2>
+<h2 id="CUsersazureuserDocumentsGithubSystemLinqDynamicCoresrcSystemLinqDynamicCoreCustomTypeProvidersDefaultDynamicLinqCustomTypeProvidercs">C:\Users\azureuser\Documents\Github\System.Linq.Dynamic.Core\src\System.Linq.Dynamic.Core\CustomTypeProviders\DefaultDynamicLinqCustomTypeProvider.cs</h2>
 <table class="lineAnalysis">
 <thead><tr><th></th><th>#</th><th>Line</th><th></th><th>Line coverage</th></tr></thead>
 <tbody>
@@ -60,18 +60,20 @@
 <tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line21"></a><code>21</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;virtual&nbsp;HashSet&lt;Type&gt;&nbsp;GetCustomTypes()</code></td></tr>
 <tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line22"></a><code>22</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
 <tr title="0 of 2 branches are covered" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line23"></a><code>23</code></td><td class="branch0">&nbsp;</td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(_customTypes&nbsp;!=&nbsp;null)</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line24"></a><code>24</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;_customTypes;</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line25"></a><code>25</code></td><td></td><td class="lightgray"><code></code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IEnumerable&lt;Assembly&gt;&nbsp;assemblies&nbsp;=&nbsp;_assemblyHelper.GetAssemblies();</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line27"></a><code>27</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_customTypes&nbsp;=&nbsp;new&nbsp;HashSet&lt;Type&gt;(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line28"></a><code>28</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;_customTypes;</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line29"></a><code>29</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line30"></a><code>30</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line31"></a><code>31</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
-<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line32"></a><code>32</code></td><td></td><td class="lightgray"><code>#endif</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line24"></a><code>24</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line25"></a><code>25</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;_customTypes;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line27"></a><code>27</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line28"></a><code>28</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IEnumerable&lt;Assembly&gt;&nbsp;assemblies&nbsp;=&nbsp;_assemblyHelper.GetAssemblies();</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line29"></a><code>29</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_customTypes&nbsp;=&nbsp;new&nbsp;HashSet&lt;Type&gt;(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line30"></a><code>30</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;_customTypes;</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line31"></a><code>31</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line32"></a><code>32</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line33"></a><code>33</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
+<tr data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line34"></a><code>34</code></td><td></td><td class="lightgray"><code>#endif</code></td></tr>
 </tbody>
 </table>
-<div class="footer">Generated by: ReportGenerator 2.5.6.0<br />30-4-2017 - 13:27:34<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="http://www.palmmedia.de">www.palmmedia.de</a></div></div>
+<div class="footer">Generated by: ReportGenerator 2.5.6.0<br />2018-07-27 - 14:51:25<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="http://www.palmmedia.de">www.palmmedia.de</a></div></div>
 <div class="containerright">
 <div class="containerrightfixed">
 <h1>Methods/Properties</h1>

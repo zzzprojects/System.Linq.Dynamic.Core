@@ -32,6 +32,62 @@ namespace System.Linq.Dynamic.Core.Tests
             public int TotalIncome { get; set; }
         }
 
+        public class CustomClassWithStaticMethod
+        {
+            public static int GetAge(int x) => x;
+        }
+
+        public class CustomTextClass
+        {
+            public CustomTextClass(string origin)
+            {
+                Origin = origin;
+            }
+
+            public string Origin { get; }
+
+            public static implicit operator string(CustomTextClass customTextValue)
+            {
+                return customTextValue?.Origin;
+            }
+
+            public static implicit operator CustomTextClass(string origin)
+            {
+                return new CustomTextClass(origin);
+            }
+
+            public override string ToString()
+            {
+                return Origin;
+            }
+        }
+
+        public class TextHolder
+        {
+            public TextHolder(string name, CustomTextClass note)
+            {
+                Name = name;
+                Note = note;
+            }
+
+            public string Name { get; }
+
+            public CustomTextClass Note { get; }
+
+            public override string ToString()
+            {
+                return Name + " (" + Note + ")";
+            }
+        }
+
+        public static class StaticHelper
+        {
+            public static Guid? GetGuid(string name)
+            {
+                return Guid.NewGuid();
+            }
+        }
+
         private class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
             private HashSet<Type> _customTypes;
@@ -44,7 +100,14 @@ namespace System.Linq.Dynamic.Core.Tests
                 }
 
                 _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }));
+                _customTypes.Add(typeof(CustomClassWithStaticMethod));
+                _customTypes.Add(typeof(StaticHelper));
                 return _customTypes;
+            }
+
+            public Type ResolveType(string typeName)
+            {
+                return Type.GetType(typeName);
             }
         }
 
@@ -412,6 +475,180 @@ namespace System.Linq.Dynamic.Core.Tests
                 DynamicExpressionParser.ParseLambda(typeof(IO.FileStream), null, "it.Close()");
             })
             .Throws<ParseException>().WithMessage("Methods on type 'Stream' are not accessible");
+        }
+
+        [Fact]
+        public void ParseLambda_CustomMethod()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                CustomTypeProvider = new TestCustomTypeProvider()
+            };
+
+            var context = new CustomClassWithStaticMethod();
+            string expression = $"{nameof(CustomClassWithStaticMethod)}.{nameof(CustomClassWithStaticMethod.GetAge)}(10)";
+
+            // Act
+            var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(CustomClassWithStaticMethod), null, expression);
+            Delegate del = lambdaExpression.Compile();
+            int result = (int)del.DynamicInvoke(context);
+
+            // Assert
+            Check.That(result).IsEqualTo(10);
+        }
+
+        [Fact]
+        public void ParseLambda_With_InnerStringLiteral()
+        {
+            var originalTrueValue = "simple + \"quoted\"";
+            var doubleQuotedTrueValue = "simple + \"\"quoted\"\"";
+            var expressionText = $"iif(1>0, \"{doubleQuotedTrueValue}\", \"false\")";
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(string), null, expressionText);
+            var del = lambda.Compile();
+            object result = del.DynamicInvoke(String.Empty);
+            Check.That(result).IsEqualTo(originalTrueValue);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Guid_Equals_Null()
+        {
+            // Arrange
+            var user = new User();
+            Guid guidEmpty = Guid.Empty;
+            Guid someId = Guid.NewGuid();
+            string expressionText = $"iif(@0.Id == null, @0.Id == Guid.Parse(\"{someId}\"), Id == Id)";
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
+            var boolLambda = lambda as Expression<Func<User, bool>>;
+            Assert.NotNull(boolLambda);
+
+            var del = lambda.Compile();
+            bool result = (bool)del.DynamicInvoke(user);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Null_Equals_Guid()
+        {
+            // Arrange
+            var user = new User();
+            Guid guidEmpty = Guid.Empty;
+            Guid someId = Guid.NewGuid();
+            string expressionText = $"iif(null == @0.Id, @0.Id == Guid.Parse(\"{someId}\"), Id == Id)";
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
+            var boolLambda = lambda as Expression<Func<User, bool>>;
+            Assert.NotNull(boolLambda);
+
+            var del = lambda.Compile();
+            bool result = (bool)del.DynamicInvoke(user);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Guid_Equals_String()
+        {
+            // Arrange
+            Guid someId = Guid.NewGuid();
+            Guid anotherId = Guid.NewGuid();
+            var user = new User();
+            user.Id = someId;
+            Guid guidEmpty = Guid.Empty;
+            string expressionText = $"iif(@0.Id == \"{someId}\", Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
+            var guidLambda = lambda as Expression<Func<User, Guid>>;
+            Assert.NotNull(guidLambda);
+
+            var del = lambda.Compile();
+            Guid result = (Guid)del.DynamicInvoke(user);
+
+            // Assert
+            Assert.Equal(guidEmpty, result);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Concat_String_CustomType()
+        {
+            // Arrange
+            string name = "name1";
+            string note = "note1";
+            var textHolder = new TextHolder(name, note);
+            string expressionText = "Name + \" (\" + Note + \")\"";
+
+            // Act 1
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(TextHolder), null, expressionText, textHolder);
+            var stringLambda = lambda as Expression<Func<TextHolder, string>>;
+
+            // Assert 1
+            Assert.NotNull(stringLambda);
+
+            // Act 2
+            var del = lambda.Compile();
+            string result = (string)del.DynamicInvoke(textHolder);
+
+            // Assert 2
+            Assert.Equal("name1 (note1)", result);
+        }
+
+        [Fact]
+        public void ParseLambda_With_Concat_CustomType_String()
+        {
+            // Arrange
+            string name = "name1";
+            string note = "note1";
+            var textHolder = new TextHolder(name, note);
+            string expressionText = "Note + \" (\" + Name + \")\"";
+
+            // Act 1
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(TextHolder), null, expressionText, textHolder);
+            var stringLambda = lambda as Expression<Func<TextHolder, string>>;
+
+            // Assert 1
+            Assert.NotNull(stringLambda);
+
+            // Act 2
+            var del = lambda.Compile();
+            string result = (string)del.DynamicInvoke(textHolder);
+
+            // Assert 2
+            Assert.Equal("note1 (name1)", result);
+        }
+
+        [Fact]
+        public void ParseLambda_Operator_Less_Greater_With_Guids()
+        {
+            var config = new ParsingConfig
+            {
+                CustomTypeProvider = new TestCustomTypeProvider()
+            };
+
+            // Arrange
+            Guid someId = Guid.NewGuid();
+            Guid anotherId = Guid.NewGuid();
+            var user = new User();
+            user.Id = someId;
+            Guid guidEmpty = Guid.Empty;
+            string expressionText = $"iif(@0.Id == StaticHelper.GetGuid(\"name\"), Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
+            var guidLambda = lambda as Expression<Func<User, Guid>>;
+            Assert.NotNull(guidLambda);
+
+            var del = lambda.Compile();
+            Guid result = (Guid)del.DynamicInvoke(user);
+
+            // Assert
+            Assert.Equal(anotherId, result);
         }
     }
 }

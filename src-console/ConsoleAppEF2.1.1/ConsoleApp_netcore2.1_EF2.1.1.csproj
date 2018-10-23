@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="..\ConsoleAppEF2.0\Database\Brand.cs" Link="Database\Brand.cs" />
         <Compile Include="..\ConsoleAppEF2.0\Database\Car.cs" Link="Database\Car.cs" />
         <Compile Include="..\ConsoleAppEF2.0\Database\TestContext.cs" Link="Database\TestContext.cs" />
     </ItemGroup>
@@ -22,10 +23,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Database\" />
     </ItemGroup>
 
 </Project>

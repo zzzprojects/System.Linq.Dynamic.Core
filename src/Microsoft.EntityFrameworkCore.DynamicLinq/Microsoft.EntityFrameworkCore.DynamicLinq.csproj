@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
     <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
-    <VersionPrefix>1.0.8.11</VersionPrefix>
+    <VersionPrefix>1.0.9.0</VersionPrefix>
     <Authors>Stef Heyenrath</Authors>
     <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0;uap10.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
@@ -12,7 +12,7 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
-    <PackageReleaseNotes>Bugfixes and new Features. For details see the release notes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
@@ -26,10 +26,11 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
+    <ProjectGuid>{D3804228-91F4-4502-9595-39584E510001}</ProjectGuid>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>full</DebugType>
     <IncludeSource>True</IncludeSource>
     <IncludeSymbols>True</IncludeSymbols>
     <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
@@ -106,7 +107,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
   </ItemGroup>
 </Project>

@@ -1,3 +1,66 @@
+# 1.0.8.18 (04 September 2018)
+
+ - [#202](https://github.com/StefH/System.Linq.Dynamic.Core/issues/202) - Feature: support Explicit cast Operator +feature
+ - [#201](https://github.com/StefH/System.Linq.Dynamic.Core/pull/201) - Fix Parsing Config not passed down to expression parser in JOIN contributed by Davvid ([david-garcia-garcia](https://github.com/david-garcia-garcia))
+ - [#165](https://github.com/StefH/System.Linq.Dynamic.Core/issues/165) - Consider fit the rule of AnonymousTypes for EFCore2.1? +feature
+
+Commits: 1442928405...47125b88c7
+
+
+# 1.0.8.17 (27 August 2018)
+
+ - [#200](https://github.com/StefH/System.Linq.Dynamic.Core/pull/200) - Fix for parsing Guid and string in the same condition contributed by Oleg ([OlegNadymov](https://github.com/OlegNadymov))
+
+Commits: b78629f5b5...b78629f5b5
+
+
+# 1.0.8.16 (19 August 2018)
+
+ - [#191](https://github.com/StefH/System.Linq.Dynamic.Core/issues/191) - Feature: re-enable support for uap10
+ - [#198](https://github.com/StefH/System.Linq.Dynamic.Core/pull/198) - re-enable UAP10 support contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+
+Commits: eac1fdc0ea...eac1fdc0ea
+
+
+# 1.0.8.15 (17 August 2018)
+
+ - [#197](https://github.com/StefH/System.Linq.Dynamic.Core/pull/197) - Added EvaluateGroupByAtDatabase For EF Core 2.1 contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#196](https://github.com/StefH/System.Linq.Dynamic.Core/issues/196) - Question: Not applicable aggregate method 'Any' exists
+ - [#165](https://github.com/StefH/System.Linq.Dynamic.Core/issues/165) - Consider fit the rule of AnonymousTypes for EFCore2.1? +feature
+
+Commits: c730a78703...1e0ed4e692
+
+
+# 1.0.8.14 (14 August 2018)
+
+ - [#195](https://github.com/StefH/System.Linq.Dynamic.Core/pull/195) - Fix the problem with inner double quotes contributed by Oleg ([OlegNadymov](https://github.com/OlegNadymov))
+ - [#194](https://github.com/StefH/System.Linq.Dynamic.Core/pull/194) - Test for sonarcloud contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+
+Commits: f1cfbe2063...870eb29888
+
+
+# 1.0.8.13 (02 August 2018)
+
+ - [#193](https://github.com/StefH/System.Linq.Dynamic.Core/pull/193) - Fix for ParseLambda with itType and resultType: correct order of arguments contributed by Oleg ([OlegNadymov](https://github.com/OlegNadymov))
+ - [#190](https://github.com/StefH/System.Linq.Dynamic.Core/pull/190) - Add SonarCloud (#186) contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#187](https://github.com/StefH/System.Linq.Dynamic.Core/issues/187) - Add custom static classes for parsing
+ - [#186](https://github.com/StefH/System.Linq.Dynamic.Core/issues/186) - Feature: include SonarCloud code checks +feature
+
+Commits: f1cfbe2063...fa1b6f29fc
+
+
+# 1.0.8.12 (27 July 2018)
+
+ - [#189](https://github.com/StefH/System.Linq.Dynamic.Core/pull/189) - Fix conversion from a non-nullable value type to the nullable value type contributed by Stef Heyenrath ([StefH](https://github.com/StefH))
+ - [#188](https://github.com/StefH/System.Linq.Dynamic.Core/issues/188) - Issue: Implicitly conversion from a non-nullable value type to the nullable form of that value type is broken?
+ - [#180](https://github.com/StefH/System.Linq.Dynamic.Core/issues/180) - Question: GroupBy fails for field named SHORT
+ - [#178](https://github.com/StefH/System.Linq.Dynamic.Core/issues/178) - Question: No generic method 'Contains' on type 'System.Linq.Enumerable
+ - [#177](https://github.com/StefH/System.Linq.Dynamic.Core/pull/177) - Feature: Remove built-in references from netstandard2.0 target contributed by Alexander Zaytsev ([hazzik](https://github.com/hazzik))
+ - [#53](https://github.com/StefH/System.Linq.Dynamic.Core/issues/53) - Question: External Methods call
+
+Commits: 2b4c6a5d76...59fb884ce4
+
+
 # 1.0.8.11 (06 June 2018)
 
  - [#172](https://github.com/StefH/System.Linq.Dynamic.Core/issues/172) - Issue: DynamicQueryableExtensions.OrderBy extension method not using ParsingConfig parameter

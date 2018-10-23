@@ -1,72 +1,78 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
-  <PropertyGroup>
-    <Authors>Stef Heyenrath</Authors>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
-    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">$(PackageTargetFallback);dnxcore50;dotnet5.4;portable-net451+win8</PackageTargetFallback>
-    <DebugType>full</DebugType>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>False</DelaySign>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
-    <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
-    <PackageReference Include="OpenCover" Version="4.6.519" />
-    <PackageReference Include="ReportGenerator" Version="2.5.6" />
-    <PackageReference Include="xunit.runner.console" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <Version>2.3.1</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>10.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="Linq.PropertyTranslator.Core">
-      <Version>1.0.4</Version>
-    </PackageReference>
-    <PackageReference Include="QueryInterceptor.Core">
-      <Version>1.0.6</Version>
-    </PackageReference>
-    <PackageReference Include="System.AppDomain.NetCoreApp">
-      <Version>1.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="xunit">
-      <Version>2.3.1</Version>
-    </PackageReference>
-    <PackageReference Include="NFluent" Version="2.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore">
-      <Version>1.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore">
-      <Version>1.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
-      <Version>1.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer">
-      <Version>1.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="System.Linq.Parallel">
-      <Version>4.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Threading.Tasks">
-      <Version>4.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  </ItemGroup>
-  
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
-    <DefineConstants>$(DefineConstants);NETSTANDARD;EFCORE</DefineConstants>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Authors>Stef Heyenrath</Authors>
+        <TargetFrameworks>netcoreapp1.1</TargetFrameworks>
+        <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
+        <DebugType>full</DebugType>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
+        <DelaySign>False</DelaySign>
+        <ProjectGuid>{912FBF24-3CAE-4A50-B5EA-E525B9FAEC80}</ProjectGuid>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
+        <PackageReference Include="OpenCover" Version="4.6.519" />
+        <PackageReference Include="ReportGenerator" Version="2.5.6" />
+        <PackageReference Include="xunit.runner.console" Version="2.3.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+        <PackageReference Include="Newtonsoft.Json">
+            <Version>10.0.3</Version>
+        </PackageReference>
+        <PackageReference Include="Linq.PropertyTranslator.Core">
+            <Version>1.0.4</Version>
+        </PackageReference>
+        <PackageReference Include="QueryInterceptor.Core">
+            <Version>1.0.6</Version>
+        </PackageReference>
+        <PackageReference Include="xunit">
+            <Version>2.3.1</Version>
+        </PackageReference>
+        <PackageReference Include="NFluent" Version="2.1.1" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+        <PackageReference Include="EntityFramework" Version="6.1.3" />
+        <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.2" />
+        <ProjectReference Include="..\..\src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
+        <PackageReference Include="System.AppDomain.NetCoreApp" Version="1.1.2" />
+        <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+        <PackageReference Include="System.Linq.Parallel">
+            <Version>4.3.0</Version>
+        </PackageReference>
+        <PackageReference Include="System.Threading.Tasks">
+            <Version>4.3.0</Version>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore">
+            <Version>1.1.1</Version>
+        </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore">
+            <Version>1.1.1</Version>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
+            <Version>1.1.1</Version>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer">
+            <Version>1.1.1</Version>
+        </PackageReference>
+
+        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    </ItemGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
+        <DefineConstants>$(DefineConstants);NETSTANDARD;EFCORE</DefineConstants>
+    </PropertyGroup>
 </Project>

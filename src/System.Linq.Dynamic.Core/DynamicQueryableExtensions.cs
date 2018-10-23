@@ -500,7 +500,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(keySelector, nameof(keySelector));
             Check.NotEmpty(resultSelector, nameof(resultSelector));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
             LambdaExpression elementLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, resultSelector, args);
 
@@ -570,7 +570,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(keySelector, nameof(keySelector));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
@@ -586,7 +586,6 @@ namespace System.Linq.Dynamic.Core
         {
             return GroupBy(source, (ParsingConfig)null, keySelector, args);
         }
-
         #endregion GroupBy
 
         #region GroupByMany
@@ -680,11 +679,11 @@ namespace System.Linq.Dynamic.Core
             Type outerType = outer.ElementType;
             Type innerType = inner.AsQueryable().ElementType;
 
-            bool createParameterCtor = outer.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? outer.IsLinqToObjects();
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, null, innerKeySelector, args);
 
-            CheckOuterAndInnerTypes(createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
+            CheckOuterAndInnerTypes(config, createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
 
             ParameterExpression[] parameters =
             {
@@ -698,7 +697,7 @@ namespace System.Linq.Dynamic.Core
                 typeof(Queryable), nameof(Queryable.GroupJoin),
                 new[] { outer.ElementType, innerType, outerSelectorLambda.Body.Type, resultSelectorLambda.Body.Type },
                 outer.Expression,
-                Expression.Constant(inner),
+                inner.AsQueryable().Expression,
                 Expression.Quote(outerSelectorLambda),
                 Expression.Quote(innerSelectorLambda),
                 Expression.Quote(resultSelectorLambda)));
@@ -709,7 +708,6 @@ namespace System.Linq.Dynamic.Core
         {
             return GroupJoin(outer, null, inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
-
         #endregion
 
         #region Join
@@ -737,11 +735,11 @@ namespace System.Linq.Dynamic.Core
             Type outerType = outer.ElementType;
             Type innerType = inner.AsQueryable().ElementType;
 
-            bool createParameterCtor = outer.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? outer.IsLinqToObjects();
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, null, innerKeySelector, args);
 
-            CheckOuterAndInnerTypes(createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
+            CheckOuterAndInnerTypes(config, createParameterCtor, outerType, innerType, outerKeySelector, innerKeySelector, ref outerSelectorLambda, ref innerSelectorLambda, args);
 
             ParameterExpression[] parameters =
             {
@@ -897,7 +895,7 @@ namespace System.Linq.Dynamic.Core
 #if NET35
         public static object LastOrDefault([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
 #else
-        public static dynamic LastOrDefault([NotNull] this IQueryable source,  [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic LastOrDefault([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
 #endif
         {
             Check.NotNull(source, nameof(source));
@@ -1134,7 +1132,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, selector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
@@ -1174,7 +1172,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(TResult), selector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
@@ -1212,7 +1210,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(resultType, nameof(resultType));
             Check.NotEmpty(selector, nameof(selector));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, resultType, selector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
@@ -1290,7 +1288,7 @@ namespace System.Linq.Dynamic.Core
 
         private static IQueryable SelectManyInternal(IQueryable source, ParsingConfig config, Type resultType, string selector, params object[] args)
         {
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, selector, args);
 
             //Extra help to get SelectMany to work from StackOverflow Answer
@@ -1347,7 +1345,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
@@ -1440,7 +1438,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(resultSelector, nameof(resultSelector));
             Check.NotEmpty(resultParameterName, nameof(resultParameterName));
 
-            bool createParameterCtor = source.IsLinqToObjects();
+            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? source.IsLinqToObjects();
             LambdaExpression sourceSelectLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, collectionSelector, collectionSelectorArgs);
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
@@ -1580,7 +1578,7 @@ namespace System.Linq.Dynamic.Core
 #if NET35
         public static object SingleOrDefault([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
 #else
-        public static dynamic SingleOrDefault([NotNull] this IQueryable source,  [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic SingleOrDefault([NotNull] this IQueryable source, [CanBeNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
 #endif
         {
             Check.NotNull(source, nameof(source));
@@ -1925,7 +1923,7 @@ namespace System.Linq.Dynamic.Core
         #endregion
 
         #region Private Helpers
-        private static void CheckOuterAndInnerTypes(bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object[] args)
+        private static void CheckOuterAndInnerTypes(ParsingConfig config, bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object[] args)
         {
             Type outerSelectorReturnType = outerSelectorLambda.Body.Type;
             Type innerSelectorReturnType = innerSelectorLambda.Body.Type;
@@ -1943,12 +1941,12 @@ namespace System.Linq.Dynamic.Core
                 if (TypeHelper.IsNullableType(outerSelectorReturnType) && !TypeHelper.IsNullableType(innerSelectorReturnType))
                 {
                     innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
-                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
+                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
                 }
                 else if (!TypeHelper.IsNullableType(outerSelectorReturnType) && TypeHelper.IsNullableType(innerSelectorReturnType))
                 {
                     outerSelectorReturnType = ExpressionParser.ToNullableType(outerSelectorReturnType);
-                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
+                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
                 }
 
                 // If types are still not the same, throw an Exception

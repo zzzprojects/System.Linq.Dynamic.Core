@@ -2,34 +2,26 @@
   <PropertyGroup>
     <Description>This is a .NETStandard/ .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
     <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
-    <VersionPrefix>1.0.8.11</VersionPrefix>
+    <VersionPrefix>1.0.9.0</VersionPrefix>
     <Authors>Microsoft;Scott Guthrie;King Wilder;Nathan Arnott;Stef Heyenrath</Authors>
-    <TargetFrameworks>net35;net40;net45;net46;uap10.0;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0;uap10.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>System.Linq.Dynamic.Core</AssemblyName>
     <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageTags>system;linq;dynamic;core;dotnet;NETCoreApp;NETStandard</PackageTags>
-    <PackageReleaseNotes>Bugfixes and new Features. For details see the release notes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/licence.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <DefaultLanguage>en-us</DefaultLanguage>
+    <ProjectGuid>{D3804228-91F4-4502-9595-39584E510002}</ProjectGuid>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>full</DebugType>
     <IncludeSource>True</IncludeSource>
     <IncludeSymbols>True</IncludeSymbols>
     <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
@@ -123,7 +115,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.10" />
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
   </ItemGroup>

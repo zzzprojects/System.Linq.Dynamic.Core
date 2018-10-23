@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
@@ -24,6 +23,13 @@ namespace ConsoleAppEF2
                 };
 
                 return set;
+            }
+
+            public Type ResolveType(string typeName)
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+                return ResolveType(assemblies, typeName);
             }
         }
 

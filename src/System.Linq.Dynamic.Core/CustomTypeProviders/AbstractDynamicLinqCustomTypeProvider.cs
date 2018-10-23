@@ -6,7 +6,7 @@ using System.Linq.Dynamic.Core.Validation;
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// The abstract <see cref="AbstractDynamicLinqCustomTypeProvider"/>. Find all types marked with <see cref="DynamicLinqTypeAttribute"/>.
+    /// The abstract DynamicLinqCustomTypeProvider which is used by the <see cref="IDynamicLinkCustomTypeProvider"/> and can be used by a custom TypeProvider like in .NET Core.
     /// </summary>
     public abstract class AbstractDynamicLinqCustomTypeProvider
     {
@@ -30,6 +30,29 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 #endif
         }
 
+        /// <summary>
+        /// Resolve any type which is registered in the current application domain.
+        /// </summary>
+        /// <param name="assemblies">The assemblies to inspect.</param>
+        /// <param name="typeName">The typename to resolve.</param>
+        /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
+        protected Type ResolveType([NotNull] IEnumerable<Assembly> assemblies, [NotNull] string typeName)
+        {
+            Check.NotNull(assemblies, nameof(assemblies));
+            Check.NotEmpty(typeName, nameof(typeName));
+
+            foreach (Assembly assembly in assemblies)
+            {
+                Type resolvedType = assembly.GetType(typeName, false, true);
+                if (resolvedType != null)
+                {
+                    return resolvedType;
+                }
+            }
+
+            return null;
+        }
+
 #if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
         /// <summary>
         /// Gets the assembly types in an Exception friendly way.
@@ -48,8 +71,10 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
                 {
                     definedTypes = assembly.DefinedTypes;
                 }
-                catch (Exception)
-                { }
+                catch
+                {
+                    // Ignore error
+                }
 
                 if (definedTypes != null)
                 {
@@ -78,8 +103,10 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
                 {
                     definedTypes = assembly.GetTypes();
                 }
-                catch (Exception)
-                { }
+                catch
+                {
+                    // Ignore error
+                }
 
                 if (definedTypes != null)
                 {
