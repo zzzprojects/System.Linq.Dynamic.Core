@@ -270,6 +270,9 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
+        /// <summary>
+        /// Based on gblog by graeme-hill. https://github.com/graeme-hill/gblog/blob/master/source_content/articles/2014.139_entity-framework-dynamic-queries-and-parameterization.mkd
+        /// </summary>
         private static MemberExpression WrappedConstant<TValue>(TValue value)
         {
             var wrapper = new WrappedObj<TValue>(value);
