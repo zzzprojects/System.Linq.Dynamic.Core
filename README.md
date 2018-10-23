@@ -24,7 +24,6 @@ There are several documentation resources:
 | &nbsp;&nbsp;**Issues** | [![GitHub issues](https://img.shields.io/github/issues/StefH/System.Linq.Dynamic.Core.svg)](https://github.com/StefH/System.Linq.Dynamic.Core/issues) |
 | | |
 | ***Quality*** | &nbsp; |
-| &nbsp;&nbsp;**Build** | [![Build status](https://ci.appveyor.com/api/projects/status/0c4v2bsvdqd57600?svg=true)](https://ci.appveyor.com/project/StefH/system-linq-dynamic-core) |
 | &nbsp;&nbsp;**Build Azure** | [![Build Status Azure](https://stef.visualstudio.com/System.Linq.Dynamic.Core/_apis/build/status/StefH.System.Linq.Dynamic.Core)](https://stef.visualstudio.com/System.Linq.Dynamic.Core/_build/latest?definitionId=12) |
 | &nbsp;&nbsp;**CodeFactor** | [![CodeFactor](https://www.codefactor.io/repository/github/stefh/system.linq.dynamic.core/badge)](https://www.codefactor.io/repository/github/stefh/system.linq.dynamic.core)
 | &nbsp;&nbsp;**Sonar Quality Gate** | [![Sonar Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=alert_status)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core) |
@@ -40,6 +39,8 @@ There are several documentation resources:
 | &nbsp;&nbsp;**Microsoft.EntityFrameworkCore.DynamicLinq** | [![NuGet](https://buildstats.info/nuget/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 | ***MyGet (previews)*** | &nbsp; |
 | &nbsp;&nbsp;**System.Linq.Dynamic.Core** | [![MyGet](https://buildstats.info/myget/system-linq-dynamic-core/System.Linq.Dynamic.Core)](https://www.myget.org/feed/system-linq-dynamic-corepackage/nuget/System.Linq.Dynamic.Core) |
+| &nbsp;&nbsp;**EntityFramework.DynamicLinq** | [![MyGet](https://buildstats.info/myget/system-linq-dynamic-core/EntityFramework.DynamicLinq)](https://www.myget.org/feed/system-linq-dynamic-corepackage/nuget/EntityFramework.DynamicLinq) |
+| &nbsp;&nbsp;**Microsoft.EntityFrameworkCore.DynamicLinq** | [![MyGet](https://buildstats.info/myget/system-linq-dynamic-core/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.myget.org/feed/system-linq-dynamic-corepackage/nuget/Microsoft.EntityFrameworkCore.DynamicLinq) |
 
 # Development Details
 
