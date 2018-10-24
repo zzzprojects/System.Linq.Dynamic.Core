@@ -413,6 +413,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 typeof(Boolean),
                 string.Format("Property1 == {0}", expectedRightValue));
 
+            var testA = "";
             string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
             Assert.Equal(typeof(Boolean), expression.Body.Type);
             Assert.Equal(expectedRightValue, rightValue);
