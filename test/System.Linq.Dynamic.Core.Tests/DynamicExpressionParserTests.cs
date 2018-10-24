@@ -427,8 +427,11 @@ namespace System.Linq.Dynamic.Core.Tests
                 new[] { Expression.Parameter(typeof(string), "Property1") },
                 typeof(Boolean),
                 string.Format("Property1 == {0}", expectedRightValue));
+            
+            var constantExpression =((ConstantExpression)((MemberExpression)(((BinaryExpression)expression.Body).Right)).Expression);
+            var wrappedObj = (System.Linq.Dynamic.Core.Parser.ExpressionHelper.WrappedObj<string>)constantExpression.Value;
 
-            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
+            string rightValue = wrappedObj.Value;
             Assert.Equal(typeof(Boolean), expression.Body.Type);
             Assert.Equal(expectedRightValue, rightValue);
         }
