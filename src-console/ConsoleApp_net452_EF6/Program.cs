@@ -11,16 +11,20 @@ namespace ConsoleApp_net452_EF6
     {
         static void Main(string[] args)
         {
-            var all = new
-            {
-                test1 = new List<int> { 1, 2, 3 }.ToDynamicList(typeof(int)),
-                test2 = new List<dynamic> { 4, 5, 6 }.ToDynamicList(typeof(int)),
-                test3 = new List<object> { 7, 8, 9 }.ToDynamicList(typeof(int))
-            };
-
-            Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
             using (var context = new KendoGridDbContext())
             {
+                var found1 = context.Employees.FirstOrDefault($"EmployeeNumber > 1000");
+                Console.WriteLine($"found1 : {found1.Id} - {found1.EmployeeNumber}");
+
+                var found2 = context.Employees.FirstOrDefault($"EmployeeNumber > @0", 1001);
+                Console.WriteLine($"found2 : {found2.Id} - {found2.EmployeeNumber}");
+
+                int em = 1002;
+                var found3 = context.Employees.FirstOrDefault($"EmployeeNumber > @0", em);
+                Console.WriteLine($"found3 : {found3.Id} - {found3.EmployeeNumber}");
+
+                return;
+
                 string search = "2";
                 var expected = context.Employees.Where(e => System.Data.Entity.SqlServer.SqlFunctions.StringConvert((double)e.EmployeeNumber).Contains(search)).ToArray();
                 foreach (var emp in expected)
@@ -34,7 +38,7 @@ namespace ConsoleApp_net452_EF6
                     Console.WriteLine($"DynamicLinq : {emp.Id} - {emp.EmployeeNumber}");
                 }
 
-                Console.WriteLine(new String('-', 80));
+                Console.WriteLine(new string('-', 80));
                 int x = 1002;
                 int seven = 7;
                 var testNonOptimize = context.Employees.Where(e => e.EmployeeNumber > 1000 && e.EmployeeNumber < x && 7 == seven);
