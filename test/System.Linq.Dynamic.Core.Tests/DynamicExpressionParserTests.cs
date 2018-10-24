@@ -429,7 +429,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 string.Format("Property1 == {0}", expectedRightValue));
             
             var constantExpression =((ConstantExpression)((MemberExpression)(((BinaryExpression)expression.Body).Right)).Expression);
-            var wrappedObj = (System.Linq.Dynamic.Core.Parser.ExpressionHelper.WrappedObj<string>)constantExpression.Value;
+            var wrappedObj = (System.Linq.Dynamic.Core.Parser.WrappedObj<string>)constantExpression.Value;
 
             string rightValue = wrappedObj.Value;
             Assert.Equal(typeof(Boolean), expression.Body.Type);
