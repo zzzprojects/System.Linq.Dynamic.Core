@@ -232,7 +232,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                 if (constantExpression.Type == typeof(string)) 
                 {
-                    expression = WrappedConstant((string)constantExpression.Value);
+                    expression = WrappedConstant((string)constantExpression.ToString());
                 }
                 else if (constantExpression.Type == typeof(long)) 
                 {
