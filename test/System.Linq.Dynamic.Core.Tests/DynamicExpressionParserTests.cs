@@ -453,17 +453,25 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
         {
             string expectedRightValue = "\"test\\string\"";
+            
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
                 typeof(Boolean),
                 string.Format("Property1 == {0}", expectedRightValue));
+            
+            var notWrappedExpression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") },
+                typeof(Boolean),
+                string.Format("Property1 == {0} + \"\"", expectedRightValue));
+
+            var notWrappedExpectedRightValue = ((ConstantExpression)(((MethodCallExpression)(((BinaryExpression)notWrappedExpression.Body).Right)).Arguments[0])).Value;
             
             var constantExpression =((ConstantExpression)((MemberExpression)(((BinaryExpression)expression.Body).Right)).Expression);
             var wrappedObj = (System.Linq.Dynamic.Core.Parser.WrappedObj<string>)constantExpression.Value;            
 
             string rightValue = wrappedObj.Value;
             Assert.Equal(typeof(Boolean), expression.Body.Type);
-            Assert.Equal(expectedRightValue, rightValue);
+            Assert.Equal(notWrappedExpectedRightValue, rightValue);
         }
 
         [Fact]
