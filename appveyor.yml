@@ -44,7 +44,7 @@ before_build:
 
 build_script:
 # Begin SonarScanner
-- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { & dotnet sonarscanner begin /k:"system.linq.dynamic.core" /d:sonar.organization="stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$env:SONAR_TOKEN" /v:"$env:APPVEYOR_BUILD_NUMBER" /d:sonar.cs.opencover.reportsPaths="$env:CD\coverage.xml" }'
+- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { & dotnet sonarscanner begin /k:"sspekinc_System.Linq.Dynamic.Core" /d:sonar.organization="sspekinc-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="de9a8377f998e25940294cc205877d556c59b4c2" /v:"$env:APPVEYOR_BUILD_NUMBER" /d:sonar.cs.opencover.reportsPaths="$env:CD\coverage.xml" }'
 
 # Build Code
 - dotnet build src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj -c %CONFIGURATION%
@@ -65,7 +65,7 @@ test_script:
 - codecov -f "coverage.xml"
 - coveralls.net\tools\csmacnz.Coveralls.exe --opencover -i .\coverage.xml
 
-- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { & dotnet sonarscanner end /d:sonar.login="$env:SONAR_TOKEN" }'
+- ps: 'if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { & dotnet sonarscanner end /d:sonar.login="de9a8377f998e25940294cc205877d556c59b4c2" }'
 
 # Run tests for EntityFramework.DynamicLinq
 - dotnet test -c %CONFIGURATION% --no-build test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj
