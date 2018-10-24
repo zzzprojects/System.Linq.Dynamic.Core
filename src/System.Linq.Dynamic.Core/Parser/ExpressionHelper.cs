@@ -280,14 +280,6 @@ namespace System.Linq.Dynamic.Core.Parser
                 Expression.Constant(wrapper),
                 typeof(WrappedObj<TValue>).GetProperty("Value"));
         }
-
-        private class WrappedObj<TValue>
-        {
-            public TValue Value { get; set; }
-            public WrappedObj(TValue value)
-            {
-                this.Value = value;
-            }
-        }        
+     
     }
 }
