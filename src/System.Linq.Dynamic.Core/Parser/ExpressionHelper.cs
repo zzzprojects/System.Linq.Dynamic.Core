@@ -68,20 +68,20 @@ namespace System.Linq.Dynamic.Core.Parser
         public static Expression GenerateEqual(Expression left, Expression right)
         {
             OptimizeForEqualityIfPossible(ref left, ref right);
-            
-            WrapConstantExpression(ref left);
-            WrapConstantExpression(ref right);
-            
+
+            ConstantExpressionWrapper.Wrap(ref left);
+            ConstantExpressionWrapper.Wrap(ref right);
+
             return Expression.Equal(left, right);
         }
 
         public static Expression GenerateNotEqual(Expression left, Expression right)
         {
             OptimizeForEqualityIfPossible(ref left, ref right);
-            
-            WrapConstantExpression(ref left);
-            WrapConstantExpression(ref right);
-            
+
+            ConstantExpressionWrapper.Wrap(ref left);
+            ConstantExpressionWrapper.Wrap(ref right);
+
             return Expression.NotEqual(left, right);
         }
 
@@ -98,9 +98,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 var rightPart = right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right;
                 return Expression.GreaterThan(leftPart, rightPart);
             }
-            
-            WrapConstantExpression(ref left);
-            WrapConstantExpression(ref right);
+
+            ConstantExpressionWrapper.Wrap(ref left);
+            ConstantExpressionWrapper.Wrap(ref right);
 
             return Expression.GreaterThan(left, right);
         }
@@ -117,9 +117,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.GreaterThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
-            
-            WrapConstantExpression(ref left);
-            WrapConstantExpression(ref right);
+
+            ConstantExpressionWrapper.Wrap(ref left);
+            ConstantExpressionWrapper.Wrap(ref right);
 
             return Expression.GreaterThanOrEqual(left, right);
         }
@@ -137,8 +137,8 @@ namespace System.Linq.Dynamic.Core.Parser
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
 
-            WrapConstantExpression(ref left);
-            WrapConstantExpression(ref right);
+            ConstantExpressionWrapper.Wrap(ref left);
+            ConstantExpressionWrapper.Wrap(ref right);
 
             return Expression.LessThan(left, right);
         }
@@ -156,8 +156,8 @@ namespace System.Linq.Dynamic.Core.Parser
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
 
-            WrapConstantExpression(ref left);
-            WrapConstantExpression(ref right);
+            ConstantExpressionWrapper.Wrap(ref left);
+            ConstantExpressionWrapper.Wrap(ref right);
 
             return Expression.LessThanOrEqual(left, right);
         }
@@ -208,10 +208,10 @@ namespace System.Linq.Dynamic.Core.Parser
 
         static MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
         {
-            var methodInfo = left.Type.GetMethod(methodName, new[] {left.Type, right.Type});
+            var methodInfo = left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
             if (methodInfo == null)
             {
-                methodInfo = right.Type.GetMethod(methodName, new[] {left.Type, right.Type});
+                methodInfo = right.Type.GetMethod(methodName, new[] { left.Type, right.Type });
             }
 
             return methodInfo;
@@ -221,65 +221,5 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             return Expression.Call(null, GetStaticMethod(methodName, left, right), new[] { left, right });
         }
-        
-       static void WrapConstantExpression(ref Expression expression)
-        {
-            if (!(expression is ConstantExpression || expression is NewExpression)) return;
-
-            if (expression is ConstantExpression)
-            {
-                ConstantExpression constantExpression = expression as ConstantExpression;
-
-                if (constantExpression.Type == typeof(string)) 
-                {
-                    expression = WrappedConstant((string)constantExpression.Value);
-                }
-                else if (constantExpression.Type == typeof(long)) 
-                {
-                    expression = WrappedConstant((Int64)constantExpression.Value);
-                } 
-                else if (constantExpression.Type == typeof(int)) 
-                {
-                    expression = WrappedConstant((Int32)constantExpression.Value);
-                }
-                else if (constantExpression.Type == typeof(short)) 
-                {
-                    expression = WrappedConstant((Int16)constantExpression.Value);
-                }
-                else if (constantExpression.Type == typeof(Guid)) 
-                {
-                    expression = WrappedConstant((Guid)constantExpression.Value);
-                }
-                else if (constantExpression.Type == typeof(DateTime)) 
-                {
-                    expression = WrappedConstant((DateTime)constantExpression.Value);
-                }
-            }
-            else
-            {
-                NewExpression newExpression = expression as NewExpression;
-
-                if (newExpression.Type == typeof(Guid)) 
-                {
-                    expression = WrappedConstant((Expression.Lambda<Func<Guid>>(newExpression).Compile())());
-                }
-                else if (newExpression.Type == typeof(DateTime)) 
-                {
-                    expression = WrappedConstant((Expression.Lambda<Func<DateTime>>(newExpression).Compile())());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Based on gblog by graeme-hill. https://github.com/graeme-hill/gblog/blob/master/source_content/articles/2014.139_entity-framework-dynamic-queries-and-parameterization.mkd
-        /// </summary>
-        private static MemberExpression WrappedConstant<TValue>(TValue value)
-        {
-            var wrapper = new WrappedObj<TValue>(value);
-            return Expression.Property(
-                Expression.Constant(wrapper),
-                typeof(WrappedObj<TValue>).GetProperty("Value"));
-        }
-     
     }
 }
