@@ -20,6 +20,5 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// <param name="typeName">The typename to resolve.</param>
         /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
         Type ResolveType([NotNull] string typeName);
-
     }
 }

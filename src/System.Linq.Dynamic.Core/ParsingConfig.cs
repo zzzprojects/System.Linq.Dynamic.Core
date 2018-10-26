@@ -21,14 +21,8 @@ namespace System.Linq.Dynamic.Core
             EvaluateGroupByAtDatabase = true
         };
 
-        /// <summary>
-        /// The custom type provider.
-        /// </summary>
         private IDynamicLinkCustomTypeProvider _customTypeProvider;
 
-        /// <summary>
-        /// The expression promoter.
-        /// </summary>
         private IExpressionPromoter _expressionPromoter;
 
         /// <summary>

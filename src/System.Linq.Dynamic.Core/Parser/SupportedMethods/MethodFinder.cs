@@ -6,9 +6,6 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
     internal class MethodFinder
     {
-        /// <summary>
-        /// The parsing config
-        /// </summary>
         private ParsingConfig _parsingConfig;
 
         /// <summary>
@@ -17,7 +14,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         /// <param name="parsingConfig"></param>
         public MethodFinder(ParsingConfig parsingConfig)
         {
-            this._parsingConfig = parsingConfig;
+            _parsingConfig = parsingConfig;
         }
 
         public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression[] args)

@@ -3,17 +3,19 @@
 namespace System.Linq.Dynamic.Core.Parser
 {
     /// <summary>
-    /// Expression promoter is used whe matching
+    /// Expression promoter is used to promote object or value types
+    /// to their destination type when an automatic promotion is available
+    /// such as: int to int?
     /// </summary>
     public interface IExpressionPromoter
     {
         /// <summary>
         /// Promote an expression
         /// </summary>
-        /// <param name="expr">Source expression.</param>
-        /// <param name="type">Destionation data type to promote to.</param>
-        /// <param name="exact">If the match must be exact.</param>
-        /// <param name="convertExpr">Convert expression.</param>
+        /// <param name="expr">Source expression</param>
+        /// <param name="type">Destionation data type to promote</param>
+        /// <param name="exact">If the match must be exact</param>
+        /// <param name="convertExpr">Convert expression</param>
         /// <returns></returns>
         Expression Promote(Expression expr, Type type, bool exact, bool convertExpr);
     }
