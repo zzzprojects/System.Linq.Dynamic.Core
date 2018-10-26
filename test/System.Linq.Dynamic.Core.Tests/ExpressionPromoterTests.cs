@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core.Parser;
+﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 using Xunit;
 
@@ -12,7 +13,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             if (result == null)
             {
-                if (type == typeof(string) && expr.Type == typeof(Guid))
+                if (type == typeof(Guid) && expr.Type == typeof(string))
                 {
                     var ce = expr as ConstantExpression;
 
@@ -29,7 +30,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
     public class SampleDto
     {
-        public Guid data;
+        public Guid data { get; set; }
     }
 
     /// <summary>
@@ -42,7 +43,9 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var parsingConfig = new ParsingConfig()
             {
-                AllowNewToEvaluateAnyType = true
+                AllowNewToEvaluateAnyType = true,
+                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProvider(),
+                ExpressionPromoter = new CustomExpressionPromoter()
             };
 
             // Act
