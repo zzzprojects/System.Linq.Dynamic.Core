@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
     internal class MethodFinder
     {
-        private ParsingConfig _parsingConfig;
+        private readonly ParsingConfig _parsingConfig;
 
         /// <summary>
         /// Get an instance
