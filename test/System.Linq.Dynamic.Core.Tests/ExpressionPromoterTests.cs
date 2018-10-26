@@ -40,9 +40,14 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void PromoteGuidTest()
         {
+            var parsingConfig = new ParsingConfig()
+            {
+                AllowNewToEvaluateAnyType = true
+            };
+
             // Act
             string query = $"new {typeof(SampleDto).FullName}(@0 as data)";
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, new object[] { Guid.NewGuid().ToString() });
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(parsingConfig, null, query, new object[] { Guid.NewGuid().ToString() });
             Delegate del = expression.Compile();
             SampleDto result = (SampleDto) del.DynamicInvoke();
 
