@@ -7,6 +7,13 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public class ExpressionHelperTests
     {
+        private readonly IExpressionHelper _expressionHelper;
+
+        public ExpressionHelperTests()
+        {
+            _expressionHelper = new ExpressionHelper(ParsingConfig.Default);
+        }
+
         [Fact]
         public void ExpressionHelper_OptimizeStringForEqualityIfPossible_Guid()
         {
@@ -14,7 +21,7 @@ namespace System.Linq.Dynamic.Core.Tests
             string guidAsString = Guid.NewGuid().ToString();
 
             // Act
-            Expression result = ExpressionHelper.OptimizeStringForEqualityIfPossible(guidAsString, typeof(Guid));
+            Expression result = _expressionHelper.OptimizeStringForEqualityIfPossible(guidAsString, typeof(Guid));
 
             // Assert
             Check.That(result).IsInstanceOf<ConstantExpression>();
@@ -28,7 +35,7 @@ namespace System.Linq.Dynamic.Core.Tests
             string guidAsString = "x";
 
             // Act
-            Expression result = ExpressionHelper.OptimizeStringForEqualityIfPossible(guidAsString, typeof(Guid));
+            Expression result = _expressionHelper.OptimizeStringForEqualityIfPossible(guidAsString, typeof(Guid));
 
             // Assert
             Check.That(result).IsNull();

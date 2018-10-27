@@ -525,7 +525,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Enum()
         {
             var config = new ParsingConfig();
-#if NETSTANDARD            
+#if NETCOREAPP        
             config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
@@ -582,7 +582,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_ConfigExtensions()
         {
             var config = new ParsingConfig();
-#if NETSTANDARD            
+#if NETCOREAPP
             config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 

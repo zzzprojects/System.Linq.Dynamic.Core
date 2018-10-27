@@ -10,13 +10,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{25E69107-C89E-4807-AA31-C49423F0F1E3}"
 	ProjectSection(SolutionItems) = preProject
 		.deployment = .deployment
-		appveyor.yml = appveyor.yml
+		azure-pipelines.yml = azure-pipelines.yml
 		CHANGELOG.md = CHANGELOG.md
 		ChangeLog.txt = ChangeLog.txt
-		codecov-local.cmd = codecov-local.cmd
-		codecov.yml = codecov.yml
+		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
+		report\run-coverlet-local.cmd = report\run-coverlet-local.cmd
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.DynamicLinq.Tests.net452", "test\EntityFramework.DynamicLinq.Tests.net452\EntityFramework.DynamicLinq.Tests.net452.csproj", "{6B45E89C-0788-4942-924F-EF6397114BD1}"
@@ -28,6 +28,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.EntityFrameworkCore.DynamicLinq", "src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj", "{D3804228-91F4-4502-9595-39584E510001}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.Linq.Dynamic.Core.Tests", "test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj", "{912FBF24-3CAE-4A50-B5EA-E525B9FAEC80}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D3804228-91F4-4502-9595-39584E510001} = {D3804228-91F4-4502-9595-39584E510001}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.DynamicLinq.Tests", "test\EntityFramework.DynamicLinq.Tests\EntityFramework.DynamicLinq.Tests.csproj", "{BF97CB1B-5043-4256-8F42-CF3A4F3863BE}"
 EndProject

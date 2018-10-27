@@ -1,4 +1,5 @@
 ﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Dynamic.Core.Parser;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -21,6 +22,8 @@ namespace System.Linq.Dynamic.Core
         };
 
         private IDynamicLinkCustomTypeProvider _customTypeProvider;
+
+        private IExpressionPromoter _expressionPromoter;
 
         /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
@@ -47,6 +50,25 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
+        /// Gets or sets the <see cref="IExpressionPromoter"/>.
+        /// </summary>
+        public IExpressionPromoter ExpressionPromoter
+        {
+            get
+            {
+                return _expressionPromoter ?? (_expressionPromoter = new ExpressionPromoter());
+            }
+
+            set
+            {
+                if (_expressionPromoter != value)
+                {
+                    _expressionPromoter = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Determines if the context keywords (it, parent, and root) are valid and usable inside a Dynamic Linq string expression.  
         /// Does not affect the usability of the equivalent context symbols ($, ^ and ~).
         /// Default value is true.
@@ -65,6 +87,13 @@ namespace System.Linq.Dynamic.Core
         public bool EvaluateGroupByAtDatabase { get; set; } = false;
 
         /// <summary>
+        /// Use Parameterized Names in generated dynamic SQL query. Default set to true.
+        /// See https://github.com/graeme-hill/gblog/blob/master/source_content/articles/2014.139_entity-framework-dynamic-queries-and-parameterization.mkd
+        /// </summary>
+        public bool UseParameterizedNamesInDynamicQuery { get; set; } = true;
+
+        /// <summary>
+        /// Allows the New() keyword to evaluate any available Type.
         /// Allows the New() keyword to evaluate any available Type. Default value is false.
         /// </summary>
         public bool AllowNewToEvaluateAnyType { get; set; } = false;

@@ -24,8 +24,10 @@ namespace System.Linq.Dynamic.Core.Parser
         static readonly string methodThenByDescending = nameof(Queryable.ThenByDescending);
 
         private readonly ParsingConfig _parsingConfig;
+        private readonly MethodFinder _methodFinder;
         private readonly KeywordsHelper _keywordsHelper;
         private readonly TextParser _textParser;
+        private readonly IExpressionHelper _expressionHelper;
         private readonly Dictionary<string, object> _internals;
         private readonly Dictionary<string, object> _symbols;
 
@@ -69,6 +71,8 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _keywordsHelper = new KeywordsHelper(_parsingConfig);
             _textParser = new TextParser(expression);
+            _methodFinder = new MethodFinder(_parsingConfig);
+            _expressionHelper = new ExpressionHelper(_parsingConfig);
         }
 
         void ProcessParameters(ParameterExpression[] parameters)
@@ -135,7 +139,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (resultType != null)
             {
-                if ((expr = ExpressionPromoter.Promote(expr, resultType, true, false)) == null)
+                if ((expr = _parsingConfig.ExpressionPromoter.Promote(expr, resultType, true, false)) == null)
                 {
                     throw ParseError(exprPos, Res.ExpressionTypeMismatch, TypeHelper.GetTypeName(resultType));
                 }
@@ -333,11 +337,11 @@ namespace System.Linq.Dynamic.Core.Parser
 
                         if (accumulate.Type != typeof(bool))
                         {
-                            accumulate = ExpressionHelper.GenerateEqual(left, right);
+                            accumulate = _expressionHelper.GenerateEqual(left, right);
                         }
                         else
                         {
-                            accumulate = Expression.OrElse(accumulate, ExpressionHelper.GenerateEqual(left, right));
+                            accumulate = Expression.OrElse(accumulate, _expressionHelper.GenerateEqual(left, right));
                         }
 
                         if (_textParser.CurrentToken.Id == TokenId.End)
@@ -357,7 +361,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     var args = new[] { left };
 
-                    if (MethodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, args, out MethodBase containsSignature) != 1)
+                    if (_methodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, args, out MethodBase containsSignature) != 1)
                     {
                         throw ParseError(op.Pos, Res.NoApplicableAggregate, nameof(IEnumerableSignatures.Contains));
                     }
@@ -416,17 +420,17 @@ namespace System.Linq.Dynamic.Core.Parser
                         // Doesn't break any other function since logical AND with a string is invalid anyway.
                         if (left.Type == typeof(string) || right.Type == typeof(string))
                         {
-                            left = ExpressionHelper.GenerateStringConcat(left, right);
+                            left = _expressionHelper.GenerateStringConcat(left, right);
                         }
                         else
                         {
-                            ExpressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
+                            _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                             left = Expression.And(left, right);
                         }
                         break;
 
                     case TokenId.Bar:
-                        ExpressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
+                        _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                         left = Expression.Or(left, right);
                         break;
                 }
@@ -474,11 +478,11 @@ namespace System.Linq.Dynamic.Core.Parser
                     if (left.Type != right.Type)
                     {
                         Expression e;
-                        if ((e = ExpressionPromoter.Promote(right, left.Type, true, false)) != null)
+                        if ((e = _parsingConfig.ExpressionPromoter.Promote(right, left.Type, true, false)) != null)
                         {
                             right = e;
                         }
-                        else if ((e = ExpressionPromoter.Promote(left, right.Type, true, false)) != null)
+                        else if ((e = _parsingConfig.ExpressionPromoter.Promote(left, right.Type, true, false)) != null)
                         {
                             left = e;
                         }
@@ -542,23 +546,23 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     case TokenId.Equal:
                     case TokenId.DoubleEqual:
-                        left = ExpressionHelper.GenerateEqual(left, right);
+                        left = _expressionHelper.GenerateEqual(left, right);
                         break;
                     case TokenId.ExclamationEqual:
                     case TokenId.LessGreater:
-                        left = ExpressionHelper.GenerateNotEqual(left, right);
+                        left = _expressionHelper.GenerateNotEqual(left, right);
                         break;
                     case TokenId.GreaterThan:
-                        left = ExpressionHelper.GenerateGreaterThan(left, right);
+                        left = _expressionHelper.GenerateGreaterThan(left, right);
                         break;
                     case TokenId.GreaterThanEqual:
-                        left = ExpressionHelper.GenerateGreaterThanEqual(left, right);
+                        left = _expressionHelper.GenerateGreaterThanEqual(left, right);
                         break;
                     case TokenId.LessThan:
-                        left = ExpressionHelper.GenerateLessThan(left, right);
+                        left = _expressionHelper.GenerateLessThan(left, right);
                         break;
                     case TokenId.LessThanEqual:
-                        left = ExpressionHelper.GenerateLessThanEqual(left, right);
+                        left = _expressionHelper.GenerateLessThanEqual(left, right);
                         break;
                 }
             }
@@ -633,17 +637,17 @@ namespace System.Linq.Dynamic.Core.Parser
                     case TokenId.Plus:
                         if (left.Type == typeof(string) || right.Type == typeof(string))
                         {
-                            left = ExpressionHelper.GenerateStringConcat(left, right);
+                            left = _expressionHelper.GenerateStringConcat(left, right);
                         }
                         else
                         {
                             CheckAndPromoteOperands(typeof(IAddSignatures), op.Text, ref left, ref right, op.Pos);
-                            left = ExpressionHelper.GenerateAdd(left, right);
+                            left = _expressionHelper.GenerateAdd(left, right);
                         }
                         break;
                     case TokenId.Minus:
                         CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Text, ref left, ref right, op.Pos);
-                        left = ExpressionHelper.GenerateSubtract(left, right);
+                        left = _expressionHelper.GenerateSubtract(left, right);
                         break;
                 }
             }
@@ -1064,8 +1068,8 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (expr1.Type != expr2.Type)
             {
-                Expression expr1As2 = expr2 != Constants.NullLiteral ? ExpressionPromoter.Promote(expr1, expr2.Type, true, false) : null;
-                Expression expr2As1 = expr1 != Constants.NullLiteral ? ExpressionPromoter.Promote(expr2, expr1.Type, true, false) : null;
+                Expression expr1As2 = expr2 != Constants.NullLiteral ? _parsingConfig.ExpressionPromoter.Promote(expr1, expr2.Type, true, false) : null;
+                Expression expr2As1 = expr1 != Constants.NullLiteral ? _parsingConfig.ExpressionPromoter.Promote(expr2, expr1.Type, true, false) : null;
                 if (expr1As2 != null && expr2As1 == null)
                 {
                     expr1 = expr1As2;
@@ -1205,7 +1209,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (newType != null)
             {
-                return Expression.NewArrayInit(newType, expressions.Select(expression => ExpressionPromoter.Promote(expression, newType, true, true)));
+                return Expression.NewArrayInit(newType, expressions.Select(expression => _parsingConfig.ExpressionPromoter.Promote(expression, newType, true, true)));
             }
 
             return Expression.NewArrayInit(expressions.All(expression => expression.Type == expressions[0].Type) ? expressions[0].Type : typeof(object), expressions);
@@ -1275,7 +1279,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     Type expressionType = expressions[i].Type;
 
                     // Promote from Type to Nullable Type if needed
-                    expressionsPromoted.Add(ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
+                    expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
                 }
 
                 return Expression.New(ctor, expressionsPromoted, (IEnumerable<MemberInfo>)propertyInfos);
@@ -1289,7 +1293,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 Type expressionType = expressions[i].Type;
 
                 // Promote from Type to Nullable Type if needed
-                bindings[i] = Expression.Bind(property, ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
+                bindings[i] = Expression.Bind(property, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
             }
 
             return Expression.MemberInit(Expression.New(type), bindings);
@@ -1300,7 +1304,7 @@ namespace System.Linq.Dynamic.Core.Parser
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
             Expression[] args = ParseArgumentList();
-            if (MethodFinder.FindMethod(lambda.Type, nameof(Expression.Invoke), false, args, out MethodBase _) != 1)
+            if (_methodFinder.FindMethod(lambda.Type, nameof(Expression.Invoke), false, args, out MethodBase _) != 1)
             {
                 throw ParseError(errorPos, Res.ArgsIncompatibleWithLambda);
             }
@@ -1341,7 +1345,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     }
                 }
 
-                switch (MethodFinder.FindBestMethod(type.GetConstructors(), args, out MethodBase method))
+                switch (_methodFinder.FindBestMethod(type.GetConstructors(), args, out MethodBase method))
                 {
                     case 0:
                         if (args.Length == 1)
@@ -1448,7 +1452,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
 
                 Expression[] args = ParseArgumentList();
-                switch (MethodFinder.FindMethod(type, id, instance == null, args, out MethodBase mb))
+                switch (_methodFinder.FindMethod(type, id, instance == null, args, out MethodBase mb))
                 {
                     case 0:
                         throw ParseError(errorPos, Res.NoApplicableMethod, id, TypeHelper.GetTypeName(type));
@@ -1600,13 +1604,13 @@ namespace System.Linq.Dynamic.Core.Parser
             _it = outerIt;
             _parent = oldParent;
 
-            if (!MethodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, args))
+            if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, args))
             {
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
             }
 
             Type callType = typeof(Enumerable);
-            if (isQueryable && MethodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, args))
+            if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, args))
             {
                 callType = typeof(Queryable);
             }
@@ -1706,7 +1710,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     throw ParseError(errorPos, Res.CannotIndexMultiDimArray);
                 }
-                Expression index = ExpressionPromoter.Promote(args[0], typeof(int), true, false);
+                Expression index = _parsingConfig.ExpressionPromoter.Promote(args[0], typeof(int), true, false);
 
                 if (index == null)
                 {
@@ -1716,7 +1720,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.ArrayIndex(expr, index);
             }
 
-            switch (MethodFinder.FindIndexer(expr.Type, args, out var mb))
+            switch (_methodFinder.FindIndexer(expr.Type, args, out var mb))
             {
                 case 0:
                     throw ParseError(errorPos, Res.NoApplicableIndexer,
@@ -1771,7 +1775,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             Expression[] args = { expr };
 
-            if (!MethodFinder.ContainsMethod(signatures, "F", false, args))
+            if (!_methodFinder.ContainsMethod(signatures, "F", false, args))
             {
                 throw IncompatibleOperandError(opName, expr, errorPos);
             }
@@ -1783,7 +1787,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             Expression[] args = { left, right };
 
-            if (!MethodFinder.ContainsMethod(signatures, "F", false, args))
+            if (!_methodFinder.ContainsMethod(signatures, "F", false, args))
             {
                 throw IncompatibleOperandsError(opName, left, right, errorPos);
             }

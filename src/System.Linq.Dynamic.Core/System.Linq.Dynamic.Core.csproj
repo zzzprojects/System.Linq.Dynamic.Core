@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Description>This is a .NETStandard/ .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
         <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
-        <VersionPrefix>1.0.9.0</VersionPrefix>
+        <!--<VersionPrefix>1.0.9.1</VersionPrefix>-->
         <Authors>Microsoft;Scott Guthrie;King Wilder;Nathan Arnott;Stef Heyenrath</Authors>
         <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0;uap10.0</TargetFrameworks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -21,15 +21,15 @@
         <DebugType>full</DebugType>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
+        <TargetFrameworks>net40;net45;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
+    </PropertyGroup>
+
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <IncludeSource>True</IncludeSource>
         <IncludeSymbols>True</IncludeSymbols>
         <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net20' ">
-        <DefineConstants>NET35</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
@@ -48,27 +48,15 @@
         <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(TargetFramework)' == 'sl5'">
-        <NugetTargetMoniker>Silverlight,Version=v5.0</NugetTargetMoniker>
-        <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
-        <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
-        <DefineConstants>SL50;SILVERLIGHT</DefineConstants>
-        <LanguageTargets>$(MSBuildProgramFiles32)\MSBuild\Microsoft\Silverlight\v5.0\Microsoft.Silverlight.CSharp.targets</LanguageTargets>
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="10.4.0" PrivateAssets="All" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net20' ">
-        <Reference Include="System" />
-        <PackageReference Include="NetLegacySupport.ConcurrentDictionary" Version="1.1.1" />
-    </ItemGroup>
-
     <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+        <PackageReference Include="NetLegacySupport.ConcurrentDictionary">
+            <Version>1.1.1</Version>
+        </PackageReference>
         <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <PackageReference Include="NetLegacySupport.ConcurrentDictionary" Version="1.1.1" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
@@ -102,15 +90,6 @@
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
         <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'sl5' ">
-        <PackageReference Include="Portable.ConcurrentDictionary" Version="1.0.3" />
-        <Reference Include="mscorlib" />
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Net" />
-        <Reference Include="System.Windows" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
