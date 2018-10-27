@@ -89,7 +89,7 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
-        private class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+        public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
             private HashSet<Type> _customTypes;
 

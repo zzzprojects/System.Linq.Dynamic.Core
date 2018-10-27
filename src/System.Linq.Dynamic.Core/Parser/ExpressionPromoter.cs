@@ -3,9 +3,10 @@ using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
-    internal static class ExpressionPromoter
+    internal class ExpressionPromoter : IExpressionPromoter
     {
-        public static Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
+        /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)"/>
+        public virtual Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
         {
             if (expr.Type == type)
             {

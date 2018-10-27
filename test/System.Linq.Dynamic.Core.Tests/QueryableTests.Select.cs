@@ -7,7 +7,7 @@ using QueryInterceptor.Core;
 using Xunit;
 using NFluent;
 #if EFCORE
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 #else
 using Microsoft.AspNet.Identity.EntityFramework;
 #endif
@@ -269,7 +269,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Select_Dynamic_IntoKnownNestedType()
         {
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
-#if NETSTANDARD
+#if NETCOREAPP
             config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
             // Assign
@@ -287,7 +287,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
         {
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
-#if NETSTANDARD
+#if NETCOREAPP
             config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 

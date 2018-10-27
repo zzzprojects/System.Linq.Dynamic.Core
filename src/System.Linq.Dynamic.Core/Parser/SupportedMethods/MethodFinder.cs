@@ -4,14 +4,25 @@ using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
-    internal static class MethodFinder
+    internal class MethodFinder
     {
-        public static bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression[] args)
+        private readonly ParsingConfig _parsingConfig;
+
+        /// <summary>
+        /// Get an instance
+        /// </summary>
+        /// <param name="parsingConfig"></param>
+        public MethodFinder(ParsingConfig parsingConfig)
+        {
+            _parsingConfig = parsingConfig;
+        }
+
+        public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression[] args)
         {
             return FindMethod(type, methodName, staticAccess, args, out var _) == 1;
         }
 
-        public static int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)
+        public int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)
         {
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
@@ -39,7 +50,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return 0;
         }
 
-        public static int FindBestMethod(IEnumerable<MethodBase> methods, Expression[] args, out MethodBase method)
+        public int FindBestMethod(IEnumerable<MethodBase> methods, Expression[] args, out MethodBase method)
         {
             MethodData[] applicable = methods.
                 Select(m => new MethodData { MethodBase = m, Parameters = m.GetParameters() }).
@@ -73,7 +84,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return applicable.Length;
         }
 
-        public static int FindIndexer(Type type, Expression[] args, out MethodBase method)
+        public int FindIndexer(Type type, Expression[] args, out MethodBase method)
         {
             foreach (Type t in SelfAndBaseTypes(type))
             {
@@ -99,7 +110,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return 0;
         }
 
-        static bool IsApplicable(MethodData method, Expression[] args)
+        bool IsApplicable(MethodData method, Expression[] args)
         {
             if (method.Parameters.Length != args.Length)
             {
@@ -115,7 +126,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                     return false;
                 }
 
-                Expression promoted = ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
+                Expression promoted = this._parsingConfig.ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
                 if (promoted == null)
                 {
                     return false;
@@ -126,7 +137,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return true;
         }
 
-        static bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
+        bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
         {
             bool better = false;
             for (int i = 0; i < args.Length; i++)
@@ -158,7 +169,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         // Return "First" if s -> t1 is a better conversion than s -> t2
         // Return "Second" if s -> t2 is a better conversion than s -> t1
         // Return "Both" if neither conversion is better
-        static CompareConversionType CompareConversions(Type source, Type first, Type second)
+        CompareConversionType CompareConversions(Type source, Type first, Type second)
         {
             if (first == second)
             {
@@ -197,7 +208,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return CompareConversionType.Both;
         }
 
-        static IEnumerable<Type> SelfAndBaseTypes(Type type)
+        IEnumerable<Type> SelfAndBaseTypes(Type type)
         {
             if (type.GetTypeInfo().IsInterface)
             {
@@ -208,7 +219,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return SelfAndBaseClasses(type);
         }
 
-        static IEnumerable<Type> SelfAndBaseClasses(Type type)
+        IEnumerable<Type> SelfAndBaseClasses(Type type)
         {
             while (type != null)
             {
@@ -217,7 +228,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             }
         }
 
-        static void AddInterface(List<Type> types, Type type)
+        void AddInterface(List<Type> types, Type type)
         {
             if (!types.Contains(type))
             {
