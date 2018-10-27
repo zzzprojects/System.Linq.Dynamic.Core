@@ -385,51 +385,76 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression()
         {
-            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(Boolean), "Property1 == \"test\"");
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
+            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"test\"");
+            Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
         [Fact]
         public void ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
-            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(Boolean), "Property1 == \"\"");
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
+            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
+            Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
         [Fact]
         public void ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
             var config = new ParsingConfig();
-            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(Boolean), "Property1 == \"\"");
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
+            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
+            Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
         [Fact]
         public void ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
             string expectedRightValue = "\"test \\\"string\"";
+
+            // Act
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
-                typeof(Boolean),
+                typeof(bool),
                 string.Format("Property1 == {0}", expectedRightValue));
 
-            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
-            Assert.Equal(expectedRightValue, rightValue);
+            var notWrappedExpression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") },
+                typeof(bool),
+                string.Format("Property1 == {0} + \"\"", expectedRightValue));
+
+            var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
+
+            var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
+            dynamic wrappedObj = constantExpression.Value;
+
+            // Assert
+            string rightValue = wrappedObj.Value;
+            Assert.Equal(typeof(bool), expression.Body.Type);
+            Assert.Equal(notWrappedExpectedRightValue, rightValue);
         }
 
         [Fact]
         public void ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
+            // Assign
             string expectedRightValue = "\"\\\"test\"";
+
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
-                typeof(Boolean),
+                typeof(bool),
                 string.Format("Property1 == {0}", expectedRightValue));
 
-            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
-            Assert.Equal(expectedRightValue, rightValue);
+            var notWrappedExpression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") },
+                typeof(bool),
+                string.Format("Property1 == {0} + \"\"", expectedRightValue));
+
+            var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
+
+            var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
+            dynamic wrappedObj = constantExpression.Value;
+
+            string rightValue = wrappedObj.Value;
+            Assert.Equal(typeof(bool), expression.Body.Type);
+            Assert.Equal(notWrappedExpectedRightValue, rightValue);
         }
 
         [Fact]
@@ -439,22 +464,36 @@ namespace System.Linq.Dynamic.Core.Tests
 
             Assert.Throws<ParseException>(() => DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
-                typeof(Boolean),
+                typeof(bool),
                 string.Format("Property1 == {0}", expectedRightValue)));
         }
 
         [Fact]
         public void ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
         {
+            // Assign
             string expectedRightValue = "\"test\\string\"";
+
+            // Act
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
-                typeof(Boolean),
+                typeof(bool),
                 string.Format("Property1 == {0}", expectedRightValue));
 
-            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
-            Assert.Equal(typeof(Boolean), expression.Body.Type);
-            Assert.Equal(expectedRightValue, rightValue);
+            var notWrappedExpression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") },
+                typeof(bool),
+                string.Format("Property1 == {0} + \"\"", expectedRightValue));
+
+            var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
+
+            var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
+            dynamic wrappedObj = constantExpression.Value;
+
+            // Assert
+            string rightValue = wrappedObj.Value;
+            Assert.Equal(typeof(bool), expression.Body.Type);
+            Assert.Equal(notWrappedExpectedRightValue, rightValue);
         }
 
         [Fact]
@@ -506,7 +545,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var expressionText = $"iif(1>0, \"{doubleQuotedTrueValue}\", \"false\")";
             var lambda = DynamicExpressionParser.ParseLambda(typeof(string), null, expressionText);
             var del = lambda.Compile();
-            object result = del.DynamicInvoke(String.Empty);
+            object result = del.DynamicInvoke(string.Empty);
             Check.That(result).IsEqualTo(originalTrueValue);
         }
 
