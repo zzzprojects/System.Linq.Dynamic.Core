@@ -9,7 +9,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var thisType = GetType();
 
-#if NETSTANDARD
+#if NETCORE1_1
             var assemblies = AppDomain.NetCoreApp.AppDomain.CurrentDomain.GetAssemblies(thisType).Where(x => !x.IsDynamic).ToArray();
 #else
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToArray();
@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var thisType = GetType();
 
-#if NETSTANDARD
+#if NETCORE1_1
             var assemblies = AppDomain.NetCoreApp.AppDomain.CurrentDomain.GetAssemblies(thisType).ToArray();
 #else
             var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToArray();
