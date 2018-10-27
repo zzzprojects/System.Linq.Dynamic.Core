@@ -27,6 +27,7 @@ namespace System.Linq.Dynamic.Core.Parser
         private readonly MethodFinder _methodFinder;
         private readonly KeywordsHelper _keywordsHelper;
         private readonly TextParser _textParser;
+        private readonly IExpressionHelper _expressionHelper;
         private readonly Dictionary<string, object> _internals;
         private readonly Dictionary<string, object> _symbols;
 
@@ -66,6 +67,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _keywordsHelper = new KeywordsHelper(_parsingConfig);
             _textParser = new TextParser(expression);
             _methodFinder = new MethodFinder(_parsingConfig);
+            _expressionHelper = new ExpressionHelper(_parsingConfig);
         }
 
         void ProcessParameters(ParameterExpression[] parameters)
@@ -330,11 +332,11 @@ namespace System.Linq.Dynamic.Core.Parser
 
                         if (accumulate.Type != typeof(bool))
                         {
-                            accumulate = ExpressionHelper.GenerateEqual(left, right);
+                            accumulate = _expressionHelper.GenerateEqual(left, right);
                         }
                         else
                         {
-                            accumulate = Expression.OrElse(accumulate, ExpressionHelper.GenerateEqual(left, right));
+                            accumulate = Expression.OrElse(accumulate, _expressionHelper.GenerateEqual(left, right));
                         }
 
                         if (_textParser.CurrentToken.Id == TokenId.End)
@@ -413,17 +415,17 @@ namespace System.Linq.Dynamic.Core.Parser
                         // Doesn't break any other function since logical AND with a string is invalid anyway.
                         if (left.Type == typeof(string) || right.Type == typeof(string))
                         {
-                            left = ExpressionHelper.GenerateStringConcat(left, right);
+                            left = _expressionHelper.GenerateStringConcat(left, right);
                         }
                         else
                         {
-                            ExpressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
+                            _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                             left = Expression.And(left, right);
                         }
                         break;
 
                     case TokenId.Bar:
-                        ExpressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
+                        _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                         left = Expression.Or(left, right);
                         break;
                 }
@@ -539,23 +541,23 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     case TokenId.Equal:
                     case TokenId.DoubleEqual:
-                        left = ExpressionHelper.GenerateEqual(left, right);
+                        left = _expressionHelper.GenerateEqual(left, right);
                         break;
                     case TokenId.ExclamationEqual:
                     case TokenId.LessGreater:
-                        left = ExpressionHelper.GenerateNotEqual(left, right);
+                        left = _expressionHelper.GenerateNotEqual(left, right);
                         break;
                     case TokenId.GreaterThan:
-                        left = ExpressionHelper.GenerateGreaterThan(left, right);
+                        left = _expressionHelper.GenerateGreaterThan(left, right);
                         break;
                     case TokenId.GreaterThanEqual:
-                        left = ExpressionHelper.GenerateGreaterThanEqual(left, right);
+                        left = _expressionHelper.GenerateGreaterThanEqual(left, right);
                         break;
                     case TokenId.LessThan:
-                        left = ExpressionHelper.GenerateLessThan(left, right);
+                        left = _expressionHelper.GenerateLessThan(left, right);
                         break;
                     case TokenId.LessThanEqual:
-                        left = ExpressionHelper.GenerateLessThanEqual(left, right);
+                        left = _expressionHelper.GenerateLessThanEqual(left, right);
                         break;
                 }
             }
@@ -630,17 +632,17 @@ namespace System.Linq.Dynamic.Core.Parser
                     case TokenId.Plus:
                         if (left.Type == typeof(string) || right.Type == typeof(string))
                         {
-                            left = ExpressionHelper.GenerateStringConcat(left, right);
+                            left = _expressionHelper.GenerateStringConcat(left, right);
                         }
                         else
                         {
                             CheckAndPromoteOperands(typeof(IAddSignatures), op.Text, ref left, ref right, op.Pos);
-                            left = ExpressionHelper.GenerateAdd(left, right);
+                            left = _expressionHelper.GenerateAdd(left, right);
                         }
                         break;
                     case TokenId.Minus:
                         CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Text, ref left, ref right, op.Pos);
-                        left = ExpressionHelper.GenerateSubtract(left, right);
+                        left = _expressionHelper.GenerateSubtract(left, right);
                         break;
                 }
             }

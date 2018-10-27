@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
-using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 using System.Reflection;
 using Xunit;
@@ -410,6 +409,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             string expectedRightValue = "\"test \\\"string\"";
 
+            // Act
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
                 typeof(bool),
@@ -423,8 +423,9 @@ namespace System.Linq.Dynamic.Core.Tests
             var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
 
             var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
-            var wrappedObj = (WrappedValue<string>)constantExpression.Value;
+            dynamic wrappedObj = constantExpression.Value;
 
+            // Assert
             string rightValue = wrappedObj.Value;
             Assert.Equal(typeof(bool), expression.Body.Type);
             Assert.Equal(notWrappedExpectedRightValue, rightValue);
@@ -433,6 +434,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
+            // Assign
             string expectedRightValue = "\"\\\"test\"";
 
             var expression = DynamicExpressionParser.ParseLambda(
@@ -448,7 +450,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
 
             var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
-            var wrappedObj = (WrappedValue<string>)constantExpression.Value;
+            dynamic wrappedObj = constantExpression.Value;
 
             string rightValue = wrappedObj.Value;
             Assert.Equal(typeof(bool), expression.Body.Type);
@@ -469,8 +471,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
         {
+            // Assign
             string expectedRightValue = "\"test\\string\"";
 
+            // Act
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
                 typeof(bool),
@@ -484,8 +488,9 @@ namespace System.Linq.Dynamic.Core.Tests
             var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
 
             var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
-            var wrappedObj = (WrappedValue<string>)constantExpression.Value;
+            dynamic wrappedObj = constantExpression.Value;
 
+            // Assert
             string rightValue = wrappedObj.Value;
             Assert.Equal(typeof(bool), expression.Body.Type);
             Assert.Equal(notWrappedExpectedRightValue, rightValue);

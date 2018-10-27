@@ -6,9 +6,9 @@ namespace System.Linq.Dynamic.Core.Parser
     /// <summary>
     /// Based on gblog by graeme-hill. https://github.com/graeme-hill/gblog/blob/master/source_content/articles/2014.139_entity-framework-dynamic-queries-and-parameterization.mkd
     /// </summary>
-    internal static class ConstantExpressionWrapper
+    internal class ConstantExpressionWrapper : IConstantExpressionWrapper
     {
-        public static void Wrap(ref Expression expression)
+        public void Wrap(ref Expression expression)
         {
             if (expression is ConstantExpression)
             {

@@ -1,91 +1,101 @@
-﻿using System.Globalization;
+﻿using JetBrains.Annotations;
+using System.Globalization;
+using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
-    internal static class ExpressionHelper
+    internal class ExpressionHelper : IExpressionHelper
     {
-        public static void ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right)
+        private readonly IConstantExpressionWrapper _constantExpressionWrapper = new ConstantExpressionWrapper();
+        private readonly ParsingConfig _parsingConfig;
+
+        internal ExpressionHelper([NotNull] ParsingConfig parsingConfig)
+        {
+            Check.NotNull(parsingConfig, nameof(parsingConfig));
+
+            _parsingConfig = parsingConfig;
+        }
+
+        public void ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right)
         {
             if (left.Type == right.Type)
             {
                 return;
             }
 
-            if (left.Type == typeof(UInt64) || right.Type == typeof(UInt64))
+            if (left.Type == typeof(ulong) || right.Type == typeof(ulong))
             {
-                right = right.Type != typeof(UInt64) ? Expression.Convert(right, typeof(UInt64)) : right;
-                left = left.Type != typeof(UInt64) ? Expression.Convert(left, typeof(UInt64)) : left;
+                right = right.Type != typeof(ulong) ? Expression.Convert(right, typeof(ulong)) : right;
+                left = left.Type != typeof(ulong) ? Expression.Convert(left, typeof(ulong)) : left;
             }
-            else if (left.Type == typeof(Int64) || right.Type == typeof(Int64))
+            else if (left.Type == typeof(long) || right.Type == typeof(long))
             {
-                right = right.Type != typeof(Int64) ? Expression.Convert(right, typeof(Int64)) : right;
-                left = left.Type != typeof(Int64) ? Expression.Convert(left, typeof(Int64)) : left;
+                right = right.Type != typeof(long) ? Expression.Convert(right, typeof(long)) : right;
+                left = left.Type != typeof(long) ? Expression.Convert(left, typeof(long)) : left;
             }
-            else if (left.Type == typeof(UInt32) || right.Type == typeof(UInt32))
+            else if (left.Type == typeof(uint) || right.Type == typeof(uint))
             {
-                right = right.Type != typeof(UInt32) ? Expression.Convert(right, typeof(UInt32)) : right;
-                left = left.Type != typeof(UInt32) ? Expression.Convert(left, typeof(UInt32)) : left;
+                right = right.Type != typeof(uint) ? Expression.Convert(right, typeof(uint)) : right;
+                left = left.Type != typeof(uint) ? Expression.Convert(left, typeof(uint)) : left;
             }
-            else if (left.Type == typeof(Int32) || right.Type == typeof(Int32))
+            else if (left.Type == typeof(int) || right.Type == typeof(int))
             {
-                right = right.Type != typeof(Int32) ? Expression.Convert(right, typeof(Int32)) : right;
-                left = left.Type != typeof(Int32) ? Expression.Convert(left, typeof(Int32)) : left;
+                right = right.Type != typeof(int) ? Expression.Convert(right, typeof(int)) : right;
+                left = left.Type != typeof(int) ? Expression.Convert(left, typeof(int)) : left;
             }
-            else if (left.Type == typeof(UInt16) || right.Type == typeof(UInt16))
+            else if (left.Type == typeof(ushort) || right.Type == typeof(ushort))
             {
-                right = right.Type != typeof(UInt16) ? Expression.Convert(right, typeof(UInt16)) : right;
-                left = left.Type != typeof(UInt16) ? Expression.Convert(left, typeof(UInt16)) : left;
+                right = right.Type != typeof(ushort) ? Expression.Convert(right, typeof(ushort)) : right;
+                left = left.Type != typeof(ushort) ? Expression.Convert(left, typeof(ushort)) : left;
             }
-            else if (left.Type == typeof(Int16) || right.Type == typeof(Int16))
+            else if (left.Type == typeof(short) || right.Type == typeof(short))
             {
-                right = right.Type != typeof(Int16) ? Expression.Convert(right, typeof(Int16)) : right;
-                left = left.Type != typeof(Int16) ? Expression.Convert(left, typeof(Int16)) : left;
+                right = right.Type != typeof(short) ? Expression.Convert(right, typeof(short)) : right;
+                left = left.Type != typeof(short) ? Expression.Convert(left, typeof(short)) : left;
             }
-            else if (left.Type == typeof(Byte) || right.Type == typeof(Byte))
+            else if (left.Type == typeof(byte) || right.Type == typeof(byte))
             {
-                right = right.Type != typeof(Byte) ? Expression.Convert(right, typeof(Byte)) : right;
-                left = left.Type != typeof(Byte) ? Expression.Convert(left, typeof(Byte)) : left;
+                right = right.Type != typeof(byte) ? Expression.Convert(right, typeof(byte)) : right;
+                left = left.Type != typeof(byte) ? Expression.Convert(left, typeof(byte)) : left;
             }
         }
 
-        public static Expression GenerateAdd(Expression left, Expression right)
+        public Expression GenerateAdd(Expression left, Expression right)
         {
             return Expression.Add(left, right);
         }
 
-        public static Expression GenerateStringConcat(Expression left, Expression right)
+        public Expression GenerateStringConcat(Expression left, Expression right)
         {
             return GenerateStaticMethodCall("Concat", left, right);
         }
 
-        public static Expression GenerateSubtract(Expression left, Expression right)
+        public Expression GenerateSubtract(Expression left, Expression right)
         {
             return Expression.Subtract(left, right);
         }
 
-        public static Expression GenerateEqual(Expression left, Expression right)
+        public Expression GenerateEqual(Expression left, Expression right)
         {
             OptimizeForEqualityIfPossible(ref left, ref right);
 
-            ConstantExpressionWrapper.Wrap(ref left);
-            ConstantExpressionWrapper.Wrap(ref right);
+            WrapConstantExpressions(ref left, ref right);
 
             return Expression.Equal(left, right);
         }
 
-        public static Expression GenerateNotEqual(Expression left, Expression right)
+        public Expression GenerateNotEqual(Expression left, Expression right)
         {
             OptimizeForEqualityIfPossible(ref left, ref right);
 
-            ConstantExpressionWrapper.Wrap(ref left);
-            ConstantExpressionWrapper.Wrap(ref right);
+            WrapConstantExpressions(ref left, ref right);
 
             return Expression.NotEqual(left, right);
         }
 
-        public static Expression GenerateGreaterThan(Expression left, Expression right)
+        public Expression GenerateGreaterThan(Expression left, Expression right)
         {
             if (left.Type == typeof(string))
             {
@@ -99,13 +109,12 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.GreaterThan(leftPart, rightPart);
             }
 
-            ConstantExpressionWrapper.Wrap(ref left);
-            ConstantExpressionWrapper.Wrap(ref right);
+            WrapConstantExpressions(ref left, ref right);
 
             return Expression.GreaterThan(left, right);
         }
 
-        public static Expression GenerateGreaterThanEqual(Expression left, Expression right)
+        public Expression GenerateGreaterThanEqual(Expression left, Expression right)
         {
             if (left.Type == typeof(string))
             {
@@ -118,13 +127,12 @@ namespace System.Linq.Dynamic.Core.Parser
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
 
-            ConstantExpressionWrapper.Wrap(ref left);
-            ConstantExpressionWrapper.Wrap(ref right);
+            WrapConstantExpressions(ref left, ref right);
 
             return Expression.GreaterThanOrEqual(left, right);
         }
 
-        public static Expression GenerateLessThan(Expression left, Expression right)
+        public Expression GenerateLessThan(Expression left, Expression right)
         {
             if (left.Type == typeof(string))
             {
@@ -137,13 +145,12 @@ namespace System.Linq.Dynamic.Core.Parser
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
 
-            ConstantExpressionWrapper.Wrap(ref left);
-            ConstantExpressionWrapper.Wrap(ref right);
+            WrapConstantExpressions(ref left, ref right);
 
             return Expression.LessThan(left, right);
         }
 
-        public static Expression GenerateLessThanEqual(Expression left, Expression right)
+        public Expression GenerateLessThanEqual(Expression left, Expression right)
         {
             if (left.Type == typeof(string))
             {
@@ -156,18 +163,15 @@ namespace System.Linq.Dynamic.Core.Parser
                     right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
             }
 
-            ConstantExpressionWrapper.Wrap(ref left);
-            ConstantExpressionWrapper.Wrap(ref right);
+            WrapConstantExpressions(ref left, ref right);
 
             return Expression.LessThanOrEqual(left, right);
         }
 
-        public static void OptimizeForEqualityIfPossible(ref Expression left, ref Expression right)
+        public void OptimizeForEqualityIfPossible(ref Expression left, ref Expression right)
         {
             // The goal here is to provide the way to convert some types from the string form in a way that is compatible with Linq to Entities.
-            //
             // The Expression.Call(typeof(Guid).GetMethod("Parse"), right); does the job only for Linq to Object but Linq to Entities.
-            //
             Type leftType = left.Type;
             Type rightType = right.Type;
 
@@ -182,7 +186,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public static Expression OptimizeStringForEqualityIfPossible(string text, Type type)
+        public Expression OptimizeStringForEqualityIfPossible(string text, Type type)
         {
             if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
             {
@@ -206,7 +210,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return null;
         }
 
-        static MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
+        private MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
         {
             var methodInfo = left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
             if (methodInfo == null)
@@ -217,9 +221,18 @@ namespace System.Linq.Dynamic.Core.Parser
             return methodInfo;
         }
 
-        static Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
+        private Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
         {
             return Expression.Call(null, GetStaticMethod(methodName, left, right), new[] { left, right });
+        }
+
+        private void WrapConstantExpressions(ref Expression left, ref Expression right)
+        {
+            if (_parsingConfig.UseParameterizedNamesInDynamicQuery)
+            {
+                _constantExpressionWrapper.Wrap(ref left);
+                _constantExpressionWrapper.Wrap(ref right);
+            }
         }
     }
 }

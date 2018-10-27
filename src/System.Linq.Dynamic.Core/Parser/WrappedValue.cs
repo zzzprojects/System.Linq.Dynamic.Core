@@ -1,6 +1,6 @@
 ﻿namespace System.Linq.Dynamic.Core.Parser
 {
-    public class WrappedValue<TValue>
+    internal class WrappedValue<TValue>
     {
         public TValue Value { get; private set; }
 
