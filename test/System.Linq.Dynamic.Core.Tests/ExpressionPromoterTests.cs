@@ -1,61 +1,57 @@
-﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+﻿using Moq;
+using System.Collections.Generic;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    public class CustomExpressionPromoter : ExpressionPromoter
-    {
-        public override Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
-        {
-            var result = base.Promote(expr, type, exact, convertExpr);
-
-            if (result == null)
-            {
-                if (type == typeof(Guid) && expr.Type == typeof(string))
-                {
-                    var ce = expr as ConstantExpression;
-
-                    if (Guid.TryParse(Convert.ToString(ce?.Value), out var guid))
-                    {
-                        return Expression.Constant(guid, type);
-                    }
-                }
-            }
-
-            return result;
-        }
-    }
-
-    public class SampleDto
-    {
-        public Guid data { get; set; }
-    }
-
-    /// <summary>
-    /// Test for the expression promoter
-    /// </summary>
     public class ExpressionPromoterTests
     {
-        [Fact]
-        public void PromoteGuidTest()
+        public class SampleDto
         {
+            public Guid data { get; set; }
+        }
+
+        private readonly Mock<IExpressionPromoter> _expressionPromoterMock;
+        private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicLinkCustomTypeProviderMock;
+
+        public ExpressionPromoterTests()
+        {
+            _dynamicLinkCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            _dynamicLinkCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type>());
+            _dynamicLinkCustomTypeProviderMock.Setup(d => d.ResolveType(It.IsAny<string>())).Returns(typeof(SampleDto));
+
+            _expressionPromoterMock = new Mock<IExpressionPromoter>();
+            _expressionPromoterMock.Setup(e => e.Promote(It.IsAny<Expression>(), It.IsAny<Type>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(Expression.Constant(Guid.NewGuid()));
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_WithCustomExpressionPromoter()
+        {
+            // Assign
             var parsingConfig = new ParsingConfig()
             {
                 AllowNewToEvaluateAnyType = true,
-                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProvider(),
-                ExpressionPromoter = new CustomExpressionPromoter()
+                CustomTypeProvider = _dynamicLinkCustomTypeProviderMock.Object,
+                ExpressionPromoter = _expressionPromoterMock.Object
             };
 
             // Act
             string query = $"new {typeof(SampleDto).FullName}(@0 as data)";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(parsingConfig, null, query, new object[] { Guid.NewGuid().ToString() });
             Delegate del = expression.Compile();
-            SampleDto result = (SampleDto) del.DynamicInvoke();
+            SampleDto result = (SampleDto)del.DynamicInvoke();
 
             // Assert
             Assert.NotNull(result);
+
+            // Verify
+            _dynamicLinkCustomTypeProviderMock.Verify(d => d.GetCustomTypes(), Times.Once);
+            _dynamicLinkCustomTypeProviderMock.Verify(d => d.ResolveType($"{typeof(SampleDto).FullName}"), Times.Once);
+
+            _expressionPromoterMock.Verify(e => e.Promote(It.IsAny<ConstantExpression>(), typeof(Guid), true, true), Times.Once);
         }
     }
 }

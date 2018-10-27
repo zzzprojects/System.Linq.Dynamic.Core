@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
-    public class ExpressionPromoter : IExpressionPromoter
+    internal class ExpressionPromoter : IExpressionPromoter
     {
         /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)"/>
         public virtual Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
