@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using NFluent;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Parser.Tests
 {
     public class ExpressionHelperTests
     {

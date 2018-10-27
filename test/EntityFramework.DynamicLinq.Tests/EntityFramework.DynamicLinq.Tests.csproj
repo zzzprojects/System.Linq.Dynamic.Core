@@ -23,7 +23,7 @@
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\*\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\D*.cs" />
-        <Compile Include="..\System.Linq.Dynamic.Core.Tests\Parser\*.cs" />
+        <!--<Compile Include="..\System.Linq.Dynamic.Core.Tests\Parser\*.cs" />-->
     </ItemGroup>
 
     <ItemGroup>
