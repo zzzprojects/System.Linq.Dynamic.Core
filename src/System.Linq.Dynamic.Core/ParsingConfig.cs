@@ -93,7 +93,6 @@ namespace System.Linq.Dynamic.Core
         public bool UseParameterizedNamesInDynamicQuery { get; set; } = true;
 
         /// <summary>
-        /// Allows the New() keyword to evaluate any available Type.
         /// Allows the New() keyword to evaluate any available Type. Default value is false.
         /// </summary>
         public bool AllowNewToEvaluateAnyType { get; set; } = false;
