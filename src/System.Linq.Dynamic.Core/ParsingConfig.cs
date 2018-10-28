@@ -89,7 +89,7 @@ namespace System.Linq.Dynamic.Core
         /// Use Parameterized Names in generated dynamic SQL query. Default set to true.
         /// See https://github.com/graeme-hill/gblog/blob/master/source_content/articles/2014.139_entity-framework-dynamic-queries-and-parameterization.mkd
         /// </summary>
-        public bool UseParameterizedNamesInDynamicQuery { get; set; } = true;
+        public bool UseParameterizedNamesInDynamicQuery { get; set; } = false;
 
         /// <summary>
         /// Allows the New() keyword to evaluate any available Type.

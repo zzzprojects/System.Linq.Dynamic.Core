@@ -99,7 +99,9 @@ namespace System.Linq.Dynamic.Core.Tests
                     return _customTypes;
                 }
 
-                _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }));
+                _customTypes =
+                    new HashSet<Type>(
+                        FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }));
                 _customTypes.Add(typeof(CustomClassWithStaticMethod));
                 _customTypes.Add(typeof(StaticHelper));
                 return _customTypes;
@@ -109,6 +111,45 @@ namespace System.Linq.Dynamic.Core.Tests
             {
                 return Type.GetType(typeName);
             }
+        }
+
+        [Fact]
+        public void ParseLambda_UseParameterizedNamesInDynamicQuery_true()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = true
+            };
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<string, bool>(config, true, "s => s == \"x\"");
+
+            // Assert
+            dynamic constantExpression = ((MemberExpression)(expression.Body as BinaryExpression).Right).Expression as ConstantExpression;
+            dynamic wrappedObj = constantExpression.Value;
+            string value = wrappedObj.Value;
+
+            Check.That(value).IsEqualTo("x");
+        }
+
+        [Fact]
+        public void ParseLambda_UseParameterizedNamesInDynamicQuery_false()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = false
+            };
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<string, bool>(config, true, "s => s == \"x\"");
+
+            // Assert
+            dynamic constantExpression = (ConstantExpression)(expression.Body as BinaryExpression).Right;
+            string value = constantExpression.Value;
+
+            Check.That(value).IsEqualTo("x");
         }
 
         [Fact]
@@ -141,16 +182,20 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var externals = new Dictionary<string, object>
             {
-                { "Users", qry }
+                {"Users", qry}
             };
 
             // Act
-            string query = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
+            string query =
+                "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
             Delegate del = expression.Compile();
             IEnumerable<dynamic> result = del.DynamicInvoke() as IEnumerable<dynamic>;
 
-            var expected = qry.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>().ToArray();
+            var expected = qry.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age)
+                .Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) })
+                .Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>()
+                .ToArray();
 
             // Assert
             Check.That(result).IsNotNull();
@@ -166,12 +211,16 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             // Act
-            string query = "GroupBy(x => new { x.Profile.Age }, it).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
+            string query =
+                "GroupBy(x => new { x.Profile.Age }, it).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
             Delegate del = expression.Compile();
             IEnumerable<dynamic> result = del.DynamicInvoke(qry) as IEnumerable<dynamic>;
 
-            var expected = qry.GroupBy(x => new { x.Profile.Age }, x => x).OrderBy(gg => gg.Key.Age).Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) }).Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>().ToArray();
+            var expected = qry.GroupBy(x => new { x.Profile.Age }, x => x).OrderBy(gg => gg.Key.Age)
+                .Select(j => new { j.Key.Age, TotalIncome = j.Sum(k => k.Income) })
+                .Select(c => new ComplexParseLambda1Result { Age = c.Age, TotalIncome = c.TotalIncome }).Cast<dynamic>()
+                .ToArray();
 
             // Assert
             Check.That(result).IsNotNull();
@@ -197,8 +246,10 @@ namespace System.Linq.Dynamic.Core.Tests
             };
 
             // Act
-            string stringExpression = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new System.Linq.Dynamic.Core.Tests.DynamicExpressionParserTests+ComplexParseLambda3Result{j.Key.Age, j.Sum(k => k.Income) As TotalIncome})";
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(config, null, stringExpression, externals);
+            string stringExpression =
+                "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new System.Linq.Dynamic.Core.Tests.DynamicExpressionParserTests+ComplexParseLambda3Result{j.Key.Age, j.Sum(k => k.Income) As TotalIncome})";
+            LambdaExpression expression =
+                DynamicExpressionParser.ParseLambda(config, null, stringExpression, externals);
             Delegate del = expression.Compile();
             IEnumerable<dynamic> result = del.DynamicInvoke() as IEnumerable<dynamic>;
 
@@ -262,13 +313,14 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var expressionParams = new[]
             {
-                Expression.Parameter(typeof (MyClass), "myObj")
+                Expression.Parameter(typeof(MyClass), "myObj")
             };
 
             var myClassInstance = new MyClass();
             var invokersMerge = new List<object> { myClassInstance };
 
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(false, expressionParams, null, "myObj.Foo()");
+            LambdaExpression expression =
+                DynamicExpressionParser.ParseLambda(false, expressionParams, null, "myObj.Foo()");
             Delegate del = expression.Compile();
             object result = del.DynamicInvoke(invokersMerge.ToArray());
 
@@ -385,14 +437,16 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression()
         {
-            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"test\"");
+            var expression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"test\"");
             Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
         [Fact]
         public void ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
-            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
+            var expression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
             Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
@@ -400,7 +454,8 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
             var config = new ParsingConfig();
-            var expression = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
+            var expression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
             Assert.Equal(typeof(bool), expression.Body.Type);
         }
 
@@ -415,20 +470,9 @@ namespace System.Linq.Dynamic.Core.Tests
                 typeof(bool),
                 string.Format("Property1 == {0}", expectedRightValue));
 
-            var notWrappedExpression = DynamicExpressionParser.ParseLambda(
-                new[] { Expression.Parameter(typeof(string), "Property1") },
-                typeof(bool),
-                string.Format("Property1 == {0} + \"\"", expectedRightValue));
-
-            var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
-
-            var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
-            dynamic wrappedObj = constantExpression.Value;
-
-            // Assert
-            string rightValue = wrappedObj.Value;
+            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
             Assert.Equal(typeof(bool), expression.Body.Type);
-            Assert.Equal(notWrappedExpectedRightValue, rightValue);
+            Assert.Equal(expectedRightValue, rightValue);
         }
 
         [Fact]
@@ -442,19 +486,9 @@ namespace System.Linq.Dynamic.Core.Tests
                 typeof(bool),
                 string.Format("Property1 == {0}", expectedRightValue));
 
-            var notWrappedExpression = DynamicExpressionParser.ParseLambda(
-                new[] { Expression.Parameter(typeof(string), "Property1") },
-                typeof(bool),
-                string.Format("Property1 == {0} + \"\"", expectedRightValue));
-
-            var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
-
-            var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
-            dynamic wrappedObj = constantExpression.Value;
-
-            string rightValue = wrappedObj.Value;
+            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
             Assert.Equal(typeof(bool), expression.Body.Type);
-            Assert.Equal(notWrappedExpectedRightValue, rightValue);
+            Assert.Equal(expectedRightValue, rightValue);
         }
 
         [Fact]
@@ -480,20 +514,9 @@ namespace System.Linq.Dynamic.Core.Tests
                 typeof(bool),
                 string.Format("Property1 == {0}", expectedRightValue));
 
-            var notWrappedExpression = DynamicExpressionParser.ParseLambda(
-                new[] { Expression.Parameter(typeof(string), "Property1") },
-                typeof(bool),
-                string.Format("Property1 == {0} + \"\"", expectedRightValue));
-
-            var notWrappedExpectedRightValue = ((ConstantExpression)((MethodCallExpression)((BinaryExpression)notWrappedExpression.Body).Right).Arguments[0]).Value;
-
-            var constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
-            dynamic wrappedObj = constantExpression.Value;
-
-            // Assert
-            string rightValue = wrappedObj.Value;
-            Assert.Equal(typeof(bool), expression.Body.Type);
-            Assert.Equal(notWrappedExpectedRightValue, rightValue);
+            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
+            Assert.Equal(typeof(Boolean), expression.Body.Type);
+            Assert.Equal(expectedRightValue, rightValue);
         }
 
         [Fact]
@@ -509,11 +532,8 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ParseLambda_IllegalMethodCall_ThrowsException()
         {
-            Check.ThatCode(() =>
-            {
-                DynamicExpressionParser.ParseLambda(typeof(IO.FileStream), null, "it.Close()");
-            })
-            .Throws<ParseException>().WithMessage("Methods on type 'Stream' are not accessible");
+            Check.ThatCode(() => { DynamicExpressionParser.ParseLambda(typeof(IO.FileStream), null, "it.Close()"); })
+                .Throws<ParseException>().WithMessage("Methods on type 'Stream' are not accessible");
         }
 
         [Fact]
@@ -526,10 +546,12 @@ namespace System.Linq.Dynamic.Core.Tests
             };
 
             var context = new CustomClassWithStaticMethod();
-            string expression = $"{nameof(CustomClassWithStaticMethod)}.{nameof(CustomClassWithStaticMethod.GetAge)}(10)";
+            string expression =
+                $"{nameof(CustomClassWithStaticMethod)}.{nameof(CustomClassWithStaticMethod.GetAge)}(10)";
 
             // Act
-            var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(CustomClassWithStaticMethod), null, expression);
+            var lambdaExpression =
+                DynamicExpressionParser.ParseLambda(config, typeof(CustomClassWithStaticMethod), null, expression);
             Delegate del = lambdaExpression.Compile();
             int result = (int)del.DynamicInvoke(context);
 
@@ -600,7 +622,8 @@ namespace System.Linq.Dynamic.Core.Tests
             var user = new User();
             user.Id = someId;
             Guid guidEmpty = Guid.Empty;
-            string expressionText = $"iif(@0.Id == \"{someId}\", Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
+            string expressionText =
+                $"iif(@0.Id == \"{someId}\", Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
 
             // Act
             var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
@@ -676,7 +699,8 @@ namespace System.Linq.Dynamic.Core.Tests
             var user = new User();
             user.Id = someId;
             Guid guidEmpty = Guid.Empty;
-            string expressionText = $"iif(@0.Id == StaticHelper.GetGuid(\"name\"), Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
+            string expressionText =
+                $"iif(@0.Id == StaticHelper.GetGuid(\"name\"), Guid.Parse(\"{guidEmpty}\"), Guid.Parse(\"{anotherId}\"))";
 
             // Act
             var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
