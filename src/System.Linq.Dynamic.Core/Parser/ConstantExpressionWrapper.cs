@@ -18,6 +18,18 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     expression = WrappedConstant((bool)constantExpression.Value);
                 }
+                if (constantExpression.Type == typeof(char))
+                {
+                    expression = WrappedConstant((char)constantExpression.Value);
+                }
+                if (constantExpression.Type == typeof(byte))
+                {
+                    expression = WrappedConstant((byte)constantExpression.Value);
+                }
+                if (constantExpression.Type == typeof(sbyte))
+                {
+                    expression = WrappedConstant((sbyte)constantExpression.Value);
+                }
                 else if (constantExpression.Type == typeof(string))
                 {
                     expression = WrappedConstant((string)constantExpression.Value);
