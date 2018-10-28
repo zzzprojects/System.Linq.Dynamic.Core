@@ -24,11 +24,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData(6UL)]
         [InlineData(7.1f)]
         [InlineData(8.1d)]
-        [InlineData("str")]
         [InlineData('c')]
         [InlineData((byte) 10)]
         [InlineData((sbyte) 11)]
-        public void ConstantExpressionWrapper_Wrap_ConstantExpression_SimpleTypes<T>(T test)
+        public void ConstantExpressionWrapper_Wrap_ConstantExpression_PrimitiveTypes<T>(T test)
         {
             // Assign
             var expression = Expression.Constant(test) as Expression;
@@ -43,6 +42,27 @@ namespace System.Linq.Dynamic.Core.Tests
             dynamic wrappedObj = constantExpression.Value;
 
             T value = wrappedObj.Value;
+
+            Check.That(value).IsEqualTo(test);
+        }
+
+        [Fact]
+        public void ConstantExpressionWrapper_Wrap_ConstantExpression_String()
+        {
+            // Assign
+            string test = "abc";
+            var expression = Expression.Constant(test) as Expression;
+
+            // Act
+            _constantExpressionWrapper.Wrap(ref expression);
+
+            // Verify
+            Check.That(expression).IsNotNull();
+
+            var constantExpression = (expression as MemberExpression).Expression as ConstantExpression;
+            dynamic wrappedObj = constantExpression.Value;
+
+            string value = wrappedObj.Value;
 
             Check.That(value).IsEqualTo(test);
         }
