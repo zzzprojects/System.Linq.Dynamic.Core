@@ -25,6 +25,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData(7.1f)]
         [InlineData(8.1d)]
         [InlineData("str")]
+        [InlineData('c')]
+        [InlineData((byte) 10)]
+        [InlineData((sbyte) 11)]
         public void ConstantExpressionWrapper_Wrap_ConstantExpression_SimpleTypes<T>(T test)
         {
             // Assign
