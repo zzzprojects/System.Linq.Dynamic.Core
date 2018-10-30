@@ -5,7 +5,7 @@ using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Parser.Tests
 {
     public class ExpressionPromoterTests
     {

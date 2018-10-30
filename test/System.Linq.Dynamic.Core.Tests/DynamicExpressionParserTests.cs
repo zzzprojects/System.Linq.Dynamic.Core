@@ -23,6 +23,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             public int? Age;
             public int TotalIncome;
+            public string Name;
         }
 
         [DynamicLinqType]
@@ -114,7 +115,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_UseParameterizedNamesInDynamicQuery_true()
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true()
         {
             // Assign
             var config = new ParsingConfig
@@ -134,7 +135,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_UseParameterizedNamesInDynamicQuery_false()
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false()
         {
             // Assign
             var config = new ParsingConfig
@@ -153,7 +154,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_ToList()
+        public void DynamicExpressionParser_ParseLambda_ToList()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -174,7 +175,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_Complex_1()
+        public void DynamicExpressionParser_ParseLambda_Complex_1()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -204,7 +205,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_Complex_2()
+        public void DynamicExpressionParser_ParseLambda_Complex_2()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -229,7 +230,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_Complex_3()
+        public void DynamicExpressionParser_ParseLambda_Complex_3()
         {
             var config = new ParsingConfig
             {
@@ -264,7 +265,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_Select_1()
+        public void DynamicExpressionParser_ParseLambda_Select_1()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -286,7 +287,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_Select_2()
+        public void DynamicExpressionParser_ParseLambda_Select_2()
         {
             // Arrange
             var testList = User.GenerateSampleModels(5);
@@ -309,7 +310,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/58
         [Fact]
-        public void ParseLambda_4_Issue58()
+        public void DynamicExpressionParser_ParseLambda_4_Issue58()
         {
             var expressionParams = new[]
             {
@@ -328,7 +329,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_DuplicateParameterNames_ThrowsException()
+        public void DynamicExpressionParser_ParseLambda_DuplicateParameterNames_ThrowsException()
         {
             // Arrange
             var parameters = new[]
@@ -344,7 +345,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_EmptyParameterList()
+        public void DynamicExpressionParser_ParseLambda_EmptyParameterList()
         {
             // Arrange
             var pEmpty = new ParameterExpression[] { };
@@ -358,7 +359,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_ParameterName()
+        public void DynamicExpressionParser_ParseLambda_ParameterName()
         {
             // Arrange
             var parameters = new[]
@@ -376,7 +377,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_ParameterName_Empty()
+        public void DynamicExpressionParser_ParseLambda_ParameterName_Empty()
         {
             // Arrange
             var parameters = new[]
@@ -392,7 +393,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_ParameterName_Null()
+        public void DynamicExpressionParser_ParseLambda_ParameterName_Null()
         {
             // Arrange
             var parameters = new[]
@@ -408,7 +409,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression()
+        public void DynamicExpressionParser_ParseLambda_ParameterExpressionMethodCall_ReturnsIntExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(true,
                 new[] { Expression.Parameter(typeof(int), "x") },
@@ -418,7 +419,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_RealNumbers()
+        public void DynamicExpressionParser_ParseLambda_RealNumbers()
         {
             var parameters = new ParameterExpression[0];
 
@@ -435,7 +436,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression()
+        public void DynamicExpressionParser_ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"test\"");
@@ -443,7 +444,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
+        public void DynamicExpressionParser_ParseLambda_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") }, typeof(bool), "Property1 == \"\"");
@@ -451,7 +452,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
+        public void DynamicExpressionParser_ParseLambda_Config_StringLiteralEmpty_ReturnsBooleanLambdaExpression()
         {
             var config = new ParsingConfig();
             var expression = DynamicExpressionParser.ParseLambda(
@@ -460,7 +461,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression()
+        public void DynamicExpressionParser_ParseLambda_StringLiteralEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
             string expectedRightValue = "\"test \\\"string\"";
 
@@ -476,7 +477,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
+        public void DynamicExpressionParser_ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
             // Assign
             string expectedRightValue = "\"\\\"test\"";
@@ -492,7 +493,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_StringLiteral_MissingClosingQuote()
+        public void DynamicExpressionParser_ParseLambda_StringLiteral_MissingClosingQuote()
         {
             string expectedRightValue = "\"test\\\"";
 
@@ -503,7 +504,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
+        public void DynamicExpressionParser_ParseLambda_StringLiteralEscapedBackslash_ReturnsBooleanLambdaExpression()
         {
             // Assign
             string expectedRightValue = "\"test\\string\"";
@@ -520,7 +521,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
+        public void DynamicExpressionParser_ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(
                 typeof(Tuple<int>),
@@ -530,14 +531,14 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_IllegalMethodCall_ThrowsException()
+        public void DynamicExpressionParser_ParseLambda_IllegalMethodCall_ThrowsException()
         {
             Check.ThatCode(() => { DynamicExpressionParser.ParseLambda(typeof(IO.FileStream), null, "it.Close()"); })
                 .Throws<ParseException>().WithMessage("Methods on type 'Stream' are not accessible");
         }
 
         [Fact]
-        public void ParseLambda_CustomMethod()
+        public void DynamicExpressionParser_ParseLambda_CustomMethod()
         {
             // Assign
             var config = new ParsingConfig
@@ -560,7 +561,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_With_InnerStringLiteral()
+        public void DynamicExpressionParser_ParseLambda_With_InnerStringLiteral()
         {
             var originalTrueValue = "simple + \"quoted\"";
             var doubleQuotedTrueValue = "simple + \"\"quoted\"\"";
@@ -572,7 +573,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_With_Guid_Equals_Null()
+        public void DynamicExpressionParser_ParseLambda_With_Guid_Equals_Null()
         {
             // Arrange
             var user = new User();
@@ -593,7 +594,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_With_Null_Equals_Guid()
+        public void DynamicExpressionParser_ParseLambda_With_Null_Equals_Guid()
         {
             // Arrange
             var user = new User();
@@ -614,7 +615,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_With_Guid_Equals_String()
+        public void DynamicExpressionParser_ParseLambda_With_Guid_Equals_String()
         {
             // Arrange
             Guid someId = Guid.NewGuid();
@@ -638,7 +639,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_With_Concat_String_CustomType()
+        public void DynamicExpressionParser_ParseLambda_With_Concat_String_CustomType()
         {
             // Arrange
             string name = "name1";
@@ -662,7 +663,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_With_Concat_CustomType_String()
+        public void DynamicExpressionParser_ParseLambda_With_Concat_CustomType_String()
         {
             // Arrange
             string name = "name1";
@@ -686,7 +687,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ParseLambda_Operator_Less_Greater_With_Guids()
+        public void DynamicExpressionParser_ParseLambda_Operator_Less_Greater_With_Guids()
         {
             var config = new ParsingConfig
             {
@@ -712,6 +713,25 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(anotherId, result);
+        }
+
+        [Theory]
+        [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]
+        [InlineData("c => c.Name == \"test\"", "c => (c.Name == \"test\")")]
+        public void DynamicExpressionParser_ParseLambda_RenameParameterExpression(string expressionAsString, string expected)
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                RenameParameterExpression = true
+            };
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<ComplexParseLambda1Result, bool>(config, true, expressionAsString);
+            string result = expression.ToString();
+
+            // Assert
+            Check.That(result).IsEqualTo(expected);
         }
     }
 }

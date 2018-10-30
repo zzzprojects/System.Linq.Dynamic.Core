@@ -202,9 +202,6 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\User.cs">
       <Link>Entities\User.cs</Link>
     </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core.Tests\ExpressionPromoterTests.cs">
-      <Link>ExpressionPromoterTests.cs</Link>
-    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\ExpressionTests.cs">
       <Link>ExpressionTests.cs</Link>
     </Compile>
@@ -354,6 +351,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Parser\" />
     <Folder Include="TestHelpers\" />
   </ItemGroup>
   <ItemGroup>

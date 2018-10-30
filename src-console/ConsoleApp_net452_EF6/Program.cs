@@ -23,8 +23,6 @@ namespace ConsoleApp_net452_EF6
                 var found3 = context.Employees.FirstOrDefault($"EmployeeNumber > @0", em);
                 Console.WriteLine($"found3 : {found3.Id} - {found3.EmployeeNumber}");
 
-                return;
-
                 string search = "2";
                 var expected = context.Employees.Where(e => System.Data.Entity.SqlServer.SqlFunctions.StringConvert((double)e.EmployeeNumber).Contains(search)).ToArray();
                 foreach (var emp in expected)

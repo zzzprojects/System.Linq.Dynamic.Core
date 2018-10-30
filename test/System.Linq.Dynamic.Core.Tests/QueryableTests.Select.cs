@@ -16,6 +16,43 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
+        public class Example
+        {
+            public DateTime Time { get; set; }
+            public DayOfWeek? DOWNull { get; set; }
+            public DayOfWeek DOW { get; set; }
+            public int Sec { get; set; }
+            public int? SecNull { get; set; }
+
+            public class NestedDto
+            {
+                public string Name { get; set; }
+
+                public class NestedDto2
+                {
+                    public string Name2 { get; set; }
+                }
+            }
+        }
+
+        public class ExampleWithConstructor
+        {
+            public DateTime Time { get; set; }
+            public DayOfWeek? DOWNull { get; set; }
+            public DayOfWeek DOW { get; set; }
+            public int Sec { get; set; }
+            public int? SecNull { get; set; }
+
+            public ExampleWithConstructor(DateTime t, DayOfWeek? dn, DayOfWeek d, int s, int? sn)
+            {
+                Time = t;
+                DOWNull = dn;
+                DOW = d;
+                Sec = s;
+                SecNull = sn;
+            }
+        }
+
         /// <summary>
         /// Cannot work with property which in base class. https://github.com/StefH/System.Linq.Dynamic.Core/issues/23
         /// </summary>
@@ -190,43 +227,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(testList.Select(x => x.Profile).Cast<object>().ToList(), userProfiles.ToDynamicList());
         }
 
-        public class Example
-        {
-            public DateTime Time { get; set; }
-            public DayOfWeek? DOWNull { get; set; }
-            public DayOfWeek DOW { get; set; }
-            public int Sec { get; set; }
-            public int? SecNull { get; set; }
-
-            public class NestedDto
-            {
-                public string Name { get; set; }
-
-                public class NestedDto2
-                {
-                    public string Name2 { get; set; }
-                }
-            }
-        }
-
-        public class ExampleWithConstructor
-        {
-            public DateTime Time { get; set; }
-            public DayOfWeek? DOWNull { get; set; }
-            public DayOfWeek DOW { get; set; }
-            public int Sec { get; set; }
-            public int? SecNull { get; set; }
-
-            public ExampleWithConstructor(DateTime t, DayOfWeek? dn, DayOfWeek d, int s, int? sn)
-            {
-                Time = t;
-                DOWNull = dn;
-                DOW = d;
-                Sec = s;
-                SecNull = sn;
-            }
-        }
-
         [Fact]
         public void Select_Dynamic_IntoTypeWithNullableProperties1()
         {
@@ -300,6 +300,40 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(projectedData.First().Name2).Equals("name1");
             Check.That(projectedData.Last().Name2).Equals("name2");
+        }
+
+        [Fact]
+        public void Select_Dynamic_RenameParameterExpression_Is_False()
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                RenameParameterExpression = false
+            };
+            var queryable = new int[0].AsQueryable();
+
+            // Act
+            string result = queryable.Select<int>(config, "it * it").ToString();
+
+            // Assert
+            Check.That(result).Equals("System.Int32[].Select(Param_0 => (Param_0 * Param_0))");
+        }
+
+        [Fact]
+        public void Select_Dynamic_RenameParameterExpression_Is_True()
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                RenameParameterExpression = true
+            };
+            var queryable = new int[0].AsQueryable();
+
+            // Act
+            string result = queryable.Select<int>(config, "it * it").ToString();
+
+            // Assert
+            Check.That(result).Equals("System.Int32[].Select(it => (it * it))");
         }
 
         [Fact]
