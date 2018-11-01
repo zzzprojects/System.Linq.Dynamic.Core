@@ -24,7 +24,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net40;net45;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -36,12 +36,6 @@
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
         <DefineConstants>NETSTANDARD</DefineConstants>
-    </PropertyGroup>
-
-    <!-- https://github.com/Microsoft/msbuild/issues/1333 -->
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
-        <!-- <FrameworkPathOverride>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride> -->
-        <FrameworkPathOverride>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2</FrameworkPathOverride>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
