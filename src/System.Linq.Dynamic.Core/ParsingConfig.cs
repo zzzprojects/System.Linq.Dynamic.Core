@@ -81,13 +81,13 @@ namespace System.Linq.Dynamic.Core
         public bool UseDynamicObjectClassForAnonymousTypes { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the EntityFramwwork version supports evaluating GroupBy at database level. Default value is false.
+        /// Gets or sets a value indicating whether the EntityFramework version supports evaluating GroupBy at database level. Default value is false.
         /// See https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.1#linq-groupby-translation
         /// </summary>
         public bool EvaluateGroupByAtDatabase { get; set; } = false;
 
         /// <summary>
-        /// Use Parameterized Names in generated dynamic SQL query. Default set to true.
+        /// Use Parameterized Names in generated dynamic SQL query. Default set to false.
         /// See https://github.com/graeme-hill/gblog/blob/master/source_content/articles/2014.139_entity-framework-dynamic-queries-and-parameterization.mkd
         /// </summary>
         public bool UseParameterizedNamesInDynamicQuery { get; set; } = false;
