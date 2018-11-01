@@ -28,6 +28,8 @@
         <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510001}</ProjectGuid>
         <DebugType>full</DebugType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
@@ -73,32 +75,32 @@
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-        <Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />
+        <!--<Reference Include="System" />
+        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-        <Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />
+        <!--<Reference Include="System" />
+        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-        <Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />
+        <!--<Reference Include="System" />
+        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-        <Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />
+        <!--<Reference Include="System" />
+        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-        <Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />
+        <!--<Reference Include="System" />
+        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
