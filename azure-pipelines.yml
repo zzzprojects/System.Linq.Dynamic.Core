@@ -47,6 +47,11 @@ steps:
     %USERPROFILE%\.dotnet\tools\dotnet-sonarscanner end /d:sonar.login="$(SONAR_TOKEN)"
   displayName: End SonarScanner
 
+# Upload coverage to codecov.io
+- script: |
+    %USERPROFILE%\.nuget\packages\codecov\1.1.0\tools\codecov.exe -f "./test/System.Linq.Dynamic.Core.Tests/coverage.opencover.xml" -t $(CODECOV_TOKEN)
+  displayName: Upload coverage to codecov.io
+
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
