@@ -19,10 +19,12 @@
         <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510002}</ProjectGuid>
         <DebugType>full</DebugType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>net40;net45;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -34,6 +36,12 @@
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
         <DefineConstants>NETSTANDARD</DefineConstants>
+    </PropertyGroup>
+
+    <!-- https://github.com/Microsoft/msbuild/issues/1333 -->
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
+        <!-- <FrameworkPathOverride>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride> -->
+        <FrameworkPathOverride>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2</FrameworkPathOverride>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
@@ -56,10 +64,10 @@
         <PackageReference Include="NetLegacySupport.ConcurrentDictionary">
             <Version>1.1.1</Version>
         </PackageReference>
-        <Reference Include="System" />
+        <!--<Reference Include="System" />-->
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+    <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
     </ItemGroup>
@@ -77,7 +85,7 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
-    </ItemGroup>
+    </ItemGroup>-->
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />

@@ -27,6 +27,8 @@
         <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510000}</ProjectGuid>
         <DebugType>full</DebugType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -53,8 +55,8 @@
         <PackageReference Include="EntityFramework" Version="6.1.3" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
-    </ItemGroup>
+    </ItemGroup>-->
 </Project>
