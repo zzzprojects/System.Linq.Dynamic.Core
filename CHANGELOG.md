@@ -1,14 +1,18 @@
-# 1.0.9.1 (01 November 2018)
+# 1.0.9.1 (06 November 2018)
 - [#210](https://github.com/StefH/System.Linq.Dynamic.Core/pull/210) - Set up CI with Azure Pipelines contributed by [azure-pipelines[bot]](https://github.com/apps/azure-pipelines)
 - [#211](https://github.com/StefH/System.Linq.Dynamic.Core/pull/211) - ParameterExpressionRenamer contributed by [StefH](https://github.com/StefH)
 - [#212](https://github.com/StefH/System.Linq.Dynamic.Core/pull/212) - Make ExpressionPromoter plugable contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
 - [#213](https://github.com/StefH/System.Linq.Dynamic.Core/pull/213) - Generating Parameterized SQL (by sspekinc) contributed by [StefH](https://github.com/StefH)
 - [#214](https://github.com/StefH/System.Linq.Dynamic.Core/pull/214) - UseParameterizedNamesInDynamicQuery=false contributed by [StefH](https://github.com/StefH)
 - [#216](https://github.com/StefH/System.Linq.Dynamic.Core/pull/216) - Add sourcelink contributed by [StefH](https://github.com/StefH)
+- [#217](https://github.com/StefH/System.Linq.Dynamic.Core/pull/217) - Use GitHubReleaseNotes contributed by [StefH](https://github.com/StefH)
+- [#218](https://github.com/StefH/System.Linq.Dynamic.Core/pull/218) - Codecov integration contributed by [StefH](https://github.com/StefH)
 - [#71](https://github.com/StefH/System.Linq.Dynamic.Core/issues/71) - Issue: Increase code-coverage
+- [#119](https://github.com/StefH/System.Linq.Dynamic.Core/issues/119) - Feature: How to keep parameter input name of query
 - [#179](https://github.com/StefH/System.Linq.Dynamic.Core/issues/179) - Feature: Implement SourceLink
 - [#184](https://github.com/StefH/System.Linq.Dynamic.Core/issues/184) - Feature: Generate Parameterized SQL
 - [#204](https://github.com/StefH/System.Linq.Dynamic.Core/issues/204) - Cannot GroupJoin when source is Linq-To-Entities
+- [#209](https://github.com/StefH/System.Linq.Dynamic.Core/issues/209) - Feature: use Azure Pipelines for building
 
 # 1.0.9.0 (19 October 2018)
 - [#208](https://github.com/StefH/System.Linq.Dynamic.Core/pull/208) - Fix New() support for Type + Fix GroupJoin() not working when using Linq-To-Entities (2) contributed by [StefH](https://github.com/StefH)
@@ -123,13 +127,11 @@
 # 1.0.7.12 (09 November 2017)
 - [#115](https://github.com/StefH/System.Linq.Dynamic.Core/pull/115) - Dynamic Linq Query not usable with ORM Provider (fix for #114) contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#116](https://github.com/StefH/System.Linq.Dynamic.Core/pull/116) - Bugfix DynamicLinq when using IQueryable contributed by [jogibear9988](https://github.com/jogibear9988)
-- [#113](https://github.com/StefH/System.Linq.Dynamic.Core/issues/113) - .pdb is missing in nuget
-
-# 1.0.7.11 (01 November 2017)
 - [#108](https://github.com/StefH/System.Linq.Dynamic.Core/issues/108) - [Question] Nullable property inside Join statement
 - [#109](https://github.com/StefH/System.Linq.Dynamic.Core/issues/109) - Not able to build with VS2017
 - [#111](https://github.com/StefH/System.Linq.Dynamic.Core/issues/111) - [Bug] Incorrect Nullable&lt;&gt; parsing
 - [#112](https://github.com/StefH/System.Linq.Dynamic.Core/issues/112) - Support NETStandard 2.0
+- [#113](https://github.com/StefH/System.Linq.Dynamic.Core/issues/113) - .pdb is missing in nuget
 
 # 1.0.7.10 (27 October 2017)
 - [#8](https://github.com/StefH/System.Linq.Dynamic.Core/pull/8) - Remove useless dependences contributed by [yyjdelete](https://github.com/yyjdelete)
