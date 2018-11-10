@@ -83,6 +83,8 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// Gets or sets a value indicating whether the EntityFramework version supports evaluating GroupBy at database level. Default value is false.
         /// See https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.1#linq-groupby-translation
+        /// 
+        /// Remark: when this setting is set to 'true', make sure to supply this ParsingConfig as first parameter on the extension methods.
         /// </summary>
         public bool EvaluateGroupByAtDatabase { get; set; } = false;
 

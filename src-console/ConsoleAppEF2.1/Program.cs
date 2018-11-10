@@ -41,9 +41,9 @@ namespace ConsoleAppEF21
 
         static void Main(string[] args)
         {
-            var list = new List<Car> { new Car { Key = 1 }, new Car { Key = 2 } };
+            //var list = new List<Car> { new Car { Key = 1 }, new Car { Key = 2 } };
 
-            var carsTest = list.AsQueryable().Where("Key = @0", "1").ToList();
+            //var carsTest = list.AsQueryable().Where("Key = @0", "1").ToList();
 
             //IQueryable qry = GetQueryable();
 
@@ -87,13 +87,15 @@ namespace ConsoleAppEF21
                 context.SaveChanges();
             }
 
-            //var g1 = context.Cars.GroupBy("new(Brand)").Select("new(Key.Brand as KeyValue1, it.Count() as CountValue1)").ToDynamicList();
-            //Console.WriteLine("GroupBy @ local {0}", JsonConvert.SerializeObject(g1, Formatting.Indented));
+            var g1 = context.Cars.GroupBy("new(Brand)").Select("new(Key.Brand as KeyValue1, it.Count() as CountValue1)").ToDynamicList();
+            Console.WriteLine("GroupBy @ local {0}", JsonConvert.SerializeObject(g1, Formatting.Indented));
 
-            //Console.WriteLine(new string('_', 80));
+            Console.WriteLine(new string('_', 100));
 
-            //var g2 = context.Cars.GroupBy("new(Brand)", config).Select("new(Key.Brand as KeyValue2, it.Count() as CountValue2)").ToDynamicList();
-            //Console.WriteLine("GroupBy @ database {0}", JsonConvert.SerializeObject(g2, Formatting.Indented));
+            var g2 = context.Cars.GroupBy(config, "new(Brand)").Select(config, "new(Key.Brand as KeyValue2, it.Count() as CountValue2)").ToDynamicList();
+            Console.WriteLine("GroupBy @ database {0}", JsonConvert.SerializeObject(g2, Formatting.Indented));
+
+            Console.WriteLine(new string('_', 100));
 
             var join1 = context.Cars.Join(
                     context.Brands,
