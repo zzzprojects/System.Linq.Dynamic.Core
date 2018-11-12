@@ -7,14 +7,14 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{591f9224-a8d6-49cf-8af8-f9b383c1f9ff}</ProjectGuid>
-    <SHFBSchemaVersion>2015.6.5.0</SHFBSchemaVersion>
+    <SHFBSchemaVersion>2017.9.26.0</SHFBSchemaVersion>
     <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual Studio adds them anyway -->
     <AssemblyName>Documentation</AssemblyName>
     <RootNamespace>Documentation</RootNamespace>
     <Name>Documentation</Name>
     <!-- SHFB properties -->
-    <FrameworkVersion>.NET Framework 4.6.1</FrameworkVersion>
-    <OutputPath>System.Linq.Dynamic.Core.SandCastle\wwwroot\</OutputPath>
+    <FrameworkVersion>Cross-platform (.NET Core/.NET Standard)</FrameworkVersion>
+    <OutputPath>..\docs\</OutputPath>
     <HtmlHelpName>Documentation</HtmlHelpName>
     <Language>en-US</Language>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
@@ -25,12 +25,12 @@
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CleanIntermediates>True</CleanIntermediates>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net45\System.Linq.Dynamic.Core.dll" />
-      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\net45\System.Linq.Dynamic.Core.xml" />
-      <DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net45\EntityFramework.DynamicLinq.dll" />
-      <DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net45\EntityFramework.DynamicLinq.xml" />
-      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\net451\Microsoft.EntityFrameworkCore.DynamicLinq.dll" />
-      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\net451\Microsoft.EntityFrameworkCore.DynamicLinq.xml" />
+      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\netstandard2.0\System.Linq.Dynamic.Core.dll" />
+      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\netstandard2.0\System.Linq.Dynamic.Core.xml" />
+      <DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net46\EntityFramework.DynamicLinq.dll" />
+      <DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net46\EntityFramework.DynamicLinq.xml" />
+      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\netstandard2.0\Microsoft.EntityFrameworkCore.DynamicLinq.dll" />
+      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\netstandard2.0\Microsoft.EntityFrameworkCore.DynamicLinq.xml" />
     </DocumentationSources>
     <WebsiteSdkLinkType>Msdn</WebsiteSdkLinkType>
     <HtmlSdkLinkType>Msdn</HtmlSdkLinkType>
@@ -54,8 +54,44 @@
     <NamingMethod>Guid</NamingMethod>
     <HelpTitle>System.Linq.Dynamic.Core, EntityFramework.DynamicLinq and Microsoft.EntityFrameworkCore.DynamicLinq</HelpTitle>
     <ContentPlacement>BelowNamespaces</ContentPlacement>
-    <WorkingPath>System.Linq.Dynamic.Core.SandCastle.tmp\</WorkingPath>
-    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected, PublicCompilerGenerated</VisibleItems>
+    <WorkingPath>
+    </WorkingPath>
+    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, ProtectedInternalAsProtected, PublicCompilerGenerated, EditorBrowsableNever, NonBrowsable</VisibleItems>
+    <WarnOnMissingSourceContext>False</WarnOnMissingSourceContext>
+    <ComponentConfigurations>
+      <ComponentConfig id="Code Block Component" enabled="True" xmlns="">
+        <component id="Code Block Component">
+  <basePath value="{@HtmlEncProjectFolder}" />
+  <outputPaths>{@HelpFormatOutputPaths}</outputPaths>
+  <allowMissingSource value="false" />
+  <removeRegionMarkers value="false" />
+  <colorizer syntaxFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xml" styleFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xsl" stylesheet="{@SHFBFolder}PresentationStyles\Colorizer\highlight.css" scriptFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.js" disabled="{@DisableCodeBlockComponent}" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" />
+</component>
+      </ComponentConfig>
+<ComponentConfig id="Syntax Component" enabled="True" xmlns=""><component id="Syntax Component">
+  <syntax input="/document/reference" output="/document/syntax" renderReferenceLinks="false" />
+  <generators>
+    {@SyntaxFilters}
+</generators>
+  <containerElement name="codeSnippetGroup" addNoExampleTabs="true" includeOnSingleSnippets="false" groupingEnabled="{@CodeSnippetGrouping}" />
+  <configurations>
+    <generator id="C#" />
+    <generator id="Visual Basic">
+      <includeLineContinuation value="false" />
+    </generator>
+    <generator id="Visual Basic Usage">
+      <includeLineContinuation value="false" />
+    </generator>
+    <generator id="Managed C++" />
+    <generator id="F#" />
+    <generator id="J#" />
+    <generator id="JScript" />
+    <generator id="JavaScript" />
+    <generator id="XAML Usage" />
+    <generator id="ASP.NET" />
+    <generator id="X#" />
+  </configurations>
+</component></ComponentConfig></ComponentConfigurations>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
