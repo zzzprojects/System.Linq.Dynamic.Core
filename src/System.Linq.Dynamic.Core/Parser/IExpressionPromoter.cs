@@ -16,7 +16,7 @@ namespace System.Linq.Dynamic.Core.Parser
         /// <param name="type">Destionation data type to promote</param>
         /// <param name="exact">If the match must be exact</param>
         /// <param name="convertExpr">Convert expression</param>
-        /// <returns></returns>
+        /// <returns>The promoted <see cref="Expression"/></returns>
         Expression Promote(Expression expr, Type type, bool exact, bool convertExpr);
     }
 }

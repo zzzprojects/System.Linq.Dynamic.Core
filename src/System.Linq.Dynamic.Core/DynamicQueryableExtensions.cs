@@ -703,7 +703,7 @@ namespace System.Linq.Dynamic.Core
                 Expression.Quote(resultSelectorLambda)));
         }
 
-        /// <inheritdoc cref="GroupJoin(IQueryable, IEnumerable, string, string, string, object[])"/>
+        /// <inheritdoc cref="GroupJoin(IQueryable, ParsingConfig, IEnumerable, string, string, string, object[])"/>
         public static IQueryable GroupJoin([NotNull] this IQueryable outer, [NotNull] IEnumerable inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, [NotNull] string resultSelector, params object[] args)
         {
             return GroupJoin(outer, null, inner, outerKeySelector, innerKeySelector, resultSelector, args);
@@ -1183,7 +1183,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery<TResult>(optimized);
         }
 
-        /// <inheritdoc cref="Select(IQueryable, ParsingConfig, string, object[])"/>
+        /// <inheritdoc cref="Select{TResult}(IQueryable, ParsingConfig, string, object[])"/>
         public static IQueryable<TResult> Select<TResult>([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
         {
             return Select<TResult>(source, null, selector, args);
@@ -1198,7 +1198,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="resultType">The result type.</param>
         /// <param name="selector">A projection string expression to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
-        /// <returns>An <see cref="IQueryable{TResult}"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+        /// <returns>An <see cref="IQueryable"/> whose elements are the result of invoking a projection string on each element of source.</returns>
         /// <example>
         /// <code>
         /// var users = queryable.Select(typeof(User), "new (Username, Pwd as Password)");
@@ -1363,7 +1363,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.CreateQuery<TResult>(optimized);
         }
 
-        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, object[])"/>
+        /// <inheritdoc cref="SelectMany{TResult}(IQueryable, ParsingConfig, string, object[])"/>
         public static IQueryable<TResult> SelectMany<TResult>([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
         {
             return SelectMany<TResult>(source, null, selector, args);
@@ -1398,7 +1398,7 @@ namespace System.Linq.Dynamic.Core
             return SelectMany(source, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
         }
 
-        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, object[])"/>
+        /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, string, string, string, object[], object[])"/>
         public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string collectionSelector, [NotNull] string resultSelector, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
         {
             return SelectMany(source, null, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
@@ -1912,6 +1912,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
+        /// <returns>A <see cref="IQueryable"/> that contains elements from the input sequence that satisfy the condition specified by LambdaExpression.</returns>
         public static IQueryable Where([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
         {
             Check.NotNull(source, nameof(source));
