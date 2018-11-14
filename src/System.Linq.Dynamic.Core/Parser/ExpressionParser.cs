@@ -1894,6 +1894,4 @@ namespace System.Linq.Dynamic.Core.Parser
             return new ParseException(string.Format(CultureInfo.CurrentCulture, format, args), pos);
         }
     }
-
 }
-
