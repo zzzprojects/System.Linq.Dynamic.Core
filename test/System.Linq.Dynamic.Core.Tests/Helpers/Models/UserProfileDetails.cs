@@ -2,7 +2,7 @@
 {
     public class UserProfileDetails
     {
-        private long Id { get; set; }
+        public long Id { get; set; }
 
         private long Id2 { get; set; }
     }

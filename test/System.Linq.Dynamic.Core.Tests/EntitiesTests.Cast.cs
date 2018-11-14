@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using NFluent;
+using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
@@ -17,6 +18,20 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void Cast_To_nullableint_Automatic()
+        {
+            // Arrange
+            PopulateTestData(5, 0);
+
+            // Act
+            var expectedResult = _context.Blogs.Select(b => b.BlogId == 2 ? (int?)b.BlogId : null).ToList();
+            var result = _context.Blogs.AsQueryable().Select("BlogId == 2 ? BlogId : null").ToDynamicList<int?>();
+
+            // Assert
+            Check.That(result).ContainsExactly(expectedResult);
         }
 
         [Fact]

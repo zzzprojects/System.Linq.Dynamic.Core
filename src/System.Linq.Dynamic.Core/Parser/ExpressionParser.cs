@@ -1068,6 +1068,31 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (expr1.Type != expr2.Type)
             {
+                if ((expr1 == Constants.NullLiteral && expr2.Type.GetTypeInfo().IsValueType) || (expr2 == Constants.NullLiteral && expr1.Type.GetTypeInfo().IsValueType))
+                {
+                    // If expr1 is a null constant and expr2 is a IsValueType:
+                    // - create nullable constant from expr1 with type from expr2
+                    // - convert expr2 to nullable
+                    if (expr1 == Constants.NullLiteral && expr2.Type.GetTypeInfo().IsValueType)
+                    {
+                        Type nullableType = typeof(Nullable<>).MakeGenericType(expr2.Type);
+                        expr1 = Expression.Constant(null, nullableType);
+                        expr2 = Expression.Convert(expr2, nullableType);
+                    }
+
+                    // If expr2 is a null constant and expr1 is a IsValueType:
+                    // - create nullable constant from expr2 with type from expr1
+                    // - convert expr1 to nullable
+                    if (expr2 == Constants.NullLiteral && expr1.Type.GetTypeInfo().IsValueType)
+                    {
+                        Type nullableType = typeof(Nullable<>).MakeGenericType(expr1.Type);
+                        expr2 = Expression.Constant(null, nullableType);
+                        expr1 = Expression.Convert(expr1, nullableType);
+                    }
+
+                    return Expression.Condition(test, expr1, expr2);
+                }
+
                 Expression expr1As2 = expr2 != Constants.NullLiteral ? _parsingConfig.ExpressionPromoter.Promote(expr1, expr2.Type, true, false) : null;
                 Expression expr2As1 = expr1 != Constants.NullLiteral ? _parsingConfig.ExpressionPromoter.Promote(expr2, expr1.Type, true, false) : null;
                 if (expr1As2 != null && expr2As1 == null)
@@ -1871,3 +1896,4 @@ namespace System.Linq.Dynamic.Core.Parser
     }
 
 }
+

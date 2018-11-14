@@ -17,10 +17,16 @@ namespace ConsoleAppEF2
         {
             public string Name { get; set; }
 
-            public class NestedDto2
-            {
-                public string Name2 { get; set; }
-            }
+            public NestedDto2 NestedDto2 { get; set; }
+
+
+        }
+
+        public class NestedDto2
+        {
+            public string Name2 { get; set; }
+
+            public int Id { get; set; }
         }
 
         class NetCore21CustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
@@ -166,6 +172,13 @@ namespace ConsoleAppEF2
 
         static void Main(string[] args)
         {
+            var q = new[] { new NestedDto(), new NestedDto { NestedDto2 = new NestedDto2 { Id = 42 } } }.AsQueryable();
+            var r1 = q.Select("it != null && it.NestedDto2 != null ? it.NestedDto2.Id : null");
+            var list1 = r1.ToDynamicList<int?>();
+
+            var r2 = q.Select("it != null && it.NestedDto2 != null ? it.NestedDto2 : null");
+            var list2 = r2.ToDynamicList<NestedDto2>();
+
             var config = new ParsingConfig
             {
                 AllowNewToEvaluateAnyType = true,
@@ -211,7 +224,7 @@ namespace ConsoleAppEF2
             var any2 = anyTest.Where("values.Contains(1)");
             Console.WriteLine("any2 {0}", JsonConvert.SerializeObject(any2, Formatting.Indented));
 
-            
+
 
             var dateLastModified = new DateTime(2018, 1, 15);
 
