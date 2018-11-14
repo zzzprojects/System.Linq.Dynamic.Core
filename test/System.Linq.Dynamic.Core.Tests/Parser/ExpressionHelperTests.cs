@@ -1,5 +1,4 @@
-﻿using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using NFluent;
 using Xunit;
 
@@ -39,6 +38,36 @@ namespace System.Linq.Dynamic.Core.Parser.Tests
 
             // Assert
             Check.That(result).IsNull();
+        }
+
+        [Fact]
+        public void ExpressionHelper_GenerateAndAlsoMemberExpression()
+        {
+            // Assign
+            Expression<Func<Item, int>> expression = (x) => x.Relation1.Relation2.Id;
+
+            // Act
+            Expression result = _expressionHelper.GenerateAndAlsoMemberExpression(expression);
+
+            // Assert
+            Check.That(result.ToString()).IsEqualTo("((x.Relation1 != null) AndAlso (x.Relation1.Relation2 != null))");
+        }
+
+        class Item
+        {
+            public int Id { get; set; }
+            public Relation1 Relation1 { get; set; }
+        }
+
+        class Relation1
+        {
+            public int Id { get; set; }
+            public Relation2 Relation2 { get; set; }
+        }
+
+        class Relation2
+        {
+            public int Id { get; set; }
         }
     }
 }
