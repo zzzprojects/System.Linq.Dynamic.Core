@@ -50,44 +50,44 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Add_Number()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -1, 2 }.AsQueryable();
 
-            //Act
+            // Act
             var result = values.Select<int>("it + 1");
             var expected = values.Select(i => i + 1);
 
-            //Assert
+            // Assert
             Check.That(result).ContainsExactly(expected);
         }
 
         [Fact]
         public void ExpressionTests_Add_String()
         {
-            //Arrange
+            // Arrange
             var values = new[] { "a", "b" }.AsQueryable();
 
-            //Act
+            // Act
             var result = values.Select<string>("it + \"z\"");
             var expected = values.Select(i => i + "z");
 
-            //Assert
+            // Assert
             Check.That(result).ContainsExactly(expected);
         }
 
         [Fact]
         public void ExpressionTests_ArrayInitializer()
         {
-            //Arrange
+            // Arrange
             var list = new[] { 0, 1, 2, 3, 4 };
 
-            //Act
+            // Act
             var result1 = list.AsQueryable().SelectMany("new[] {}");
             var result2 = list.AsQueryable().SelectMany("new[] { it + 1, it + 2 }");
             var result3 = list.AsQueryable().SelectMany("new long[] { it + 1, byte(it + 2), short(it + 3) }");
             var result4 = list.AsQueryable().SelectMany("new[] { new[] { it + 1, it + 2 }, new[] { it + 3, it + 4 } }");
 
-            //Assert
+            // Assert
             Assert.Equal(0, result1.Count());
             Assert.Equal(result2.Cast<int>(), list.SelectMany(item => new[] { item + 1, item + 2 }));
             Assert.Equal(result3.Cast<long>(), list.SelectMany(item => new long[] { item + 1, (byte)(item + 2), (short)(item + 3) }));
@@ -128,7 +128,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result16 = qry.FirstOrDefault("(it.B & @0) == 1", (ushort)1);
             var result17 = qry.FirstOrDefault("(it.B & @0) == 1", (short)1);
 
-            //Assert
+            // Assert
             Assert.Equal(3, result0.Id);
             Assert.Equal(3, result1.Id);
             Assert.Equal(3, result2.Id);
@@ -179,7 +179,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result16 = qry.FirstOrDefault("(it.B | @0) == 1", (ushort)1);
             var result17 = qry.FirstOrDefault("(it.B | @0) == 1", (short)1);
 
-            //Assert
+            // Assert
             Assert.Equal(3, result0.Id);
             Assert.Equal(3, result1.Id);
             Assert.Equal(3, result2.Id);
@@ -202,116 +202,164 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Cast_To_nullableint()
         {
-            //Arrange
+            // Arrange
             var list = new List<SimpleValuesModel>
             {
                 new SimpleValuesModel { IntValue = 5 }
             };
 
-            //Act
+            // Act
             var expectedResult = list.Select(x => (int?)x.IntValue);
             var result = list.AsQueryable().Select("int?(IntValue)");
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<int?>());
+        }
+
+        [Fact]
+        public void ExpressionTests_Cast_Automatic_To_nullablelong()
+        {
+            // Arrange
+            var q = new[] { null, new UserProfile(), new UserProfile { UserProfileDetails = new UserProfileDetails { Id = 42 } } }.AsQueryable();
+
+            // Act
+            var expectedResult = q.Select(x => x != null && x.UserProfileDetails != null ? (long?)x.UserProfileDetails.Id : null);
+            var result = q.Select("it != null && it.UserProfileDetails != null ? it.UserProfileDetails.Id : null");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<long?>());
         }
 
         [Fact]
         public void ExpressionTests_Cast_To_newnullableint()
         {
-            //Arrange
+            // Arrange
             var list = new List<SimpleValuesModel>
             {
                 new SimpleValuesModel { IntValue = 5 }
             };
 
-            //Act
+            // Act
             var expectedResult = list.Select(x => new { i = (int?)x.IntValue });
             var result = list.AsQueryable().Select("new (int?(IntValue) as i)");
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult.Count(), result.Count());
+        }
+
+        [Fact]
+        public void ExpressionTests_Conditional_With_Automatic_Cast_NullableInt()
+        {
+            // Arrange
+            var qry = new[] { 1, 2 }.AsQueryable();
+
+            // Act
+            var realResult1 = qry.Select(x => x == 2 ? null : (int?)x).ToList();
+            var result1 = qry.Select("it == 2 ? null : it").ToDynamicList<int?>();
+            var realResult2 = qry.Select(x => x == 2 ? (int?)x : null).ToList();
+            var result2 = qry.Select("it == 2 ? it : null").ToDynamicList<int?>();
+
+            // Assert
+            Check.That(result1).ContainsExactly(realResult1);
+            Check.That(result2).ContainsExactly(realResult2);
+        }
+
+        [Fact]
+        public void ExpressionTests_Conditional_With_No_Automatic_Cast()
+        {
+            // Arrange
+            var qry = new[] { null, new SimpleValuesModel() }.AsQueryable();
+
+            // Act
+            var realResult1 = qry.Select(x => x != null ? x : null).ToList();
+            var result1 = qry.Select("it != null ? it : null").ToDynamicList<SimpleValuesModel>();
+            var realResult2 = qry.Select(x => x == null ? null : x).ToList();
+            var result2 = qry.Select("it == null ? null : it").ToDynamicList<SimpleValuesModel>();
+
+            // Assert
+            Check.That(result1).ContainsExactly(realResult1);
+            Check.That(result2).ContainsExactly(realResult2);
         }
 
         [Fact]
         public void ExpressionTests_Conditional()
         {
-            //Arrange
+            // Arrange
             int[] values = { 1, 2, 3, 4, 5 };
             var qry = values.AsQueryable();
 
-            //Act
+            // Act
             var realResult = values.Select(x => x == 2 ? 99 : 100).ToList();
             var result = qry.Select("it == 2 ? 99 : 100").ToDynamicList<int>();
 
-            //Assert
+            // Assert
             Check.That(result).ContainsExactly(realResult);
         }
 
         [Fact]
         public void ExpressionTests_ConditionalOr1()
         {
-            //Arrange
+            // Arrange
             int[] values = { 1, 2, 3, 4, 5 };
             var qry = values.AsQueryable();
 
-            //Act
+            // Act
             var realResult = values.Where(x => x == 2 || x == 3).ToList();
             var result = qry.Where("it == 2 or it == 3").ToDynamicList<int>();
 
-            //Assert
+            // Assert
             Check.That(realResult).ContainsExactly(result);
         }
 
         [Fact]
         public void ExpressionTests_ConditionalOr2()
         {
-            //Arrange
+            // Arrange
             int[] values = { 1, 2, 3, 4, 5 };
             var qry = values.AsQueryable();
 
-            //Act
+            // Act
             var realResult = values.Where(x => x == 2 || x == 3).ToList();
             var result = qry.Where("it == 2 || it == 3").ToDynamicList<int>();
 
-            //Assert
+            // Assert
             Check.That(realResult).ContainsExactly(result);
         }
 
         [Fact]
         public void ExpressionTests_ConditionalAnd1()
         {
-            //Arrange
+            // Arrange
             var values = new[] { new { s = "s", i = 1 }, new { s = "abc", i = 2 } };
             var qry = values.AsQueryable();
 
-            //Act
+            // Act
             var realResult = values.Where(x => x.s == "s" && x.i == 2).ToList();
             var result = qry.Where("s == \"s\" and i == 2").ToDynamicList();
 
-            //Assert
+            // Assert
             Check.That(realResult).ContainsExactly(result);
         }
 
         [Fact]
         public void ExpressionTests_ConditionalAnd2()
         {
-            //Arrange
+            // Arrange
             var values = new[] { new { s = "s", i = 1 }, new { s = "abc", i = 2 } };
             var qry = values.AsQueryable();
 
-            //Act
+            // Act
             var realResult = values.Where(x => x.s == "s" && x.i == 2).ToList();
             var result = qry.Where("s == \"s\" && i == 2").ToDynamicList();
 
-            //Assert
+            // Assert
             Check.That(realResult).ContainsExactly(result);
         }
 
         [Fact]
         public void ExpressionTests_ContainsGuid()
         {
-            //Arrange
+            // Arrange
             var userList = User.GenerateSampleModels(5);
             var userQry = userList.AsQueryable();
 
@@ -324,13 +372,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var successValues = failValues.Concat(new[] { userList[0].Id }).ToArray();
 
 
-            //Act
+            // Act
             var found1 = userQry.Where("Id in @0", successValues);
             var found2 = userQry.Where("@0.Contains(Id)", successValues);
             var notFound1 = userQry.Where("Id in @0", failValues);
             var notFound2 = userQry.Where("@0.Contains(Id)", failValues);
 
-            //Assert
+            // Assert
 #if NET35
             Assert.Equal(userList[0].Id, ((User)found1.Single()).Id);
             Assert.Equal(userList[0].Id, ((User)found2.Single()).Id);
@@ -362,15 +410,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_DecimalQualifiers()
         {
-            //Arrange
+            // Arrange
             var values = new[] { 1m, 2M, 3M }.AsQueryable();
             var resultValues = new[] { 2m, 3m }.AsQueryable();
 
-            //Act
+            // Act
             var result1 = values.Where("it == 2M or it == 3m");
             var result2 = values.Where("it == 2.0M or it == 3.00m");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
@@ -378,15 +426,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_DecimalQualifiers_Negative()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -1m, -2M, -3M }.AsQueryable();
             var resultValues = new[] { -2m, -3m }.AsQueryable();
 
-            //Act
+            // Act
             var result1 = values.Where("it == -2M or it == -3m");
             var result2 = values.Where("it == -2.0M or it == -3.0m");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
@@ -395,7 +443,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_DistinctBy()
         {
-            //Arrange
+            // Arrange
             //Makes a Distinct By Tuple.Item1 but returns a full Tuple
             var lst = new List<Tuple<int, int, int>>
             {
@@ -412,12 +460,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = p.GroupBy("Item1", "it").Select("it.Max(it.Item3)");
 
 
-            //Act
+            // Act
             var qry1 = p.Where("@0.Any(it == parent.Item3)", qry);
             var qry2 = p.Where("@0.Any($ == ^.Item3)", qry);
             var qry3 = p.Where("@0.Any($ == ~.Item3)", qry);
 
-            //Assert
+            // Assert
             Assert.Equal(2, qry1.Count());
             Assert.Equal(2, qry2.Count());
             Assert.Equal(2, qry3.Count());
@@ -426,29 +474,29 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Divide_Number()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -10, 20 }.AsQueryable();
 
-            //Act
+            // Act
             var result = values.Select<int>("it / 10");
             var expected = values.Select(i => i / 10);
 
-            //Assert
+            // Assert
             Check.That(result).ContainsExactly(expected);
         }
 
         [Fact]
         public void ExpressionTests_Double()
         {
-            //Arrange
+            // Arrange
             var values = new[] { 1d, 2D, 3d }.AsQueryable();
             var resultValues = new[] { 2d, 3d }.AsQueryable();
 
-            //Act
+            // Act
             var result1 = values.Where("it == 2 or it == 3");
             var result2 = values.Where("it > 1.99");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
@@ -456,15 +504,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Double_Negative()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -1d, -2D, -3d }.AsQueryable();
             var resultValues = new[] { -2d, -3d }.AsQueryable();
 
-            //Act
+            // Act
             var result1 = values.Where("it == -2 or it == -3");
             var result2 = values.Where("it == -2.00 or it == -3.0");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
@@ -474,15 +522,15 @@ namespace System.Linq.Dynamic.Core.Tests
         //{
         //    GlobalConfig.NumberDecimalSeparator = ',';
 
-        //    //Arrange
+        //    // Arrange
         //    var values = new[] { 1d, 2D, 3d }.AsQueryable();
         //    var resultValues = new[] { 2d, 3d }.AsQueryable();
 
-        //    //Act
+        //    // Act
         //    var result1 = values.Where("it == 2 or it == 3");
         //    var result2 = values.Where("it > 1,99");
 
-        //    //Assert
+        //    // Assert
         //    Assert.Equal(resultValues.ToArray(), result1.ToArray());
         //    Assert.Equal(resultValues.ToArray(), result2.ToArray());
 
@@ -492,15 +540,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_DoubleQualifiers()
         {
-            //Arrange
+            // Arrange
             var values = new[] { 1d, 2D, 3d }.AsQueryable();
             var resultValues = new[] { 2d, 3d }.AsQueryable();
 
-            //Act
+            // Act
             var result1 = values.Where("it == 2d or it == 3D");
             var result2 = values.Where("it == 2.00d or it == 3.0D");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
@@ -508,15 +556,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_DoubleQualifiers_Negative()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -1d, -2D, -3d }.AsQueryable();
             var resultValues = new[] { -2d, -3d }.AsQueryable();
 
-            //Act
+            // Act
             var result1 = values.Where("it == -2d or it == -3D");
             var result2 = values.Where("it == -2.00d or it == -3.0D");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
@@ -611,7 +659,7 @@ namespace System.Linq.Dynamic.Core.Tests
             config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
-            //Act
+            // Act
             var result1a = new[] { TestEnum.Var1 }.AsQueryable().Where(config, "it = @0", (TestEnum?)TestEnum.Var1);
             var result1b = new[] { TestEnum.Var1 }.AsQueryable().Where(config, "@0 = it", (TestEnum?)TestEnum.Var1);
             var result2a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "it = @0", TestEnum.Var1);
@@ -624,7 +672,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result11a = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "it = @0", "Var1");
             var result11b = new[] { (TestEnum?)TestEnum.Var1, null }.AsQueryable().Where(config, "@0 = it", "Var1");
 
-            //Assert
+            // Assert
             Assert.Equal(TestEnum.Var1, result1a.Single());
             Assert.Equal(TestEnum.Var1, result1b.Single());
             Assert.Equal(TestEnum.Var1, result2a.Single());
@@ -663,15 +711,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_FloatQualifiers()
         {
-            //Arrange
+            // Arrange
             var values = new[] { 1f, 2F, 3F }.AsQueryable();
             var resultValues = new[] { 2f, 3f }.AsQueryable();
 
-            //Act
+            // Act
             var result1 = values.Where("it == 2F or it == 3f");
             var result2 = values.Where("it == 2.0F or it == 3.00f");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
@@ -679,15 +727,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_FloatQualifiers_Negative()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -1f, -2F, -3F }.AsQueryable();
             var resultValues = new[] { -2f, -3f }.AsQueryable();
 
-            //Act
+            // Act
             var result1 = values.Where("it == -2F or it == -3f");
             var result2 = values.Where("it == -2.0F or it == -3.0f");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
@@ -700,11 +748,11 @@ namespace System.Linq.Dynamic.Core.Tests
             config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
-            //Arrange
+            // Arrange
             var lst = new List<Guid> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
             var qry = lst.AsQueryable();
 
-            //Act
+            // Act
             string testValue = lst[0].ToString();
             var result1a = qry.Where(config, "it = \"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\"");
             var result1b = qry.Where(config, "it = @0", testValue);
@@ -712,7 +760,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result2a = qry.Where(config, "\"0A191E77-E32D-4DE1-8F1C-A144C2B0424D\" = it");
             var result2b = qry.Where(config, "@0 = it", testValue);
 
-            //Assert
+            // Assert
             Assert.Equal(lst[0], result1a.Single());
             Assert.Equal(lst[0], result1b.Single());
             Assert.Equal(lst[0], result2a.Single());
@@ -722,16 +770,16 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Guid_CompareTo_Guid()
         {
-            //Arrange
+            // Arrange
             var lst = new List<Guid> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
             var qry = lst.AsQueryable();
 
-            //Act
+            // Act
             Guid testValue = lst[0];
             var resulta = qry.Where("it = @0", testValue);
             var resultb = qry.Where("@0 = it", testValue);
 
-            //Assert
+            // Assert
             Assert.Equal(testValue, resulta.Single());
             Assert.Equal(testValue, resultb.Single());
         }
@@ -739,16 +787,16 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_GuidNullable_CompareTo_Guid()
         {
-            //Arrange
+            // Arrange
             var lst = new List<Guid?> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
             var qry = lst.AsQueryable();
 
-            //Act
+            // Act
             Guid testValue = new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}");
             var resulta = qry.Where("it = @0", testValue);
             var resultb = qry.Where("@0 = it", testValue);
 
-            //Assert
+            // Assert
             Assert.Equal(testValue, resulta.Single());
             Assert.Equal(testValue, resultb.Single());
         }
@@ -756,16 +804,16 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_GuidNullable_CompareTo_GuidNullable()
         {
-            //Arrange
+            // Arrange
             var lst = new List<Guid?> { new Guid("{0A191E77-E32D-4DE1-8F1C-A144C2B0424D}"), Guid.NewGuid(), Guid.NewGuid() };
             var qry = lst.AsQueryable();
 
-            //Act
+            // Act
             Guid? testValue = lst[0];
             var resulta = qry.Where("it = @0", testValue);
             var resultb = qry.Where("@0 = it", testValue);
 
-            //Assert
+            // Assert
             Assert.Equal(testValue, resulta.Single());
             Assert.Equal(testValue, resultb.Single());
         }
@@ -793,10 +841,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_HexadecimalInteger()
         {
-            //Arrange
+            // Arrange
             var values = new[] { 1, 2, 3 };
 
-            //Act
+            // Act
             var result = values.AsQueryable().Select("it * 0x1000abEF").Cast<int>();
             var resultNeg = values.AsQueryable().Select("it * -0xaBcDeF").Cast<int>();
             var resultU = values.AsQueryable().Select("uint(it) * 0x12345678U").Cast<uint>();
@@ -804,7 +852,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultLNeg = values.AsQueryable().Select("it * -0x0ABCDEF987654321L").Cast<long>();
             var resultUL = values.AsQueryable().Select("ulong(it) * 0x1000abEFUL").Cast<ulong>();
 
-            //Assert
+            // Assert
             Assert.Equal(values.Select(it => it * 0x1000abEF), result);
             Assert.Equal(values.Select(it => it * -0xaBcDeF), resultNeg);
             Assert.Equal(values.Select(it => (uint)it * 0x12345678U), resultU);
@@ -856,13 +904,13 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_In_String()
         {
-            //Arrange
+            // Arrange
             var testRange = Enumerable.Range(1, 100).ToArray();
             var testModels = User.GenerateSampleModels(10);
             var testModelByUsername = string.Format("Username in (\"{0}\",\"{1}\",\"{2}\")", testModels[0].UserName, testModels[1].UserName, testModels[2].UserName);
             var testInExpression = new[] { 2, 4, 6, 8 };
 
-            //Act
+            // Act
             var result1a = testRange.AsQueryable().Where("it in (2,4,6,8)").ToArray();
             var result1b = testRange.AsQueryable().Where("it in (2, 4,  6, 8)").ToArray();
             // https://github.com/NArnott/System.Linq.Dynamic/issues/52
@@ -873,7 +921,7 @@ namespace System.Linq.Dynamic.Core.Tests
                     .ToArray();
             var result4 = testRange.AsQueryable().Where("it in @0", testInExpression).ToArray();
 
-            //Assert
+            // Assert
             Assert.Equal(new[] { 2, 4, 6, 8 }, result1a);
             Assert.Equal(new[] { 2, 4, 6, 8 }, result1b);
             Assert.Equal(testModels.Take(3).ToArray(), result2);
@@ -884,21 +932,21 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_IsNull_Simple()
         {
-            //Arrange
+            // Arrange
             var baseQuery = new int?[] { 1, 2, null, 3, 4 }.AsQueryable();
             var expectedResult = new[] { 1, 2, 0, 3, 4 };
 
             // Act
             var result1 = baseQuery.Select("isnull(it, 0)");
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult, result1.ToDynamicArray<int>());
         }
 
         [Fact]
         public void ExpressionTests_IsNull_Complex()
         {
-            //Arrange
+            // Arrange
             var testModels = User.GenerateSampleModels(3, true);
             testModels[0].NullableInt = null;
             testModels[1].NullableInt = null;
@@ -908,13 +956,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var expectedResult2 = testModels.AsQueryable().Where(u => (u.NullableInt ?? 10) == 10).ToArray();
             var expectedResult3 = testModels.Select(m => m.NullableInt ?? 10).ToArray();
 
-            //Act
+            // Act
             var result1 = testModels.AsQueryable().Select("new (UserName, isnull(NullableInt, (3 * Income)) as X)");
             var result2 = testModels.AsQueryable().Where("isnull(NullableInt, 10) == 10");
             var result3a = testModels.AsQueryable().Select("isnull(NullableInt, @0)", 10);
             var result3b = testModels.AsQueryable().Select<int>("isnull(NullableInt, @0)", 10);
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult1.ToString(), result1.ToDynamicArray().ToString());
             Assert.Equal(expectedResult2, result2.ToArray());
             Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
@@ -996,15 +1044,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_LogicalAndOr()
         {
-            //Arrange
+            // Arrange
             var lst = new List<int> { 0x20, 0x21, 0x30, 0x31, 0x41 };
             var qry = lst.AsQueryable();
 
-            //Act
+            // Act
             var result1 = qry.Where("(it & 1) > 0");
             var result2 = qry.Where("(it & 32) > 0");
 
-            //Assert
+            // Assert
             Assert.Equal(new[] { 0x21, 0x31, 0x41 }, result1.ToArray());
             Assert.Equal(qry.Where(x => (x & 32) > 0).ToArray(), result2.ToArray());
         }
@@ -1041,103 +1089,103 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_MethodCall_ValueTypeToValueTypeParameter()
         {
-            //Arrange
+            // Arrange
             var list = new[] { 0, 1, 2, 3, 4 };
 
-            //Act
+            // Act
             var methods = new Methods();
             var expectedResult = list.Where(x => methods.Method1(x));
             var result = list.AsQueryable().Where("@0.Method1(it)", methods);
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
         [Fact]
         public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast()
         {
-            //Arrange
+            // Arrange
             var list = new[] { 0, 1, 2, 3, 4 };
 
-            //Act
+            // Act
             var methods = new Methods();
             var expectedResult = list.Where(x => methods.Method2(x));
             var result = list.AsQueryable().Where("@0.Method2(object(it))", methods);
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
         [Fact]
         public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast()
         {
-            //Arrange
+            // Arrange
             var list = new[] { 0, 1, 2, 3, 4 };
 
-            //Act
+            // Act
             var methods = new Methods();
             var expectedResult = list.Where(x => methods.Method2(x));
             var result = list.AsQueryable().Where("@0.Method2(it)", methods);
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
         [Fact]
         public void ExpressionTests_MethodCall_NullableValueTypeToObjectParameter()
         {
-            //Arrange
+            // Arrange
             var list = new int?[] { 0, 1, 2, 3, 4, null };
 
-            //Act
+            // Act
             var methods = new Methods();
             var expectedResult = list.Where(x => methods.Method2(x));
             var result = list.AsQueryable().Where("@0.Method2(it)", methods);
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
         [Fact]
         public void ExpressionTests_MethodCall_ReferenceTypeToObjectParameter()
         {
-            //Arrange
+            // Arrange
             var list = new[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
 
-            //Act
+            // Act
             var methods = new Methods();
             var expectedResult = list.Where(x => methods.Method3(x));
             var result = list.AsQueryable().Where("@0.Method3(it)", methods);
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult.Count(), result.Count());
         }
 
         [Fact]
         public void ExpressionTests_NewAnonymousType_Paren()
         {
-            //Arrange
+            // Arrange
             var users = User.GenerateSampleModels(1);
 
-            //Act
+            // Act
             var expectedResult = users.Select(x => new { x.Id, I = x.Income }).FirstOrDefault();
             var result = users.AsQueryable().Select("new (Id, Income as I)").FirstOrDefault();
 
-            //Assert
+            // Assert
             Check.That(result).Equals(expectedResult);
         }
 
         [Fact]
         public void ExpressionTests_NewAnonymousType_CurlyParen()
         {
-            //Arrange
+            // Arrange
             var users = User.GenerateSampleModels(1);
 
-            //Act
+            // Act
             var expectedResult = users.Select(x => new { x.Id, I = x.Income }).FirstOrDefault();
             var result = users.AsQueryable().Select("new { Id, Income as I }").FirstOrDefault();
 
-            //Assert
+            // Assert
             Check.That(result).Equals(expectedResult);
         }
 
@@ -1159,35 +1207,35 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Modulo_Number()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -10, 20 }.AsQueryable();
 
-            //Act
+            // Act
             var result = values.Select<int>("it % 3");
             var expected = values.Select(i => i % 3);
 
-            //Assert
+            // Assert
             Check.That(result).ContainsExactly(expected);
         }
 
         [Fact]
         public void ExpressionTests_Multiply_Number()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -1, 2 }.AsQueryable();
 
-            //Act
+            // Act
             var result = values.Select<int>("it * 10");
             var expected = values.Select(i => i * 10);
 
-            //Assert
+            // Assert
             Check.That(result).ContainsExactly(expected);
         }
 
         [Fact]
         public void ExpressionTests_NullCoalescing()
         {
-            //Arrange
+            // Arrange
             var testModels = User.GenerateSampleModels(3, true);
             testModels[0].NullableInt = null;
             testModels[1].NullableInt = null;
@@ -1197,13 +1245,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var expectedResult2 = testModels.AsQueryable().Where(u => (u.NullableInt ?? 10) == 10).ToArray();
             var expectedResult3 = testModels.Select(m => m.NullableInt ?? 10).ToArray();
 
-            //Act
+            // Act
             var result1 = testModels.AsQueryable().Select("new (UserName, NullableInt ?? (3 * Income) as X)");
             var result2 = testModels.AsQueryable().Where("(NullableInt ?? 10) == 10");
             var result3a = testModels.AsQueryable().Select("NullableInt ?? @0", 10);
             var result3b = testModels.AsQueryable().Select<int>("NullableInt ?? @0", 10);
 
-            //Assert
+            // Assert
             Assert.Equal(expectedResult1.ToString(), result1.ToDynamicArray().ToString());
             Assert.Equal(expectedResult2, result2.ToDynamicArray<User>());
             Assert.Equal(expectedResult3, result3a.ToDynamicArray<int>());
@@ -1224,7 +1272,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // (Profile != null ? (Profile.UserProfileDetails != null ? Profile.UserProfileDetails.Id : null) : null)
             var result = testModels.AsQueryable().Where(t);
 
-            //Assert
+            // Assert
             Check.That(result).IsNull();
         }
 
@@ -1266,20 +1314,20 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_OrderBy()
         {
-            //Arrange
+            // Arrange
             var qry = User.GenerateSampleModels(100).AsQueryable();
 
-            //Act
+            // Act
             var orderBy = qry.OrderBy("Id asc, Profile.Age desc");
 
-            //Assert
+            // Assert
             Check.That(qry.OrderBy(x => x.Id).ThenByDescending(x => x.Profile.Age).ToArray()).ContainsExactly(orderBy.ToArray());
         }
 
         //[Fact]
         public void ExpressionTests_Select_DynamicObjects()
         {
-            //Arrange
+            // Arrange
             dynamic a1 = new { Name = "a", BlogId = 100 };
             dynamic a2 = new { Name = "b", BlogId = 200 };
             var list = new List<dynamic> { a1, a2 };
@@ -1288,7 +1336,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var result1 = qry.Select("new (it as x)");
             var result = result1.Select("x.BlogId");
 
-            //Assert
+            // Assert
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
@@ -1339,18 +1387,18 @@ namespace System.Linq.Dynamic.Core.Tests
 
         private static void ExpressionTests_ShiftInternal<TItemType, TResult>()
         {
-            //Arrange
+            // Arrange
             var lst = new[] { 10, 20, 30 }.Select(item => (TItemType)Convert.ChangeType(item, typeof(TItemType)));
             var qry = lst.AsQueryable();
             int? nullableShift = 2;
 
-            //Act
+            // Act
             var result1 = qry.Select("it << 1");
             var result2 = qry.Select("it >> 1");
             var result3 = qry.Where("it << 2 = 80");
             var result4 = qry.Where("it << @0 = 80", nullableShift);
 
-            //Assert
+            // Assert
             Assert.Equal(new[] { 20, 40, 60 }.Select(item => Convert.ChangeType(item, typeof(TResult))).ToArray(), result1.Cast<object>().ToArray());
             Assert.Equal(new[] { 5, 10, 15 }.Select(item => Convert.ChangeType(item, typeof(TResult))).ToArray(), result2.Cast<object>().ToArray());
             Assert.Equal(Convert.ChangeType(20, typeof(TItemType)), result3.Single());
@@ -1360,19 +1408,19 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_SkipAndTake()
         {
-            //Arrange
+            // Arrange
             var samples = User.GenerateSampleModels(3);
             samples[0].Roles = null;
             samples[1].Roles = new List<Role> { new Role(), new Role() };
 
             var sampleQuery = samples.AsQueryable();
 
-            //Act
+            // Act
             var expectedResult = sampleQuery.Select(x => new { SecondRole = x.Roles != null ? x.Roles.Skip(1).Take(1) : null }).ToArray();
 
             var result = sampleQuery.Select("new ( iif(Roles != null, Roles.Skip(1).Take(1), null) as SecondRole )");
 
-            //Assert
+            // Assert
             var resultArray = result.ToDynamicArray();
             for (int i = 0; i < expectedResult.Count(); i++)
             {
@@ -1388,7 +1436,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_ImplicitCast()
         {
-            //Arrange
+            // Arrange
             Guid code1 = new Guid("651E08E3-85B1-42D1-80AF-68E28E2B7DA6");
             Guid code2 = new Guid("6451FEB2-3226-41D0-961C-B72B7B5A0157");
 
@@ -1396,14 +1444,14 @@ namespace System.Linq.Dynamic.Core.Tests
             samples[0].State = new UserState() { StatusCode = code1, Description = "alive" };
             samples[1].State = new UserState() { StatusCode = code2, Description = "deceased" };
 
-            //Act
+            // Act
             string queryString = "State == @0";
             IList<User> result = samples.AsQueryable().Where(queryString, code1).ToList();
 
             string queryString2 = "@0 == State";
             IList<User> result2 = samples.AsQueryable().Where(queryString2, code1).ToList();
 
-            //Assert
+            // Assert
             Assert.Equal(1, result.Count);
             Assert.Equal(code1, result[0].State.StatusCode);
             Assert.Equal("alive", result[0].State.Description);
@@ -1475,49 +1523,49 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Subtract_Number()
         {
-            //Arrange
+            // Arrange
             var values = new[] { -1, 2 }.AsQueryable();
 
-            //Act
+            // Act
             var result = values.Select<int>("it - 10");
             var expected = values.Select(i => i - 10);
 
-            //Assert
+            // Assert
             Check.That(result).ContainsExactly(expected);
         }
 
         [Fact]
         public void ExpressionTests_Sum()
         {
-            //Arrange
+            // Arrange
             int[] initValues = { 1, 2, 3, 4, 5 };
             var qry = initValues.AsQueryable().Select(x => new { strValue = "str", intValue = x }).GroupBy(x => x.strValue);
 
-            //Act
+            // Act
             var result = qry.Select("Sum(intValue)").AsEnumerable().ToArray()[0];
 
-            //Assert
+            // Assert
             Assert.Equal(15, result);
         }
 
         [Fact]
         public void ExpressionTests_Sum_LowerCase()
         {
-            //Arrange
+            // Arrange
             int[] initValues = { 1, 2, 3, 4, 5 };
             var qry = initValues.AsQueryable().Select(x => new { strValue = "str", intValue = x }).GroupBy(x => x.strValue);
 
-            //Act
+            // Act
             var result = qry.Select("sum(intValue)").AsEnumerable().ToArray()[0];
 
-            //Assert
+            // Assert
             Assert.Equal(15, result);
         }
 
         [Fact]
         public void ExpressionTests_Sum2()
         {
-            //Arrange
+            // Arrange
             var initValues = new[]
             {
                 new SimpleValuesModel { FloatValue = 1 },
@@ -1527,11 +1575,11 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var qry = initValues.AsQueryable();
 
-            //Act
+            // Act
             var result = qry.Select("FloatValue").Sum();
             var result2 = ((IQueryable<float>)qry.Select("FloatValue")).Sum();
 
-            //Assert
+            // Assert
             Assert.Equal(6.0f, result);
             Assert.Equal(6.0f, result2);
         }
@@ -1572,7 +1620,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Type_Integer_Qualifiers()
         {
-            //Arrange
+            // Arrange
             var valuesL = new[] { 1L, 2L, 3L }.AsQueryable();
             var resultValuesL = new[] { 2L, 3L }.AsQueryable();
 
@@ -1582,12 +1630,12 @@ namespace System.Linq.Dynamic.Core.Tests
             var valuesUL = new[] { 1UL, 2UL, 3UL }.AsQueryable();
             var resultValuesUL = new[] { 2UL, 3UL }.AsQueryable();
 
-            //Act
+            // Act
             var resultL = valuesL.Where("it in (2L, 3L)");
             var resultU = valuesU.Where("it in (2U, 3U)");
             var resultUL = valuesUL.Where("it in (2UL, 3UL)");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValuesL.ToArray(), resultL.ToArray());
             Assert.Equal(resultValuesU.ToArray(), resultU.ToArray());
             Assert.Equal(resultValuesUL.ToArray(), resultUL.ToArray());
@@ -1596,15 +1644,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Type_Integer_Qualifiers_Negative()
         {
-            //Arrange
+            // Arrange
             var valuesL = new[] { -1L, -2L, -3L }.AsQueryable();
             var resultValuesL = new[] { -2L, -3L }.AsQueryable();
 
-            //Act
+            // Act
             var resultL = valuesL.Where("it <= -2L");
             var resultIn = valuesL.Where("it in (-2L, -3L)");
 
-            //Assert
+            // Assert
             Assert.Equal(resultValuesL.ToArray(), resultL);
             Assert.Equal(resultValuesL.ToArray(), resultIn);
         }
@@ -1612,10 +1660,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Type_Integer_Qualifiers_Exceptions()
         {
-            //Arrange
+            // Arrange
             var values = new[] { 1L, 2L, 3L }.AsQueryable();
 
-            //Assert
+            // Assert
             Assert.Throws<ParseException>(() => values.Where("it in (2LL)"));
             Assert.Throws<ParseException>(() => values.Where("it in (2UU)"));
             Assert.Throws<ParseException>(() => values.Where("it in (2LU)"));
@@ -1631,7 +1679,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Uri()
         {
-            //Arrange
+            // Arrange
             var lst = new List<Uri>
             {
                 new Uri("http://127.0.0.1"),
@@ -1641,10 +1689,10 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var qry = lst.AsQueryable();
 
-            //Act
+            // Act
             var result1 = qry.AsQueryable().Where("it = @0", new Uri("http://127.0.0.1"));
 
-            //Assert
+            // Assert
             Assert.Equal(2, result1.Count());
         }
 
