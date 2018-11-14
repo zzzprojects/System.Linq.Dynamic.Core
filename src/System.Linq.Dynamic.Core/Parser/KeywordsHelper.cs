@@ -14,6 +14,7 @@ namespace System.Linq.Dynamic.Core.Parser
         public const string KEYWORD_IIF = "iif";
         public const string KEYWORD_NEW = "new";
         public const string KEYWORD_ISNULL = "isnull";
+        public const string KEYWORD_NULLPROPAGATION = "np";
 
         private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
         {
@@ -37,6 +38,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _keywords.Add(KEYWORD_IIF, KEYWORD_IIF);
             _keywords.Add(KEYWORD_NEW, KEYWORD_NEW);
             _keywords.Add(KEYWORD_ISNULL, KEYWORD_ISNULL);
+            _keywords.Add(KEYWORD_NULLPROPAGATION, KEYWORD_NULLPROPAGATION);
 
             foreach (Type type in PredefinedTypesHelper.PredefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
             {

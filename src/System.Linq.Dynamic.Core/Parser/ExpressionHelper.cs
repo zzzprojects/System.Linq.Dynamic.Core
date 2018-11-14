@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
@@ -233,6 +234,68 @@ namespace System.Linq.Dynamic.Core.Parser
                 _constantExpressionWrapper.Wrap(ref left);
                 _constantExpressionWrapper.Wrap(ref right);
             }
+        }
+
+        public Expression GenerateAndAlsoMemberExpression(Expression expression)
+        {
+            var memberExpresssions = GetAllMemberExpressions(expression);
+            if (!memberExpresssions.Any())
+            {
+                return null;
+            }
+
+            memberExpresssions.Reverse();
+
+            var binaryExpressions = new List<BinaryExpression>();
+            foreach (var memberExpresssion in memberExpresssions)
+            {
+                binaryExpressions.Add(Expression.NotEqual(memberExpresssion, Constants.NullLiteral));
+            }
+
+            var andAlsoExpression = binaryExpressions[0];
+            for (int i = 1; i < binaryExpressions.Count; i++)
+            {
+                andAlsoExpression = Expression.AndAlso(andAlsoExpression, binaryExpressions[i]);
+            }
+
+            return andAlsoExpression;
+        }
+
+        private static MemberExpression GetMemberExpression(Expression expression)
+        {
+            if (expression is MemberExpression)
+            {
+                return (MemberExpression)expression;
+            }
+            else if (expression is LambdaExpression lambdaExpression)
+            {
+                if (lambdaExpression.Body is MemberExpression memberExpression)
+                {
+                    return memberExpression;
+                }
+                else if (lambdaExpression.Body is UnaryExpression unaryExpression)
+                {
+                    return (MemberExpression)unaryExpression.Operand;
+                }
+            }
+            return null;
+        }
+
+        private static List<Expression> GetAllMemberExpressions(Expression expression)
+        {
+            var list = new List<Expression>();
+            var memberExpression = GetMemberExpression(expression);
+
+            while (memberExpression != null)
+            {
+                memberExpression = GetMemberExpression(memberExpression.Expression);
+                if (memberExpression != null)
+                {
+                    list.Add(memberExpression);
+                }
+            }
+
+            return list;
         }
     }
 }

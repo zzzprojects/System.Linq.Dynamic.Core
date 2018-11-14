@@ -49,6 +49,8 @@
         public const string NoMatchingConstructor = "No matching constructor in type '{0}'";
         public const string NoParentInScope = "No 'parent' is in scope";
         public const string NoRootInScope = "No 'root' is in scope";
+        public const string NullPropagationRequiresCorrectArgs = "The 'np' (null-propagation) function requires 1 or 2 arguments";
+        public const string NullPropagationRequiresMemberExpression = "The 'np' (null-propagation) function requires the first argument to be a MemberExpression";
         public const string OpenBracketExpected = "'[' expected";
         public const string OpenCurlyParenExpected = "'{' expected";
         public const string OpenParenExpected = "'(' expected";
