@@ -41,16 +41,16 @@ namespace System.Linq.Dynamic.Core.Parser.Tests
         }
 
         [Fact]
-        public void ExpressionHelper_GenerateAndAlsoMemberExpression()
+        public void ExpressionHelper_GenerateAndAlsoNotNullExpression()
         {
             // Assign
             Expression<Func<Item, int>> expression = (x) => x.Relation1.Relation2.Id;
 
             // Act
-            Expression result = _expressionHelper.GenerateAndAlsoMemberExpression(expression);
+            Expression result = _expressionHelper.GenerateAndAlsoNotNullExpression(expression);
 
             // Assert
-            Check.That(result.ToString()).IsEqualTo("((x.Relation1 != null) AndAlso (x.Relation1.Relation2 != null))");
+            Check.That(result.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
         }
 
         class Item

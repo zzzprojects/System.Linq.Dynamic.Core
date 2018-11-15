@@ -1261,11 +1261,12 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_NullPropagating_Null()
         {
             // Arrange
-            var testModels = User.GenerateSampleModels(1, true);
-            testModels[0].Profile = null;
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].Profile = null; // Set the Profile to null for first User
 
             // Act
-            var result = testModels.AsQueryable().Select(t => t.Profile != null && t.Profile.UserProfileDetails != null ? (long?)t.Profile.UserProfileDetails.Id : null).ToArray();
+            var result = testModels.AsQueryable().Select(t => t != null && t.Profile != null && t.Profile.UserProfileDetails != null ? (long?)t.Profile.UserProfileDetails.Id : null).ToArray();
             var resultDynamic = testModels.AsQueryable().Select("np(it.Profile.UserProfileDetails.Id)").ToDynamicArray<long?>();
 
             // Assert
@@ -1276,11 +1277,12 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_NullPropagating_Value()
         {
             // Arrange
-            var testModels = User.GenerateSampleModels(1, true);
-            testModels[0].Profile = null;
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].Profile = null; // Set the Profile to null for first User
 
             // Act
-            var result = testModels.AsQueryable().Select(t => t.Profile != null && t.Profile.UserProfileDetails != null ? t.Profile.UserProfileDetails.Id : 100).ToArray();
+            var result = testModels.AsQueryable().Select(t => t != null && t.Profile != null && t.Profile.UserProfileDetails != null ? t.Profile.UserProfileDetails.Id : 100).ToArray();
             var resultDynamic = testModels.AsQueryable().Select("np(it.Profile.UserProfileDetails.Id, 100)").ToDynamicArray<long>();
 
             // Assert

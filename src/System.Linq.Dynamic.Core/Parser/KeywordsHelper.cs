@@ -11,10 +11,11 @@ namespace System.Linq.Dynamic.Core.Parser
         public const string KEYWORD_IT = "it";
         public const string KEYWORD_PARENT = "parent";
         public const string KEYWORD_ROOT = "root";
-        public const string KEYWORD_IIF = "iif";
-        public const string KEYWORD_NEW = "new";
-        public const string KEYWORD_ISNULL = "isnull";
-        public const string KEYWORD_NULLPROPAGATION = "np";
+
+        public const string FUNCTION_IIF = "iif";
+        public const string FUNCTION_ISNULL = "isnull";
+        public const string FUNCTION_NEW = "new";
+        public const string FUNCTION_NULLPROPAGATION = "np";
 
         private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
         {
@@ -35,10 +36,11 @@ namespace System.Linq.Dynamic.Core.Parser
             _keywords.Add(SYMBOL_IT, SYMBOL_IT);
             _keywords.Add(SYMBOL_PARENT, SYMBOL_PARENT);
             _keywords.Add(SYMBOL_ROOT, SYMBOL_ROOT);
-            _keywords.Add(KEYWORD_IIF, KEYWORD_IIF);
-            _keywords.Add(KEYWORD_NEW, KEYWORD_NEW);
-            _keywords.Add(KEYWORD_ISNULL, KEYWORD_ISNULL);
-            _keywords.Add(KEYWORD_NULLPROPAGATION, KEYWORD_NULLPROPAGATION);
+
+            _keywords.Add(FUNCTION_IIF, FUNCTION_IIF);
+            _keywords.Add(FUNCTION_ISNULL, FUNCTION_ISNULL);
+            _keywords.Add(FUNCTION_NEW, FUNCTION_NEW);
+            _keywords.Add(FUNCTION_NULLPROPAGATION, FUNCTION_NULLPROPAGATION);
 
             foreach (Type type in PredefinedTypesHelper.PredefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
             {

@@ -236,24 +236,23 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public Expression GenerateAndAlsoMemberExpression(Expression expression)
+        public Expression GenerateAndAlsoNotNullExpression(Expression sourceExpression)
         {
-            var memberExpresssions = GetAllMemberExpressions(expression);
-            if (!memberExpresssions.Any())
+            var expresssions = CollectExpressions(sourceExpression);
+            if (!expresssions.Any())
             {
                 return null;
             }
 
-            memberExpresssions.Reverse();
+            // Reverse the list
+            expresssions.Reverse();
 
-            var binaryExpressions = new List<BinaryExpression>();
-            foreach (var memberExpresssion in memberExpresssions)
-            {
-                binaryExpressions.Add(Expression.NotEqual(memberExpresssion, Constants.NullLiteral));
-            }
+            // Convert all expressions into '!= null'
+            var binaryExpressions = expresssions.Select(expression => Expression.NotEqual(expression, Constants.NullLiteral)).ToArray();
 
+            // Convert all binary expressions into `AndAlso(...)`
             var andAlsoExpression = binaryExpressions[0];
-            for (int i = 1; i < binaryExpressions.Count; i++)
+            for (int i = 1; i < binaryExpressions.Length; i++)
             {
                 andAlsoExpression = Expression.AndAlso(andAlsoExpression, binaryExpressions[i]);
             }
@@ -261,38 +260,51 @@ namespace System.Linq.Dynamic.Core.Parser
             return andAlsoExpression;
         }
 
-        private static MemberExpression GetMemberExpression(Expression expression)
+        private static Expression GetMemberExpression(Expression expression)
         {
-            if (expression is MemberExpression)
+            if (expression is ParameterExpression parameterExpression)
             {
-                return (MemberExpression)expression;
+                return parameterExpression;
             }
-            else if (expression is LambdaExpression lambdaExpression)
+
+            if (expression is MemberExpression memberExpression)
             {
-                if (lambdaExpression.Body is MemberExpression memberExpression)
+                return memberExpression;
+            }
+
+            if (expression is LambdaExpression lambdaExpression)
+            {
+                if (lambdaExpression.Body is MemberExpression bodyAsMemberExpression)
                 {
-                    return memberExpression;
+                    return bodyAsMemberExpression;
                 }
-                else if (lambdaExpression.Body is UnaryExpression unaryExpression)
+
+                if (lambdaExpression.Body is UnaryExpression bodyAsunaryExpression)
                 {
-                    return (MemberExpression)unaryExpression.Operand;
+                    return bodyAsunaryExpression.Operand;
                 }
             }
+
             return null;
         }
 
-        private static List<Expression> GetAllMemberExpressions(Expression expression)
+        private static List<Expression> CollectExpressions(Expression sourceExpression)
         {
             var list = new List<Expression>();
-            var memberExpression = GetMemberExpression(expression);
+            Expression expression = GetMemberExpression(sourceExpression);
 
-            while (memberExpression != null)
+            while (expression is MemberExpression memberExpression)
             {
-                memberExpression = GetMemberExpression(memberExpression.Expression);
-                if (memberExpression != null)
+                expression = GetMemberExpression(memberExpression.Expression);
+                if (expression is MemberExpression)
                 {
-                    list.Add(memberExpression);
+                    list.Add(expression);
                 }
+            }
+
+            if (expression is ParameterExpression)
+            {
+                list.Add(expression);
             }
 
             return list;

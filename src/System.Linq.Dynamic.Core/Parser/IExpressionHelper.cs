@@ -28,6 +28,6 @@ namespace System.Linq.Dynamic.Core.Parser
 
         Expression OptimizeStringForEqualityIfPossible(string text, Type type);
 
-        Expression GenerateAndAlsoMemberExpression(Expression expression);
+        Expression GenerateAndAlsoNotNullExpression(Expression sourceExpression);
     }
 }

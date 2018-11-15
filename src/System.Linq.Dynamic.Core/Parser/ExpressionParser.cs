@@ -240,8 +240,8 @@ namespace System.Linq.Dynamic.Core.Parser
             return expr;
         }
 
-        // isnull(a,b) operator
-        Expression ParseIsNull()
+        // isnull(a,b) function
+        Expression ParseFunctionIsNull()
         {
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
@@ -947,7 +947,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value))
             {
-                var typeValue = value as Type;
+                Type typeValue = value as Type;
                 if (typeValue != null)
                 {
                     return ParseTypeAccess(typeValue);
@@ -956,13 +956,15 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (value == (object)KeywordsHelper.KEYWORD_IT) return ParseIt();
                 if (value == (object)KeywordsHelper.KEYWORD_PARENT) return ParseParent();
                 if (value == (object)KeywordsHelper.KEYWORD_ROOT) return ParseRoot();
+
                 if (value == (object)KeywordsHelper.SYMBOL_IT) return ParseIt();
                 if (value == (object)KeywordsHelper.SYMBOL_PARENT) return ParseParent();
                 if (value == (object)KeywordsHelper.SYMBOL_ROOT) return ParseRoot();
-                if (value == (object)KeywordsHelper.KEYWORD_IIF) return ParseIif();
-                if (value == (object)KeywordsHelper.KEYWORD_NEW) return ParseNew();
-                if (value == (object)KeywordsHelper.KEYWORD_ISNULL) return ParseIsNull();
-                if (value == (object)KeywordsHelper.KEYWORD_NULLPROPAGATION) return ParseNullPropagation();
+
+                if (value == (object)KeywordsHelper.FUNCTION_IIF) return ParseFunctionIif();
+                if (value == (object)KeywordsHelper.FUNCTION_ISNULL) return ParseFunctionIsNull();
+                if (value == (object)KeywordsHelper.FUNCTION_NEW) return ParseNew();
+                if (value == (object)KeywordsHelper.FUNCTION_NULLPROPAGATION) return ParseFunctionNullPropagation();
 
                 _textParser.NextToken();
 
@@ -1030,7 +1032,8 @@ namespace System.Linq.Dynamic.Core.Parser
             return _root;
         }
 
-        Expression ParseIif()
+        // iif(test, ifTrue, ifFalse) function
+        Expression ParseFunctionIif()
         {
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
@@ -1044,7 +1047,8 @@ namespace System.Linq.Dynamic.Core.Parser
             return GenerateConditional(args[0], args[1], args[2], errorPos);
         }
 
-        Expression ParseNullPropagation()
+        // np(...) function
+        Expression ParseFunctionNullPropagation()
         {
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
@@ -1058,7 +1062,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (args[0] is MemberExpression memberExpression)
             {
-                var expressionTest = _expressionHelper.GenerateAndAlsoMemberExpression(memberExpression);
+                var expressionTest = _expressionHelper.GenerateAndAlsoNotNullExpression(memberExpression);
                 var expressionIfTrue = memberExpression;
                 var expressionIfFalse = args.Length == 2 ? args[1] : Constants.NullLiteral;
 
@@ -1128,6 +1132,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return Expression.Condition(test, expr1, expr2);
         }
 
+        // new (...) function
         Expression ParseNew()
         {
             _textParser.NextToken();
@@ -1260,33 +1265,33 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (_parsingConfig != null && _parsingConfig.UseDynamicObjectClassForAnonymousTypes)
                 {
 #endif
-                type = typeof(DynamicClass);
-                Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
+                    type = typeof(DynamicClass);
+                    Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
 #if NET35 || NET40
                     ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetConstructors().First();
 #else
                 ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
 #endif
-                var arrayIndexParams = new List<Expression>();
-                for (int i = 0; i < expressions.Count; i++)
-                {
-                    // Just convert the expression always to an object expression.
-                    UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
-                    NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
+                    var arrayIndexParams = new List<Expression>();
+                    for (int i = 0; i < expressions.Count; i++)
+                    {
+                        // Just convert the expression always to an object expression.
+                        UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
+                        NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
 
-                    arrayIndexParams.Add(parameter);
-                }
+                        arrayIndexParams.Add(parameter);
+                    }
 
-                // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
-                NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
+                    // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
+                    NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
 
-                // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
+                    // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
 #if NET35 || NET40
                     ConstructorInfo constructor = type.GetConstructors().First();
 #else
                 ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
 #endif
-                return Expression.New(constructor, newArrayExpression);
+                    return Expression.New(constructor, newArrayExpression);
 #if !UAP10_0
                 }
 
