@@ -1531,9 +1531,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
             }
 #endif
-            if (!_parsingConfig.DisableMemberAccessToIndexAccesorDowncast)
+            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback)
             {
-                MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] {typeof(string)});
+                MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
                 if (indexerMethod != null)
                 {
                     return Expression.Call(instance, indexerMethod, Expression.Constant(id));

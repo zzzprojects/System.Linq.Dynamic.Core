@@ -72,14 +72,14 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Entities_Select_BrokenObject()
         {
             ParsingConfig config = ParsingConfig.Default;
-            config.DisableMemberAccessToIndexAccesorDowncast = false;
+            config.DisableMemberAccessToIndexAccessorFallback = false;
 
             // Silently creates something that will later fail on materialization
             var test = _context.Blogs.Select(config, "new(~.BlogId)");
             test = test.Select(config, "new(nonexistentproperty as howcanthiswork)");
 
             // Will fail when creating the expression
-            config.DisableMemberAccessToIndexAccesorDowncast = true;
+            config.DisableMemberAccessToIndexAccessorFallback = true;
             Assert.ThrowsAny<ParseException>(() =>
             {
                 test = test.Select(config, "new(nonexistentproperty as howcanthiswork)");
