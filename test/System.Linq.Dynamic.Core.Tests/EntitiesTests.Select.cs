@@ -59,7 +59,7 @@ namespace System.Linq.Dynamic.Core.Tests
             //Arrange
             PopulateTestData(5, 0);
 
-            var expected = _context.Blogs.Select(x => new {}).ToList(); ;
+            var expected = _context.Blogs.Select(x => new {}).ToList();
 
             //Act
             var test = _context.Blogs.GroupBy(config, "BlogId", "new()").Select<object>("new()").ToList();
