@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using MongoDB.Bson;
 #if EFCORE
@@ -65,6 +66,24 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
             Assert.Equal(expected.ToJson(), test.ToJson());
+        }
+
+        [Fact]
+        public void Entities_Select_BrokenObject()
+        {
+            ParsingConfig config = ParsingConfig.Default;
+            config.DisableMemberAccessToIndexAccesorDowncast = false;
+
+            // Silently creates something that will later fail on materialization
+            var test = _context.Blogs.Select(config, "new(~.BlogId)");
+            test = test.Select(config, "new(nonexistentproperty as howcanthiswork)");
+
+            // Will fail when creating the expression
+            config.DisableMemberAccessToIndexAccesorDowncast = true;
+            Assert.ThrowsAny<ParseException>(() =>
+            {
+                test = test.Select(config, "new(nonexistentproperty as howcanthiswork)");
+            });
         }
 
         [Fact]
