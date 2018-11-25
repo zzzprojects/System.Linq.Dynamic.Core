@@ -1,5 +1,7 @@
 ﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Dynamic.Core.Validation;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -66,6 +68,48 @@ namespace System.Linq.Dynamic.Core
                     _expressionPromoter = value;
                 }
             }
+        }
+
+        protected virtual bool IsProviderEnumerableQuery(IQueryProvider provider)
+        {
+            Type baseType = provider.GetType().GetTypeInfo().BaseType;
+#if NET35
+            bool isLinqToObjects = baseType.FullName.Contains("EnumerableQuery");
+#else
+            bool isLinqToObjects = baseType == typeof(EnumerableQuery);
+#endif
+            if (!isLinqToObjects)
+            {
+                // add support for https://github.com/StefH/QueryInterceptor.Core, version 1.0.1 and up
+                if (baseType.Name == "QueryTranslatorProvider")
+                {
+                    try
+                    {
+                        PropertyInfo property = baseType.GetProperty("OriginalProvider");
+                        IQueryProvider originalProvider = property.GetValue(provider, null) as IQueryProvider;
+                        return originalProvider != null && IsProviderEnumerableQuery(originalProvider);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return isLinqToObjects;
+        }
+
+        /// <summary>
+        /// Check if the Provider from IQueryable is a LinqToObjects provider.
+        /// </summary>
+        /// <param name="source">The IQueryable</param>
+        /// <returns>true if provider is LinqToObjects, else false</returns>
+        public virtual bool IsLinqToObjects(IQueryable source)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(source.Provider, nameof(source.Provider));
+
+            return IsProviderEnumerableQuery(source.Provider);
         }
 
         /// <summary>
