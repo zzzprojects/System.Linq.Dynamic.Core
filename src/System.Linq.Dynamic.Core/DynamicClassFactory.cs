@@ -264,7 +264,10 @@ namespace System.Linq.Dynamic.Core
                             ilgeneratorToString.Emit(OpCodes.Pop);
                         }
 
-                        if (createParameterCtor)
+                        // Only create the default and with params constructor when there are any params.
+                        // Otherwise default constructor is not needed because it matches the default
+                        // one provided by the runtime when no constructor is present
+                        if (createParameterCtor && names.Any())
                         {
                             // .ctor default
                             ConstructorBuilder constructorDef = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, EmptyTypes);

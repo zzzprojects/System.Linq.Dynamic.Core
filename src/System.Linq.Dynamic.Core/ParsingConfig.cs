@@ -103,5 +103,12 @@ namespace System.Linq.Dynamic.Core
         /// Renames the (Typed)ParameterExpression empty Name to a the correct supplied name from `it`. Default value is false.
         /// </summary>
         public bool RenameParameterExpression { get; set; } = false;
+
+        /// <summary>
+        /// By default when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor. Use
+        /// this flag to disable this behaviour and have parsing fail when parsing an expression
+        /// where a member access on a non existing member happens. Default value is false.
+        /// </summary>
+        public bool DisableMemberAccessToIndexAccessorFallback { get; set; } = false;
     }
 }
