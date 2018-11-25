@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
+using MongoDB.Bson;
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
 #else
@@ -46,6 +47,24 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
             Assert.Equal<ICollection>(expected, test);
+        }
+
+        [Fact]
+        public void Entities_Select_EmptyObject()
+        {
+            ParsingConfig config = ParsingConfig.Default;
+            config.EvaluateGroupByAtDatabase = true;
+
+            //Arrange
+            PopulateTestData(5, 0);
+
+            var expected = _context.Blogs.Select(x => new {}).ToList(); ;
+
+            //Act
+            var test = _context.Blogs.GroupBy(config, "BlogId", "new()").Select<object>("new()").ToList();
+
+            //Assert
+            Assert.Equal(expected.ToJson(), test.ToJson());
         }
 
         [Fact]
