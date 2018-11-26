@@ -1,7 +1,5 @@
 ﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Dynamic.Core.Validation;
-using System.Reflection;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -26,6 +24,8 @@ namespace System.Linq.Dynamic.Core
         private IDynamicLinkCustomTypeProvider _customTypeProvider;
 
         private IExpressionPromoter _expressionPromoter;
+
+        private IQueryableAnalyzer _queryableAnalyzer;
 
         /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
@@ -70,46 +70,23 @@ namespace System.Linq.Dynamic.Core
             }
         }
 
-        protected virtual bool IsProviderEnumerableQuery(IQueryProvider provider)
+        /// <summary>
+        /// Gets or sets the <see cref="IQueryableAnalyzer"/>.
+        /// </summary>
+        public IQueryableAnalyzer QueryableAnalyzer
         {
-            Type baseType = provider.GetType().GetTypeInfo().BaseType;
-#if NET35
-            bool isLinqToObjects = baseType.FullName.Contains("EnumerableQuery");
-#else
-            bool isLinqToObjects = baseType == typeof(EnumerableQuery);
-#endif
-            if (!isLinqToObjects)
+            get
             {
-                // add support for https://github.com/StefH/QueryInterceptor.Core, version 1.0.1 and up
-                if (baseType.Name == "QueryTranslatorProvider")
-                {
-                    try
-                    {
-                        PropertyInfo property = baseType.GetProperty("OriginalProvider");
-                        IQueryProvider originalProvider = property.GetValue(provider, null) as IQueryProvider;
-                        return originalProvider != null && IsProviderEnumerableQuery(originalProvider);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
+                return _queryableAnalyzer ?? (_queryableAnalyzer = new DefaultQueryableAnalyzer());
             }
 
-            return isLinqToObjects;
-        }
-
-        /// <summary>
-        /// Check if the Provider from IQueryable is a LinqToObjects provider.
-        /// </summary>
-        /// <param name="source">The IQueryable</param>
-        /// <returns>true if provider is LinqToObjects, else false</returns>
-        public virtual bool IsLinqToObjects(IQueryable source)
-        {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(source.Provider, nameof(source.Provider));
-
-            return IsProviderEnumerableQuery(source.Provider);
+            set
+            {
+                if (_queryableAnalyzer != value)
+                {
+                    _queryableAnalyzer = value;
+                }
+            }
         }
 
         /// <summary>
