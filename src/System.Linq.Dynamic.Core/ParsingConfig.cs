@@ -25,6 +25,8 @@ namespace System.Linq.Dynamic.Core
 
         private IExpressionPromoter _expressionPromoter;
 
+        private IQueryableAnalyzer _queryableAnalyzer;
+
         /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
         /// </summary>
@@ -64,6 +66,25 @@ namespace System.Linq.Dynamic.Core
                 if (_expressionPromoter != value)
                 {
                     _expressionPromoter = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="IQueryableAnalyzer"/>.
+        /// </summary>
+        public IQueryableAnalyzer QueryableAnalyzer
+        {
+            get
+            {
+                return _queryableAnalyzer ?? (_queryableAnalyzer = new DefaultQueryableAnalyzer());
+            }
+
+            set
+            {
+                if (_queryableAnalyzer != value)
+                {
+                    _queryableAnalyzer = value;
                 }
             }
         }
