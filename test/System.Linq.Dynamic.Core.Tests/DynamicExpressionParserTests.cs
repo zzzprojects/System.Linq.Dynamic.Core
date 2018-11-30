@@ -129,7 +129,9 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             dynamic constantExpression = ((MemberExpression)(expression.Body as BinaryExpression).Right).Expression as ConstantExpression;
             dynamic wrappedObj = constantExpression.Value;
-            string value = wrappedObj.Value;
+
+            var propertyInfo = wrappedObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
+            string value = propertyInfo.GetValue(wrappedObj) as string;
 
             Check.That(value).IsEqualTo("x");
         }
