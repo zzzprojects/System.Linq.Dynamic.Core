@@ -38,8 +38,9 @@ steps:
 
 # Build tests and run tests for net452 and netcoreapp2.1 (with coverage)
 - script: |
-    dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug --framework net452
-    dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug --framework netcoreapp2.1 --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    dotnet build ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug
+    dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --no-build --configuration Debug --framework net452
+    dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --no-build --configuration Debug --framework netcoreapp2.1 --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
   displayName: 'Build tests and run tests for net452 and netcoreapp2.1 (with coverage)'
 
 # End SonarScanner

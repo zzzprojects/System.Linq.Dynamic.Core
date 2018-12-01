@@ -5,8 +5,7 @@
         <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
         <DebugType>full</DebugType>
         <SignAssembly>True</SignAssembly>
-        <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
-        <DelaySign>False</DelaySign>
+        <AssemblyOriginatorKeyFile>../../src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <ProjectGuid>{912FBF24-3CAE-4A50-B5EA-E525B9FAEC80}</ProjectGuid>
     </PropertyGroup>
 
@@ -21,20 +20,19 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-        <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
         <PackageReference Include="OpenCover" Version="4.6.519" />
         <PackageReference Include="ReportGenerator" Version="4.0.0" />
-        <PackageReference Include="xunit.runner.console" Version="2.4.0">
+        <PackageReference Include="xunit.runner.console" Version="2.4.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0">
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-        <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.4" />
-        <PackageReference Include="QueryInterceptor.Core" Version="1.0.6" />
+        <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.5" />
+        <PackageReference Include="QueryInterceptor.Core" Version="1.0.7" />
         <PackageReference Include="xunit" Version="2.4.0" />
         <PackageReference Include="NFluent" Version="2.1.1" />
         <PackageReference Include="Moq" Version="4.10.0" />

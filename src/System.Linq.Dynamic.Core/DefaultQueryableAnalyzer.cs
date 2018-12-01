@@ -15,7 +15,8 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(query, nameof(query));
             provider = provider ?? query.Provider;
 
-            Type baseType = provider.GetType().GetTypeInfo().BaseType;
+            Type providerType = provider.GetType();
+            Type baseType = providerType.GetTypeInfo().BaseType;
 #if NET35
             bool isLinqToObjects = baseType.FullName.Contains("EnumerableQuery");
 #else
@@ -24,13 +25,18 @@ namespace System.Linq.Dynamic.Core
             if (!isLinqToObjects)
             {
                 // Support for https://github.com/StefH/QueryInterceptor.Core, version 1.0.1 and up
-                if (baseType.Name == "QueryTranslatorProvider")
+                if (providerType.Name.StartsWith("QueryTranslatorProvider"))
                 {
                     try
                     {
-                        PropertyInfo property = baseType.GetProperty("OriginalProvider");
-                        IQueryProvider originalProvider = property.GetValue(provider, null) as IQueryProvider;
-                        return originalProvider != null && SupportsLinqToObjects(query, originalProvider);
+                        PropertyInfo property = providerType.GetProperty("OriginalProvider");
+                        if (property != null)
+                        { 
+                            IQueryProvider originalProvider = property.GetValue(provider, null) as IQueryProvider;
+                            return originalProvider != null && SupportsLinqToObjects(query, originalProvider);
+                        }
+
+                        return SupportsLinqToObjects(query);
                     }
                     catch
                     {
@@ -39,7 +45,7 @@ namespace System.Linq.Dynamic.Core
                 }
 
                 // Support for https://github.com/scottksmith95/LINQKit ExpandableQuery
-                if (provider.GetType().GetTypeInfo().Name.StartsWith("ExpandableQuery"))
+                if (providerType.Name.StartsWith("ExpandableQuery"))
                 {
                     try
                     {
