@@ -20,8 +20,8 @@ namespace System.Linq.Dynamic.Core.Tests
             const string search = "a";
 
             //Arrange
-            var blog1 = new Blog { Name = "blog a", BlogId = 1000 };
-            var blog2 = new Blog { Name = "blog b", BlogId = 3000 };
+            var blog1 = new Blog { Name = "blog a", BlogId = 1000, Created = DateTime.Now };
+            var blog2 = new Blog { Name = "blog b", BlogId = 3000, Created = DateTime.Now };
             _context.Blogs.Add(blog1);
             _context.Blogs.Add(blog2);
             _context.SaveChanges();
