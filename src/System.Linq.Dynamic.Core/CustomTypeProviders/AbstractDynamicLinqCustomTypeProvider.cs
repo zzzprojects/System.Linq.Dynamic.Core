@@ -6,7 +6,7 @@ using System.Reflection;
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// The abstract DynamicLinqCustomTypeProvider which is used by the <see cref="DefaultDynamicLinqCustomTypeProvider"/> and can be used by a custom TypeProvider like in .NET Core.
+    /// The abstract DynamicLinqCustomTypeProvider which is used by the DefaultDynamicLinqCustomTypeProvider and can be used by a custom TypeProvider like in .NET Core.
     /// </summary>
     public abstract class AbstractDynamicLinqCustomTypeProvider
     {
@@ -19,15 +19,9 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         {
             Check.NotNull(assemblies, nameof(assemblies));
 #if !NET35
-            assemblies = assemblies.Where(x => !x.IsDynamic);
+            assemblies = assemblies.Where(a => !a.IsDynamic);
 #endif
-            var definedTypes = GetAssemblyTypes(assemblies);
-
-#if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
-            return definedTypes.Where(x => x.CustomAttributes.Any(y => y.AttributeType == typeof(DynamicLinqTypeAttribute))).Select(x => x.AsType());
-#else
-            return definedTypes.Where(x => x.GetCustomAttributes(typeof(DynamicLinqTypeAttribute), false).Any());
-#endif
+            return GetAssemblyTypesWithDynamicLinqTypeAttribute(assemblies);
         }
 
         /// <summary>
@@ -55,21 +49,21 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 
 #if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
         /// <summary>
-        /// Gets the assembly types in an Exception friendly way.
+        /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
         /// <returns><see cref="IEnumerable{Type}" /></returns>
-        protected IEnumerable<TypeInfo> GetAssemblyTypes([NotNull] IEnumerable<Assembly> assemblies)
+        protected IEnumerable<Type> GetAssemblyTypesWithDynamicLinqTypeAttribute([NotNull] IEnumerable<Assembly> assemblies)
         {
             Check.NotNull(assemblies, nameof(assemblies));
 
             foreach (var assembly in assemblies)
             {
-                IEnumerable<TypeInfo> definedTypes = null;
+                IEnumerable<Type> definedTypes = null;
 
                 try
                 {
-                    definedTypes = assembly.DefinedTypes;
+                    definedTypes = assembly.ExportedTypes.Where(t => t.GetTypeInfo().IsDefined(typeof(DynamicLinqTypeAttribute), false));
                 }
                 catch
                 {
@@ -87,21 +81,21 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         }
 #else                
         /// <summary>
-        /// Gets the assembly types in an Exception friendly way.
+        /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
         /// <returns><see cref="IEnumerable{Type}" /></returns>
-        protected IEnumerable<Type> GetAssemblyTypes([NotNull] IEnumerable<Assembly> assemblies)
+        protected IEnumerable<Type> GetAssemblyTypesWithDynamicLinqTypeAttribute([NotNull] IEnumerable<Assembly> assemblies)
         {
             Check.NotNull(assemblies, nameof(assemblies));
 
-            foreach (var assembly in assemblies)
+            foreach (var assembly in assemblies.Where(a => !a.GlobalAssemblyCache)) // Skip System DLL's
             {
                 IEnumerable<Type> definedTypes = null;
 
                 try
                 {
-                    definedTypes = assembly.GetTypes();
+                    definedTypes = assembly.GetExportedTypes().Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false));
                 }
                 catch
                 {

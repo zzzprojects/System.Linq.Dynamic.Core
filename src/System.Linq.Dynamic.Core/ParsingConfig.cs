@@ -35,7 +35,7 @@ namespace System.Linq.Dynamic.Core
             get
             {
 #if !(DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
-                // only use DefaultDynamicLinqCustomTypeProvider if not WINDOWS_APP || UAP10_0 || NETSTANDARD
+                // only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework
                 return _customTypeProvider ?? (_customTypeProvider = new DefaultDynamicLinqCustomTypeProvider());
 #else
                 return _customTypeProvider;
