@@ -8,7 +8,7 @@ namespace ConsoleAppPerformanceTest236
     {
         public static void DoIt()
         {
-            var q = User.GenerateSampleModels(0).AsQueryable();
+            var q = User.GenerateSampleModels(10000).AsQueryable();
 
             int count = 1000;
             for (int i = 0; i <= count; i++)
