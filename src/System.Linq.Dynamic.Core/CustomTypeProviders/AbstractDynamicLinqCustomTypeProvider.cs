@@ -1,12 +1,12 @@
 ﻿using JetBrains.Annotations;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq.Dynamic.Core.Validation;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// The abstract DynamicLinqCustomTypeProvider which is used by the <see cref="IDynamicLinkCustomTypeProvider"/> and can be used by a custom TypeProvider like in .NET Core.
+    /// The abstract DynamicLinqCustomTypeProvider which is used by the <see cref="DefaultDynamicLinqCustomTypeProvider"/> and can be used by a custom TypeProvider like in .NET Core.
     /// </summary>
     public abstract class AbstractDynamicLinqCustomTypeProvider
     {
@@ -14,7 +14,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// Finds the types marked with DynamicLinqTypeAttribute.
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
-        /// <returns>IEnumerable{Type}</returns>
+        /// <returns><see cref="IEnumerable{Type}" /></returns>
         protected IEnumerable<Type> FindTypesMarkedWithDynamicLinqTypeAttribute([NotNull] IEnumerable<Assembly> assemblies)
         {
             Check.NotNull(assemblies, nameof(assemblies));
@@ -58,7 +58,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// Gets the assembly types in an Exception friendly way.
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
-        /// <returns>IEnumerable{Type}</returns>
+        /// <returns><see cref="IEnumerable{Type}" /></returns>
         protected IEnumerable<TypeInfo> GetAssemblyTypes([NotNull] IEnumerable<Assembly> assemblies)
         {
             Check.NotNull(assemblies, nameof(assemblies));
@@ -90,7 +90,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// Gets the assembly types in an Exception friendly way.
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
-        /// <returns>IEnumerable{Type}</returns>
+        /// <returns><see cref="IEnumerable{Type}" /></returns>
         protected IEnumerable<Type> GetAssemblyTypes([NotNull] IEnumerable<Assembly> assemblies)
         {
             Check.NotNull(assemblies, nameof(assemblies));

@@ -6,7 +6,8 @@ using System.Reflection;
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// The default <see cref="IDynamicLinkCustomTypeProvider"/>.
+    /// The default implementation for <see cref="IDynamicLinkCustomTypeProvider"/>.
+    /// 
     /// Scans the current AppDomain for all types marked with <see cref="DynamicLinqTypeAttribute"/>, and adds them as custom Dynamic Link types.
     ///
     /// Also provides functionality to resolve a Type in the current Application Domain.
