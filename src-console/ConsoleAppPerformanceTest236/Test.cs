@@ -10,10 +10,10 @@ namespace ConsoleAppPerformanceTest236
         {
             var q = User.GenerateSampleModels(10000).AsQueryable();
 
-            int count = 1000;
+            int count = 100;
             for (int i = 0; i <= count; i++)
             {
-                if (i % 100 == 0)
+                if (i % 10 == 0)
                 {
                     Console.WriteLine(i);
                 }

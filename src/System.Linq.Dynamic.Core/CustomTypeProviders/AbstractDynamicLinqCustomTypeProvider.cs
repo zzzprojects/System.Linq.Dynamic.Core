@@ -11,7 +11,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
     public abstract class AbstractDynamicLinqCustomTypeProvider
     {
         /// <summary>
-        /// Finds the types marked with DynamicLinqTypeAttribute.
+        /// Finds the unique types marked with DynamicLinqTypeAttribute.
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
         /// <returns><see cref="IEnumerable{Type}" /></returns>
@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 #if !NET35
             assemblies = assemblies.Where(a => !a.IsDynamic);
 #endif
-            return GetAssemblyTypesWithDynamicLinqTypeAttribute(assemblies);
+            return GetAssemblyTypesWithDynamicLinqTypeAttribute(assemblies).Distinct().ToArray();
         }
 
         /// <summary>
@@ -59,18 +59,18 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 
             foreach (var assembly in assemblies)
             {
-                IEnumerable<Type> definedTypes = null;
+                Type[] definedTypes = null;
 
                 try
                 {
-                    definedTypes = assembly.ExportedTypes.Where(t => t.GetTypeInfo().IsDefined(typeof(DynamicLinqTypeAttribute), false));
+                    definedTypes = assembly.ExportedTypes.Where(t => t.GetTypeInfo().IsDefined(typeof(DynamicLinqTypeAttribute), false)).ToArray();
                 }
-                catch
+                catch (ReflectionTypeLoadException reflectionTypeLoadException)
                 {
-                    // Ignore error
+                    definedTypes = reflectionTypeLoadException.Types;
                 }
 
-                if (definedTypes != null)
+                if (definedTypes != null && definedTypes.Length > 0)
                 {
                     foreach (var definedType in definedTypes)
                     {
@@ -91,18 +91,18 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 
             foreach (var assembly in assemblies.Where(a => !a.GlobalAssemblyCache)) // Skip System DLL's
             {
-                IEnumerable<Type> definedTypes = null;
+                Type[] definedTypes = null;
 
                 try
                 {
-                    definedTypes = assembly.GetExportedTypes().Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false));
+                    definedTypes = assembly.GetExportedTypes().Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false)).ToArray();
                 }
-                catch
+                catch (ReflectionTypeLoadException reflectionTypeLoadException)
                 {
-                    // Ignore error
+                    definedTypes = reflectionTypeLoadException.Types;
                 }
 
-                if (definedTypes != null)
+                if (definedTypes != null && definedTypes.Length > 0)
                 {
                     foreach (var definedType in definedTypes)
                     {
