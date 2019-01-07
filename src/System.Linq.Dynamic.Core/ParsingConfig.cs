@@ -28,11 +28,6 @@ namespace System.Linq.Dynamic.Core
         private IQueryableAnalyzer _queryableAnalyzer;
 
         /// <summary>
-        /// Renames the (Typed)ParameterExpression empty Name to a the correct supplied name from `it`. Default value is false.
-        /// </summary>
-        public bool CacheCustomTypeProvider { get; set; } = false;
-
-        /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
         /// </summary>
         public IDynamicLinkCustomTypeProvider CustomTypeProvider
