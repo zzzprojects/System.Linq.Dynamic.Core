@@ -1564,7 +1564,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _keywordsHelper.TryGetValue(name, out object type);
 
-            var result = type as Type;
+            Type result = type as Type;
             if (result != null)
             {
                 return result;
@@ -1584,6 +1584,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return _root.Type;
             }
+
             if (_it != null && _it.Type.Namespace + "." + _it.Type.Name == name)
             {
                 return _it.Type;
