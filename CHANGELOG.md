@@ -1,4 +1,4 @@
-# 1.0.9.1 (06 November 2018)
+# 1.0.9.1 (07 January 2019)
 - [#210](https://github.com/StefH/System.Linq.Dynamic.Core/pull/210) - Set up CI with Azure Pipelines contributed by [azure-pipelines[bot]](https://github.com/apps/azure-pipelines)
 - [#211](https://github.com/StefH/System.Linq.Dynamic.Core/pull/211) - ParameterExpressionRenamer contributed by [StefH](https://github.com/StefH)
 - [#212](https://github.com/StefH/System.Linq.Dynamic.Core/pull/212) - Make ExpressionPromoter plugable contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
@@ -7,12 +7,30 @@
 - [#216](https://github.com/StefH/System.Linq.Dynamic.Core/pull/216) - Add sourcelink contributed by [StefH](https://github.com/StefH)
 - [#217](https://github.com/StefH/System.Linq.Dynamic.Core/pull/217) - Use GitHubReleaseNotes contributed by [StefH](https://github.com/StefH)
 - [#218](https://github.com/StefH/System.Linq.Dynamic.Core/pull/218) - Codecov integration contributed by [StefH](https://github.com/StefH)
+- [#221](https://github.com/StefH/System.Linq.Dynamic.Core/pull/221) - Add docs folder for hosting documentation pages on github. contributed by [StefH](https://github.com/StefH)
+- [#222](https://github.com/StefH/System.Linq.Dynamic.Core/pull/222) - GenerateConditional will cast to nullable valuetype if needed contributed by [StefH](https://github.com/StefH)
+- [#228](https://github.com/StefH/System.Linq.Dynamic.Core/pull/228) - Issue215 contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
+- [#229](https://github.com/StefH/System.Linq.Dynamic.Core/pull/229) - Override is linq to objects contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
+- [#231](https://github.com/StefH/System.Linq.Dynamic.Core/pull/231) - Make ParsingConfig mandatory contributed by [StefH](https://github.com/StefH)
+- [#237](https://github.com/StefH/System.Linq.Dynamic.Core/pull/237) - Performance Fix contributed by [StefH](https://github.com/StefH)
 - [#71](https://github.com/StefH/System.Linq.Dynamic.Core/issues/71) - Issue: Increase code-coverage
 - [#119](https://github.com/StefH/System.Linq.Dynamic.Core/issues/119) - Feature: How to keep parameter input name of query
+- [#144](https://github.com/StefH/System.Linq.Dynamic.Core/issues/144) - Question: Static / Constant properties and Enums not supported as parameters in method calls
+- [#145](https://github.com/StefH/System.Linq.Dynamic.Core/issues/145) - Question : Performance and 'System.IO.FileNotFoundException' in System.Private.CoreLib.dll
+- [#152](https://github.com/StefH/System.Linq.Dynamic.Core/issues/152) - Multiple assemblies with equivalent identity have been imported
+- [#174](https://github.com/StefH/System.Linq.Dynamic.Core/issues/174) - Including more methods from System.Math?
 - [#179](https://github.com/StefH/System.Linq.Dynamic.Core/issues/179) - Feature: Implement SourceLink
+- [#183](https://github.com/StefH/System.Linq.Dynamic.Core/issues/183) - Question: Issue with DateTime Field
 - [#184](https://github.com/StefH/System.Linq.Dynamic.Core/issues/184) - Feature: Generate Parameterized SQL
 - [#204](https://github.com/StefH/System.Linq.Dynamic.Core/issues/204) - Cannot GroupJoin when source is Linq-To-Entities
 - [#209](https://github.com/StefH/System.Linq.Dynamic.Core/issues/209) - Feature: use Azure Pipelines for building
+- [#215](https://github.com/StefH/System.Linq.Dynamic.Core/issues/215) - Issue: DynamicClassFactory fails to create dynamic type without properties
+- [#219](https://github.com/StefH/System.Linq.Dynamic.Core/issues/219) - ParsingConfig.DefaultEFCore21 doesn't group on database
+- [#220](https://github.com/StefH/System.Linq.Dynamic.Core/issues/220) - Update wiki about  Null-coalescing operator
+- [#227](https://github.com/StefH/System.Linq.Dynamic.Core/issues/227) - Question: Is it possible to pass CustomAttribute to property using new(...) syntax? 
+- [#232](https://github.com/StefH/System.Linq.Dynamic.Core/issues/232) - Extensionpoint for changing identifier token text
+- [#234](https://github.com/StefH/System.Linq.Dynamic.Core/issues/234) - Does this support Json data
+- [#236](https://github.com/StefH/System.Linq.Dynamic.Core/issues/236) - Massive performance hit when upgrading from 1.0.8.18 to 1.0.9
 
 # 1.0.9.0 (19 October 2018)
 - [#208](https://github.com/StefH/System.Linq.Dynamic.Core/pull/208) - Fix New() support for Type + Fix GroupJoin() not working when using Linq-To-Entities (2) contributed by [StefH](https://github.com/StefH)

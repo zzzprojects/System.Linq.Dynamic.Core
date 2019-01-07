@@ -25,6 +25,8 @@ namespace System.Linq.Dynamic.Core
 
         private IExpressionPromoter _expressionPromoter;
 
+        private IQueryableAnalyzer _queryableAnalyzer;
+
         /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
         /// </summary>
@@ -33,7 +35,7 @@ namespace System.Linq.Dynamic.Core
             get
             {
 #if !(DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
-                // only use DefaultDynamicLinqCustomTypeProvider if not WINDOWS_APP || UAP10_0 || NETSTANDARD
+                // only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework
                 return _customTypeProvider ?? (_customTypeProvider = new DefaultDynamicLinqCustomTypeProvider());
 #else
                 return _customTypeProvider;
@@ -64,6 +66,25 @@ namespace System.Linq.Dynamic.Core
                 if (_expressionPromoter != value)
                 {
                     _expressionPromoter = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="IQueryableAnalyzer"/>.
+        /// </summary>
+        public IQueryableAnalyzer QueryableAnalyzer
+        {
+            get
+            {
+                return _queryableAnalyzer ?? (_queryableAnalyzer = new DefaultQueryableAnalyzer());
+            }
+
+            set
+            {
+                if (_queryableAnalyzer != value)
+                {
+                    _queryableAnalyzer = value;
                 }
             }
         }
@@ -103,5 +124,12 @@ namespace System.Linq.Dynamic.Core
         /// Renames the (Typed)ParameterExpression empty Name to a the correct supplied name from `it`. Default value is false.
         /// </summary>
         public bool RenameParameterExpression { get; set; } = false;
+
+        /// <summary>
+        /// By default when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor. Use
+        /// this flag to disable this behaviour and have parsing fail when parsing an expression
+        /// where a member access on a non existing member happens. Default value is false.
+        /// </summary>
+        public bool DisableMemberAccessToIndexAccessorFallback { get; set; } = false;
     }
 }

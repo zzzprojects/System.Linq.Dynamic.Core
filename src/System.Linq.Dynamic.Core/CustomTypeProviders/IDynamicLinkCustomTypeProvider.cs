@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
@@ -11,7 +11,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// <summary>
         /// Returns a list of custom types that System.Linq.Dynamic.Core will understand.
         /// </summary>
-        /// <returns>A <see cref="HashSet&lt;Type&gt;" /> list of custom types.</returns>
+        /// <returns>A <see cref="HashSet{Type}" /> list of custom types.</returns>
         HashSet<Type> GetCustomTypes();
 
         /// <summary>

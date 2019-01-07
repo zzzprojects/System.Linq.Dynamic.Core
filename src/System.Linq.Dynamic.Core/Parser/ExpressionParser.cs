@@ -1545,11 +1545,13 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
             }
 #endif
-
-            MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
-            if (indexerMethod != null)
+            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback)
             {
-                return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+                MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
+                if (indexerMethod != null)
+                {
+                    return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+                }
             }
 
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
@@ -1576,7 +1578,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _keywordsHelper.TryGetValue(name, out object type);
 
-            var result = type as Type;
+            Type result = type as Type;
             if (result != null)
             {
                 return result;
@@ -1596,6 +1598,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return _root.Type;
             }
+
             if (_it != null && _it.Type.Namespace + "." + _it.Type.Name == name)
             {
                 return _it.Type;

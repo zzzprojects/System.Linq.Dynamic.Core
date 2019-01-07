@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
+using Newtonsoft.Json;
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
 #else
@@ -14,9 +16,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Entities_Select_SingleColumn_NullCoalescing()
         {
-            //Arrange
-            var blog1 = new Blog { BlogId = 1000, Name = "Blog1", NullableInt = null };
-            var blog2 = new Blog { BlogId = 2000, Name = "Blog2", NullableInt = 5 };
+            //A rrange
+            var blog1 = new Blog { BlogId = 1000, Name = "Blog1", Created = DateTime.Now, NullableInt = null };
+            var blog2 = new Blog { BlogId = 2000, Name = "Blog2", Created = DateTime.Now, NullableInt = 5 };
             _context.Blogs.Add(blog1);
             _context.Blogs.Add(blog2);
             _context.SaveChanges();
@@ -24,11 +26,11 @@ namespace System.Linq.Dynamic.Core.Tests
             var expected1 = _context.Blogs.Select(x => (int?)(x.NullableInt ?? 10)).ToArray();
             var expected2 = _context.Blogs.Select(x => (int?)(x.NullableInt ?? 9 + x.BlogId)).ToArray();
 
-            //Act
+            // Act
             var test1 = _context.Blogs.Select<int?>("NullableInt ?? 10").ToArray();
             var test2 = _context.Blogs.Select<int?>("NullableInt ?? 9 + BlogId").ToArray();
 
-            //Assert
+            // Assert
             Assert.Equal(expected1, test1);
             Assert.Equal(expected2, test2);
         }
@@ -46,6 +48,42 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Assert
             Assert.Equal<ICollection>(expected, test);
+        }
+
+        [Fact]
+        public void Entities_Select_EmptyObject()
+        {
+            ParsingConfig config = ParsingConfig.Default;
+            config.EvaluateGroupByAtDatabase = true;
+
+            // Arrange
+            PopulateTestData(5, 0);
+
+            var expected = _context.Blogs.Select(x => new {}).ToList();
+
+            // Act
+            var test = _context.Blogs.GroupBy(config, "BlogId", "new()").Select<object>("new()").ToList();
+
+            // Assert
+            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(test));
+        }
+
+        [Fact]
+        public void Entities_Select_BrokenObject()
+        {
+            ParsingConfig config = ParsingConfig.Default;
+            config.DisableMemberAccessToIndexAccessorFallback = false;
+
+            // Silently creates something that will later fail on materialization
+            var test = _context.Blogs.Select(config, "new(~.BlogId)");
+            test = test.Select(config, "new(nonexistentproperty as howcanthiswork)");
+
+            // Will fail when creating the expression
+            config.DisableMemberAccessToIndexAccessorFallback = true;
+            Assert.ThrowsAny<ParseException>(() =>
+            {
+                test = test.Select(config, "new(nonexistentproperty as howcanthiswork)");
+            });
         }
 
         [Fact]
