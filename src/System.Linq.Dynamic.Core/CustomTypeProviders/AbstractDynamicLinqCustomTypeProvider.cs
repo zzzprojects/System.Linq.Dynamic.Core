@@ -35,7 +35,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             Check.NotNull(assemblies, nameof(assemblies));
             Check.NotEmpty(typeName, nameof(typeName));
 
-            foreach (Assembly assembly in assemblies)
+            foreach (var assembly in assemblies)
             {
                 Type resolvedType = assembly.GetType(typeName, false, true);
                 if (resolvedType != null)
