@@ -69,6 +69,10 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
                 {
                     definedTypes = reflectionTypeLoadException.Types;
                 }
+                catch
+                {
+                    // Ignore all other exceptions
+                }
 
                 if (definedTypes != null && definedTypes.Length > 0)
                 {
@@ -95,11 +99,16 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 
                 try
                 {
-                    definedTypes = assembly.GetExportedTypes().Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false)).ToArray();
+                    definedTypes = assembly.GetExportedTypes()
+                        .Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false)).ToArray();
                 }
                 catch (ReflectionTypeLoadException reflectionTypeLoadException)
                 {
                     definedTypes = reflectionTypeLoadException.Types;
+                }
+                catch
+                {
+                    // Ignore all other exceptions
                 }
 
                 if (definedTypes != null && definedTypes.Length > 0)
