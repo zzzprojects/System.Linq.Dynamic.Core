@@ -576,6 +576,91 @@ namespace EntityFramework.DynamicLinq
         }
         #endregion LastOrDefault
 
+        #region SingleOrDefaultAsync
+        private static readonly MethodInfo _singleOrDefault = GetMethod(nameof(Queryable.SingleOrDefault));
+
+        /// <summary>
+        ///     Asynchronously returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists.
+        ///     This method throws an exception if more than one element satisfies the condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to return the single element of.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation. The task result contains the single element of the input sequence that satisfies the condition in predicate.
+        /// </returns>
+        [PublicAPI]
+        public static Task<dynamic> SingleOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            return ExecuteAsync<dynamic>(_singleOrDefault, source, cancellationToken);
+        }
+
+        private static readonly MethodInfo _singleOrDefaultPredicate = GetMethod(nameof(Queryable.SingleOrDefault), 1);
+
+        /// <summary>
+        ///     Asynchronously returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists.
+        ///     This method throws an exception if more than one element satisfies the condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to return the single element of.
+        /// </param>
+        /// <param name="predicate"> A function to test each element for a condition. </param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation. The task result contains the single element of the input sequence that satisfies the condition in <paramref name="predicate" />, or default if no such element is found.
+        /// </returns>
+        [PublicAPI]
+        public static Task<dynamic> SingleOrDefaultAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return SingleOrDefaultAsync(source, default(CancellationToken), predicate, args);
+        }
+
+        /// <summary>
+        ///     Asynchronously returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists.
+        ///     This method throws an exception if more than one element satisfies the condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to return the single element of.
+        /// </param>
+        /// <param name="predicate"> A function to test each element for a condition. </param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation. The task result contains the single element of the input sequence that satisfies the condition in <paramref name="predicate" />, or default if no such element is found.
+        /// </returns>
+        [PublicAPI]
+        public static Task<dynamic> SingleOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(predicate, nameof(predicate));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, predicate, args);
+
+            return ExecuteAsync<dynamic>(_singleOrDefaultPredicate, source, Expression.Quote(lambda), cancellationToken);
+        }
+        #endregion SingleOrDefault
+
         #region Private Helpers
         // Copied from https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
         //private static Task<dynamic> ExecuteAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
