@@ -1,11 +1,11 @@
-﻿using System;
+﻿using ConsoleAppEF2.Database;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
-using ConsoleAppEF2.Database;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace ConsoleAppEF2
 {
@@ -82,6 +82,18 @@ namespace ConsoleAppEF2
             context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "no", Year = "1979", DateLastModified = dateLastModified.AddDays(2) });
             context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979", DateLastModified = dateLastModified.AddDays(3) });
             context.SaveChanges();
+
+            var carSingleOrDefault = context.Cars.SingleOrDefault(config, "Brand = \"Ford\"");
+            Console.WriteLine("carSingleOrDefault {0}", JsonConvert.SerializeObject(carSingleOrDefault, Formatting.Indented));
+
+            try
+            {
+                context.Cars.SingleOrDefault(config, "Brand = \"Alfa\"");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Excepted : " + e);
+            }
 
             var carDateLastModified = context.Cars.Where(config, "DateLastModified > \"2018-01-16\"");
             Console.WriteLine("carDateLastModified {0}", JsonConvert.SerializeObject(carDateLastModified, Formatting.Indented));

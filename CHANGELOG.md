@@ -1,3 +1,7 @@
+# 1.0.9.2 (10 January 2019)
+- [#239](https://github.com/StefH/System.Linq.Dynamic.Core/pull/239) - SingleOrDefaultAsync contributed by [StefH](https://github.com/StefH)
+- [#238](https://github.com/StefH/System.Linq.Dynamic.Core/issues/238) - Missing SingleOrDefaultAsync for EntityFrameworkCore
+
 # 1.0.9.1 (07 January 2019)
 - [#210](https://github.com/StefH/System.Linq.Dynamic.Core/pull/210) - Set up CI with Azure Pipelines contributed by [azure-pipelines[bot]](https://github.com/apps/azure-pipelines)
 - [#211](https://github.com/StefH/System.Linq.Dynamic.Core/pull/211) - ParameterExpressionRenamer contributed by [StefH](https://github.com/StefH)
