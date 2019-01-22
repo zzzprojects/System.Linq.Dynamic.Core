@@ -83,6 +83,9 @@ namespace ConsoleAppEF2
             context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979", DateLastModified = dateLastModified.AddDays(3) });
             context.SaveChanges();
 
+            var methodTest = context.Cars.Select("it.X(true, \"tst\").Contains(\"Blue\")");
+            Console.WriteLine("methodTest {0}", JsonConvert.SerializeObject(methodTest, Formatting.Indented));
+
             var carSingleOrDefault = context.Cars.SingleOrDefault(config, "Brand = \"Ford\"");
             Console.WriteLine("carSingleOrDefault {0}", JsonConvert.SerializeObject(carSingleOrDefault, Formatting.Indented));
 
