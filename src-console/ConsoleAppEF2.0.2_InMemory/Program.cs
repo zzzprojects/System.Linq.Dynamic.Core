@@ -11,6 +11,16 @@ namespace ConsoleAppEF2
 {
     class Program
     {
+        class User
+        {
+            public string Name { get; set; }
+
+            public string GetDisplayName(bool a, bool b, bool c)
+            {
+                return Name + "GetDisplayName";
+            }
+        }
+
         class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
             public HashSet<Type> GetCustomTypes()
@@ -68,6 +78,15 @@ namespace ConsoleAppEF2
                 test3 = new List<object> { 7, 8, 9 }.ToDynamicList(typeof(int))
             };
             Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
+
+            var projects = new[]
+            {
+                new { UserShares = new [] { new User { Name  = "John" } } }
+            }.AsQueryable();
+
+            var filter = "UserShares.Any(GetDisplayName(true,true,false).Contains(\"John\"))";
+            var filtered = projects.Where(filter);
+            Console.WriteLine("filtered {0}", JsonConvert.SerializeObject(filtered, Formatting.Indented));
 
             var config = new ParsingConfig
             {
