@@ -1,3 +1,9 @@
+# 1.0.10.0 (05 February 2019)
+- [#223](https://github.com/StefH/System.Linq.Dynamic.Core/pull/223) - Add 'np(...)' Null Propagating function contributed by [StefH](https://github.com/StefH)
+- [#98](https://github.com/StefH/System.Linq.Dynamic.Core/issues/98) - Feature: Add the &quot;?.&quot; operator (null-conditional operator) to support navigation properties with null values
+- [#182](https://github.com/StefH/System.Linq.Dynamic.Core/issues/182) - Error when navigation property which named &quot;Parent&quot;
+- [#243](https://github.com/StefH/System.Linq.Dynamic.Core/issues/243) - EF Core 2.2 - cannot use Where operator
+
 # 1.0.9.2 (10 January 2019)
 - [#239](https://github.com/StefH/System.Linq.Dynamic.Core/pull/239) - SingleOrDefaultAsync contributed by [StefH](https://github.com/StefH)
 - [#238](https://github.com/StefH/System.Linq.Dynamic.Core/issues/238) - Missing SingleOrDefaultAsync for EntityFrameworkCore
