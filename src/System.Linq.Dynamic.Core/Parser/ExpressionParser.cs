@@ -210,23 +210,6 @@ namespace System.Linq.Dynamic.Core.Parser
             return expr;
         }
 
-        // ?. (null-propagating) operator
-        //Expression ParseNullPropagatingOperator()
-        //{
-        //    int errorPos = _textParser.CurrentToken.Pos;
-        //    Expression expr = ParseNullCoalescingOperator();
-        //    if (_textParser.CurrentToken.Id == TokenId.Question)
-        //    {
-        //        _textParser.NextToken();
-        //        Expression expr1 = ParseConditionalOperator();
-        //        _textParser.ValidateToken(TokenId.Dot, Res.DotExpected);
-        //        _textParser.NextToken();
-        //        Expression expr2 = ParseConditionalOperator();
-        //        expr = GenerateConditional(expr, expr1, expr2, errorPos);
-        //    }
-        //    return expr;
-        //}
-
         // ?? (null-coalescing) operator
         Expression ParseNullCoalescingOperator()
         {
@@ -257,8 +240,8 @@ namespace System.Linq.Dynamic.Core.Parser
             return expr;
         }
 
-        // isnull(a,b) operator
-        Expression ParseIsNull()
+        // isnull(a,b) function
+        Expression ParseFunctionIsNull()
         {
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
@@ -964,7 +947,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value))
             {
-                var typeValue = value as Type;
+                Type typeValue = value as Type;
                 if (typeValue != null)
                 {
                     return ParseTypeAccess(typeValue);
@@ -973,12 +956,15 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (value == (object)KeywordsHelper.KEYWORD_IT) return ParseIt();
                 if (value == (object)KeywordsHelper.KEYWORD_PARENT) return ParseParent();
                 if (value == (object)KeywordsHelper.KEYWORD_ROOT) return ParseRoot();
+
                 if (value == (object)KeywordsHelper.SYMBOL_IT) return ParseIt();
                 if (value == (object)KeywordsHelper.SYMBOL_PARENT) return ParseParent();
                 if (value == (object)KeywordsHelper.SYMBOL_ROOT) return ParseRoot();
-                if (value == (object)KeywordsHelper.KEYWORD_IIF) return ParseIif();
-                if (value == (object)KeywordsHelper.KEYWORD_NEW) return ParseNew();
-                if (value == (object)KeywordsHelper.KEYWORD_ISNULL) return ParseIsNull();
+
+                if (value == (object)KeywordsHelper.FUNCTION_IIF) return ParseFunctionIif();
+                if (value == (object)KeywordsHelper.FUNCTION_ISNULL) return ParseFunctionIsNull();
+                if (value == (object)KeywordsHelper.FUNCTION_NEW) return ParseNew();
+                if (value == (object)KeywordsHelper.FUNCTION_NULLPROPAGATION) return ParseFunctionNullPropagation();
 
                 _textParser.NextToken();
 
@@ -1046,10 +1032,12 @@ namespace System.Linq.Dynamic.Core.Parser
             return _root;
         }
 
-        Expression ParseIif()
+        // iif(test, ifTrue, ifFalse) function
+        Expression ParseFunctionIif()
         {
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
+
             Expression[] args = ParseArgumentList();
             if (args.Length != 3)
             {
@@ -1057,6 +1045,31 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             return GenerateConditional(args[0], args[1], args[2], errorPos);
+        }
+
+        // np(...) function
+        Expression ParseFunctionNullPropagation()
+        {
+            int errorPos = _textParser.CurrentToken.Pos;
+            _textParser.NextToken();
+
+            Expression[] args = ParseArgumentList();
+
+            if (args.Length != 1 && args.Length != 2)
+            {
+                throw ParseError(errorPos, Res.NullPropagationRequiresCorrectArgs);
+            }
+
+            if (args[0] is MemberExpression memberExpression)
+            {
+                var expressionTest = _expressionHelper.GenerateAndAlsoNotNullExpression(memberExpression);
+                var expressionIfTrue = memberExpression;
+                var expressionIfFalse = args.Length == 2 ? args[1] : Constants.NullLiteral;
+
+                return GenerateConditional(expressionTest, expressionIfTrue, expressionIfFalse, errorPos);
+            }
+
+            throw ParseError(errorPos, Res.NullPropagationRequiresMemberExpression);
         }
 
         Expression GenerateConditional(Expression test, Expression expr1, Expression expr2, int errorPos)
@@ -1119,6 +1132,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return Expression.Condition(test, expr1, expr2);
         }
 
+        // new (...) function
         Expression ParseNew()
         {
             _textParser.NextToken();
@@ -1256,7 +1270,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #if NET35 || NET40
                     ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetConstructors().First();
 #else
-                    ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
+                ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
 #endif
                     var arrayIndexParams = new List<Expression>();
                     for (int i = 0; i < expressions.Count; i++)
@@ -1275,7 +1289,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #if NET35 || NET40
                     ConstructorInfo constructor = type.GetConstructors().First();
 #else
-                    ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
+                ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
 #endif
                     return Expression.New(constructor, newArrayExpression);
 #if !UAP10_0

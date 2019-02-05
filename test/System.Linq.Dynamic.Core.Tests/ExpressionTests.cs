@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-using System.Text;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using NFluent;
@@ -1257,57 +1256,48 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
         }
 
-        // [Fact]
-        public void ExpressionTests_NullPropagating()
+        [Fact]
+        public void ExpressionTests_NullPropagating_Null()
         {
             // Arrange
-            var testModels = User.GenerateSampleModels(1, true);
-            testModels[0].Profile = null;
-
-            string q = "Profile?.UserProfileDetails?.Id > 0 || Profile?.UserProfileDetails?.Id2 > 0";
-            string t = X(q);
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].Profile = null; // Set the Profile to null for first User
 
             // Act
-            // (Profile != null ? (Profile.UserProfileDetails != null ? Profile.UserProfileDetails.Id : null) : null)
-            var result = testModels.AsQueryable().Where(t);
+            var result = testModels.AsQueryable().Select(t => t != null && t.Profile != null && t.Profile.UserProfileDetails != null ? (long?)t.Profile.UserProfileDetails.Id : null).ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(it.Profile.UserProfileDetails.Id)").ToDynamicArray<long?>();
 
             // Assert
-            Check.That(result).IsNull();
+            Check.That(resultDynamic).ContainsExactly(result);
         }
 
-        private string X(string text)
+        [Fact]
+        public void ExpressionTests_NullPropagating_Value()
         {
-            var newText = new List<string>();
-            string[] spaceParts = text.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string spacePart in spaceParts)
-            {
-                string[] parts = spacePart.Split(new[] { "?." }, StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length > 1)
-                {
-                    var list = new List<string>();
-                    for (int i = 0; i < parts.Length; i++)
-                    {
-                        list.Add(string.Join(".", parts.Take(parts.Length - i)));
-                    }
+            // Arrange
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].Profile = null; // Set the Profile to null for first User
 
-                    var stringBuilder = new StringBuilder();
-                    list.Reverse();
-                    for (int i = 0; i < list.Count - 1; i++)
-                    {
-                        stringBuilder.Append($"({list[i]} != null ? ");
-                    }
+            // Act
+            var result = testModels.AsQueryable().Select(t => t != null && t.Profile != null && t.Profile.UserProfileDetails != null ? t.Profile.UserProfileDetails.Id : 100).ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(it.Profile.UserProfileDetails.Id, 100)").ToDynamicArray<long>();
 
-                    stringBuilder.Append($"({list.Last()}) {string.Concat(Enumerable.Repeat(" : null)", parts.Length - 1))}");
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
 
-                    newText.Add(stringBuilder.ToString());
-                }
-                else
-                {
-                    newText.Add(spacePart);
-                }
-            }
+        [Fact]
+        public void ExpressionTests_NullPropagating_ThrowsException()
+        {
+            // Arrange
+            var q = User.GenerateSampleModels(1, true).AsQueryable();
 
-            return string.Join(" ", newText);
+            // Act
+            Check.ThatCode(() => q.Select("np()")).Throws<ParseException>();
+            Check.ThatCode(() => q.Select("np(it.Profile.UserProfileDetails.Id, 1, 2)")).Throws<ParseException>();
+            Check.ThatCode(() => q.Select("np(1)")).Throws<ParseException>();
         }
 
         [Fact]

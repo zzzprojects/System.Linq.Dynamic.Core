@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
@@ -233,6 +234,80 @@ namespace System.Linq.Dynamic.Core.Parser
                 _constantExpressionWrapper.Wrap(ref left);
                 _constantExpressionWrapper.Wrap(ref right);
             }
+        }
+
+        public Expression GenerateAndAlsoNotNullExpression(Expression sourceExpression)
+        {
+            var expresssions = CollectExpressions(sourceExpression);
+            if (!expresssions.Any())
+            {
+                return null;
+            }
+
+            // Reverse the list
+            expresssions.Reverse();
+
+            // Convert all expressions into '!= null'
+            var binaryExpressions = expresssions.Select(expression => Expression.NotEqual(expression, Constants.NullLiteral)).ToArray();
+
+            // Convert all binary expressions into `AndAlso(...)`
+            var andAlsoExpression = binaryExpressions[0];
+            for (int i = 1; i < binaryExpressions.Length; i++)
+            {
+                andAlsoExpression = Expression.AndAlso(andAlsoExpression, binaryExpressions[i]);
+            }
+
+            return andAlsoExpression;
+        }
+
+        private static Expression GetMemberExpression(Expression expression)
+        {
+            if (expression is ParameterExpression parameterExpression)
+            {
+                return parameterExpression;
+            }
+
+            if (expression is MemberExpression memberExpression)
+            {
+                return memberExpression;
+            }
+
+            if (expression is LambdaExpression lambdaExpression)
+            {
+                if (lambdaExpression.Body is MemberExpression bodyAsMemberExpression)
+                {
+                    return bodyAsMemberExpression;
+                }
+
+                if (lambdaExpression.Body is UnaryExpression bodyAsunaryExpression)
+                {
+                    return bodyAsunaryExpression.Operand;
+                }
+            }
+
+            return null;
+        }
+
+        private static List<Expression> CollectExpressions(Expression sourceExpression)
+        {
+            var list = new List<Expression>();
+            Expression expression = GetMemberExpression(sourceExpression);
+
+            while (expression is MemberExpression memberExpression)
+            {
+                expression = GetMemberExpression(memberExpression.Expression);
+                if (expression is MemberExpression)
+                {
+                    list.Add(expression);
+                }
+            }
+
+            if (expression is ParameterExpression)
+            {
+                list.Add(expression);
+            }
+
+            return list;
         }
     }
 }
