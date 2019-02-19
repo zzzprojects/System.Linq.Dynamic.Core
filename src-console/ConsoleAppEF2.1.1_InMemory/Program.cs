@@ -118,18 +118,26 @@ namespace ConsoleAppEF2
             context.Brands.Add(new Brand { BrandType = "Alfa", BrandName = "Romeo" });
             context.SaveChanges();
 
-            var testDto1 = new TestDto { BaseName = "b", Name = "t" };
+            var testDto1 = new TestDto { BaseName = "a", Name = "t" };
             context.BaseDtos.Add(testDto1);
             var testDto2 = new TestDto { BaseName = "b", Name = "t" };
             context.BaseDtos.Add(testDto2);
 
-            var otherTestDto = new OtherTestDto { BaseName = "b", Name = "t" };
+            var otherTestDto = new OtherTestDto { BaseName = "c", Name = "t" };
             context.BaseDtos.Add(otherTestDto);
             context.SaveChanges();
 
             context.ComplexDtos.Add(new ComplexDto { X = "both", ListOfBaseDtos = new BaseDto[] { testDto1, otherTestDto } });
             context.ComplexDtos.Add(new ComplexDto { X = "testDto", ListOfBaseDtos = new BaseDto[] { testDto2 } });
             context.SaveChanges();
+
+            var cast = context.BaseDtos.Where(b => b is TestDto).Cast<TestDto>().ToArray();
+            var castDynamicWithType = context.BaseDtos.Where(b => b is TestDto).Cast(typeof(TestDto)).ToDynamicArray();
+            var castDynamicWithString = context.BaseDtos.Where(b => b is TestDto).Cast(config, "ConsoleAppEF2.Database.TestDto").ToDynamicArray();
+
+            var oftype = context.BaseDtos.OfType<TestDto>().ToArray();
+            var oftypeDynamicWithType = context.BaseDtos.OfType(typeof(TestDto)).ToDynamicArray();
+            var oftypeDynamicWithString = context.BaseDtos.OfType(config, "ConsoleAppEF2.Database.TestDto").ToDynamicArray();
 
             var oftypeTestDto = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t").ToArray();
             var oftypeTestDtoDynamic = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"").ToArray();
