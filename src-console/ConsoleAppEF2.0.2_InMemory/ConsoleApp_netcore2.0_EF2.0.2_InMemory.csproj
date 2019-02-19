@@ -1,25 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>ConsoleAppEF2</AssemblyName>
-    <RootNamespace>ConsoleAppEF2</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <AssemblyName>ConsoleAppEF2</AssemblyName>
+        <RootNamespace>ConsoleAppEF2</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\ConsoleAppEF2.0\Database\Brand.cs" Link="Database\Brand.cs" />
-    <Compile Include="..\ConsoleAppEF2.0\Database\Car.cs" Link="Database\Car.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\ConsoleAppEF2.0\Database\Brand.cs" Link="Database\Brand.cs" />
+        <Compile Include="..\ConsoleAppEF2.0\Database\Car.cs" Link="Database\Car.cs" />
+        <Compile Include="..\ConsoleAppEF2.0\Database\BaseDto.cs" Link="Database\BaseDto.cs" />
+        <Compile Include="..\ConsoleAppEF2.0\Database\TestDto.cs" Link="Database\TestDto.cs" />
+        <Compile Include="..\ConsoleAppEF2.0\Database\OtherTestDto.cs" Link="Database\OtherTestDto.cs" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.2" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj" />
+          <Compile Include="..\ConsoleAppEF2.0\Database\BaseDto.cs" Link="Database\BaseDto.cs" />
+      <Compile Include="..\ConsoleAppEF2.0\Database\TestDto.cs" Link="Database\TestDto.cs" />
+</ItemGroup>
 
 </Project>

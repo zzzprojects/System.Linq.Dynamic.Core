@@ -1,12 +1,10 @@
-﻿using System;
+﻿using ConsoleAppEF2.Database;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
-using System.Linq.Expressions;
-using System.Reflection;
-using ConsoleAppEF2.Database;
-using Newtonsoft.Json;
 
 namespace ConsoleAppEF2
 {
@@ -80,7 +78,7 @@ namespace ConsoleAppEF2
             };
 
             // Act
-            var testDataAsQueryable = new List<string>() { "name1", "name2" }.AsQueryable();
+            var testDataAsQueryable = new List<string> { "name1", "name2" }.AsQueryable();
             var projectedData = (IQueryable<NestedDto>)testDataAsQueryable.Select(config, $"new {typeof(NestedDto).FullName}(~ as Name)");
             Console.WriteLine(projectedData.First().Name);
             Console.WriteLine(projectedData.Last().Name);
@@ -121,6 +119,13 @@ namespace ConsoleAppEF2
             context.Brands.Add(new Brand { BrandType = "Fiat", BrandName = "Panda" });
             context.Brands.Add(new Brand { BrandType = "Alfa", BrandName = "Romeo" });
             context.SaveChanges();
+
+            context.BaseDtos.Add(new TestDto { BaseName = "b", Name = "t" });
+            context.BaseDtos.Add(new OtherTestDto { BaseName = "b", Name = "t" });
+            context.SaveChanges();
+
+            var oftypeTestDto1 = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t");
+            var oftypeTestDto2 = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"");
 
             var carDateLastModified = context.Cars.Where(config, "DateLastModified > \"2018-01-16\"");
             Console.WriteLine("carDateLastModified {0}", JsonConvert.SerializeObject(carDateLastModified, Formatting.Indented));
