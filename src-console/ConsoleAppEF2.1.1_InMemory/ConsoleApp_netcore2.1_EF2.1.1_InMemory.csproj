@@ -14,6 +14,7 @@
         <Compile Include="..\ConsoleAppEF2.0\Database\BaseDto.cs" Link="Database\BaseDto.cs" />
         <Compile Include="..\ConsoleAppEF2.0\Database\TestDto.cs" Link="Database\TestDto.cs" />
         <Compile Include="..\ConsoleAppEF2.0\Database\OtherTestDto.cs" Link="Database\OtherTestDto.cs" />
+        <Compile Include="..\ConsoleAppEF2.0\Database\ComplexDto.cs" Link="Database\ComplexDto.cs" />
     </ItemGroup>
 
     <ItemGroup>

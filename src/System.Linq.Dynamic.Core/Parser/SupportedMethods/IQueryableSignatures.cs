@@ -15,24 +15,32 @@
         void Average(int selector);
         void Average(long? selector);
         void Average(long selector);
+        void Cast(string type);
         void Count();
         void Count(bool predicate);
         void DefaultIfEmpty();
         void DefaultIfEmpty(object defaultValue);
         void Distinct();
+        void First();
         void First(bool predicate);
+        void FirstOrDefault();
         void FirstOrDefault(bool predicate);
         void GroupBy(object keySelector);
         void GroupBy(object keySelector, object elementSelector);
+        void Last();
         void Last(bool predicate);
+        void LastOrDefault();
         void LastOrDefault(bool predicate);
         void Max(object selector);
         void Min(object selector);
+        void OfType(string type);
         void OrderBy(object selector);
         void OrderByDescending(object selector);
         void Select(object selector);
         void SelectMany(object selector);
+        void Single();
         void Single(bool predicate);
+        void SingleOrDefault();
         void SingleOrDefault(bool predicate);
         void Skip(int count);
         void SkipWhile(bool predicate);
@@ -51,13 +59,5 @@
         void ThenBy(object selector);
         void ThenByDescending(object selector);
         void Where(bool predicate);
-
-        // Executors
-        void First();
-        void FirstOrDefault();
-        void Last();
-        void LastOrDefault();
-        void Single();
-        void SingleOrDefault();
     }
 }

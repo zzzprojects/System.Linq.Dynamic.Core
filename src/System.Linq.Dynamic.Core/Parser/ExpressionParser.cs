@@ -709,7 +709,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
                 else if (_textParser.CurrentToken.Id == TokenId.NullPropagation)
                 {
-                    throw new NotSupportedException("An expression tree lambda may not contain a null propagating operator.");
+                    throw new NotSupportedException("An expression tree lambda may not contain a null propagating operator. Use the 'np()' or 'np(...)' (null-propagation) function instead.");
                 }
                 else if (_textParser.CurrentToken.Id == TokenId.OpenBracket)
                 {
@@ -1270,7 +1270,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #if NET35 || NET40
                     ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetConstructors().First();
 #else
-                ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
+                    ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
 #endif
                     var arrayIndexParams = new List<Expression>();
                     for (int i = 0; i < expressions.Count; i++)
@@ -1289,7 +1289,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #if NET35 || NET40
                     ConstructorInfo constructor = type.GetConstructors().First();
 #else
-                ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
+                    ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
 #endif
                     return Expression.New(constructor, newArrayExpression);
 #if !UAP10_0
@@ -1658,7 +1658,20 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             Type[] typeArgs;
-            if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
+            if (new[] { "OfType", "Cast" }.Contains(methodName))
+            {
+                string typeName = (args[0] as ConstantExpression)?.Value as string;
+
+                Type resultType = FindType(typeName);
+                if (resultType == null)
+                {
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeName);
+                }
+
+                args = new Expression[0];
+                typeArgs = new[] { resultType };
+            }
+            else if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
             {
                 if (args.Length == 2)
                 {

@@ -14,6 +14,8 @@ namespace ConsoleAppEF2.Database
 
         public virtual DbSet<BaseDto> BaseDtos { get; set; }
 
+        public virtual DbSet<ComplexDto> ComplexDtos { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLoggerFactory(MyLoggerFactory); // Warning: Do not create a new ILoggerFactory instance each time 
@@ -27,6 +29,7 @@ namespace ConsoleAppEF2.Database
             modelBuilder.Entity<Car>().HasKey(c => c.Key);
             modelBuilder.Entity<Brand>().HasKey(b => b.BrandType);
             modelBuilder.Entity<BaseDto>().HasKey(t => t.Key);
+            modelBuilder.Entity<ComplexDto>().HasKey(t => t.Key);
         }
 
         // https://stackoverflow.com/questions/46212704/how-do-i-write-ef-functions-extension-method

@@ -55,21 +55,21 @@ namespace ConsoleAppEF2
 
         static void Main(string[] args)
         {
-            var q = new[] { new NestedDto(), new NestedDto { NestedDto2 = new NestedDto2 { NestedDto3 = new NestedDto3 { Id = 42 } } } }.AsQueryable();
+            //var q = new[] { new NestedDto(), new NestedDto { NestedDto2 = new NestedDto2 { NestedDto3 = new NestedDto3 { Id = 42 } } } }.AsQueryable();
 
-            var np1 = q.Select("np(it.NestedDto2.NestedDto3.Id, 0)");
-            var npResult1 = np1.ToDynamicList<int>();
-            Console.WriteLine("npResult1 {0}", JsonConvert.SerializeObject(npResult1, Formatting.Indented));
+            //var np1 = q.Select("np(it.NestedDto2.NestedDto3.Id, 0)");
+            //var npResult1 = np1.ToDynamicList<int>();
+            //Console.WriteLine("npResult1 {0}", JsonConvert.SerializeObject(npResult1, Formatting.Indented));
 
-            var np2 = q.Select("np(it.NestedDto2.NestedDto3.Id)");
-            var npResult2 = np2.ToDynamicList<int?>();
-            Console.WriteLine("npResult2 {0}", JsonConvert.SerializeObject(npResult2, Formatting.Indented));
+            //var np2 = q.Select("np(it.NestedDto2.NestedDto3.Id)");
+            //var npResult2 = np2.ToDynamicList<int?>();
+            //Console.WriteLine("npResult2 {0}", JsonConvert.SerializeObject(npResult2, Formatting.Indented));
 
-            var r1 = q.Select("it != null && it.NestedDto2 != null ? it.NestedDto2.Id : null");
-            var list1 = r1.ToDynamicList<int?>();
+            //var r1 = q.Select("it != null && it.NestedDto2 != null ? it.NestedDto2.Id : null");
+            //var list1 = r1.ToDynamicList<int?>();
 
-            var r2 = q.Select("it != null && it.NestedDto2 != null ? it.NestedDto2 : null");
-            var list2 = r2.ToDynamicList<NestedDto2>();
+            //var r2 = q.Select("it != null && it.NestedDto2 != null ? it.NestedDto2 : null");
+            //var list2 = r2.ToDynamicList<NestedDto2>();
 
             var config = new ParsingConfig
             {
@@ -77,34 +77,32 @@ namespace ConsoleAppEF2
                 CustomTypeProvider = new NetCore21CustomTypeProvider()
             };
 
-            // Act
-            var testDataAsQueryable = new List<string> { "name1", "name2" }.AsQueryable();
-            var projectedData = (IQueryable<NestedDto>)testDataAsQueryable.Select(config, $"new {typeof(NestedDto).FullName}(~ as Name)");
-            Console.WriteLine(projectedData.First().Name);
-            Console.WriteLine(projectedData.Last().Name);
+            //// Act
+            //var testDataAsQueryable = new List<string> { "name1", "name2" }.AsQueryable();
+            //var projectedData = (IQueryable<NestedDto>)testDataAsQueryable.Select(config, $"new {typeof(NestedDto).FullName}(~ as Name)");
+            //Console.WriteLine(projectedData.First().Name);
+            //Console.WriteLine(projectedData.Last().Name);
 
-            var all = new
-            {
-                test1 = new List<int> { 1, 2, 3 }.ToDynamicList(typeof(int)),
-                test2 = new List<dynamic> { 4, 5, 6 }.ToDynamicList(typeof(int)),
-                test3 = new List<object> { 7, 8, 9 }.ToDynamicList(typeof(int))
-            };
-            Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
+            //var all = new
+            //{
+            //    test1 = new List<int> { 1, 2, 3 }.ToDynamicList(typeof(int)),
+            //    test2 = new List<dynamic> { 4, 5, 6 }.ToDynamicList(typeof(int)),
+            //    test3 = new List<object> { 7, 8, 9 }.ToDynamicList(typeof(int))
+            //};
+            //Console.WriteLine("all {0}", JsonConvert.SerializeObject(all, Formatting.Indented));
 
-            var anyTest = new[]
-            {
-                new { id = "1", values =new [] { 1, 2, 3 } },
-                new { id = "2", values =new [] { 1, 4 } },
-                new { id = "3", values =new [] { 9, 5 } }
-            }.AsQueryable();
+            //var anyTest = new[]
+            //{
+            //    new { id = "1", values =new [] { 1, 2, 3 } },
+            //    new { id = "2", values =new [] { 1, 4 } },
+            //    new { id = "3", values =new [] { 9, 5 } }
+            //}.AsQueryable();
 
-            var any1 = anyTest.Where(x => x.values.Contains(1));
-            Console.WriteLine("any1 {0}", JsonConvert.SerializeObject(any1, Formatting.Indented));
+            //var any1 = anyTest.Where(x => x.values.Contains(1));
+            //Console.WriteLine("any1 {0}", JsonConvert.SerializeObject(any1, Formatting.Indented));
 
-            var any2 = anyTest.Where("values.Contains(1)");
-            Console.WriteLine("any2 {0}", JsonConvert.SerializeObject(any2, Formatting.Indented));
-
-
+            //var any2 = anyTest.Where("values.Contains(1)");
+            //Console.WriteLine("any2 {0}", JsonConvert.SerializeObject(any2, Formatting.Indented));
 
             var dateLastModified = new DateTime(2018, 1, 15);
 
@@ -120,12 +118,27 @@ namespace ConsoleAppEF2
             context.Brands.Add(new Brand { BrandType = "Alfa", BrandName = "Romeo" });
             context.SaveChanges();
 
-            context.BaseDtos.Add(new TestDto { BaseName = "b", Name = "t" });
-            context.BaseDtos.Add(new OtherTestDto { BaseName = "b", Name = "t" });
+            var testDto1 = new TestDto { BaseName = "b", Name = "t" };
+            context.BaseDtos.Add(testDto1);
+            var testDto2 = new TestDto { BaseName = "b", Name = "t" };
+            context.BaseDtos.Add(testDto2);
+
+            var otherTestDto = new OtherTestDto { BaseName = "b", Name = "t" };
+            context.BaseDtos.Add(otherTestDto);
             context.SaveChanges();
 
-            var oftypeTestDto1 = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t").ToArray();
-            var oftypeTestDto2 = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"").ToArray();
+            context.ComplexDtos.Add(new ComplexDto { X = "both", ListOfBaseDtos = new BaseDto[] { testDto1, otherTestDto } });
+            context.ComplexDtos.Add(new ComplexDto { X = "testDto", ListOfBaseDtos = new BaseDto[] { testDto2 } });
+            context.SaveChanges();
+
+            var oftypeTestDto = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t").ToArray();
+            var oftypeTestDtoDynamic = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"").ToArray();
+
+            var complexOfType = context.ComplexDtos.Select(c => c.ListOfBaseDtos.OfType<TestDto>().Where(x => x.Name == "t")).ToArray();
+            var complexOfTypeDynamic = context.ComplexDtos.Select(config, "ListOfBaseDtos.OfType(\"ConsoleAppEF2.Database.TestDto\").Where(Name == \"t\")").ToDynamicArray();
+
+            var complexCast = context.ComplexDtos.Where(c => c.X == "testDto").ToList().Select(c => c.ListOfBaseDtos.Cast<TestDto>().Where(x => x.Name == "t")).ToArray();
+            var complexCastDynamic = context.ComplexDtos.Where(c => c.X == "testDto").ToList().AsQueryable().Select(config, "ListOfBaseDtos.Cast(\"ConsoleAppEF2.Database.TestDto\").Where(Name == \"t\")").ToDynamicArray();
 
             var carDateLastModified = context.Cars.Where(config, "DateLastModified > \"2018-01-16\"");
             Console.WriteLine("carDateLastModified {0}", JsonConvert.SerializeObject(carDateLastModified, Formatting.Indented));
