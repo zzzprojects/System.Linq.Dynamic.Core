@@ -32,26 +32,26 @@ namespace ConsoleAppEF2
             public int Id { get; set; }
         }
 
-        class NetCore21CustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
-        {
-            public HashSet<Type> GetCustomTypes()
-            {
-                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        //class NetCore21CustomTypeProvider : DefaultDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+        //{
+        //    public new HashSet<Type> GetCustomTypes()
+        //    {
+        //        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-                var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies))
-                {
-                    typeof(TestContext)
-                };
+        //        var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies))
+        //        {
+        //            typeof(TestContext)
+        //        };
 
-                return set;
-            }
+        //        return set;
+        //    }
 
-            public Type ResolveType(string typeName)
-            {
-                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-                return ResolveType(assemblies, typeName);
-            }
-        }
+        //    //public Type ResolveType(string typeName)
+        //    //{
+        //    //    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        //    //    return ResolveType(assemblies, typeName);
+        //    //}
+        //}
 
         static void Main(string[] args)
         {
@@ -74,7 +74,7 @@ namespace ConsoleAppEF2
             var config = new ParsingConfig
             {
                 AllowNewToEvaluateAnyType = true,
-                CustomTypeProvider = new NetCore21CustomTypeProvider()
+                // CustomTypeProvider = new NetCore21CustomTypeProvider()
             };
 
             //// Act

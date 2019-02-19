@@ -12,7 +12,7 @@ namespace System.Reflection
         }
 #endif
 
-#if NET35 || NET40 || SILVERLIGHT || WPSL
+#if NET35 || NET40 || SILVERLIGHT || WPSL || NETCOREAPP
         public static PropertyBuilder DefineProperty(this TypeBuilder tb, string name, PropertyAttributes attributes, CallingConventions callingConvention, Type returnType, Type[] parameterTypes)
         {
             return tb.DefineProperty(name, attributes, returnType, parameterTypes);
