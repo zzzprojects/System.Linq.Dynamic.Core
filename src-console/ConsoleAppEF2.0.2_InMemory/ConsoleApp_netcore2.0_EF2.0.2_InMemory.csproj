@@ -23,8 +23,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq\Microsoft.EntityFrameworkCore.DynamicLinq.csproj" />
-          <Compile Include="..\ConsoleAppEF2.0\Database\BaseDto.cs" Link="Database\BaseDto.cs" />
-      <Compile Include="..\ConsoleAppEF2.0\Database\TestDto.cs" Link="Database\TestDto.cs" />
-</ItemGroup>
+    </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 
 namespace ConsoleAppEF2.Database
 {
-    public abstract class BaseDto
+    public class BaseDto
     {
         [Key]
         public int Key { get; set; }

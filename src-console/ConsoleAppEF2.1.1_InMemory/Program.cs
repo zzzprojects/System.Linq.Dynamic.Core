@@ -124,8 +124,8 @@ namespace ConsoleAppEF2
             context.BaseDtos.Add(new OtherTestDto { BaseName = "b", Name = "t" });
             context.SaveChanges();
 
-            var oftypeTestDto1 = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t");
-            var oftypeTestDto2 = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"");
+            var oftypeTestDto1 = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t").ToArray();
+            var oftypeTestDto2 = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"").ToArray();
 
             var carDateLastModified = context.Cars.Where(config, "DateLastModified > \"2018-01-16\"");
             Console.WriteLine("carDateLastModified {0}", JsonConvert.SerializeObject(carDateLastModified, Formatting.Indented));

@@ -1,6 +1,6 @@
 ﻿namespace ConsoleAppEF2.Database
 {
-    public class OtherTestDto : BaseDto
+    public class TestDto : BaseDto
     {
         public string Name { get; set; }
     }
