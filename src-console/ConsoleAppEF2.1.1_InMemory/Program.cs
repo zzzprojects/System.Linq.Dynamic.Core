@@ -32,26 +32,20 @@ namespace ConsoleAppEF2
             public int Id { get; set; }
         }
 
-        //class NetCore21CustomTypeProvider : DefaultDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
-        //{
-        //    public new HashSet<Type> GetCustomTypes()
-        //    {
-        //        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        class TestCustomTypeProvider : DefaultDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+        {
+            public new HashSet<Type> GetCustomTypes()
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-        //        var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies))
-        //        {
-        //            typeof(TestContext)
-        //        };
+                var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies))
+                {
+                    typeof(TestContext)
+                };
 
-        //        return set;
-        //    }
-
-        //    //public Type ResolveType(string typeName)
-        //    //{
-        //    //    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        //    //    return ResolveType(assemblies, typeName);
-        //    //}
-        //}
+                return set;
+            }
+        }
 
         static void Main(string[] args)
         {
@@ -74,7 +68,7 @@ namespace ConsoleAppEF2
             var config = new ParsingConfig
             {
                 AllowNewToEvaluateAnyType = true,
-                // CustomTypeProvider = new NetCore21CustomTypeProvider()
+                CustomTypeProvider = new TestCustomTypeProvider()
             };
 
             //// Act
@@ -104,7 +98,7 @@ namespace ConsoleAppEF2
             //var any2 = anyTest.Where("values.Contains(1)");
             //Console.WriteLine("any2 {0}", JsonConvert.SerializeObject(any2, Formatting.Indented));
 
-            var dateLastModified = new DateTime(2018, 1, 15);
+            DateTime dateLastModified = new DateTime(2018, 1, 15);
 
             var context = new TestContext();
             context.Cars.Add(new Car { Brand = "Ford", Color = "Blue", Vin = "yes", Year = "2017", DateLastModified = dateLastModified });
@@ -131,6 +125,61 @@ namespace ConsoleAppEF2
             context.ComplexDtos.Add(new ComplexDto { X = "testDto", ListOfBaseDtos = new BaseDto[] { testDto2 } });
             context.SaveChanges();
 
+            OfTypeAndCastTests(context, config);
+
+            var carDateLastModified = context.Cars.Where(config, "DateLastModified > \"2018-01-16\"");
+            Console.WriteLine("carDateLastModified {0}", JsonConvert.SerializeObject(carDateLastModified, Formatting.Indented));
+
+            var carFirstOrDefault = context.Cars.Where(config, "Brand == \"Ford\"");
+            Console.WriteLine("carFirstOrDefault {0}", JsonConvert.SerializeObject(carFirstOrDefault, Formatting.Indented));
+
+            LikeTests(context, config);
+
+            var testDynamic = context.Cars.Select(c => new
+            {
+                K = c.Key,
+                C = c.Color
+            });
+
+            var testDynamicResult = testDynamic.Select("it").OrderBy("C");
+            try
+            {
+                Console.WriteLine("resultX {0}", JsonConvert.SerializeObject(testDynamicResult, Formatting.Indented));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        private static void LikeTests(TestContext context, ParsingConfig config)
+        {
+            //var carsLike1 =
+            //    from c in context.Cars
+            //    where EF.Functions.Like(c.Brand, "%a%")
+            //    select c;
+            //Console.WriteLine("carsLike1 {0}", JsonConvert.SerializeObject(carsLike1, Formatting.Indented));
+
+            //var cars2Like = context.Cars.Where(c => EF.Functions.Like(c.Brand, "%a%"));
+            //Console.WriteLine("cars2Like {0}", JsonConvert.SerializeObject(cars2Like, Formatting.Indented));
+
+            var dynamicCarsLike1 = context.Cars.Where(config, "TestContext.Like(Brand, \"%a%\")");
+            Console.WriteLine("dynamicCarsLike1 {0}", JsonConvert.SerializeObject(dynamicCarsLike1, Formatting.Indented));
+
+            var dynamicCarsLike2 = context.Cars.Where(config, "TestContext.Like(Brand, \"%d%\")");
+            Console.WriteLine("dynamicCarsLike2 {0}", JsonConvert.SerializeObject(dynamicCarsLike2, Formatting.Indented));
+
+            var dynamicFunctionsLike1 = context.Cars.Where(config, "DynamicFunctions.Like(Brand, \"%a%\")");
+            Console.WriteLine("dynamicFunctionsLike1 {0}",
+            JsonConvert.SerializeObject(dynamicFunctionsLike1, Formatting.Indented));
+
+            var dynamicFunctionsLike2 = context.Cars.Where(config, "DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
+            Console.WriteLine("dynamicFunctionsLike2 {0}",
+            JsonConvert.SerializeObject(dynamicFunctionsLike2, Formatting.Indented));
+        }
+
+        private static void OfTypeAndCastTests(TestContext context, ParsingConfig config)
+        {
             var cast = context.BaseDtos.Where(b => b is TestDto).Cast<TestDto>().ToArray();
             var castDynamicWithType = context.BaseDtos.Where(b => b is TestDto).Cast(typeof(TestDto)).ToDynamicArray();
             var castDynamicWithString = context.BaseDtos.Where(b => b is TestDto).Cast(config, "ConsoleAppEF2.Database.TestDto").ToDynamicArray();
@@ -142,54 +191,18 @@ namespace ConsoleAppEF2
             var oftypeTestDto = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t").ToArray();
             var oftypeTestDtoDynamic = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"").ToArray();
 
-            var complexOfType = context.ComplexDtos.Select(c => c.ListOfBaseDtos.OfType<TestDto>().Where(x => x.Name == "t")).ToArray();
-            var complexOfTypeDynamic = context.ComplexDtos.Select(config, "ListOfBaseDtos.OfType(\"ConsoleAppEF2.Database.TestDto\").Where(Name == \"t\")").ToDynamicArray();
+            var complexOfType = context.ComplexDtos.Select(c => c.ListOfBaseDtos.OfType<TestDto>().Where(x => x.Name == "t"))
+                .ToArray();
+            var complexOfTypeDynamic = context.ComplexDtos
+                .Select(config, "ListOfBaseDtos.OfType(\"ConsoleAppEF2.Database.TestDto\").Where(Name == \"t\")")
+                .ToDynamicArray();
 
-            var complexCast = context.ComplexDtos.Where(c => c.X == "testDto").ToList().Select(c => c.ListOfBaseDtos.Cast<TestDto>().Where(x => x.Name == "t")).ToArray();
-            var complexCastDynamic = context.ComplexDtos.Where(c => c.X == "testDto").ToList().AsQueryable().Select(config, "ListOfBaseDtos.Cast(\"ConsoleAppEF2.Database.TestDto\").Where(Name == \"t\")").ToDynamicArray();
-
-            var carDateLastModified = context.Cars.Where(config, "DateLastModified > \"2018-01-16\"");
-            Console.WriteLine("carDateLastModified {0}", JsonConvert.SerializeObject(carDateLastModified, Formatting.Indented));
-
-            //var carFirstOrDefault = context.Cars.Where(config, "Brand == \"Ford\"");
-            //Console.WriteLine("carFirstOrDefault {0}", JsonConvert.SerializeObject(carFirstOrDefault, Formatting.Indented));
-
-            //var carsLike1 =
-            //    from c in context.Cars
-            //    where EF.Functions.Like(c.Brand, "%a%")
-            //    select c;
-            //Console.WriteLine("carsLike1 {0}", JsonConvert.SerializeObject(carsLike1, Formatting.Indented));
-
-            //var cars2Like = context.Cars.Where(c => EF.Functions.Like(c.Brand, "%a%"));
-            //Console.WriteLine("cars2Like {0}", JsonConvert.SerializeObject(cars2Like, Formatting.Indented));
-
-            //var dynamicCarsLike1 = context.Cars.Where(config, "TestContext.Like(Brand, \"%a%\")");
-            //Console.WriteLine("dynamicCarsLike1 {0}", JsonConvert.SerializeObject(dynamicCarsLike1, Formatting.Indented));
-
-            //var dynamicCarsLike2 = context.Cars.Where(config, "TestContext.Like(Brand, \"%d%\")");
-            //Console.WriteLine("dynamicCarsLike2 {0}", JsonConvert.SerializeObject(dynamicCarsLike2, Formatting.Indented));
-
-            //var dynamicFunctionsLike1 = context.Cars.Where(config, "DynamicFunctions.Like(Brand, \"%a%\")");
-            //Console.WriteLine("dynamicFunctionsLike1 {0}", JsonConvert.SerializeObject(dynamicFunctionsLike1, Formatting.Indented));
-
-            //var dynamicFunctionsLike2 = context.Cars.Where(config, "DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
-            //Console.WriteLine("dynamicFunctionsLike2 {0}", JsonConvert.SerializeObject(dynamicFunctionsLike2, Formatting.Indented));
-
-            //var testDynamic = context.Cars.Select(c => new
-            //{
-            //    K = c.Key,
-            //    C = c.Color
-            //});
-
-            //var testDynamicResult = testDynamic.Select("it").OrderBy("C");
-            //try
-            //{
-            //    Console.WriteLine("resultX {0}", JsonConvert.SerializeObject(testDynamicResult, Formatting.Indented));
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine(e);
-            //}
+            var complexCast = context.ComplexDtos.Where(c => c.X == "testDto").ToList()
+                .Select(c => c.ListOfBaseDtos.Cast<TestDto>().Where(x => x.Name == "t"))
+                .ToArray();
+            var complexCastDynamic = context.ComplexDtos.Where(c => c.X == "testDto").ToList().AsQueryable()
+                .Select(config, "ListOfBaseDtos.Cast(\"ConsoleAppEF2.Database.TestDto\").Where(Name == \"t\")")
+                .ToDynamicArray();
         }
     }
 }
