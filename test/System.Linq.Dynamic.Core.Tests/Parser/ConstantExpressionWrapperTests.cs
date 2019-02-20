@@ -27,7 +27,6 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData('c')]
         [InlineData((byte)10)]
         [InlineData((sbyte)11)]
-        [InlineData("test")]
         public void ConstantExpressionWrapper_Wrap_ConstantExpression_PrimitiveTypes<T>(T test)
         {
             // Assign
