@@ -19,7 +19,8 @@ namespace System.Linq.Dynamic.Core.Tests
         {
 #if EFCORE
             var builder = new DbContextOptionsBuilder();
-            builder.UseSqlite($"Filename=System.Linq.Dynamic.Core.{Guid.NewGuid()}.db");
+            // builder.UseSqlite($"Filename=System.Linq.Dynamic.Core.{Guid.NewGuid()}.db");
+            builder.UseInMemoryDatabase($"System.Linq.Dynamic.Core.{Guid.NewGuid()}");
             //builder.UseSqlServer($"Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;AttachDbFileName=.\\System.Linq.Dynamic.Core.{Guid.NewGuid()}.mdf;");
 
             _context = new BlogContext(builder.Options);

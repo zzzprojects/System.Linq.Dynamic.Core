@@ -1,9 +1,9 @@
-﻿using System.Linq.Dynamic.Core.Parser;
+﻿using NFluent;
+using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
-using NFluent;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Tests.Parser
 {
     public class ConstantExpressionWrapperTests
     {
@@ -25,8 +25,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData(7.1f)]
         [InlineData(8.1d)]
         [InlineData('c')]
-        [InlineData((byte) 10)]
-        [InlineData((sbyte) 11)]
+        [InlineData((byte)10)]
+        [InlineData((sbyte)11)]
+        [InlineData("test")]
         public void ConstantExpressionWrapper_Wrap_ConstantExpression_PrimitiveTypes<T>(T test)
         {
             // Assign
@@ -38,7 +39,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Verify
             Check.That(expression).IsNotNull();
 
-            var constantExpression = (expression as MemberExpression).Expression as ConstantExpression;
+            ConstantExpression constantExpression = (expression as MemberExpression).Expression as ConstantExpression;
             dynamic wrappedObj = constantExpression.Value;
 
             T value = wrappedObj.Value;
@@ -59,7 +60,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Verify
             Check.That(expression).IsNotNull();
 
-            var constantExpression = (expression as MemberExpression).Expression as ConstantExpression;
+            ConstantExpression constantExpression = (expression as MemberExpression).Expression as ConstantExpression;
             dynamic wrappedObj = constantExpression.Value;
 
             string value = wrappedObj.Value;

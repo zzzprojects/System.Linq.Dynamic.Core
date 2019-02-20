@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ConsoleApp_net452_EF6.Entities;
+using System;
 using System.Linq;
-using ConsoleApp_net452_EF6.Entities;
 using System.Linq.Dynamic.Core;
-using Newtonsoft.Json;
 
 namespace ConsoleApp_net452_EF6
 {
@@ -13,15 +11,30 @@ namespace ConsoleApp_net452_EF6
         {
             using (var context = new KendoGridDbContext())
             {
-                var found1 = context.Employees.FirstOrDefault($"EmployeeNumber > 1000");
+                var config = new ParsingConfig
+                {
+                    UseParameterizedNamesInDynamicQuery = true
+                };
+
+                var found1 = context.Employees.FirstOrDefault(config, "EmployeeNumber > 1000");
                 Console.WriteLine($"found1 : {found1.Id} - {found1.EmployeeNumber}");
 
-                var found2 = context.Employees.FirstOrDefault($"EmployeeNumber > @0", 1001);
+                var found2 = context.Employees.FirstOrDefault(config, "EmployeeNumber > @0", 1001);
                 Console.WriteLine($"found2 : {found2.Id} - {found2.EmployeeNumber}");
 
                 int em = 1002;
-                var found3 = context.Employees.FirstOrDefault($"EmployeeNumber > @0", em);
+                var found3 = context.Employees.FirstOrDefault(config, "EmployeeNumber > @0", em);
                 Console.WriteLine($"found3 : {found3.Id} - {found3.EmployeeNumber}");
+
+                var foundFirstName1 = context.Employees.FirstOrDefault(config, "FirstName.Contains(\"e\")");
+                Console.WriteLine($"foundFirstName1 : {foundFirstName1.Id} - {foundFirstName1.FirstName}");
+
+                var foundFirstName2 = context.Employees.FirstOrDefault(config, "FirstName.StartsWith(@0)", "J");
+                Console.WriteLine($"foundFirstName2 : {foundFirstName2.Id} - {foundFirstName2.FirstName}");
+
+                string ends = "h";
+                var foundFirstName3 = context.Employees.FirstOrDefault(config, "FirstName.EndsWith(@0)", ends);
+                Console.WriteLine($"foundFirstName3 : {foundFirstName3.Id} - {foundFirstName3.FirstName}");
 
                 string search = "2";
                 var expected = context.Employees.Where(e => System.Data.Entity.SqlServer.SqlFunctions.StringConvert((double)e.EmployeeNumber).Contains(search)).ToArray();
