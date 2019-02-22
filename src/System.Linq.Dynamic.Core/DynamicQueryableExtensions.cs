@@ -229,10 +229,10 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(config, nameof(config));
             Check.NotEmpty(typeName, nameof(typeName));
 
-            config.AllowNewToEvaluateAnyType = true;
-            var newExpression = DynamicExpressionParser.ParseLambda(config, null, $"new {typeName}()");
+            var finder = new TypeFinder(config, new KeywordsHelper(config));
+            Type type = finder.FindTypeByName(typeName, null, true);
 
-            return Cast(source, newExpression.Body.Type);
+            return Cast(source, type);
         }
 
         /// <summary>
@@ -1025,10 +1025,10 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(config, nameof(config));
             Check.NotEmpty(typeName, nameof(typeName));
 
-            config.AllowNewToEvaluateAnyType = true;
-            var newExpression = DynamicExpressionParser.ParseLambda(config, null, $"new {typeName}()");
+            var finder = new TypeFinder(config, new KeywordsHelper(config));
+            Type type = finder.FindTypeByName(typeName, null, true);
 
-            return OfType(source, newExpression.Body.Type);
+            return OfType(source, type);
         }
 
         /// <summary>

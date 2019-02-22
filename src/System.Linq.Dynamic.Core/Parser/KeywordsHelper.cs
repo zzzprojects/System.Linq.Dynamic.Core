@@ -2,7 +2,7 @@
 
 namespace System.Linq.Dynamic.Core.Parser
 {
-    internal class KeywordsHelper
+    internal class KeywordsHelper : IKeywordsHelper
     {
         public const string SYMBOL_IT = "$";
         public const string SYMBOL_PARENT = "^";

@@ -25,9 +25,10 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private readonly ParsingConfig _parsingConfig;
         private readonly MethodFinder _methodFinder;
-        private readonly KeywordsHelper _keywordsHelper;
+        private readonly IKeywordsHelper _keywordsHelper;
         private readonly TextParser _textParser;
         private readonly IExpressionHelper _expressionHelper;
+        private readonly ITypeFinder _typeFinder;
         private readonly Dictionary<string, object> _internals;
         private readonly Dictionary<string, object> _symbols;
 
@@ -73,6 +74,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser = new TextParser(expression);
             _methodFinder = new MethodFinder(_parsingConfig);
             _expressionHelper = new ExpressionHelper(_parsingConfig);
+            _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
         }
 
         void ProcessParameters(ParameterExpression[] parameters)
@@ -1242,7 +1244,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     _textParser.NextToken();
                 }
 
-                newType = FindType(newTypeName);
+                newType = _typeFinder.FindTypeByName(newTypeName, new [] { _it, _parent, _root }, false);
                 if (newType == null)
                 {
                     throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, newTypeName);
@@ -1654,7 +1656,7 @@ namespace System.Linq.Dynamic.Core.Parser
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
 
-        Type FindType(string name)
+        Type FindTypeOld(string name, bool forceUseCustomTypeProvider)
         {
             _keywordsHelper.TryGetValue(name, out object type);
 
@@ -1694,9 +1696,13 @@ namespace System.Linq.Dynamic.Core.Parser
                 return _root.Type;
             }
 
-            if (_parsingConfig.AllowNewToEvaluateAnyType && _parsingConfig.CustomTypeProvider != null)
+            if ((forceUseCustomTypeProvider || _parsingConfig.AllowNewToEvaluateAnyType) && _parsingConfig.CustomTypeProvider != null)
             {
-                return _parsingConfig.CustomTypeProvider.ResolveType(name);
+                var resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(name);
+                if (_parsingConfig.ResolveTypesBySimpleName && resolvedType == null)
+                {
+                    return _parsingConfig.CustomTypeProvider.ResolveTypeBySimpleName(name);
+                }
             }
 
             return null;
@@ -1806,7 +1812,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArg, functionName, typeName);
             }
 
-            Type resultType = FindType(typeName);
+            Type resultType = _typeFinder.FindTypeByName(typeName, null, true);
             if (resultType == null)
             {
                 throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeName);

@@ -131,5 +131,7 @@ namespace System.Linq.Dynamic.Core
         /// where a member access on a non existing member happens. Default value is false.
         /// </summary>
         public bool DisableMemberAccessToIndexAccessorFallback { get; set; } = false;
+
+        public bool ResolveTypesBySimpleName { get; set; } = false;
     }
 }
