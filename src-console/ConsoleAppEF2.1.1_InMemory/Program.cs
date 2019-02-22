@@ -169,13 +169,13 @@ namespace ConsoleAppEF2
             var dynamicCarsLike2 = context.Cars.Where(config, "TestContext.Like(Brand, \"%d%\")");
             Console.WriteLine("dynamicCarsLike2 {0}", JsonConvert.SerializeObject(dynamicCarsLike2, Formatting.Indented));
 
-            var dynamicFunctionsLike1 = context.Cars.Where(config, "DynamicFunctions.Like(Brand, \"%a%\")");
-            Console.WriteLine("dynamicFunctionsLike1 {0}",
-            JsonConvert.SerializeObject(dynamicFunctionsLike1, Formatting.Indented));
+            //var dynamicFunctionsLike1 = context.Cars.Where(config, "DynamicFunctions.Like(Brand, \"%a%\")");
+            //Console.WriteLine("dynamicFunctionsLike1 {0}",
+            //JsonConvert.SerializeObject(dynamicFunctionsLike1, Formatting.Indented));
 
-            var dynamicFunctionsLike2 = context.Cars.Where(config, "DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
-            Console.WriteLine("dynamicFunctionsLike2 {0}",
-            JsonConvert.SerializeObject(dynamicFunctionsLike2, Formatting.Indented));
+            //var dynamicFunctionsLike2 = context.Cars.Where(config, "DynamicFunctions.Like(Vin, \"%a.%b%\", \".\")");
+            //Console.WriteLine("dynamicFunctionsLike2 {0}",
+            //JsonConvert.SerializeObject(dynamicFunctionsLike2, Formatting.Indented));
         }
 
         private static void OfTypeAndCastTests(TestContext context, ParsingConfig config)
@@ -198,6 +198,9 @@ namespace ConsoleAppEF2
             var asOfTypeDynamicTestDto = context.BaseDtos.Where(config, "As(\"ConsoleAppEF2.Database.TestDto\") != null").ToDynamicArray();
             var asOfTypeDynamicOtherTestDto = context.BaseDtos.Where(config, "As(\"ConsoleAppEF2.Database.OtherTestDto\") != null").ToDynamicArray();
             var asOfTypeDynamicComplexDto = context.BaseDtos.Where(config, "As(\"ConsoleAppEF2.Database.ComplexDto\") != null").ToDynamicArray();
+
+            var castOnX = context.BaseDtos.Where(b => b as TestDto != null).Where(b => ((TestDto)b).Name != null).ToArray();
+            var castOnXDynamic = context.BaseDtos.Where(b => b as TestDto != null).Where(config, "Cast(\"ConsoleAppEF2.Database.TestDto\").Name != null").ToArray();
 
             var oftypeTestDto = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t").ToArray();
             var oftypeTestDtoDynamic = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"").ToArray();
