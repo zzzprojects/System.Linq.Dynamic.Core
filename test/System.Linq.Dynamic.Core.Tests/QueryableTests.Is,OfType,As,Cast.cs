@@ -79,6 +79,51 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
         }
 
+        [Theory]
+        [InlineData("OfType")]
+        [InlineData("is")]
+        public void OfType_Dynamic_ActingOnIt(string function)
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                AllowNewToEvaluateAnyType = true
+            };
+
+            var qry = new BaseEmployee[]
+            {
+                new Worker { Name = "1" }, new Boss { Name = "b" }
+            }.AsQueryable();
+
+            // Act
+            int countOfType = qry.Count(c => c is Worker);
+            int countOfTypeDynamic = qry.Count(config, $"{function}(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")");
+
+            // Assert
+            Check.That(countOfTypeDynamic).Equals(countOfType);
+        }
+
+        [Fact]
+        public void As_Dynamic_ActingOnIt()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                AllowNewToEvaluateAnyType = true
+            };
+
+            var qry = new BaseEmployee[]
+            {
+                new Worker { Name = "1" }, new Boss { Name = "b" }
+            }.AsQueryable();
+
+            // Act
+            int countAsDynamic = qry.Count(config, $"As(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\") != null");
+
+            // Assert
+            Check.That(countAsDynamic).Equals(1);
+        }
+
         [Fact]
         public void CastToType_WithType()
         {
@@ -104,9 +149,7 @@ namespace System.Linq.Dynamic.Core.Tests
             {
                 AllowNewToEvaluateAnyType = true
             };
-#if NETCOREAPP
-            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
+
             var qry = new BaseEmployee[]
             {
                 new Worker { Name = "1" }, new Worker { Name = "2" }
@@ -128,9 +171,6 @@ namespace System.Linq.Dynamic.Core.Tests
             {
                 AllowNewToEvaluateAnyType = true
             };
-#if NETCOREAPP
-            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
 
             var qry = new[]
             {
@@ -152,6 +192,49 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void CastToType_Dynamic_ActingOnIt()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                AllowNewToEvaluateAnyType = true
+            };
+
+            var qry = new BaseEmployee[]
+            {
+                new Worker { Name = "1" }, new Worker { Name = "2" }
+            }.AsQueryable();
+
+            // Act
+            var cast = qry.Select(c => (Worker)c).ToArray();
+            var castDynamic = qry.Select(config, "Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")").ToDynamicArray();
+
+            // Assert
+            Check.That(cast.Length).Equals(castDynamic.Length);
+        }
+
+        [Fact]
+        public void CastToType_Dynamic_ActingOnIt_Throws()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                AllowNewToEvaluateAnyType = true
+            };
+
+            var qry = new BaseEmployee[]
+            {
+                new Worker { Name = "1" }, new Boss { Name = "b" }
+            }.AsQueryable();
+
+            // Act
+            Action castDynamic = () => qry.Select(config, "Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")").ToDynamicArray();
+
+            // Assert
+            Check.ThatCode(castDynamic).Throws<Exception>();
+        }
+
+        [Fact]
         public void OfType_Dynamic_Exceptions()
         {
             // Assign
@@ -170,6 +253,21 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => qry.Select("Employees.OfType().Where(Name == \"e\")"));
             Assert.Throws<ParseException>(() => qry.Select("Employees.OfType(true).Where(Name == \"e\")"));
             Assert.Throws<ParseException>(() => qry.Select("Employees.OfType(\"not-found\").Where(Name == \"e\")"));
+        }
+
+        [Fact]
+        public void OfType_Dynamic_ActingOnIt_Exceptions()
+        {
+            // Assign
+            var qry = new BaseEmployee[]
+            {
+                new Worker { Name = "1" }, new Boss { Name = "b" }
+            }.AsQueryable();
+
+            // Act
+            Assert.Throws<ParseException>(() => qry.Count("OfType()"));
+            Assert.Throws<ParseException>(() => qry.Count("OfType(true)"));
+            Assert.Throws<ParseException>(() => qry.Count("OfType(\"not-found\")"));
         }
 
         [Fact]

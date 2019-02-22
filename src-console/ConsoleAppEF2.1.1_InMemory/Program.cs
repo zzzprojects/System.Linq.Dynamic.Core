@@ -189,15 +189,15 @@ namespace ConsoleAppEF2
             var oftypeDynamicWithType = context.BaseDtos.OfType(typeof(TestDto)).ToDynamicArray();
             var oftypeDynamicWithString = context.BaseDtos.OfType(config, "ConsoleAppEF2.Database.TestDto").ToDynamicArray();
 
-            bool isOfType = context.BaseDtos.Any(b => b is TestDto);
-            try
-            {
-                bool isOfTypeDynamic = context.BaseDtos.Any(config, "OfType(\"ConsoleAppEF2.Database.TestDto\")");
-            }
-            catch (Exception e)
-            {
-                // Not supported yet...
-            }
+            int isOfType = context.BaseDtos.Count(b => b is TestDto);
+            int isOfTypeDynamicTestDto = context.BaseDtos.Count(config, "OfType(\"ConsoleAppEF2.Database.TestDto\")");
+            int isOfTypeDynamicOtherTestDto = context.BaseDtos.Count(config, "OfType(\"ConsoleAppEF2.Database.OtherTestDto\")");
+            int isOfTypeDynamicComplexDto = context.BaseDtos.Count(config, "OfType(\"ConsoleAppEF2.Database.ComplexDto\")");
+
+            var asOfType = context.BaseDtos.Where(b => b as TestDto != null).ToArray();
+            var asOfTypeDynamicTestDto = context.BaseDtos.Where(config, "As(\"ConsoleAppEF2.Database.TestDto\") != null").ToDynamicArray();
+            var asOfTypeDynamicOtherTestDto = context.BaseDtos.Where(config, "As(\"ConsoleAppEF2.Database.OtherTestDto\") != null").ToDynamicArray();
+            var asOfTypeDynamicComplexDto = context.BaseDtos.Where(config, "As(\"ConsoleAppEF2.Database.ComplexDto\") != null").ToDynamicArray();
 
             var oftypeTestDto = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t").ToArray();
             var oftypeTestDtoDynamic = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"").ToArray();
