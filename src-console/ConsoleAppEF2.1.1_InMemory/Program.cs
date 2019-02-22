@@ -185,8 +185,19 @@ namespace ConsoleAppEF2
             var castDynamicWithString = context.BaseDtos.Where(b => b is TestDto).Cast(config, "ConsoleAppEF2.Database.TestDto").ToDynamicArray();
 
             var oftype = context.BaseDtos.OfType<TestDto>().ToArray();
+            bool ofTypeAny = context.BaseDtos.OfType<TestDto>().Any();
             var oftypeDynamicWithType = context.BaseDtos.OfType(typeof(TestDto)).ToDynamicArray();
             var oftypeDynamicWithString = context.BaseDtos.OfType(config, "ConsoleAppEF2.Database.TestDto").ToDynamicArray();
+
+            bool isOfType = context.BaseDtos.Any(b => b is TestDto);
+            try
+            {
+                bool isOfTypeDynamic = context.BaseDtos.Any(config, "OfType(\"ConsoleAppEF2.Database.TestDto\")");
+            }
+            catch (Exception e)
+            {
+                // Not supported yet...
+            }
 
             var oftypeTestDto = context.BaseDtos.OfType<TestDto>().Where(x => x.Name == "t").ToArray();
             var oftypeTestDtoDynamic = context.BaseDtos.OfType<TestDto>().Where("Name == \"t\"").ToArray();

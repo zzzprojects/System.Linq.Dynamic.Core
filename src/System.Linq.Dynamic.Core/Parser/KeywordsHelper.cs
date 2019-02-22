@@ -16,6 +16,7 @@ namespace System.Linq.Dynamic.Core.Parser
         public const string FUNCTION_ISNULL = "isnull";
         public const string FUNCTION_NEW = "new";
         public const string FUNCTION_NULLPROPAGATION = "np";
+        public const string FUNCTION_OFTYPE = "OfType";
 
         private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
         {

@@ -965,6 +965,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (value == (object)KeywordsHelper.FUNCTION_ISNULL) return ParseFunctionIsNull();
                 if (value == (object)KeywordsHelper.FUNCTION_NEW) return ParseNew();
                 if (value == (object)KeywordsHelper.FUNCTION_NULLPROPAGATION) return ParseFunctionNullPropagation();
+                if (value == (object)KeywordsHelper.FUNCTION_OFTYPE) return ParseFunctionOfType();
 
                 _textParser.NextToken();
 
@@ -1070,6 +1071,24 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             throw ParseError(errorPos, Res.NullPropagationRequiresMemberExpression);
+        }
+
+        // OfType(...) function
+        Expression ParseFunctionOfType()
+        {
+            int errorPos = _textParser.CurrentToken.Pos;
+            _textParser.NextToken();
+
+            Expression[] args = ParseArgumentList();
+
+            if (args.Length != 1)
+            {
+                throw ParseError(errorPos, Res.FunctionRequiresOneArg, "OfType");
+            }
+
+            Type resolvedType = ResolveTypeFromArgumentExpression(args[0]);
+
+            return null; // Expression.Call(callType, methodName, typeArgs, args);
         }
 
         Expression GenerateConditional(Expression test, Expression expr1, Expression expr2, int errorPos)
@@ -1494,6 +1513,21 @@ namespace System.Linq.Dynamic.Core.Parser
                 switch (_methodFinder.FindMethod(type, id, instance == null, args, out MethodBase mb))
                 {
                     case 0:
+                        // TODO : this is wrong
+                        //if (id == KeywordsHelper.FUNCTION_OFTYPE)
+                        //{
+                        //    if (args.Length != 1)
+                        //    {
+                        //        throw ParseError(errorPos, Res.FunctionRequiresOneArg, "OfType");
+                        //    }
+
+                        //    Type resolvedType = ResolveTypeFromArgumentExpression(args[0]);
+
+                        //    bool isOfType = TypeHelper.IsCompatibleWith(type, resolvedType);
+
+                        //    return Expression.Constant(isOfType);
+                        //}
+
                         throw ParseError(errorPos, Res.NoApplicableMethod, id, TypeHelper.GetTypeName(type));
 
                     case 1:
@@ -1660,16 +1694,13 @@ namespace System.Linq.Dynamic.Core.Parser
             Type[] typeArgs;
             if (new[] { "OfType", "Cast" }.Contains(methodName))
             {
-                string typeName = (args[0] as ConstantExpression)?.Value as string;
-
-                Type resultType = FindType(typeName);
-                if (resultType == null)
+                if (args.Length != 1)
                 {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeName);
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneArg, methodName);
                 }
 
+                typeArgs = new[] { ResolveTypeFromArgumentExpression(args[0]) };
                 args = new Expression[0];
-                typeArgs = new[] { resultType };
             }
             else if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
             {
@@ -1719,6 +1750,19 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             return Expression.Call(callType, methodName, typeArgs, args);
+        }
+
+        private Type ResolveTypeFromArgumentExpression(Expression argumentExpression)
+        {
+            string typeName = (argumentExpression as ConstantExpression)?.Value as string;
+
+            Type resultType = FindType(typeName);
+            if (resultType == null)
+            {
+                throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeName);
+            }
+
+            return resultType;
         }
 
         Expression[] ParseArgumentList()
