@@ -965,7 +965,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (value == (object)KeywordsHelper.FUNCTION_ISNULL) return ParseFunctionIsNull();
                 if (value == (object)KeywordsHelper.FUNCTION_NEW) return ParseNew();
                 if (value == (object)KeywordsHelper.FUNCTION_NULLPROPAGATION) return ParseFunctionNullPropagation();
-                if (value == (object)KeywordsHelper.FUNCTION_OFTYPE) return ParseFunctionOfType();
+                // if (value == (object)KeywordsHelper.FUNCTION_OFTYPE) return ParseFunctionOfType();
 
                 _textParser.NextToken();
 
@@ -1074,22 +1074,22 @@ namespace System.Linq.Dynamic.Core.Parser
         }
 
         // OfType(...) function
-        Expression ParseFunctionOfType()
-        {
-            int errorPos = _textParser.CurrentToken.Pos;
-            _textParser.NextToken();
+        //Expression ParseFunctionOfType()
+        //{
+        //    int errorPos = _textParser.CurrentToken.Pos;
+        //    _textParser.NextToken();
 
-            Expression[] args = ParseArgumentList();
+        //    Expression[] args = ParseArgumentList();
 
-            if (args.Length != 1)
-            {
-                throw ParseError(errorPos, Res.FunctionRequiresOneArg, "OfType");
-            }
+        //    if (args.Length != 1)
+        //    {
+        //        throw ParseError(errorPos, Res.FunctionRequiresOneArg, "OfType");
+        //    }
 
-            Type resolvedType = ResolveTypeFromArgumentExpression(args[0]);
+        //    Type resolvedType = ResolveTypeFromArgumentExpression(args[0]);
 
-            return null; // Expression.Call(callType, methodName, typeArgs, args);
-        }
+        //    return null; // Expression.Call(callType, methodName, typeArgs, args);
+        //}
 
         Expression GenerateConditional(Expression test, Expression expr1, Expression expr2, int errorPos)
         {
