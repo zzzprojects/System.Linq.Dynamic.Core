@@ -967,7 +967,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     case KeywordsHelper.FUNCTION_OFTYPE:
                     case KeywordsHelper.FUNCTION_IS:
-                        return ParseFunctionOfType();
+                        return ParseFunctionOfTypeOrIs();
 
                     case KeywordsHelper.FUNCTION_AS:
                         return ParseFunctionAs();
@@ -1097,19 +1097,21 @@ namespace System.Linq.Dynamic.Core.Parser
         }
 
         // OfType(...) and Is(...) function
-        Expression ParseFunctionOfType()
+        Expression ParseFunctionOfTypeOrIs()
         {
             int errorPos = _textParser.CurrentToken.Pos;
+            string functionName = _textParser.CurrentToken.Text;
+
             _textParser.NextToken();
 
             Expression[] args = ParseArgumentList();
 
             if (args.Length != 1)
             {
-                throw ParseError(errorPos, Res.FunctionRequiresOneArg, "OfType");
+                throw ParseError(errorPos, Res.FunctionRequiresOneArg, functionName);
             }
 
-            Type resolvedType = ResolveTypeFromArgumentExpression("OfType", args[0]);
+            Type resolvedType = ResolveTypeFromArgumentExpression(functionName, args[0]);
 
             return Expression.TypeIs(_it, resolvedType);
         }
