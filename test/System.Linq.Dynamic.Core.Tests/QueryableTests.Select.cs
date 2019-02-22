@@ -270,7 +270,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
 #if NETCOREAPP
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
             // Assign
             var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
@@ -288,7 +288,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
 #if NETCOREAPP
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             // Assign

@@ -33,7 +33,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 AllowNewToEvaluateAnyType = true
             };
 #if NETCOREAPP
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
             var qry = new BaseEmployee[]
             {
@@ -57,7 +57,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 AllowNewToEvaluateAnyType = true
             };
 #if NETCOREAPP
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             var qry = new[]
@@ -105,7 +105,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 AllowNewToEvaluateAnyType = true
             };
 #if NETCOREAPP
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
             var qry = new BaseEmployee[]
             {
@@ -129,7 +129,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 AllowNewToEvaluateAnyType = true
             };
 #if NETCOREAPP
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             var qry = new[]

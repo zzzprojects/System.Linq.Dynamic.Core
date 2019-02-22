@@ -4,7 +4,7 @@
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <!--<VersionPrefix>1.0.9.1</VersionPrefix>-->
         <Authors>Stef Heyenrath</Authors>
-        <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0;uap10.0</TargetFrameworks>
+        <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0;uap10.0;netcoreapp2.1</TargetFrameworks>
         <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
@@ -17,7 +17,6 @@
         <PackageLicenseUrl>https://raw.githubusercontent.com/StefH/System.Linq.Dynamic.Core/master/LICENSE</PackageLicenseUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
-        <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(PackageTargetFallback);dotnet5.4;portable-win81+wp81;portable-net45+wp8;portable-net45+win8+wp8;portable-wp81+wpa81;portable-win81+wp81+wpa81;portable-net45+win8+wpa81+wp8;portable-net45+win8;portable-net45+win8+wpa81;portable-win81+wpa81;portable-net451+win81;portable-net451+win81+wpa81</PackageTargetFallback>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -33,7 +32,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0;netcoreapp2.1</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -75,32 +74,22 @@
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-        <!--<Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-        <!--<Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-        <!--<Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-        <!--<Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-        <!--<Reference Include="System" />
-        <Reference Include="Microsoft.CSharp" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
@@ -109,6 +98,10 @@
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     </ItemGroup>
 
