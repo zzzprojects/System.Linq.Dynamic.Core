@@ -28,13 +28,6 @@ namespace System.Linq.Dynamic.Core.Tests
         public void OfType_WithString()
         {
             // Assign
-            var config = new ParsingConfig
-            {
-                AllowNewToEvaluateAnyType = true
-            };
-#if NETCOREAPP
-            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
             var qry = new BaseEmployee[]
             {
                 new Worker { Name = "e" }, new Boss { Name = "e" }
@@ -42,7 +35,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var oftype = qry.OfType<Worker>().ToArray();
-            var oftypeDynamic = qry.OfType(config, typeof(Worker).FullName).ToDynamicArray();
+            var oftypeDynamic = qry.OfType(typeof(Worker).FullName).ToDynamicArray();
 
             // Assert
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
@@ -52,14 +45,6 @@ namespace System.Linq.Dynamic.Core.Tests
         public void OfType_Dynamic()
         {
             // Assign
-            var config = new ParsingConfig
-            {
-                AllowNewToEvaluateAnyType = true
-            };
-#if NETCOREAPP
-            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
-
             var qry = new[]
             {
                 new CompanyWithBaseEmployees
@@ -73,7 +58,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var oftype = qry.Select(c => c.Employees.OfType<Worker>().Where(e => e.Name == "e")).ToArray();
-            var oftypeDynamic = qry.Select(config, "Employees.OfType(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Where(Name == \"e\")").ToDynamicArray();
+            var oftypeDynamic = qry.Select("Employees.OfType(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Where(Name == \"e\")").ToDynamicArray();
 
             // Assert
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
@@ -85,11 +70,6 @@ namespace System.Linq.Dynamic.Core.Tests
         public void OfType_Dynamic_ActingOnIt(string function)
         {
             // Assign
-            var config = new ParsingConfig
-            {
-                AllowNewToEvaluateAnyType = true
-            };
-
             var qry = new BaseEmployee[]
             {
                 new Worker { Name = "1" }, new Boss { Name = "b" }
@@ -97,7 +77,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             int countOfType = qry.Count(c => c is Worker);
-            int countOfTypeDynamic = qry.Count(config, $"{function}(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")");
+            int countOfTypeDynamic = qry.Count($"{function}(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")");
 
             // Assert
             Check.That(countOfTypeDynamic).Equals(countOfType);
@@ -129,18 +109,13 @@ namespace System.Linq.Dynamic.Core.Tests
         public void As_Dynamic_ActingOnIt()
         {
             // Assign
-            var config = new ParsingConfig
-            {
-                AllowNewToEvaluateAnyType = true
-            };
-
             var qry = new BaseEmployee[]
             {
                 new Worker { Name = "1" }, new Boss { Name = "b" }
             }.AsQueryable();
 
             // Act
-            int countAsDynamic = qry.Count(config, $"As(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\") != null");
+            int countAsDynamic = qry.Count("As(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\") != null");
 
             // Assert
             Check.That(countAsDynamic).Equals(1);
@@ -167,11 +142,6 @@ namespace System.Linq.Dynamic.Core.Tests
         public void CastToType_WithString()
         {
             // Assign
-            var config = new ParsingConfig
-            {
-                AllowNewToEvaluateAnyType = true
-            };
-
             var qry = new BaseEmployee[]
             {
                 new Worker { Name = "1" }, new Worker { Name = "2" }
@@ -179,7 +149,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var cast = qry.Cast<Worker>().ToArray();
-            var castDynamic = qry.Cast(config, typeof(Worker).FullName).ToDynamicArray();
+            var castDynamic = qry.Cast(typeof(Worker).FullName).ToDynamicArray();
 
             // Assert
             Check.That(castDynamic.Length).Equals(cast.Length);
@@ -189,11 +159,6 @@ namespace System.Linq.Dynamic.Core.Tests
         public void CastToType_Dynamic()
         {
             // Assign
-            var config = new ParsingConfig
-            {
-                AllowNewToEvaluateAnyType = true
-            };
-
             var qry = new[]
             {
                 new CompanyWithBaseEmployees
@@ -207,7 +172,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var cast = qry.Select(c => c.Employees.Cast<Worker>().Where(e => e.Name == "e")).ToArray();
-            var castDynamic = qry.Select(config, "Employees.Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Where(Name == \"e\")").ToDynamicArray();
+            var castDynamic = qry.Select("Employees.Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Where(Name == \"e\")").ToDynamicArray();
 
             // Assert
             Check.That(cast.Length).Equals(castDynamic.Length);
@@ -217,11 +182,6 @@ namespace System.Linq.Dynamic.Core.Tests
         public void CastToType_Dynamic_ActingOnIt()
         {
             // Assign
-            var config = new ParsingConfig
-            {
-                AllowNewToEvaluateAnyType = true
-            };
-
             var qry = new BaseEmployee[]
             {
                 new Worker { Name = "1" }, new Worker { Name = "2" }
@@ -229,7 +189,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var cast = qry.Select(c => (Worker)c).ToArray();
-            var castDynamic = qry.Select(config, "Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")").ToDynamicArray();
+            var castDynamic = qry.Select("Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")").ToDynamicArray();
 
             // Assert
             Check.That(cast.Length).Equals(castDynamic.Length);
@@ -239,18 +199,13 @@ namespace System.Linq.Dynamic.Core.Tests
         public void CastToType_Dynamic_ActingOnIt_Throws()
         {
             // Assign
-            var config = new ParsingConfig
-            {
-                AllowNewToEvaluateAnyType = true
-            };
-
             var qry = new BaseEmployee[]
             {
                 new Worker { Name = "1" }, new Boss { Name = "b" }
             }.AsQueryable();
 
             // Act
-            Action castDynamic = () => qry.Select(config, "Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")").ToDynamicArray();
+            Action castDynamic = () => qry.Select("Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")").ToDynamicArray();
 
             // Assert
             Check.ThatCode(castDynamic).Throws<Exception>();
