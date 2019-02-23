@@ -43,6 +43,16 @@ namespace System.Linq.Dynamic.Core.Parser
                     {
                         return expression.Type;
                     }
+
+                    if (_parsingConfig.ResolveTypesBySimpleName && _parsingConfig.CustomTypeProvider != null)
+                    {
+                        string possibleFullName = $"{expression.Type.Namespace}.{name}";
+                        var resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(possibleFullName);
+                        if (resolvedType != null)
+                        {
+                            return resolvedType;
+                        }
+                    }
                 }
             }
 
