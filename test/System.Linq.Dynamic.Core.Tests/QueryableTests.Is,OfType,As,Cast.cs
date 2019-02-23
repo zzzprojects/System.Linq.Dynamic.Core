@@ -104,6 +104,28 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void OfType_Dynamic_ActingOnIt_WithSimpleName()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                ResolveTypesBySimpleName = true
+            };
+
+            var qry = new BaseEmployee[]
+            {
+                new Worker { Name = "1" }, new Boss { Name = "b" }
+            }.AsQueryable();
+
+            // Act
+            int countOfType = qry.Count(c => c is Worker);
+            int countOfTypeDynamic = qry.Count(config, "OfType(\"Worker\")");
+
+            // Assert
+            Check.That(countOfTypeDynamic).Equals(countOfType);
+        }
+
+        [Fact]
         public void As_Dynamic_ActingOnIt()
         {
             // Assign
