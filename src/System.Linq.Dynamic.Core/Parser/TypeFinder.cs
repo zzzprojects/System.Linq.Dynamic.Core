@@ -49,7 +49,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
 
                 // In case the type is not found based on fullname, try to get the type on simplename if allowed
-                if (_parsingConfig.ResolveTypesBySimpleName && resolvedType == null)
+                if (_parsingConfig.ResolveTypesBySimpleName)
                 {
                     return _parsingConfig.CustomTypeProvider.ResolveTypeBySimpleName(name);
                 }
