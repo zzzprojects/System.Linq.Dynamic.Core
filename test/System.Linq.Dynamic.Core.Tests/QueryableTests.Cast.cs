@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
-        [Fact]
+        // [Fact]
         public void Cast_Explicit()
         {
             // Assign

@@ -19,7 +19,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression[] args)
         {
-            return FindMethod(type, methodName, staticAccess, args, out var _) == 1;
+            return FindMethod(type, methodName, staticAccess, args, out _) == 1;
         }
 
         public int FindMethod(Type type, string methodName, bool staticAccess, Expression[] args, out MethodBase method)

@@ -23,6 +23,12 @@ namespace WindowsUniversalTestApp14393
             return ResolveType(assemblies, typeName);
         }
 
+        public Type ResolveTypeBySimpleName(string typeName)
+        {
+            var assemblies = GetAssemblyListAsync().Result;
+            return ResolveTypeBySimpleName(assemblies, typeName);
+        }
+
         private static async Task<List<Assembly>> GetAssemblyListAsync()
         {
             List<Assembly> assemblies = new List<Assembly>();

@@ -2,7 +2,7 @@
 
 namespace System.Linq.Dynamic.Core.Parser
 {
-    internal class KeywordsHelper
+    internal class KeywordsHelper : IKeywordsHelper
     {
         public const string SYMBOL_IT = "$";
         public const string SYMBOL_PARENT = "^";
@@ -16,6 +16,10 @@ namespace System.Linq.Dynamic.Core.Parser
         public const string FUNCTION_ISNULL = "isnull";
         public const string FUNCTION_NEW = "new";
         public const string FUNCTION_NULLPROPAGATION = "np";
+        public const string FUNCTION_OFTYPE = "OfType";
+        public const string FUNCTION_IS = "is";
+        public const string FUNCTION_AS = "as";
+        public const string FUNCTION_CAST = "Cast";
 
         private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
         {
@@ -41,6 +45,10 @@ namespace System.Linq.Dynamic.Core.Parser
             _keywords.Add(FUNCTION_ISNULL, FUNCTION_ISNULL);
             _keywords.Add(FUNCTION_NEW, FUNCTION_NEW);
             _keywords.Add(FUNCTION_NULLPROPAGATION, FUNCTION_NULLPROPAGATION);
+            _keywords.Add(FUNCTION_OFTYPE, FUNCTION_OFTYPE);
+            _keywords.Add(FUNCTION_IS, FUNCTION_IS);
+            _keywords.Add(FUNCTION_AS, FUNCTION_AS);
+            _keywords.Add(FUNCTION_CAST, FUNCTION_CAST);
 
             foreach (Type type in PredefinedTypesHelper.PredefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
             {

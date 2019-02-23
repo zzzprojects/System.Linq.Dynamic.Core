@@ -15,10 +15,17 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         HashSet<Type> GetCustomTypes();
 
         /// <summary>
-        /// Resolve any type which is registered in the current application domain.
+        /// Resolve any type by fullname which is registered in the current application domain.
         /// </summary>
         /// <param name="typeName">The typename to resolve.</param>
         /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
         Type ResolveType([NotNull] string typeName);
+
+        /// <summary>
+        /// Resolve any type by the simple name which is registered in the current application domain.
+        /// </summary>
+        /// <param name="simpleTypeName">The typename to resolve.</param>
+        /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
+        Type ResolveTypeBySimpleName([NotNull] string simpleTypeName);
     }
 }

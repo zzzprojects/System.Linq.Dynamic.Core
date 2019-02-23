@@ -31,6 +31,12 @@ namespace ConsoleAppEF211
 
                 return ResolveType(assemblies, typeName);
             }
+
+            public Type ResolveTypeBySimpleName(string typeName)
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                return ResolveTypeBySimpleName(assemblies, typeName);
+            }
         }
 
         private static IQueryable GetQueryable()
