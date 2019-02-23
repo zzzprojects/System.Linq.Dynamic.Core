@@ -60,7 +60,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private bool TryResolveTypeUsingExpressions(string name, ParameterExpression[] expressions, out Type result)
         {
-            foreach (var expression in expressions)
+            foreach (var expression in expressions.Where(e => e != null))
             {
                 if (expression != null && expression.Type.Name == name)
                 {
