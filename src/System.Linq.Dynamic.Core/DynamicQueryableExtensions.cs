@@ -2156,14 +2156,7 @@ namespace System.Linq.Dynamic.Core
 
         private static MethodInfo GetGenericMethod(string name)
         {
-            try
-            {
-                return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Method not found: " + name, ex);
-            }
+            return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
         }
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null)
