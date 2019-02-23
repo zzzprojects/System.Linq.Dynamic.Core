@@ -47,6 +47,35 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             return null;
         }
 
+        /// <summary>
+        /// Resolve a type by the simple name which is registered in the current application domain.
+        /// </summary>
+        /// <param name="assemblies">The assemblies to inspect.</param>
+        /// <param name="simpleTypeName">The simple typename to resolve.</param>
+        /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
+        protected Type ResolveTypeBySimpleName([NotNull] IEnumerable<Assembly> assemblies, [NotNull] string simpleTypeName)
+        {
+            Check.NotNull(assemblies, nameof(assemblies));
+            Check.NotEmpty(simpleTypeName, nameof(simpleTypeName));
+
+            foreach (var assembly in assemblies)
+            {
+                var fullnames = assembly.GetTypes().Select(t => t.FullName).Distinct();
+                var firstMatchingFullname = fullnames.FirstOrDefault(fn => fn.EndsWith($".{simpleTypeName}"));
+
+                if (firstMatchingFullname != null)
+                {
+                    Type resolvedType = assembly.GetType(firstMatchingFullname, false, true);
+                    if (resolvedType != null)
+                    {
+                        return resolvedType;
+                    }
+                }
+            }
+
+            return null;
+        }
+
 #if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
         /// <summary>
         /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.

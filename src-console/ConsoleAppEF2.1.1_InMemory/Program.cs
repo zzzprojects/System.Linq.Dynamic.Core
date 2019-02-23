@@ -189,6 +189,12 @@ namespace ConsoleAppEF2
             var oftypeDynamicWithType = context.BaseDtos.OfType(typeof(TestDto)).ToDynamicArray();
             var oftypeDynamicWithString = context.BaseDtos.OfType(config, "ConsoleAppEF2.Database.TestDto").ToDynamicArray();
 
+            var configX = new ParsingConfig
+            {
+                ResolveTypesBySimpleName = true
+            };
+            var oftypeDynamicWithSimpleNameString = context.BaseDtos.OfType(configX, "TestDto").ToDynamicArray();
+
             int isOfType = context.BaseDtos.Count(b => b is TestDto);
             int isOfTypeDynamicTestDto = context.BaseDtos.Count(config, "OfType(\"ConsoleAppEF2.Database.TestDto\")");
             int isOfTypeDynamicOtherTestDto = context.BaseDtos.Count(config, "OfType(\"ConsoleAppEF2.Database.OtherTestDto\")");

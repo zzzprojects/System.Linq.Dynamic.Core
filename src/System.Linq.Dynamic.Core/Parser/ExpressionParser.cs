@@ -25,9 +25,10 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private readonly ParsingConfig _parsingConfig;
         private readonly MethodFinder _methodFinder;
-        private readonly KeywordsHelper _keywordsHelper;
+        private readonly IKeywordsHelper _keywordsHelper;
         private readonly TextParser _textParser;
         private readonly IExpressionHelper _expressionHelper;
+        private readonly ITypeFinder _typeFinder;
         private readonly Dictionary<string, object> _internals;
         private readonly Dictionary<string, object> _symbols;
 
@@ -73,6 +74,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser = new TextParser(expression);
             _methodFinder = new MethodFinder(_parsingConfig);
             _expressionHelper = new ExpressionHelper(_parsingConfig);
+            _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
         }
 
         void ProcessParameters(ParameterExpression[] parameters)
@@ -1242,7 +1244,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     _textParser.NextToken();
                 }
 
-                newType = FindType(newTypeName);
+                newType = _typeFinder.FindTypeByName(newTypeName, new[] { _it, _parent, _root }, false);
                 if (newType == null)
                 {
                     throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, newTypeName);
@@ -1654,54 +1656,6 @@ namespace System.Linq.Dynamic.Core.Parser
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
 
-        Type FindType(string name)
-        {
-            _keywordsHelper.TryGetValue(name, out object type);
-
-            Type result = type as Type;
-            if (result != null)
-            {
-                return result;
-            }
-
-            if (_it != null && _it.Type.Name == name)
-            {
-                return _it.Type;
-            }
-
-            if (_parent != null && _parent.Type.Name == name)
-            {
-                return _parent.Type;
-            }
-
-            if (_root != null && _root.Type.Name == name)
-            {
-                return _root.Type;
-            }
-
-            if (_it != null && _it.Type.Namespace + "." + _it.Type.Name == name)
-            {
-                return _it.Type;
-            }
-
-            if (_parent != null && _parent.Type.Namespace + "." + _parent.Type.Name == name)
-            {
-                return _parent.Type;
-            }
-
-            if (_root != null && _root.Type.Namespace + "." + _root.Type.Name == name)
-            {
-                return _root.Type;
-            }
-
-            if (_parsingConfig.AllowNewToEvaluateAnyType && _parsingConfig.CustomTypeProvider != null)
-            {
-                return _parsingConfig.CustomTypeProvider.ResolveType(name);
-            }
-
-            return null;
-        }
-
         Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, bool isQueryable)
         {
             var oldParent = _parent;
@@ -1806,7 +1760,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArg, functionName, typeName);
             }
 
-            Type resultType = FindType(typeName);
+            Type resultType = _typeFinder.FindTypeByName(typeName, new[] { _it, _parent, _root }, true);
             if (resultType == null)
             {
                 throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeName);
