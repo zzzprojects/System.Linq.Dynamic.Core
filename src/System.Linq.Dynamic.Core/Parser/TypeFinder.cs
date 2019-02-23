@@ -62,20 +62,16 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             foreach (var expression in expressions.Where(e => e != null))
             {
-                if (expression != null && expression.Type.Name == name)
+                if (expression.Type.Name == name)
                 {
-                    {
-                        result = expression.Type;
-                        return true;
-                    }
+                    result = expression.Type;
+                    return true;
                 }
 
-                if (expression != null && expression.Type.Namespace + "." + expression.Type.Name == name)
+                if ($"{expression.Type.Namespace}.{expression.Type.Name}" == name)
                 {
-                    {
-                        result = expression.Type;
-                        return true;
-                    }
+                    result = expression.Type;
+                    return true;
                 }
 
                 if (_parsingConfig.ResolveTypesBySimpleName && _parsingConfig.CustomTypeProvider != null)
@@ -84,10 +80,8 @@ namespace System.Linq.Dynamic.Core.Parser
                     var resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(possibleFullName);
                     if (resolvedType != null)
                     {
-                        {
-                            result = resolvedType;
-                            return true;
-                        }
+                        result = resolvedType;
+                        return true;
                     }
                 }
             }
