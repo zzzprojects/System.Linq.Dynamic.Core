@@ -18,7 +18,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _parsingConfig = parsingConfig;
         }
 
-        public Type FindTypeByName(string name, ParameterExpression[] expressions, bool forceUseCustomTypeProvider = false)
+        public Type FindTypeByName(string name, ParameterExpression[] expressions, bool forceUseCustomTypeProvider)
         {
             Check.NotEmpty(name, nameof(name));
 
@@ -30,40 +30,25 @@ namespace System.Linq.Dynamic.Core.Parser
                 return result;
             }
 
-            if (expressions != null)
+            if (expressions != null && TryResolveTypeUsingExpressions(name, expressions, out result))
             {
-                foreach (var expression in expressions)
-                {
-                    if (expression != null && expression.Type.Name == name)
-                    {
-                        return expression.Type;
-                    }
-
-                    if (expression != null && expression.Type.Namespace + "." + expression.Type.Name == name)
-                    {
-                        return expression.Type;
-                    }
-
-                    if (_parsingConfig.ResolveTypesBySimpleName && _parsingConfig.CustomTypeProvider != null)
-                    {
-                        string possibleFullName = $"{expression.Type.Namespace}.{name}";
-                        var resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(possibleFullName);
-                        if (resolvedType != null)
-                        {
-                            return resolvedType;
-                        }
-                    }
-                }
+                return result;
             }
 
+            return ResolveTypeByUsingCustomTypeProvider(name, forceUseCustomTypeProvider);
+        }
+
+        private Type ResolveTypeByUsingCustomTypeProvider(string name, bool forceUseCustomTypeProvider)
+        {
             if ((forceUseCustomTypeProvider || _parsingConfig.AllowNewToEvaluateAnyType) && _parsingConfig.CustomTypeProvider != null)
             {
-                var resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(name);
+                Type resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(name);
                 if (resolvedType != null)
                 {
                     return resolvedType;
                 }
 
+                // In case the type is not found based on fullname, try to get the type on simplename if allowed
                 if (_parsingConfig.ResolveTypesBySimpleName && resolvedType == null)
                 {
                     return _parsingConfig.CustomTypeProvider.ResolveTypeBySimpleName(name);
@@ -71,6 +56,44 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             return null;
+        }
+
+        private bool TryResolveTypeUsingExpressions(string name, ParameterExpression[] expressions, out Type result)
+        {
+            foreach (var expression in expressions)
+            {
+                if (expression != null && expression.Type.Name == name)
+                {
+                    {
+                        result = expression.Type;
+                        return true;
+                    }
+                }
+
+                if (expression != null && expression.Type.Namespace + "." + expression.Type.Name == name)
+                {
+                    {
+                        result = expression.Type;
+                        return true;
+                    }
+                }
+
+                if (_parsingConfig.ResolveTypesBySimpleName && _parsingConfig.CustomTypeProvider != null)
+                {
+                    string possibleFullName = $"{expression.Type.Namespace}.{name}";
+                    var resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(possibleFullName);
+                    if (resolvedType != null)
+                    {
+                        {
+                            result = resolvedType;
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            result = null;
+            return false;
         }
     }
 }
