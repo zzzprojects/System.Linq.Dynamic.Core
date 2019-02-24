@@ -196,9 +196,9 @@ namespace ConsoleAppEF2
             var oftypeDynamicWithSimpleNameString = context.BaseDtos.OfType(configX, "TestDto").ToDynamicArray();
 
             int isOfType = context.BaseDtos.Count(b => b is TestDto);
-            int isOfTypeDynamicTestDto = context.BaseDtos.Count(config, "OfType(\"ConsoleAppEF2.Database.TestDto\")");
-            int isOfTypeDynamicOtherTestDto = context.BaseDtos.Count(config, "OfType(\"ConsoleAppEF2.Database.OtherTestDto\")");
-            int isOfTypeDynamicComplexDto = context.BaseDtos.Count(config, "OfType(\"ConsoleAppEF2.Database.ComplexDto\")");
+            int isOfTypeDynamicTestDto = context.BaseDtos.Count(config, "is(\"ConsoleAppEF2.Database.TestDto\")");
+            int isOfTypeDynamicOtherTestDto = context.BaseDtos.Count(config, "is(\"ConsoleAppEF2.Database.OtherTestDto\")");
+            int isOfTypeDynamicComplexDto = context.BaseDtos.Count(config, "is(\"ConsoleAppEF2.Database.ComplexDto\")");
 
             var asOfType = context.BaseDtos.Where(b => b as TestDto != null).ToArray();
             var asOfTypeDynamicTestDto = context.BaseDtos.Where(config, "As(\"ConsoleAppEF2.Database.TestDto\") != null").ToDynamicArray();

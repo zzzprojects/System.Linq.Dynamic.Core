@@ -64,10 +64,8 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
         }
 
-        [Theory]
-        [InlineData("OfType")]
-        [InlineData("is")]
-        public void OfType_Dynamic_ActingOnIt(string function)
+        [Fact]
+        public void Is_Dynamic_ActingOnIt()
         {
             // Assign
             var qry = new BaseEmployee[]
@@ -77,14 +75,14 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             int countOfType = qry.Count(c => c is Worker);
-            int countOfTypeDynamic = qry.Count($"{function}(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")");
+            int countOfTypeDynamic = qry.Count("is(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")");
 
             // Assert
             Check.That(countOfTypeDynamic).Equals(countOfType);
         }
 
         [Fact]
-        public void OfType_Dynamic_ActingOnIt_WithSimpleName()
+        public void Is_Dynamic_ActingOnIt_WithSimpleName()
         {
             // Assign
             var config = new ParsingConfig
@@ -99,7 +97,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             int countOfType = qry.Count(c => c is Worker);
-            int countOfTypeDynamic = qry.Count(config, "OfType(\"Worker\")");
+            int countOfTypeDynamic = qry.Count(config, "is(\"Worker\")");
 
             // Assert
             Check.That(countOfTypeDynamic).Equals(countOfType);

@@ -967,9 +967,8 @@ namespace System.Linq.Dynamic.Core.Parser
                     case KeywordsHelper.FUNCTION_NULLPROPAGATION:
                         return ParseFunctionNullPropagation();
 
-                    case KeywordsHelper.FUNCTION_OFTYPE:
                     case KeywordsHelper.FUNCTION_IS:
-                        return ParseFunctionOfTypeOrIs();
+                        return ParseFunctionIs();
 
                     case KeywordsHelper.FUNCTION_AS:
                         return ParseFunctionAs();
@@ -1098,12 +1097,11 @@ namespace System.Linq.Dynamic.Core.Parser
             throw ParseError(errorPos, Res.NullPropagationRequiresMemberExpression);
         }
 
-        // OfType(...) and Is(...) function
-        Expression ParseFunctionOfTypeOrIs()
+        // Is(...) function
+        Expression ParseFunctionIs()
         {
             int errorPos = _textParser.CurrentToken.Pos;
             string functionName = _textParser.CurrentToken.Text;
-
             _textParser.NextToken();
 
             Expression[] args = ParseArgumentList();
@@ -1122,16 +1120,17 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParseFunctionAs()
         {
             int errorPos = _textParser.CurrentToken.Pos;
+            string functionName = _textParser.CurrentToken.Text;
             _textParser.NextToken();
 
             Expression[] args = ParseArgumentList();
 
             if (args.Length != 1)
             {
-                throw ParseError(errorPos, Res.FunctionRequiresOneArg, "As");
+                throw ParseError(errorPos, Res.FunctionRequiresOneArg, functionName);
             }
 
-            Type resolvedType = ResolveTypeFromArgumentExpression("As", args[0]);
+            Type resolvedType = ResolveTypeFromArgumentExpression(functionName, args[0]);
 
             return Expression.TypeAs(_it, resolvedType);
         }
@@ -1140,16 +1139,17 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParseFunctionCast()
         {
             int errorPos = _textParser.CurrentToken.Pos;
+            string functionName = _textParser.CurrentToken.Text;
             _textParser.NextToken();
 
             Expression[] args = ParseArgumentList();
 
             if (args.Length != 1)
             {
-                throw ParseError(errorPos, Res.FunctionRequiresOneArg, "Cast");
+                throw ParseError(errorPos, Res.FunctionRequiresOneArg, functionName);
             }
 
-            Type resolvedType = ResolveTypeFromArgumentExpression("Cast", args[0]);
+            Type resolvedType = ResolveTypeFromArgumentExpression(functionName, args[0]);
 
             return Expression.ConvertChecked(_it, resolvedType);
         }
