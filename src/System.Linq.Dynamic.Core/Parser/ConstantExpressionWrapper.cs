@@ -10,23 +10,21 @@ namespace System.Linq.Dynamic.Core.Parser
     {
         public void Wrap(ref Expression expression)
         {
-            if (expression is ConstantExpression)
+            if (expression is ConstantExpression constantExpression)
             {
-                var constantExpression = expression as ConstantExpression;
-
                 if (constantExpression.Type == typeof(bool))
                 {
                     expression = WrappedConstant((bool)constantExpression.Value);
                 }
-                if (constantExpression.Type == typeof(char))
+                else if (constantExpression.Type == typeof(char))
                 {
                     expression = WrappedConstant((char)constantExpression.Value);
                 }
-                if (constantExpression.Type == typeof(byte))
+                else if (constantExpression.Type == typeof(byte))
                 {
                     expression = WrappedConstant((byte)constantExpression.Value);
                 }
-                if (constantExpression.Type == typeof(sbyte))
+                else if (constantExpression.Type == typeof(sbyte))
                 {
                     expression = WrappedConstant((sbyte)constantExpression.Value);
                 }
@@ -90,10 +88,8 @@ namespace System.Linq.Dynamic.Core.Parser
                 return;
             }
 
-            if (expression is NewExpression)
+            if (expression is NewExpression newExpression)
             {
-                var newExpression = expression as NewExpression;
-
                 if (newExpression.Type == typeof(Guid))
                 {
                     expression = WrappedConstant(Expression.Lambda<Func<Guid>>(newExpression).Compile()());

@@ -18,13 +18,14 @@ namespace System.Linq.Dynamic.Core.Tests
 
         BlogContext _context;
 
-        static readonly Random Rnd = new Random(1);
+        // static readonly Random Rnd = new Random(1);
 
         public DefaultQueryableAnalyzerTests()
         {
 #if EFCORE
             var builder = new DbContextOptionsBuilder();
-            builder.UseSqlite($"Filename=System.Linq.Dynamic.Core.{Guid.NewGuid()}.db");
+            // builder.UseSqlite($"Filename=System.Linq.Dynamic.Core.{Guid.NewGuid()}.db");
+            builder.UseInMemoryDatabase($"System.Linq.Dynamic.Core.{Guid.NewGuid()}");
 
             _context = new BlogContext(builder.Options);
             _context.Database.EnsureCreated();
