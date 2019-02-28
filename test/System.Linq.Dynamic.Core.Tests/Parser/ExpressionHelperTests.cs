@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
-using NFluent;
+﻿using NFluent;
+using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Expressions;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Parser.Tests
+namespace System.Linq.Dynamic.Core.Tests.Parser
 {
     public class ExpressionHelperTests
     {
@@ -11,6 +12,49 @@ namespace System.Linq.Dynamic.Core.Parser.Tests
         public ExpressionHelperTests()
         {
             _expressionHelper = new ExpressionHelper(ParsingConfig.Default);
+        }
+
+        [Fact]
+        public void ExpressionHelper_WrapConstantExpression_false()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = false
+            };
+            var expressionHelper = new ExpressionHelper(config);
+
+            string value = "test";
+            Expression expression = Expression.Constant(value);
+
+            // Act
+            expressionHelper.WrapConstantExpression(ref expression);
+
+            // Assert
+            Check.That(expression).IsInstanceOf<ConstantExpression>();
+            Check.That(expression.ToString()).Equals("\"test\"");
+        }
+
+        [Fact]
+        public void ExpressionHelper_WrapConstantExpression_true()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = true
+            };
+            var expressionHelper = new ExpressionHelper(config);
+
+            string value = "test";
+            Expression expression = Expression.Constant(value);
+
+            // Act
+            expressionHelper.WrapConstantExpression(ref expression);
+            expressionHelper.WrapConstantExpression(ref expression);
+
+            // Assert
+            Check.That(expression.GetType().FullName).Equals("System.Linq.Expressions.PropertyExpression");
+            Check.That(expression.ToString()).Equals("value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.String]).Value");
         }
 
         [Fact]

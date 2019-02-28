@@ -1784,7 +1784,11 @@ namespace System.Linq.Dynamic.Core.Parser
             var argList = new List<Expression>();
             while (true)
             {
-                argList.Add(ParseConditionalOperator());
+                var argumentExpression = ParseConditionalOperator();
+
+                _expressionHelper.WrapConstantExpression(ref argumentExpression);
+
+                argList.Add(argumentExpression);
 
                 if (_textParser.CurrentToken.Id != TokenId.Comma)
                 {

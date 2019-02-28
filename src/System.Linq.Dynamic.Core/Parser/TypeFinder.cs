@@ -62,13 +62,13 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             foreach (var expression in expressions.Where(e => e != null))
             {
-                if (expression.Type.Name == name)
+                if (name == expression.Type.Name)
                 {
                     result = expression.Type;
                     return true;
                 }
 
-                if ($"{expression.Type.Namespace}.{expression.Type.Name}" == name)
+                if (name == $"{expression.Type.Namespace}.{expression.Type.Name}")
                 {
                     result = expression.Type;
                     return true;

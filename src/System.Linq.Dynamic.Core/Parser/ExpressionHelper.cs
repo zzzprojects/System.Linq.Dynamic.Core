@@ -19,6 +19,14 @@ namespace System.Linq.Dynamic.Core.Parser
             _parsingConfig = parsingConfig;
         }
 
+        public void WrapConstantExpression(ref Expression argument)
+        {
+            if (_parsingConfig.UseParameterizedNamesInDynamicQuery)
+            {
+                _constantExpressionWrapper.Wrap(ref argument);
+            }
+        }
+
         public void ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right)
         {
             if (left.Type == right.Type)

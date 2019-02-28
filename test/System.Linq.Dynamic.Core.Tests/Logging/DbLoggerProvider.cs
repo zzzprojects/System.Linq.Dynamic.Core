@@ -9,7 +9,7 @@ namespace System.Linq.Dynamic.Core.Tests.Logging
         private static readonly string[] Categories =
         {
             typeof(RelationalCommandBuilderFactory).FullName,
-            typeof(SqliteRelationalConnection).FullName
+            // typeof(SqliteRelationalConnection).FullName
         };
 
         public ILogger CreateLogger(string name)
