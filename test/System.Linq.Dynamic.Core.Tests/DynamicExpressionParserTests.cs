@@ -112,6 +112,12 @@ namespace System.Linq.Dynamic.Core.Tests
             {
                 return Type.GetType(typeName);
             }
+
+            public Type ResolveTypeBySimpleName(string typeName)
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                return ResolveTypeBySimpleName(assemblies, typeName);
+            }
         }
 
         [Fact]

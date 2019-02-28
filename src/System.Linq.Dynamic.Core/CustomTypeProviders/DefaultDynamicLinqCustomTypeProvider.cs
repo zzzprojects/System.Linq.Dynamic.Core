@@ -54,6 +54,15 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             return ResolveType(assemblies, typeName);
         }
 
+        /// <inheritdoc cref="IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName"/>
+        public Type ResolveTypeBySimpleName(string simpleTypeName)
+        {
+            Check.NotEmpty(simpleTypeName, nameof(simpleTypeName));
+
+            IEnumerable<Assembly> assemblies = _assemblyHelper.GetAssemblies();
+            return ResolveTypeBySimpleName(assemblies, simpleTypeName);
+        }
+
         private HashSet<Type> GetCustomTypesInternal()
         {
             IEnumerable<Assembly> assemblies = _assemblyHelper.GetAssemblies();

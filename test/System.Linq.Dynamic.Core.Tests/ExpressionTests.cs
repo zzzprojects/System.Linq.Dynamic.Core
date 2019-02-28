@@ -572,7 +572,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var config = new ParsingConfig();
 #if NETCOREAPP        
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             // Arrange
@@ -629,7 +629,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var config = new ParsingConfig();
 #if NETCOREAPP
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             // Arrange
@@ -654,7 +654,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var config = new ParsingConfig();
 #if NETSTANDARD
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             // Act
@@ -743,7 +743,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var config = new ParsingConfig();
 #if NETSTANDARD
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
 
             // Arrange
@@ -867,7 +867,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var config = new ParsingConfig();
 #if NETSTANDARD
-            config.CustomTypeProvider = new NetStandardCustomTypeProvider();
+            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
 #endif
             // Arrange
             var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
@@ -1329,7 +1329,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
-#if !NETCOREAPP1_1
+#if !NETCOREAPP
         [Fact]
         [Trait("Issue", "136")]
         public void ExpressionTests_Select_ExpandoObjects()

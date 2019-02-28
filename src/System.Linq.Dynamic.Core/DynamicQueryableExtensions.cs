@@ -197,6 +197,56 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion AsEnumerable
 
+        #region Cast
+        private static readonly MethodInfo _cast = GetGenericMethod(nameof(Queryable.Cast));
+
+        /// <summary>
+        /// Converts the elements of an <see cref="IQueryable"/> to the specified type.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be converted.</param>
+        /// <param name="type">The type to convert the elements of source to.</param>
+        /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+        public static IQueryable Cast([NotNull] this IQueryable source, [NotNull] Type type)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(type, nameof(type));
+
+            var optimized = OptimizeExpression(Expression.Call(null, _cast.MakeGenericMethod(new Type[] { type }), new Expression[] { source.Expression }));
+
+            return source.Provider.CreateQuery(optimized);
+        }
+
+        /// <summary>
+        /// Converts the elements of an <see cref="IQueryable"/> to the specified type.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be converted.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="typeName">The type to convert the elements of source to.</param>
+        /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+        public static IQueryable Cast([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string typeName)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(typeName, nameof(typeName));
+
+            var finder = new TypeFinder(config, new KeywordsHelper(config));
+            Type type = finder.FindTypeByName(typeName, null, true);
+
+            return Cast(source, type);
+        }
+
+        /// <summary>
+        /// Converts the elements of an <see cref="IQueryable"/> to the specified type.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be converted.</param>
+        /// <param name="typeName">The type to convert the elements of source to.</param>
+        /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+        public static IQueryable Cast([NotNull] this IQueryable source, [NotNull] string typeName)
+        {
+            return Cast(source, ParsingConfig.Default, typeName);
+        }
+        #endregion Cast
+
         #region Count
         private static readonly MethodInfo _count = GetMethod(nameof(Queryable.Count));
 
@@ -942,6 +992,56 @@ namespace System.Linq.Dynamic.Core
             return Execute(_lastDefaultPredicate, source, lambda);
         }
         #endregion LastOrDefault
+
+        #region OfType
+        private static readonly MethodInfo _ofType = GetGenericMethod(nameof(Queryable.OfType));
+
+        /// <summary>
+        /// Filters the elements of an <see cref="IQueryable"/> based on a specified type.
+        /// </summary>
+        /// <param name="source">An <see cref="IQueryable"/> whose elements to filter.</param>
+        /// <param name="type">The type to filter the elements of the sequence on.</param>
+        /// <returns>A collection that contains the elements from source that have the type.</returns>
+        public static IQueryable OfType([NotNull] this IQueryable source, [NotNull] Type type)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(type, nameof(type));
+
+            var optimized = OptimizeExpression(Expression.Call(null, _ofType.MakeGenericMethod(new Type[] { type }), new Expression[] { source.Expression }));
+
+            return source.Provider.CreateQuery(optimized);
+        }
+
+        /// <summary>
+        /// Filters the elements of an <see cref="IQueryable"/> based on a specified type.
+        /// </summary>
+        /// <param name="source">An <see cref="IQueryable"/> whose elements to filter.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="typeName">The type to filter the elements of the sequence on.</param>
+        /// <returns>A collection that contains the elements from source that have the type.</returns>
+        public static IQueryable OfType([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string typeName)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(typeName, nameof(typeName));
+
+            var finder = new TypeFinder(config, new KeywordsHelper(config));
+            Type type = finder.FindTypeByName(typeName, null, true);
+
+            return OfType(source, type);
+        }
+
+        /// <summary>
+        /// Filters the elements of an <see cref="IQueryable"/> based on a specified type.
+        /// </summary>
+        /// <param name="source">An <see cref="IQueryable"/> whose elements to filter.</param>
+        /// <param name="typeName">The type to filter the elements of the sequence on.</param>
+        /// <returns>A collection that contains the elements from source that have the type.</returns>
+        public static IQueryable OfType([NotNull] this IQueryable source, [NotNull] string typeName)
+        {
+            return OfType(source, ParsingConfig.Default, typeName);
+        }
+        #endregion OfType
 
         #region OrderBy
         /// <summary>
@@ -2052,6 +2152,11 @@ namespace System.Linq.Dynamic.Core
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
             return source.Provider.Execute<TResult>(optimized);
+        }
+
+        private static MethodInfo GetGenericMethod(string name)
+        {
+            return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
         }
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null)

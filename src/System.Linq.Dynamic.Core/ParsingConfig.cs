@@ -35,7 +35,7 @@ namespace System.Linq.Dynamic.Core
             get
             {
 #if !(DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD)
-                // only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework
+                // only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and NET Core App 2.x
                 return _customTypeProvider ?? (_customTypeProvider = new DefaultDynamicLinqCustomTypeProvider());
 #else
                 return _customTypeProvider;
@@ -131,5 +131,13 @@ namespace System.Linq.Dynamic.Core
         /// where a member access on a non existing member happens. Default value is false.
         /// </summary>
         public bool DisableMemberAccessToIndexAccessorFallback { get; set; } = false;
+
+        /// <summary>
+        /// By default finding types by a simple name is not suported.
+        /// Use this flag to use the CustomTypeProvider to resolve types by a simple name like "Employee" instead of "MyDatabase.Entities.Employee".
+        /// Note that a first matching type is returned and this functionality needs to scan all types from all assemblies, so use with caution.
+        /// Default value is false.
+        /// </summary>
+        public bool ResolveTypesBySimpleName { get; set; } = false;
     }
 }

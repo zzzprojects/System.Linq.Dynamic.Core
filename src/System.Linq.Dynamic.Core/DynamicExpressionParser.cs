@@ -1,9 +1,8 @@
-﻿using System.Linq.Dynamic.Core.Parser;
+﻿using JetBrains.Annotations;
+using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Util;
-using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
-using System.Collections.Generic;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -71,7 +70,7 @@ namespace System.Linq.Dynamic.Core
             {
                 var renamer = new ParameterExpressionRenamer(parser.ItName);
                 parsedExpression = renamer.Rename(parsedExpression, out ParameterExpression newParameterExpression);
-                    
+
                 return Expression.Lambda(parsedExpression, new[] { newParameterExpression });
             }
             else

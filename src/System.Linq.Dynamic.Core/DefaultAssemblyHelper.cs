@@ -29,7 +29,7 @@ namespace System.Linq.Dynamic.Core
             return assemblies.ToArray();
         }
 
-#elif (DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD || WPSL)
+#elif DOTNET5_1 || WINDOWS_APP || UAP10_0 || NETSTANDARD || WPSL
         public Assembly[] GetAssemblies()
         {
             throw new NotSupportedException();
@@ -37,8 +37,12 @@ namespace System.Linq.Dynamic.Core
 #else
         public Assembly[] GetAssemblies()
         {
+#if NETCORE1_1
+            return AppDomain.NetCoreApp.AppDomain.CurrentDomain.GetAssemblies(thisType).ToArray();
+#else
             return AppDomain.CurrentDomain.GetAssemblies();
+#endif
         }
 #endif
     }
-}
+    }
