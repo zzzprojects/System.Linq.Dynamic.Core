@@ -25,12 +25,12 @@
     <DisableCodeBlockComponent>False</DisableCodeBlockComponent>
     <CleanIntermediates>True</CleanIntermediates>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\netstandard2.0\System.Linq.Dynamic.Core.dll" />
-      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\netstandard2.0\System.Linq.Dynamic.Core.xml" />
+      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\netcoreapp2.1\System.Linq.Dynamic.Core.dll" />
       <DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net46\EntityFramework.DynamicLinq.dll" />
       <DocumentationSource sourceFile="..\src\EntityFramework.DynamicLinq\bin\Release\net46\EntityFramework.DynamicLinq.xml" />
-      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\netstandard2.0\Microsoft.EntityFrameworkCore.DynamicLinq.dll" />
-      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\netstandard2.0\Microsoft.EntityFrameworkCore.DynamicLinq.xml" />
+      <DocumentationSource sourceFile="..\src\System.Linq.Dynamic.Core\bin\Release\netcoreapp2.1\System.Linq.Dynamic.Core.xml" />
+      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\netcoreapp2.1\Microsoft.EntityFrameworkCore.DynamicLinq.dll" />
+      <DocumentationSource sourceFile="..\src\Microsoft.EntityFrameworkCore.DynamicLinq\bin\Release\netcoreapp2.1\Microsoft.EntityFrameworkCore.DynamicLinq.xml" />
     </DocumentationSources>
     <WebsiteSdkLinkType>Msdn</WebsiteSdkLinkType>
     <HtmlSdkLinkType>Msdn</HtmlSdkLinkType>
@@ -61,37 +61,40 @@
     <ComponentConfigurations>
       <ComponentConfig id="Code Block Component" enabled="True" xmlns="">
         <component id="Code Block Component">
-  <basePath value="{@HtmlEncProjectFolder}" />
-  <outputPaths>{@HelpFormatOutputPaths}</outputPaths>
-  <allowMissingSource value="false" />
-  <removeRegionMarkers value="false" />
-  <colorizer syntaxFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xml" styleFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xsl" stylesheet="{@SHFBFolder}PresentationStyles\Colorizer\highlight.css" scriptFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.js" disabled="{@DisableCodeBlockComponent}" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" />
-</component>
+          <basePath value="{@HtmlEncProjectFolder}" />
+          <outputPaths>{@HelpFormatOutputPaths}</outputPaths>
+          <allowMissingSource value="false" />
+          <removeRegionMarkers value="false" />
+          <colorizer syntaxFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xml" styleFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xsl" stylesheet="{@SHFBFolder}PresentationStyles\Colorizer\highlight.css" scriptFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.js" disabled="{@DisableCodeBlockComponent}" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" />
+        </component>
       </ComponentConfig>
-<ComponentConfig id="Syntax Component" enabled="True" xmlns=""><component id="Syntax Component">
-  <syntax input="/document/reference" output="/document/syntax" renderReferenceLinks="false" />
-  <generators>
+      <ComponentConfig id="Syntax Component" enabled="True" xmlns="">
+        <component id="Syntax Component">
+          <syntax input="/document/reference" output="/document/syntax" renderReferenceLinks="false" />
+          <generators>
     {@SyntaxFilters}
 </generators>
-  <containerElement name="codeSnippetGroup" addNoExampleTabs="true" includeOnSingleSnippets="false" groupingEnabled="{@CodeSnippetGrouping}" />
-  <configurations>
-    <generator id="C#" />
-    <generator id="Visual Basic">
-      <includeLineContinuation value="false" />
-    </generator>
-    <generator id="Visual Basic Usage">
-      <includeLineContinuation value="false" />
-    </generator>
-    <generator id="Managed C++" />
-    <generator id="F#" />
-    <generator id="J#" />
-    <generator id="JScript" />
-    <generator id="JavaScript" />
-    <generator id="XAML Usage" />
-    <generator id="ASP.NET" />
-    <generator id="X#" />
-  </configurations>
-</component></ComponentConfig></ComponentConfigurations>
+          <containerElement name="codeSnippetGroup" addNoExampleTabs="true" includeOnSingleSnippets="false" groupingEnabled="{@CodeSnippetGrouping}" />
+          <configurations>
+            <generator id="C#" />
+            <generator id="Visual Basic">
+              <includeLineContinuation value="false" />
+            </generator>
+            <generator id="Visual Basic Usage">
+              <includeLineContinuation value="false" />
+            </generator>
+            <generator id="Managed C++" />
+            <generator id="F#" />
+            <generator id="J#" />
+            <generator id="JScript" />
+            <generator id="JavaScript" />
+            <generator id="XAML Usage" />
+            <generator id="ASP.NET" />
+            <generator id="X#" />
+          </configurations>
+        </component>
+      </ComponentConfig>
+    </ComponentConfigurations>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
