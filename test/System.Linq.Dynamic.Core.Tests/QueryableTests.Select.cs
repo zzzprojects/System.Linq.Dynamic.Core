@@ -337,6 +337,19 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Select_Dynamic_ReservedKeyword()
+        {
+            // Arrange
+            var queryable = new[] { new { Id = 1, Guid = "a" } }.AsQueryable();
+
+            // Act
+            var result = queryable.Select("new (Id, @Guid, 42 as Answer)").ToDynamicArray();
+
+            // Assert
+            Check.That(result).IsNotNull();
+        }
+
+        [Fact]
         public void Select_Dynamic_Exceptions()
         {
             //Arrange
