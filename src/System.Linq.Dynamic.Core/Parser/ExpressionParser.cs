@@ -557,11 +557,18 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             try
             {
-                if (constantExpr.Value is string)
+                if (constantExpr.Value is string stringValue)
                 {
-                    return Enum.Parse(TypeHelper.GetNonNullableType(leftType), (string)constantExpr.Value, true);
+                    return Enum.Parse(TypeHelper.GetNonNullableType(leftType), stringValue, true);
                 }
+            }
+            catch
+            {
+                throw ParseError(pos, Res.ExpressionTypeMismatch, leftType);
+            }
 
+            try
+            {
                 return Enum.ToObject(leftType, constantExpr.Value);
             }
             catch
