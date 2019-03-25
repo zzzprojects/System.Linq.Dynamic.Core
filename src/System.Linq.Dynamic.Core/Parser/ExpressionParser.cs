@@ -569,7 +569,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             try
             {
-                return Enum.ToObject(leftType, constantExpr.Value);
+                return Enum.ToObject(TypeHelper.GetNonNullableType(leftType), constantExpr.Value);
             }
             catch
             {

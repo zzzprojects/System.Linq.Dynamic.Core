@@ -28,6 +28,8 @@ namespace System.Linq.Dynamic.Core.Tests
 
             public TestEnum2 B { get; set; }
 
+            public TestEnum2? C { get; set; }
+
             public int Id { get; set; }
         }
 
@@ -568,27 +570,6 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_EnumProperty()
-        {
-            // Arrange
-            var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
-
-            // Act
-            var resultEqualEnumParamLeft = qry.Where("@0 == it.B", TestEnum2.Var2).ToDynamicArray();
-            var resultEqualEnumParamRight = qry.Where("it.B == @0", TestEnum2.Var2).ToDynamicArray();
-
-            var resultEqualIntParamLeft = qry.Where("@0 == it.B", 1).ToDynamicArray();
-            var resultEqualIntParamRight = qry.Where("it.B == @0", 1).ToDynamicArray();
-
-            // Assert
-            Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum2.Var2);
-            Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnum2.Var2);
-
-            Check.That(resultEqualIntParamLeft.Single()).Equals(TestEnum2.Var2);
-            Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum2.Var2);
-        }
-
-        [Fact]
         public void ExpressionTests_Enum()
         {
             var config = new ParsingConfig();
@@ -643,12 +624,51 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_ConfigExtensions()
+        public void ExpressionTests_Enum_Property()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
+
+            // Act
+            var resultEqualEnumParamLeft = qry.Where("@0 == it.B", TestEnum2.Var2).ToDynamicArray();
+            var resultEqualEnumParamRight = qry.Where("it.B == @0", TestEnum2.Var2).ToDynamicArray();
+
+            var resultEqualIntParamLeft = qry.Where("@0 == it.B", 1).ToDynamicArray();
+            var resultEqualIntParamRight = qry.Where("it.B == @0", 1).ToDynamicArray();
+
+            // Assert
+            Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum2.Var2);
+            Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnum2.Var2);
+
+            Check.That(resultEqualIntParamLeft.Single()).Equals(TestEnum2.Var2);
+            Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum2.Var2);
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_NullableProperty()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { C = TestEnum2.Var2 } }.AsQueryable();
+
+            // Act
+            var resultEqualEnumParamLeft = qry.Where("@0 == it.C", TestEnum2.Var2).ToDynamicArray();
+            var resultEqualEnumParamRight = qry.Where("it.C == @0", TestEnum2.Var2).ToDynamicArray();
+
+            var resultEqualIntParamLeft = qry.Where("@0 == it.C", 1).ToDynamicArray();
+            var resultEqualIntParamRight = qry.Where("it.C == @0", 1).ToDynamicArray();
+
+            // Assert
+            Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum2.Var2);
+            Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnum2.Var2);
+
+            Check.That(resultEqualIntParamLeft.Single()).Equals(TestEnum2.Var2);
+            Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum2.Var2);
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_MoreTests()
         {
             var config = new ParsingConfig();
-#if NETCOREAPP
-            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
 
             // Arrange
             var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };
