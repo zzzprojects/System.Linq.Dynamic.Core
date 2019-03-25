@@ -577,8 +577,8 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultEqualEnumParamLeft = qry.Where("@0 == it.B", TestEnum2.Var2).ToDynamicArray();
             var resultEqualEnumParamRight = qry.Where("it.B == @0", TestEnum2.Var2).ToDynamicArray();
 
-            var resultEqualIntParamLeft = qry.Where("@0 == it.B", 2).ToDynamicArray();
-            var resultEqualIntParamRight = qry.Where("it.B == @0", 2).ToDynamicArray();
+            var resultEqualIntParamLeft = qry.Where("@0 == it.B", 1).ToDynamicArray();
+            var resultEqualIntParamRight = qry.Where("it.B == @0", 1).ToDynamicArray();
 
             // Assert
             Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum2.Var2);
