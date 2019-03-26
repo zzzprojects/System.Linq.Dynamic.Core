@@ -1,3 +1,7 @@
+# 1.0.12.0 (26 March 2019)
+- [#260](https://github.com/StefH/System.Linq.Dynamic.Core/pull/260) - Fix for Nullable Enum filter contributed by [StefH](https://github.com/StefH)
+- [#258](https://github.com/StefH/System.Linq.Dynamic.Core/issues/258) - Filter by enum column with parameters throws exception [bug]
+
 # 1.0.11.0 (28 February 2019)
 - [#249](https://github.com/StefH/System.Linq.Dynamic.Core/pull/249) - Add support for OfType, Is, As and Cast [feature] contributed by [StefH](https://github.com/StefH)
 - [#250](https://github.com/StefH/System.Linq.Dynamic.Core/pull/250) - Wrap all constant expressions to fix Parameterized SQL (#247) [bug, feature] contributed by [StefH](https://github.com/StefH)
