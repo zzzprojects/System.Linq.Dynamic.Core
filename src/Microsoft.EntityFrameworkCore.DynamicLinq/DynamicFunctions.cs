@@ -8,7 +8,7 @@ namespace Microsoft.EntityFrameworkCore.DynamicLinq
     [DynamicLinqType]
     public static class DynamicFunctions
     {
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 && EFDYNAMICFUNCTIONS
         /// <summary>
         ///     <para>
         ///         An implementation of the SQL LIKE operation. On relational databases this is usually directly
