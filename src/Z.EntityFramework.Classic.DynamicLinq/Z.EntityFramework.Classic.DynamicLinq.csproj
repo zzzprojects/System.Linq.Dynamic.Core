@@ -44,6 +44,6 @@
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
-        <PackageReference Include="Z.EntityFramework.Classic" Version="7.0.40" />
+        <PackageReference Include="Z.EntityFramework.Classic" Version="7.1.2" />
     </ItemGroup>
 </Project>

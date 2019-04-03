@@ -6,7 +6,7 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Z.EntityFramework.Classic" Version="7.0.40" />
+        <PackageReference Include="Z.EntityFramework.Classic" Version="7.1.2" />
     </ItemGroup>
 
     <ItemGroup>
