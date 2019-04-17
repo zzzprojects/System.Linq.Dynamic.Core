@@ -529,6 +529,40 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void DynamicExpressionParser_ParseLambda_StringLiteral_Backslash()
+        {
+            string expectedLeftValue = "Property1.IndexOf(\"\\\\\")";
+            string expectedRightValue = "0";
+            var expression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") },
+                typeof(Boolean),
+                string.Format("{0} >= {1}", expectedLeftValue, expectedRightValue));
+
+            string leftValue = ((BinaryExpression)expression.Body).Left.ToString();
+            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
+            Assert.Equal(typeof(Boolean), expression.Body.Type);
+            Assert.Equal(expectedLeftValue, leftValue);
+            Assert.Equal(expectedRightValue, rightValue);
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_StringLiteral_QuotationMark()
+        {
+            string expectedLeftValue = "Property1.IndexOf(\"\\\"\")";
+            string expectedRightValue = "0";
+            var expression = DynamicExpressionParser.ParseLambda(
+                new[] { Expression.Parameter(typeof(string), "Property1") },
+                typeof(Boolean),
+                string.Format("{0} >= {1}", expectedLeftValue, expectedRightValue));
+
+            string leftValue = ((BinaryExpression)expression.Body).Left.ToString();
+            string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
+            Assert.Equal(typeof(Boolean), expression.Body.Type);
+            Assert.Equal(expectedLeftValue, leftValue);
+            Assert.Equal(expectedRightValue, rightValue);
+        }
+
+        [Fact]
         public void DynamicExpressionParser_ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
         {
             var expression = DynamicExpressionParser.ParseLambda(

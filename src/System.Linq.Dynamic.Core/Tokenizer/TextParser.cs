@@ -48,7 +48,10 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
         private void NextChar()
         {
-            if (_textPos < _textLen) _textPos++;
+            if (_textPos < _textLen)
+            {
+                _textPos++;
+            }
             _ch = _textPos < _textLen ? _text[_textPos] : '\0';
         }
 
@@ -255,23 +258,33 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                     char quote = _ch;
                     do
                     {
-                        bool escaped;
+                        NextChar();
 
-                        do
+                        while (_textPos < _textLen && _ch != quote)
                         {
-                            escaped = false;
-                            NextChar();
-
                             if (_ch == '\\')
                             {
-                                escaped = true;
-                                if (_textPos < _textLen) NextChar();
+                                if (_textPos < _textLen)
+                                {
+                                    NextChar();
+
+                                    if (_textPos < _textLen && _ch == quote)
+                                    {
+                                        NextChar();
+                                    }
+                                }
+                            }
+
+                            if (_textPos < _textLen && _ch != quote)
+                            {
+                                NextChar();
                             }
                         }
-                        while (_textPos < _textLen && (_ch != quote || escaped));
 
                         if (_textPos == _textLen)
+                        {
                             throw ParseError(_textPos, Res.UnterminatedStringLiteral);
+                        }
 
                         NextChar();
                     } while (_ch == quote);
@@ -422,10 +435,9 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             return new ParseException(string.Format(CultureInfo.CurrentCulture, format, args), pos);
         }
 
-        private static TokenId GetAliasedTokenId(TokenId t, string alias)
+        private static TokenId GetAliasedTokenId(TokenId tokenId, string alias)
         {
-            TokenId id;
-            return t == TokenId.Identifier && _predefinedAliases.TryGetValue(alias, out id) ? id : t;
+            return tokenId == TokenId.Identifier && _predefinedAliases.TryGetValue(alias, out TokenId id) ? id : tokenId;
         }
 
         private static bool IsHexChar(char c)
