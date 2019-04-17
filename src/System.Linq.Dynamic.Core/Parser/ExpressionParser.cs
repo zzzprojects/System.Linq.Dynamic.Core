@@ -1523,7 +1523,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Convert(expr, type);
             }
 
-            // Try to Parse the string rather that just generate the convert statement
+            // Try to Parse the string rather than just generate the convert statement
             if (expr.NodeType == ExpressionType.Constant && exprType == typeof(string))
             {
                 string text = (string)((ConstantExpression)expr).Value;
