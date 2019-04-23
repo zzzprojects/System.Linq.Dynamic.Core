@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -22,9 +23,9 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
         {
-            { "true", Constants.TrueLiteral },
-            { "false", Constants.FalseLiteral },
-            { "null", Constants.NullLiteral }
+            { "true", Expression.Constant(true) },
+            { "false", Expression.Constant(false) },
+            { "null", Expression.Constant(null) }
         };
 
         public KeywordsHelper(ParsingConfig config)
