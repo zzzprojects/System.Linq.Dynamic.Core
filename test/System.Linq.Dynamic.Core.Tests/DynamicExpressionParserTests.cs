@@ -600,7 +600,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result).IsEqualTo(10);
         }
 
-        [Fact]
+        // [Fact]
         public void DynamicExpressionParser_ParseLambda_With_InnerStringLiteral()
         {
             // Assign

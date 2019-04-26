@@ -47,8 +47,16 @@ namespace ConsoleAppEF2
             }
         }
 
+        private static void StringEscapeTest()
+        {
+            var strings = new[] { "x \\ \\ \\\\ y" }.AsQueryable();
+
+            int count = strings.Count("'\\'");
+        }
+
         static void Main(string[] args)
         {
+            StringEscapeTest();
             //var q = new[] { new NestedDto(), new NestedDto { NestedDto2 = new NestedDto2 { NestedDto3 = new NestedDto3 { Id = 42 } } } }.AsQueryable();
 
             //var np1 = q.Select("np(it.NestedDto2.NestedDto3.Id, 0)");

@@ -54,6 +54,15 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             }
             _ch = _textPos < _textLen ? _text[_textPos] : '\0';
         }
+        public char PeekNextChar()
+        {
+            if (_textPos + 1 < _textLen)
+            {
+                return _text[_textPos + 1];
+            }
+
+            return '\0';
+        }
 
         public void NextToken()
         {
@@ -255,39 +264,37 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
                 case '"':
                 case '\'':
+                    bool balanced = true;
                     char quote = _ch;
-                    do
+                    int start = _textPos;
+
+                    NextChar();
+
+                    for (int i = start; i < _textLen && _ch != quote; i++)
                     {
-                        NextChar();
-
-                        while (_textPos < _textLen && _ch != quote)
+                        if (_ch == '\\')
                         {
-                            if (_ch == '\\')
+                            char? next = PeekNextChar();
+                            if (next == '\\')
                             {
-                                if (_textPos < _textLen)
-                                {
-                                    NextChar();
-
-                                    if (_textPos < _textLen && _ch == quote)
-                                    {
-                                        NextChar();
-                                    }
-                                }
+                                NextChar();
                             }
-
-                            if (_textPos < _textLen && _ch != quote)
+                            else if (next == quote)
                             {
+                                balanced = !balanced;
                                 NextChar();
                             }
                         }
 
-                        if (_textPos == _textLen)
-                        {
-                            throw ParseError(_textPos, Res.UnterminatedStringLiteral);
-                        }
-
                         NextChar();
-                    } while (_ch == quote);
+                    }
+
+                    if (_textPos == _textLen && !balanced)
+                    {
+                        throw ParseError(_textPos, Res.UnterminatedStringLiteral);
+                    }
+
+                    NextChar();
 
                     tokenId = TokenId.StringLiteral;
                     break;

@@ -1,9 +1,9 @@
-﻿using NFluent;
-using System.Linq.Dynamic.Core.Exceptions;
+﻿using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tokenizer;
+using NFluent;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tokenizer.Tests
+namespace System.Linq.Dynamic.Core.Tests.Tokenizer
 {
     public class TextParserTests
     {
