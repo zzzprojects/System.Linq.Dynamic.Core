@@ -8,6 +8,8 @@ namespace System.Linq.Dynamic.Core.Tokenizer
     {
         private static char NumberDecimalSeparator = '.';
 
+        private static char[] EscapeCharacters = new[] { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
+
         // These aliases are supposed to simply the where clause and make it more human readable
         // As an addition it is compatible with the OData.Filter specification
         private static readonly Dictionary<string, TokenId> _predefinedAliases = new Dictionary<string, TokenId>
@@ -264,29 +266,34 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
                 case '"':
                 case '\'':
-                    bool balanced = true;
+                    bool balanced = false;
                     char quote = _ch;
-                    int start = _textPos;
 
                     NextChar();
 
-                    for (int i = start; i < _textLen && _ch != quote; i++)
+                    while (_textPos < _textLen && _ch != quote)
                     {
+                        char next = PeekNextChar();
+
                         if (_ch == '\\')
                         {
-                            char? next = PeekNextChar();
-                            if (next == '\\')
+                            if (EscapeCharacters.Contains(next))
                             {
                                 NextChar();
                             }
-                            else if (next == quote)
+
+                            if (next == '"')
                             {
-                                balanced = !balanced;
                                 NextChar();
                             }
                         }
 
                         NextChar();
+
+                        if (_ch == quote)
+                        {
+                            balanced = !balanced;
+                        }
                     }
 
                     if (_textPos == _textLen && !balanced)

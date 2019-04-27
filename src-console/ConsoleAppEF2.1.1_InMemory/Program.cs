@@ -49,9 +49,10 @@ namespace ConsoleAppEF2
 
         private static void StringEscapeTest()
         {
-            var strings = new[] { "x \\ \\ \\\\ y" }.AsQueryable();
+            var strings = new[] { "test\\x" }.AsQueryable();
 
-            int count = strings.Count("'\\'");
+            int count = strings.Count("Contains('\\')");
+            Console.WriteLine(count);
         }
 
         static void Main(string[] args)

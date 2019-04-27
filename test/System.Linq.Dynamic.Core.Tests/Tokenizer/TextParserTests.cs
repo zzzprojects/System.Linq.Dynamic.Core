@@ -1,6 +1,6 @@
-﻿using System.Linq.Dynamic.Core.Exceptions;
+﻿using NFluent;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tokenizer;
-using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Tokenizer
@@ -189,6 +189,42 @@ namespace System.Linq.Dynamic.Core.Tests.Tokenizer
             Check.That(textParser.CurrentToken.Id).Equals(TokenId.Slash);
             Check.That(textParser.CurrentToken.Pos).Equals(1);
             Check.That(textParser.CurrentToken.Text).Equals("/");
+        }
+
+        [Fact]
+        public void TextParser_Parse_StringLiteral_WithSingleQuotes_Backslash()
+        {
+            // Assign + Act
+            var textParser = new TextParser("'\\'");
+
+            // Assert
+            Check.That(textParser.CurrentToken.Id).Equals(TokenId.StringLiteral);
+            Check.That(textParser.CurrentToken.Pos).Equals(0);
+            Check.That(textParser.CurrentToken.Text[1]).Equals('\\');
+        }
+
+        [Fact]
+        public void TextParser_Parse_StringLiteral_WithSingleQuotes_DoubleQuote()
+        {
+            // Assign + Act
+            var textParser = new TextParser("'\"'");
+
+            // Assert
+            Check.That(textParser.CurrentToken.Id).Equals(TokenId.StringLiteral);
+            Check.That(textParser.CurrentToken.Pos).Equals(0);
+            Check.That(textParser.CurrentToken.Text[1]).Equals('"');
+        }
+
+        [Fact]
+        public void TextParser_Parse_StringLiteral_WithSingleQuotes_SingleQuote()
+        {
+            // Assign + Act
+            var textParser = new TextParser("'\''");
+
+            // Assert
+            Check.That(textParser.CurrentToken.Id).Equals(TokenId.StringLiteral);
+            Check.That(textParser.CurrentToken.Pos).Equals(0);
+            Check.That(textParser.CurrentToken.Text[1]).Equals('\'');
         }
 
         [Fact]
