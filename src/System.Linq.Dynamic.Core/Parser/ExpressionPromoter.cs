@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
-    internal class ExpressionPromoter : IExpressionPromoter
+    public class ExpressionPromoter : IExpressionPromoter
     {
         /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)"/>
         public virtual Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
@@ -17,7 +17,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (ce != null)
             {
-                if (ce == Constants.NullLiteral || ce.Value == null)
+                if (Constants.IsNull(ce))
                 {
                     if (!type.GetTypeInfo().IsValueType || TypeHelper.IsNullableType(type))
                     {

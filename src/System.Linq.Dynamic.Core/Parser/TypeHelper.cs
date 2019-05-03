@@ -321,12 +321,13 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             Type baseType = GetNonNullableType(type);
 
-            string s = baseType.Name;
+            string name = baseType.Name;
             if (type != baseType)
             {
-                s += '?';
+                name += '?';
             }
-            return s;
+
+            return name;
         }
 
         public static Type GetNonNullableType(Type type)

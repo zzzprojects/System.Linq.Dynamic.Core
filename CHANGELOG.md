@@ -1,3 +1,16 @@
+# 1.0.13.0 (03 May 2019)
+- [#264](https://github.com/StefH/System.Linq.Dynamic.Core/pull/264) - Fix escape characters parsing [bug] contributed by [StefH](https://github.com/StefH)
+- [#266](https://github.com/StefH/System.Linq.Dynamic.Core/pull/266) - Make ExpressionPromoter public + Fix issue with null constant expression compare [bug] contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
+- [#148](https://github.com/StefH/System.Linq.Dynamic.Core/issues/148) - Question: Using where filter it.Contains(@0) fails where it.Contains(\&quot;keep\&quot;) works [question]
+- [#154](https://github.com/StefH/System.Linq.Dynamic.Core/issues/154) - Remark: Semantic Versioning... [wontfix]
+- [#163](https://github.com/StefH/System.Linq.Dynamic.Core/issues/163) - Issue: Using escaped strings is not working correctly [bug]
+- [#240](https://github.com/StefH/System.Linq.Dynamic.Core/issues/240) - Question: What is the proper way to construct a dynamic query for EF Core using DateTime or Nullable DateTime?
+- [#241](https://github.com/StefH/System.Linq.Dynamic.Core/issues/241) - Question: Is it possible to project without flattening the result? [question]
+- [#244](https://github.com/StefH/System.Linq.Dynamic.Core/issues/244) - Possible to add 'Compare' Extension method [wontfix]
+- [#246](https://github.com/StefH/System.Linq.Dynamic.Core/issues/246) - Exception: Argument expression is not valid [question]
+- [#261](https://github.com/StefH/System.Linq.Dynamic.Core/issues/261) - How can I use Where(&quot;...&quot;) after calling ToDynamicArray [question]
+- [#263](https://github.com/StefH/System.Linq.Dynamic.Core/issues/263) - Have a WhereOr method [question]
+
 # 1.0.12.0 (26 March 2019)
 - [#260](https://github.com/StefH/System.Linq.Dynamic.Core/pull/260) - Fix for Nullable Enum filter contributed by [StefH](https://github.com/StefH)
 - [#258](https://github.com/StefH/System.Linq.Dynamic.Core/issues/258) - Filter by enum column with parameters throws exception [bug]
@@ -189,7 +202,7 @@
 - [#69](https://github.com/StefH/System.Linq.Dynamic.Core/pull/69) - Fix - when method has object parameter and ValueType value is passed into this method, result is exception in System.Dynamic.Utils.ExpressionUtils.ValidateOneArgument. contributed by [DavidCizek](https://github.com/DavidCizek)
 - [#76](https://github.com/StefH/System.Linq.Dynamic.Core/pull/76) - Fix - shift operators work only for int, short, ushort, byte, sbyte. contributed by [DavidCizek](https://github.com/DavidCizek)
 - [#77](https://github.com/StefH/System.Linq.Dynamic.Core/pull/77) - New features: Hexadecimal integers and array initializers contributed by [DavidCizek](https://github.com/DavidCizek)
-- [#78](https://github.com/StefH/System.Linq.Dynamic.Core/pull/78) - New feature: GroupJoin [feature] contributed by [Maschmi](https://github.com/Maschmi)
+- [#78](https://github.com/StefH/System.Linq.Dynamic.Core/pull/78) - New feature: GroupJoin [feature] contributed by [ghost](https://github.com/ghost)
 - [#80](https://github.com/StefH/System.Linq.Dynamic.Core/pull/80) - [Feature] Usage of cached Lambda Expressions contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#85](https://github.com/StefH/System.Linq.Dynamic.Core/pull/85) - [Fix] Guid? == null comparison contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#86](https://github.com/StefH/System.Linq.Dynamic.Core/pull/86) - [Fix] Fixed null in Parameter and added functionality Binary And and Or with different Types contributed by [jogibear9988](https://github.com/jogibear9988)

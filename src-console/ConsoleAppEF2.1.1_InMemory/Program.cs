@@ -10,6 +10,23 @@ namespace ConsoleAppEF2
 {
     static class Program
     {
+        public class A
+        {
+            public string topProperty { get; set; }
+            public B bProperty { get; set; }
+            public C cProperty { get; set; }
+        }
+
+        public class B
+        {
+            public string someString { get; set; }
+        }
+
+        public class C
+        {
+            public string someOtherString { get; set; }
+        }
+
         public class NestedDto
         {
             public string Name { get; set; }
@@ -47,8 +64,17 @@ namespace ConsoleAppEF2
             }
         }
 
+        private static void StringEscapeTest()
+        {
+            var strings = new[] { "test\\x" }.AsQueryable();
+
+            int count = strings.Count("Contains('\\')");
+            Console.WriteLine(count);
+        }
+
         static void Main(string[] args)
         {
+            StringEscapeTest();
             //var q = new[] { new NestedDto(), new NestedDto { NestedDto2 = new NestedDto2 { NestedDto3 = new NestedDto3 { Id = 42 } } } }.AsQueryable();
 
             //var np1 = q.Select("np(it.NestedDto2.NestedDto3.Id, 0)");
@@ -68,8 +94,15 @@ namespace ConsoleAppEF2
             var config = new ParsingConfig
             {
                 AllowNewToEvaluateAnyType = true,
+                ResolveTypesBySimpleName = true,
                 CustomTypeProvider = new TestCustomTypeProvider()
             };
+
+            IQueryable<A> query = new[] { new A { bProperty = new B { someString = "x" } } }.AsQueryable();
+
+            string predicate = $"new {typeof(A).FullName}(new {typeof(B).FullName}(\"x\" as someString) as bProperty)";
+            var result2 = query.Select(config, predicate);
+            Console.WriteLine(predicate + ":" + JsonConvert.SerializeObject(result2));
 
             //// Act
             //var testDataAsQueryable = new List<string> { "name1", "name2" }.AsQueryable();

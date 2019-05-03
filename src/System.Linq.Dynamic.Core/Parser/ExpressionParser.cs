@@ -428,7 +428,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (isEquality && (!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType || left.Type == typeof(Guid) && right.Type == typeof(Guid)))
                 {
                     // If left or right is NullLiteral, just continue. Else check if the types differ.
-                    if (!(left == Constants.NullLiteral || right == Constants.NullLiteral) && left.Type != right.Type)
+                    if (!(Constants.IsNull(left) || Constants.IsNull(right)) && left.Type != right.Type)
                     {
                         if (left.Type.IsAssignableFrom(right.Type))
                         {
@@ -1096,7 +1096,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 var expressionTest = _expressionHelper.GenerateAndAlsoNotNullExpression(memberExpression);
                 var expressionIfTrue = memberExpression;
-                var expressionIfFalse = args.Length == 2 ? args[1] : Constants.NullLiteral;
+                var expressionIfFalse = args.Length == 2 ? args[1] : Expression.Constant(null);
 
                 return GenerateConditional(expressionTest, expressionIfTrue, expressionIfFalse, errorPos);
             }
@@ -1170,12 +1170,12 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (expr1.Type != expr2.Type)
             {
-                if ((expr1 == Constants.NullLiteral && expr2.Type.GetTypeInfo().IsValueType) || (expr2 == Constants.NullLiteral && expr1.Type.GetTypeInfo().IsValueType))
+                if ((Constants.IsNull(expr1) && expr2.Type.GetTypeInfo().IsValueType) || (Constants.IsNull(expr2) && expr1.Type.GetTypeInfo().IsValueType))
                 {
                     // If expr1 is a null constant and expr2 is a IsValueType:
                     // - create nullable constant from expr1 with type from expr2
                     // - convert expr2 to nullable
-                    if (expr1 == Constants.NullLiteral && expr2.Type.GetTypeInfo().IsValueType)
+                    if (Constants.IsNull(expr1) && expr2.Type.GetTypeInfo().IsValueType)
                     {
                         Type nullableType = typeof(Nullable<>).MakeGenericType(expr2.Type);
                         expr1 = Expression.Constant(null, nullableType);
@@ -1185,7 +1185,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     // If expr2 is a null constant and expr1 is a IsValueType:
                     // - create nullable constant from expr2 with type from expr1
                     // - convert expr1 to nullable
-                    if (expr2 == Constants.NullLiteral && expr1.Type.GetTypeInfo().IsValueType)
+                    if (Constants.IsNull(expr2) && expr1.Type.GetTypeInfo().IsValueType)
                     {
                         Type nullableType = typeof(Nullable<>).MakeGenericType(expr1.Type);
                         expr2 = Expression.Constant(null, nullableType);
@@ -1195,8 +1195,8 @@ namespace System.Linq.Dynamic.Core.Parser
                     return Expression.Condition(test, expr1, expr2);
                 }
 
-                Expression expr1As2 = expr2 != Constants.NullLiteral ? _parsingConfig.ExpressionPromoter.Promote(expr1, expr2.Type, true, false) : null;
-                Expression expr2As1 = expr1 != Constants.NullLiteral ? _parsingConfig.ExpressionPromoter.Promote(expr2, expr1.Type, true, false) : null;
+                Expression expr1As2 = !Constants.IsNull(expr2) ? _parsingConfig.ExpressionPromoter.Promote(expr1, expr2.Type, true, false) : null;
+                Expression expr2As1 = !Constants.IsNull(expr1) ? _parsingConfig.ExpressionPromoter.Promote(expr2, expr1.Type, true, false) : null;
                 if (expr1As2 != null && expr2As1 == null)
                 {
                     expr1 = expr1As2;
@@ -1207,8 +1207,8 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
                 else
                 {
-                    string type1 = expr1 != Constants.NullLiteral ? expr1.Type.Name : "null";
-                    string type2 = expr2 != Constants.NullLiteral ? expr2.Type.Name : "null";
+                    string type1 = !Constants.IsNull(expr1) ? expr1.Type.Name : "null";
+                    string type2 = !Constants.IsNull(expr2) ? expr2.Type.Name : "null";
                     if (expr1As2 != null)
                     {
                         throw ParseError(errorPos, Res.BothTypesConvertToOther, type1, type2);
@@ -1523,7 +1523,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Convert(expr, type);
             }
 
-            // Try to Parse the string rather that just generate the convert statement
+            // Try to Parse the string rather than just generate the convert statement
             if (expr.NodeType == ExpressionType.Constant && exprType == typeof(string))
             {
                 string text = (string)((ConstantExpression)expr).Value;
