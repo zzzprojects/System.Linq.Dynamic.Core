@@ -1177,7 +1177,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     // - convert expr2 to nullable
                     if (Constants.IsNull(expr1) && expr2.Type.GetTypeInfo().IsValueType)
                     {
-                        Type nullableType = typeof(Nullable<>).MakeGenericType(expr2.Type);
+                        Type nullableType = TypeHelper.ToNullableType(expr2.Type);
                         expr1 = Expression.Constant(null, nullableType);
                         expr2 = Expression.Convert(expr2, nullableType);
                     }
@@ -1187,7 +1187,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     // - convert expr1 to nullable
                     if (Constants.IsNull(expr2) && expr1.Type.GetTypeInfo().IsValueType)
                     {
-                        Type nullableType = typeof(Nullable<>).MakeGenericType(expr1.Type);
+                        Type nullableType = TypeHelper.ToNullableType(expr1.Type);
                         expr2 = Expression.Constant(null, nullableType);
                         expr1 = Expression.Convert(expr1, nullableType);
                     }
