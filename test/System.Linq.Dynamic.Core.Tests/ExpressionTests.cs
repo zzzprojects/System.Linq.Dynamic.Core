@@ -1290,7 +1290,39 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_Null()
+        public void ExpressionTests_NullPropagating_DateTime_Value()
+        {
+            // Arrange
+            var q = new[] {
+                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
+            }.AsQueryable();
+
+            // Act
+            var result = q.OrderBy(x => x.date2).Select(x => x.id).ToArray();
+            var resultDynamic = q.OrderBy("np(date2)").Select("id").ToDynamicArray<int>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_NullableDateTime()
+        {
+            // Arrange
+            var q = new[] {
+                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
+            }.AsQueryable();
+
+            // Act
+            var result = q.OrderBy(x => x.date1).Select(x => x.id).ToArray();
+            var resultDynamic = q.OrderBy("np(date1)").Select("id").ToDynamicArray<int>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_Integer_Null()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
@@ -1306,7 +1338,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_Value()
+        public void ExpressionTests_NullPropagating_Integer_Value()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();

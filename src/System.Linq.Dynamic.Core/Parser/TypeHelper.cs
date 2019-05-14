@@ -260,6 +260,13 @@ namespace System.Linq.Dynamic.Core.Parser
             return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
+        public static Type ToNullableType(Type type)
+        {
+            Check.NotNull(type, nameof(type));
+
+            return IsNullableType(type) ? type : typeof(Nullable<>).MakeGenericType(type);
+        }
+
         public static bool IsSignedIntegralType(Type type)
         {
             return GetNumericTypeKind(type) == 2;

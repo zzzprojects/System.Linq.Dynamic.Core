@@ -1,3 +1,10 @@
+# 1.0.14.0 (14 May 2019)
+- [#270](https://github.com/StefH/System.Linq.Dynamic.Core/pull/270) - Fix for np() opererator for Nullable (e.g. DateTime) contributed by [StefH](https://github.com/StefH)
+- [#105](https://github.com/StefH/System.Linq.Dynamic.Core/issues/105) - Feature: Support for EF Core 2.0's EF.Functions.Like() [feature]
+- [#265](https://github.com/StefH/System.Linq.Dynamic.Core/issues/265) - Linq CreateQuery throws exception [question]
+- [#267](https://github.com/StefH/System.Linq.Dynamic.Core/issues/267) - UseParameterizedNamesInDynamicQuery=true is ignored if predicate in Where clause has Contains() expression [question]
+- [#269](https://github.com/StefH/System.Linq.Dynamic.Core/issues/269) - np() opererator fails for (Nullable) DateTime [bug]
+
 # 1.0.13.0 (03 May 2019)
 - [#264](https://github.com/StefH/System.Linq.Dynamic.Core/pull/264) - Fix escape characters parsing [bug] contributed by [StefH](https://github.com/StefH)
 - [#266](https://github.com/StefH/System.Linq.Dynamic.Core/pull/266) - Make ExpressionPromoter public + Fix issue with null constant expression compare [bug] contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
