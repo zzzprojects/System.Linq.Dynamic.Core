@@ -1705,11 +1705,13 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var resultL = valuesL.Where("it == 100");
             var resultNL = valuesL.Where("it != 1 && it != 5");
+            var resultArg = valuesL.Where("it == @0", 100);
             var resultIn = valuesL.Where("it in (100)");
 
             // Assert
             Assert.Equal(resultValuesL.ToArray(), resultL);
             Assert.Equal(resultValuesL.ToArray(), resultNL);
+            Assert.Equal(resultValuesL.ToArray(), resultArg);
             Assert.Equal(resultValuesL.ToArray(), resultIn);
         }
 
