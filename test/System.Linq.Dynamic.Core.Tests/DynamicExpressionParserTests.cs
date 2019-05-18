@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
 using Xunit;
@@ -140,6 +141,30 @@ namespace System.Linq.Dynamic.Core.Tests
             string value = propertyInfo.GetValue(wrappedObj) as string;
 
             Check.That(value).IsEqualTo("x");
+        }
+
+        
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_WithStructWithEquality()
+        {
+            // Assign
+            var testList = User.GenerateSampleModels(51);
+            var qry = testList.AsQueryable();
+
+            // Act
+            var expectedX = (ulong) long.MaxValue + 3;
+
+            string query = $"Where(x => x.SnowflakeId == {expectedX})";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
+            Delegate del = expression.Compile();
+            IEnumerable<dynamic> result = del.DynamicInvoke(qry) as IEnumerable<dynamic>;
+
+            var expected = qry.Where(gg => gg.SnowflakeId == new SnowflakeId(expectedX)).ToList();
+
+            // Assert
+            Check.That(result).IsNotNull();
+            Check.That(result).HasSize(expected.Count);
+            Check.That(result.ToArray()[0]).Equals(expected[0]);
         }
 
         [Fact]

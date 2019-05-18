@@ -250,6 +250,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserState.cs">
       <Link>Helpers\Models\UserState.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\SnowflakeId.cs">
+      <Link>Helpers\Models\SnowflakeId.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\TestEnum.cs">
       <Link>Helpers\TestEnum.cs</Link>
     </Compile>

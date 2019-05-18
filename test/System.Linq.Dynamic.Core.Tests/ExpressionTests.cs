@@ -1696,6 +1696,24 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Type_StructWithIntegerEquality()
+        {
+            // Arrange
+            var valuesL = new[] { new SnowflakeId(1L), new SnowflakeId(100), new SnowflakeId(5) }.AsQueryable();
+            var resultValuesL = new[] { new SnowflakeId(100) }.AsQueryable();
+
+            // Act
+            var resultL = valuesL.Where("it == 100");
+            var resultNL = valuesL.Where("it != 1 && it != 5");
+            var resultIn = valuesL.Where("it in (100)");
+
+            // Assert
+            Assert.Equal(resultValuesL.ToArray(), resultL);
+            Assert.Equal(resultValuesL.ToArray(), resultNL);
+            Assert.Equal(resultValuesL.ToArray(), resultIn);
+        }
+
+        [Fact]
         public void ExpressionTests_Type_Integer_Qualifiers_Negative()
         {
             // Arrange
