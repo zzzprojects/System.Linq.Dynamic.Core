@@ -143,7 +143,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(value).IsEqualTo("x");
         }
 
-        
         [Fact]
         public void DynamicExpressionParser_ParseLambda_WithStructWithEquality()
         {
@@ -152,7 +151,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             // Act
-            var expectedX = (ulong) long.MaxValue + 3;
+            ulong expectedX = (ulong) long.MaxValue + 3;
 
             string query = $"Where(x => x.SnowflakeId == {expectedX})";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
