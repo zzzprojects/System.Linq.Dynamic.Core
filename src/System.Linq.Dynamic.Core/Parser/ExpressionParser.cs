@@ -1920,10 +1920,10 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (nativeOperation != null)
             {
-                if (left is ConstantExpression)
+                // first try left operand's equality operators
+                found = _methodFinder.ContainsMethod(left.Type, nativeOperation, true, args);
+                if (!found)
                     found = _methodFinder.ContainsMethod(right.Type, nativeOperation, true, args);
-                else if (right is ConstantExpression)
-                    found = _methodFinder.ContainsMethod(left.Type, nativeOperation, true, args);
             }
 
             if (!found && !_methodFinder.ContainsMethod(signatures, "F", false, args))

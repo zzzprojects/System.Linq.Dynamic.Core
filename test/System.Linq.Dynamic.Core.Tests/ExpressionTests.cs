@@ -1716,6 +1716,43 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Type_StructWithIntegerEquality_BothVariablesInStruct()
+        {
+            // Arrange
+            var valuesL = new[]
+            {
+                new
+                {
+                    Id = new SnowflakeId(1L), 
+                    Var = 1
+                },
+                new
+                {
+                    Id = new SnowflakeId(2L), 
+                    Var = 1
+                },
+                new
+                {
+                    Id = new SnowflakeId(1L), 
+                    Var = 2
+                }
+            }.AsQueryable();
+
+            var resultValuesL = new[] { 
+                new {
+                    Id = new SnowflakeId(1L), 
+                    Var = 1
+                }
+            }.AsQueryable();
+
+            // Act
+            var resultL = valuesL.Where("it.Id == it.Var");
+
+            // Assert
+            Assert.Equal(resultValuesL.ToArray(), resultL);
+        }
+
+        [Fact]
         public void ExpressionTests_Type_Integer_Qualifiers_Negative()
         {
             // Arrange
