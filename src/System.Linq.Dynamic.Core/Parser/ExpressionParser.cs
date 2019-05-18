@@ -251,7 +251,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
                 Expression right = ParseAndOperator();
-                CheckAndPromoteOperands(typeof(ILogicalSignatures), op.Text, ref left, ref right, op.Pos);
+                CheckAndPromoteOperands(typeof(ILogicalSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                 left = Expression.OrElse(left, right);
             }
             return left;
@@ -266,7 +266,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
                 Expression right = ParseComparisonOperator();
-                CheckAndPromoteOperands(typeof(ILogicalSignatures), op.Text, ref left, ref right, op.Pos);
+                CheckAndPromoteOperands(typeof(ILogicalSignatures), op.Id,op.Text, ref left, ref right, op.Pos);
                 left = Expression.AndAlso(left, right);
             }
             return left;
@@ -303,7 +303,7 @@ namespace System.Linq.Dynamic.Core.Parser
                         // else, check for direct type match
                         else if (left.Type != right.Type)
                         {
-                            CheckAndPromoteOperands(typeof(IEqualitySignatures), "==", ref left, ref right, op.Pos);
+                            CheckAndPromoteOperands(typeof(IEqualitySignatures), TokenId.DoubleEqual, "==", ref left, ref right, op.Pos);
                         }
 
                         if (accumulate.Type != typeof(bool))
@@ -508,7 +508,7 @@ namespace System.Linq.Dynamic.Core.Parser
                         }
                         else
                         {
-                            CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures), op.Text, ref left, ref right, op.Pos);
+                            CheckAndPromoteOperands(isEquality ? typeof(IEqualitySignatures) : typeof(IRelationalSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                         }
                     }
                 }
@@ -589,11 +589,11 @@ namespace System.Linq.Dynamic.Core.Parser
                 switch (op.Id)
                 {
                     case TokenId.DoubleLessThan:
-                        CheckAndPromoteOperands(typeof(IShiftSignatures), op.Text, ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(IShiftSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                         left = Expression.LeftShift(left, right);
                         break;
                     case TokenId.DoubleGreaterThan:
-                        CheckAndPromoteOperands(typeof(IShiftSignatures), op.Text, ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(IShiftSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                         left = Expression.RightShift(left, right);
                         break;
                 }
@@ -619,12 +619,12 @@ namespace System.Linq.Dynamic.Core.Parser
                         }
                         else
                         {
-                            CheckAndPromoteOperands(typeof(IAddSignatures), op.Text, ref left, ref right, op.Pos);
+                            CheckAndPromoteOperands(typeof(IAddSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                             left = _expressionHelper.GenerateAdd(left, right);
                         }
                         break;
                     case TokenId.Minus:
-                        CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Text, ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                         left = _expressionHelper.GenerateSubtract(left, right);
                         break;
                 }
@@ -642,7 +642,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
                 Expression right = ParseUnary();
-                CheckAndPromoteOperands(typeof(IArithmeticSignatures), op.Text, ref left, ref right, op.Pos);
+                CheckAndPromoteOperands(typeof(IArithmeticSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                 switch (op.Id)
                 {
                     case TokenId.Asterisk:
@@ -1897,11 +1897,37 @@ namespace System.Linq.Dynamic.Core.Parser
             expr = args[0];
         }
 
-        void CheckAndPromoteOperands(Type signatures, string opName, ref Expression left, ref Expression right, int errorPos)
+        static string GetOverloadedOperationName(TokenId tokenId)
+        {
+            switch (tokenId)
+            {
+                case TokenId.DoubleEqual:
+                    return "op_Equality";
+                case TokenId.ExclamationEqual:
+                    return "op_Inequality";
+                default:
+                    return null;
+            }
+        }
+
+        void CheckAndPromoteOperands(Type signatures, TokenId opId, string opName, ref Expression left,
+            ref Expression right, int errorPos)
         {
             Expression[] args = { left, right };
+            
+            // support operator overloading
+            var nativeOperation = GetOverloadedOperationName(opId);
+            bool found = false;
 
-            if (!_methodFinder.ContainsMethod(signatures, "F", false, args))
+            if (nativeOperation != null)
+            {
+                if (left is ConstantExpression)
+                    found = _methodFinder.ContainsMethod(right.Type, nativeOperation, true, args);
+                else if (right is ConstantExpression)
+                    found = _methodFinder.ContainsMethod(left.Type, nativeOperation, true, args);
+            }
+
+            if (!found && !_methodFinder.ContainsMethod(signatures, "F", false, args))
             {
                 throw IncompatibleOperandsError(opName, left, right, errorPos);
             }
