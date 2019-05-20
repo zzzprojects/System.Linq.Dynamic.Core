@@ -1,3 +1,7 @@
+# 1.0.15.0 (20 May 2019)
+- [#273](https://github.com/StefH/System.Linq.Dynamic.Core/pull/273) - Adding support for overloaded op_Equality contributed by [nothrow](https://github.com/nothrow)
+- [#272](https://github.com/StefH/System.Linq.Dynamic.Core/issues/272) - Allow comparing via overloaded equality operator [feature]
+
 # 1.0.14.0 (14 May 2019)
 - [#270](https://github.com/StefH/System.Linq.Dynamic.Core/pull/270) - Fix for np() opererator for Nullable (e.g. DateTime) contributed by [StefH](https://github.com/StefH)
 - [#105](https://github.com/StefH/System.Linq.Dynamic.Core/issues/105) - Feature: Support for EF Core 2.0's EF.Functions.Like() [feature]
