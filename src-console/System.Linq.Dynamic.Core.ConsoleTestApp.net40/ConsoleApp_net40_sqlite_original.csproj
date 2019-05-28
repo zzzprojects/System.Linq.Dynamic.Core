@@ -94,6 +94,9 @@
     <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserProfile.cs">
       <Link>Helpers\Models\UserProfile.cs</Link>
     </Compile>
+    <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\SnowflakeId.cs">
+      <Link>Helpers\Models\SnowflakeId.cs</Link>
+    </Compile>
     <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\TestEnum.cs">
       <Link>Helpers\TestEnum.cs</Link>
     </Compile>
@@ -102,7 +105,7 @@
     </Compile>
     <Compile Include="..\..\test\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserState.cs">
       <Link>Helpers\Models\UserState.cs</Link>
-    </Compile>	
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -6,6 +6,8 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
     {
         public Guid Id { get; set; }
 
+        public SnowflakeId SnowflakeId { get; set; }
+
         public string UserName { get; set; }
 
         public int? NullableInt { get; set; }
@@ -42,6 +44,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
                 var user = new User
                 {
                     Id = Guid.NewGuid(),
+                    SnowflakeId = new SnowflakeId(((ulong)long.MaxValue + (ulong)i + 2UL)),
                     UserName = "User" + i,
                     Income = 1 + (i % 15) * 100
                 };
