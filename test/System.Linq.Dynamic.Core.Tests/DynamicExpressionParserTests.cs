@@ -814,7 +814,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var expression = DynamicExpressionParser.ParseLambda(new[] { p0 }, typeof(bool), expressionAsString);
             Delegate del = expression.Compile();
-            bool? result = del.DynamicInvoke("testing") as bool?;
+            bool? result = del.DynamicInvoke(testValue) as bool?;
 
             // Assert
             Check.That(result).IsEqualTo(expectedResult);
