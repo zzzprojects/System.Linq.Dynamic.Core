@@ -51,13 +51,28 @@ namespace System.Linq.Dynamic.Core.Parser
 
             foreach (Type type in PredefinedTypesHelper.PredefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
             {
-                _keywords[type.FullName] = type;
+                if (!string.IsNullOrEmpty(type.FullName))
+                {
+                    _keywords[type.FullName] = type;
+                }
                 _keywords[type.Name] = type;
             }
 
             foreach (KeyValuePair<string, Type> pair in PredefinedTypesHelper.PredefinedTypesShorthands)
             {
                 _keywords.Add(pair.Key, pair.Value);
+            }
+
+            if (config.SupportEnumerationsFromSystemNamespace)
+            {
+                foreach (Type type in EnumerationsFromMscorlib.PredefinedEnumerationTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
+                {
+                    if (!string.IsNullOrEmpty(type.FullName))
+                    {
+                        _keywords[type.FullName] = type;
+                    }
+                    _keywords[type.Name] = type;
+                }
             }
 
             if (config.CustomTypeProvider != null)

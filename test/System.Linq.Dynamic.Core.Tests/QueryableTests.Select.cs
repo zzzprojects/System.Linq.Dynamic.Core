@@ -234,12 +234,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var dates = Enumerable.Repeat(0, 7)
                     .Select((d, i) => new DateTime(2000, 1, 1).AddDays(i).AddSeconds(i))
                     .AsQueryable();
+            var config = new ParsingConfig { SupportEnumerationsFromSystemNamespace = false };
 
             // Act
             IQueryable<Example> result = dates
                 .Select(d => new Example { Time = d, DOWNull = d.DayOfWeek, DOW = d.DayOfWeek, Sec = d.Second, SecNull = d.Second });
             IQueryable<Example> resultDynamic = dates
-                .Select<Example>("new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
+                .Select<Example>(config, "new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
 
             // Assert
             Check.That(resultDynamic.First()).Equals(result.First());
@@ -253,12 +254,13 @@ namespace System.Linq.Dynamic.Core.Tests
             var dates = Enumerable.Repeat(0, 7)
                     .Select((d, i) => new DateTime(2000, 1, 1).AddDays(i).AddSeconds(i))
                     .AsQueryable();
+            var config = new ParsingConfig { SupportEnumerationsFromSystemNamespace = false };
 
             // Act
             IQueryable<ExampleWithConstructor> result = dates
                 .Select(d => new ExampleWithConstructor(d, d.DayOfWeek, d.DayOfWeek, d.Second, d.Second));
             IQueryable<ExampleWithConstructor> resultDynamic = dates
-                .Select<ExampleWithConstructor>("new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
+                .Select<ExampleWithConstructor>(config, "new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
 
             // Assert
             Check.That(resultDynamic.First()).Equals(result.First());
