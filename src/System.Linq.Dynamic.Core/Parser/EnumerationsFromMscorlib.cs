@@ -6,11 +6,7 @@ namespace System.Linq.Dynamic.Core.Parser
     internal static class EnumerationsFromMscorlib
     {
         /// <summary>
-        /// Some enumeration types from mscorlib/netstandard
-        /// 
-        /// var enums = Assembly.Load("mscorlib").GetTypes()
-        ///     .Where(x => x.IsEnum && x.FullName.StartsWith("System") && x.FullName.Count(c => c == '.') == 1)
-        ///     .OrderBy(x => x.Name).Select(x => "typeof(" + x.Name + "),");
+        /// Some enumeration types from mscorlib/netstandard.
         /// </summary>
         public static readonly IDictionary<Type, int> PredefinedEnumerationTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> {
 #if !(UAP10_0 || NETSTANDARD || NET35 || NETCOREAPP)
