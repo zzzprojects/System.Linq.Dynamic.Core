@@ -139,5 +139,11 @@ namespace System.Linq.Dynamic.Core
         /// Default value is false.
         /// </summary>
         public bool ResolveTypesBySimpleName { get; set; } = false;
+
+        /// <summary>
+        /// Support enumeration-types from the System namespace in mscorelib. An example could be "StringComparison".
+        /// Default value is true.
+        /// </summary>
+        public bool SupportEnumerationsFromSystemNamespace { get; set; } = true;
     }
 }

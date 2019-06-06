@@ -802,5 +802,22 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(result).IsEqualTo(expected);
         }
+
+        [Theory]
+        [InlineData(@"p0.Equals(""Testing"", 3)", "testinG", true)]
+        [InlineData(@"p0.Equals(""Testing"", StringComparison.InvariantCultureIgnoreCase)", "testinG", true)]
+        public void DynamicExpressionParser_ParseLambda_SupportEnumerationStringComparison(string expressionAsString, string testValue, bool expectedResult)
+        {
+            // Arrange
+            var p0 = Expression.Parameter(typeof(string), "p0");
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda(new[] { p0 }, typeof(bool), expressionAsString);
+            Delegate del = expression.Compile();
+            bool? result = del.DynamicInvoke(testValue) as bool?;
+
+            // Assert
+            Check.That(result).IsEqualTo(expectedResult);
+        }
     }
 }
