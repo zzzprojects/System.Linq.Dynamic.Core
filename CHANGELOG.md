@@ -1,3 +1,6 @@
+# 1.0.16.0 (06 June 2019)
+- [#275](https://github.com/StefH/System.Linq.Dynamic.Core/pull/275) - Support Enumerations from System Namespace (e.g. StringComparison) [feature] contributed by [StefH](https://github.com/StefH)
+
 # 1.0.15.0 (20 May 2019)
 - [#273](https://github.com/StefH/System.Linq.Dynamic.Core/pull/273) - Adding support for overloaded op_Equality contributed by [nothrow](https://github.com/nothrow)
 - [#272](https://github.com/StefH/System.Linq.Dynamic.Core/issues/272) - Allow comparing via overloaded equality operator [feature]
