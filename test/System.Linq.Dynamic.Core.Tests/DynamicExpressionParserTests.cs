@@ -143,8 +143,10 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(value).IsEqualTo("x");
         }
 
-        [Fact]
-        public void DynamicExpressionParser_ParseLambda_WithStructWithEquality()
+        [Theory]
+        [InlineData("Where(x => x.SnowflakeId == {0})")]
+        [InlineData("Where(x => x.SnowflakeId = {0})")]
+        public void DynamicExpressionParser_ParseLambda_WithStructWithEquality(string query)
         {
             // Assign
             var testList = User.GenerateSampleModels(51);
@@ -153,7 +155,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             ulong expectedX = (ulong) long.MaxValue + 3;
 
-            string query = $"Where(x => x.SnowflakeId == {expectedX})";
+            query = string.Format(query, expectedX);
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
             Delegate del = expression.Compile();
             IEnumerable<dynamic> result = del.DynamicInvoke(qry) as IEnumerable<dynamic>;
