@@ -1,3 +1,7 @@
+# 1.0.17.0 (14 June 2019)
+- [#276](https://github.com/StefH/System.Linq.Dynamic.Core/pull/276) - op_Compare also for single &quot;equals&quot; token [bug] contributed by [nothrow](https://github.com/nothrow)
+- [#274](https://github.com/StefH/System.Linq.Dynamic.Core/issues/274) - Question: Extension method that returns Expression&lt;Func&lt;T, bool&gt;&gt; ? [question]
+
 # 1.0.16.0 (06 June 2019)
 - [#275](https://github.com/StefH/System.Linq.Dynamic.Core/pull/275) - Support Enumerations from System Namespace (e.g. StringComparison) [feature] contributed by [StefH](https://github.com/StefH)
 
