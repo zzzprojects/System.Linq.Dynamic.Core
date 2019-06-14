@@ -1704,14 +1704,18 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var resultL = valuesL.Where("it == 100");
+            var resultLs = valuesL.Where("it = 100");
             var resultNL = valuesL.Where("it != 1 && it != 5");
             var resultArg = valuesL.Where("it == @0", 100);
+            var resultArgs = valuesL.Where("it = @0", 100);
             var resultIn = valuesL.Where("it in (100)");
 
             // Assert
             Assert.Equal(resultValuesL.ToArray(), resultL);
+            Assert.Equal(resultValuesL.ToArray(), resultLs);
             Assert.Equal(resultValuesL.ToArray(), resultNL);
             Assert.Equal(resultValuesL.ToArray(), resultArg);
+            Assert.Equal(resultValuesL.ToArray(), resultArgs);
             Assert.Equal(resultValuesL.ToArray(), resultIn);
         }
 
@@ -1743,13 +1747,15 @@ namespace System.Linq.Dynamic.Core.Tests
                     Id = new SnowflakeId(1L), 
                     Var = 1
                 }
-            }.AsQueryable();
+            }.AsQueryable().ToArray();
 
             // Act
             var resultL = valuesL.Where("it.Id == it.Var");
+            var resultLs = valuesL.Where("it.Id = it.Var");
 
             // Assert
             Assert.Equal(resultValuesL.ToArray(), resultL);
+            Assert.Equal(resultValuesL.ToArray(), resultLs);
         }
 
         [Fact]
