@@ -1902,6 +1902,7 @@ namespace System.Linq.Dynamic.Core.Parser
             switch (tokenId)
             {
                 case TokenId.DoubleEqual:
+                case TokenId.Equal:
                     return "op_Equality";
                 case TokenId.ExclamationEqual:
                     return "op_Inequality";
