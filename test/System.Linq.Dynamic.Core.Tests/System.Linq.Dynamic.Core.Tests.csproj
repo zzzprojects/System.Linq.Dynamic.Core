@@ -19,6 +19,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="FluentAssertions" Version="5.7.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
         <PackageReference Include="OpenCover" Version="4.6.519" />
         <PackageReference Include="ReportGenerator" Version="4.0.0" />

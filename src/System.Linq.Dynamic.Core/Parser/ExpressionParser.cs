@@ -7,6 +7,7 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser.SupportedMethods;
 using System.Linq.Dynamic.Core.Parser.SupportedOperands;
 using System.Linq.Dynamic.Core.Tokenizer;
+using System.Linq.Dynamic.Core.TypeConverters;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -29,6 +30,7 @@ namespace System.Linq.Dynamic.Core.Parser
         private readonly TextParser _textParser;
         private readonly IExpressionHelper _expressionHelper;
         private readonly ITypeFinder _typeFinder;
+        private readonly ITypeConverterFactory _typeConverterFactory;
         private readonly Dictionary<string, object> _internals;
         private readonly Dictionary<string, object> _symbols;
 
@@ -75,6 +77,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _methodFinder = new MethodFinder(_parsingConfig);
             _expressionHelper = new ExpressionHelper(_parsingConfig);
             _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
+            _typeConverterFactory = new TypeConverterFactory(_parsingConfig);
         }
 
         void ProcessParameters(ParameterExpression[] parameters)
@@ -471,13 +474,13 @@ namespace System.Linq.Dynamic.Core.Parser
                         }
                     }
                 }
-                else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeConverterFactory.GetConverter(left.Type)) != null)
+                else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string stringValueR && (typeConverter = _typeConverterFactory.GetConverter(left.Type)) != null)
                 {
-                    right = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), left.Type);
+                    right = Expression.Constant(typeConverter.ConvertFromInvariantString(stringValueR), left.Type);
                 }
-                else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeConverterFactory.GetConverter(right.Type)) != null)
+                else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string stringValueL && (typeConverter = _typeConverterFactory.GetConverter(right.Type)) != null)
                 {
-                    left = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), right.Type);
+                    left = Expression.Constant(typeConverter.ConvertFromInvariantString(stringValueL), right.Type);
                 }
                 else
                 {
@@ -1497,7 +1500,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return ParseMemberAccess(type, null);
         }
 
-        static Expression GenerateConversion(Expression expr, Type type, int errorPos)
+        private Expression GenerateConversion(Expression expr, Type type, int errorPos)
         {
             Type exprType = expr.Type;
             if (exprType == type)
@@ -1528,21 +1531,11 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 string text = (string)((ConstantExpression)expr).Value;
 
-                // DateTime is parsed as UTC time.
-                if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
+                var typeConvertor = _typeConverterFactory.GetConverter(type);
+                if (typeConvertor != null)
                 {
-                    return Expression.Constant(dateTime, type);
-                }
-
-                object[] arguments = { text, null };
-#if NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD
-                MethodInfo method = type.GetMethod("TryParse", new[] { typeof(string), type.MakeByRefType() });
-#else
-                MethodInfo method = type.GetMethod("TryParse", BindingFlags.Public | BindingFlags.Static, null, new Type[] { typeof(string), type.MakeByRefType() }, null);
-#endif
-                if (method != null && (bool)method.Invoke(null, arguments))
-                {
-                    return Expression.Constant(arguments[1], type);
+                    var value = typeConvertor.ConvertFromInvariantString(text);
+                    return Expression.Constant(value, type);
                 }
             }
 
@@ -1914,7 +1907,7 @@ namespace System.Linq.Dynamic.Core.Parser
         void CheckAndPromoteOperands(Type signatures, TokenId opId, string opName, ref Expression left, ref Expression right, int errorPos)
         {
             Expression[] args = { left, right };
-            
+
             // support operator overloading
             var nativeOperation = GetOverloadedOperationName(opId);
             bool found = false;
