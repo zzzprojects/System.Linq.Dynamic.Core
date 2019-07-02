@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
     <PropertyGroup>
+        <!--<Version>1.0.18</Version>-->
         <Description>This is a .NETStandard / .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
         <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
         <Authors>Microsoft;Scott Guthrie;King Wilder;Nathan Arnott;Stef Heyenrath</Authors>
@@ -8,7 +9,7 @@
         <AssemblyName>System.Linq.Dynamic.Core</AssemblyName>
         <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <!--<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>-->
         <PackageTags>system;linq;dynamic;core;dotnet;NETCoreApp;NETStandard</PackageTags>
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
         <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>

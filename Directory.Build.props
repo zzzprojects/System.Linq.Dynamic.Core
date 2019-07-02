@@ -1,19 +1,19 @@
 <Project>
-  <PropertyGroup>
-    <MsBuildAllProjects>$(MsBuildAllProjects);$(MsBuildThisFileFullPath)</MsBuildAllProjects>
-  </PropertyGroup>
+    <PropertyGroup>
+        <MsBuildAllProjects>$(MsBuildAllProjects);$(MsBuildThisFileFullPath)</MsBuildAllProjects>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <VersionPrefix>1.0.17</VersionPrefix>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Version>1.0.18</Version>
+    </PropertyGroup>
 
-  <Choose>
-    <!-- The environment variable `Prerelease` is set in the azure-pipelines.yml file. -->
-    <When Condition=" '$(Prerelease)' != '' ">
-      <PropertyGroup>
-        <!-- Set the version to x.x.x.x-{Prerelease}-1{Build_BuildId} (this is same buildId as defined in the azure-pipelines.yml file). -->
-        <VersionSuffix>$(Prerelease)-1$(BUILD_BUILDID)</VersionSuffix>
-      </PropertyGroup>
-    </When>
-  </Choose>
+    <Choose>
+        <!-- The environment variable `Prerelease` is set in the azure-pipelines.yml file. -->
+        <When Condition=" '$(Prerelease)' != '' ">
+            <PropertyGroup>
+                <!-- Set the version to x.x.x.x-{Prerelease}-1{Build_BuildId} (this is same buildId as defined in the azure-pipelines.yml file). -->
+                <Version>$(Prerelease)-1$(BUILD_BUILDID)</Version>
+            </PropertyGroup>
+        </When>
+    </Choose>
 </Project>
