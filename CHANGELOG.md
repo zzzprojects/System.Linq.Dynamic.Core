@@ -1,3 +1,7 @@
+# 1.0.18.0 (02 July 2019)
+- [#171](https://github.com/StefH/System.Linq.Dynamic.Core/issues/171) - File version attribute is 0.0.0.0 [invalid]
+- [#278](https://github.com/StefH/System.Linq.Dynamic.Core/issues/278) - Nuget System.Linq.Dynamic.Core 1.0.17 - Incorrect version [bug]
+
 # 1.0.17.0 (14 June 2019)
 - [#276](https://github.com/StefH/System.Linq.Dynamic.Core/pull/276) - op_Compare also for single &quot;equals&quot; token [bug] contributed by [nothrow](https://github.com/nothrow)
 - [#274](https://github.com/StefH/System.Linq.Dynamic.Core/issues/274) - Question: Extension method that returns Expression&lt;Func&lt;T, bool&gt;&gt; ? [question]
