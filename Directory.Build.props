@@ -4,7 +4,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Version>1.0.19</Version>
+        <VersionPrefix>1.0.19</VersionPrefix>
     </PropertyGroup>
 
     <Choose>
@@ -12,7 +12,7 @@
         <When Condition=" '$(Prerelease)' != '' ">
             <PropertyGroup>
                 <!-- Set the version to x.x.x.x-{Prerelease}-1{Build_BuildId} (this is same buildId as defined in the azure-pipelines.yml file). -->
-                <Version>$(Prerelease)-1$(BUILD_BUILDID)</Version>
+                <VersionSuffix>$(Prerelease)-1$(BUILD_BUILDID)</VersionSuffix>
             </PropertyGroup>
         </When>
     </Choose>
