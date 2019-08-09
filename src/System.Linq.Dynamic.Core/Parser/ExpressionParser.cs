@@ -430,11 +430,11 @@ namespace System.Linq.Dynamic.Core.Parser
                     // If left or right is NullLiteral, just continue. Else check if the types differ.
                     if (!(Constants.IsNull(left) || Constants.IsNull(right)) && left.Type != right.Type)
                     {
-                        if (left.Type.IsAssignableFrom(right.Type))
+                        if (left.Type.IsAssignableFrom(right.Type) || HasImplicitConversion(right.Type, left.Type))
                         {
                             right = Expression.Convert(right, left.Type);
                         }
-                        else if (right.Type.IsAssignableFrom(left.Type))
+                        else if (right.Type.IsAssignableFrom(left.Type) || HasImplicitConversion(left.Type, right.Type))
                         {
                             left = Expression.Convert(left, right.Type);
                         }
