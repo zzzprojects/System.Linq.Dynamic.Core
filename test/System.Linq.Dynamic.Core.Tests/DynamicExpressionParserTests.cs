@@ -788,25 +788,18 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_With_Implicit_Conversions()
+        public void DynamicExpressionParser_ParseLambda_With_One_Way_Implicit_Conversions()
         {
             // Arrange
             var testValue = "test";
             var container = new TestImplicitConversionContainer(testValue);
             var expressionText = $"OneWay == \"{testValue}\"";
 
-            // Act 1
+            // Act
             var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionText);
 
-            // Assert 1
+            // Assert
             Assert.NotNull(lambda);
-
-            // Act 2
-            var del = lambda.Compile();
-            bool result = (bool)del.DynamicInvoke(container);
-
-            // Assert 2
-            Assert.True(result);
         }
 
         [Fact]

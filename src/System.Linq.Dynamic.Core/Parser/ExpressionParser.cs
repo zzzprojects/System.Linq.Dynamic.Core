@@ -543,7 +543,9 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private bool HasImplicitConversion(Type baseType, Type targetType)
         {
-            return baseType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+            var methods = baseType.GetMethods(BindingFlags.Public | BindingFlags.Static).ToList();
+            methods.AddRange(targetType.GetMethods(BindingFlags.Public | BindingFlags.Static));
+            return methods
                 .Where(mi => mi.Name == "op_Implicit" && mi.ReturnType == targetType)
                 .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
         }
