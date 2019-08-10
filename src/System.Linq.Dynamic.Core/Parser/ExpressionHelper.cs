@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -244,28 +244,36 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public Expression GenerateAndAlsoNotNullExpression(Expression sourceExpression)
+        public bool TryGenerateAndAlsoNotNullExpression(Expression sourceExpression, out Expression generatedExpression)
         {
-            var expresssions = CollectExpressions(sourceExpression);
-            if (!expresssions.Any())
+            generatedExpression = sourceExpression;
+
+            var expressions = CollectExpressions(sourceExpression);
+            //if (!expressions.Any())
+            //{
+            //    return null;
+            //}
+
+            if (expressions.Count == 1)
             {
-                return null;
+                generatedExpression = sourceExpression;
+                return false;
             }
 
             // Reverse the list
-            expresssions.Reverse();
+            expressions.Reverse();
 
             // Convert all expressions into '!= null'
-            var binaryExpressions = expresssions.Select(expression => Expression.NotEqual(expression, Expression.Constant(null))).ToArray();
+            var binaryExpressions = expressions.Select(expression => Expression.NotEqual(expression, Expression.Constant(null))).ToArray();
 
             // Convert all binary expressions into `AndAlso(...)`
-            var andAlsoExpression = binaryExpressions[0];
+            generatedExpression = binaryExpressions[0];
             for (int i = 1; i < binaryExpressions.Length; i++)
             {
-                andAlsoExpression = Expression.AndAlso(andAlsoExpression, binaryExpressions[i]);
+                generatedExpression = Expression.AndAlso(generatedExpression, binaryExpressions[i]);
             }
 
-            return andAlsoExpression;
+            return true;
         }
 
         private static Expression GetMemberExpression(Expression expression)
