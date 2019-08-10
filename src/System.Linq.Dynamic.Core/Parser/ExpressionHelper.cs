@@ -249,10 +249,6 @@ namespace System.Linq.Dynamic.Core.Parser
             generatedExpression = sourceExpression;
 
             var expressions = CollectExpressions(sourceExpression);
-            //if (!expressions.Any())
-            //{
-            //    return null;
-            //}
 
             if (expressions.Count == 1)
             {
