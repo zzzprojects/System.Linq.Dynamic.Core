@@ -242,11 +242,14 @@ namespace System.Linq.Dynamic.Core.Parser
             return expr;
         }
 
-        // ||, or operator
+        // Or operator
+        // - ||
+        // - Or
+        // - OrElse
         Expression ParseOrOperator()
         {
             Expression left = ParseAndOperator();
-            while (_textParser.CurrentToken.Id == TokenId.DoubleBar || TokenIdentifierIs("or"))
+            while (_textParser.CurrentToken.Id == TokenId.DoubleBar || TokenIdentifierIs("Or") || TokenIdentifierIs("OrElse"))
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
@@ -257,11 +260,14 @@ namespace System.Linq.Dynamic.Core.Parser
             return left;
         }
 
-        // &&, and operator
+        // And operator
+        // - &&
+        // - And
+        // - AndAlso
         Expression ParseAndOperator()
         {
             Expression left = ParseIn();
-            while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand || TokenIdentifierIs("and"))
+            while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand || TokenIdentifierIs("And") || TokenIdentifierIs("AndAlso"))
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
@@ -1914,7 +1920,7 @@ namespace System.Linq.Dynamic.Core.Parser
         void CheckAndPromoteOperands(Type signatures, TokenId opId, string opName, ref Expression left, ref Expression right, int errorPos)
         {
             Expression[] args = { left, right };
-            
+
             // support operator overloading
             var nativeOperation = GetOverloadedOperationName(opId);
             bool found = false;
