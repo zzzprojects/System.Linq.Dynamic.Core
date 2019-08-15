@@ -245,11 +245,14 @@ namespace System.Linq.Dynamic.Core.Parser
             return expr;
         }
 
-        // ||, or operator
+        // Or operator
+        // - ||
+        // - Or
+        // - OrElse
         Expression ParseOrOperator()
         {
             Expression left = ParseAndOperator();
-            while (_textParser.CurrentToken.Id == TokenId.DoubleBar || TokenIdentifierIs("or"))
+            while (_textParser.CurrentToken.Id == TokenId.DoubleBar || TokenIdentifierIs("Or") || TokenIdentifierIs("OrElse"))
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
@@ -260,11 +263,14 @@ namespace System.Linq.Dynamic.Core.Parser
             return left;
         }
 
-        // &&, and operator
+        // And operator
+        // - &&
+        // - And
+        // - AndAlso
         Expression ParseAndOperator()
         {
             Expression left = ParseIn();
-            while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand || TokenIdentifierIs("and"))
+            while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand || TokenIdentifierIs("And") || TokenIdentifierIs("AndAlso"))
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
@@ -433,11 +439,11 @@ namespace System.Linq.Dynamic.Core.Parser
                     // If left or right is NullLiteral, just continue. Else check if the types differ.
                     if (!(Constants.IsNull(left) || Constants.IsNull(right)) && left.Type != right.Type)
                     {
-                        if (left.Type.IsAssignableFrom(right.Type))
+                        if (left.Type.IsAssignableFrom(right.Type) || HasImplicitConversion(right.Type, left.Type))
                         {
                             right = Expression.Convert(right, left.Type);
                         }
-                        else if (right.Type.IsAssignableFrom(left.Type))
+                        else if (right.Type.IsAssignableFrom(left.Type) || HasImplicitConversion(left.Type, right.Type))
                         {
                             left = Expression.Convert(left, right.Type);
                         }
@@ -546,7 +552,16 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private bool HasImplicitConversion(Type baseType, Type targetType)
         {
-            return baseType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+            var baseTypeHasConversion = baseType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(mi => mi.Name == "op_Implicit" && mi.ReturnType == targetType)
+                .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
+
+            if (baseTypeHasConversion)
+            {
+                return true;
+            }
+
+            return targetType.GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Where(mi => mi.Name == "op_Implicit" && mi.ReturnType == targetType)
                 .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
         }
