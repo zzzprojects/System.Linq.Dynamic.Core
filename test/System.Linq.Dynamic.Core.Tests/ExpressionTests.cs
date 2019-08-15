@@ -75,6 +75,21 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result).ContainsExactly(expected);
         }
 
+
+        [Fact]
+        public void ExpressionTests_AndAlso()
+        {
+            // Arrange
+            var users = new[] { new User { Income = 1 }, new User { Income = 2 }, new User { Income = 3 } }.AsQueryable();
+
+            // Act
+            var result = users.Where(u => u.Income == 1 && u.Income == 2).ToArray();
+            var resultDynamic = users.Where("Income == 1 AndAlso Income == 2").ToArray();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
         [Fact]
         public void ExpressionTests_ArrayInitializer()
         {
@@ -1363,6 +1378,20 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.ThatCode(() => q.Select("np()")).Throws<ParseException>();
             Check.ThatCode(() => q.Select("np(it.Profile.UserProfileDetails.Id, 1, 2)")).Throws<ParseException>();
             Check.ThatCode(() => q.Select("np(1)")).Throws<ParseException>();
+        }
+
+        [Fact]
+        public void ExpressionTests_OrElse()
+        {
+            // Arrange
+            var users = new[] { new User { Income = 1 }, new User { Income = 2 }, new User { Income = 3 } }.AsQueryable();
+
+            // Act
+            var result = users.Where(u => u.Income == 1 || u.Income == 2).ToArray();
+            var resultDynamic = users.Where("Income == 1 OrElse Income == 2").ToArray();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
         }
 
         [Fact]

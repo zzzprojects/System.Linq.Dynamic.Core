@@ -16,6 +16,7 @@ steps:
 # Install SonarScanner
 - script: |
     dotnet tool install --global dotnet-sonarscanner
+  condition: and(succeeded(), eq(variables['SonarScanner'], 'yes'))
   displayName: Install SonarScanner
 
 # Begin SonarScanner
@@ -26,6 +27,7 @@ steps:
 #
 - script: |
     %USERPROFILE%\.dotnet\tools\dotnet-sonarscanner begin /k:"system.linq.dynamic.core" /o:"stefh-github" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="$(SONAR_TOKEN)" /v:"$(buildId)" /d:sonar.cs.opencover.reportsPaths="**\coverage.opencover.xml"
+  condition: and(succeeded(), eq(variables['SonarScanner'], 'yes'))
   displayName: Begin SonarScanner
 
 - task: DotNetCoreCLI@2
@@ -46,6 +48,7 @@ steps:
 # End SonarScanner
 - script: |
     %USERPROFILE%\.dotnet\tools\dotnet-sonarscanner end /d:sonar.login="$(SONAR_TOKEN)"
+  condition: and(succeeded(), eq(variables['SonarScanner'], 'yes'))
   displayName: End SonarScanner
 
 # Upload coverage to codecov.io
