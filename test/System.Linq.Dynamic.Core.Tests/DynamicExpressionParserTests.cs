@@ -1,10 +1,10 @@
-﻿using NFluent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
+using NFluent;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
@@ -62,6 +62,36 @@ namespace System.Linq.Dynamic.Core.Tests
             {
                 return Origin;
             }
+        }
+
+        public class CustomClassWithOneWayImplicitConversion
+        {
+            public CustomClassWithOneWayImplicitConversion(string origin)
+            {
+                Origin = origin;
+            }
+
+            public string Origin { get; }
+
+            public static implicit operator CustomClassWithOneWayImplicitConversion(string origin)
+            {
+                return new CustomClassWithOneWayImplicitConversion(origin);
+            }
+
+            public override string ToString()
+            {
+                return Origin;
+            }
+        }
+
+        public class TestImplicitConversionContainer
+        {
+            public TestImplicitConversionContainer(CustomClassWithOneWayImplicitConversion oneWay)
+            {
+                OneWay = oneWay;
+            }
+
+            public CustomClassWithOneWayImplicitConversion OneWay { get; }
         }
 
         public class TextHolder
@@ -755,6 +785,21 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert 2
             Assert.Equal("note1 (name1)", result);
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_With_One_Way_Implicit_Conversions()
+        {
+            // Arrange
+            var testValue = "test";
+            var container = new TestImplicitConversionContainer(testValue);
+            var expressionText = $"OneWay == \"{testValue}\"";
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionText);
+
+            // Assert
+            Assert.NotNull(lambda);
         }
 
         [Fact]
