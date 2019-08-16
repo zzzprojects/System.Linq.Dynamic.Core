@@ -84,14 +84,37 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
+        public class CustomClassWithValueTypeImplicitConversion
+        {
+            public CustomClassWithValueTypeImplicitConversion(int origin)
+            {
+                Origin = origin;
+            }
+
+            public int Origin { get; }
+
+            public static implicit operator CustomClassWithValueTypeImplicitConversion(int origin)
+            {
+                return new CustomClassWithValueTypeImplicitConversion(origin);
+            }
+
+            public override string ToString()
+            {
+                return Origin.ToString();
+            }
+        }
+
         public class TestImplicitConversionContainer
         {
-            public TestImplicitConversionContainer(CustomClassWithOneWayImplicitConversion oneWay)
+            public TestImplicitConversionContainer(CustomClassWithOneWayImplicitConversion oneWay, CustomClassWithValueTypeImplicitConversion valueType)
             {
                 OneWay = oneWay;
+                ValueType = valueType;
             }
 
             public CustomClassWithOneWayImplicitConversion OneWay { get; }
+
+            public CustomClassWithValueTypeImplicitConversion ValueType { get; }
         }
 
         public class TextHolder
@@ -791,14 +814,22 @@ namespace System.Linq.Dynamic.Core.Tests
         public void DynamicExpressionParser_ParseLambda_With_One_Way_Implicit_Conversions()
         {
             // Arrange
-            var testValue = "test";
-            var container = new TestImplicitConversionContainer(testValue);
-            var expressionText = $"OneWay == \"{testValue}\"";
+            var testString = "test";
+            var testInt = 6;
+            var container = new TestImplicitConversionContainer(testString, testInt);
+            var expressionTextString = $"OneWay == \"{testString}\"";
+            var expressionTextValueType = $"ValueType == \"{testInt}\"";
 
-            // Act
-            var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionText);
+            // Act 1
+            var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextString);
 
-            // Assert
+            // Assert 1
+            Assert.NotNull(lambda);
+
+            // Act 2
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextString);
+
+            // Assert 2
             Assert.NotNull(lambda);
         }
 
