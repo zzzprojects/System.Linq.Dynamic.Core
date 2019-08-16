@@ -84,6 +84,26 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
+        public class CustomClassWithReversedImplicitConversion
+        {
+            public CustomClassWithReversedImplicitConversion(string origin)
+            {
+                Origin = origin;
+            }
+
+            public string Origin { get; }
+
+            public static implicit operator string(CustomClassWithReversedImplicitConversion origin)
+            {
+                return origin.ToString();
+            }
+
+            public override string ToString()
+            {
+                return Origin;
+            }
+        }
+
         public class CustomClassWithValueTypeImplicitConversion
         {
             public CustomClassWithValueTypeImplicitConversion(int origin)
@@ -104,17 +124,47 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
+        public class CustomClassWithReversedValueTypeImplicitConversion
+        {
+            public CustomClassWithReversedValueTypeImplicitConversion(int origin)
+            {
+                Origin = origin;
+            }
+
+            public int Origin { get; }
+
+            public static implicit operator int(CustomClassWithReversedValueTypeImplicitConversion origin)
+            {
+                return origin.Origin;
+            }
+
+            public override string ToString()
+            {
+                return Origin.ToString();
+            }
+        }
+
         public class TestImplicitConversionContainer
         {
-            public TestImplicitConversionContainer(CustomClassWithOneWayImplicitConversion oneWay, CustomClassWithValueTypeImplicitConversion valueType)
+            public TestImplicitConversionContainer(
+                CustomClassWithOneWayImplicitConversion oneWay,
+                CustomClassWithReversedImplicitConversion reversed,
+                CustomClassWithValueTypeImplicitConversion valueType,
+                CustomClassWithReversedValueTypeImplicitConversion reversedValueType)
             {
                 OneWay = oneWay;
+                Reversed = Reversed;
                 ValueType = valueType;
+                ReversedValueType = reversedValueType;
             }
 
             public CustomClassWithOneWayImplicitConversion OneWay { get; }
 
+            public CustomClassWithReversedImplicitConversion Reversed { get; }
+
             public CustomClassWithValueTypeImplicitConversion ValueType { get; }
+
+            public CustomClassWithReversedValueTypeImplicitConversion ReversedValueType { get; }
         }
 
         public class TextHolder
@@ -816,9 +866,11 @@ namespace System.Linq.Dynamic.Core.Tests
             // Arrange
             var testString = "test";
             var testInt = 6;
-            var container = new TestImplicitConversionContainer(testString, testInt);
+            var container = new TestImplicitConversionContainer(testString, new CustomClassWithReversedImplicitConversion(testString), testInt, new CustomClassWithReversedValueTypeImplicitConversion(testInt));
             var expressionTextString = $"OneWay == \"{testString}\"";
-            var expressionTextValueType = $"ValueType == \"{testInt}\"";
+            var expressionTextReversed = $"Reversed == \"{testString}\"";
+            var expressionTextValueType = $"ValueType == {testInt}";
+            var expressionTextReversedValueType = $"ReversedValueType == {testInt}";
 
             // Act 1
             var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextString);
@@ -827,9 +879,21 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.NotNull(lambda);
 
             // Act 2
-            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextString);
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextReversed);
 
             // Assert 2
+            Assert.NotNull(lambda);
+
+            // Act 3
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextValueType);
+
+            // Assert 3
+            Assert.NotNull(lambda);
+
+            // Act 4
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextReversedValueType);
+
+            // Assert 4
             Assert.NotNull(lambda);
         }
 
