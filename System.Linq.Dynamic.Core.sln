@@ -74,12 +74,9 @@ Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "System.Linq.Dynamic.Core", 
 		{D3804228-91F4-4502-9595-39584E510002} = {D3804228-91F4-4502-9595-39584E510002}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppPerformanceTest236", "src-console\ConsoleAppPerformanceTest236\ConsoleAppPerformanceTest236.csproj", "{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppPerformanceTest236", "src-console\ConsoleAppPerformanceTest236\ConsoleAppPerformanceTest236.csproj", "{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -437,5 +434,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94C56722-194E-4B8B-BC23-B3F754E89A20}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
