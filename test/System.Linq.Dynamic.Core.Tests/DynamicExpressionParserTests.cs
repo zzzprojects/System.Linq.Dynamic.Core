@@ -867,10 +867,16 @@ namespace System.Linq.Dynamic.Core.Tests
             var testString = "test";
             var testInt = 6;
             var container = new TestImplicitConversionContainer(testString, new CustomClassWithReversedImplicitConversion(testString), testInt, new CustomClassWithReversedValueTypeImplicitConversion(testInt));
+
             var expressionTextString = $"OneWay == \"{testString}\"";
             var expressionTextReversed = $"Reversed == \"{testString}\"";
             var expressionTextValueType = $"ValueType == {testInt}";
             var expressionTextReversedValueType = $"ReversedValueType == {testInt}";
+
+            var invertedExpressionTextString = $"\"{testString}\" == OneWay";
+            var invertedExpressionTextReversed = $"\"{testString}\" == Reversed";
+            var invertedExpressionTextValueType = $"{testInt} == ValueType";
+            var invertedExpressionTextReversedValueType = $"{testInt} == ReversedValueType";
 
             // Act 1
             var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextString);
@@ -894,6 +900,30 @@ namespace System.Linq.Dynamic.Core.Tests
             lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextReversedValueType);
 
             // Assert 4
+            Assert.NotNull(lambda);
+
+            // Act 5
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextString);
+
+            // Assert 5
+            Assert.NotNull(lambda);
+
+            // Act 6
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextReversed);
+
+            // Assert 6
+            Assert.NotNull(lambda);
+
+            // Act 7
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextValueType);
+
+            // Assert 7
+            Assert.NotNull(lambda);
+
+            // Act 8
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextReversedValueType);
+
+            // Assert 8
             Assert.NotNull(lambda);
         }
 
