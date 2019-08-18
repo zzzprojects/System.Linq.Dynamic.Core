@@ -504,13 +504,27 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     if (!typesAreSameAndImplementCorrectInterface)
                     {
-                        if (left.Type.GetTypeInfo().IsClass && right is ConstantExpression && HasImplicitConversion(left.Type, right.Type))
+                        if (left.Type.GetTypeInfo().IsClass && right is ConstantExpression)
                         {
-                            left = Expression.Convert(left, right.Type);
+                            if (HasImplicitConversion(left.Type, right.Type))
+                            {
+                                left = Expression.Convert(left, right.Type);
+                            }
+                            else if (HasImplicitConversion(right.Type, left.Type))
+                            {
+                                right = Expression.Convert(right, left.Type);
+                            }
                         }
-                        else if (right.Type.GetTypeInfo().IsClass && left is ConstantExpression && HasImplicitConversion(right.Type, left.Type))
+                        else if (right.Type.GetTypeInfo().IsClass && left is ConstantExpression)
                         {
-                            right = Expression.Convert(right, left.Type);
+                            if (HasImplicitConversion(right.Type, left.Type))
+                            {
+                                right = Expression.Convert(right, left.Type);
+                            }
+                            else if (HasImplicitConversion(left.Type, right.Type))
+                            {
+                                left = Expression.Convert(left, right.Type);
+                            }
                         }
                         else
                         {
