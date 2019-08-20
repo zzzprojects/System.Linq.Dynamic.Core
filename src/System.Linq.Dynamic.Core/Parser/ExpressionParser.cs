@@ -249,7 +249,7 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParseOrOperator()
         {
             Expression left = ParseAndOperator();
-            while (_textParser.CurrentToken.Id == TokenId.DoubleBar || TokenIdentifierIs("Or") || TokenIdentifierIs("OrElse"))
+            while (_textParser.CurrentToken.Id == TokenId.DoubleBar)
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
@@ -267,7 +267,7 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParseAndOperator()
         {
             Expression left = ParseIn();
-            while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand || TokenIdentifierIs("And") || TokenIdentifierIs("AndAlso"))
+            while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand)
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
