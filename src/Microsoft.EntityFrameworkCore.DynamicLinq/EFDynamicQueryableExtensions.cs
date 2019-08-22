@@ -768,15 +768,17 @@ namespace EntityFramework.DynamicLinq
 
         //    throw new InvalidOperationException(Res.IQueryableProviderNotAsync);
         //}
+        private static MethodInfo _executeAsyncMethod =
+                typeof(EntityFrameworkDynamicQueryableExtensions)
+                .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }, null);
+
         private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var executeAsyncMethod =
-                typeof(EntityFrameworkDynamicQueryableExtensions)
-                .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }, null)
-                .MakeGenericMethod(operatorMethodInfo.ReturnType);
+            var executeAsyncMethod = _executeAsyncMethod.MakeGenericMethod(operatorMethodInfo.ReturnType);
 
             var task = (Task)executeAsyncMethod.Invoke(null, new object[] { operatorMethodInfo, source, cancellationToken });
             var castedTask = task.ContinueWith(t => (dynamic)t.GetType().GetProperty(nameof(Task<object>.Result)).GetValue(t));
+
             return castedTask;
         }
 
@@ -805,15 +807,17 @@ namespace EntityFramework.DynamicLinq
         private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression, CancellationToken cancellationToken = default(CancellationToken))
             => ExecuteAsync<TResult>(operatorMethodInfo, source, Expression.Quote(expression), cancellationToken);
 
+        private static readonly MethodInfo _executeAsyncMethodWithExpression =
+                typeof(EntityFrameworkDynamicQueryableExtensions)
+                .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken)}, null);
+
         private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var executeAsyncMethod =
-                typeof(EntityFrameworkDynamicQueryableExtensions)
-                .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }, null)
-                .MakeGenericMethod(operatorMethodInfo.ReturnType);
+            var executeAsyncMethod = _executeAsyncMethodWithExpression.MakeGenericMethod(operatorMethodInfo.ReturnType);
 
             var task = (Task)executeAsyncMethod.Invoke(null, new object[] { operatorMethodInfo, source, expression, cancellationToken });
             var castedTask = task.ContinueWith(t => (dynamic)t.GetType().GetProperty(nameof(Task<object>.Result)).GetValue(t));
+
             return castedTask;
         }
 
@@ -841,6 +845,7 @@ namespace EntityFramework.DynamicLinq
 
         private static MethodInfo GetMethod<TResult>(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             GetMethod(name, typeof(TResult), parameterCount, predicate);
+
         private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
 
