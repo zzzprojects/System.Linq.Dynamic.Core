@@ -662,7 +662,6 @@ namespace EntityFramework.DynamicLinq
         #endregion SingleOrDefault
 
         #region SumAsync
-        private static readonly MethodInfo _sum = GetMethod(nameof(Queryable.Sum));
 
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of values.
@@ -682,15 +681,15 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains sum of the values in the sequence.
         /// </returns>
         [PublicAPI]
-        public static Task<int> SumAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<dynamic> SumAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
 
-            return ExecuteAsync<int>(_sum, source, cancellationToken);
-        }
+            var sum = GetMethod(nameof(Queryable.Sum), source.ElementType);
 
-        private static readonly MethodInfo _sumSelector = GetMethod(nameof(Queryable.Sum), 1);
+            return ExecuteDynamicAsync(sum, source, cancellationToken);
+        }
 
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of values.
@@ -710,7 +709,7 @@ namespace EntityFramework.DynamicLinq
         ///     function.
         /// </returns>
         [PublicAPI]
-        public static Task<int> SumAsync([NotNull] this IQueryable source, [NotNull] string selector, [CanBeNull] params object[] args)
+        public static Task<dynamic> SumAsync([NotNull] this IQueryable source, [NotNull] string selector, [CanBeNull] params object[] args)
         {
             return SumAsync(source, default(CancellationToken), selector, args);
         }
@@ -735,7 +734,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the sum of the projected values.
         /// </returns>
         [PublicAPI]
-        public static Task<int> SumAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string selector, [CanBeNull] params object[] args)
+        public static Task<dynamic> SumAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string selector, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(selector, nameof(selector));
@@ -743,7 +742,9 @@ namespace EntityFramework.DynamicLinq
 
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, selector, args);
 
-            return ExecuteAsync<int>(_sumSelector, source, Expression.Quote(lambda), cancellationToken);
+            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.ReturnType, 1);
+
+            return ExecuteDynamicAsync(sumSelector, source, Expression.Quote(lambda), cancellationToken);
         }
         #endregion SumAsync
 
@@ -767,6 +768,17 @@ namespace EntityFramework.DynamicLinq
 
         //    throw new InvalidOperationException(Res.IQueryableProviderNotAsync);
         //}
+        private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var executeAsyncMethod =
+                typeof(EntityFrameworkDynamicQueryableExtensions)
+                .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }, null)
+                .MakeGenericMethod(operatorMethodInfo.ReturnType);
+
+            var task = (Task)executeAsyncMethod.Invoke(null, new object[] { operatorMethodInfo, source, cancellationToken });
+            var castedTask = task.ContinueWith(t => (dynamic)t.GetType().GetProperty(nameof(Task<object>.Result)).GetValue(t));
+            return castedTask;
+        }
 
         private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -793,6 +805,18 @@ namespace EntityFramework.DynamicLinq
         private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression, CancellationToken cancellationToken = default(CancellationToken))
             => ExecuteAsync<TResult>(operatorMethodInfo, source, Expression.Quote(expression), cancellationToken);
 
+        private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var executeAsyncMethod =
+                typeof(EntityFrameworkDynamicQueryableExtensions)
+                .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }, null)
+                .MakeGenericMethod(operatorMethodInfo.ReturnType);
+
+            var task = (Task)executeAsyncMethod.Invoke(null, new object[] { operatorMethodInfo, source, expression, cancellationToken });
+            var castedTask = task.ContinueWith(t => (dynamic)t.GetType().GetProperty(nameof(Task<object>.Result)).GetValue(t));
+            return castedTask;
+        }
+
         private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
         {
 #if EFCORE
@@ -816,10 +840,12 @@ namespace EntityFramework.DynamicLinq
         }
 
         private static MethodInfo GetMethod<TResult>(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            GetMethod(name, parameterCount, mi => (mi.ReturnType == typeof(TResult)) && ((predicate == null) || predicate(mi)));
+            GetMethod(name, typeof(TResult), parameterCount, predicate);
+        private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
+            GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
+            typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).First(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
         #endregion Private Helpers
     }
 }
