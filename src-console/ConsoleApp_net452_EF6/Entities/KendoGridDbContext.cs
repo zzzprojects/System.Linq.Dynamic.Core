@@ -1,10 +1,16 @@
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq.Dynamic.Core.ConsoleTestApp.net452.Entities;
 
 namespace ConsoleApp_net452_EF6.Entities
 {
-    public partial class KendoGridDbContext : DbContext
+    public class KendoGridDbContext : DbContext
     {
+        public KendoGridDbContext(DbConnection connection)
+            : base(connection, false)
+        {
+        }
+
         public KendoGridDbContext()
             : base("name=KendoGrid")
         {
