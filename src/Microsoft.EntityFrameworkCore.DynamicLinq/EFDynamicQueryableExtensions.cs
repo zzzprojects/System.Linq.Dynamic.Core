@@ -661,6 +661,92 @@ namespace EntityFramework.DynamicLinq
         }
         #endregion SingleOrDefault
 
+        #region SumAsync
+        private static readonly MethodInfo _sum = GetMethod(nameof(Queryable.Sum));
+
+        /// <summary>
+        ///     Asynchronously computes the sum of a sequence of values.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> that contains the elements to be summed.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains sum of the values in the sequence.
+        /// </returns>
+        [PublicAPI]
+        public static Task<int> SumAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            return ExecuteAsync<int>(_sum, source, cancellationToken);
+        }
+
+        private static readonly MethodInfo _sumSelector = GetMethod(nameof(Queryable.Sum), 1);
+
+        /// <summary>
+        ///     Asynchronously computes the sum of a sequence of values.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> that contains the elements to be summed.
+        /// </param>
+        /// <param name="selector"> A projection function to apply to each element. </param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate
+        ///     function.
+        /// </returns>
+        [PublicAPI]
+        public static Task<int> SumAsync([NotNull] this IQueryable source, [NotNull] string selector, [CanBeNull] params object[] args)
+        {
+            return SumAsync(source, default(CancellationToken), selector, args);
+        }
+
+        /// <summary>
+        ///     Asynchronously computes the sum of a sequence of values.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> that contains the elements to be summed.
+        /// </param>
+        /// <param name="selector"> A projection function to apply to each element. </param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the sum of the projected values.
+        /// </returns>
+        [PublicAPI]
+        public static Task<int> SumAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string selector, [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(selector, nameof(selector));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, selector, args);
+
+            return ExecuteAsync<int>(_sumSelector, source, Expression.Quote(lambda), cancellationToken);
+        }
+        #endregion SumAsync
+
         #region Private Helpers
         // Copied from https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
         //private static Task<dynamic> ExecuteAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
