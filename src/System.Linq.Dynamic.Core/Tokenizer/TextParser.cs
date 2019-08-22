@@ -14,9 +14,9 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         private static readonly Dictionary<string, TokenId> _predefinedOperatorAliases = new Dictionary<string, TokenId>(StringComparer.OrdinalIgnoreCase)
         {
             { "eq", TokenId.Equal },
-            { "equals", TokenId.Equal },
+            { "equal", TokenId.Equal },
             { "ne", TokenId.ExclamationEqual },
-            { "notequals", TokenId.ExclamationEqual },
+            { "notequal", TokenId.ExclamationEqual },
             { "neq", TokenId.ExclamationEqual },
             { "lt", TokenId.LessThan },
             { "LessThan", TokenId.LessThan },
