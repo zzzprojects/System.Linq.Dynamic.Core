@@ -768,7 +768,7 @@ namespace EntityFramework.DynamicLinq
 
         //    throw new InvalidOperationException(Res.IQueryableProviderNotAsync);
         //}
-        private static MethodInfo _executeAsyncMethod =
+        private static readonly MethodInfo _executeAsyncMethod =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
                 .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }, null);
 
