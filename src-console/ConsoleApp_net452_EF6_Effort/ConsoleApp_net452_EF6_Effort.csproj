@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{36B101B1-720B-4770-B222-C6ADD464F9EC}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ConsoleApp_net452_EF6</RootNamespace>
+    <AssemblyName>ConsoleApp_net452_EF6</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Effort, Version=2.2.2.0, Culture=neutral, PublicKeyToken=6a46696d54971e6d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Effort.EF6.2.2.2\lib\net45\Effort.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=4.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FSharp.Core.4.2.3\lib\net45\FSharp.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Linq.Expression.Optimizer, Version=1.0.6.0, Culture=neutral, PublicKeyToken=34b6af2337893e15, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Linq.Expression.Optimizer.1.0.9\lib\net45\Linq.Expression.Optimizer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NMemory, Version=3.0.0.0, Culture=neutral, PublicKeyToken=afc61983f100d280, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NMemory.3.1.0\lib\net45\NMemory.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\Company.cs">
+      <Link>Entities\Company.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\Country.cs">
+      <Link>Entities\Country.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\Employee.cs">
+      <Link>Entities\Employee.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\Function.cs">
+      <Link>Entities\Function.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\KendoGridDbContext.cs">
+      <Link>Entities\KendoGridDbContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\MainCompany.cs">
+      <Link>Entities\MainCompany.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\OU.cs">
+      <Link>Entities\OU.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\Product.cs">
+      <Link>Entities\Product.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\Role.cs">
+      <Link>Entities\Role.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\SubFunction.cs">
+      <Link>Entities\SubFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\User.cs">
+      <Link>Entities\User.cs</Link>
+    </Compile>
+    <Compile Include="..\ConsoleApp_net452_EF6\Entities\VW_EmployeeDetails.cs">
+      <Link>Entities\VW_EmployeeDetails.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj">
+      <Project>{8b9ceafa-ed50-4682-8531-a082cfd3fdae}</Project>
+      <Name>EntityFramework.DynamicLinq</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj">
+      <Project>{b70cd050-3b9c-406c-85fd-1a26394ec7c8}</Project>
+      <Name>System.Linq.Dynamic.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

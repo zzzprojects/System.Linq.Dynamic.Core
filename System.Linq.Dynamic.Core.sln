@@ -74,12 +74,11 @@ Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "System.Linq.Dynamic.Core", 
 		{D3804228-91F4-4502-9595-39584E510002} = {D3804228-91F4-4502-9595-39584E510002}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppPerformanceTest236", "src-console\ConsoleAppPerformanceTest236\ConsoleAppPerformanceTest236.csproj", "{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppPerformanceTest236", "src-console\ConsoleAppPerformanceTest236\ConsoleAppPerformanceTest236.csproj", "{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp_net452_EF6_Effort", "src-console\ConsoleApp_net452_EF6_Effort\ConsoleApp_net452_EF6_Effort.csproj", "{36B101B1-720B-4770-B222-C6ADD464F9EC}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
@@ -409,6 +408,22 @@ Global
 		{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84}.Release|x64.Build.0 = Release|Any CPU
 		{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84}.Release|x86.ActiveCfg = Release|Any CPU
 		{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84}.Release|x86.Build.0 = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|ARM.Build.0 = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|x86.Build.0 = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|ARM.ActiveCfg = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|ARM.Build.0 = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|x64.Build.0 = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|x86.ActiveCfg = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -434,8 +449,12 @@ Global
 		{926D446C-8358-465A-AFAC-2F9078C22262} = {ECA5702B-5D32-4888-A34E-9461FC533F23}
 		{591F9224-A8D6-49CF-8AF8-F9B383C1F9FF} = {1384C18E-DCF3-4A5B-9560-2BF5DD8C51CE}
 		{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
+		{36B101B1-720B-4770-B222-C6ADD464F9EC} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94C56722-194E-4B8B-BC23-B3F754E89A20}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
