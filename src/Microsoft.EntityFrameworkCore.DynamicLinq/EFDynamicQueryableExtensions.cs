@@ -770,7 +770,12 @@ namespace EntityFramework.DynamicLinq
         //}
         private static readonly MethodInfo _executeAsyncMethod =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
+#if NETSTANDARD
+                .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
+                .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }));
+#else
                 .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }, null);
+#endif
 
         private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -809,7 +814,12 @@ namespace EntityFramework.DynamicLinq
 
         private static readonly MethodInfo _executeAsyncMethodWithExpression =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
+#if NETSTANDARD
+                .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
+                .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }));
+#else
                 .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken)}, null);
+#endif
 
         private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -851,6 +861,6 @@ namespace EntityFramework.DynamicLinq
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).First(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
-        #endregion Private Helpers
+#endregion Private Helpers
     }
 }
