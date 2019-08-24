@@ -1808,13 +1808,75 @@ namespace System.Linq.Dynamic.Core
         /// Computes the sum of a sequence of numeric values.
         /// </summary>
         /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Sum();
+        /// var result2 = queryable.Select("Roles.Sum()");
+        /// </code>
+        /// </example>
         /// <returns>The sum of the values in the sequence.</returns>
+        [PublicAPI]
         public static object Sum([NotNull] this IQueryable source)
         {
             Check.NotNull(source, nameof(source));
 
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Sum), null, source.Expression));
             return source.Provider.Execute(optimized);
+        }
+
+        /// <summary>
+        /// Computes the sum of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Sum("Income > 50");
+        /// var result2 = queryable.Sum("Income > @0", 50);
+        /// </code>
+        /// </example>
+        /// <returns>The sum of the values in the sequence.</returns>
+        [PublicAPI]
+        public static bool Sum([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
+
+            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.ReturnType, 1);
+
+            return Execute<bool>(sumSelector, source, lambda);
+        }
+
+        /// <inheritdoc cref="Sum(IQueryable, ParsingConfig, string, object[])"/>
+        [PublicAPI]
+        public static object Sum([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            return Sum(source, ParsingConfig.Default, predicate, args);
+        }
+
+        /// <summary>
+        /// Computes the sum of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+        /// <param name="lambda">A Lambda Expression.</param>
+        /// <returns>The sum of the values in the sequence.</returns>
+        [PublicAPI]
+        public static object Sum([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(lambda, nameof(lambda));
+
+            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.ReturnType, 1);
+
+            return Execute<object>(sumSelector, source, lambda);
         }
         #endregion Sum
 
@@ -2152,6 +2214,9 @@ namespace System.Linq.Dynamic.Core
             return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
         }
 
+        private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
+            GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
+
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null)
         {
             try
@@ -2161,7 +2226,7 @@ namespace System.Linq.Dynamic.Core
             }
             catch (Exception ex)
             {
-                throw new Exception("Method not found: " + name, ex);
+                throw new Exception("Specific Method not found: " + name, ex);
             }
         }
         #endregion Private Helpers
