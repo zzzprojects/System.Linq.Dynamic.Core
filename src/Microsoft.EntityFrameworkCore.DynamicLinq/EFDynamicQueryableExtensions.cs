@@ -206,7 +206,7 @@ namespace EntityFramework.DynamicLinq
         /// <param name="source">
         ///     An <see cref="IQueryable" /> to calculate the average of.
         /// </param>
-        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="selector">A projection function to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>
         ///     A task that represents the asynchronous operation.
@@ -214,9 +214,9 @@ namespace EntityFramework.DynamicLinq
         ///     predicate; otherwise, <c>false</c>.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, [CanBeNull] params object[] args)
         {
-            return AverageAsync(source, predicate, default(CancellationToken), args);
+            return AverageAsync(source, selector, default(CancellationToken), args);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace EntityFramework.DynamicLinq
         /// <param name="source">
         ///     An <see cref="IQueryable" /> to calculate the average of.
         /// </param>
-        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="selector">A projection function to apply to each element.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
@@ -240,13 +240,13 @@ namespace EntityFramework.DynamicLinq
         ///     predicate; otherwise, <c>false</c>.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
+        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
 
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, predicate, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, selector, args);
 
             return ExecuteAsync<dynamic>(_averagePredicate, source, Expression.Quote(lambda), cancellationToken);
         }
