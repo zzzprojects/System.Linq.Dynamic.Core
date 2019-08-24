@@ -15,30 +15,30 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public async Task Entities_AverageAsync()
         {
-            //Arrange
+            // Arrange
             PopulateTestData(1, 0);
 
-            var expected = await _context.Blogs.Select(b => b.BlogId).AverageAsync();
+            double expected = await _context.Blogs.Select(b => b.BlogId).AverageAsync();
 
-            //Act
-            var actual = await _context.Blogs.Select("BlogId").AverageAsync();
+            // Act
+            double actual = await _context.Blogs.Select("BlogId").AverageAsync();
 
-            //Assert
+            // Assert
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public async Task Entities_AverageAsync_Selector()
         {
-            //Arrange
+            // Arrange
             PopulateTestData(1, 0);
 
-            var expected = await _context.Blogs.AverageAsync(b => b.BlogId);
+            double expected = await _context.Blogs.AverageAsync(b => b.BlogId);
 
-            //Act
-            var actual = await _context.Blogs.AverageAsync("BlogId");
+            // Act
+            double actual = await _context.Blogs.AverageAsync("BlogId");
 
-            //Assert
+            // Assert
             Assert.Equal(expected, actual);
         }
     }

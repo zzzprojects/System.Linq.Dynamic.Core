@@ -186,12 +186,12 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation. The task result contains the average of the sequence of values.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<double> AverageAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
 
-            return ExecuteAsync<dynamic>(_average, source, cancellationToken);
+            return ExecuteAsync<double>(_average, source, cancellationToken);
         }
 
         private static readonly MethodInfo _averagePredicate = GetMethod(nameof(Queryable.Average), 1);
@@ -214,7 +214,7 @@ namespace EntityFramework.DynamicLinq
         ///     predicate; otherwise, <c>false</c>.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, [CanBeNull] params object[] args)
+        public static Task<double> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, [CanBeNull] params object[] args)
         {
             return AverageAsync(source, selector, default(CancellationToken), args);
         }
@@ -240,7 +240,7 @@ namespace EntityFramework.DynamicLinq
         ///     predicate; otherwise, <c>false</c>.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
+        public static Task<double> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
@@ -248,7 +248,7 @@ namespace EntityFramework.DynamicLinq
 
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, selector, args);
 
-            return ExecuteAsync<dynamic>(_averagePredicate, source, Expression.Quote(lambda), cancellationToken);
+            return ExecuteAsync<double>(_averagePredicate, source, Expression.Quote(lambda), cancellationToken);
         }
         #endregion AverageAsync
 

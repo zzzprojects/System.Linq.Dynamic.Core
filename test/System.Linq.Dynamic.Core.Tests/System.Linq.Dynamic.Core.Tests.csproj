@@ -49,7 +49,6 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.0.1" />
-        <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.1" />-->
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
         <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="1.1.15" />
