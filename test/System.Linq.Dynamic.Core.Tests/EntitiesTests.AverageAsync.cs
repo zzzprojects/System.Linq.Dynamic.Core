@@ -13,33 +13,33 @@ namespace System.Linq.Dynamic.Core.Tests
     public partial class EntitiesTests
     {
         [Fact]
-        public async Task Entities_SumAsync()
+        public async Task Entities_AverageAsync()
         {
             //Arrange
             PopulateTestData(1, 0);
 
-            var expectedSum = await _context.Blogs.Select(b => b.BlogId).SumAsync();
+            var expected = await _context.Blogs.Select(b => b.BlogId).AverageAsync();
 
             //Act
-            var actualSum = await _context.Blogs.Select(b => "BlogId").SumAsync();
+            var actual = await _context.Blogs.Select(b => "BlogId").AverageAsync();
 
             //Assert
-            Assert.Equal(expectedSum, actualSum);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public async Task Entities_SumAsync_Selector()
+        public async Task Entities_AverageAsync_Selector()
         {
             //Arrange
             PopulateTestData(1, 0);
 
-            var expectedSum = await _context.Blogs.SumAsync(b => b.BlogId);
+            var expected = await _context.Blogs.AverageAsync(b => b.BlogId);
 
             //Act
-            var actualSum = await _context.Blogs.SumAsync("BlogId");
+            var actual = await _context.Blogs.AverageAsync("BlogId");
 
             //Assert
-            Assert.Equal(expectedSum, actualSum);
+            Assert.Equal(expected, actual);
         }
     }
 }

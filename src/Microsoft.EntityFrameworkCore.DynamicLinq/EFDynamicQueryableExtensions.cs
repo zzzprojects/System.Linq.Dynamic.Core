@@ -29,24 +29,60 @@ namespace EntityFramework.DynamicLinq
     {
         private static readonly TraceSource TraceSource = new TraceSource(typeof(EntityFrameworkDynamicQueryableExtensions).Name);
 
-        private static Expression OptimizeExpression(Expression expression)
+        #region AllAsync
+        private static readonly MethodInfo _AllPredicate = GetMethod(nameof(Queryable.All), 1);
+
+        /// <summary>
+        ///     Asynchronously determines whether all the elements of a sequence satisfy a condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that All asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to calculate the All of.
+        /// </param>
+        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation. The task result contains true if every element of the source sequence passes the test in the specified predicate; otherwise, false.
+        /// </returns>
+        [PublicAPI]
+        public static Task<bool> AllAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            if (ExtensibilityPoint.QueryOptimizer != null)
-            {
-                var optimized = ExtensibilityPoint.QueryOptimizer(expression);
-
-#if !(WINDOWS_APP45x || SILVERLIGHT)
-                if (optimized != expression)
-                {
-                    TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
-                    TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
-                }
-#endif
-                return optimized;
-            }
-
-            return expression;
+            return AllAsync(source, predicate, default(CancellationToken), args);
         }
+
+        /// <summary>
+        ///     Asynchronously determines whether all the elements of a sequence satisfy a condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that All asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to calculate the All of.
+        /// </param>
+        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation. The task result contains true if every element of the source sequence passes the test in the specified predicate; otherwise, false.
+        /// </returns>
+        [PublicAPI]
+        public static Task<bool> AllAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, predicate, args);
+
+            return ExecuteAsync<bool>(_AllPredicate, source, Expression.Quote(lambda), cancellationToken);
+        }
+        #endregion AllAsync
 
         #region AnyAsync
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
@@ -65,8 +101,7 @@ namespace EntityFramework.DynamicLinq
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains <c>true</c> if the source sequence contains any elements; otherwise, <c>false</c>.
+        ///     A task that represents the asynchronous operation. The task result contains true if the source sequence contains any elements; otherwise, false.
         /// </returns>
         [PublicAPI]
         public static Task<bool> AnyAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
@@ -89,12 +124,10 @@ namespace EntityFramework.DynamicLinq
         /// <param name="source">
         ///     An <see cref="IQueryable" /> whose elements to test for a condition.
         /// </param>
-        /// <param name="predicate"> A function to test each element for a condition.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains <c>true</c> if any elements in the source sequence pass the test in the specified
-        ///     predicate; otherwise, <c>false</c>.
+        ///     A task that represents the asynchronous operation. The task result contains true if the source sequence contains any elements; otherwise, false.
         /// </returns>
         [PublicAPI]
         public static Task<bool> AnyAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
@@ -112,15 +145,13 @@ namespace EntityFramework.DynamicLinq
         /// <param name="source">
         ///     An <see cref="IQueryable" /> whose elements to test for a condition.
         /// </param>
-        /// <param name="predicate"> A function to test each element for a condition.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <param name="cancellationToken">
         ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains <c>true</c> if any elements in the source sequence pass the test in the specified
-        ///     predicate; otherwise, <c>false</c>.
+        ///     A task that represents the asynchronous operation. The task result contains true if the source sequence contains any elements; otherwise, false.
         /// </returns>
         [PublicAPI]
         public static Task<bool> AnyAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
@@ -134,6 +165,92 @@ namespace EntityFramework.DynamicLinq
             return ExecuteAsync<bool>(_anyPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
         #endregion AnyAsync
+
+        #region AverageAsync
+        private static readonly MethodInfo _average = GetMethod(nameof(Queryable.Average));
+
+        /// <summary>
+        ///     Asynchronously computes the average of a sequence of values.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported. Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to calculate the average of.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation. The task result contains the average of the sequence of values.
+        /// </returns>
+        [PublicAPI]
+        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            return ExecuteAsync<dynamic>(_average, source, cancellationToken);
+        }
+
+        private static readonly MethodInfo _averagePredicate = GetMethod(nameof(Queryable.Average), 1);
+
+        /// <summary>
+        ///     Asynchronously computes the average of a sequence of values that is obtained by invoking a projection function on each element of the input sequence.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that Average asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to calculate the average of.
+        /// </param>
+        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains <c>true</c> if Average elements in the source sequence pass the test in the specified
+        ///     predicate; otherwise, <c>false</c>.
+        /// </returns>
+        [PublicAPI]
+        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return AverageAsync(source, predicate, default(CancellationToken), args);
+        }
+
+        /// <summary>
+        ///     Asynchronously computes the average of a sequence of values that is obtained by invoking a projection function on each element of the input sequence.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that Average asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to calculate the average of.
+        /// </param>
+        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains <c>true</c> if Average elements in the source sequence pass the test in the specified
+        ///     predicate; otherwise, <c>false</c>.
+        /// </returns>
+        [PublicAPI]
+        public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, predicate, args);
+
+            return ExecuteAsync<dynamic>(_averagePredicate, source, Expression.Quote(lambda), cancellationToken);
+        }
+        #endregion AverageAsync
 
         #region Count
         private static readonly MethodInfo _count = GetMethod(nameof(Queryable.Count));
@@ -662,7 +779,6 @@ namespace EntityFramework.DynamicLinq
         #endregion SingleOrDefault
 
         #region SumAsync
-
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of values.
         /// </summary>
@@ -818,7 +934,7 @@ namespace EntityFramework.DynamicLinq
                 .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
                 .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }));
 #else
-                .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken)}, null);
+                .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }, null);
 #endif
 
         private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
@@ -861,6 +977,25 @@ namespace EntityFramework.DynamicLinq
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).First(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
-#endregion Private Helpers
+
+        private static Expression OptimizeExpression(Expression expression)
+        {
+            if (ExtensibilityPoint.QueryOptimizer != null)
+            {
+                var optimized = ExtensibilityPoint.QueryOptimizer(expression);
+
+#if !(WINDOWS_APP45x || SILVERLIGHT)
+                if (optimized != expression)
+                {
+                    TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
+                    TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
+                }
+#endif
+                return optimized;
+            }
+
+            return expression;
+        }
+        #endregion Private Helpers
     }
 }
