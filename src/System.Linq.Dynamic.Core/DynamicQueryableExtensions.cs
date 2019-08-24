@@ -1821,8 +1821,8 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Sum), null, source.Expression));
-            return source.Provider.Execute(optimized);
+            var sum = GetMethod(nameof(Queryable.Sum), source.ElementType);
+            return Execute<object>(sum, source);
         }
 
         /// <summary>
@@ -1835,8 +1835,7 @@ namespace System.Linq.Dynamic.Core
         /// <example>
         /// <code language="cs">
         /// IQueryable queryable = employees.AsQueryable();
-        /// var result1 = queryable.Sum("Income > 50");
-        /// var result2 = queryable.Sum("Income > @0", 50);
+        /// var result = queryable.Sum("Income");
         /// </code>
         /// </example>
         /// <returns>The sum of the values in the sequence.</returns>
@@ -1852,12 +1851,12 @@ namespace System.Linq.Dynamic.Core
 
             var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
 
-            return Execute<bool>(sumSelector, source, lambda);
+            return Convert.ChangeType(Execute<object>(sumSelector, source, lambda), lambda.GetReturnType());
         }
 
         /// <inheritdoc cref="Sum(IQueryable, ParsingConfig, string, object[])"/>
         [PublicAPI]
-        public static object Sum([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static object Sum([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             return Sum(source, ParsingConfig.Default, predicate, args);
         }
@@ -1876,7 +1875,7 @@ namespace System.Linq.Dynamic.Core
 
             var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
 
-            return Execute<object>(sumSelector, source, lambda);
+            return Convert.ChangeType(Execute<object>(sumSelector, source, lambda), lambda.GetReturnType());
         }
         #endregion Sum
 
@@ -2180,7 +2179,9 @@ namespace System.Linq.Dynamic.Core
             }
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
-            return source.Provider.Execute<TResult>(optimized);
+            var result = source.Provider.Execute(optimized);
+
+            return (TResult) Convert.ChangeType(result, typeof(TResult));
         }
 
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
@@ -2206,7 +2207,9 @@ namespace System.Linq.Dynamic.Core
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
-            return source.Provider.Execute<TResult>(optimized);
+            var result = source.Provider.Execute(optimized);
+
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         private static MethodInfo GetGenericMethod(string name)
