@@ -1841,7 +1841,7 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The sum of the values in the sequence.</returns>
         [PublicAPI]
-        public static bool Sum([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object Sum([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(config, nameof(config));
@@ -1850,7 +1850,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
-            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.ReturnType, 1);
+            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
 
             return Execute<bool>(sumSelector, source, lambda);
         }
@@ -1874,7 +1874,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(lambda, nameof(lambda));
 
-            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.ReturnType, 1);
+            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
 
             return Execute<object>(sumSelector, source, lambda);
         }

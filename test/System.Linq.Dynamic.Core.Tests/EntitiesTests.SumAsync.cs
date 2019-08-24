@@ -43,7 +43,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public async Task Entities_SumAsync_Integer_AndUsing_Selector()
+        public async Task Entities_SumAsync_Integer_Selector()
         {
             // Arrange
             PopulateTestData(1, 0);
@@ -58,7 +58,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public async Task Entities_SumAsync_Double_AndUsing_Selector()
+        public async Task Entities_SumAsync_Double_Selector()
         {
             // Arrange
             PopulateTestData(1, 0);

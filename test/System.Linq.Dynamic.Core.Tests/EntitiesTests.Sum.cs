@@ -35,14 +35,14 @@ namespace System.Linq.Dynamic.Core.Tests
             var expected = _context.Blogs.Select(b => b.BlogId * 1.0d).Sum();
 
             // Act
-            var actual = _context.Blogs.Select("BlogId").Sum();
+            var actual = _context.Blogs.Select("BlogId * 1.0").Sum();
 
             // Assert
             Assert.Equal(expected, actual);
         }
 
         [Fact]
-        public void Entities_Sum_Integer_AndUsing_Selector()
+        public void Entities_Sum_Integer_Selector()
         {
             // Arrange
             PopulateTestData(1, 0);
@@ -57,7 +57,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Entities_Sum_Double_AndUsing_Selector()
+        public void Entities_Sum_Double_Selector()
         {
             // Arrange
             PopulateTestData(1, 0);

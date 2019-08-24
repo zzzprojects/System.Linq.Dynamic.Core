@@ -15,7 +15,7 @@ namespace ConsoleApp_net452_EF6
 
             using (var context = new KendoGridDbContext(connection))
             {
-                context.KendoGridCountry.Add(new Country { Code = "NL", Name = "Nederland" });
+                context.KendoGridCountry.Add(new Country { Id = 1000, Code = "NL", Name = "Nederland" });
 
                 var main1 = new MainCompany { Name = "Main1" };
                 context.KendoGridMainCompany.Add(main1);
