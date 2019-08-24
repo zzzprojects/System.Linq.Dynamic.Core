@@ -16,7 +16,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public async Task Entities_SumAsync_Integer()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             var expected = await _context.Blogs.Select(b => b.BlogId).SumAsync();
 
@@ -31,7 +31,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public async Task Entities_SumAsync_Double()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             var expected = await _context.Blogs.Select(b => b.BlogId * 1.0d).SumAsync();
 
@@ -46,7 +46,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public async Task Entities_SumAsync_Integer_Selector()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             var expected = await _context.Blogs.SumAsync(b => b.BlogId);
 
@@ -61,7 +61,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public async Task Entities_SumAsync_Double_Selector()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             var expected = await _context.Blogs.SumAsync(b => b.BlogId * 1.0d);
 

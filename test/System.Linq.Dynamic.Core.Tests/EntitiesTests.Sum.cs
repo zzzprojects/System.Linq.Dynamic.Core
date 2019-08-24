@@ -15,7 +15,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Entities_Sum_Integer()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             var expected = _context.Blogs.Select(b => b.BlogId).Sum();
 
@@ -30,7 +30,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Entities_Sum_Double()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             var expected = _context.Blogs.Select(b => b.BlogId * 1.0d).Sum();
 
@@ -45,7 +45,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Entities_Sum_Integer_Selector()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             var expected = _context.Blogs.Sum(b => b.BlogId);
 
@@ -60,7 +60,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Entities_Sum_Double_Selector()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             var expected = _context.Blogs.Sum(b => b.BlogId * 1.0d);
 

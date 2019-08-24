@@ -865,25 +865,6 @@ namespace EntityFramework.DynamicLinq
         #endregion SumAsync
 
         #region Private Helpers
-        // Copied from https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs
-        //private static Task<dynamic> ExecuteAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    var provider = source.Provider as IAsyncQueryProvider;
-
-        //    if (provider != null)
-        //    {
-        //        if (operatorMethodInfo.IsGenericMethod)
-        //        {
-        //            operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
-        //        }
-
-        //        return provider.ExecuteAsync<dynamic>(
-        //            Expression.Call(null, operatorMethodInfo, source.Expression),
-        //            cancellationToken);
-        //    }
-
-        //    throw new InvalidOperationException(Res.IQueryableProviderNotAsync);
-        //}
         private static readonly MethodInfo _executeAsyncMethod =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
 #if NETSTANDARD || UAP10_0

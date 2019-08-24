@@ -16,7 +16,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public async Task Entities_AverageAsync()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             double expected = await _context.Blogs.Select(b => b.BlogId).AverageAsync();
 
@@ -31,7 +31,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public async Task Entities_AverageAsync_Selector()
         {
             // Arrange
-            PopulateTestData(1, 0);
+            PopulateTestData(2, 0);
 
             double expected = await _context.Blogs.AverageAsync(b => b.BlogId);
 
