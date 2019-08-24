@@ -243,7 +243,7 @@ namespace EntityFramework.DynamicLinq
         public static Task<dynamic> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotEmpty(selector, nameof(selector));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
 
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, selector, args);
