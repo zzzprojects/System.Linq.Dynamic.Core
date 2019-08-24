@@ -886,7 +886,7 @@ namespace EntityFramework.DynamicLinq
         //}
         private static readonly MethodInfo _executeAsyncMethod =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
-#if NETSTANDARD
+#if NETSTANDARD || UAP10_0
                 .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
                 .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }));
 #else
@@ -930,7 +930,7 @@ namespace EntityFramework.DynamicLinq
 
         private static readonly MethodInfo _executeAsyncMethodWithExpression =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
-#if NETSTANDARD
+#if NETSTANDARD || UAP10_0
                 .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
                 .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }));
 #else

@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var expected = await _context.Blogs.AllAsync(b => b.BlogId > 2000);
 
             //Act
-            var actual = await _context.Blogs.AllAsync("BlogId => 2000");
+            var actual = await _context.Blogs.AllAsync("BlogId > 2000");
 
             //Assert
             Assert.Equal(expected, actual);

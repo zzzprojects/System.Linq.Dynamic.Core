@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var expected = await _context.Blogs.Select(b => b.BlogId).AverageAsync();
 
             //Act
-            var actual = await _context.Blogs.Select(b => "BlogId").AverageAsync();
+            var actual = await _context.Blogs.Select("BlogId").AverageAsync();
 
             //Assert
             Assert.Equal(expected, actual);
