@@ -200,79 +200,78 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion Any
 
-        //#region Average
-        ///// <summary>
-        ///// Computes the average of a sequence of numeric values.
-        ///// </summary>
-        ///// <param name="source">A sequence of numeric values to calculate the average of.</param>
-        ///// <example>
-        ///// <code language="cs">
-        ///// IQueryable queryable = employees.AsQueryable();
-        ///// var result1 = queryable.Average();
-        ///// var result2 = queryable.Select("Roles.Average()");
-        ///// </code>
-        ///// </example>
-        ///// <returns>The average of the values in the sequence.</returns>
-        //[PublicAPI]
-        //public static double Average([NotNull] this IQueryable source)
-        //{
-        //    Check.NotNull(source, nameof(source));
+        #region Average
+        /// <summary>
+        /// Computes the average of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the average of.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Average();
+        /// var result2 = queryable.Select("Roles.Average()");
+        /// </code>
+        /// </example>
+        /// <returns>The average of the values in the sequence.</returns>
+        [PublicAPI]
+        public static double Average([NotNull] this IQueryable source)
+        {
+            Check.NotNull(source, nameof(source));
 
-        //    var average = GetMethod(nameof(Queryable.Average), new[] { source.ElementType }, typeof(double));
-        //    return Execute<double>(average, source);
-        //}
+            var average = GetMethod(nameof(Queryable.Average), source.ElementType, typeof(double));
+            return Execute<double>(average, source);
+        }
 
-        ///// <summary>
-        ///// Computes the average of a sequence of numeric values.
-        ///// </summary>
-        ///// <param name="source">A sequence of numeric values to calculate the average of.</param>
-        ///// <param name="config">The <see cref="ParsingConfig"/>.</param>
-        ///// <param name="predicate">A function to test each element for a condition.</param>
-        ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        ///// <example>
-        ///// <code language="cs">
-        ///// IQueryable queryable = employees.AsQueryable();
-        ///// var result = queryable.Average("Income");
-        ///// </code>
-        ///// </example>
-        ///// <returns>The average of the values in the sequence.</returns>
-        //[PublicAPI]
-        //public static double Average([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
-        //{
-        //    Check.NotNull(source, nameof(source));
-        //    Check.NotNull(config, nameof(config));
-        //    Check.NotEmpty(predicate, nameof(predicate));
+        /// <summary>
+        /// Computes the average of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the average of.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result = queryable.Average("Income");
+        /// </code>
+        /// </example>
+        /// <returns>The average of the values in the sequence.</returns>
+        [PublicAPI]
+        public static double Average([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
 
-        //    bool createParameterCtor = SupportsLinqToObjects(config, source);
-        //    LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
-        //    var averageSelector = GetMethod(nameof(Queryable.Average), new[] { source.ElementType }, typeof(double), 1);
-        //    return Execute<double>(averageSelector, source, lambda);
-        //}
+            return Average(source, lambda);
+        }
 
-        ///// <inheritdoc cref="Average(IQueryable, ParsingConfig, string, object[])"/>
-        //[PublicAPI]
-        //public static double Average([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
-        //{
-        //    return Average(source, ParsingConfig.Default, predicate, args);
-        //}
+        /// <inheritdoc cref="Average(IQueryable, ParsingConfig, string, object[])"/>
+        [PublicAPI]
+        public static double Average([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return Average(source, ParsingConfig.Default, predicate, args);
+        }
 
-        ///// <summary>
-        ///// Computes the average of a sequence of numeric values.
-        ///// </summary>
-        ///// <param name="source">A sequence of numeric values to calculate the average of.</param>
-        ///// <param name="lambda">A Lambda Expression.</param>
-        ///// <returns>The average of the values in the sequence.</returns>
-        //[PublicAPI]
-        //public static double Average([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
-        //{
-        //    Check.NotNull(source, nameof(source));
-        //    Check.NotNull(lambda, nameof(lambda));
+        /// <summary>
+        /// Computes the average of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the average of.</param>
+        /// <param name="lambda">A Lambda Expression.</param>
+        /// <returns>The average of the values in the sequence.</returns>
+        [PublicAPI]
+        public static double Average([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(lambda, nameof(lambda));
 
-        //    var averageSelector = GetMethod(nameof(Queryable.Average), new[] { source.ElementType }, typeof(double), 1);
-        //    return Execute<double>(averageSelector, source, lambda);
-        //}
-        //#endregion Average
+            var averageSelector = GetMethod(nameof(Queryable.Average), lambda.GetReturnType(), typeof(double), 1);
+            return Execute<double>(averageSelector, source, lambda);
+        }
+        #endregion Average
 
         #region AsEnumerable
 #if NET35
@@ -2318,8 +2317,8 @@ namespace System.Linq.Dynamic.Core
             return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
         }
 
-        private static MethodInfo GetMethod(string name, Type[] argumentTypes, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            GetMethod(name, returnType, parameterCount, mi => (mi.GetParameters().Select(p => p.ParameterType).SequenceEqual(argumentTypes)) && ((predicate == null) || predicate(mi)));
+        private static MethodInfo GetMethod(string name, Type argumentType, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
+            GetMethod(name, returnType, parameterCount, mi => mi.ToString().Contains(argumentType.ToString()) && ((predicate == null) || predicate(mi)));
 
         private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));

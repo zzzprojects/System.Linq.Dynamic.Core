@@ -19,18 +19,18 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expected, actual);
         }
 
-        //[Fact]
-        //public void Average_Selector()
-        //{
-        //    // Arrange
-        //    var users = User.GenerateSampleModels(100);
+        [Fact]
+        public void Average_Selector()
+        {
+            // Arrange
+            var users = User.GenerateSampleModels(100);
 
-        //    // Act
-        //    var expected = users.Average(u => u.Income);
-        //    var result = users.AsQueryable().Average("Income");
+            // Act
+            var expected = users.Average(u => u.Income);
+            var result = users.AsQueryable().Average("Income");
 
-        //    // Assert
-        //    Assert.Equal(expected, result);
-        //}
+            // Assert
+            Assert.Equal(expected, result);
+        }
     }
 }
