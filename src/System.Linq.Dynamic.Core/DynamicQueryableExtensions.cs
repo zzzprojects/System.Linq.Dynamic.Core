@@ -121,7 +121,34 @@ namespace System.Linq.Dynamic.Core
         [PublicAPI]
         public static bool All([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, predicate, args);
+            return All(source, ParsingConfig.Default, predicate, args);
+        }
+
+        /// <summary>
+        ///     Determines whether all the elements of a sequence satisfy a condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that All asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to calculate the All of.
+        /// </param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        ///     true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.
+        /// </returns>
+        [PublicAPI]
+        public static bool All([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
 
             return Execute<bool>(_AllPredicate, source, Expression.Quote(lambda));
         }
