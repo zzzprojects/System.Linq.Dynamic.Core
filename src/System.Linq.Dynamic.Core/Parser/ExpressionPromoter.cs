@@ -1,5 +1,8 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using ETG.SABENTISpro.Utils.DynamicLinkCore.Compatibility;
+using TypeLite.Extensions;
+using TypeExtensions = ETG.SABENTISpro.Utils.HelpersUtils.TypeExtensions;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -13,9 +16,39 @@ namespace System.Linq.Dynamic.Core.Parser
                 return expr;
             }
 
-            var ce = expr as ConstantExpression;
+            if (expr is LambdaExpression le)
+            {
+                if (le.GetReturnType() == type)
+                {
+                    return expr;
+                }
 
-            if (ce != null)
+                if (type.IsNullable() && le.ReturnType == TypeExtensions.GetUnderlyingType(type))
+                {
+                    // Boxing
+                    var boxed = Expression.Convert(le.Body, type);
+                    Type delegateType;
+
+                    // TODO: Recode to handle N possible arguments
+                    switch (le.Parameters.Count)
+                    {
+                        case 1:
+                            delegateType = typeof(Func<,>).MakeGenericType(le.Parameters[0].Type, type);
+                            break;
+                        case 2:
+                            delegateType = typeof(Func<,,>).MakeGenericType(le.Parameters[0].Type, le.Parameters[1].Type, type);
+                            break;
+                        case 3:
+                            delegateType = typeof(Func<,,,>).MakeGenericType(le.Parameters[0].Type, le.Parameters[1].Type, le.Parameters[2].Type, type);
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+
+                    return Expression.Lambda(delegateType, boxed, le.Parameters);
+                }
+            }
+            else if (expr is ConstantExpression ce)
             {
                 if (Constants.IsNull(ce))
                 {
@@ -83,6 +116,13 @@ namespace System.Linq.Dynamic.Core.Parser
                             return Expression.Constant(value, type);
                         }
                     }
+                }
+
+                // Try to autopromote string to guid, because in Json and other serializations guid
+                // is a value type represented as string.
+                if (expr.Type == typeof(string) && type == typeof(Guid))
+                {
+                    return Expression.Constant(new Guid(Convert.ToString(ce.Value)), typeof(Guid));
                 }
             }
 

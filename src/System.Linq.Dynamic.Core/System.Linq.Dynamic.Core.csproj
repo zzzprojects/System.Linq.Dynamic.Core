@@ -8,7 +8,7 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>System.Linq.Dynamic.Core</AssemblyName>
         <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
-        <SignAssembly>true</SignAssembly>
+        <SignAssembly>false</SignAssembly>
         <!--<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>-->
         <PackageTags>system;linq;dynamic;core;dotnet;NETCoreApp;NETStandard</PackageTags>
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>

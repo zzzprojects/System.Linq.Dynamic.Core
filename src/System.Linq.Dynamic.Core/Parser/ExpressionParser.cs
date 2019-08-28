@@ -1463,7 +1463,7 @@ namespace System.Linq.Dynamic.Core.Parser
             Expression[] args = ParseArgumentList();
             if (_methodFinder.FindMethod(lambda.Type, nameof(Expression.Invoke), false, args, out MethodBase _) != 1)
             {
-                throw ParseError(errorPos, Res.ArgsIncompatibleWithLambda);
+                throw ParseError(errorPos, Res.ArgsIncompatibleWithLambda, String.Join(", ", args.Select((i) => i.Type.Name).ToArray()), string.Join(", ", lambda.Parameters.Select((i) => i.Type.Name).ToArray()));
             }
 
             return Expression.Invoke(lambda, args);
@@ -1593,50 +1593,18 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             int errorPos = _textParser.CurrentToken.Pos;
-            string id = GetIdentifier();
+            string methodName = GetIdentifier();
             _textParser.NextToken();
 
-            if (_textParser.CurrentToken.Id == TokenId.OpenParen)
+            var methodCallExpression = this.ParseMethodCall(type, instance, methodName, errorPos);
+            if (methodCallExpression != null)
             {
-                if (instance != null && type != typeof(string))
-                {
-                    Type enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
-                    if (enumerableType != null)
-                    {
-                        Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                        return ParseAggregate(instance, elementType, id, errorPos, TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null);
-                    }
-                }
-
-                Expression[] args = ParseArgumentList();
-                switch (_methodFinder.FindMethod(type, id, instance == null, args, out MethodBase mb))
-                {
-                    case 0:
-                        throw ParseError(errorPos, Res.NoApplicableMethod, id, TypeHelper.GetTypeName(type));
-
-                    case 1:
-                        MethodInfo method = (MethodInfo)mb;
-                        if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType) && !(method.IsPublic && PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.ReturnType)))
-                        {
-                            throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType));
-                        }
-
-                        if (method.ReturnType == typeof(void))
-                        {
-                            throw ParseError(errorPos, Res.MethodIsVoid, id, TypeHelper.GetTypeName(method.DeclaringType));
-                        }
-
-                        return Expression.Call(instance, method, args);
-
-                    default:
-                        throw ParseError(errorPos, Res.AmbiguousMethodInvocation, id, TypeHelper.GetTypeName(type));
-                }
+                return methodCallExpression;
             }
 
             if (type.GetTypeInfo().IsEnum)
             {
-                var @enum = Enum.Parse(type, id, true);
-
+                var @enum = Enum.Parse(type, methodName, true);
                 return Expression.Constant(@enum);
             }
 
@@ -1646,7 +1614,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.MakeIndex(instance, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
-            MemberInfo member = FindPropertyOrField(type, id, instance == null);
+            MemberInfo member = FindPropertyOrField(type, methodName, instance == null);
             if (member is PropertyInfo property)
             {
                 return Expression.Property(instance, property);
@@ -1660,7 +1628,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #if !NET35 && !UAP10_0 && !NETSTANDARD1_3
             if (type == typeof(object))
             {
-                return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
+                return Expression.Dynamic(new DynamicGetMemberBinder(methodName), type, instance);
             }
 #endif
             if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback)
@@ -1668,19 +1636,20 @@ namespace System.Linq.Dynamic.Core.Parser
                 MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
                 if (indexerMethod != null)
                 {
-                    return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+                    return Expression.Call(instance, indexerMethod, Expression.Constant(methodName));
                 }
             }
 
+            // TODO: Lambda invocations should be treated as method calls, see ParseMethodCall
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {
                 // This might be an internal variable for use within a lambda expression, so store it as such
-                _internals.Add(id, _it);
+                _internals.Add(methodName, _it);
 
                 // Also store ItName (only once)
                 if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
                 {
-                    ItName = id;
+                    ItName = methodName;
                 }
 
                 // next
@@ -1689,9 +1658,75 @@ namespace System.Linq.Dynamic.Core.Parser
                 return ParseConditionalOperator();
             }
 
-            throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
+            throw ParseError(errorPos, Res.UnknownPropertyOrField, methodName, TypeHelper.GetTypeName(type));
         }
 
+        Expression ParseMethodCall(Type type, Expression instance, string methodName, int errorPos)
+        {
+            if (_textParser.CurrentToken.Id != TokenId.OpenParen)
+            {
+                return null;
+            }
+
+            var methodReducer = new MethodReducer(this._parsingConfig, type, methodName);
+            List<MethodData> methods = methodReducer.GetCurrentApplicableMethods();
+
+            _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
+            _textParser.NextToken();
+
+            if (_textParser.CurrentToken.Id != TokenId.CloseParen)
+            {
+                while (true)
+                {
+                    var argumentExpression = ParseConditionalOperator();
+
+                    _expressionHelper.WrapConstantExpression(ref argumentExpression);
+
+                    methods = methodReducer.Reduce(argumentExpression);
+
+                    if (_textParser.CurrentToken.Id != TokenId.Comma)
+                    {
+                        break;
+                    }
+
+                    _textParser.NextToken();
+                }
+            }
+
+            _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
+            _textParser.NextToken();
+
+            // No method matches the arguments
+            if (!methods.Any())
+            {
+                throw ParseError(errorPos, Res.NoApplicableMethod, methodName, TypeHelper.GetTypeName(type));
+            }
+
+            if (methods.Count > 1)
+            {
+                throw ParseError(errorPos, Res.AmbiguousMethodInvocation, methodName, TypeHelper.GetTypeName(type));
+            }
+
+            var method = methods.Single();
+            var methodInfo = (MethodInfo)method.MethodBase;
+            var returnType = methodInfo.ReturnType;
+            var args = method.Args;
+
+            if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.MethodBase.DeclaringType) && !(method.MethodBase.IsPublic && PredefinedTypesHelper.IsPredefinedType(_parsingConfig, returnType)))
+            {
+                throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.MethodBase.DeclaringType));
+            }
+
+            if (returnType == typeof(void))
+            {
+                throw ParseError(errorPos, Res.MethodIsVoid, methodName, TypeHelper.GetTypeName(method.MethodBase.DeclaringType));
+            }
+            
+            // TODO: Add support for static methods
+            return Expression.Call(instance, methodInfo, args);
+        }
+
+        // TODO: Get rid of this custom logic
         Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, bool isQueryable)
         {
             var oldParent = _parent;

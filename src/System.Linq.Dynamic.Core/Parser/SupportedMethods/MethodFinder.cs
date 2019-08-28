@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using TypeLite.Extensions;
 
 namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
@@ -26,7 +27,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         {
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
-            foreach (Type t in SelfAndBaseTypes(type))
+            foreach (Type t in type.SelfAndBaseTypes())
             {
                 MemberInfo[] members = t.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName);
                 int count = FindBestMethod(members.Cast<MethodBase>(), args, out method);
@@ -36,7 +37,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 }
             }
 #else
-            foreach (Type t in SelfAndBaseTypes(type))
+            foreach (Type t in type.SelfAndBaseTypes())
             {
                 MethodInfo[] methods = t.GetTypeInfo().DeclaredMethods.Where(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == methodName.ToLowerInvariant()).ToArray();
                 int count = FindBestMethod(methods, args, out method);
@@ -86,7 +87,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         public int FindIndexer(Type type, Expression[] args, out MethodBase method)
         {
-            foreach (Type t in SelfAndBaseTypes(type))
+            foreach (Type t in type.SelfAndBaseTypes())
             {
                 MemberInfo[] members = t.GetDefaultMembers();
                 if (members.Length != 0)
@@ -206,35 +207,6 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             }
 
             return CompareConversionType.Both;
-        }
-
-        IEnumerable<Type> SelfAndBaseTypes(Type type)
-        {
-            if (type.GetTypeInfo().IsInterface)
-            {
-                var types = new List<Type>();
-                AddInterface(types, type);
-                return types;
-            }
-            return SelfAndBaseClasses(type);
-        }
-
-        IEnumerable<Type> SelfAndBaseClasses(Type type)
-        {
-            while (type != null)
-            {
-                yield return type;
-                type = type.GetTypeInfo().BaseType;
-            }
-        }
-
-        void AddInterface(List<Type> types, Type type)
-        {
-            if (!types.Contains(type))
-            {
-                types.Add(type);
-                foreach (Type t in type.GetInterfaces()) AddInterface(types, t);
-            }
         }
     }
 }
