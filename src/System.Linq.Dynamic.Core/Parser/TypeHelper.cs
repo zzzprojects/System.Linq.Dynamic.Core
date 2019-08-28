@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
+using TypeLite.Extensions;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -30,8 +31,18 @@ namespace System.Linq.Dynamic.Core.Parser
             return null;
         }
 
-        public static bool IsCompatibleWith(Type source, Type target)
+        /// <summary>
+        /// Check if a type is copmatible with a target type. If the target type is a generic definition type
+        /// the promotedTarget is filled with the needed generic arguments.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="promotedTarget"></param>
+        /// <returns></returns>
+        public static bool IsCompatibleWith(Type source, Type target, out Type promotedTarget)
         {
+            promotedTarget = null;
+
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             if (source == target)
             {
@@ -40,7 +51,58 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (!target.IsValueType)
             {
-                return target.IsAssignableFrom(source);
+                // Chain match arguments
+                foreach (var t in source.SelfAndBaseTypes())
+                {
+                    if (target.IsAssignableFrom(t))
+                    {
+                        return true;
+                    }
+
+                    if ((target.IsGenericType || target.IsGenericTypeDefinition) && t.IsGenericType)
+                    {
+                        var targetGenericTypeDef = target.IsGenericType ? target.GetGenericTypeDefinition() : target;
+                        var tGenericTypeDef = t.GetGenericTypeDefinition();
+
+                        if (targetGenericTypeDef != tGenericTypeDef)
+                        {
+                            continue;
+                        }
+
+                        var targetGenericArgs = target.GetGenericArguments();
+                        var tGenericArgs = t.GetGenericArguments();
+
+                        bool compatibleArgs = true;
+                        for (int x = 0; x < tGenericArgs.Length; x++)
+                        {
+                            var targetType = targetGenericArgs[x];
+
+                            if (targetType.IsGenericParameter)
+                            {
+                                var constraints = targetType.GetGenericParameterConstraints();
+                                // TODO: Check the constraints, covariance, etc...
+                            }
+                            else
+                            {
+                                if (!TypeHelper.IsCompatibleWith(tGenericArgs[x], targetType, out _))
+                                {
+                                    compatibleArgs = false;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!compatibleArgs)
+                        {
+                            continue;
+                        }
+
+                        promotedTarget = target.GetGenericTypeDefinition().MakeGenericType(t.GenericTypeArguments);
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             Type st = GetNonNullableType(source);

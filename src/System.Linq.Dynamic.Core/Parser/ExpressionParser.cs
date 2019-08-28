@@ -1593,10 +1593,10 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             int errorPos = _textParser.CurrentToken.Pos;
-            string methodName = GetIdentifier();
+            string id = GetIdentifier();
             _textParser.NextToken();
 
-            var methodCallExpression = this.ParseMethodCall(type, instance, methodName, errorPos);
+            var methodCallExpression = this.ParseMethodCall(type, instance, id, errorPos);
             if (methodCallExpression != null)
             {
                 return methodCallExpression;
@@ -1604,7 +1604,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (type.GetTypeInfo().IsEnum)
             {
-                var @enum = Enum.Parse(type, methodName, true);
+                var @enum = Enum.Parse(type, id, true);
                 return Expression.Constant(@enum);
             }
 
@@ -1614,7 +1614,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.MakeIndex(instance, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
-            MemberInfo member = FindPropertyOrField(type, methodName, instance == null);
+            MemberInfo member = FindPropertyOrField(type, id, instance == null);
             if (member is PropertyInfo property)
             {
                 return Expression.Property(instance, property);
@@ -1628,7 +1628,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #if !NET35 && !UAP10_0 && !NETSTANDARD1_3
             if (type == typeof(object))
             {
-                return Expression.Dynamic(new DynamicGetMemberBinder(methodName), type, instance);
+                return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
             }
 #endif
             if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback)
@@ -1636,7 +1636,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
                 if (indexerMethod != null)
                 {
-                    return Expression.Call(instance, indexerMethod, Expression.Constant(methodName));
+                    return Expression.Call(instance, indexerMethod, Expression.Constant(id));
                 }
             }
 
@@ -1644,12 +1644,12 @@ namespace System.Linq.Dynamic.Core.Parser
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {
                 // This might be an internal variable for use within a lambda expression, so store it as such
-                _internals.Add(methodName, _it);
+                _internals.Add(id, _it);
 
                 // Also store ItName (only once)
                 if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
                 {
-                    ItName = methodName;
+                    ItName = id;
                 }
 
                 // next
@@ -1658,7 +1658,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return ParseConditionalOperator();
             }
 
-            throw ParseError(errorPos, Res.UnknownPropertyOrField, methodName, TypeHelper.GetTypeName(type));
+            throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
 
         Expression ParseMethodCall(Type type, Expression instance, string methodName, int errorPos)
@@ -1668,8 +1668,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return null;
             }
 
-            var methodReducer = new MethodReducer(this._parsingConfig, type, methodName);
-            List<MethodData> methods = methodReducer.GetCurrentApplicableMethods();
+            var methodReducer = new MethodReducer(this._parsingConfig, type, methodName, instance);
 
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
             _textParser.NextToken();
@@ -1678,11 +1677,13 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 while (true)
                 {
+                    methodReducer.PrepareReduce();
+
                     var argumentExpression = ParseConditionalOperator();
 
                     _expressionHelper.WrapConstantExpression(ref argumentExpression);
 
-                    methods = methodReducer.Reduce(argumentExpression);
+                    methodReducer.Reduce(argumentExpression);
 
                     if (_textParser.CurrentToken.Id != TokenId.Comma)
                     {
@@ -1692,6 +1693,8 @@ namespace System.Linq.Dynamic.Core.Parser
                     _textParser.NextToken();
                 }
             }
+
+            var methods = methodReducer.GetCurrentApplicableMethods();
 
             _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
             _textParser.NextToken();

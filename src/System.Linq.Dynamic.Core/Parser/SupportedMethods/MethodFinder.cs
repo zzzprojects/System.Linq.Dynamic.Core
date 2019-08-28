@@ -134,7 +134,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 }
                 promotedArgs[i] = promoted;
             }
-            method.Args = promotedArgs;
+            method.Args = promotedArgs.ToList();
             return true;
         }
 
@@ -185,8 +185,8 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 return CompareConversionType.Second;
             }
 
-            bool firstIsCompatibleWithSecond = TypeHelper.IsCompatibleWith(first, second);
-            bool secondIsCompatibleWithFirst = TypeHelper.IsCompatibleWith(second, first);
+            bool firstIsCompatibleWithSecond = TypeHelper.IsCompatibleWith(first, second, out _);
+            bool secondIsCompatibleWithFirst = TypeHelper.IsCompatibleWith(second, first, out _);
 
             if (firstIsCompatibleWithSecond && !secondIsCompatibleWithFirst)
             {

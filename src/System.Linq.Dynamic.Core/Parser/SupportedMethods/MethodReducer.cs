@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using ETG.SABENTISpro.Utils.HelpersUtils;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using ETG.SABENTISpro.Utils.HelpersUtils;
 using TypeLite.Extensions;
 
 namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
@@ -21,20 +21,23 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         private List<MethodData> _applicableMethods;
 
-        private List<Expression> _args;
+        private Expression _instance;
 
         /// <summary>
         /// Get an instance of MethodReducer
         /// </summary>
         /// <param name="parsingConfig"></param>
-        public MethodReducer(ParsingConfig parsingConfig, Type ownerType, string methodName)
+        /// <param name="ownerType"></param>
+        /// <param name="methodName"></param>
+        /// <param name="instance">Instance, used to feed extension methods</param>
+        public MethodReducer(ParsingConfig parsingConfig, Type ownerType, string methodName, Expression instance)
         {
             _parsingConfig = parsingConfig;
             _ownerType = ownerType;
             _methodName = methodName;
-            _args = new List<Expression>();
+            _instance = instance;
 
-            this._applicableMethods = this.LoadMembers(_ownerType, true, methodName);
+            this._applicableMethods = this.LoadMembers(_ownerType, true, methodName, instance);
         }
 
         public List<MethodData> GetCurrentApplicableMethods()
@@ -46,23 +49,27 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         /// Add a new argument and reduce the set of available methods
         /// </summary>
         /// <param name="arg"></param>
-        public List<MethodData> Reduce(Expression arg)
+        public void Reduce(Expression arg)
         {
-            int currentPosition = _args.Count;
-            _args.Add(arg);
-
             // Reduce the set of matching methods
-            _applicableMethods = _applicableMethods
-                .Where(m => IsApplicable(m, _args, currentPosition))
-                .ToList();
+            _applicableMethods = this.ReduceMethodsWithArgument(_applicableMethods, arg);
+        }
 
-            return _applicableMethods;
+        /// <summary>
+        /// Remove any potentially matching methods that do not accept any
+        /// additional arguments
+        /// </summary>
+        /// <returns></returns>
+        public void PrepareReduce()
+        {
+            // Reduce the set of matching methods
+            _applicableMethods = this.PrepareReduceMethods(_applicableMethods);
         }
 
         /// <summary>
         /// Find all available methods without considering method signature.
         /// </summary>
-        protected List<MethodData> LoadMembers(Type type, bool staticAccess, string methodName)
+        protected List<MethodData> LoadMembers(Type type, bool staticAccess, string methodName, Expression instance)
         {
             MemberInfo[] members = new MemberInfo[0];
 
@@ -81,58 +88,116 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             // TODO: This is very slow/heavy, try to cache or find different approach
             // plus this returns too much stuff, we need to scope this only to IEnumerable, IQueryable, etc..
             // which is what makes sense in Dynamic.Linq.Core, or delegate this to the TypeResolver
-            var extensionMethods = type.GetExtensionMethods();
+            var extensionMethods = type.GetExtensionMethods(methodName);
+            extensionMethods = this.PrepareReduceMethods(extensionMethods);
+            extensionMethods = this.ReduceMethodsWithArgument(extensionMethods, instance);
 
             var result = new List<MethodData>();
+
             result.AddRange(members.Select((i) => new MethodData((MethodBase)i)));
-            result.AddRange(extensionMethods.Select((i) => new MethodData((MethodBase)i)));
+            result.AddRange(extensionMethods);
+
             return result;
         }
 
         /// <summary>
-        /// Se if the current set of arguments apply to a method
+        /// Try to promote and absorb an argument in the argument chain. Return false if it fails.
         /// </summary>
-        /// <param name="method"></param>
-        /// <param name="args"></param>
-        /// <param name="currentPosition"></param>
+        /// <param name="md"></param>
+        /// <param name="argument"></param>
+        /// <param name="t"></param>
         /// <returns></returns>
-        protected bool IsApplicable(MethodData method, List<Expression> args, int currentPosition)
+        protected bool MergeArgument(MethodData md, Expression argument)
         {
-            if (args.Count > method.Parameters.Length)
+            if (md.Args.Count >= md.Parameters.Length)
             {
-                return false;
+                throw new Exception("Method dos not admit any more arguments. Use PrepareReduce before calling Reduce.");
             }
 
-            Expression[] promotedArgs = new Expression[args.Count];
+            var nextMethodParameter = md.MethodBase.GetParameters()[md.Args.Count];
 
-            for (int i = currentPosition; i < args.Count; i++)
+            var promotedArgument = this._parsingConfig.ExpressionPromoter.Promote(
+                argument,
+                nextMethodParameter.ParameterType,
+                false,
+                true,
+                out var promotedTarget);
+
+            if (promotedArgument != null)
             {
-                ParameterInfo pi = method.Parameters[i];
+                md.Args.Add(promotedArgument);
 
-                if (pi.IsOut)
+                foreach (var methodGa in md.MethodBase.GetGenericArguments())
                 {
-                    return false;
+                    var paramGenericArguments = nextMethodParameter.ParameterType.GetGenericArguments();
+
+                    for (int x = 0; x < paramGenericArguments.Length; x++)
+                    {
+                        if (paramGenericArguments[x].Name == methodGa.Name)
+                        {
+                            md.GenericArguments[methodGa.Name] = promotedTarget.GetGenericArguments()[x];
+                        }
+                    }
                 }
 
-                // TODO: Not sure why this criteria here... kept from previous implementation
-                bool canConvert = method.MethodBase.DeclaringType != typeof(IEnumerableSignatures);
-
-                Expression promoted = this._parsingConfig.ExpressionPromoter.Promote(
-                    args[i],
-                    pi.ParameterType,
-                    false,
-                    canConvert);
-
-                if (promoted == null)
-                {
-                    return false;
-                }
-
-                promotedArgs[i] = promoted;
+                this.CheckMethodResolved(md);
+                return true;
             }
 
-            method.Args = promotedArgs;
-            return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="methods"></param>
+        /// <returns></returns>
+        protected List<MethodData> PrepareReduceMethods(List<MethodData> methods)
+        {
+            return methods.Where((i) => i.Parameters.Length > i.Args.Count).ToList();
+        }
+
+        /// <summary>
+        /// Reduce this methods...
+        /// </summary>
+        /// <returns></returns>
+        protected List<MethodData> ReduceMethodsWithArgument(List<MethodData> methods, Expression arg)
+        {
+            List<MethodData> results = new List<MethodData>();
+
+            foreach (var m in methods)
+            {
+                var fullName = ((MethodInfo)m.MethodBase).GetGenericArguments().FirstOrDefault()?.Name;
+                var declaringType = m.MethodBase.DeclaringType.Name;
+
+                if (this.MergeArgument(m, arg))
+                {
+                    results.Add(m);
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Checks if we have enough generic arguments to resolve the method
+        /// </summary>
+        /// <returns></returns>
+        protected void CheckMethodResolved(MethodData md)
+        {
+            if (md.MethodGenericsResolved)
+            {
+                return;
+            }
+
+            if (!md.GenericArguments.Keys.Except(md.MethodBase.GetGenericArguments().Select((i) => i.Name)).Any())
+            {
+                md.MethodBase = ((MethodInfo)md.MethodBase).GetGenericMethodDefinition()
+                    .MakeGenericMethod(md.GenericArguments.Values.ToArray());
+
+                md.MethodGenericsResolved = true;
+                md.Parameters = md.MethodBase.GetParameters().ToArray();
+            }
         }
 
         protected bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
@@ -182,8 +247,8 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 return CompareConversionType.Second;
             }
 
-            bool firstIsCompatibleWithSecond = TypeHelper.IsCompatibleWith(first, second);
-            bool secondIsCompatibleWithFirst = TypeHelper.IsCompatibleWith(second, first);
+            bool firstIsCompatibleWithSecond = TypeHelper.IsCompatibleWith(first, second, out _);
+            bool secondIsCompatibleWithFirst = TypeHelper.IsCompatibleWith(second, first, out _);
 
             if (firstIsCompatibleWithSecond && !secondIsCompatibleWithFirst)
             {

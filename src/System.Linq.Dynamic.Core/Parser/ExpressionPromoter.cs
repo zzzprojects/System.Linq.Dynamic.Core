@@ -1,6 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using ETG.SABENTISpro.Utils.DynamicLinkCore.Compatibility;
+using System.Linq.Expressions;
 using System.Reflection;
-using ETG.SABENTISpro.Utils.DynamicLinkCore.Compatibility;
 using TypeLite.Extensions;
 using TypeExtensions = ETG.SABENTISpro.Utils.HelpersUtils.TypeExtensions;
 
@@ -11,6 +11,14 @@ namespace System.Linq.Dynamic.Core.Parser
         /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)"/>
         public virtual Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
         {
+            return this.Promote(expr, type, exact, convertExpr, out _);
+        }
+
+        /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)"/>
+        public virtual Expression Promote(Expression expr, Type type, bool exact, bool convertExpr, out Type promotedTarget)
+        {
+            promotedTarget = null;
+
             if (expr.Type == type)
             {
                 return expr;
@@ -126,11 +134,11 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            if (TypeHelper.IsCompatibleWith(expr.Type, type))
+            if (TypeHelper.IsCompatibleWith(expr.Type, type, out promotedTarget))
             {
                 if (type.GetTypeInfo().IsValueType || exact || expr.Type.GetTypeInfo().IsValueType && convertExpr)
                 {
-                    return Expression.Convert(expr, type);
+                    return Expression.Convert(expr, promotedTarget ?? type);
                 }
 
                 return expr;
