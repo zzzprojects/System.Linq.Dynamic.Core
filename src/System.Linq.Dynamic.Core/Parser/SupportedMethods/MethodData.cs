@@ -31,5 +31,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         public bool ExtensionMethod { get; set; }
 
         public bool MethodGenericsResolved { get; set; }
+
+        public bool PerfectMatch { get; set; }
     }
 }

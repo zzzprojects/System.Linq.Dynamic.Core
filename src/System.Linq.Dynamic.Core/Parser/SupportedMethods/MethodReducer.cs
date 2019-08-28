@@ -67,6 +67,27 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         }
 
         /// <summary>
+        /// Get a hint on what the next argument Type might look like..
+        /// </summary>
+        /// <returns></returns>
+        public Type HintNextLambdaArgumentTypes()
+        {
+            // Only support single dimensional lambdas (p) => p.x
+            List<Type> lambdaTypes = new List<Type>();
+            lambdaTypes.Add(typeof(Func<,>));
+
+            var nextLambdaTypes = (from p in _applicableMethods
+                select p.Parameters[p.Args.Count])
+                .Where((i) => i.ParameterType.IsGenericType &&
+                              lambdaTypes.Contains(i.ParameterType.GetGenericTypeDefinition()))
+                .Select((i) => i.ParameterType.GenericTypeArguments.First())
+                .ToList();
+
+            // TODO: Hint is only valid if they are all the same!
+            return nextLambdaTypes.First();
+        }
+
+        /// <summary>
         /// Find all available methods without considering method signature.
         /// </summary>
         protected List<MethodData> LoadMembers(Type type, bool staticAccess, string methodName, Expression instance)
@@ -127,21 +148,36 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             {
                 md.Args.Add(promotedArgument);
 
-                foreach (var methodGa in md.MethodBase.GetGenericArguments())
+                if (!md.MethodGenericsResolved)
                 {
-                    var paramGenericArguments = nextMethodParameter.ParameterType.GetGenericArguments();
-
-                    for (int x = 0; x < paramGenericArguments.Length; x++)
+                    foreach (var methodGa in md.MethodBase.GetGenericArguments())
                     {
-                        if (paramGenericArguments[x].Name == methodGa.Name)
+                        var paramGenericArguments = nextMethodParameter.ParameterType.GetGenericArguments();
+
+                        for (int x = 0; x < paramGenericArguments.Length; x++)
                         {
-                            md.GenericArguments[methodGa.Name] = promotedTarget.GetGenericArguments()[x];
+                            if (paramGenericArguments[x].Name == methodGa.Name)
+                            {
+                                md.GenericArguments[methodGa.Name] = promotedTarget.GetGenericArguments()[x];
+                            }
                         }
                     }
+
+                    this.CheckMethodResolved(md);
                 }
 
-                this.CheckMethodResolved(md);
                 return true;
+            }
+
+            md.PerfectMatch = true;
+
+            for (int x = 0; x < md.Args.Count; x++)
+            {
+                if (md.Args[x].Type != md.Parameters[x].ParameterType)
+                {
+                    md.PerfectMatch = false;
+                    break;
+                }
             }
 
             return false;
@@ -167,6 +203,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
             foreach (var m in methods)
             {
+                // TODO: Remove this debugging hints
                 var fullName = ((MethodInfo)m.MethodBase).GetGenericArguments().FirstOrDefault()?.Name;
                 var declaringType = m.MethodBase.DeclaringType.Name;
 

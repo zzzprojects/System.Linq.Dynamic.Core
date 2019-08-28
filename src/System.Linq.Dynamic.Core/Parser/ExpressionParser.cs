@@ -36,6 +36,7 @@ namespace System.Linq.Dynamic.Core.Parser
         private ParameterExpression _it;
         private ParameterExpression _parent;
         private ParameterExpression _root;
+        private List<Type> _lambdaHint;
         private Type _resultType;
         private bool _createParameterCtor;
 
@@ -1640,10 +1641,12 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            // TODO: Lambda invocations should be treated as method calls, see ParseMethodCall
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {
+                string parentItName = ItName;
+
                 // This might be an internal variable for use within a lambda expression, so store it as such
+                // TODO: This is the place to add type hints, and to support multi-dimensional lambdas
                 _internals.Add(id, _it);
 
                 // Also store ItName (only once)
@@ -1655,7 +1658,10 @@ namespace System.Linq.Dynamic.Core.Parser
                 // next
                 _textParser.NextToken();
 
-                return ParseConditionalOperator();
+                var right = ParseConditionalOperator();
+                ItName = parentItName;
+
+                return Expression.Lambda(right, new[] { ParameterExpressionHelper.CreateParameterExpression(type, id) });
             }
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
@@ -1679,7 +1685,29 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     methodReducer.PrepareReduce();
 
+                    Type lambdaArgumentType = methodReducer.HintNextLambdaArgumentTypes();
+
+                    // We use this hint to tell lambda parser what parameter types
+                    // to expect when parsing the lambda. There is no real support for
+                    // lambda parameter typing, we simply replace the "IT" context
+                    // and restore it when done... we follow a similar strategy
+                    // to the old ParseAggregate()
+
+                    _lambdaHint = new List<Type>();
+                    _lambdaHint.Add(lambdaArgumentType);
+
+                    var oldParent = _parent;
+                    ParameterExpression outerIt = _it;
+                    ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(lambdaArgumentType, string.Empty);
+                    _parent = _it;
+                    _it = innerIt;
+
                     var argumentExpression = ParseConditionalOperator();
+
+                    _it = outerIt;
+                    _parent = oldParent;
+
+                    _lambdaHint = null;
 
                     _expressionHelper.WrapConstantExpression(ref argumentExpression);
 
@@ -1705,6 +1733,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 throw ParseError(errorPos, Res.NoApplicableMethod, methodName, TypeHelper.GetTypeName(type));
             }
 
+            // TODO: This perfectmath thing is shut a quick POC shortcut...
+            methods = methods.Take(1).ToList();
+
             if (methods.Count > 1)
             {
                 throw ParseError(errorPos, Res.AmbiguousMethodInvocation, methodName, TypeHelper.GetTypeName(type));
@@ -1724,106 +1755,8 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 throw ParseError(errorPos, Res.MethodIsVoid, methodName, TypeHelper.GetTypeName(method.MethodBase.DeclaringType));
             }
-            
-            // TODO: Add support for static methods
-            return Expression.Call(instance, methodInfo, args);
-        }
 
-        // TODO: Get rid of this custom logic
-        Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, bool isQueryable)
-        {
-            var oldParent = _parent;
-
-            ParameterExpression outerIt = _it;
-            ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty);
-
-            _parent = _it;
-
-            if (methodName == "Contains" || methodName == "Skip" || methodName == "Take")
-            {
-                // for any method that acts on the parent element type, we need to specify the outerIt as scope.
-                _it = outerIt;
-            }
-            else
-            {
-                _it = innerIt;
-            }
-
-            Expression[] args = ParseArgumentList();
-
-            _it = outerIt;
-            _parent = oldParent;
-
-            if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, args))
-            {
-                throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
-            }
-
-            Type callType = typeof(Enumerable);
-            if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, args))
-            {
-                callType = typeof(Queryable);
-            }
-
-            Type[] typeArgs;
-            if (new[] { "OfType", "Cast" }.Contains(methodName))
-            {
-                if (args.Length != 1)
-                {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneArg, methodName);
-                }
-
-                typeArgs = new[] { ResolveTypeFromArgumentExpression(methodName, args[0]) };
-                args = new Expression[0];
-            }
-            else if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
-            {
-                if (args.Length == 2)
-                {
-                    typeArgs = new[] { elementType, args[0].Type, args[1].Type };
-                }
-                else
-                {
-                    typeArgs = new[] { elementType, args[0].Type };
-                }
-            }
-            else if (methodName == "SelectMany")
-            {
-                var type = Expression.Lambda(args[0], innerIt).Body.Type;
-                var interfaces = type.GetInterfaces().Union(new[] { type });
-                Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
-                Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
-                typeArgs = new[] { elementType, resultType };
-            }
-            else
-            {
-                typeArgs = new[] { elementType };
-            }
-
-            if (args.Length == 0)
-            {
-                args = new[] { instance };
-            }
-            else
-            {
-                if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
-                {
-                    args = new[] { instance, args[0] };
-                }
-                else
-                {
-                    if (args.Length == 2)
-                    {
-                        args = new[] { instance, Expression.Lambda(args[0], innerIt), Expression.Lambda(args[1], innerIt) };
-                    }
-                    else
-                    {
-                        args = new[] { instance, Expression.Lambda(args[0], innerIt) };
-                    }
-                }
-            }
-
-            return Expression.Call(callType, methodName, typeArgs, args);
+            return Expression.Call(methodInfo.IsStatic ? null : instance, methodInfo, args);
         }
 
         private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression)
