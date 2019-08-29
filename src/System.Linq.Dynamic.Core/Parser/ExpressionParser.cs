@@ -1749,10 +1749,11 @@ namespace System.Linq.Dynamic.Core.Parser
             var returnType = methodInfo.ReturnType;
             var args = method.Args;
 
-            if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.MethodBase.DeclaringType) && !(method.MethodBase.IsPublic && PredefinedTypesHelper.IsPredefinedType(_parsingConfig, returnType)))
+            // TODO: Not sure why this constraint was here before...
+            /*if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.MethodBase.DeclaringType) && !(method.MethodBase.IsPublic && PredefinedTypesHelper.IsPredefinedType(_parsingConfig, returnType)))
             {
                 throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.MethodBase.DeclaringType));
-            }
+            }*/
 
             if (returnType == typeof(void))
             {

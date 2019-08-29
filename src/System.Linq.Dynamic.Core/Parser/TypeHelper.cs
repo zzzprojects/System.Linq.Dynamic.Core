@@ -67,7 +67,12 @@ namespace System.Linq.Dynamic.Core.Parser
             if (!target.IsValueType)
             {
                 // Chain match arguments
-                foreach (var t in source.GetSelfAndBaseTypes())
+                // TODO:
+                // Performance of this is terrible, too much reflection and
+                // too much interfaces to consider, at compile time this is
+                // acceptable, but not at runtime. Figure out a way to minimize
+                // the number of introspected types/interfaces
+                foreach (var t in source.GetSelfAndAllBaseAndInterfaces())
                 {
                     if (target.IsAssignableFrom(t))
                     {
@@ -452,6 +457,18 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             return type;
+        }
+
+        public static IEnumerable<Type> GetSelfAndAllBaseAndInterfaces(this Type type)
+        {
+            var types = new List<Type>();
+
+            foreach (var t in GetSelfAndBaseClasses(type))
+            {
+                AddInterface(types, t);
+            }
+
+            return types;
         }
 
         public static IEnumerable<Type> GetSelfAndBaseTypes(this Type type)

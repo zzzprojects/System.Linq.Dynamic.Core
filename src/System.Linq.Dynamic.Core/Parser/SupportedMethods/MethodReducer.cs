@@ -126,7 +126,6 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         /// </summary>
         /// <param name="md"></param>
         /// <param name="argument"></param>
-        /// <param name="t"></param>
         /// <returns>True if the argument could be merged, false if the argument is not compatible with the method signature.</returns>
         protected bool MergeArgument(MethodData md, Expression argument)
         {
@@ -226,7 +225,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 return;
             }
 
-            if (!md.GenericArguments.Keys.Except(md.MethodBase.GetGenericArguments().Select((i) => i.Name)).Any())
+            if (!md.MethodBase.GetGenericArguments().Select((i) => i.Name).Except(md.GenericArguments.Keys).Any())
             {
                 md.MethodBase = ((MethodInfo)md.MethodBase).GetGenericMethodDefinition()
                     .MakeGenericMethod(md.GenericArguments.Values.ToArray());
