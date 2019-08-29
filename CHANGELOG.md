@@ -1,3 +1,22 @@
+# 1.0.19.0 (29 August 2019)
+- [#277](https://github.com/StefH/System.Linq.Dynamic.Core/pull/277) - DateTimeIsParsedAsUTC [feature] contributed by [StefH](https://github.com/StefH)
+- [#281](https://github.com/StefH/System.Linq.Dynamic.Core/pull/281) - Support for AndAlso and OrElse [feature] contributed by [StefH](https://github.com/StefH)
+- [#285](https://github.com/StefH/System.Linq.Dynamic.Core/pull/285) - Fix certain cases where implicit conversions aren't correctly detected when parsing comparison operators [bug] contributed by [alexweav](https://github.com/alexweav)
+- [#287](https://github.com/StefH/System.Linq.Dynamic.Core/pull/287) - Ensure that one-way implicit conversions also work for value types contributed by [alexweav](https://github.com/alexweav)
+- [#290](https://github.com/StefH/System.Linq.Dynamic.Core/pull/290) - Added SumAsync contributed by [wertzui](https://github.com/wertzui)
+- [#292](https://github.com/StefH/System.Linq.Dynamic.Core/pull/292) - Add ConsoleApp using EF6 Effort contributed by [StefH](https://github.com/StefH)
+- [#297](https://github.com/StefH/System.Linq.Dynamic.Core/pull/297) - Fix for #294 contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
+- [#298](https://github.com/StefH/System.Linq.Dynamic.Core/pull/298) - Add 'All', 'Average', 'AverageAsync' and update 'Sum' [feature] contributed by [StefH](https://github.com/StefH)
+- [#299](https://github.com/StefH/System.Linq.Dynamic.Core/pull/299) - Add more PredefinedOperatorAliases [feature] contributed by [StefH](https://github.com/StefH)
+- [#268](https://github.com/StefH/System.Linq.Dynamic.Core/issues/268) - Timezone conversion [feature]
+- [#279](https://github.com/StefH/System.Linq.Dynamic.Core/issues/279) - Support .NET Expression string operators (AndAlso &amp; OrElse) [feature]
+- [#282](https://github.com/StefH/System.Linq.Dynamic.Core/issues/282) - Generated SQL with string array. [question]
+- [#283](https://github.com/StefH/System.Linq.Dynamic.Core/issues/283) - Order by TypeCode throw exception [question]
+- [#284](https://github.com/StefH/System.Linq.Dynamic.Core/issues/284) - String(Null) raises Ambiguous error [question]
+- [#291](https://github.com/StefH/System.Linq.Dynamic.Core/issues/291) - Question: How to truncate possibly but not necessarily nullable datetime on SQL side?
+- [#293](https://github.com/StefH/System.Linq.Dynamic.Core/issues/293) - Parsing fails when using redundant parentheses [invalid]
+- [#294](https://github.com/StefH/System.Linq.Dynamic.Core/issues/294) - Context lost in object initializer [bug]
+
 # 1.0.18.0 (02 July 2019)
 - [#171](https://github.com/StefH/System.Linq.Dynamic.Core/issues/171) - File version attribute is 0.0.0.0 [invalid]
 - [#278](https://github.com/StefH/System.Linq.Dynamic.Core/issues/278) - Nuget System.Linq.Dynamic.Core 1.0.17 - Incorrect version [bug]
