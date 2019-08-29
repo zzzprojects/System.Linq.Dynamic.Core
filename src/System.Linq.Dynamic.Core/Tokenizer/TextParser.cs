@@ -11,20 +11,27 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         private static char[] EscapeCharacters = new[] { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
 
         // These aliases are supposed to simply the where clause and make it more human readable
-        // As an addition it is compatible with the OData.Filter specification
-        private static readonly Dictionary<string, TokenId> _predefinedAliases = new Dictionary<string, TokenId>
+        private static readonly Dictionary<string, TokenId> _predefinedOperatorAliases = new Dictionary<string, TokenId>(StringComparer.OrdinalIgnoreCase)
         {
-            {"eq", TokenId.Equal},
-            {"ne", TokenId.ExclamationEqual},
-            {"neq", TokenId.ExclamationEqual},
-            {"lt", TokenId.LessThan},
-            {"le", TokenId.LessThanEqual},
-            {"gt", TokenId.GreaterThan},
-            {"ge", TokenId.GreaterThanEqual},
-            {"and", TokenId.DoubleAmphersand},
-            {"or", TokenId.DoubleBar},
-            {"not", TokenId.Exclamation},
-            {"mod", TokenId.Percent}
+            { "eq", TokenId.Equal },
+            { "equal", TokenId.Equal },
+            { "ne", TokenId.ExclamationEqual },
+            { "notequal", TokenId.ExclamationEqual },
+            { "neq", TokenId.ExclamationEqual },
+            { "lt", TokenId.LessThan },
+            { "LessThan", TokenId.LessThan },
+            { "le", TokenId.LessThanEqual },
+            { "LessThanEqual", TokenId.LessThanEqual },
+            { "gt", TokenId.GreaterThan },
+            { "GreaterThan", TokenId.GreaterThan },
+            { "ge", TokenId.GreaterThanEqual },
+            { "GreaterThanEqual", TokenId.GreaterThanEqual },
+            { "and", TokenId.DoubleAmphersand },
+            { "AndAlso", TokenId.DoubleAmphersand },
+            { "or", TokenId.DoubleBar },
+            { "OrElse", TokenId.DoubleBar },
+            { "not", TokenId.Exclamation },
+            { "mod", TokenId.Percent }
         };
 
         private readonly string _text;
@@ -451,7 +458,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
         private static TokenId GetAliasedTokenId(TokenId tokenId, string alias)
         {
-            return tokenId == TokenId.Identifier && _predefinedAliases.TryGetValue(alias, out TokenId id) ? id : tokenId;
+            return tokenId == TokenId.Identifier && _predefinedOperatorAliases.TryGetValue(alias, out TokenId id) ? id : tokenId;
         }
 
         private static bool IsHexChar(char c)
