@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Parser.SupportedMethods;
 using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
-using TypeLite.Extensions;
+using System.Runtime.CompilerServices;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
     internal static class TypeHelper
     {
+        private static MethodInfo[] _allExtensionMethodsInCurrentAssembliesCache;
+
         public static Type FindGenericType(Type generic, Type type)
         {
             while (type != null && type != typeof(object))
@@ -37,6 +40,18 @@ namespace System.Linq.Dynamic.Core.Parser
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
+        /// <returns></returns>
+        public static bool IsCompatibleWith(Type source, Type target)
+        {
+            return IsCompatibleWith(source, target, out _);
+        }
+
+        /// <summary>
+        /// Check if a type is copmatible with a target type. If the target type is a generic definition type
+        /// the promotedTarget is filled with the needed generic arguments.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
         /// <param name="promotedTarget"></param>
         /// <returns></returns>
         public static bool IsCompatibleWith(Type source, Type target, out Type promotedTarget)
@@ -52,7 +67,7 @@ namespace System.Linq.Dynamic.Core.Parser
             if (!target.IsValueType)
             {
                 // Chain match arguments
-                foreach (var t in source.SelfAndBaseTypes())
+                foreach (var t in source.GetSelfAndBaseTypes())
                 {
                     if (target.IsAssignableFrom(t))
                     {
@@ -97,7 +112,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             continue;
                         }
 
-                        promotedTarget = target.GetGenericTypeDefinition().MakeGenericType(t.GenericTypeArguments);
+                        promotedTarget = target.GetGenericTypeDefinition().MakeGenericType(TypeHelper.GetGenericTypeArguments(t));
                         return true;
                     }
                 }
@@ -315,14 +330,14 @@ namespace System.Linq.Dynamic.Core.Parser
             return GetNumericTypeKind(type) != 0;
         }
 
-        public static bool IsNullableType(Type type)
+        public static bool IsNullableType(this Type type)
         {
             Check.NotNull(type, nameof(type));
 
             return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
-        public static Type ToNullableType(Type type)
+        public static Type ToNullableType(this Type type)
         {
             Check.NotNull(type, nameof(type));
 
@@ -337,6 +352,11 @@ namespace System.Linq.Dynamic.Core.Parser
         public static bool IsUnsignedIntegralType(Type type)
         {
             return GetNumericTypeKind(type) == 3;
+        }
+
+        public static bool GetIsSealed(this Type type)
+        {
+            return type.GetTypeInfo().IsSealed;
         }
 
         private static int GetNumericTypeKind(Type type)
@@ -399,6 +419,13 @@ namespace System.Linq.Dynamic.Core.Parser
             return name;
         }
 
+        public static Type[] GetGenericTypeArguments(Type type)
+        {
+            Check.NotNull(type, nameof(type));
+
+            return type.GetTypeInfo().GetGenericTypeArguments();
+        }
+
         public static Type GetNonNullableType(Type type)
         {
             Check.NotNull(type, nameof(type));
@@ -406,7 +433,14 @@ namespace System.Linq.Dynamic.Core.Parser
             return IsNullableType(type) ? type.GetTypeInfo().GetGenericTypeArguments()[0] : type;
         }
 
-        public static Type GetUnderlyingType(Type type)
+        public static bool GetIsGenericType(this Type type)
+        {
+            Check.NotNull(type, nameof(type));
+
+            return type.GetTypeInfo().IsGenericType;
+        }
+
+        public static Type GetUnderlyingType(this Type type)
         {
             Check.NotNull(type, nameof(type));
 
@@ -420,7 +454,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return type;
         }
 
-        public static IEnumerable<Type> GetSelfAndBaseTypes(Type type)
+        public static IEnumerable<Type> GetSelfAndBaseTypes(this Type type)
         {
             if (type.GetTypeInfo().IsInterface)
             {
@@ -431,7 +465,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return GetSelfAndBaseClasses(type);
         }
 
-        private static IEnumerable<Type> GetSelfAndBaseClasses(Type type)
+        private static IEnumerable<Type> GetSelfAndBaseClasses(this Type type)
         {
             while (type != null)
             {
@@ -571,6 +605,53 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// This Method extends the System.Type-type to get all extended methods. It searches hereby in all assemblies which are known by the current AppDomain.
+        /// </summary>
+        /// <remarks>
+        /// Inspired by Jon Skeet from his answer on http://stackoverflow.com/questions/299515/c-sharp-reflection-to-identify-extension-methods
+        /// </remarks>
+        /// <returns>returns MethodInfo[] with the extended Method</returns>
+
+        internal static List<MethodData> GetExtensionMethods(this Type t, string name, List<Type> types)
+        {
+            // TODO: We need an intermediate cache for this, that should not use t as key, but each individual type in the inheritance chain
+            // TODO: We might need to promote the incoming expression instance for the extension param
+            List<MethodData> methods = new List<MethodData>();
+
+            foreach (var method in AllExtensionMethods(types))
+            {
+                if (!method.Name.Equals(name, StringComparison.CurrentCulture))
+                {
+                    continue;
+                }
+
+                methods.Add(new MethodData(method));
+            }
+
+            return methods;
+        }
+
+        private static MethodInfo[] AllExtensionMethods(List<Type> types)
+        {
+            if (_allExtensionMethodsInCurrentAssembliesCache != null)
+            {
+                return _allExtensionMethodsInCurrentAssembliesCache;
+            }
+
+            List<Type> assTypes = types;
+
+            var query = from type in assTypes
+                        where type.GetIsSealed() && !type.GetIsGenericType() && !type.IsNested
+                        from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                        where method.IsDefined(typeof(ExtensionAttribute), false)
+                        select method;
+
+            _allExtensionMethodsInCurrentAssembliesCache = query.ToArray<MethodInfo>();
+
+            return _allExtensionMethodsInCurrentAssembliesCache;
         }
     }
 }

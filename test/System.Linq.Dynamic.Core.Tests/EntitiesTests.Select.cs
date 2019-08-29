@@ -132,7 +132,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var test = _context.Blogs.Select("new (BlogId, Name, Posts)").ToDynamicArray();
 
             //Assert
-            Assert.Equal(expected.Length, test.Length);
+            Assert.Equal<int>((int)expected.Length, (int)test.Length);
             for (int i = 0; i < expected.Length; i++)
             {
                 var expectedRow = expected[i];

@@ -9,6 +9,13 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
     public interface IDynamicLinkCustomTypeProvider
     {
         /// <summary>
+        /// Get the list of types that will be used for extension method instrospection
+        /// done during lambda parsing.
+        /// </summary>
+        /// <returns></returns>
+        List<Type> GetMethodIntrospectionTypes();
+
+        /// <summary>
         /// Returns a list of custom types that System.Linq.Dynamic.Core will understand.
         /// </summary>
         /// <returns>A <see cref="HashSet{Type}" /> list of custom types.</returns>

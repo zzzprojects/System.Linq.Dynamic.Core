@@ -1,12 +1,11 @@
-﻿using System;
+﻿using ConsoleAppEF2.Database;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
-using ConsoleAppEF2.Database;
-using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace ConsoleAppEF2
 {
@@ -14,6 +13,16 @@ namespace ConsoleAppEF2
     {
         class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
+            /// <inheritdoc cref="IDynamicLinkCustomTypeProvider"/>
+            public List<Type> GetMethodIntrospectionTypes()
+            {
+                return new List<Type>()
+                {
+                    typeof(Queryable),
+                    typeof(Enumerable)
+                };
+            }
+
             public HashSet<Type> GetCustomTypes()
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();

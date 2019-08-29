@@ -1,8 +1,6 @@
 ﻿using ETG.SABENTISpro.Utils.DynamicLinkCore.Compatibility;
 using System.Linq.Expressions;
 using System.Reflection;
-using TypeLite.Extensions;
-using TypeExtensions = ETG.SABENTISpro.Utils.HelpersUtils.TypeExtensions;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -31,7 +29,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     return expr;
                 }
 
-                if (type.IsNullable() && le.ReturnType == TypeExtensions.GetUnderlyingType(type))
+                if (type.IsNullableType() && le.GetReturnType() == type.GetUnderlyingType())
                 {
                     // Boxing
                     var boxed = Expression.Convert(le.Body, type);

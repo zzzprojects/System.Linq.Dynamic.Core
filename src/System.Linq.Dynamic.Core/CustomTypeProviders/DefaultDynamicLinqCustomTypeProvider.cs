@@ -29,6 +29,16 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             _cacheCustomTypes = cacheCustomTypes;
         }
 
+        /// <inheritdoc cref="IDynamicLinkCustomTypeProvider"/>
+        public virtual List<Type> GetMethodIntrospectionTypes()
+        {
+            return new List<Type>()
+            {
+                typeof(Queryable),
+                typeof(Enumerable)
+            };
+        }
+
         /// <inheritdoc cref="IDynamicLinkCustomTypeProvider.GetCustomTypes"/>
         public virtual HashSet<Type> GetCustomTypes()
         {

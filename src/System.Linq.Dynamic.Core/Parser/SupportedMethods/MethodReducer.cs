@@ -1,8 +1,6 @@
-﻿using ETG.SABENTISpro.Utils.HelpersUtils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using TypeLite.Extensions;
 
 namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
@@ -46,9 +44,9 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         }
 
         /// <summary>
-        /// Add a new argument and reduce the set of available methods
+        /// Reduce the set of possible matching methods according to the given argument.
         /// </summary>
-        /// <param name="arg"></param>
+        /// <param name="arg">The argument that the methods remaiming after reduction should be compatible with.</param>
         public void Reduce(Expression arg)
         {
             // Reduce the set of matching methods
@@ -56,8 +54,9 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         }
 
         /// <summary>
-        /// Remove any potentially matching methods that do not accept any
-        /// additional arguments
+        /// Before calling Reduce, this method gets rid of any methods that do not accept
+        /// any additional arguments. This gives us a hint on the set of available methods
+        /// before even parsing the next method argument.
         /// </summary>
         /// <returns></returns>
         public void PrepareReduce()
@@ -68,6 +67,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         /// <summary>
         /// Get a hint on what the next argument Type might look like..
+        /// TODO: Not very reliable or consistent....
         /// </summary>
         /// <returns></returns>
         public Type HintNextLambdaArgumentTypes()
@@ -77,14 +77,14 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             lambdaTypes.Add(typeof(Func<,>));
 
             var nextLambdaTypes = (from p in _applicableMethods
-                select p.Parameters[p.Args.Count])
-                .Where((i) => i.ParameterType.IsGenericType &&
+                                   select p.Parameters[p.Args.Count])
+                .Where((i) => i.ParameterType.GetIsGenericType() &&
                               lambdaTypes.Contains(i.ParameterType.GetGenericTypeDefinition()))
-                .Select((i) => i.ParameterType.GenericTypeArguments.First())
+                .Select((i) => TypeHelper.GetGenericTypeArguments(i.ParameterType).First())
                 .ToList();
 
             // TODO: Hint is only valid if they are all the same!
-            return nextLambdaTypes.First();
+            return nextLambdaTypes.FirstOrDefault();
         }
 
         /// <summary>
@@ -96,12 +96,12 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
-            foreach (Type t in type.SelfAndBaseTypes())
+            foreach (Type t in type.GetSelfAndBaseTypes())
             {
                 members = t.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName);
             }
 #else
-            foreach (Type t in type.SelfAndBaseTypes())
+            foreach (Type t in type.GetSelfAndBaseTypes())
             {
                 members = t.GetTypeInfo().DeclaredMethods.Where(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == methodName.ToLowerInvariant()).ToArray();
             }
@@ -109,7 +109,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             // TODO: This is very slow/heavy, try to cache or find different approach
             // plus this returns too much stuff, we need to scope this only to IEnumerable, IQueryable, etc..
             // which is what makes sense in Dynamic.Linq.Core, or delegate this to the TypeResolver
-            var extensionMethods = type.GetExtensionMethods(methodName);
+            var extensionMethods = type.GetExtensionMethods(methodName, this._parsingConfig.CustomTypeProvider.GetMethodIntrospectionTypes().ToList());
             extensionMethods = this.PrepareReduceMethods(extensionMethods);
             extensionMethods = this.ReduceMethodsWithArgument(extensionMethods, instance);
 
@@ -127,7 +127,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         /// <param name="md"></param>
         /// <param name="argument"></param>
         /// <param name="t"></param>
-        /// <returns></returns>
+        /// <returns>True if the argument could be merged, false if the argument is not compatible with the method signature.</returns>
         protected bool MergeArgument(MethodData md, Expression argument)
         {
             if (md.Args.Count >= md.Parameters.Length)
@@ -148,6 +148,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             {
                 md.Args.Add(promotedArgument);
 
+                // TODO: Improve performance of this logic
                 if (!md.MethodGenericsResolved)
                 {
                     foreach (var methodGa in md.MethodBase.GetGenericArguments())
@@ -169,6 +170,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 return true;
             }
 
+            // TODO: PerfectMatch is not used
             md.PerfectMatch = true;
 
             for (int x = 0; x < md.Args.Count; x++)
@@ -184,7 +186,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         }
 
         /// <summary>
-        /// 
+        /// Removes any methods that won't accept any additional arguments
         /// </summary>
         /// <param name="methods"></param>
         /// <returns></returns>
@@ -194,7 +196,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         }
 
         /// <summary>
-        /// Reduce this methods...
+        /// Reduce the list of available methods, and leave only those that can accept the given argument.
         /// </summary>
         /// <returns></returns>
         protected List<MethodData> ReduceMethodsWithArgument(List<MethodData> methods, Expression arg)
@@ -203,10 +205,6 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
             foreach (var m in methods)
             {
-                // TODO: Remove this debugging hints
-                var fullName = ((MethodInfo)m.MethodBase).GetGenericArguments().FirstOrDefault()?.Name;
-                var declaringType = m.MethodBase.DeclaringType.Name;
-
                 if (this.MergeArgument(m, arg))
                 {
                     results.Add(m);
@@ -217,7 +215,8 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         }
 
         /// <summary>
-        /// Checks if we have enough generic arguments to resolve the method
+        /// Checks if we have enough generic arguments to resolve the method to it's specific type implementation
+        /// in order to obtain the final signature.
         /// </summary>
         /// <returns></returns>
         protected void CheckMethodResolved(MethodData md)
@@ -235,77 +234,6 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 md.MethodGenericsResolved = true;
                 md.Parameters = md.MethodBase.GetParameters().ToArray();
             }
-        }
-
-        protected bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
-        {
-            bool better = false;
-            for (int i = 0; i < args.Length; i++)
-            {
-                CompareConversionType result = CompareConversions(args[i].Type, first.Parameters[i].ParameterType, second.Parameters[i].ParameterType);
-
-                // If second is better, return false
-                if (result == CompareConversionType.Second)
-                {
-                    return false;
-                }
-
-                // If first is better, return true
-                if (result == CompareConversionType.First)
-                {
-                    return true;
-                }
-
-                // If both are same, just set better to true and continue
-                if (result == CompareConversionType.Both)
-                {
-                    better = true;
-                }
-            }
-
-            return better;
-        }
-
-        // Return "First" if s -> t1 is a better conversion than s -> t2
-        // Return "Second" if s -> t2 is a better conversion than s -> t1
-        // Return "Both" if neither conversion is better
-        protected CompareConversionType CompareConversions(Type source, Type first, Type second)
-        {
-            if (first == second)
-            {
-                return CompareConversionType.Both;
-            }
-            if (source == first)
-            {
-                return CompareConversionType.First;
-            }
-            if (source == second)
-            {
-                return CompareConversionType.Second;
-            }
-
-            bool firstIsCompatibleWithSecond = TypeHelper.IsCompatibleWith(first, second, out _);
-            bool secondIsCompatibleWithFirst = TypeHelper.IsCompatibleWith(second, first, out _);
-
-            if (firstIsCompatibleWithSecond && !secondIsCompatibleWithFirst)
-            {
-                return CompareConversionType.First;
-            }
-            if (secondIsCompatibleWithFirst && !firstIsCompatibleWithSecond)
-            {
-                return CompareConversionType.Second;
-            }
-
-            if (TypeHelper.IsSignedIntegralType(first) && TypeHelper.IsUnsignedIntegralType(second))
-            {
-                return CompareConversionType.First;
-            }
-            if (TypeHelper.IsSignedIntegralType(second) && TypeHelper.IsUnsignedIntegralType(first))
-            {
-                return CompareConversionType.Second;
-            }
-
-            return CompareConversionType.Both;
         }
     }
 }

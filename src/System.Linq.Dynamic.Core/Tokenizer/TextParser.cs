@@ -399,6 +399,8 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             CurrentToken.Id = GetAliasedTokenId(tokenId, CurrentToken.Text);
         }
 
+        public string RemainingText => this._text.Substring(this._textPos, this._textLen - this._textPos);
+
         public void ValidateToken(TokenId t, string errorMessage)
         {
             if (CurrentToken.Id != t)

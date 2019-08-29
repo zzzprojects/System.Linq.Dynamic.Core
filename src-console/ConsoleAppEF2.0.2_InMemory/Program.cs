@@ -23,6 +23,17 @@ namespace ConsoleAppEF2
 
         class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
         {
+            /// <inheritdoc cref="IDynamicLinkCustomTypeProvider"/>
+            public List<Type> GetMethodIntrospectionTypes()
+            {
+                return new List<Type>()
+                {
+                    typeof(Queryable),
+                    typeof(Enumerable)
+                };
+            }
+
+
             public HashSet<Type> GetCustomTypes()
             {
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();

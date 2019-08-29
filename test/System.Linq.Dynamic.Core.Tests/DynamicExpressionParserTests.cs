@@ -197,6 +197,16 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             private HashSet<Type> _customTypes;
 
+            /// <inheritdoc cref="IDynamicLinkCustomTypeProvider"/>
+            public virtual List<Type> GetMethodIntrospectionTypes()
+            {
+                return new List<Type>()
+                {
+                    typeof(Queryable),
+                    typeof(Enumerable)
+                };
+            }
+
             public virtual HashSet<Type> GetCustomTypes()
             {
                 if (_customTypes != null)

@@ -10,6 +10,8 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
     /// </summary>
     public abstract class AbstractDynamicLinqCustomTypeProvider
     {
+
+
         /// <summary>
         /// Finds the unique types marked with DynamicLinqTypeAttribute.
         /// </summary>

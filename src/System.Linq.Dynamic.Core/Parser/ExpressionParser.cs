@@ -1019,6 +1019,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 return (Expression)value;
             }
 
+            // TODO: This does not look right, the fact that a token exists in our symbol list
+            // does not mean that this is a constant or lambda invocation, i.e.
+            // (Sum) => Sum.Sum(x => x.a) will get messed up
             if (_symbols.TryGetValue(_textParser.CurrentToken.Text, out value) ||
                 _externals != null && _externals.TryGetValue(_textParser.CurrentToken.Text, out value) ||
                 _internals.TryGetValue(_textParser.CurrentToken.Text, out value))
@@ -1644,6 +1647,11 @@ namespace System.Linq.Dynamic.Core.Parser
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {
                 string parentItName = ItName;
+                var oldParent = _parent;
+                ParameterExpression outerIt = _it;
+                ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(_lambdaHint.First(), id);
+                _parent = _it;
+                _it = innerIt;
 
                 // This might be an internal variable for use within a lambda expression, so store it as such
                 // TODO: This is the place to add type hints, and to support multi-dimensional lambdas
@@ -1659,9 +1667,13 @@ namespace System.Linq.Dynamic.Core.Parser
                 _textParser.NextToken();
 
                 var right = ParseConditionalOperator();
+
+                _it = outerIt;
+                _parent = oldParent;
+                _internals.Remove(id);
                 ItName = parentItName;
 
-                return Expression.Lambda(right, new[] { ParameterExpressionHelper.CreateParameterExpression(type, id) });
+                return Expression.Lambda(right, new[] { innerIt });
             }
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
@@ -1696,16 +1708,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     _lambdaHint = new List<Type>();
                     _lambdaHint.Add(lambdaArgumentType);
 
-                    var oldParent = _parent;
-                    ParameterExpression outerIt = _it;
-                    ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(lambdaArgumentType, string.Empty);
-                    _parent = _it;
-                    _it = innerIt;
-
                     var argumentExpression = ParseConditionalOperator();
-
-                    _it = outerIt;
-                    _parent = oldParent;
 
                     _lambdaHint = null;
 
