@@ -20,7 +20,7 @@ namespace System.Linq.Dynamic.Core.TypeConverters
         {
             Check.NotNull(type, nameof(type));
 
-            if (_config.DateTimeIsParsedAsUTC && type == typeof(DateTime))
+            if (_config.DateTimeIsParsedAsUTC && (type == typeof(DateTime) || type == typeof(DateTime?)))
             {
                 return new CustomDateTimeConverter();
             }

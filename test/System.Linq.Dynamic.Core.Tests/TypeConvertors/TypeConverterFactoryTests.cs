@@ -10,6 +10,7 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         [Theory]
         [InlineData(typeof(DateTimeOffset), typeof(DateTimeOffsetConverter))]
         [InlineData(typeof(DateTime), typeof(DateTimeConverter))]
+        [InlineData(typeof(DateTime?), typeof(NullableConverter))]
         [InlineData(typeof(int), typeof(Int32Converter))]
         public void GetConverter_WithDefaultParsingConfig_ReturnsCorrectTypeConverter(Type type, Type expected)
         {
@@ -26,6 +27,7 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         [Theory]
         [InlineData(typeof(DateTimeOffset), typeof(DateTimeOffsetConverter))]
         [InlineData(typeof(DateTime), typeof(CustomDateTimeConverter))]
+        [InlineData(typeof(DateTime?), typeof(CustomDateTimeConverter))]
         [InlineData(typeof(int), typeof(Int32Converter))]
         public void GetConverter_WithDateTimeIsParsedAsUTCIsTrue_ReturnsCorrectTypeConverter(Type type, Type expected)
         {
