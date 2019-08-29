@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -11,6 +10,7 @@ using System.Linq.Dynamic.Core.TypeConverters;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -49,9 +49,9 @@ namespace System.Linq.Dynamic.Core.Parser
         /// <summary>
         /// There was a problem when an expression contained multiple lambdas where
         /// the ItName was not cleared and freed for the next lambda. This variable
-        /// store the ItName of the last parsed lambda. Not used internally by
-        /// ExpressionParser, but used to preserve compatiblity of parsingConfig.RenameParameterExpression
-        /// which was designed to wonly work with mono-lambda expressions
+        /// stores the ItName of the last parsed lambda.
+        /// Not used internally by ExpressionParser, but used to preserve compatiblity of parsingConfig.RenameParameterExpression
+        /// which was designed to only work with mono-lambda expressions.
         /// </summary>
         public string LastLambdaItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
 
