@@ -45,6 +45,15 @@ namespace System.Linq.Dynamic.Core.Parser
         public string ItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
 
         /// <summary>
+        /// There was a problem when an expression contained multiple lambdas where
+        /// the ItName was not cleared and freed for the next lambda. This variable
+        /// store the ItName of the last parsed lambda. Not used internally by
+        /// ExpressionParser, but used to preserve compatiblity of parsingConfig.RenameParameterExpression
+        /// which was designed to wonly work with mono-lambda expressions
+        /// </summary>
+        public string LastLambdaItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionParser"/> class.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
@@ -1676,6 +1685,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 // This might be an internal variable for use within a lambda expression, so store it as such
                 _internals.Add(id, _it);
+                string _previousItName = ItName;
 
                 // Also store ItName (only once)
                 if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
@@ -1686,7 +1696,14 @@ namespace System.Linq.Dynamic.Core.Parser
                 // next
                 _textParser.NextToken();
 
-                return ParseConditionalOperator();
+                LastLambdaItName = ItName;
+                var exp = ParseConditionalOperator();
+
+                // Restore previous context and clear internals
+                _internals.Remove(id);
+                ItName = _previousItName;
+
+                return exp;
             }
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
