@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using NFluent;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
-using MongoDB.Bson.IO;
-using NFluent;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
@@ -257,7 +256,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             // Act
-            ulong expectedX = (ulong) long.MaxValue + 3;
+            ulong expectedX = (ulong)long.MaxValue + 3;
 
             query = string.Format(query, expectedX);
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
@@ -639,7 +638,7 @@ namespace System.Linq.Dynamic.Core.Tests
             query = query.GroupBy("new(name as name)", "it");
             query = query.Select("new (it.Key as Key, new(it.Sum(x => x.age) as ageSum) as nativeAggregates, it as Grouping)");
             Assert.Equal(res1, Newtonsoft.Json.JsonConvert.SerializeObject(query));
-            
+
             // Multiple lambdas
             string res2 = "[{\"Key\":{\"name\":\"Juan\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":104},\"Grouping\":[{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":4},{\"name\":\"Juan\",\"age\":25}]},{\"Key\":{\"name\":\"David\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":12},\"Grouping\":[{\"name\":\"David\",\"age\":12}]},{\"Key\":{\"name\":\"Pedro\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":2},\"Grouping\":[{\"name\":\"Pedro\",\"age\":2}]}]";
             query = users.AsQueryable();
