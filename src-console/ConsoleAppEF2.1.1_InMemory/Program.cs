@@ -1,4 +1,5 @@
 ﻿using ConsoleAppEF2.Database;
+using Microsoft.EntityFrameworkCore.DynamicLinq;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -198,6 +199,14 @@ namespace ConsoleAppEF2
             {
                 Console.WriteLine(e);
             }
+
+            var a1 = context.Cars.Select(c => c.Key).AverageAsync().Result;
+            var a2 = context.Cars.Select("Key").AverageAsync().Result;
+
+            // var a3 = context.Cars.AverageAsync(c => c.Key).Result;
+            var a4 = context.Cars.AverageAsync("Key").Result;
+
+            int end = 0;
         }
 
         private static void LikeTests(TestContext context, ParsingConfig config)

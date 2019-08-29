@@ -100,6 +100,60 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion Aggregate
 
+        #region All
+        private static readonly MethodInfo _AllPredicate = GetMethod(nameof(Queryable.All), 1);
+
+        /// <summary>
+        ///     Determines whether all the elements of a sequence satisfy a condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that All asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to calculate the All of.
+        /// </param>
+        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        ///     true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.
+        /// </returns>
+        [PublicAPI]
+        public static bool All([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return All(source, ParsingConfig.Default, predicate, args);
+        }
+
+        /// <summary>
+        ///     Determines whether all the elements of a sequence satisfy a condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that All asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> to calculate the All of.
+        /// </param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        ///     true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.
+        /// </returns>
+        [PublicAPI]
+        public static bool All([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+
+            return Execute<bool>(_AllPredicate, source, Expression.Quote(lambda));
+        }
+        #endregion AllAsync
+
         #region Any
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
@@ -172,6 +226,79 @@ namespace System.Linq.Dynamic.Core
             return Execute<bool>(_anyPredicate, source, lambda);
         }
         #endregion Any
+
+        #region Average
+        /// <summary>
+        /// Computes the average of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the average of.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Average();
+        /// var result2 = queryable.Select("Roles.Average()");
+        /// </code>
+        /// </example>
+        /// <returns>The average of the values in the sequence.</returns>
+        [PublicAPI]
+        public static double Average([NotNull] this IQueryable source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            var average = GetMethod(nameof(Queryable.Average), source.ElementType, typeof(double));
+            return Execute<double>(average, source);
+        }
+
+        /// <summary>
+        /// Computes the average of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the average of.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result = queryable.Average("Income");
+        /// </code>
+        /// </example>
+        /// <returns>The average of the values in the sequence.</returns>
+        [PublicAPI]
+        public static double Average([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
+
+            return Average(source, lambda);
+        }
+
+        /// <inheritdoc cref="Average(IQueryable, ParsingConfig, string, object[])"/>
+        [PublicAPI]
+        public static double Average([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return Average(source, ParsingConfig.Default, predicate, args);
+        }
+
+        /// <summary>
+        /// Computes the average of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the average of.</param>
+        /// <param name="lambda">A Lambda Expression.</param>
+        /// <returns>The average of the values in the sequence.</returns>
+        [PublicAPI]
+        public static double Average([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(lambda, nameof(lambda));
+
+            var averageSelector = GetMethod(nameof(Queryable.Average), lambda.GetReturnType(), typeof(double), 1);
+            return Execute<double>(averageSelector, source, lambda);
+        }
+        #endregion Average
 
         #region AsEnumerable
 #if NET35
@@ -1808,13 +1935,74 @@ namespace System.Linq.Dynamic.Core
         /// Computes the sum of a sequence of numeric values.
         /// </summary>
         /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Sum();
+        /// var result2 = queryable.Select("Roles.Sum()");
+        /// </code>
+        /// </example>
         /// <returns>The sum of the values in the sequence.</returns>
+        [PublicAPI]
         public static object Sum([NotNull] this IQueryable source)
         {
             Check.NotNull(source, nameof(source));
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Sum), null, source.Expression));
-            return source.Provider.Execute(optimized);
+            var sum = GetMethod(nameof(Queryable.Sum), source.ElementType);
+            return Execute<object>(sum, source);
+        }
+
+        /// <summary>
+        /// Computes the sum of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result = queryable.Sum("Income");
+        /// </code>
+        /// </example>
+        /// <returns>The sum of the values in the sequence.</returns>
+        [PublicAPI]
+        public static object Sum([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
+
+            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
+
+            return Execute<object>(sumSelector, source, lambda);
+        }
+
+        /// <inheritdoc cref="Sum(IQueryable, ParsingConfig, string, object[])"/>
+        [PublicAPI]
+        public static object Sum([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return Sum(source, ParsingConfig.Default, predicate, args);
+        }
+
+        /// <summary>
+        /// Computes the sum of a sequence of numeric values.
+        /// </summary>
+        /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+        /// <param name="lambda">A Lambda Expression.</param>
+        /// <returns>The sum of the values in the sequence.</returns>
+        [PublicAPI]
+        public static object Sum([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(lambda, nameof(lambda));
+
+            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
+
+            return Execute<object>(sumSelector, source, lambda);
         }
         #endregion Sum
 
@@ -2056,13 +2244,6 @@ namespace System.Linq.Dynamic.Core
             // If types are not the same, try to convert to Nullable and generate new LambdaExpression
             if (outerSelectorReturnType != innerSelectorReturnType)
             {
-                //var outerSelectorReturnTypeInfo = outerSelectorReturnType.GetTypeInfo();
-                //var innerSelectorReturnTypeInfo = innerSelectorReturnType.GetTypeInfo();
-                //if (outerSelectorReturnTypeInfo.BaseType == typeof(DynamicClass) && innerSelectorReturnTypeInfo.BaseType == typeof(DynamicClass))
-                //{
-
-                //}
-
                 if (TypeHelper.IsNullableType(outerSelectorReturnType) && !TypeHelper.IsNullableType(innerSelectorReturnType))
                 {
                     innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
@@ -2125,7 +2306,9 @@ namespace System.Linq.Dynamic.Core
             }
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
-            return source.Provider.Execute<TResult>(optimized);
+            var result = source.Provider.Execute(optimized);
+
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
@@ -2151,13 +2334,21 @@ namespace System.Linq.Dynamic.Core
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
-            return source.Provider.Execute<TResult>(optimized);
+            var result = source.Provider.Execute(optimized);
+
+            return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
         private static MethodInfo GetGenericMethod(string name)
         {
             return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
         }
+
+        private static MethodInfo GetMethod(string name, Type argumentType, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
+            GetMethod(name, returnType, parameterCount, mi => mi.ToString().Contains(argumentType.ToString()) && ((predicate == null) || predicate(mi)));
+
+        private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
+            GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null)
         {
@@ -2168,7 +2359,7 @@ namespace System.Linq.Dynamic.Core
             }
             catch (Exception ex)
             {
-                throw new Exception("Method not found: " + name, ex);
+                throw new Exception("Specific method not found: " + name, ex);
             }
         }
         #endregion Private Helpers
