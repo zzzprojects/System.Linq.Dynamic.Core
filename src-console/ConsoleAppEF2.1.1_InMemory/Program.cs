@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
@@ -74,6 +75,20 @@ namespace ConsoleAppEF2
 
         static void Main(string[] args)
         {
+            var d = new[] { DateTime.UtcNow }.AsQueryable();
+
+            //DateTime.TryParse("Fri, 10 May 2019 11:03:17 GMT", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime);
+            //dateTime.ToUniversalTime().Dump();
+
+            var r = d.Where(dd => dd > DateTime.Parse("Fri, 10 May 2019 11:03:17 GMT")).ToArray();
+
+            var r2 = d.Where("it > \"Fri, 10 May 2019 11:03:17 GMT\"").ToArray();
+
+            // DateTime.Now.ToString("R").Dump();
+
+           return;
+
+
             StringEscapeTest();
             //var q = new[] { new NestedDto(), new NestedDto { NestedDto2 = new NestedDto2 { NestedDto3 = new NestedDto3 { Id = 42 } } } }.AsQueryable();
 

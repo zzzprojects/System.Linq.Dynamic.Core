@@ -19,6 +19,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public class Example
         {
             public DateTime Time { get; set; }
+            public DateTime? TimeNull { get; set; }
             public DayOfWeek? DOWNull { get; set; }
             public DayOfWeek DOW { get; set; }
             public int Sec { get; set; }
