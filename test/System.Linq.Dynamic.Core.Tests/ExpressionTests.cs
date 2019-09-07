@@ -1308,16 +1308,27 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_NullPropagation_Method()
         {
             // Arrange
-            var q = new[] {
-                new { id = 1, x = new [] { 1, 2, 3 } }
-            }.AsQueryable();
+            var users = new[] { new User { Roles = new List<Role>() } }.AsQueryable();
 
             // Act
-            var resultDynamic = q.Select("it.x.FirstOrDefault(1)");
+            var resultDynamic = users.Select("np(Roles.FirstOrDefault(false).Name)").ToDynamicArray();
 
             // Assert
-            //Check.That(resultDynamic).ContainsExactly(result);
-            int b = 0;
+            Assert.True(resultDynamic[0] == null);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagation_Method_WithDefaultValue()
+        {
+            // Arrange
+            var defaultRoleName = "x";
+            var users = new[] { new User { Roles = new List<Role>() } }.AsQueryable();
+
+            // Act
+            var resultDynamic = users.Select("np(Roles.FirstOrDefault(false).Name, @0)", defaultRoleName).ToDynamicArray();
+
+            // Assert
+            Assert.True(resultDynamic[0] == "x");
         }
 
         [Fact]

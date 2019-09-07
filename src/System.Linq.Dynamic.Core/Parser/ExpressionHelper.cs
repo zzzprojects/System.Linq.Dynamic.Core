@@ -270,14 +270,19 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private static Expression GetMemberExpression(Expression expression)
         {
+            if (expression is MemberExpression memberExpression)
+            {
+                return memberExpression;
+            }
+
             if (expression is ParameterExpression parameterExpression)
             {
                 return parameterExpression;
             }
 
-            if (expression is MemberExpression memberExpression)
+            if (expression is MethodCallExpression methodCallExpression)
             {
-                return memberExpression;
+                return methodCallExpression;
             }
 
             if (expression is LambdaExpression lambdaExpression)
@@ -287,9 +292,9 @@ namespace System.Linq.Dynamic.Core.Parser
                     return bodyAsMemberExpression;
                 }
 
-                if (lambdaExpression.Body is UnaryExpression bodyAsunaryExpression)
+                if (lambdaExpression.Body is UnaryExpression bodyAsUnaryExpression)
                 {
-                    return bodyAsunaryExpression.Operand;
+                    return bodyAsUnaryExpression.Operand;
                 }
             }
 
@@ -311,6 +316,11 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             if (expression is ParameterExpression)
+            {
+                list.Add(expression);
+            }
+
+            if (expression is MethodCallExpression)
             {
                 list.Add(expression);
             }
