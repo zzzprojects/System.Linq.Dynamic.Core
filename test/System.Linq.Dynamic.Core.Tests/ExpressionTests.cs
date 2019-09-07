@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using NFluent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using Newtonsoft.Json.Linq;
+using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -1305,11 +1305,27 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_DateTime_Value()
+        public void ExpressionTests_NullPropagation_Method()
         {
             // Arrange
             var q = new[] {
-                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
+                new { id = 1, x = new [] { 1, 2, 3 } }
+            }.AsQueryable();
+
+            // Act
+            var resultDynamic = q.Select("it.x.FirstOrDefault(1)");
+
+            // Assert
+            //Check.That(resultDynamic).ContainsExactly(result);
+            int b = 0;
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagation_DateTime()
+        {
+            // Arrange
+            var q = new[] {
+                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1) }
             }.AsQueryable();
 
             // Act
@@ -1321,7 +1337,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_NullableDateTime()
+        public void ExpressionTests_NullPropagation_NullableDateTime()
         {
             // Arrange
             var q = new[] {
@@ -1337,7 +1353,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_Integer_Null()
+        public void ExpressionTests_NullPropagation_Integer_Null()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
@@ -1353,7 +1369,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_Integer_Value()
+        public void ExpressionTests_NullPropagation_Integer_Value()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
@@ -1369,7 +1385,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_ThrowsException()
+        public void ExpressionTests_NullPropagation_ThrowsException()
         {
             // Arrange
             var q = User.GenerateSampleModels(1, true).AsQueryable();
@@ -1756,24 +1772,24 @@ namespace System.Linq.Dynamic.Core.Tests
             {
                 new
                 {
-                    Id = new SnowflakeId(1L), 
+                    Id = new SnowflakeId(1L),
                     Var = 1
                 },
                 new
                 {
-                    Id = new SnowflakeId(2L), 
+                    Id = new SnowflakeId(2L),
                     Var = 1
                 },
                 new
                 {
-                    Id = new SnowflakeId(1L), 
+                    Id = new SnowflakeId(1L),
                     Var = 2
                 }
             }.AsQueryable();
 
-            var resultValuesL = new[] { 
+            var resultValuesL = new[] {
                 new {
-                    Id = new SnowflakeId(1L), 
+                    Id = new SnowflakeId(1L),
                     Var = 1
                 }
             }.AsQueryable().ToArray();
