@@ -31,6 +31,8 @@
         void Last(bool predicate);
         void LastOrDefault();
         void LastOrDefault(bool predicate);
+        void LongCount();
+        void LongCount(bool predicate);
         void Max(object selector);
         void Min(object selector);
         void OfType(string type);
