@@ -1,8 +1,5 @@
-# 1.0.20.0 (18 November 2019)
+# 1.0.20.0 (19 November 2019)
 - [#321](https://github.com/StefH/System.Linq.Dynamic.Core/pull/321) - LongCount contributed by [StefH](https://github.com/StefH)
-- [#312](https://github.com/StefH/System.Linq.Dynamic.Core/issues/312) - After  select new xxx{x=x.x} ,OrderBy fails  [invalid, question]
-- [#314](https://github.com/StefH/System.Linq.Dynamic.Core/issues/314) - Are operators 'in' and 'not in'  supported? [invalid, question]
-- [#316](https://github.com/StefH/System.Linq.Dynamic.Core/issues/316) - Question: How to include related entities [invalid, question]
 
 # 1.0.19.0 (29 August 2019)
 - [#277](https://github.com/StefH/System.Linq.Dynamic.Core/pull/277) - DateTimeIsParsedAsUTC [feature] contributed by [StefH](https://github.com/StefH)
@@ -17,11 +14,9 @@
 - [#268](https://github.com/StefH/System.Linq.Dynamic.Core/issues/268) - Timezone conversion [feature]
 - [#279](https://github.com/StefH/System.Linq.Dynamic.Core/issues/279) - Support .NET Expression string operators (AndAlso &amp; OrElse) [feature]
 - [#291](https://github.com/StefH/System.Linq.Dynamic.Core/issues/291) - Question: How to truncate possibly but not necessarily nullable datetime on SQL side?
-- [#293](https://github.com/StefH/System.Linq.Dynamic.Core/issues/293) - Parsing fails when using redundant parentheses [invalid]
 - [#294](https://github.com/StefH/System.Linq.Dynamic.Core/issues/294) - Context lost in object initializer [bug]
 
 # 1.0.18.0 (02 July 2019)
-- [#171](https://github.com/StefH/System.Linq.Dynamic.Core/issues/171) - File version attribute is 0.0.0.0 [invalid]
 - [#278](https://github.com/StefH/System.Linq.Dynamic.Core/issues/278) - Nuget System.Linq.Dynamic.Core 1.0.17 - Incorrect version [bug]
 
 # 1.0.17.0 (14 June 2019)
@@ -64,7 +59,7 @@
 
 # 1.0.10.0 (05 February 2019)
 - [#223](https://github.com/StefH/System.Linq.Dynamic.Core/pull/223) - Add 'np(...)' Null Propagating function [feature] contributed by [StefH](https://github.com/StefH)
-- [#98](https://github.com/StefH/System.Linq.Dynamic.Core/issues/98) - Feature: Add the &quot;?.&quot; operator (null-conditional operator) to support navigation properties with null values [feature, question]
+- [#98](https://github.com/StefH/System.Linq.Dynamic.Core/issues/98) - Feature: Add the &quot;?.&quot; operator (null-conditional operator) to support navigation properties with null values [feature]
 - [#182](https://github.com/StefH/System.Linq.Dynamic.Core/issues/182) - Error when navigation property which named &quot;Parent&quot;
 - [#243](https://github.com/StefH/System.Linq.Dynamic.Core/issues/243) - EF Core 2.2 - cannot use Where operator
 
@@ -96,7 +91,6 @@
 - [#204](https://github.com/StefH/System.Linq.Dynamic.Core/issues/204) - Cannot GroupJoin when source is Linq-To-Entities
 - [#209](https://github.com/StefH/System.Linq.Dynamic.Core/issues/209) - Feature: use Azure Pipelines for building
 - [#215](https://github.com/StefH/System.Linq.Dynamic.Core/issues/215) - Issue: DynamicClassFactory fails to create dynamic type without properties [bug]
-- [#232](https://github.com/StefH/System.Linq.Dynamic.Core/issues/232) - Extensionpoint for changing identifier token text [question, wontfix]
 - [#234](https://github.com/StefH/System.Linq.Dynamic.Core/issues/234) - Does this support Json data
 - [#236](https://github.com/StefH/System.Linq.Dynamic.Core/issues/236) - Massive performance hit when upgrading from 1.0.8.18 to 1.0.9
 
@@ -204,7 +198,7 @@
 - [#116](https://github.com/StefH/System.Linq.Dynamic.Core/pull/116) - Bugfix DynamicLinq when using IQueryable contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#108](https://github.com/StefH/System.Linq.Dynamic.Core/issues/108) - [Question] Nullable property inside Join statement
 - [#109](https://github.com/StefH/System.Linq.Dynamic.Core/issues/109) - Not able to build with VS2017
-- [#111](https://github.com/StefH/System.Linq.Dynamic.Core/issues/111) - [Bug] Incorrect Nullable&lt;&gt; parsing [bug, question]
+- [#111](https://github.com/StefH/System.Linq.Dynamic.Core/issues/111) - [Bug] Incorrect Nullable&lt;&gt; parsing [bug]
 - [#112](https://github.com/StefH/System.Linq.Dynamic.Core/issues/112) - Support NETStandard 2.0 [feature]
 - [#113](https://github.com/StefH/System.Linq.Dynamic.Core/issues/113) - .pdb is missing in nuget [bug]
 
@@ -275,7 +269,6 @@
 - [#52](https://github.com/StefH/System.Linq.Dynamic.Core/issues/52) - Can I convert int to string type?
 - [#57](https://github.com/StefH/System.Linq.Dynamic.Core/issues/57) - Issue finding indexer [bug]
 - [#60](https://github.com/StefH/System.Linq.Dynamic.Core/issues/60) - Issue with nested Calls
-- [#61](https://github.com/StefH/System.Linq.Dynamic.Core/issues/61) - String[].Contains(String) expression translated to first array element contains [invalid]
 - [#62](https://github.com/StefH/System.Linq.Dynamic.Core/issues/62) - OrderBy Chaining [bug, feature]
 - [#63](https://github.com/StefH/System.Linq.Dynamic.Core/issues/63) - Syntax IN dont work with Enums
 - [#65](https://github.com/StefH/System.Linq.Dynamic.Core/issues/65) - Support embedded quotes in string literal [feature]
@@ -292,7 +285,7 @@
 - [#84](https://github.com/StefH/System.Linq.Dynamic.Core/issues/84) - [Bug] DynamicClassFactory not caching generated types [bug]
 - [#90](https://github.com/StefH/System.Linq.Dynamic.Core/issues/90) - [Bug] ParseIntegerLiteral Int16 [bug]
 - [#91](https://github.com/StefH/System.Linq.Dynamic.Core/issues/91) - [Bug] Support for decimal qualifiers 'M' &amp; 'm' [bug]
-- [#94](https://github.com/StefH/System.Linq.Dynamic.Core/issues/94) - [Bug] ParseException: Operator '==' incompatible with operand types 'ObjectId' and 'ObjectId' [bug, question]
+- [#94](https://github.com/StefH/System.Linq.Dynamic.Core/issues/94) - [Bug] ParseException: Operator '==' incompatible with operand types 'ObjectId' and 'ObjectId' [bug]
 - [#96](https://github.com/StefH/System.Linq.Dynamic.Core/issues/96) - Async support for ToDynamicList() [feature]
 - [#102](https://github.com/StefH/System.Linq.Dynamic.Core/issues/102) - Aggregate method does not work with Average function
 - [#104](https://github.com/StefH/System.Linq.Dynamic.Core/issues/104) - Add PDB to nuget package [feature]
