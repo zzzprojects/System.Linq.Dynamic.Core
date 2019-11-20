@@ -185,52 +185,52 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return false;
             }
-            Type sc = st.GetTypeInfo().IsEnum ? typeof(Object) : st;
-            Type tc = tt.GetTypeInfo().IsEnum ? typeof(Object) : tt;
+            Type sc = st.GetTypeInfo().IsEnum ? typeof(object) : st;
+            Type tc = tt.GetTypeInfo().IsEnum ? typeof(object) : tt;
 
-            if (sc == typeof(SByte))
+            if (sc == typeof(sbyte))
             {
-                if (tc == typeof(SByte) || tc == typeof(Int16) || tc == typeof(Int32) || tc == typeof(Int64) || tc == typeof(Single) || tc == typeof(Double) || tc == typeof(Decimal))
+                if (tc == typeof(sbyte) || tc == typeof(short) || tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
                     return true;
             }
-            else if (sc == typeof(Byte))
+            else if (sc == typeof(byte))
             {
-                if (tc == typeof(Byte) || tc == typeof(Int16) || tc == typeof(UInt16) || tc == typeof(Int32) || tc == typeof(UInt32) || tc == typeof(Int64) || tc == typeof(UInt64) || tc == typeof(Single) || tc == typeof(Double) || tc == typeof(Decimal))
+                if (tc == typeof(byte) || tc == typeof(short) || tc == typeof(ushort) || tc == typeof(int) || tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
                     return true;
             }
-            else if (sc == typeof(Int16))
+            else if (sc == typeof(short))
             {
-                if (tc == typeof(Int16) || tc == typeof(Int32) || tc == typeof(Int64) || tc == typeof(Single) || tc == typeof(Double) || tc == typeof(Decimal))
+                if (tc == typeof(short) || tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
                     return true;
             }
-            else if (sc == typeof(UInt16))
+            else if (sc == typeof(ushort))
             {
-                if (tc == typeof(UInt16) || tc == typeof(Int32) || tc == typeof(UInt32) || tc == typeof(Int64) || tc == typeof(UInt64) || tc == typeof(Single) || tc == typeof(Double) || tc == typeof(Decimal))
+                if (tc == typeof(ushort) || tc == typeof(int) || tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
                     return true;
             }
-            else if (sc == typeof(Int32))
+            else if (sc == typeof(int))
             {
-                if (tc == typeof(Int32) || tc == typeof(Int64) || tc == typeof(Single) || tc == typeof(Double) || tc == typeof(Decimal))
+                if (tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
                     return true;
             }
-            else if (sc == typeof(UInt32))
+            else if (sc == typeof(uint))
             {
-                if (tc == typeof(UInt32) || tc == typeof(Int64) || tc == typeof(UInt64) || tc == typeof(Single) || tc == typeof(Double) || tc == typeof(Decimal))
+                if (tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
                     return true;
             }
-            else if (sc == typeof(Int64))
+            else if (sc == typeof(long))
             {
-                if (tc == typeof(Int64) || tc == typeof(Single) || tc == typeof(Double) || tc == typeof(Decimal))
+                if (tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
                     return true;
             }
-            else if (sc == typeof(UInt64))
+            else if (sc == typeof(ulong))
             {
-                if (tc == typeof(UInt64) || tc == typeof(Single) || tc == typeof(Double) || tc == typeof(Decimal))
+                if (tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
                     return true;
             }
-            else if (sc == typeof(Single))
+            else if (sc == typeof(float))
             {
-                if (tc == typeof(Single) || tc == typeof(Double))
+                if (tc == typeof(float) || tc == typeof(double))
                     return true;
             }
 
@@ -313,11 +313,11 @@ namespace System.Linq.Dynamic.Core.Parser
                 return 0;
             }
 
-            if (type == typeof(Char) || type == typeof(Single) || type == typeof(Double) || type == typeof(Decimal))
+            if (type == typeof(char) || type == typeof(float) || type == typeof(double) || type == typeof(decimal))
                 return 1;
-            if (type == typeof(SByte) || type == typeof(Int16) || type == typeof(Int32) || type == typeof(Int64))
+            if (type == typeof(sbyte) || type == typeof(short) || type == typeof(int) || type == typeof(long))
                 return 2;
-            if (type == typeof(Byte) || type == typeof(UInt16) || type == typeof(UInt32) || type == typeof(UInt64))
+            if (type == typeof(byte) || type == typeof(ushort) || type == typeof(uint) || type == typeof(ulong))
                 return 3;
 
             return 0;
@@ -397,102 +397,102 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 case TypeCode.SByte:
                     sbyte sb;
-                    if (SByte.TryParse(text, out sb)) return sb;
+                    if (sbyte.TryParse(text, out sb)) return sb;
                     break;
                 case TypeCode.Byte:
                     byte b;
-                    if (Byte.TryParse(text, out b)) return b;
+                    if (byte.TryParse(text, out b)) return b;
                     break;
                 case TypeCode.Int16:
                     short s;
-                    if (Int16.TryParse(text, out s)) return s;
+                    if (short.TryParse(text, out s)) return s;
                     break;
                 case TypeCode.UInt16:
                     ushort us;
-                    if (UInt16.TryParse(text, out us)) return us;
+                    if (ushort.TryParse(text, out us)) return us;
                     break;
                 case TypeCode.Int32:
                     int i;
-                    if (Int32.TryParse(text, out i)) return i;
+                    if (int.TryParse(text, out i)) return i;
                     break;
                 case TypeCode.UInt32:
                     uint ui;
-                    if (UInt32.TryParse(text, out ui)) return ui;
+                    if (uint.TryParse(text, out ui)) return ui;
                     break;
                 case TypeCode.Int64:
                     long l;
-                    if (Int64.TryParse(text, out l)) return l;
+                    if (long.TryParse(text, out l)) return l;
                     break;
                 case TypeCode.UInt64:
                     ulong ul;
-                    if (UInt64.TryParse(text, out ul)) return ul;
+                    if (ulong.TryParse(text, out ul)) return ul;
                     break;
                 case TypeCode.Single:
                     float f;
-                    if (Single.TryParse(text, out f)) return f;
+                    if (float.TryParse(text, out f)) return f;
                     break;
                 case TypeCode.Double:
                     double d;
-                    if (Double.TryParse(text, out d)) return d;
+                    if (double.TryParse(text, out d)) return d;
                     break;
                 case TypeCode.Decimal:
                     decimal e;
-                    if (Decimal.TryParse(text, out e)) return e;
+                    if (decimal.TryParse(text, out e)) return e;
                     break;
             }
 #else
             var tp = GetNonNullableType(type);
-            if (tp == typeof(SByte))
+            if (tp == typeof(sbyte))
             {
                 sbyte sb;
                 if (sbyte.TryParse(text, out sb)) return sb;
             }
-            else if (tp == typeof(Byte))
+            else if (tp == typeof(byte))
             {
                 byte b;
                 if (byte.TryParse(text, out b)) return b;
             }
-            else if (tp == typeof(Int16))
+            else if (tp == typeof(short))
             {
                 short s;
                 if (short.TryParse(text, out s)) return s;
             }
-            else if (tp == typeof(UInt16))
+            else if (tp == typeof(ushort))
             {
                 ushort us;
                 if (ushort.TryParse(text, out us)) return us;
             }
-            else if (tp == typeof(Int32))
+            else if (tp == typeof(int))
             {
                 int i;
                 if (int.TryParse(text, out i)) return i;
             }
-            else if (tp == typeof(UInt32))
+            else if (tp == typeof(uint))
             {
                 uint ui;
                 if (uint.TryParse(text, out ui)) return ui;
             }
-            else if (tp == typeof(Int64))
+            else if (tp == typeof(long))
             {
                 long l;
                 if (long.TryParse(text, out l)) return l;
             }
-            else if (tp == typeof(UInt64))
+            else if (tp == typeof(ulong))
             {
                 ulong ul;
                 if (ulong.TryParse(text, out ul)) return ul;
             }
-            else if (tp == typeof(Single))
+            else if (tp == typeof(float))
             {
                 float f;
                 if (float.TryParse(text, out f)) return f;
             }
-            else if (tp == typeof(Double))
+            else if (tp == typeof(double))
             {
                 double d;
                 if (double.TryParse(text, out d)) return d;
             }
-            else if (tp == typeof(Decimal))
+            else if (tp == typeof(decimal))
             {
                 decimal e;
                 if (decimal.TryParse(text, out e)) return e;
