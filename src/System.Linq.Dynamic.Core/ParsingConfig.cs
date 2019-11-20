@@ -57,10 +57,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         public IExpressionPromoter ExpressionPromoter
         {
-            get
-            {
-                return _expressionPromoter ?? (_expressionPromoter = new ExpressionPromoter());
-            }
+            get => _expressionPromoter ?? (_expressionPromoter = new ExpressionPromoter(this));
 
             set
             {
@@ -169,13 +166,6 @@ namespace System.Linq.Dynamic.Core
         /// Default value is false.
         /// </summary>
         public bool DateTimeIsParsedAsUTC { get; set; } = false;
-
-        /// <summary>
-        /// The number parsing style.
-        ///
-        /// Default value is NumberStyles.Number
-        /// </summary>
-        public NumberStyles NumberParseStyle = NumberStyles.Number;
 
         /// <summary>
         /// The number parsing culture.
