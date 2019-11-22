@@ -228,6 +228,18 @@ namespace System.Linq.Dynamic.Core.Tests.Tokenizer
         }
 
         [Fact]
+        public void TextParser_Parse_StringLiteral_WithDoubleQuotes_DoubleQuote()
+        {
+            // Assign + Act
+            var textParser = new TextParser("\"\\\"\"");
+
+            // Assert
+            Check.That(textParser.CurrentToken.Id).Equals(TokenId.StringLiteral);
+            Check.That(textParser.CurrentToken.Pos).Equals(0);
+            Check.That(textParser.CurrentToken.Text[1]).Equals('"');
+        }
+
+        [Fact]
         public void TextParser_Parse_ThrowsException()
         {
             // Assign + Act + Assert
