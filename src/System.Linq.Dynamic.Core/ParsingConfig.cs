@@ -172,6 +172,6 @@ namespace System.Linq.Dynamic.Core
         ///
         /// Default value is CultureInfo.InvariantCulture
         /// </summary>
-        public CultureInfo NumberParseCulture = CultureInfo.InvariantCulture;
+        public CultureInfo NumberParseCulture { get; set; } = CultureInfo.InvariantCulture;
     }
 }
