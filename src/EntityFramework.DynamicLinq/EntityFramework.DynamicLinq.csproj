@@ -2,7 +2,6 @@
     <PropertyGroup>
         <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
         <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
-        <!--<VersionPrefix>1.0.9.1</VersionPrefix>-->
         <Authors>Stef Heyenrath</Authors>
         <TargetFrameworks>net45;net46</TargetFrameworks>
         <DefineConstants>EF</DefineConstants>
@@ -32,9 +31,9 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <IncludeSource>True</IncludeSource>
+        <!--<IncludeSource>True</IncludeSource>
         <IncludeSymbols>True</IncludeSymbols>
-        <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
+        <PathMap>$(MSBuildProjectDirectory)=/</PathMap>-->
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 

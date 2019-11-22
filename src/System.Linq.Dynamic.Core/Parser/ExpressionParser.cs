@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -7,9 +6,11 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser.SupportedMethods;
 using System.Linq.Dynamic.Core.Parser.SupportedOperands;
 using System.Linq.Dynamic.Core.Tokenizer;
+using System.Linq.Dynamic.Core.TypeConverters;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -29,6 +30,7 @@ namespace System.Linq.Dynamic.Core.Parser
         private readonly TextParser _textParser;
         private readonly IExpressionHelper _expressionHelper;
         private readonly ITypeFinder _typeFinder;
+        private readonly ITypeConverterFactory _typeConverterFactory;
         private readonly Dictionary<string, object> _internals;
         private readonly Dictionary<string, object> _symbols;
 
@@ -43,6 +45,15 @@ namespace System.Linq.Dynamic.Core.Parser
         /// Gets name for the `it` field. By default this is set to the KeyWord value "it".
         /// </summary>
         public string ItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
+
+        /// <summary>
+        /// There was a problem when an expression contained multiple lambdas where
+        /// the ItName was not cleared and freed for the next lambda. This variable
+        /// stores the ItName of the last parsed lambda.
+        /// Not used internally by ExpressionParser, but used to preserve compatiblity of parsingConfig.RenameParameterExpression
+        /// which was designed to only work with mono-lambda expressions.
+        /// </summary>
+        public string LastLambdaItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionParser"/> class.
@@ -75,6 +86,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _methodFinder = new MethodFinder(_parsingConfig);
             _expressionHelper = new ExpressionHelper(_parsingConfig);
             _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
+            _typeConverterFactory = new TypeConverterFactory(_parsingConfig);
         }
 
         void ProcessParameters(ParameterExpression[] parameters)
@@ -249,7 +261,7 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParseOrOperator()
         {
             Expression left = ParseAndOperator();
-            while (_textParser.CurrentToken.Id == TokenId.DoubleBar || TokenIdentifierIs("Or") || TokenIdentifierIs("OrElse"))
+            while (_textParser.CurrentToken.Id == TokenId.DoubleBar)
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
@@ -267,7 +279,7 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParseAndOperator()
         {
             Expression left = ParseIn();
-            while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand || TokenIdentifierIs("And") || TokenIdentifierIs("AndAlso"))
+            while (_textParser.CurrentToken.Id == TokenId.DoubleAmphersand)
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
@@ -477,13 +489,13 @@ namespace System.Linq.Dynamic.Core.Parser
                         }
                     }
                 }
-                else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeConverterFactory.GetConverter(left.Type)) != null)
+                else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string stringValueR && (typeConverter = _typeConverterFactory.GetConverter(left.Type)) != null)
                 {
-                    right = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), left.Type);
+                    right = Expression.Constant(typeConverter.ConvertFromInvariantString(stringValueR), left.Type);
                 }
-                else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string && (typeConverter = TypeConverterFactory.GetConverter(right.Type)) != null)
+                else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string stringValueL && (typeConverter = _typeConverterFactory.GetConverter(right.Type)) != null)
                 {
-                    left = Expression.Constant(typeConverter.ConvertFromInvariantString((string)constantExpr.Value), right.Type);
+                    left = Expression.Constant(typeConverter.ConvertFromInvariantString(stringValueL), right.Type);
                 }
                 else
                 {
@@ -504,13 +516,27 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     if (!typesAreSameAndImplementCorrectInterface)
                     {
-                        if (left.Type.GetTypeInfo().IsClass && right is ConstantExpression && HasImplicitConversion(left.Type, right.Type))
+                        if (left.Type.GetTypeInfo().IsClass && right is ConstantExpression)
                         {
-                            left = Expression.Convert(left, right.Type);
+                            if (HasImplicitConversion(left.Type, right.Type))
+                            {
+                                left = Expression.Convert(left, right.Type);
+                            }
+                            else if (HasImplicitConversion(right.Type, left.Type))
+                            {
+                                right = Expression.Convert(right, left.Type);
+                            }
                         }
-                        else if (right.Type.GetTypeInfo().IsClass && left is ConstantExpression && HasImplicitConversion(right.Type, left.Type))
+                        else if (right.Type.GetTypeInfo().IsClass && left is ConstantExpression)
                         {
-                            right = Expression.Convert(right, left.Type);
+                            if (HasImplicitConversion(right.Type, left.Type))
+                            {
+                                right = Expression.Convert(right, left.Type);
+                            }
+                            else if (HasImplicitConversion(left.Type, right.Type))
+                            {
+                                left = Expression.Convert(left, right.Type);
+                            }
                         }
                         else
                         {
@@ -1512,7 +1538,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return ParseMemberAccess(type, null);
         }
 
-        static Expression GenerateConversion(Expression expr, Type type, int errorPos)
+        private Expression GenerateConversion(Expression expr, Type type, int errorPos)
         {
             Type exprType = expr.Type;
             if (exprType == type)
@@ -1543,21 +1569,11 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 string text = (string)((ConstantExpression)expr).Value;
 
-                // DateTime is parsed as UTC time.
-                if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
+                var typeConvertor = _typeConverterFactory.GetConverter(type);
+                if (typeConvertor != null)
                 {
-                    return Expression.Constant(dateTime, type);
-                }
-
-                object[] arguments = { text, null };
-#if NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD
-                MethodInfo method = type.GetMethod("TryParse", new[] { typeof(string), type.MakeByRefType() });
-#else
-                MethodInfo method = type.GetMethod("TryParse", BindingFlags.Public | BindingFlags.Static, null, new Type[] { typeof(string), type.MakeByRefType() }, null);
-#endif
-                if (method != null && (bool)method.Invoke(null, arguments))
-                {
-                    return Expression.Constant(arguments[1], type);
+                    var value = typeConvertor.ConvertFromInvariantString(text);
+                    return Expression.Constant(value, type);
                 }
             }
 
@@ -1662,6 +1678,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 // This might be an internal variable for use within a lambda expression, so store it as such
                 _internals.Add(id, _it);
+                string _previousItName = ItName;
 
                 // Also store ItName (only once)
                 if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
@@ -1672,7 +1689,14 @@ namespace System.Linq.Dynamic.Core.Parser
                 // next
                 _textParser.NextToken();
 
-                return ParseConditionalOperator();
+                LastLambdaItName = ItName;
+                var exp = ParseConditionalOperator();
+
+                // Restore previous context and clear internals
+                _internals.Remove(id);
+                ItName = _previousItName;
+
+                return exp;
             }
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));

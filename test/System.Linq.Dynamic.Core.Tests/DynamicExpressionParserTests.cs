@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using NFluent;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
-using NFluent;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
@@ -84,14 +84,87 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
+        public class CustomClassWithReversedImplicitConversion
+        {
+            public CustomClassWithReversedImplicitConversion(string origin)
+            {
+                Origin = origin;
+            }
+
+            public string Origin { get; }
+
+            public static implicit operator string(CustomClassWithReversedImplicitConversion origin)
+            {
+                return origin.ToString();
+            }
+
+            public override string ToString()
+            {
+                return Origin;
+            }
+        }
+
+        public class CustomClassWithValueTypeImplicitConversion
+        {
+            public CustomClassWithValueTypeImplicitConversion(int origin)
+            {
+                Origin = origin;
+            }
+
+            public int Origin { get; }
+
+            public static implicit operator CustomClassWithValueTypeImplicitConversion(int origin)
+            {
+                return new CustomClassWithValueTypeImplicitConversion(origin);
+            }
+
+            public override string ToString()
+            {
+                return Origin.ToString();
+            }
+        }
+
+        public class CustomClassWithReversedValueTypeImplicitConversion
+        {
+            public CustomClassWithReversedValueTypeImplicitConversion(int origin)
+            {
+                Origin = origin;
+            }
+
+            public int Origin { get; }
+
+            public static implicit operator int(CustomClassWithReversedValueTypeImplicitConversion origin)
+            {
+                return origin.Origin;
+            }
+
+            public override string ToString()
+            {
+                return Origin.ToString();
+            }
+        }
+
         public class TestImplicitConversionContainer
         {
-            public TestImplicitConversionContainer(CustomClassWithOneWayImplicitConversion oneWay)
+            public TestImplicitConversionContainer(
+                CustomClassWithOneWayImplicitConversion oneWay,
+                CustomClassWithReversedImplicitConversion reversed,
+                CustomClassWithValueTypeImplicitConversion valueType,
+                CustomClassWithReversedValueTypeImplicitConversion reversedValueType)
             {
                 OneWay = oneWay;
+                Reversed = Reversed;
+                ValueType = valueType;
+                ReversedValueType = reversedValueType;
             }
 
             public CustomClassWithOneWayImplicitConversion OneWay { get; }
+
+            public CustomClassWithReversedImplicitConversion Reversed { get; }
+
+            public CustomClassWithValueTypeImplicitConversion ValueType { get; }
+
+            public CustomClassWithReversedValueTypeImplicitConversion ReversedValueType { get; }
         }
 
         public class TextHolder
@@ -183,7 +256,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             // Act
-            ulong expectedX = (ulong) long.MaxValue + 3;
+            ulong expectedX = (ulong)long.MaxValue + 3;
 
             query = string.Format(query, expectedX);
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
@@ -540,6 +613,40 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedRightValue, rightValue);
         }
 
+        /// <summary>
+        /// @see https://github.com/StefH/System.Linq.Dynamic.Core/issues/294
+        /// </summary>
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_MultipleLambdas()
+        {
+            var users = new[]
+            {
+                new { name = "Juan", age = 25 },
+                new { name = "Juan", age = 25 },
+                new { name = "David", age = 12 },
+                new { name = "Juan", age = 25 },
+                new { name = "Juan", age = 4 },
+                new { name = "Pedro", age = 2 },
+                new { name = "Juan", age = 25 }
+            }.ToList();
+
+            IQueryable query;
+
+            // One lambda
+            string res1 = "[{\"Key\":{\"name\":\"Juan\"},\"nativeAggregates\":{\"ageSum\":104},\"Grouping\":[{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":4},{\"name\":\"Juan\",\"age\":25}]},{\"Key\":{\"name\":\"David\"},\"nativeAggregates\":{\"ageSum\":12},\"Grouping\":[{\"name\":\"David\",\"age\":12}]},{\"Key\":{\"name\":\"Pedro\"},\"nativeAggregates\":{\"ageSum\":2},\"Grouping\":[{\"name\":\"Pedro\",\"age\":2}]}]";
+            query = users.AsQueryable();
+            query = query.GroupBy("new(name as name)", "it");
+            query = query.Select("new (it.Key as Key, new(it.Sum(x => x.age) as ageSum) as nativeAggregates, it as Grouping)");
+            Assert.Equal(res1, Newtonsoft.Json.JsonConvert.SerializeObject(query));
+
+            // Multiple lambdas
+            string res2 = "[{\"Key\":{\"name\":\"Juan\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":104},\"Grouping\":[{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":25},{\"name\":\"Juan\",\"age\":4},{\"name\":\"Juan\",\"age\":25}]},{\"Key\":{\"name\":\"David\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":12},\"Grouping\":[{\"name\":\"David\",\"age\":12}]},{\"Key\":{\"name\":\"Pedro\"},\"nativeAggregates\":{\"ageSum\":0,\"ageSum2\":2},\"Grouping\":[{\"name\":\"Pedro\",\"age\":2}]}]";
+            query = users.AsQueryable();
+            query = query.GroupBy("new(name as name)", "it");
+            query = query.Select("new (it.Key as Key, new(it.Sum(x => x.age > 25 ? 1 : 0) as ageSum, it.Sum(x => x.age) as ageSum2) as nativeAggregates, it as Grouping)");
+            Assert.Equal(res2, Newtonsoft.Json.JsonConvert.SerializeObject(query));
+        }
+
         [Fact]
         public void DynamicExpressionParser_ParseLambda_StringLiteralStartEmbeddedQuote_ReturnsBooleanLambdaExpression()
         {
@@ -791,14 +898,66 @@ namespace System.Linq.Dynamic.Core.Tests
         public void DynamicExpressionParser_ParseLambda_With_One_Way_Implicit_Conversions()
         {
             // Arrange
-            var testValue = "test";
-            var container = new TestImplicitConversionContainer(testValue);
-            var expressionText = $"OneWay == \"{testValue}\"";
+            var testString = "test";
+            var testInt = 6;
+            var container = new TestImplicitConversionContainer(testString, new CustomClassWithReversedImplicitConversion(testString), testInt, new CustomClassWithReversedValueTypeImplicitConversion(testInt));
 
-            // Act
-            var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionText);
+            var expressionTextString = $"OneWay == \"{testString}\"";
+            var expressionTextReversed = $"Reversed == \"{testString}\"";
+            var expressionTextValueType = $"ValueType == {testInt}";
+            var expressionTextReversedValueType = $"ReversedValueType == {testInt}";
 
-            // Assert
+            var invertedExpressionTextString = $"\"{testString}\" == OneWay";
+            var invertedExpressionTextReversed = $"\"{testString}\" == Reversed";
+            var invertedExpressionTextValueType = $"{testInt} == ValueType";
+            var invertedExpressionTextReversedValueType = $"{testInt} == ReversedValueType";
+
+            // Act 1
+            var lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextString);
+
+            // Assert 1
+            Assert.NotNull(lambda);
+
+            // Act 2
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextReversed);
+
+            // Assert 2
+            Assert.NotNull(lambda);
+
+            // Act 3
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextValueType);
+
+            // Assert 3
+            Assert.NotNull(lambda);
+
+            // Act 4
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, expressionTextReversedValueType);
+
+            // Assert 4
+            Assert.NotNull(lambda);
+
+            // Act 5
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextString);
+
+            // Assert 5
+            Assert.NotNull(lambda);
+
+            // Act 6
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextReversed);
+
+            // Assert 6
+            Assert.NotNull(lambda);
+
+            // Act 7
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextValueType);
+
+            // Assert 7
+            Assert.NotNull(lambda);
+
+            // Act 8
+            lambda = DynamicExpressionParser.ParseLambda<TestImplicitConversionContainer, bool>(ParsingConfig.Default, false, invertedExpressionTextReversedValueType);
+
+            // Assert 8
             Assert.NotNull(lambda);
         }
 
