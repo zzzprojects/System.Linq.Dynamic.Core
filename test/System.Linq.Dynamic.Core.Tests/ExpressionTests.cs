@@ -1587,6 +1587,20 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_StringEscaping()
+        {
+            // Arrange
+            var baseQuery = new[] { new { Value = "ab\"cd" } }.AsQueryable();
+
+            // Act
+            var result = baseQuery.Where("it.Value == \"ab\\\"cd\"").ToList();
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal("ab\"cd", result[0].Value);
+        }
+
+        [Fact]
         public void ExpressionTests_BinaryAnd()
         {
             // Arrange
