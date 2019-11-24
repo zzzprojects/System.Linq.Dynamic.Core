@@ -82,7 +82,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _parsingConfig = parsingConfig ?? ParsingConfig.Default;
 
             _keywordsHelper = new KeywordsHelper(_parsingConfig);
-            _textParser = new TextParser(expression);
+            _textParser = new TextParser(_parsingConfig, expression);
             _methodFinder = new MethodFinder(_parsingConfig);
             _expressionHelper = new ExpressionHelper(_parsingConfig);
             _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);

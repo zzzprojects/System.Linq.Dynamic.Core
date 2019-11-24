@@ -6,12 +6,12 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 {
     internal class TextParser
     {
-        private static char NumberDecimalSeparator = '.';
+        private const char DefaultNumberDecimalSeparator = '.';
 
-        private static char[] EscapeCharacters = new[] { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
+        private static readonly char[] EscapeCharacters = new[] { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
 
         // These aliases are supposed to simply the where clause and make it more human readable
-        private static readonly Dictionary<string, TokenId> _predefinedOperatorAliases = new Dictionary<string, TokenId>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, TokenId> PredefinedOperatorAliases = new Dictionary<string, TokenId>(StringComparer.OrdinalIgnoreCase)
         {
             { "eq", TokenId.Equal },
             { "equal", TokenId.Equal },
@@ -34,6 +34,8 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             { "mod", TokenId.Percent }
         };
 
+        private readonly ParsingConfig _config;
+        private readonly char _numberDecimalSeparator;
         private readonly string _text;
         private readonly int _textLen;
 
@@ -41,10 +43,14 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         private char _ch;
         public Token CurrentToken;
 
-        public TextParser(string text)
+        public TextParser(ParsingConfig config, string text)
         {
+            _config = config;
+            _numberDecimalSeparator = config.NumberParseCulture?.NumberFormat.NumberDecimalSeparator[0] ?? DefaultNumberDecimalSeparator;
+
             _text = text;
             _textLen = _text.Length;
+
             SetTextPos(0);
             NextToken();
         }
@@ -362,7 +368,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                             break;
                         }
 
-                        if (_ch == NumberDecimalSeparator)
+                        if (_ch == _numberDecimalSeparator)
                         {
                             tokenId = TokenId.RealLiteral;
                             NextChar();
@@ -458,7 +464,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
         private static TokenId GetAliasedTokenId(TokenId tokenId, string alias)
         {
-            return tokenId == TokenId.Identifier && _predefinedOperatorAliases.TryGetValue(alias, out TokenId id) ? id : tokenId;
+            return tokenId == TokenId.Identifier && PredefinedOperatorAliases.TryGetValue(alias, out TokenId id) ? id : tokenId;
         }
 
         private static bool IsHexChar(char c)
