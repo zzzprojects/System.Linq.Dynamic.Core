@@ -69,6 +69,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             }
             _ch = _textPos < _textLen ? _text[_textPos] : '\0';
         }
+
         public char PeekNextChar()
         {
             if (_textPos + 1 < _textLen)
