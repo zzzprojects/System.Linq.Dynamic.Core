@@ -1590,14 +1590,18 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_StringEscaping()
         {
             // Arrange
-            var baseQuery = new[] { new { Value = "ab\"cd" } }.AsQueryable();
+            var baseQuery = new[] { new { Value = "ab\"cd" }, new { Value = "a \\ b" } }.AsQueryable();
 
             // Act
-            var result = baseQuery.Where("it.Value == \"ab\\\"cd\"").ToList();
+            var result1 = baseQuery.Where("it.Value == \"ab\\\"cd\"").ToList();
+            var result2 = baseQuery.Where("it.Value.IndexOf('\\') != -1").ToList();
 
             // Assert
-            Assert.Single(result);
-            Assert.Equal("ab\"cd", result[0].Value);
+            Assert.Single(result1);
+            Assert.Equal("ab\"cd", result1[0].Value);
+
+            Assert.Single(result2);
+            Assert.Equal("a \\ b", result2[0].Value);
         }
 
         [Fact]
