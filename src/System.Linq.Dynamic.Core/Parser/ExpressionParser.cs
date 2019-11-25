@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -10,7 +11,6 @@ using System.Linq.Dynamic.Core.TypeConverters;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -781,35 +781,52 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParseStringLiteral()
         {
             _textParser.ValidateToken(TokenId.StringLiteral);
-            char quote = _textParser.CurrentToken.Text[0];
-            string s = _textParser.CurrentToken.Text.Substring(1, _textParser.CurrentToken.Text.Length - 2);
-            int index1 = 0;
-            while (true)
-            {
-                int index2 = s.IndexOf(quote, index1);
-                if (index2 < 0)
-                {
-                    break;
-                }
 
-                if (index2 + 1 < s.Length && s[index2 + 1] == quote)
-                {
-                    s = s.Remove(index2, 1);
-                }
-                index1 = index2 + 1;
-            }
+            string result = SpracheStringParser.ParseString(_textParser.CurrentToken.Text);
 
-            if (quote == '\'')
+            if (_textParser.CurrentToken.Text[0] == '\'')
             {
-                if (s.Length != 1)
+                if (result.Length > 1)
                 {
                     throw ParseError(Res.InvalidCharacterLiteral);
                 }
+
                 _textParser.NextToken();
-                return ConstantExpressionHelper.CreateLiteral(s[0], s);
+                return ConstantExpressionHelper.CreateLiteral(result[0], result);
             }
+
             _textParser.NextToken();
-            return ConstantExpressionHelper.CreateLiteral(s, s);
+            return ConstantExpressionHelper.CreateLiteral(result, result);
+
+            //char quote = _textParser.CurrentToken.Text[0];
+            //string s = _textParser.CurrentToken.Text.Substring(1, _textParser.CurrentToken.Text.Length - 2);
+            //int index1 = 0;
+            //while (true)
+            //{
+            //    int index2 = s.IndexOf(quote, index1);
+            //    if (index2 < 0)
+            //    {
+            //        break;
+            //    }
+
+            //    if (index2 + 1 < s.Length && s[index2 + 1] == quote)
+            //    {
+            //        s = s.Remove(index2, 1);
+            //    }
+            //    index1 = index2 + 1;
+            //}
+
+            //if (quote == '\'')
+            //{
+            //    if (s.Length != 1)
+            //    {
+            //        throw ParseError(Res.InvalidCharacterLiteral);
+            //    }
+            //    _textParser.NextToken();
+            //    return ConstantExpressionHelper.CreateLiteral(s[0], s);
+            //}
+            //_textParser.NextToken();
+            //return ConstantExpressionHelper.CreateLiteral(s, s);
         }
 
         Expression ParseIntegerLiteral()
