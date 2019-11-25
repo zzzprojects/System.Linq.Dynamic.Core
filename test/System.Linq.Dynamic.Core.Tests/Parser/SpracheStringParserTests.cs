@@ -22,6 +22,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData("\"/\"", "/")]
         [InlineData("\"a\"", "a")]
         [InlineData("\"This \\\"is\\\" a test.\"", "This \"is\" a test.")]
+        [InlineData(@"""This \""is\"" b test.""", @"This ""is"" b test.")]
         [InlineData("\"ab\\\"cd\"", "ab\"cd")]
         [InlineData("\"\\\"\"", "\"")]
         [InlineData("\"\\\"\\\"\"", "\"\"")]
