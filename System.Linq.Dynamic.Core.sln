@@ -76,6 +76,8 @@ Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "System.Linq.Dynamic.Core", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppPerformanceTest236", "src-console\ConsoleAppPerformanceTest236\ConsoleAppPerformanceTest236.csproj", "{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp_net452_EF6_Effort", "src-console\ConsoleApp_net452_EF6_Effort\ConsoleApp_net452_EF6_Effort.csproj", "{36B101B1-720B-4770-B222-C6ADD464F9EC}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Z.EntityFramework.Classic.DynamicLinq", "src\Z.EntityFramework.Classic.DynamicLinq\Z.EntityFramework.Classic.DynamicLinq.csproj", "{D3804228-91F4-4502-9595-39584EA20000}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp.EntityFrameworkClassic", "src-console\ConsoleApp.EntityFrameworkClassic\ConsoleApp.EntityFrameworkClassic.csproj", "{0077F262-D69B-44D2-8A7C-87D8D19022A6}"
@@ -442,6 +444,22 @@ Global
 		{0077F262-D69B-44D2-8A7C-87D8D19022A6}.Release|x64.Build.0 = Release|Any CPU
 		{0077F262-D69B-44D2-8A7C-87D8D19022A6}.Release|x86.ActiveCfg = Release|Any CPU
 		{0077F262-D69B-44D2-8A7C-87D8D19022A6}.Release|x86.Build.0 = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|ARM.Build.0 = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Debug|x86.Build.0 = Debug|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|ARM.ActiveCfg = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|ARM.Build.0 = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|x64.Build.0 = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|x86.ActiveCfg = Release|Any CPU
+		{36B101B1-720B-4770-B222-C6ADD464F9EC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -469,6 +487,7 @@ Global
 		{E9C52E5E-28DC-4D45-B9AB-1B2CF2924A84} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 		{D3804228-91F4-4502-9595-39584EA20000} = {DBD7D9B6-FCC7-4650-91AF-E6457573A68F}
 		{0077F262-D69B-44D2-8A7C-87D8D19022A6} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
+		{36B101B1-720B-4770-B222-C6ADD464F9EC} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94C56722-194E-4B8B-BC23-B3F754E89A20}

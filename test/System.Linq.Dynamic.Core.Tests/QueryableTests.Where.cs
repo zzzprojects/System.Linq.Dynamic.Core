@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core.Exceptions;
+﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
@@ -43,40 +44,28 @@ namespace System.Linq.Dynamic.Core.Tests
             NFluent.Check.That(dynamicExpression).Equals(expresion);
         }
 
-        [Fact]
-        public void Where_Dynamic_StringQuoted()
+        [Theory]
+        [InlineData("Fri, 10 May 2019 11:03:17 GMT", 11)]
+        [InlineData("Fri, 10 May 2019 11:03:17 -07:00", 18)]
+        public void Where_Dynamic_DateTimeIsParsedAsUTC(string time, int hours)
         {
-            //Arrange
-            var testList = User.GenerateSampleModels(2, allowNullableProfiles: true);
-            testList[0].UserName = @"This \""is\"" a test.";
-            var qry = testList.AsQueryable();
+            // Arrange
+            var queryable = new List<Example> {
+                new Example
+                {
+                    TimeNull = new DateTime(2019, 5, 10, hours, 3, 17, DateTimeKind.Utc)
+                }
+            }.AsQueryable();
 
-            //Act
-            var result1a = qry.Where(@"UserName == ""This \""is\"" a test.""").ToArray();
-            var result1b = qry.Where("UserName == \"This \\\"is\\\" a test.\"").ToArray();
-            var result2 = qry.Where("UserName == @0", @"This \""is\"" a test.").ToArray();
-            var expected = qry.Where(x => x.UserName == @"This \""is\"" a test.").ToArray();
+            // Act
+            var parsingConfig = new ParsingConfig
+            {
+                DateTimeIsParsedAsUTC = true
+            };
+            var result = queryable.Where(parsingConfig, $"it.TimeNull >= \"{time}\"");
 
-            //Assert
-            Assert.Single(expected);
-            Assert.Equal(expected, result1a);
-            Assert.Equal(expected, result1b);
-            Assert.Equal(expected, result2);
-        }
-
-        [Fact]
-        public void Where_Dynamic_SelectNewObjects()
-        {
-            //Arrange
-            var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
-            var qry = testList.AsQueryable();
-
-            //Act
-            var expectedResult = testList.Where(x => x.Income > 4000).Select(x => new { Id = x.Id, Income = x.Income + 1111 });
-            var dynamicList = qry.Where("Income > @0", 4000).ToDynamicList();
-
-            var newUsers = dynamicList.Select(x => new { Id = x.Id, Income = x.Income + 1111 });
-            Assert.Equal(newUsers.Cast<object>().ToList(), expectedResult);
+            // Assert
+            Assert.Equal(1, result.Count());
         }
 
         /// <summary>
@@ -130,6 +119,42 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ArgumentNullException>(() => qry.Where(null));
             Assert.Throws<ArgumentException>(() => qry.Where(""));
             Assert.Throws<ArgumentException>(() => qry.Where(" "));
+        }
+
+        [Fact]
+        public void Where_Dynamic_StringQuoted()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(2, allowNullableProfiles: true);
+            testList[0].UserName = @"This \""is\"" a test.";
+            var qry = testList.AsQueryable();
+
+            //Act
+            var result1a = qry.Where(@"UserName == ""This \""is\"" a test.""").ToArray();
+            var result1b = qry.Where("UserName == \"This \\\"is\\\" a test.\"").ToArray();
+            var result2 = qry.Where("UserName == @0", @"This \""is\"" a test.").ToArray();
+            var expected = qry.Where(x => x.UserName == @"This \""is\"" a test.").ToArray();
+
+            //Assert
+            Assert.Single(expected);
+            Assert.Equal(expected, result1a);
+            Assert.Equal(expected, result1b);
+            Assert.Equal(expected, result2);
+        }
+
+        [Fact]
+        public void Where_Dynamic_SelectNewObjects()
+        {
+            //Arrange
+            var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
+            var qry = testList.AsQueryable();
+
+            //Act
+            var expectedResult = testList.Where(x => x.Income > 4000).Select(x => new { Id = x.Id, Income = x.Income + 1111 });
+            var dynamicList = qry.Where("Income > @0", 4000).ToDynamicList();
+
+            var newUsers = dynamicList.Select(x => new { Id = x.Id, Income = x.Income + 1111 });
+            Assert.Equal(newUsers.Cast<object>().ToList(), expectedResult);
         }
     }
 }

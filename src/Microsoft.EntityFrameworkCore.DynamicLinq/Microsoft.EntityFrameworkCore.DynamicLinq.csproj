@@ -35,9 +35,9 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <IncludeSource>True</IncludeSource>
+        <!--<IncludeSource>True</IncludeSource>
         <IncludeSymbols>True</IncludeSymbols>
-        <PathMap>$(MSBuildProjectDirectory)=/</PathMap>
+        <PathMap>$(MSBuildProjectDirectory)=/</PathMap>-->
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 

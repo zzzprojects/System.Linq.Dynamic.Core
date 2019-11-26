@@ -33,7 +33,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             bool expected = queryable.Any(u => u.Income > 50);
-            bool result = (queryable as IQueryable).Any("Income > 50");
+            bool result = queryable.Any("Income > 50");
 
             //Assert
             Assert.Equal(expected, result);
@@ -49,7 +49,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             bool expected = queryable.Any(u => u.Income > value);
-            bool result = (queryable as IQueryable).Any("Income > @0", value);
+            bool result = queryable.Any("Income > @0", value);
 
             //Assert
             Assert.Equal(expected, result);
@@ -109,7 +109,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // arrange
             var list = new List<A>
             {
-                new A {Bs = new List<B>() {new B {A = new A(), Cs = new List<C> {new C {B = new B()}}}}}
+                new A {Bs = new List<B> {new B {A = new A(), Cs = new List<C> {new C {B = new B()}}}}}
             };
             var queryable = list.AsQueryable();
 

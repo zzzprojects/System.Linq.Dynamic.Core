@@ -2,18 +2,28 @@
 using System.ComponentModel;
 using System.Linq.Dynamic.Core.Validation;
 
-namespace System.Linq.Dynamic.Core
+namespace System.Linq.Dynamic.Core.TypeConverters
 {
-    internal static class TypeConverterFactory
+    internal class TypeConverterFactory : ITypeConverterFactory
     {
-        /// <summary>
-        /// Returns a type converter for the specified type.
-        /// </summary>
-        /// <param name="type">The System.Type of the target component.</param>
-        /// <returns>A System.ComponentModel.TypeConverter for the specified type.</returns>
-        public static TypeConverter GetConverter([NotNull] Type type)
+        private readonly ParsingConfig _config;
+
+        public TypeConverterFactory([NotNull] ParsingConfig config)
+        {
+            Check.NotNull(config, nameof(config));
+
+            _config = config;
+        }
+
+        /// <see cref="ITypeConverterFactory.GetConverter"/>
+        public TypeConverter GetConverter(Type type)
         {
             Check.NotNull(type, nameof(type));
+
+            if (_config.DateTimeIsParsedAsUTC && (type == typeof(DateTime) || type == typeof(DateTime?)))
+            {
+                return new CustomDateTimeConverter();
+            }
 
 #if !SILVERLIGHT
             return TypeDescriptor.GetConverter(type);

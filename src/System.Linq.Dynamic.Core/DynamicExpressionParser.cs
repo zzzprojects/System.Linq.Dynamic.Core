@@ -68,7 +68,7 @@ namespace System.Linq.Dynamic.Core
 
             if (parsingConfig != null && parsingConfig.RenameParameterExpression && parameters.Length == 1)
             {
-                var renamer = new ParameterExpressionRenamer(parser.ItName);
+                var renamer = new ParameterExpressionRenamer(parser.LastLambdaItName);
                 parsedExpression = renamer.Rename(parsedExpression, out ParameterExpression newParameterExpression);
 
                 return Expression.Lambda(parsedExpression, new[] { newParameterExpression });

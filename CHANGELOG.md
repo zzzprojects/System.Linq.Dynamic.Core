@@ -1,10 +1,26 @@
+# 1.0.20.0 (19 November 2019)
+- [#321](https://github.com/StefH/System.Linq.Dynamic.Core/pull/321) - LongCount contributed by [StefH](https://github.com/StefH)
+
+# 1.0.19.0 (29 August 2019)
+- [#277](https://github.com/StefH/System.Linq.Dynamic.Core/pull/277) - DateTimeIsParsedAsUTC [feature] contributed by [StefH](https://github.com/StefH)
+- [#281](https://github.com/StefH/System.Linq.Dynamic.Core/pull/281) - Support for AndAlso and OrElse [feature] contributed by [StefH](https://github.com/StefH)
+- [#285](https://github.com/StefH/System.Linq.Dynamic.Core/pull/285) - Fix certain cases where implicit conversions aren't correctly detected when parsing comparison operators [bug] contributed by [alexweav](https://github.com/alexweav)
+- [#287](https://github.com/StefH/System.Linq.Dynamic.Core/pull/287) - Ensure that one-way implicit conversions also work for value types contributed by [alexweav](https://github.com/alexweav)
+- [#290](https://github.com/StefH/System.Linq.Dynamic.Core/pull/290) - Added SumAsync contributed by [wertzui](https://github.com/wertzui)
+- [#292](https://github.com/StefH/System.Linq.Dynamic.Core/pull/292) - Add ConsoleApp using EF6 Effort contributed by [StefH](https://github.com/StefH)
+- [#297](https://github.com/StefH/System.Linq.Dynamic.Core/pull/297) - Fix for #294 contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
+- [#298](https://github.com/StefH/System.Linq.Dynamic.Core/pull/298) - Add 'All', 'Average', 'AverageAsync' and update 'Sum' [feature] contributed by [StefH](https://github.com/StefH)
+- [#299](https://github.com/StefH/System.Linq.Dynamic.Core/pull/299) - Add more PredefinedOperatorAliases [feature] contributed by [StefH](https://github.com/StefH)
+- [#268](https://github.com/StefH/System.Linq.Dynamic.Core/issues/268) - Timezone conversion [feature]
+- [#279](https://github.com/StefH/System.Linq.Dynamic.Core/issues/279) - Support .NET Expression string operators (AndAlso &amp; OrElse) [feature]
+- [#291](https://github.com/StefH/System.Linq.Dynamic.Core/issues/291) - Question: How to truncate possibly but not necessarily nullable datetime on SQL side?
+- [#294](https://github.com/StefH/System.Linq.Dynamic.Core/issues/294) - Context lost in object initializer [bug]
+
 # 1.0.18.0 (02 July 2019)
-- [#171](https://github.com/StefH/System.Linq.Dynamic.Core/issues/171) - File version attribute is 0.0.0.0 [invalid]
 - [#278](https://github.com/StefH/System.Linq.Dynamic.Core/issues/278) - Nuget System.Linq.Dynamic.Core 1.0.17 - Incorrect version [bug]
 
 # 1.0.17.0 (14 June 2019)
 - [#276](https://github.com/StefH/System.Linq.Dynamic.Core/pull/276) - op_Compare also for single &quot;equals&quot; token [bug] contributed by [nothrow](https://github.com/nothrow)
-- [#274](https://github.com/StefH/System.Linq.Dynamic.Core/issues/274) - Question: Extension method that returns Expression&lt;Func&lt;T, bool&gt;&gt; ? [question]
 
 # 1.0.16.0 (06 June 2019)
 - [#275](https://github.com/StefH/System.Linq.Dynamic.Core/pull/275) - Support Enumerations from System Namespace (e.g. StringComparison) [feature] contributed by [StefH](https://github.com/StefH)
@@ -16,22 +32,15 @@
 # 1.0.14.0 (14 May 2019)
 - [#270](https://github.com/StefH/System.Linq.Dynamic.Core/pull/270) - Fix for np() opererator for Nullable (e.g. DateTime) contributed by [StefH](https://github.com/StefH)
 - [#105](https://github.com/StefH/System.Linq.Dynamic.Core/issues/105) - Feature: Support for EF Core 2.0's EF.Functions.Like() [feature]
-- [#265](https://github.com/StefH/System.Linq.Dynamic.Core/issues/265) - Linq CreateQuery throws exception [question]
-- [#267](https://github.com/StefH/System.Linq.Dynamic.Core/issues/267) - UseParameterizedNamesInDynamicQuery=true is ignored if predicate in Where clause has Contains() expression [question]
 - [#269](https://github.com/StefH/System.Linq.Dynamic.Core/issues/269) - np() opererator fails for (Nullable) DateTime [bug]
 
 # 1.0.13.0 (03 May 2019)
 - [#264](https://github.com/StefH/System.Linq.Dynamic.Core/pull/264) - Fix escape characters parsing [bug] contributed by [StefH](https://github.com/StefH)
 - [#266](https://github.com/StefH/System.Linq.Dynamic.Core/pull/266) - Make ExpressionPromoter public + Fix issue with null constant expression compare [bug] contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
-- [#148](https://github.com/StefH/System.Linq.Dynamic.Core/issues/148) - Question: Using where filter it.Contains(@0) fails where it.Contains(\&quot;keep\&quot;) works [question]
 - [#154](https://github.com/StefH/System.Linq.Dynamic.Core/issues/154) - Remark: Semantic Versioning... [wontfix]
 - [#163](https://github.com/StefH/System.Linq.Dynamic.Core/issues/163) - Issue: Using escaped strings is not working correctly [bug]
 - [#240](https://github.com/StefH/System.Linq.Dynamic.Core/issues/240) - Question: What is the proper way to construct a dynamic query for EF Core using DateTime or Nullable DateTime?
-- [#241](https://github.com/StefH/System.Linq.Dynamic.Core/issues/241) - Question: Is it possible to project without flattening the result? [question]
 - [#244](https://github.com/StefH/System.Linq.Dynamic.Core/issues/244) - Possible to add 'Compare' Extension method [wontfix]
-- [#246](https://github.com/StefH/System.Linq.Dynamic.Core/issues/246) - Exception: Argument expression is not valid [question]
-- [#261](https://github.com/StefH/System.Linq.Dynamic.Core/issues/261) - How can I use Where(&quot;...&quot;) after calling ToDynamicArray [question]
-- [#263](https://github.com/StefH/System.Linq.Dynamic.Core/issues/263) - Have a WhereOr method [question]
 
 # 1.0.12.0 (26 March 2019)
 - [#260](https://github.com/StefH/System.Linq.Dynamic.Core/pull/260) - Fix for Nullable Enum filter contributed by [StefH](https://github.com/StefH)
@@ -44,14 +53,13 @@
 - [#253](https://github.com/StefH/System.Linq.Dynamic.Core/pull/253) - OfType Function contributed by [StefH](https://github.com/StefH)
 - [#254](https://github.com/StefH/System.Linq.Dynamic.Core/pull/254) - Resolve types by simple name #252 [feature] contributed by [StefH](https://github.com/StefH)
 - [#255](https://github.com/StefH/System.Linq.Dynamic.Core/pull/255) - Fix SonarScanner in build [bug] contributed by [StefH](https://github.com/StefH)
-- [#245](https://github.com/StefH/System.Linq.Dynamic.Core/issues/245) - Question: Is it possible to validate expression before apply it? [question]
 - [#247](https://github.com/StefH/System.Linq.Dynamic.Core/issues/247) - Parameterized SQL doesn't work for Contains, StartsWith, and EndsWith 
 - [#248](https://github.com/StefH/System.Linq.Dynamic.Core/issues/248) - Add IQueryable.OfType support to ExpressionParser.
 - [#252](https://github.com/StefH/System.Linq.Dynamic.Core/issues/252) - Implement ResolveTypesBySimpleName [feature]
 
 # 1.0.10.0 (05 February 2019)
 - [#223](https://github.com/StefH/System.Linq.Dynamic.Core/pull/223) - Add 'np(...)' Null Propagating function [feature] contributed by [StefH](https://github.com/StefH)
-- [#98](https://github.com/StefH/System.Linq.Dynamic.Core/issues/98) - Feature: Add the &quot;?.&quot; operator (null-conditional operator) to support navigation properties with null values [feature, question]
+- [#98](https://github.com/StefH/System.Linq.Dynamic.Core/issues/98) - Feature: Add the &quot;?.&quot; operator (null-conditional operator) to support navigation properties with null values [feature]
 - [#182](https://github.com/StefH/System.Linq.Dynamic.Core/issues/182) - Error when navigation property which named &quot;Parent&quot;
 - [#243](https://github.com/StefH/System.Linq.Dynamic.Core/issues/243) - EF Core 2.2 - cannot use Where operator
 
@@ -76,20 +84,13 @@
 - [#237](https://github.com/StefH/System.Linq.Dynamic.Core/pull/237) - Performance Fix [bug] contributed by [StefH](https://github.com/StefH)
 - [#71](https://github.com/StefH/System.Linq.Dynamic.Core/issues/71) - Issue: Increase code-coverage [feature]
 - [#119](https://github.com/StefH/System.Linq.Dynamic.Core/issues/119) - Feature: How to keep parameter input name of query [feature]
-- [#144](https://github.com/StefH/System.Linq.Dynamic.Core/issues/144) - Question: Static / Constant properties and Enums not supported as parameters in method calls [question]
 - [#145](https://github.com/StefH/System.Linq.Dynamic.Core/issues/145) - Question : Performance and 'System.IO.FileNotFoundException' in System.Private.CoreLib.dll
 - [#152](https://github.com/StefH/System.Linq.Dynamic.Core/issues/152) - Multiple assemblies with equivalent identity have been imported
-- [#174](https://github.com/StefH/System.Linq.Dynamic.Core/issues/174) - Including more methods from System.Math? [question]
 - [#179](https://github.com/StefH/System.Linq.Dynamic.Core/issues/179) - Feature: Implement SourceLink
-- [#183](https://github.com/StefH/System.Linq.Dynamic.Core/issues/183) - Question: Issue with DateTime Field [question]
 - [#184](https://github.com/StefH/System.Linq.Dynamic.Core/issues/184) - Feature: Generate Parameterized SQL [feature]
 - [#204](https://github.com/StefH/System.Linq.Dynamic.Core/issues/204) - Cannot GroupJoin when source is Linq-To-Entities
 - [#209](https://github.com/StefH/System.Linq.Dynamic.Core/issues/209) - Feature: use Azure Pipelines for building
 - [#215](https://github.com/StefH/System.Linq.Dynamic.Core/issues/215) - Issue: DynamicClassFactory fails to create dynamic type without properties [bug]
-- [#219](https://github.com/StefH/System.Linq.Dynamic.Core/issues/219) - ParsingConfig.DefaultEFCore21 doesn't group on database [question]
-- [#220](https://github.com/StefH/System.Linq.Dynamic.Core/issues/220) - Update wiki about  Null-coalescing operator [question]
-- [#227](https://github.com/StefH/System.Linq.Dynamic.Core/issues/227) - Question: Is it possible to pass CustomAttribute to property using new(...) syntax?  [question]
-- [#232](https://github.com/StefH/System.Linq.Dynamic.Core/issues/232) - Extensionpoint for changing identifier token text [question, wontfix]
 - [#234](https://github.com/StefH/System.Linq.Dynamic.Core/issues/234) - Does this support Json data
 - [#236](https://github.com/StefH/System.Linq.Dynamic.Core/issues/236) - Massive performance hit when upgrading from 1.0.8.18 to 1.0.9
 
@@ -118,7 +119,6 @@
 
 # 1.0.8.15 (17 August 2018)
 - [#197](https://github.com/StefH/System.Linq.Dynamic.Core/pull/197) - Added EvaluateGroupByAtDatabase For EF Core 2.1 contributed by [StefH](https://github.com/StefH)
-- [#196](https://github.com/StefH/System.Linq.Dynamic.Core/issues/196) - Question: Not applicable aggregate method 'Any' exists [question]
 
 # 1.0.8.14 (14 August 2018)
 - [#190](https://github.com/StefH/System.Linq.Dynamic.Core/pull/190) - Add SonarCloud (#186) contributed by [StefH](https://github.com/StefH)
@@ -130,7 +130,6 @@
 # 1.0.8.12 (27 July 2018)
 - [#177](https://github.com/StefH/System.Linq.Dynamic.Core/pull/177) - Feature: Remove built-in references from netstandard2.0 target contributed by [hazzik](https://github.com/hazzik)
 - [#189](https://github.com/StefH/System.Linq.Dynamic.Core/pull/189) - Fix conversion from a non-nullable value type to the nullable value type contributed by [StefH](https://github.com/StefH)
-- [#53](https://github.com/StefH/System.Linq.Dynamic.Core/issues/53) - Question: External Methods call [question]
 - [#178](https://github.com/StefH/System.Linq.Dynamic.Core/issues/178) - Question: No generic method 'Contains' on type 'System.Linq.Enumerable
 - [#180](https://github.com/StefH/System.Linq.Dynamic.Core/issues/180) - Question: GroupBy fails for field named SHORT
 - [#188](https://github.com/StefH/System.Linq.Dynamic.Core/issues/188) - Issue: Implicitly conversion from a non-nullable value type to the nullable form of that value type is broken?
@@ -140,7 +139,6 @@
 
 # 1.0.8.10 (05 June 2018)
 - [#143](https://github.com/StefH/System.Linq.Dynamic.Core/issues/143) - Question : How to orderby an attribute of a List
-- [#155](https://github.com/StefH/System.Linq.Dynamic.Core/issues/155) - Question: OrderByDescending availability [question]
 - [#170](https://github.com/StefH/System.Linq.Dynamic.Core/issues/170) - Question: Support to build Expressions besides LambdaExpressions
 
 # 1.0.8.9 (26 May 2018)
@@ -158,9 +156,6 @@
 - [#157](https://github.com/StefH/System.Linq.Dynamic.Core/issues/157) - Issue : SkipWhile Method not found in mono [bug]
 - [#161](https://github.com/StefH/System.Linq.Dynamic.Core/issues/161) - Error (1.0.8.3 to 1.0.8.4 on EF 6.2) &quot;No generic method 'OrderBy' on type System.Linq.Queryable&quot;
 
-# 1.0.8.5 (27 April 2018)
-- [#160](https://github.com/StefH/System.Linq.Dynamic.Core/issues/160) - Question: Generic ParseLambda method [question]
-
 # 1.0.8.4 (25 April 2018)
 - [#159](https://github.com/StefH/System.Linq.Dynamic.Core/pull/159) - Performance fix (#153) contributed by [StefH](https://github.com/StefH)
 - [#151](https://github.com/StefH/System.Linq.Dynamic.Core/issues/151) - Parse Query Syntax like Code
@@ -169,11 +164,8 @@
 # 1.0.8.3 (30 March 2018)
 - [#137](https://github.com/StefH/System.Linq.Dynamic.Core/pull/137) - Feature: Add support for querying a IQueryable&lt;dynamic&gt; contributed by [NickDarvey](https://github.com/NickDarvey)
 - [#150](https://github.com/StefH/System.Linq.Dynamic.Core/pull/150) - Feature: Support Binary &amp; For String and Int [feature] contributed by [jogibear9988](https://github.com/jogibear9988)
-- [#139](https://github.com/StefH/System.Linq.Dynamic.Core/issues/139) - Question: How to get related entities only one field [help wanted]
-- [#140](https://github.com/StefH/System.Linq.Dynamic.Core/issues/140) - Question: Possible to write this using Dynamic Linq? [question]
+- [#139](https://github.com/StefH/System.Linq.Dynamic.Core/issues/139) - Question: How to get related entities only one field
 - [#141](https://github.com/StefH/System.Linq.Dynamic.Core/issues/141) - Question: Is there TryParseLambda
-- [#142](https://github.com/StefH/System.Linq.Dynamic.Core/issues/142) - Question: GroupJoin issue [question]
-- [#146](https://github.com/StefH/System.Linq.Dynamic.Core/issues/146) - Question: where should support question be posted (here or SO) [question]
 
 # 1.0.8.2 (09 January 2018)
 - [#138](https://github.com/StefH/System.Linq.Dynamic.Core/pull/138) - Solved issue 130 contributed by [StefH](https://github.com/StefH)
@@ -181,7 +173,6 @@
 
 # 1.0.8.1 (05 January 2018)
 - [#135](https://github.com/StefH/System.Linq.Dynamic.Core/pull/135) - Add DbGeography to predefined types to allow advanced spatial queries. contributed by [czielin](https://github.com/czielin)
-- [#59](https://github.com/StefH/System.Linq.Dynamic.Core/issues/59) - Cant compile DynamicLinqWebDocs [question]
 - [#95](https://github.com/StefH/System.Linq.Dynamic.Core/issues/95) - Has no assembly version number.
 - [#126](https://github.com/StefH/System.Linq.Dynamic.Core/issues/126) - How to make a request with Collate in order to get Accent Insensitive results?
 - [#129](https://github.com/StefH/System.Linq.Dynamic.Core/issues/129) - ToDynamicList/ToDynamicArray cannot actually cast to specified type in .net core 2 [bug]
@@ -198,7 +189,6 @@
 - [#123](https://github.com/StefH/System.Linq.Dynamic.Core/pull/123) - appveyor contributed by [StefH](https://github.com/StefH)
 - [#114](https://github.com/StefH/System.Linq.Dynamic.Core/issues/114) - Dynamic Linq Query not usable with ORM Provider [bug]
 - [#120](https://github.com/StefH/System.Linq.Dynamic.Core/issues/120) - Error with parsing
-- [#121](https://github.com/StefH/System.Linq.Dynamic.Core/issues/121) - [Question] Count() method [question]
 - [#122](https://github.com/StefH/System.Linq.Dynamic.Core/issues/122) - Join with int list
 - [#124](https://github.com/StefH/System.Linq.Dynamic.Core/issues/124) -  OrderBy produces error.
 - [#125](https://github.com/StefH/System.Linq.Dynamic.Core/issues/125) - Not compatable with dotnet Core 2. [bug]
@@ -208,7 +198,7 @@
 - [#116](https://github.com/StefH/System.Linq.Dynamic.Core/pull/116) - Bugfix DynamicLinq when using IQueryable contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#108](https://github.com/StefH/System.Linq.Dynamic.Core/issues/108) - [Question] Nullable property inside Join statement
 - [#109](https://github.com/StefH/System.Linq.Dynamic.Core/issues/109) - Not able to build with VS2017
-- [#111](https://github.com/StefH/System.Linq.Dynamic.Core/issues/111) - [Bug] Incorrect Nullable&lt;&gt; parsing [bug, question]
+- [#111](https://github.com/StefH/System.Linq.Dynamic.Core/issues/111) - [Bug] Incorrect Nullable&lt;&gt; parsing [bug]
 - [#112](https://github.com/StefH/System.Linq.Dynamic.Core/issues/112) - Support NETStandard 2.0 [feature]
 - [#113](https://github.com/StefH/System.Linq.Dynamic.Core/issues/113) - .pdb is missing in nuget [bug]
 
@@ -248,7 +238,7 @@
 - [#14](https://github.com/StefH/System.Linq.Dynamic.Core/issues/14) - Ampersand can be used both as logical And or as vb-like concatenation operator [feature]
 - [#15](https://github.com/StefH/System.Linq.Dynamic.Core/issues/15) - Add Skip, Take to ExpressionParser [feature]
 - [#16](https://github.com/StefH/System.Linq.Dynamic.Core/issues/16) - Add Paging support [feature]
-- [#17](https://github.com/StefH/System.Linq.Dynamic.Core/issues/17) - Windows 10 uwp support [help wanted]
+- [#17](https://github.com/StefH/System.Linq.Dynamic.Core/issues/17) - Windows 10 uwp support
 - [#18](https://github.com/StefH/System.Linq.Dynamic.Core/issues/18) - SelectMany over an Array throws System.IndexOutOfRangeException [bug]
 - [#19](https://github.com/StefH/System.Linq.Dynamic.Core/issues/19) - NotEqual filter not working with DateTime [bug]
 - [#20](https://github.com/StefH/System.Linq.Dynamic.Core/issues/20) - Can't install using nuget in Asp.Net 4.0 Web Pages project
@@ -265,8 +255,6 @@
 - [#31](https://github.com/StefH/System.Linq.Dynamic.Core/issues/31) - Group by multiple columns? [bug]
 - [#32](https://github.com/StefH/System.Linq.Dynamic.Core/issues/32) - When same dynamic class is first used in Linq2Entities, it's reused for Linq2Sql [bug]
 - [#33](https://github.com/StefH/System.Linq.Dynamic.Core/issues/33) - Package 1.0.6.3 install fails for UWP App [bug]
-- [#34](https://github.com/StefH/System.Linq.Dynamic.Core/issues/34) - Support for netcoreapp1.0? [question]
-- [#35](https://github.com/StefH/System.Linq.Dynamic.Core/issues/35) - Compatibility with System.Linq.Dynamic.Library  [question]
 - [#36](https://github.com/StefH/System.Linq.Dynamic.Core/issues/36) - CreateClass Equivalent? [feature]
 - [#40](https://github.com/StefH/System.Linq.Dynamic.Core/issues/40) - Add strong naming from library [feature]
 - [#42](https://github.com/StefH/System.Linq.Dynamic.Core/issues/42) - Microsoft.EntityFrameworkCore.DynamicLinq - ToListAsync()?
@@ -275,14 +263,12 @@
 - [#45](https://github.com/StefH/System.Linq.Dynamic.Core/issues/45) - Take() and Skip() lose ElementType [bug]
 - [#46](https://github.com/StefH/System.Linq.Dynamic.Core/issues/46) - Methods on type are not accessible error
 - [#48](https://github.com/StefH/System.Linq.Dynamic.Core/issues/48) - Add an overload to the &quot;ToDynamicList&quot; method which accepts a Type [feature]
-- [#49](https://github.com/StefH/System.Linq.Dynamic.Core/issues/49) - .Contains(&quot;&quot;) operation Exception [help wanted]
+- [#49](https://github.com/StefH/System.Linq.Dynamic.Core/issues/49) - .Contains(&quot;&quot;) operation Exception
 - [#50](https://github.com/StefH/System.Linq.Dynamic.Core/issues/50) - Add functionality to optimize your queries using Linq.Expression.Optimizer [feature]
-- [#51](https://github.com/StefH/System.Linq.Dynamic.Core/issues/51) - [Question] How can I format a datetime (nullable) field value in select? [help wanted]
+- [#51](https://github.com/StefH/System.Linq.Dynamic.Core/issues/51) - [Question] How can I format a datetime (nullable) field value in select?
 - [#52](https://github.com/StefH/System.Linq.Dynamic.Core/issues/52) - Can I convert int to string type?
 - [#57](https://github.com/StefH/System.Linq.Dynamic.Core/issues/57) - Issue finding indexer [bug]
-- [#58](https://github.com/StefH/System.Linq.Dynamic.Core/issues/58) - Parse Lambda [question]
 - [#60](https://github.com/StefH/System.Linq.Dynamic.Core/issues/60) - Issue with nested Calls
-- [#61](https://github.com/StefH/System.Linq.Dynamic.Core/issues/61) - String[].Contains(String) expression translated to first array element contains [invalid]
 - [#62](https://github.com/StefH/System.Linq.Dynamic.Core/issues/62) - OrderBy Chaining [bug, feature]
 - [#63](https://github.com/StefH/System.Linq.Dynamic.Core/issues/63) - Syntax IN dont work with Enums
 - [#65](https://github.com/StefH/System.Linq.Dynamic.Core/issues/65) - Support embedded quotes in string literal [feature]
@@ -296,17 +282,11 @@
 - [#79](https://github.com/StefH/System.Linq.Dynamic.Core/issues/79) - DynamicExpressionParser does not allow empty parameter lists. [bug]
 - [#81](https://github.com/StefH/System.Linq.Dynamic.Core/issues/81) - [Question] Create new nuget?
 - [#82](https://github.com/StefH/System.Linq.Dynamic.Core/issues/82) - [Feature] Add DefaultIfEmpty [feature]
-- [#83](https://github.com/StefH/System.Linq.Dynamic.Core/issues/83) - [Bug] Problem with DynamicExpressionParser.ParseLambda &amp; external ParameterExpression [question]
 - [#84](https://github.com/StefH/System.Linq.Dynamic.Core/issues/84) - [Bug] DynamicClassFactory not caching generated types [bug]
-- [#87](https://github.com/StefH/System.Linq.Dynamic.Core/issues/87) - [Question] Memory leak in Join method [question]
-- [#88](https://github.com/StefH/System.Linq.Dynamic.Core/issues/88) - [Question] FileNotFoundException: Could not load file or assembly 'System.Linq.Dynamic.Core' [question]
-- [#89](https://github.com/StefH/System.Linq.Dynamic.Core/issues/89) - [Question] System.Linq.Dynamic.Core.Exceptions.ParseException: 'No 'it' is in scope' [question]
 - [#90](https://github.com/StefH/System.Linq.Dynamic.Core/issues/90) - [Bug] ParseIntegerLiteral Int16 [bug]
 - [#91](https://github.com/StefH/System.Linq.Dynamic.Core/issues/91) - [Bug] Support for decimal qualifiers 'M' &amp; 'm' [bug]
-- [#94](https://github.com/StefH/System.Linq.Dynamic.Core/issues/94) - [Bug] ParseException: Operator '==' incompatible with operand types 'ObjectId' and 'ObjectId' [bug, question]
+- [#94](https://github.com/StefH/System.Linq.Dynamic.Core/issues/94) - [Bug] ParseException: Operator '==' incompatible with operand types 'ObjectId' and 'ObjectId' [bug]
 - [#96](https://github.com/StefH/System.Linq.Dynamic.Core/issues/96) - Async support for ToDynamicList() [feature]
-- [#97](https://github.com/StefH/System.Linq.Dynamic.Core/issues/97) - Dynamic Select with string Concatenation [question]
-- [#101](https://github.com/StefH/System.Linq.Dynamic.Core/issues/101) - Question: OrderBy does not work with navigation properties [question]
 - [#102](https://github.com/StefH/System.Linq.Dynamic.Core/issues/102) - Aggregate method does not work with Average function
 - [#104](https://github.com/StefH/System.Linq.Dynamic.Core/issues/104) - Add PDB to nuget package [feature]
 - [#106](https://github.com/StefH/System.Linq.Dynamic.Core/issues/106) - Using both System.Linq and System.Linq.Dynamic.Core 
