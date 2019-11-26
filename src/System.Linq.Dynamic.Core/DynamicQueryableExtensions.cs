@@ -1120,6 +1120,79 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion LastOrDefault
 
+        #region LongCount
+        private static readonly MethodInfo _longCount = GetMethod(nameof(Queryable.LongCount));
+
+        /// <summary>
+        /// Returns the number of elements in a sequence.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result = queryable.LongCount();
+        /// </code>
+        /// </example>
+        /// <returns>The number of elements in the input sequence.</returns>
+        public static long LongCount([NotNull] this IQueryable source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Execute<long>(_longCount, source);
+        }
+
+        private static readonly MethodInfo _longCountPredicate = GetMethod(nameof(Queryable.LongCount), 1);
+
+        /// <summary>
+        /// Returns the number of elements in a sequence.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.LongCount("Income > 50");
+        /// var result2 = queryable.LongCount("Income > @0", 50);
+        /// var result3 = queryable.Select("Roles.LongCount()");
+        /// </code>
+        /// </example>
+        /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
+        [PublicAPI]
+        public static long LongCount([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
+
+            return Execute<long>(_longCountPredicate, source, lambda);
+        }
+
+        /// <inheritdoc cref="LongCount(IQueryable, ParsingConfig, string, object[])"/>
+        public static long LongCount([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        {
+            return LongCount(source, ParsingConfig.Default, predicate, args);
+        }
+
+        /// <summary>
+        /// Returns the number of elements in a sequence.
+        /// </summary>
+        /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
+        /// <param name="lambda">A cached Lambda Expression.</param>
+        /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
+        public static long LongCount([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(lambda, nameof(lambda));
+
+            return Execute<long>(_longCountPredicate, source, lambda);
+        }
+        #endregion LongCount
+
         #region OfType
         private static readonly MethodInfo _ofType = GetGenericMethod(nameof(Queryable.OfType));
 

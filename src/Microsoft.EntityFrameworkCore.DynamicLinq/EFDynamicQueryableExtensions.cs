@@ -693,6 +693,93 @@ namespace EntityFramework.DynamicLinq
         }
         #endregion LastOrDefault
 
+        #region LongCount
+        private static readonly MethodInfo _longCount = GetMethod(nameof(Queryable.LongCount));
+
+        /// <summary>
+        ///     Asynchronously returns the number of elements in a sequence.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> that contains the elements to be counted.
+        /// </param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the number of elements in the input sequence.
+        /// </returns>
+        [PublicAPI]
+        public static Task<long> LongCountAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            return ExecuteAsync<long>(_longCount, source, cancellationToken);
+        }
+
+        private static readonly MethodInfo _longCountPredicate = GetMethod(nameof(Queryable.LongCount), 1);
+
+        /// <summary>
+        ///     Asynchronously returns the number of elements in a sequence that satisfy a condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> that contains the elements to be counted.
+        /// </param>
+        /// <param name="predicate"> A function to test each element for a condition. </param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate
+        ///     function.
+        /// </returns>
+        [PublicAPI]
+        public static Task<long> LongCountAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return LongCountAsync(source, default(CancellationToken), predicate, args);
+        }
+
+        /// <summary>
+        ///     Asynchronously returns the number of elements in a sequence that satisfy a condition.
+        /// </summary>
+        /// <remarks>
+        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        /// <param name="source">
+        ///     An <see cref="IQueryable" /> that contains the elements to be counted.
+        /// </param>
+        /// <param name="predicate"> A function to test each element for a condition. </param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <param name="cancellationToken">
+        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// </param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the number of elements in the sequence that satisfy the condition in the predicate
+        ///     function.
+        /// </returns>
+        [PublicAPI]
+        public static Task<long> LongCountAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(predicate, nameof(predicate));
+            Check.NotNull(cancellationToken, nameof(cancellationToken));
+
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, predicate, args);
+
+            return ExecuteAsync<long>(_longCountPredicate, source, Expression.Quote(lambda), cancellationToken);
+        }
+        #endregion LongCount
+
         #region SingleOrDefaultAsync
         private static readonly MethodInfo _singleOrDefault = GetMethod(nameof(Queryable.SingleOrDefault));
 
