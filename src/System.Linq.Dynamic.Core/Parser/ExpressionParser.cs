@@ -1135,11 +1135,16 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (args[0] is MemberExpression memberExpression)
             {
-                var expressionTest = _expressionHelper.GenerateAndAlsoNotNullExpression(memberExpression);
-                var expressionIfTrue = memberExpression;
-                var expressionIfFalse = args.Length == 2 ? args[1] : Expression.Constant(null);
+                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(memberExpression, out Expression generatedExpression))
+                {
+                    var expressionIfTrue = memberExpression;
+                    var expressionIfFalse = args.Length == 2 ? args[1] : Expression.Constant(null);
 
-                return GenerateConditional(expressionTest, expressionIfTrue, expressionIfFalse, errorPos);
+                    return GenerateConditional(generatedExpression, expressionIfTrue, expressionIfFalse, errorPos);
+                }
+
+                // The member expression is a single expression, just return it.
+                return memberExpression;
             }
 
             throw ParseError(errorPos, Res.NullPropagationRequiresMemberExpression);
@@ -1211,25 +1216,30 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (expr1.Type != expr2.Type)
             {
-                if ((Constants.IsNull(expr1) && expr2.Type.GetTypeInfo().IsValueType) || (Constants.IsNull(expr2) && expr1.Type.GetTypeInfo().IsValueType))
+                // If expr1 is a null constant and expr2 is ValueType:
+                // - create nullable constant from expr1 with type from expr2
+                // - convert expr2 to nullable (unless it's already nullable)
+                if (Constants.IsNull(expr1) && expr2.Type.GetTypeInfo().IsValueType)
                 {
-                    // If expr1 is a null constant and expr2 is a IsValueType:
-                    // - create nullable constant from expr1 with type from expr2
-                    // - convert expr2 to nullable
-                    if (Constants.IsNull(expr1) && expr2.Type.GetTypeInfo().IsValueType)
+                    Type nullableType = TypeHelper.ToNullableType(expr2.Type);
+                    expr1 = Expression.Constant(null, nullableType);
+                    if (!TypeHelper.IsNullableType(expr2.Type))
                     {
-                        Type nullableType = TypeHelper.ToNullableType(expr2.Type);
-                        expr1 = Expression.Constant(null, nullableType);
                         expr2 = Expression.Convert(expr2, nullableType);
                     }
 
-                    // If expr2 is a null constant and expr1 is a IsValueType:
-                    // - create nullable constant from expr2 with type from expr1
-                    // - convert expr1 to nullable
-                    if (Constants.IsNull(expr2) && expr1.Type.GetTypeInfo().IsValueType)
+                    return Expression.Condition(test, expr1, expr2);
+                }
+
+                // If expr2 is a null constant and expr1 is a ValueType:
+                // - create nullable constant from expr2 with type from expr1
+                // - convert expr1 to nullable (unless it's already nullable)
+                if (Constants.IsNull(expr2) && expr1.Type.GetTypeInfo().IsValueType)
+                {
+                    Type nullableType = TypeHelper.ToNullableType(expr1.Type);
+                    expr2 = Expression.Constant(null, nullableType);
+                    if (!TypeHelper.IsNullableType(expr1.Type))
                     {
-                        Type nullableType = TypeHelper.ToNullableType(expr1.Type);
-                        expr2 = Expression.Constant(null, nullableType);
                         expr1 = Expression.Convert(expr1, nullableType);
                     }
 
