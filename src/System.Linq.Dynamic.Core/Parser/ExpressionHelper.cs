@@ -250,7 +250,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             var expressions = CollectExpressions(sourceExpression);
 
-            if (expressions.Count == 1)
+            if (expressions.Count == 1 && !(expressions[0] is MethodCallExpression))
             {
                 generatedExpression = sourceExpression;
                 return false;

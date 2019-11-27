@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using NFluent;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-using Newtonsoft.Json.Linq;
-using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -1409,13 +1409,12 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagation_DateTime()
         public void ExpressionTests_NullPropagating_DateTime()
         {
             // Arrange
             var q = new[]
             {
-                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
+                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1) }
             }.AsQueryable();
 
             // Act
