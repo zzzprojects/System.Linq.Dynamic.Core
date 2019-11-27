@@ -7,7 +7,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 {
     public class ExpressionHelperTests
     {
-        private readonly IExpressionHelper _expressionHelper;
+        private readonly ExpressionHelper _expressionHelper;
 
         public ExpressionHelperTests()
         {
@@ -85,16 +85,31 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Fact]
-        public void ExpressionHelper_GenerateAndAlsoNotNullExpression()
+        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_ForMultiple()
         {
             // Assign
             Expression<Func<Item, int>> expression = (x) => x.Relation1.Relation2.Id;
 
             // Act
-            Expression result = _expressionHelper.GenerateAndAlsoNotNullExpression(expression);
+            bool result = _expressionHelper.TryGenerateAndAlsoNotNullExpression(expression, out Expression generatedExpresion);
 
             // Assert
-            Check.That(result.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
+            Check.That(result).IsTrue();
+            Check.That(generatedExpresion.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
+        }
+
+        [Fact]
+        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_ForSingle()
+        {
+            // Assign
+            Expression<Func<Item, int>> expression = (x) => x.Id;
+
+            // Act
+            bool result = _expressionHelper.TryGenerateAndAlsoNotNullExpression(expression, out Expression generatedExpresion);
+
+            // Assert
+            Check.That(result).IsFalse();
+            Check.That(generatedExpresion.ToString()).IsEqualTo("x => x.Id");
         }
 
         class Item

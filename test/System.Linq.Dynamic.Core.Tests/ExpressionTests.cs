@@ -37,6 +37,8 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             public Guid? GuidNull { get; set; }
 
+            public Guid GuidNormal { get; set; }
+
             public int Id { get; set; }
         }
 
@@ -1304,6 +1306,81 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult3, result3b.ToDynamicArray<int>());
         }
 
+        [Theory]
+        [InlineData("np(g)", "Select(Param_0 => Param_0.g)")]
+        [InlineData("np(gnullable)", "Select(Param_0 => Param_0.gnullable)")]
+        [InlineData("np(dt)", "Select(Param_0 => Param_0.dt)")]
+        [InlineData("np(dtnullable)", "Select(Param_0 => Param_0.dtnullable)")]
+        [InlineData("np(number)", "Select(Param_0 => Param_0.number)")]
+        [InlineData("np(nullablenumber)", "Select(Param_0 => Param_0.nullablenumber)")]
+        [InlineData("np(_enum)", "Select(Param_0 => Param_0._enum)")]
+        [InlineData("np(_enumnullable)", "Select(Param_0 => Param_0._enumnullable)")]
+
+#if NET452
+        [InlineData("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g), null))")]
+        [InlineData("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt), null))")]
+        [InlineData("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.number), null))")]
+        [InlineData("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum), null))")]
+        [InlineData("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id), null))")]
+        [InlineData("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal), null))")]
+#else
+        [InlineData("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g, Nullable`1), null))")]
+        [InlineData("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt, Nullable`1), null))")]
+        [InlineData("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.number, Nullable`1), null))")]
+        [InlineData("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum, Nullable`1), null))")]
+        [InlineData("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id, Nullable`1), null))")]
+        [InlineData("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal, Nullable`1), null))")]
+#endif
+
+        [InlineData("np(nested.gnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.gnullable, null))")]
+        [InlineData("np(nested.dtnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.dtnullable, null))")]
+        [InlineData("np(nested.nullablenumber)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.nullablenumber, null))")]
+        [InlineData("np(nested._enumnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested._enumnullable, null))")]
+        [InlineData("np(item.GuidNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Param_0.item.GuidNull, null))")]
+        public void ExpressionTests_NullPropagating(string test, string query)
+        {
+            // Arrange
+            var q = new[]
+            {
+                new
+                {
+                    g = Guid.NewGuid(),
+                    gnullable = (Guid?) Guid.NewGuid(),
+                    dt = DateTime.Now,
+                    dtnullable = (DateTime?) DateTime.Now,
+                    _enum = TestEnum2.Var1,
+                    _enumnullable = (TestEnum2?) TestEnum2.Var2,
+                    number = 1,
+                    nullablenumber = (int?) 2,
+                    nested = new
+                    {
+                        g = Guid.NewGuid(),
+                        gnullable = (Guid?) Guid.NewGuid(),
+                        dt = DateTime.Now,
+                        dtnullable = (DateTime?) DateTime.Now,
+                        _enum = TestEnum2.Var1,
+                        _enumnullable = (TestEnum2?) TestEnum2.Var2,
+                        number = 1,
+                        nullablenumber = (int?) 2,
+                    },
+                    item = new TestGuidNullClass
+                    {
+                        Id = 100,
+                        GuidNormal = Guid.NewGuid(),
+                        GuidNull = Guid.NewGuid()
+                    }
+                }
+            }.AsQueryable();
+
+            // Act
+            var resultDynamic = q.Select(test);
+
+            // Assert
+            string queryAsString = resultDynamic.ToString();
+            queryAsString = queryAsString.Substring(queryAsString.IndexOf(".Select") + 1).TrimEnd(']');
+            Check.That(queryAsString).Equals(query);
+        }
+
         [Fact]
         public void ExpressionTests_NullPropagation_Method()
         {
@@ -1333,10 +1410,12 @@ namespace System.Linq.Dynamic.Core.Tests
 
         [Fact]
         public void ExpressionTests_NullPropagation_DateTime()
+        public void ExpressionTests_NullPropagating_DateTime()
         {
             // Arrange
-            var q = new[] {
-                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1) }
+            var q = new[]
+            {
+                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
             }.AsQueryable();
 
             // Act
@@ -1351,7 +1430,8 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_NullPropagation_NullableDateTime()
         {
             // Arrange
-            var q = new[] {
+            var q = new[]
+            {
                 new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
             }.AsQueryable();
 
@@ -1364,7 +1444,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagation_Integer_Null()
+        public void ExpressionTests_NullPropagating_WithoutDefaultValue()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
@@ -1380,7 +1460,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagation_Integer_Value()
+        public void ExpressionTests_NullPropagating_WithDefaultValue()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();

@@ -4,7 +4,7 @@
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <Authors>Stef Heyenrath</Authors>
         <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0;uap10.0;netcoreapp2.1</TargetFrameworks>
-        <DefineConstants>$(DefineConstants);EFCORE</DefineConstants>
+        <DefineConstants>$(DefineConstants);EFCORE;EFDYNAMICFUNCTIONS</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
         <AssemblyOriginatorKeyFile>Microsoft.EntityFrameworkCore.DynamicLinq.snk</AssemblyOriginatorKeyFile>
@@ -96,11 +96,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.0" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp2.1'">
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     </ItemGroup>
 
