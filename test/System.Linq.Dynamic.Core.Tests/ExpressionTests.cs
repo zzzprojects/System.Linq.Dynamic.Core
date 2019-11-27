@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using NFluent;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-using Newtonsoft.Json.Linq;
-using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -1382,12 +1382,39 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_NullPropagation_Method()
+        {
+            // Arrange
+            var users = new[] { new User { Roles = new List<Role>() } }.AsQueryable();
+
+            // Act
+            var resultDynamic = users.Select("np(Roles.FirstOrDefault(false).Name)").ToDynamicArray();
+
+            // Assert
+            Assert.True(resultDynamic[0] == null);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagation_Method_WithDefaultValue()
+        {
+            // Arrange
+            var defaultRoleName = "x";
+            var users = new[] { new User { Roles = new List<Role>() } }.AsQueryable();
+
+            // Act
+            var resultDynamic = users.Select("np(Roles.FirstOrDefault(false).Name, @0)", defaultRoleName).ToDynamicArray();
+
+            // Assert
+            Assert.True(resultDynamic[0] == "x");
+        }
+
+        [Fact]
         public void ExpressionTests_NullPropagating_DateTime()
         {
             // Arrange
             var q = new[]
             {
-                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
+                new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1) }
             }.AsQueryable();
 
             // Act
@@ -1399,7 +1426,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_NullableDateTime()
+        public void ExpressionTests_NullPropagation_NullableDateTime()
         {
             // Arrange
             var q = new[]
@@ -1448,7 +1475,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_ThrowsException()
+        public void ExpressionTests_NullPropagation_ThrowsException()
         {
             // Arrange
             var q = User.GenerateSampleModels(1, true).AsQueryable();

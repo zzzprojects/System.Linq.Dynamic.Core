@@ -352,7 +352,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     if (_methodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, args, out MethodBase containsSignature) != 1)
                     {
-                        throw ParseError(op.Pos, Res.NoApplicableAggregate, nameof(IEnumerableSignatures.Contains));
+                        throw ParseError(op.Pos, Res.NoApplicableAggregate, nameof(IEnumerableSignatures.Contains), string.Join(",", args.Select(a => a.Type.Name).ToArray()));
                     }
 
                     var typeArgs = new[] { left.Type };
@@ -1738,7 +1738,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, args))
             {
-                throw ParseError(errorPos, Res.NoApplicableAggregate, methodName);
+                throw ParseError(errorPos, Res.NoApplicableAggregate, methodName, string.Join(",", args.Select(a => a.Type.Name).ToArray()));
             }
 
             Type callType = typeof(Enumerable);
