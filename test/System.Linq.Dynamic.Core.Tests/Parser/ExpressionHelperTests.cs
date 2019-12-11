@@ -36,6 +36,27 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Fact]
+        public void ExpressionHelper_WrapNullableConstantExpression_false()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = false
+            };
+            var expressionHelper = new ExpressionHelper(config);
+
+            int? value = 42;
+            Expression expression = Expression.Constant(value);
+
+            // Act
+            expressionHelper.WrapConstantExpression(ref expression);
+
+            // Assert
+            Check.That(expression).IsInstanceOf<ConstantExpression>();
+            Check.That(expression.ToString()).Equals("42");
+        }
+
+        [Fact]
         public void ExpressionHelper_WrapConstantExpression_true()
         {
             // Assign
@@ -55,6 +76,28 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             // Assert
             Check.That(expression.GetType().FullName).Equals("System.Linq.Expressions.PropertyExpression");
             Check.That(expression.ToString()).Equals("value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.String]).Value");
+        }
+
+        [Fact]
+        public void ExpressionHelper_WrapNullableConstantExpression_true()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = true
+            };
+            var expressionHelper = new ExpressionHelper(config);
+
+            int? value = 42;
+            Expression expression = Expression.Constant(value);
+
+            // Act
+            expressionHelper.WrapConstantExpression(ref expression);
+            expressionHelper.WrapConstantExpression(ref expression);
+
+            // Assert
+            Check.That(expression.GetType().FullName).Equals("System.Linq.Expressions.PropertyExpression");
+            Check.That(expression.ToString()).Equals("value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.Int32]).Value");
         }
 
         [Fact]
