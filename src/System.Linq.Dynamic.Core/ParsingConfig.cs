@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+﻿using System.Globalization;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
 
 namespace System.Linq.Dynamic.Core
@@ -56,10 +57,7 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         public IExpressionPromoter ExpressionPromoter
         {
-            get
-            {
-                return _expressionPromoter ?? (_expressionPromoter = new ExpressionPromoter());
-            }
+            get => _expressionPromoter ?? (_expressionPromoter = new ExpressionPromoter(this));
 
             set
             {
@@ -168,5 +166,12 @@ namespace System.Linq.Dynamic.Core
         /// Default value is false.
         /// </summary>
         public bool DateTimeIsParsedAsUTC { get; set; } = false;
+
+        /// <summary>
+        /// The number parsing culture.
+        ///
+        /// Default value is CultureInfo.InvariantCulture
+        /// </summary>
+        public CultureInfo NumberParseCulture { get; set; } = CultureInfo.InvariantCulture;
     }
 }

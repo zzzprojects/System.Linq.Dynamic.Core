@@ -82,7 +82,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _parsingConfig = parsingConfig ?? ParsingConfig.Default;
 
             _keywordsHelper = new KeywordsHelper(_parsingConfig);
-            _textParser = new TextParser(expression);
+            _textParser = new TextParser(_parsingConfig, expression);
             _methodFinder = new MethodFinder(_parsingConfig);
             _expressionHelper = new ExpressionHelper(_parsingConfig);
             _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
@@ -843,7 +843,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     text = text.Substring(2);
                 }
 
-                if (!ulong.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, CultureInfo.CurrentCulture, out ulong value))
+                if (!ulong.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, _parsingConfig.NumberParseCulture, out ulong value))
                 {
                     throw ParseError(Res.InvalidIntegerLiteral, text);
                 }
@@ -872,7 +872,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     text = text.Substring(3);
                 }
 
-                if (!long.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, CultureInfo.CurrentCulture, out long value))
+                if (!long.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, _parsingConfig.NumberParseCulture, out long value))
                 {
                     throw ParseError(Res.InvalidIntegerLiteral, text);
                 }
@@ -924,7 +924,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             if (qualifier == 'F' || qualifier == 'f')
             {
-                if (float.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out float f))
+                if (float.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Float, _parsingConfig.NumberParseCulture, out float f))
                 {
                     return ConstantExpressionHelper.CreateLiteral(f, text);
                 }
@@ -938,7 +938,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             if (qualifier == 'M' || qualifier == 'm')
             {
-                if (decimal.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Number, CultureInfo.InvariantCulture, out decimal d))
+                if (decimal.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Number, _parsingConfig.NumberParseCulture, out decimal d))
                 {
                     return ConstantExpressionHelper.CreateLiteral(d, text);
                 }
@@ -953,13 +953,13 @@ namespace System.Linq.Dynamic.Core.Parser
             double d;
             if (qualifier == 'D' || qualifier == 'd')
             {
-                if (double.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Number, CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Number, _parsingConfig.NumberParseCulture, out d))
                 {
                     return ConstantExpressionHelper.CreateLiteral(d, text);
                 }
             }
 
-            if (double.TryParse(text, NumberStyles.Number, CultureInfo.InvariantCulture, out d))
+            if (double.TryParse(text, NumberStyles.Number, _parsingConfig.NumberParseCulture, out d))
             {
                 return ConstantExpressionHelper.CreateLiteral(d, text);
             }
