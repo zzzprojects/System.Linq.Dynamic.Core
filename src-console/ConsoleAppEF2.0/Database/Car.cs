@@ -24,6 +24,8 @@ namespace ConsoleAppEF2.Database
         [Required]
         public DateTime DateLastModified { get; set; }
 
+        public DateTime? DateDeleted { get; set; }
+
         public string X(bool b, string s)
         {
             return b + s + Color;
