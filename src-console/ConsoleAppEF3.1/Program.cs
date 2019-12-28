@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ConsoleAppEF2.Database;
+using System.Linq.Dynamic.Core;
 
 namespace ConsoleAppEF31
 {
@@ -33,7 +34,14 @@ namespace ConsoleAppEF31
             {
                 Console.WriteLine($"orderByNullableDateTimeResult.Key,DateDeleted = {x.Key},{x.DateDeleted}");
             }
-            
+
+            Console.WriteLine(new string('-', 80));
+
+            var orderByNullableDateTimeDynamicResult = context.Cars.OrderBy("DateDeleted");
+            foreach (var x in orderByNullableDateTimeDynamicResult)
+            {
+                Console.WriteLine($"orderByNullableDateTimeDynamicResult.Key,DateDeleted = {x.Key},{x.DateDeleted}");
+            }
         }
     }
 }
