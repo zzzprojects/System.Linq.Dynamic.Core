@@ -12,7 +12,7 @@ namespace ConsoleAppEF31
             var context = new TestContext();
 
             //context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            //context.Database.EnsureCreated();
 
             var dateDeleted = new DateTime(2019, 2, 2);
 
@@ -41,6 +41,13 @@ namespace ConsoleAppEF31
             foreach (var x in orderByNullableDateTimeDynamicResult)
             {
                 Console.WriteLine($"orderByNullableDateTimeDynamicResult.Key,DateDeleted = {x.Key},{x.DateDeleted}");
+            }
+
+            Console.WriteLine(new string('-', 80));
+            var orderByNullableDateTimeDynamicResultNew = context.Cars.Select("new (Color, DateDeleted)").OrderBy("DateDeleted desc");
+            foreach (dynamic x in orderByNullableDateTimeDynamicResultNew)
+            {
+                Console.WriteLine($"orderByNullableDateTimeDynamicResult2.Color,DateDeleted = {x.Color},{x.DateDeleted}");
             }
         }
     }

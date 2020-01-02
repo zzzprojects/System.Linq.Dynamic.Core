@@ -5,10 +5,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <AssemblyName>ConsoleAppEF31</AssemblyName>
         <RootNamespace>ConsoleAppEF31</RootNamespace>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <DefineConstants>TRACE;EF3</DefineConstants>
+        <DefineConstants>EF3</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
