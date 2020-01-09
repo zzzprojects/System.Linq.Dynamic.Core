@@ -19,12 +19,18 @@ namespace ConsoleAppEF31
             var dateLastModified = new DateTime(2018, 1, 15);
             if (!context.Cars.Any())
             {
-                context.Cars.Add(new Car { Brand = "Ford", Color = "Blue", Vin = "yes", Year = "2017", DateLastModified = dateLastModified, DateDeleted = dateDeleted });
+                context.Cars.Add(new Car { Brand = "Ford", Color = "Blue", Vin = "yes", Year = "2017", Extra = "e1", NullableInt = 1, DateLastModified = dateLastModified, DateDeleted = dateDeleted });
                 context.Cars.Add(new Car { Brand = "Fiat", Color = "Red", Vin = "yes", Year = "2016", DateLastModified = dateLastModified.AddDays(1) });
-                context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "no", Year = "1979", DateLastModified = dateLastModified.AddDays(2) });
-                context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979", DateLastModified = dateLastModified.AddDays(3), DateDeleted = dateDeleted.AddDays(1) }); ;
+                context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "no", Year = "1979", Extra = "e2", NullableInt = 2, DateLastModified = dateLastModified.AddDays(2) });
+                context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979", Extra = "e3", NullableInt = 3, DateLastModified = dateLastModified.AddDays(3), DateDeleted = dateDeleted.AddDays(1) }); ;
+                context.Cars.Add(new Car { Brand = "Ford", Color = "Yellow", Vin = "no", Year = "2020", DateLastModified = dateLastModified });
                 context.SaveChanges();
             }
+
+            var npExtra1 = context.Cars.Select("np(Extra, \"no-extra\")").ToDynamicList();
+            var npExtra2 = context.Cars.Select("np(Extra, string.empty)").ToDynamicList();
+
+            var npNullableInt = context.Cars.Select("np(NullableInt, 42)").ToDynamicList();
 
             var selectNullableDateTime = context.Cars.FirstOrDefault(c => c.DateDeleted == dateDeleted);
             Console.WriteLine($"selectNullableDateTime.Key = {selectNullableDateTime.Key}");

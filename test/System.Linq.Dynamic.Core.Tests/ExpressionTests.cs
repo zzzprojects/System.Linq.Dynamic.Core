@@ -1467,6 +1467,22 @@ namespace System.Linq.Dynamic.Core.Tests
             testModels[0].Profile = null; // Set the Profile to null for first User
 
             // Act
+            var result = testModels.AsQueryable().Select(t => t != null && t.NullableInt != null ? t.NullableInt : 100).ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(NullableInt, 100)").ToDynamicArray<long>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagatingNested_WithDefaultValue()
+        {
+            // Arrange
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].Profile = null; // Set the Profile to null for first User
+
+            // Act
             var result = testModels.AsQueryable().Select(t => t != null && t.Profile != null && t.Profile.UserProfileDetails != null ? t.Profile.UserProfileDetails.Id : 100).ToArray();
             var resultDynamic = testModels.AsQueryable().Select("np(it.Profile.UserProfileDetails.Id, 100)").ToDynamicArray<long>();
 
