@@ -28,7 +28,8 @@ namespace ConsoleAppEF31
             }
 
             var npExtra1 = context.Cars.Select("np(Extra, \"no-extra\")").ToDynamicList();
-            var npExtra2 = context.Cars.Select("np(Extra, string.empty)").ToDynamicList();
+            var npExtra2 = context.Cars.Select("np(Extra, string.Empty)").ToDynamicList();
+            var npExtra3 = context.Cars.Any("np(Extra, string.Empty).ToUpper() == \"e1\"");
 
             var npNullableInt = context.Cars.Select("np(NullableInt, 42)").ToDynamicList();
 
