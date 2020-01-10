@@ -1149,8 +1149,8 @@ namespace System.Linq.Dynamic.Core.Parser
                     return memberExpression;
                 }
 
-                bool isNullable = TypeHelper.IsNullableType(memberExpression.Type);
-                if (isNullable)
+                bool canBeNullableType = TypeHelper.IsNullableType(memberExpression.Type) || !memberExpression.Type.GetTypeInfo().IsPrimitive;
+                if (canBeNullableType)
                 {
                     // For nullable objects, generate 'x != null ? x : null'
                     var notEqualToNull = _expressionHelper.GenerateNotEqual(memberExpression, Expression.Constant(null));

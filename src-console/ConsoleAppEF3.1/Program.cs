@@ -56,6 +56,18 @@ namespace ConsoleAppEF31
             {
                 Console.WriteLine($"orderByNullableDateTimeDynamicResult2.Color,DateDeleted = {x.Color},{x.DateDeleted}");
             }
+
+            var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
+
+            var resultDynamic = users.Any("c => np(c.FirstName, string.Empty).ToUpper() == \"DOE\"");
+            Console.WriteLine(resultDynamic);
+        }
+
+        public class User
+        {
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string EmailAddress { get; set; }
         }
     }
 }
