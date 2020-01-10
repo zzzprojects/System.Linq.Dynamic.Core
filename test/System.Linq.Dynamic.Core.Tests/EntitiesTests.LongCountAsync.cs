@@ -35,7 +35,7 @@ namespace System.Linq.Dynamic.Core.Tests
 #endif
 
             //Act
-            long result = await (_context.Blogs as IQueryable).LongCountAsync("Name.Contains(@0)", search);
+            long result = (_context.Blogs as IQueryable).LongCount("Name.Contains(@0)", search);
 
             //Assert
             Assert.Equal(expected, result);

@@ -1419,7 +1419,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var result = q.OrderBy(x => x.date2).Select(x => x.id).ToArray();
-            var resultDynamic = q.OrderBy("np(date2)").Select("id").ToDynamicArray<int>();
+            var resultDynamic = q.OrderBy("np(date1)").Select("id").ToDynamicArray<int>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);
@@ -1463,12 +1463,10 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
-            testModels.Add(null); // Add null User
-            testModels[0].Profile = null; // Set the Profile to null for first User
 
             // Act
-            var result = testModels.AsQueryable().Select(t => t != null && t.NullableInt != null ? t.NullableInt : 100).ToArray();
-            var resultDynamic = testModels.AsQueryable().Select("np(NullableInt, 100)").ToDynamicArray<long>();
+            var result = testModels.AsQueryable().Select(t => t.NullableInt != null ? t.NullableInt : 100).ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(NullableInt, 100)").ToDynamicArray<int>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);

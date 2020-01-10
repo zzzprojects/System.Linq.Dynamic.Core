@@ -1136,18 +1136,29 @@ namespace System.Linq.Dynamic.Core.Parser
             if (args[0] is MemberExpression memberExpression)
             {
                 bool hasDefaultParameter = args.Length == 2;
+                Expression expressionIfFalse = hasDefaultParameter ? args[1] : Expression.Constant(null);
 
                 if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(memberExpression, out Expression generatedExpression))
                 {
-                    var expressionIfFalse = hasDefaultParameter ? args[1] : Expression.Constant(null);
                     return GenerateConditional(generatedExpression, memberExpression, expressionIfFalse, errorPos);
                 }
 
-                generatedExpression = Expression.NotEqual(memberExpression, Expression.Constant(null));
+                if (!hasDefaultParameter)
+                {
+                    // If no default parameter has been supplied and the member expression is a single expression, just return it.
+                    return memberExpression;
+                }
 
-                // If no default parameter has been supplied and the member expression is a single expression, just return it.
-                // Else GenerateConditional
-                return !hasDefaultParameter ? memberExpression : GenerateConditional(generatedExpression, memberExpression, args[1], errorPos);
+                bool isNullable = TypeHelper.IsNullableType(memberExpression.Type);
+                if (isNullable)
+                {
+                    // For nullable objects, generate 'x != null ? x : null'
+                    var notEqualToNull = _expressionHelper.GenerateNotEqual(memberExpression, Expression.Constant(null));
+                    return GenerateConditional(notEqualToNull, memberExpression, expressionIfFalse, errorPos);
+                }
+
+                // For non-nullable with default, just ignore default and return the single expression.
+                return memberExpression;
             }
 
             throw ParseError(errorPos, Res.NullPropagationRequiresMemberExpression);
