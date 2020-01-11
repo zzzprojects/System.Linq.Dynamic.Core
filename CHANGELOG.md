@@ -1,5 +1,17 @@
-# 1.0.20.0 (19 November 2019)
+# 1.0.20.0 (11 January 2020)
+- [#262](https://github.com/StefH/System.Linq.Dynamic.Core/pull/262) - Z.EntityFramework.Classic contributed by [StefH](https://github.com/StefH)
+- [#286](https://github.com/StefH/System.Linq.Dynamic.Core/pull/286) - Do not generate IIF(...) when np(...) is used for a single expression [feature] contributed by [StefH](https://github.com/StefH)
+- [#309](https://github.com/StefH/System.Linq.Dynamic.Core/pull/309) - Null propagation for methods [bug] contributed by [StefH](https://github.com/StefH)
 - [#321](https://github.com/StefH/System.Linq.Dynamic.Core/pull/321) - LongCount contributed by [StefH](https://github.com/StefH)
+- [#323](https://github.com/StefH/System.Linq.Dynamic.Core/pull/323) - ParseNumber using CultureInfo from configuration [feature] contributed by [StefH](https://github.com/StefH)
+- [#329](https://github.com/StefH/System.Linq.Dynamic.Core/pull/329) - Fixed ToDynamicArrayAsync + ToDynamicListAsync (add type) [bug] contributed by [StefH](https://github.com/StefH)
+- [#336](https://github.com/StefH/System.Linq.Dynamic.Core/pull/336) - Add EF3.1 example [feature] contributed by [StefH](https://github.com/StefH)
+- [#338](https://github.com/StefH/System.Linq.Dynamic.Core/pull/338) - Fix np(...) [bug] contributed by [StefH](https://github.com/StefH)
+- [#302](https://github.com/StefH/System.Linq.Dynamic.Core/issues/302) - np (NullPropagation) throws NullReferenceException with methods [bug]
+- [#311](https://github.com/StefH/System.Linq.Dynamic.Core/issues/311) - Please support LongCount() [feature]
+- [#320](https://github.com/StefH/System.Linq.Dynamic.Core/issues/320) - TypeHelper#ParseNumber TryParse does not use InvariantCulture [bug]
+- [#327](https://github.com/StefH/System.Linq.Dynamic.Core/issues/327) - Incorrect ToDynamicListAsync(this IEnumerable source, Type type) and ToDynamicArrayAsync(this IEnumerable source, Type type) behavior [bug]
+- [#337](https://github.com/StefH/System.Linq.Dynamic.Core/issues/337) - np (NullPropagation) throws NullReferenceException with property on .NET Core 3.1 [bug]
 
 # 1.0.19.0 (29 August 2019)
 - [#277](https://github.com/StefH/System.Linq.Dynamic.Core/pull/277) - DateTimeIsParsedAsUTC [feature] contributed by [StefH](https://github.com/StefH)
