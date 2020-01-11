@@ -1135,15 +1135,29 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (args[0] is MemberExpression memberExpression)
             {
+                bool hasDefaultParameter = args.Length == 2;
+                Expression expressionIfFalse = hasDefaultParameter ? args[1] : Expression.Constant(null);
+
                 if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(memberExpression, out Expression generatedExpression))
                 {
-                    var expressionIfTrue = memberExpression;
-                    var expressionIfFalse = args.Length == 2 ? args[1] : Expression.Constant(null);
-
-                    return GenerateConditional(generatedExpression, expressionIfTrue, expressionIfFalse, errorPos);
+                    return GenerateConditional(generatedExpression, memberExpression, expressionIfFalse, errorPos);
                 }
 
-                // The member expression is a single expression, just return it.
+                if (!hasDefaultParameter)
+                {
+                    // If no default parameter has been supplied and the member expression is a single expression, just return it.
+                    return memberExpression;
+                }
+
+                bool canBeNullableType = TypeHelper.IsNullableType(memberExpression.Type) || !memberExpression.Type.GetTypeInfo().IsPrimitive;
+                if (canBeNullableType)
+                {
+                    // For nullable objects, generate 'x != null ? x : null'
+                    var notEqualToNull = _expressionHelper.GenerateNotEqual(memberExpression, Expression.Constant(null));
+                    return GenerateConditional(notEqualToNull, memberExpression, expressionIfFalse, errorPos);
+                }
+
+                // For non-nullable with default, just ignore default and return the single expression.
                 return memberExpression;
             }
 
@@ -1207,59 +1221,59 @@ namespace System.Linq.Dynamic.Core.Parser
             return Expression.ConvertChecked(_it, resolvedType);
         }
 
-        Expression GenerateConditional(Expression test, Expression expr1, Expression expr2, int errorPos)
+        Expression GenerateConditional(Expression test, Expression expressionIfTrue, Expression expressionIfFalse, int errorPos)
         {
             if (test.Type != typeof(bool))
             {
                 throw ParseError(errorPos, Res.FirstExprMustBeBool);
             }
 
-            if (expr1.Type != expr2.Type)
+            if (expressionIfTrue.Type != expressionIfFalse.Type)
             {
-                // If expr1 is a null constant and expr2 is ValueType:
-                // - create nullable constant from expr1 with type from expr2
-                // - convert expr2 to nullable (unless it's already nullable)
-                if (Constants.IsNull(expr1) && expr2.Type.GetTypeInfo().IsValueType)
+                // If expressionIfTrue is a null constant and expressionIfFalse is ValueType:
+                // - create nullable constant from expressionIfTrue with type from expressionIfFalse
+                // - convert expressionIfFalse to nullable (unless it's already nullable)
+                if (Constants.IsNull(expressionIfTrue) && expressionIfFalse.Type.GetTypeInfo().IsValueType)
                 {
-                    Type nullableType = TypeHelper.ToNullableType(expr2.Type);
-                    expr1 = Expression.Constant(null, nullableType);
-                    if (!TypeHelper.IsNullableType(expr2.Type))
+                    Type nullableType = TypeHelper.ToNullableType(expressionIfFalse.Type);
+                    expressionIfTrue = Expression.Constant(null, nullableType);
+                    if (!TypeHelper.IsNullableType(expressionIfFalse.Type))
                     {
-                        expr2 = Expression.Convert(expr2, nullableType);
+                        expressionIfFalse = Expression.Convert(expressionIfFalse, nullableType);
                     }
 
-                    return Expression.Condition(test, expr1, expr2);
+                    return Expression.Condition(test, expressionIfTrue, expressionIfFalse);
                 }
 
-                // If expr2 is a null constant and expr1 is a ValueType:
-                // - create nullable constant from expr2 with type from expr1
-                // - convert expr1 to nullable (unless it's already nullable)
-                if (Constants.IsNull(expr2) && expr1.Type.GetTypeInfo().IsValueType)
+                // If expressionIfFalse is a null constant and expressionIfTrue is a ValueType:
+                // - create nullable constant from expressionIfFalse with type from expressionIfTrue
+                // - convert expressionIfTrue to nullable (unless it's already nullable)
+                if (Constants.IsNull(expressionIfFalse) && expressionIfTrue.Type.GetTypeInfo().IsValueType)
                 {
-                    Type nullableType = TypeHelper.ToNullableType(expr1.Type);
-                    expr2 = Expression.Constant(null, nullableType);
-                    if (!TypeHelper.IsNullableType(expr1.Type))
+                    Type nullableType = TypeHelper.ToNullableType(expressionIfTrue.Type);
+                    expressionIfFalse = Expression.Constant(null, nullableType);
+                    if (!TypeHelper.IsNullableType(expressionIfTrue.Type))
                     {
-                        expr1 = Expression.Convert(expr1, nullableType);
+                        expressionIfTrue = Expression.Convert(expressionIfTrue, nullableType);
                     }
 
-                    return Expression.Condition(test, expr1, expr2);
+                    return Expression.Condition(test, expressionIfTrue, expressionIfFalse);
                 }
 
-                Expression expr1As2 = !Constants.IsNull(expr2) ? _parsingConfig.ExpressionPromoter.Promote(expr1, expr2.Type, true, false) : null;
-                Expression expr2As1 = !Constants.IsNull(expr1) ? _parsingConfig.ExpressionPromoter.Promote(expr2, expr1.Type, true, false) : null;
+                Expression expr1As2 = !Constants.IsNull(expressionIfFalse) ? _parsingConfig.ExpressionPromoter.Promote(expressionIfTrue, expressionIfFalse.Type, true, false) : null;
+                Expression expr2As1 = !Constants.IsNull(expressionIfTrue) ? _parsingConfig.ExpressionPromoter.Promote(expressionIfFalse, expressionIfTrue.Type, true, false) : null;
                 if (expr1As2 != null && expr2As1 == null)
                 {
-                    expr1 = expr1As2;
+                    expressionIfTrue = expr1As2;
                 }
                 else if (expr2As1 != null && expr1As2 == null)
                 {
-                    expr2 = expr2As1;
+                    expressionIfFalse = expr2As1;
                 }
                 else
                 {
-                    string type1 = !Constants.IsNull(expr1) ? expr1.Type.Name : "null";
-                    string type2 = !Constants.IsNull(expr2) ? expr2.Type.Name : "null";
+                    string type1 = !Constants.IsNull(expressionIfTrue) ? expressionIfTrue.Type.Name : "null";
+                    string type2 = !Constants.IsNull(expressionIfFalse) ? expressionIfFalse.Type.Name : "null";
                     if (expr1As2 != null)
                     {
                         throw ParseError(errorPos, Res.BothTypesConvertToOther, type1, type2);
@@ -1269,7 +1283,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            return Expression.Condition(test, expr1, expr2);
+            return Expression.Condition(test, expressionIfTrue, expressionIfFalse);
         }
 
         // new (...) function

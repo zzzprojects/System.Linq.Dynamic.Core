@@ -1419,7 +1419,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var result = q.OrderBy(x => x.date2).Select(x => x.id).ToArray();
-            var resultDynamic = q.OrderBy("np(date2)").Select("id").ToDynamicArray<int>();
+            var resultDynamic = q.OrderBy("np(date1)").Select("id").ToDynamicArray<int>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);
@@ -1443,7 +1443,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_WithoutDefaultValue()
+        public void ExpressionTests_NullPropagating_NestedInteger_WithoutDefaultValue()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
@@ -1459,7 +1459,35 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_WithDefaultValue()
+        public void ExpressionTests_NullPropagating_NullableInteger_WithDefaultValue()
+        {
+            // Arrange
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+
+            // Act
+            var result = testModels.AsQueryable().Select(t => t.NullableInt != null ? t.NullableInt : 100).ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(NullableInt, 100)").ToDynamicArray<int>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_String_WithDefaultValue()
+        {
+            // Arrange
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+
+            // Act
+            var result = testModels.AsQueryable().Select(t => t.UserName != null ? t.UserName : "x").ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(UserName, \"x\")").ToDynamicArray<string>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagatingNested_WithDefaultValue()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
