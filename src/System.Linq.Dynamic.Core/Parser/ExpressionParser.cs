@@ -1481,12 +1481,29 @@ namespace System.Linq.Dynamic.Core.Parser
             MemberBinding[] bindings = new MemberBinding[properties.Count];
             for (int i = 0; i < bindings.Length; i++)
             {
-                PropertyInfo property = type.GetProperty(properties[i].Name);
-                Type propertyType = property.PropertyType;
-                // Type expressionType = expressions[i].Type;
+                string propertyOrFieldName = properties[i].Name;
+                Type propertyOrFieldType;
+                MemberInfo memberInfo;
+                PropertyInfo propertyInfo = type.GetProperty(propertyOrFieldName);
+                if (propertyInfo != null)
+                {
+                    memberInfo = propertyInfo;
+                    propertyOrFieldType = propertyInfo.PropertyType;
+                }
+                else
+                {
+                    FieldInfo fieldInfo = type.GetField(propertyOrFieldName);
+                    if (fieldInfo == null)
+                    {
+                        throw ParseError(Res.UnknownPropertyOrField, propertyOrFieldName, TypeHelper.GetTypeName(type));
+                    }
+
+                    memberInfo = fieldInfo;
+                    propertyOrFieldType = fieldInfo.FieldType;
+                }
 
                 // Promote from Type to Nullable Type if needed
-                bindings[i] = Expression.Bind(property, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
+                bindings[i] = Expression.Bind(memberInfo, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true));
             }
 
             return Expression.MemberInit(Expression.New(type), bindings);

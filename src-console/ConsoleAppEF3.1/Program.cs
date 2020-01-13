@@ -70,11 +70,19 @@ namespace ConsoleAppEF31
             var resultDynamic = users.Any("c => np(c.FirstName, string.Empty).ToUpper() == \"DOE\"");
             Console.WriteLine(resultDynamic);
 
-            // Fails because Field is not a property but a field!
             var users2 = users.Select<User>(config, "new User(it.FirstName as FirstName, 1 as Field)");
             foreach (User u in users2)
             {
-                Console.WriteLine($"u = {u.FirstName} {u.Field}");
+                Console.WriteLine($"u.FirstName = {u.FirstName}, u.Field = {u.Field}");
+            }
+
+            try
+            {
+                users.Select<User>(config, "new User(1 as FieldDoesNotExist)");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
