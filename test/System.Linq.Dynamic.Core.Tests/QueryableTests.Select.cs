@@ -18,6 +18,7 @@ namespace System.Linq.Dynamic.Core.Tests
     {
         public class Example
         {
+            public int Field;
             public DateTime Time { get; set; }
             public DateTime? TimeNull { get; set; }
             public DayOfWeek? DOWNull { get; set; }
@@ -269,14 +270,26 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Select_Dynamic_WithField()
+        {
+            // Arrange
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+            var queryable = new List<int> { 1, 2 }.AsQueryable();
+
+            // Act
+            var projectedData = queryable.Select<Example>(config, $"new {typeof(Example).FullName}(~ as Field)");
+
+            // Assert
+            Check.That(projectedData.First().Field).Equals(1);
+            Check.That(projectedData.Last().Field).Equals(2);
+        }
+
+        [Fact]
         public void Select_Dynamic_IntoKnownNestedType()
         {
+            // Arrange
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
-#if NETCOREAPP
-            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
-            // Assign
-            var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
+            var queryable = new List<string> { "name1", "name2" }.AsQueryable();
 
             // Act
             var projectedData = queryable.Select<Example.NestedDto>(config, $"new {typeof(Example.NestedDto).FullName}(~ as Name)");
@@ -289,13 +302,9 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Select_Dynamic_IntoKnownNestedTypeSecondLevel()
         {
+            // Arrange
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
-#if NETCOREAPP
-            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
-
-            // Assign
-            var queryable = new List<string>() { "name1", "name2" }.AsQueryable();
+            var queryable = new List<string> { "name1", "name2" }.AsQueryable();
 
             // Act
             var projectedData = queryable.Select<Example.NestedDto.NestedDto2>(config, $"new {typeof(Example.NestedDto.NestedDto2).FullName}(~ as Name2)");
@@ -365,6 +374,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => qry.Select("new Id, UserName"));
             Assert.Throws<ParseException>(() => qry.Select("new (Id, UserName"));
             Assert.Throws<ParseException>(() => qry.Select("new (Id, UserName, Bad)"));
+            Check.ThatCode(() => qry.Select<User>("new User(it.Bad as Bad)")).Throws<ParseException>().WithMessage("No property or field 'Bad' exists in type 'User'");
 
             Assert.Throws<ArgumentNullException>(() => DynamicQueryableExtensions.Select(null, "Id"));
             Assert.Throws<ArgumentNullException>(() => qry.Select(null));
