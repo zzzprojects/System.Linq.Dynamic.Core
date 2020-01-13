@@ -57,10 +57,25 @@ namespace ConsoleAppEF31
                 Console.WriteLine($"orderByNullableDateTimeDynamicResult2.Color,DateDeleted = {x.Color},{x.DateDeleted}");
             }
 
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true, ResolveTypesBySimpleName = false };
+            var select = context.Cars.Select<Car>(config, $"new {typeof(Car).FullName}(it.Key as Key, \"?\" as Brand)");
+            foreach (Car car in select)
+            {
+                Console.WriteLine($"{car.Key}");
+            }
+
+            // Users
             var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
 
             var resultDynamic = users.Any("c => np(c.FirstName, string.Empty).ToUpper() == \"DOE\"");
             Console.WriteLine(resultDynamic);
+
+            // Fails because Field is not a property but a field!
+            var users2 = users.Select<User>(config, "new User(it.FirstName as FirstName, 1 as Field)");
+            foreach (User u in users2)
+            {
+                Console.WriteLine($"u = {u.FirstName} {u.Field}");
+            }
         }
 
         public class User
@@ -68,6 +83,8 @@ namespace ConsoleAppEF31
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string EmailAddress { get; set; }
+
+            public int Field;
         }
     }
 }
