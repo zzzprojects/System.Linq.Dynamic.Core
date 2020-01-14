@@ -2,6 +2,7 @@
 using System.Linq;
 using ConsoleAppEF2.Database;
 using System.Linq.Dynamic.Core;
+using Newtonsoft.Json;
 
 namespace ConsoleAppEF31
 {
@@ -9,6 +10,12 @@ namespace ConsoleAppEF31
     {
         static void Main(string[] args)
         {
+            var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
+            foreach (dynamic x in users.Select("new (int?(Field) as fld, string(null) as StrNull, string(\"a\") as StrA, string(\"\") as StrEmpty1)"))
+            {
+                Console.WriteLine($"x = {JsonConvert.SerializeObject(x)}");
+            }
+
             var context = new TestContext();
 
             //context.Database.EnsureDeleted();
@@ -64,9 +71,6 @@ namespace ConsoleAppEF31
                 Console.WriteLine($"{car.Key}");
             }
 
-            // Users
-            var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
-
             var resultDynamic = users.Any("c => np(c.FirstName, string.Empty).ToUpper() == \"DOE\"");
             Console.WriteLine(resultDynamic);
 
@@ -83,6 +87,11 @@ namespace ConsoleAppEF31
             catch (Exception e)
             {
                 Console.WriteLine(e);
+            }
+
+            foreach (dynamic x in users.Select("new (FirstName, string(\"a\") as StrA, string('c') as StrCh, string(\"\") as StrEmpty1, string('\0') as StrEmpty2, string(null) as StrNull)"))
+            {
+                Console.WriteLine($"x.FirstName = '{x.FirstName}' ; x.Str = '{x.Str == null}'");
             }
         }
 

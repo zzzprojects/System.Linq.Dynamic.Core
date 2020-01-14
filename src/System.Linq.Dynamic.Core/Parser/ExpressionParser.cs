@@ -1538,11 +1538,17 @@ namespace System.Linq.Dynamic.Core.Parser
                 _textParser.NextToken();
             }
 
-            // This is a shorthand for explicitely converting a string to something
+            // This is a shorthand for explicitly converting a string to something
             bool shorthand = _textParser.CurrentToken.Id == TokenId.StringLiteral;
             if (_textParser.CurrentToken.Id == TokenId.OpenParen || shorthand)
             {
                 Expression[] args = shorthand ? new[] { ParseStringLiteral() } : ParseArgumentList();
+
+                // If only 1 argument, and the arg is ConstantExpression, just return the ConstantExpression
+                if (args.Length == 1 && args[0] is ConstantExpression)
+                {
+                    return args[0];
+                }
 
                 // If only 1 argument, and if the type is a ValueType and argType is also a ValueType, just Convert
                 if (args.Length == 1)
@@ -1555,7 +1561,10 @@ namespace System.Linq.Dynamic.Core.Parser
                     }
                 }
 
-                switch (_methodFinder.FindBestMethod(type.GetConstructors(), args, out MethodBase method))
+                var constructorsWithOutPointerArguments = type.GetConstructors()
+                    .Where(c => !c.GetParameters().Any(p => p.ParameterType.GetTypeInfo().IsPointer))
+                    .ToArray();
+                switch (_methodFinder.FindBestMethod(constructorsWithOutPointerArguments, args, out MethodBase method))
                 {
                     case 0:
                         if (args.Length == 1)
