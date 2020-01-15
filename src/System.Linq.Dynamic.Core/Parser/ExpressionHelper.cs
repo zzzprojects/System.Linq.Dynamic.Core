@@ -244,11 +244,9 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public bool TryGenerateAndAlsoNotNullExpression(Expression sourceExpression, out Expression generatedExpression)
+        public bool TryGenerateAndAlsoNotNullExpression(Expression sourceExpression, bool addSelf, out Expression generatedExpression)
         {
-            generatedExpression = sourceExpression;
-
-            var expressions = CollectExpressions(sourceExpression);
+            var expressions = CollectExpressions(addSelf, sourceExpression);
 
             if (expressions.Count == 1 && !(expressions[0] is MethodCallExpression))
             {
@@ -305,10 +303,19 @@ namespace System.Linq.Dynamic.Core.Parser
             return null;
         }
 
-        private static List<Expression> CollectExpressions(Expression sourceExpression)
+        private static List<Expression> CollectExpressions(bool addSelf, Expression sourceExpression)
         {
-            var list = new List<Expression>();
             Expression expression = GetMemberExpression(sourceExpression);
+
+            var list = new List<Expression>();
+
+            if (addSelf && expression is MemberExpression memberExpressionFirst)
+            {
+                if (TypeHelper.IsNullableType(memberExpressionFirst.Type) || !memberExpressionFirst.Type.GetTypeInfo().IsValueType)
+                {
+                    list.Add(sourceExpression);
+                }
+            }
 
             while (expression is MemberExpression memberExpression)
             {
