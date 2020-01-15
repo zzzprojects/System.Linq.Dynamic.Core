@@ -65,7 +65,7 @@ namespace ConsoleAppEF31
             }
 
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true, ResolveTypesBySimpleName = false };
-            var select = context.Cars.Select<Car>(config, $"new {typeof(Car).FullName}(it.Key as Key, \"?\" as Brand)");
+            var select = context.Cars.Select<Car>(config, $"new {typeof(Car).FullName}(it.Key as Key, \"?\" as Brand, string(null) as Color, string(\"e\") as Extra)");
             foreach (Car car in select)
             {
                 Console.WriteLine($"{car.Key}");
