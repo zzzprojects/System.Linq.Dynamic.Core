@@ -1138,26 +1138,11 @@ namespace System.Linq.Dynamic.Core.Parser
                 bool hasDefaultParameter = args.Length == 2;
                 Expression expressionIfFalse = hasDefaultParameter ? args[1] : Expression.Constant(null);
 
-                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(memberExpression, out Expression generatedExpression))
+                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(memberExpression, hasDefaultParameter, out Expression generatedExpression))
                 {
                     return GenerateConditional(generatedExpression, memberExpression, expressionIfFalse, errorPos);
                 }
 
-                if (!hasDefaultParameter)
-                {
-                    // If no default parameter has been supplied and the member expression is a single expression, just return it.
-                    return memberExpression;
-                }
-
-                bool canBeNullableType = TypeHelper.IsNullableType(memberExpression.Type) || !memberExpression.Type.GetTypeInfo().IsPrimitive;
-                if (canBeNullableType)
-                {
-                    // For nullable objects, generate 'x != null ? x : null'
-                    var notEqualToNull = _expressionHelper.GenerateNotEqual(memberExpression, Expression.Constant(null));
-                    return GenerateConditional(notEqualToNull, memberExpression, expressionIfFalse, errorPos);
-                }
-
-                // For non-nullable with default, just ignore default and return the single expression.
                 return memberExpression;
             }
 
