@@ -12,6 +12,7 @@
     }
   ],
   "build": {
+    "maxParallelism": 1,
     "content": [
       {
 	    "files": [ "**/*.yml" ],
