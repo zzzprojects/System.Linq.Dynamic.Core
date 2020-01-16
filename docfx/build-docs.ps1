@@ -3,11 +3,11 @@
     Builds documentation for this project into static HTML output
 
 .NOTES
-    Author           : Stef Heyenrath - @sheyenrath
+    Author: Stef Heyenrath - @sheyenrath
 
 .LINK
     https://github.com/StefH/System.Linq.Dynamic.Core/docfx
-	https://raw.githubusercontent.com/jsiegmund/docfx-seed/master/build-docs.ps1	
+	  https://raw.githubusercontent.com/jsiegmund/docfx-seed/master/build-docs.ps1
 #>
 
 # For running this script: "Set-ExecutionPolicy Bypass"
@@ -15,9 +15,6 @@
 param (
   [Switch]$Serve = $false
 )
-
-# Set variables
-$scriptsPath = $PSScriptRoot
 
 Write-Host "Starting docfx build process." -ForegroundColor Yellow
 
@@ -27,8 +24,6 @@ $docfxArgs = @(
 
 # Add '--serve' to arguments in order to start serving the site in place
 if ($Serve.IsPresent) {
-
-  Write-Output "Serving website from '_site'"
   $docfxArgs = $docfxArgs + "--serve"
 }
 

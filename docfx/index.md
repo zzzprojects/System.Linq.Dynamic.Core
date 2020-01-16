@@ -9,6 +9,3 @@ var query = db.Customers
     .OrderBy("CompanyName")
     .Select("new(CompanyName as Name, Phone)");
 ```
-
-# API Documentation
-See [link](api/System.Linq.Dynamic.Core.html)

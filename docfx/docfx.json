@@ -27,7 +27,13 @@
         "files": [ ]
       }
     ],
-    "overwrite": "specs/*.md",
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/*.yml"
+        ]
+      }
+    ],
     "globalMetadata": {
       "_enableSearch": true
     },

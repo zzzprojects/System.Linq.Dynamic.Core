@@ -13,15 +13,12 @@
       "is_incremental": false
     },
     {
-      "log_codes": [
-        "InvalidFileLink"
-      ],
       "type": "Conceptual",
       "source_relative_path": "index.md",
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "57vM7BlsdlMZ6t3P0oPH0g=="
+          "hash": "chJWv7F6A/OVfPMM9I/HtA=="
         }
       },
       "is_incremental": false,
@@ -449,13 +446,13 @@
           "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 1,
-          "skipped_file_count": 0
+          "skipped_file_count": 1
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build",
-          "total_file_count": 33,
-          "skipped_file_count": 28
+          "total_file_count": 32,
+          "skipped_file_count": 32
         },
         "TocDocumentProcessor": {
           "can_incremental": false,
