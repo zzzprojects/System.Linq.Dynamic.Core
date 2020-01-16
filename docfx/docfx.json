@@ -3,7 +3,7 @@
     {
       "src": [
         {
-          "files": [ "**/*.csproj" ],
+          "files": [ "**/System.Linq.Dynamic.Core.csproj" ],
           "exclude": [ "**/bin/**", "**/obj/**" ],
           "src": "../src"
         }
@@ -12,7 +12,7 @@
     }
   ],
   "build": {
-    "maxParallelism": 1,
+    "maxParallelism": 2,
     "content": [
       {
 	    "files": [ "**/*.yml" ],

@@ -26,66 +26,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "obj/api/EntityFramework.DynamicLinq.EntityFrameworkDynamicQueryableExtensions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/EntityFramework.DynamicLinq.EntityFrameworkDynamicQueryableExtensions.html",
-          "hash": "/n96bvs/ictFmneFLznXKA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "obj/api/EntityFramework.DynamicLinq.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/EntityFramework.DynamicLinq.html",
-          "hash": "Dh7DdBvQa+4P+e2oji5jkg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "obj/api/Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions.html",
-          "hash": "qKZJSy+ULlG1+RSicBCdIw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "obj/api/Microsoft.EntityFrameworkCore.DynamicLinq.EntityFrameworkDynamicQueryableExtensions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Microsoft.EntityFrameworkCore.DynamicLinq.EntityFrameworkDynamicQueryableExtensions.html",
-          "hash": "K7n79coiTdxNForImAPDrQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "obj/api/Microsoft.EntityFrameworkCore.DynamicLinq.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/Microsoft.EntityFrameworkCore.DynamicLinq.html",
-          "hash": "l6DmHuD4TLjcLNMO1RtFpQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "obj/api/System.Linq.Dynamic.Core.CustomTypeProviders.AbstractDynamicLinqCustomTypeProvider.yml",
       "output": {
         ".html": {
@@ -414,7 +354,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "/Jg9q2T43HRS4du7wHYJhw=="
+          "hash": "fIJKSZpkXuHrnhchcTsu/g=="
         }
       },
       "is_incremental": false,
@@ -426,7 +366,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "03qgSKh5gThklm4qRAQEMA=="
+          "hash": "pz2m69lBFGpGVLYPhrwsww=="
         }
       },
       "is_incremental": false,
@@ -442,24 +382,24 @@
         "skipped_file_count": 0
       },
       "processors": {
-        "ConceptualDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 1,
-          "skipped_file_count": 1
-        },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 32,
-          "skipped_file_count": 32
-        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
           "skipped_file_count": 0
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 27,
+          "skipped_file_count": 27
+        },
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 1,
+          "skipped_file_count": 1
         }
       }
     },
