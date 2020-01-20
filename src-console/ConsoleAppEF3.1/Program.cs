@@ -27,6 +27,8 @@ namespace ConsoleAppEF31
                 context.SaveChanges();
             }
 
+            var contains = context.Cars.Where("Brand.Contains(@0)", "a").ToDynamicList();
+
             var npExtra1 = context.Cars.Select("np(Extra, \"no-extra\")").ToDynamicList();
             var npExtra2 = context.Cars.Select("np(Extra, string.Empty)").ToDynamicList();
             var npExtra3 = context.Cars.Any("np(Extra, string.Empty).ToUpper() == \"e1\"");
