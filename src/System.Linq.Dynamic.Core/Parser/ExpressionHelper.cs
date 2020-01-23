@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -244,40 +244,47 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public Expression GenerateAndAlsoNotNullExpression(Expression sourceExpression)
+        public bool TryGenerateAndAlsoNotNullExpression(Expression sourceExpression, bool addSelf, out Expression generatedExpression)
         {
-            var expresssions = CollectExpressions(sourceExpression);
-            if (!expresssions.Any())
+            var expressions = CollectExpressions(addSelf, sourceExpression);
+
+            if (expressions.Count == 1 && !(expressions[0] is MethodCallExpression))
             {
-                return null;
+                generatedExpression = sourceExpression;
+                return false;
             }
 
             // Reverse the list
-            expresssions.Reverse();
+            expressions.Reverse();
 
             // Convert all expressions into '!= null'
-            var binaryExpressions = expresssions.Select(expression => Expression.NotEqual(expression, Expression.Constant(null))).ToArray();
+            var binaryExpressions = expressions.Select(expression => Expression.NotEqual(expression, Expression.Constant(null))).ToArray();
 
             // Convert all binary expressions into `AndAlso(...)`
-            var andAlsoExpression = binaryExpressions[0];
+            generatedExpression = binaryExpressions[0];
             for (int i = 1; i < binaryExpressions.Length; i++)
             {
-                andAlsoExpression = Expression.AndAlso(andAlsoExpression, binaryExpressions[i]);
+                generatedExpression = Expression.AndAlso(generatedExpression, binaryExpressions[i]);
             }
 
-            return andAlsoExpression;
+            return true;
         }
 
         private static Expression GetMemberExpression(Expression expression)
         {
+            if (expression is MemberExpression memberExpression)
+            {
+                return memberExpression;
+            }
+
             if (expression is ParameterExpression parameterExpression)
             {
                 return parameterExpression;
             }
 
-            if (expression is MemberExpression memberExpression)
+            if (expression is MethodCallExpression methodCallExpression)
             {
-                return memberExpression;
+                return methodCallExpression;
             }
 
             if (expression is LambdaExpression lambdaExpression)
@@ -287,19 +294,28 @@ namespace System.Linq.Dynamic.Core.Parser
                     return bodyAsMemberExpression;
                 }
 
-                if (lambdaExpression.Body is UnaryExpression bodyAsunaryExpression)
+                if (lambdaExpression.Body is UnaryExpression bodyAsUnaryExpression)
                 {
-                    return bodyAsunaryExpression.Operand;
+                    return bodyAsUnaryExpression.Operand;
                 }
             }
 
             return null;
         }
 
-        private static List<Expression> CollectExpressions(Expression sourceExpression)
+        private static List<Expression> CollectExpressions(bool addSelf, Expression sourceExpression)
         {
-            var list = new List<Expression>();
             Expression expression = GetMemberExpression(sourceExpression);
+
+            var list = new List<Expression>();
+
+            if (addSelf && expression is MemberExpression memberExpressionFirst)
+            {
+                if (TypeHelper.IsNullableType(memberExpressionFirst.Type) || !memberExpressionFirst.Type.GetTypeInfo().IsValueType)
+                {
+                    list.Add(sourceExpression);
+                }
+            }
 
             while (expression is MemberExpression memberExpression)
             {
@@ -311,6 +327,11 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             if (expression is ParameterExpression)
+            {
+                list.Add(expression);
+            }
+
+            if (expression is MethodCallExpression)
             {
                 list.Add(expression);
             }

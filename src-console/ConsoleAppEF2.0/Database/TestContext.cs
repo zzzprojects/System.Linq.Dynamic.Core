@@ -6,7 +6,19 @@ namespace ConsoleAppEF2.Database
 {
     public class TestContext : DbContext
     {
+#if EF3
+        public static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => {
+                builder
+                    //.AddFilter("Default", LogLevel.Information)
+                    .AddFilter("Microsoft", LogLevel.Information)
+                    //.AddFilter("System", LogLevel.Information)
+                    //.AddDebug()
+                    .AddConsole();
+            }
+        );
+#else
         public static readonly LoggerFactory MyLoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((filter, includeScopes) => true, true) });
+#endif
 
         public virtual DbSet<Car> Cars { get; set; }
 
@@ -14,7 +26,7 @@ namespace ConsoleAppEF2.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLoggerFactory(MyLoggerFactory); // Warning: Do not create a new ILoggerFactory instance each time 
+            optionsBuilder.UseLoggerFactory(MyLoggerFactory); // Warning: Do not create a new ILoggerFactory instance each time
             optionsBuilder.EnableSensitiveDataLogging();
 
             optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=CarsEF20;Trusted_Connection=True;");

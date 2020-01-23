@@ -4,7 +4,7 @@
         <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
         <Authors>Stef Heyenrath</Authors>
         <TargetFrameworks>net45;net46</TargetFrameworks>
-        <DefineConstants>EF</DefineConstants>
+        <DefineConstants>EF;EFDYNAMICFUNCTIONS</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>EntityFramework.DynamicLinq</AssemblyName>
         <AssemblyOriginatorKeyFile>EntityFramework.DynamicLinq.snk</AssemblyOriginatorKeyFile>

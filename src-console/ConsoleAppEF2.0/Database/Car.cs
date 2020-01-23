@@ -21,8 +21,14 @@ namespace ConsoleAppEF2.Database
         [Required]
         public string Color { get; set; }
 
+        public string Extra { get; set; }
+
         [Required]
         public DateTime DateLastModified { get; set; }
+
+        public DateTime? DateDeleted { get; set; }
+
+        public int? NullableInt { get; set; }
 
         public string X(bool b, string s)
         {

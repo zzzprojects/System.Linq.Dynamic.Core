@@ -7,7 +7,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 {
     public class ExpressionHelperTests
     {
-        private readonly IExpressionHelper _expressionHelper;
+        private readonly ExpressionHelper _expressionHelper;
 
         public ExpressionHelperTests()
         {
@@ -85,16 +85,59 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Fact]
-        public void ExpressionHelper_GenerateAndAlsoNotNullExpression()
+        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNonNullable()
         {
             // Assign
-            Expression<Func<Item, int>> expression = (x) => x.Relation1.Relation2.Id;
+            Expression<Func<Item, int>> expression = x => x.Relation1.Relation2.Id;
 
             // Act
-            Expression result = _expressionHelper.GenerateAndAlsoNotNullExpression(expression);
+            bool result = _expressionHelper.TryGenerateAndAlsoNotNullExpression(expression, true, out Expression generatedExpression);
 
             // Assert
-            Check.That(result.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
+            Check.That(result).IsTrue();
+            Check.That(generatedExpression.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
+        }
+
+        [Fact]
+        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfFalse()
+        {
+            // Assign
+            Expression<Func<Item, int?>> expression = x => x.Relation1.Relation2.IdNullable;
+
+            // Act
+            bool result = _expressionHelper.TryGenerateAndAlsoNotNullExpression(expression, false, out Expression generatedExpression);
+
+            // Assert
+            Check.That(result).IsTrue();
+            Check.That(generatedExpression.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
+        }
+
+        [Fact]
+        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NestedNullable_AddSelfTrue()
+        {
+            // Assign
+            Expression<Func<Item, int?>> expression = x => x.Relation1.Relation2.IdNullable;
+
+            // Act
+            bool result = _expressionHelper.TryGenerateAndAlsoNotNullExpression(expression, true, out Expression generatedExpression);
+
+            // Assert
+            Check.That(result).IsTrue();
+            Check.That(generatedExpression.ToString()).IsEqualTo("((((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null)) AndAlso (x => x.Relation1.Relation2.IdNullable != null))");
+        }
+
+        [Fact]
+        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NonNullable()
+        {
+            // Assign
+            Expression<Func<Item, int>> expression = x => x.Id;
+
+            // Act
+            bool result = _expressionHelper.TryGenerateAndAlsoNotNullExpression(expression, true, out Expression generatedExpression);
+
+            // Assert
+            Check.That(result).IsFalse();
+            Check.That(generatedExpression.ToString()).IsEqualTo("x => x.Id");
         }
 
         class Item
@@ -112,6 +155,8 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         class Relation2
         {
             public int Id { get; set; }
+
+            public int? IdNullable { get; set; }
         }
     }
 }
