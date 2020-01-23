@@ -34,9 +34,9 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public static string ParseString(string s)
         {
-            var tp = s[0] == '\'' ? SingleQuotedString : DoubleQuotedString;
+            var parser = s[0] == '\'' ? SingleQuotedString : DoubleQuotedString;
 
-            return tp.Parse(s);
+            return parser.Parse(s);
         }
     }
 }

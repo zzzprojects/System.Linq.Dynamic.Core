@@ -19,6 +19,10 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Theory]
+        [InlineData("\"\"", "")]
+        [InlineData("\"[]\"", "[]")]
+        [InlineData("\"()\"", "()")]
+        [InlineData("\"(\\\"\\\")\"", "(\"\")")]
         [InlineData("\"/\"", "/")]
         [InlineData("\"a\"", "a")]
         [InlineData("\"This \\\"is\\\" a test.\"", "This \"is\" a test.")]
