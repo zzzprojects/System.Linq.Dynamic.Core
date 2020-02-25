@@ -38,7 +38,6 @@ namespace ConsoleAppCosmosDb
 
             await PopulateCollectionAsync(collectionUri);
 
-
             Console.WriteLine("TESTING ANY()");
             Console.WriteLine();
 
@@ -61,7 +60,6 @@ namespace ConsoleAppCosmosDb
             QueryCollection(collectionUri, ParsingConfig.Default, nameof(ParsingConfig.Default), sumReadingsInvalid, sumReadingsInvalidParams, @"FAIL");
 
             QueryCollection(collectionUri, ParsingConfig.DefaultCosmosDb, nameof(ParsingConfig.DefaultCosmosDb), sumReadingsInvalid, sumReadingsInvalidParams, @"SUCCEED");
-
 
             await DeleteDatabaseAsync();
         }
