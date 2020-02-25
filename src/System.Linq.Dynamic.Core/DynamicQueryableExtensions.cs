@@ -1294,7 +1294,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(config, nameof(config));
             Check.NotEmpty(ordering, nameof(ordering));
 
-            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty) };
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args, config);
             IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering();
 
@@ -1767,8 +1767,8 @@ namespace System.Linq.Dynamic.Core
             sourceSelectLambda = Expression.Lambda(sourceLambdaDelegateType, sourceSelectLambda.Body, sourceSelectLambda.Parameters);
 
             //we have to create additional lambda for result selection
-            ParameterExpression xParameter = ParameterExpressionHelper.CreateParameterExpression(source.ElementType, collectionParameterName);
-            ParameterExpression yParameter = ParameterExpressionHelper.CreateParameterExpression(sourceLambdaResultType, resultParameterName);
+            ParameterExpression xParameter = ParameterExpressionHelper.CreateParameterExpression(source.ElementType, collectionParameterName, config.RenameEmptyParameterExpressionNames);
+            ParameterExpression yParameter = ParameterExpressionHelper.CreateParameterExpression(sourceLambdaResultType, resultParameterName, config.RenameEmptyParameterExpressionNames);
 
             LambdaExpression resultSelectLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, new[] { xParameter, yParameter }, null, resultSelector, resultSelectorArgs);
             Type resultLambdaResultType = resultSelectLambda.Body.Type;
@@ -2198,7 +2198,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(config, nameof(config));
             Check.NotEmpty(ordering, nameof(ordering));
 
-            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty) };
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args, config);
             IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering(forceThenBy: true);
 

@@ -1716,7 +1716,7 @@ namespace System.Linq.Dynamic.Core.Parser
             var oldParent = _parent;
 
             ParameterExpression outerIt = _it;
-            ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty);
+            ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty, _parsingConfig.RenameEmptyParameterExpressionNames);
 
             _parent = _it;
 

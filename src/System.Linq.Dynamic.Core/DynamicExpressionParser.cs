@@ -128,7 +128,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotEmpty(expression, nameof(expression));
 
-            return (Expression<Func<T, TResult>>)ParseLambda(parsingConfig, createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(T), string.Empty) }, typeof(TResult), expression, values);
+            return (Expression<Func<T, TResult>>)ParseLambda(parsingConfig, createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(T), string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false) }, typeof(TResult), expression, values);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(itType, nameof(itType));
             Check.NotEmpty(expression, nameof(expression));
 
-            return ParseLambda(parsingConfig, createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(itType, string.Empty) }, resultType, expression, values);
+            return ParseLambda(parsingConfig, createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(itType, string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false) }, resultType, expression, values);
         }
 
         /// <summary>
