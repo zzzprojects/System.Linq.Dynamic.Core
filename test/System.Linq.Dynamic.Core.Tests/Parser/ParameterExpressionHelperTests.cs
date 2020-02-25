@@ -101,7 +101,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData(typeof(bool), "it && true", @"\([a-z]{6} AndAlso True\)", "", true)]
         [InlineData(typeof(bool), "it and true", @"\([a-z]{6} AndAlso True\)", "", true)]
         [InlineData(typeof(bool), "it AndAlso true", @"\([a-z]{6} AndAlso True\)", "", true)]
-        public void ParameterExpressionHelper_CreateParameterExpression(Type type, string expression, string result, string substitute, bool renameEmpty)
+        public void ParameterExpressionHelper_CreateParameterExpression(Type type, string expression, string expectedResult, string substitute, bool renameEmpty)
         {
             // Arrange
             ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(type, substitute, renameEmpty) };
@@ -111,7 +111,44 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var parsedExpression = sut.Parse(null).ToString();
 
             // Assert
-            Check.That(parsedExpression).Matches(result);
+            Check.That(parsedExpression).Matches(expectedResult);
+        }
+
+        [Theory]
+        [InlineData(null, true)]
+        [InlineData("", true)]
+        [InlineData(" ", true)]
+        [InlineData("  ", true)]
+        [InlineData("   ", true)]
+        [InlineData("    ", true)]
+        [InlineData("\t", true)]
+        [InlineData("\n", true)]
+        [InlineData("x", false)]
+        [InlineData("xx", false)]
+        [InlineData("xxx", false)]
+        [InlineData("xxxx", false)]
+        [InlineData("!", false)]
+        [InlineData("\"", false)]
+        [InlineData("$", false)]
+        [InlineData("_", false)]
+        [InlineData("-", false)]
+        public void ParameterExpressionHelper_IsNullOrWhiteSpace(string input, bool expectedResult)
+        {
+            // Arrange and Act
+            bool result = ParameterExpressionHelper.IsNullOrWhiteSpace(input);
+
+            // Assert
+            Check.That(result).IsEqualTo(expectedResult);
+        }
+
+        [Fact]
+        public void ParameterExpressionHelper_GenerateRandomWord()
+        {
+            // Arrange and Act
+            string result = ParameterExpressionHelper.GenerateRandomWord();
+
+            // Assert
+            Check.That(result).Matches(@"[a-z]{6}");
         }
     }
 }
