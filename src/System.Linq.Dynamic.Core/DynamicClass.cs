@@ -46,20 +46,6 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicClass"/> class.
-        /// </summary>
-        /// <param name="propertylist">The propertylist.</param>
-        public DynamicClass(params KeyValuePair<string, object>[] propertylist)
-        {
-            _propertiesDictionary = new Dictionary<string, object>();
-
-            foreach (var kvp in propertylist)
-            {
-                _propertiesDictionary.Add(kvp.Key, kvp.Value);
-            }
-        }
-
-        /// <summary>
         /// Gets the dynamic property by name.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>

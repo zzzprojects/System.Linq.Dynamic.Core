@@ -226,14 +226,6 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_UseDynamicObjectClassForAnonymousTypes_true()
-        {
-            var result = DynamicExpressionParser.ParseLambda(new ParsingConfig { UseDynamicObjectClassForAnonymousTypes = true }, null, "new {1 AS Id}");
-
-            result.Should().Be("() => new DynamicClass(new [] {new KeyValuePair`2(\"Id\", Convert(1))})");
-        }
-
-        [Fact]
         public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true()
         {
             // Assign

@@ -9,18 +9,6 @@ namespace System.Linq.Dynamic.Core
     public abstract class DynamicClass
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicClass"/> class.
-        /// </summary>
-        /// <param name="propertylist">The propertylist.</param>
-        public DynamicClass(params KeyValuePair<string, object>[] propertylist)
-        {
-            foreach (var kvp in propertylist)
-            {
-                SetDynamicPropertyValue(kvp.Key, kvp.Value);
-            }
-        }
-
-        /// <summary>
         /// Gets the dynamic property by name.
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
