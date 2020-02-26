@@ -5,6 +5,7 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
+using FluentAssertions;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
@@ -222,6 +223,14 @@ namespace System.Linq.Dynamic.Core.Tests
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
                 return ResolveTypeBySimpleName(assemblies, typeName);
             }
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_UseDynamicObjectClassForAnonymousTypes_true()
+        {
+            var result = DynamicExpressionParser.ParseLambda(new ParsingConfig { UseDynamicObjectClassForAnonymousTypes = true }, null, "new {1 AS Id}");
+
+            result.Should().Be("() => new DynamicClass(new [] {new KeyValuePair`2(\"Id\", Convert(1))})");
         }
 
         [Fact]

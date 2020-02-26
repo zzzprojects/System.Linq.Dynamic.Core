@@ -1454,7 +1454,6 @@ namespace System.Linq.Dynamic.Core.Parser
                 for (int i = 0; i < propertyTypes.Length; i++)
                 {
                     Type propertyType = propertyTypes[i];
-                    // Type expressionType = expressions[i].Type;
 
                     // Promote from Type to Nullable Type if needed
                     expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
@@ -1468,7 +1467,6 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 PropertyInfo property = type.GetProperty(properties[i].Name);
                 Type propertyType = property.PropertyType;
-                // Type expressionType = expressions[i].Type;
 
                 // Promote from Type to Nullable Type if needed
                 bindings[i] = Expression.Bind(property, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
