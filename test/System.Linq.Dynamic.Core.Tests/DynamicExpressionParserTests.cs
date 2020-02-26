@@ -1010,8 +1010,8 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Theory]
-        [InlineData("c => c.Age == 8", "[a-z]{6} =\\> \\([a-z]{6}\\.Age == 8\\)")]
-        [InlineData("c => c.Name == \"test\"", "[a-z]{6} =\\> \\([a-z]{6}\\.Name == \"test\"\\)")]
+        [InlineData("c => c.Age == 8", "([a-z]{16}) =\\> \\(\\1\\.Age == 8\\)")]
+        [InlineData("c => c.Name == \"test\"", "([a-z]{16}) =\\> \\(\\1\\.Name == \"test\"\\)")]
         public void DynamicExpressionParser_ParseLambda_RenameEmptyParameterExpressionNames(string expressionAsString, string expected)
         {
             // Arrange

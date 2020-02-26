@@ -59,22 +59,22 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData(typeof(int), "it ge 1", @"\(Param_0 >= 1\)", "", false)]
         [InlineData(typeof(int), "it GreaterThanEqual 1", @"\(Param_0 >= 1\)", "", false)]
 
-        [InlineData(typeof(int), "it", "[a-z]{6}", "", true)]
-        [InlineData(typeof(int), "it == 1", @"\([a-z]{6} == 1\)", "", true)]
-        [InlineData(typeof(int), "it eq 1", @"\([a-z]{6} == 1\)", "", true)]
-        [InlineData(typeof(int), "it equal 1", @"\([a-z]{6} == 1\)", "", true)]
-        [InlineData(typeof(int), "it != 1", @"\([a-z]{6} != 1\)", "", true)]
-        [InlineData(typeof(int), "it ne 1", @"\([a-z]{6} != 1\)", "", true)]
-        [InlineData(typeof(int), "it neq 1", @"\([a-z]{6} != 1\)", "", true)]
-        [InlineData(typeof(int), "it notequal 1", @"\([a-z]{6} != 1\)", "", true)]
-        [InlineData(typeof(int), "it lt 1", @"\([a-z]{6} < 1\)", "", true)]
-        [InlineData(typeof(int), "it LessThan 1", @"\([a-z]{6} < 1\)", "", true)]
-        [InlineData(typeof(int), "it le 1", @"\([a-z]{6} <= 1\)", "", true)]
-        [InlineData(typeof(int), "it LessThanEqual 1", @"\([a-z]{6} <= 1\)", "", true)]
-        [InlineData(typeof(int), "it gt 1", @"\([a-z]{6} > 1\)", "", true)]
-        [InlineData(typeof(int), "it GreaterThan 1", @"\([a-z]{6} > 1\)", "", true)]
-        [InlineData(typeof(int), "it ge 1", @"\([a-z]{6} >= 1\)", "", true)]
-        [InlineData(typeof(int), "it GreaterThanEqual 1", @"\([a-z]{6} >= 1\)", "", true)]
+        [InlineData(typeof(int), "it", "[a-z]{16}", "", true)]
+        [InlineData(typeof(int), "it == 1", @"\([a-z]{16} == 1\)", "", true)]
+        [InlineData(typeof(int), "it eq 1", @"\([a-z]{16} == 1\)", "", true)]
+        [InlineData(typeof(int), "it equal 1", @"\([a-z]{16} == 1\)", "", true)]
+        [InlineData(typeof(int), "it != 1", @"\([a-z]{16} != 1\)", "", true)]
+        [InlineData(typeof(int), "it ne 1", @"\([a-z]{16} != 1\)", "", true)]
+        [InlineData(typeof(int), "it neq 1", @"\([a-z]{16} != 1\)", "", true)]
+        [InlineData(typeof(int), "it notequal 1", @"\([a-z]{16} != 1\)", "", true)]
+        [InlineData(typeof(int), "it lt 1", @"\([a-z]{16} < 1\)", "", true)]
+        [InlineData(typeof(int), "it LessThan 1", @"\([a-z]{16} < 1\)", "", true)]
+        [InlineData(typeof(int), "it le 1", @"\([a-z]{16} <= 1\)", "", true)]
+        [InlineData(typeof(int), "it LessThanEqual 1", @"\([a-z]{16} <= 1\)", "", true)]
+        [InlineData(typeof(int), "it gt 1", @"\([a-z]{16} > 1\)", "", true)]
+        [InlineData(typeof(int), "it GreaterThan 1", @"\([a-z]{16} > 1\)", "", true)]
+        [InlineData(typeof(int), "it ge 1", @"\([a-z]{16} >= 1\)", "", true)]
+        [InlineData(typeof(int), "it GreaterThanEqual 1", @"\([a-z]{16} >= 1\)", "", true)]
 
         [InlineData(typeof(bool), "it || true", @"\(x OrElse True\)", "x", false)]
         [InlineData(typeof(bool), "it or true", @"\(x OrElse True\)", "x", false)]
@@ -85,9 +85,9 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData(typeof(bool), "it || true", @"\(Param_0 OrElse True\)", "", false)]
         [InlineData(typeof(bool), "it or true", @"\(Param_0 OrElse True\)", "", false)]
         [InlineData(typeof(bool), "it OrElse true", @"\(Param_0 OrElse True\)", "", false)]
-        [InlineData(typeof(bool), "it || true", @"\([a-z]{6} OrElse True\)", "", true)]
-        [InlineData(typeof(bool), "it or true", @"\([a-z]{6} OrElse True\)", "", true)]
-        [InlineData(typeof(bool), "it OrElse true", @"\([a-z]{6} OrElse True\)", "", true)]
+        [InlineData(typeof(bool), "it || true", @"\([a-z]{16} OrElse True\)", "", true)]
+        [InlineData(typeof(bool), "it or true", @"\([a-z]{16} OrElse True\)", "", true)]
+        [InlineData(typeof(bool), "it OrElse true", @"\([a-z]{16} OrElse True\)", "", true)]
 
         [InlineData(typeof(bool), "it && true", @"\(x AndAlso True\)", "x", false)]
         [InlineData(typeof(bool), "it and true", @"\(x AndAlso True\)", "x", false)]
@@ -98,9 +98,9 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData(typeof(bool), "it && true", @"\(Param_0 AndAlso True\)", "", false)]
         [InlineData(typeof(bool), "it and true", @"\(Param_0 AndAlso True\)", "", false)]
         [InlineData(typeof(bool), "it AndAlso true", @"\(Param_0 AndAlso True\)", "", false)]
-        [InlineData(typeof(bool), "it && true", @"\([a-z]{6} AndAlso True\)", "", true)]
-        [InlineData(typeof(bool), "it and true", @"\([a-z]{6} AndAlso True\)", "", true)]
-        [InlineData(typeof(bool), "it AndAlso true", @"\([a-z]{6} AndAlso True\)", "", true)]
+        [InlineData(typeof(bool), "it && true", @"\([a-z]{16} AndAlso True\)", "", true)]
+        [InlineData(typeof(bool), "it and true", @"\([a-z]{16} AndAlso True\)", "", true)]
+        [InlineData(typeof(bool), "it AndAlso true", @"\([a-z]{16} AndAlso True\)", "", true)]
         public void ParameterExpressionHelper_CreateParameterExpression(Type type, string expression, string expectedResult, string substitute, bool renameEmpty)
         {
             // Arrange
@@ -142,13 +142,13 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Fact]
-        public void ParameterExpressionHelper_GenerateRandomWord()
+        public void ParameterExpressionHelper_GenerateRandom16CharWord()
         {
             // Arrange and Act
             string result = ParameterExpressionHelper.GenerateRandomWord();
 
             // Assert
-            Check.That(result).Matches(@"[a-z]{6}");
+            Check.That(result).Matches(@"[a-z]{16}");
         }
     }
 }

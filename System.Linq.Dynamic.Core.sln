@@ -73,7 +73,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp.EntityFrameworkC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_netcore3.1_EF3.1", "src-console\ConsoleAppEF3.1\ConsoleApp_netcore3.1_EF3.1.csproj", "{6D21EBF2-C92D-4AE0-9BC3-47C63928F88A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp_netcore2.1_CosmosDb", "src-console\ConsoleApp_netcore2.1_CosmosDb\ConsoleApp_netcore2.1_CosmosDb.csproj", "{D160E2CF-A7E1-4DDE-9AB8-8CFB0087DCEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_netcore2.1_CosmosDb", "src-console\ConsoleApp_netcore2.1_CosmosDb\ConsoleApp_netcore2.1_CosmosDb.csproj", "{D160E2CF-A7E1-4DDE-9AB8-8CFB0087DCEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp_net452_CosmosDb", "src-console\ConsoleApp_net452_CosmosDb\ConsoleApp_net452_CosmosDb.csproj", "{0034821E-740D-4553-821B-14CE9213C43C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -457,6 +459,22 @@ Global
 		{D160E2CF-A7E1-4DDE-9AB8-8CFB0087DCEB}.Release|x64.Build.0 = Release|Any CPU
 		{D160E2CF-A7E1-4DDE-9AB8-8CFB0087DCEB}.Release|x86.ActiveCfg = Release|Any CPU
 		{D160E2CF-A7E1-4DDE-9AB8-8CFB0087DCEB}.Release|x86.Build.0 = Release|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Debug|ARM.Build.0 = Debug|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Debug|x64.Build.0 = Debug|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Debug|x86.Build.0 = Debug|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Release|ARM.ActiveCfg = Release|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Release|ARM.Build.0 = Release|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Release|x64.ActiveCfg = Release|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Release|x64.Build.0 = Release|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Release|x86.ActiveCfg = Release|Any CPU
+		{0034821E-740D-4553-821B-14CE9213C43C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -485,6 +503,7 @@ Global
 		{0077F262-D69B-44D2-8A7C-87D8D19022A6} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 		{6D21EBF2-C92D-4AE0-9BC3-47C63928F88A} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 		{D160E2CF-A7E1-4DDE-9AB8-8CFB0087DCEB} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
+		{0034821E-740D-4553-821B-14CE9213C43C} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94C56722-194E-4B8B-BC23-B3F754E89A20}

@@ -143,7 +143,7 @@ namespace System.Linq.Dynamic.Core
         public bool RenameParameterExpression { get; set; } = false;
 
         /// <summary>
-        /// Prevents any System.Linq.Expressions.ParameterExpression.Name from being empty.
+        /// Prevents any System.Linq.Expressions.ParameterExpression.Name value from being empty by substituting a random 16 character word.
         /// 
         /// Default value is false.
         /// </summary>
