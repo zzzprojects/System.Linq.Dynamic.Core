@@ -96,13 +96,6 @@ namespace System.Linq.Dynamic.Core
         public bool AreContextKeywordsEnabled { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use dynamic object class for anonymous types.
-        ///
-        /// Default value is false.
-        /// </summary>
-        public bool UseDynamicObjectClassForAnonymousTypes { get; set; } = false;
-
-        /// <summary>
         /// Gets or sets a value indicating whether the EntityFramework version supports evaluating GroupBy at database level.
         /// See https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.1#linq-groupby-translation
         /// 
