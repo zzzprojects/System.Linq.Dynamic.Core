@@ -1455,11 +1455,29 @@ namespace System.Linq.Dynamic.Core.Parser
             MemberBinding[] bindings = new MemberBinding[properties.Count];
             for (int i = 0; i < bindings.Length; i++)
             {
-                PropertyInfo property = type.GetProperty(properties[i].Name);
-                Type propertyType = property.PropertyType;
+                string propertyOrFieldName = properties[i].Name;
+                Type propertyOrFieldType;
+                MemberInfo memberInfo;
+                PropertyInfo propertyInfo = type.GetProperty(propertyOrFieldName);
+                if (propertyInfo != null)
+                {
+                    memberInfo = propertyInfo;
+                    propertyOrFieldType = propertyInfo.PropertyType;
+                }
+                else
+                {
+                    FieldInfo fieldInfo = type.GetField(propertyOrFieldName);
+                    if (fieldInfo == null)
+                    {
+                        throw ParseError(Res.UnknownPropertyOrField, propertyOrFieldName, TypeHelper.GetTypeName(type));
+                    }
+
+                    memberInfo = fieldInfo;
+                    propertyOrFieldType = fieldInfo.FieldType;
+                }
 
                 // Promote from Type to Nullable Type if needed
-                bindings[i] = Expression.Bind(property, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
+                bindings[i] = Expression.Bind(memberInfo, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true));
             }
 
             return Expression.MemberInit(Expression.New(type), bindings);
@@ -1494,11 +1512,17 @@ namespace System.Linq.Dynamic.Core.Parser
                 _textParser.NextToken();
             }
 
-            // This is a shorthand for explicitely converting a string to something
+            // This is a shorthand for explicitly converting a string to something
             bool shorthand = _textParser.CurrentToken.Id == TokenId.StringLiteral;
             if (_textParser.CurrentToken.Id == TokenId.OpenParen || shorthand)
             {
                 Expression[] args = shorthand ? new[] { ParseStringLiteral() } : ParseArgumentList();
+
+                // If only 1 argument, and the arg is ConstantExpression, just return the ConstantExpression
+                if (args.Length == 1 && args[0] is ConstantExpression)
+                {
+                    return args[0];
+                }
 
                 // If only 1 argument, and if the type is a ValueType and argType is also a ValueType, just Convert
                 if (args.Length == 1)
@@ -1511,7 +1535,10 @@ namespace System.Linq.Dynamic.Core.Parser
                     }
                 }
 
-                switch (_methodFinder.FindBestMethod(type.GetConstructors(), args, out MethodBase method))
+                var constructorsWithOutPointerArguments = type.GetConstructors()
+                    .Where(c => !c.GetParameters().Any(p => p.ParameterType.GetTypeInfo().IsPointer))
+                    .ToArray();
+                switch (_methodFinder.FindBestMethod(constructorsWithOutPointerArguments, args, out MethodBase method))
                 {
                     case 0:
                         if (args.Length == 1)

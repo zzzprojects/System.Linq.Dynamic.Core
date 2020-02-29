@@ -69,5 +69,39 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             // Assert
             Check.That(parsedExpression).Equals(result);
         }
+
+        [Theory]
+        [InlineData("string(null)", null)]
+        [InlineData("string(\"\")", "")]
+        [InlineData("string(\"a\")", "a")]
+        public void Parse_CastStringShouldReturnConstantExpression(string expression, object result)
+        {
+            // Arrange
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x") };
+            var sut = new ExpressionParser(parameters, expression, null, null);
+
+            // Act
+            var constantExpression = (ConstantExpression)sut.Parse(null);
+
+            // Assert
+            Check.That(constantExpression.Value).Equals(result);
+        }
+
+        [Theory]
+        [InlineData("int?(null)", null)]
+        [InlineData("int?(5)", 5)]
+        [InlineData("int(42)", 42)]
+        public void Parse_CastIntShouldReturnConstantExpression(string expression, object result)
+        {
+            // Arrange
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x") };
+            var sut = new ExpressionParser(parameters, expression, null, null);
+
+            // Act
+            var constantExpression = (ConstantExpression)sut.Parse(null);
+
+            // Assert
+            Check.That(constantExpression.Value).Equals(result);
+        }
     }
 }

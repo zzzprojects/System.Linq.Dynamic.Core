@@ -52,10 +52,10 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         public int FindBestMethod(IEnumerable<MethodBase> methods, Expression[] args, out MethodBase method)
         {
-            MethodData[] applicable = methods.
-                Select(m => new MethodData { MethodBase = m, Parameters = m.GetParameters() }).
-                Where(m => IsApplicable(m, args)).
-                ToArray();
+            MethodData[] applicable = methods
+                .Select(m => new MethodData { MethodBase = m, Parameters = m.GetParameters() })
+                .Where(m => IsApplicable(m, args))
+                .ToArray();
 
             if (applicable.Length > 1)
             {
