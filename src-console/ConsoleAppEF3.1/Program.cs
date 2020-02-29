@@ -2,6 +2,7 @@
 using System.Linq;
 using ConsoleAppEF2.Database;
 using System.Linq.Dynamic.Core;
+using Newtonsoft.Json;
 
 namespace ConsoleAppEF31
 {
@@ -9,6 +10,12 @@ namespace ConsoleAppEF31
     {
         static void Main(string[] args)
         {
+            var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
+            foreach (dynamic x in users.Select("new (int?(Field) as fld, string(null) as StrNull, string(\"a\") as StrA, string(\"\") as StrEmpty1)"))
+            {
+                Console.WriteLine($"x = {JsonConvert.SerializeObject(x)}");
+            }
+
             var context = new TestContext();
 
             //context.Database.EnsureDeleted();
@@ -60,23 +67,33 @@ namespace ConsoleAppEF31
             }
 
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true, ResolveTypesBySimpleName = false };
-            var select = context.Cars.Select<Car>(config, $"new {typeof(Car).FullName}(it.Key as Key, \"?\" as Brand)");
+            var select = context.Cars.Select<Car>(config, $"new {typeof(Car).FullName}(it.Key as Key, \"?\" as Brand, string(null) as Color, string(\"e\") as Extra)");
             foreach (Car car in select)
             {
                 Console.WriteLine($"{car.Key}");
             }
 
-            // Users
-            var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
-
             var resultDynamic = users.Any("c => np(c.FirstName, string.Empty).ToUpper() == \"DOE\"");
             Console.WriteLine(resultDynamic);
 
-            // Fails because Field is not a property but a field!
             var users2 = users.Select<User>(config, "new User(it.FirstName as FirstName, 1 as Field)");
             foreach (User u in users2)
             {
-                Console.WriteLine($"u = {u.FirstName} {u.Field}");
+                Console.WriteLine($"u.FirstName = {u.FirstName}, u.Field = {u.Field}");
+            }
+
+            try
+            {
+                users.Select<User>(config, "new User(1 as FieldDoesNotExist)");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            foreach (dynamic x in users.Select("new (FirstName, string(\"a\") as StrA, string('c') as StrCh, string(\"\") as StrEmpty1, string('\0') as StrEmpty2, string(null) as StrNull)"))
+            {
+                Console.WriteLine($"x.FirstName = '{x.FirstName}' ; x.Str = '{x.Str == null}'");
             }
         }
 
