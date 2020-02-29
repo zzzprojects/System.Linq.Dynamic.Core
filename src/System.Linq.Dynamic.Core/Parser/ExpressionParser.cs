@@ -1138,26 +1138,11 @@ namespace System.Linq.Dynamic.Core.Parser
                 bool hasDefaultParameter = args.Length == 2;
                 Expression expressionIfFalse = hasDefaultParameter ? args[1] : Expression.Constant(null);
 
-                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(memberExpression, out Expression generatedExpression))
+                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(memberExpression, hasDefaultParameter, out Expression generatedExpression))
                 {
                     return GenerateConditional(generatedExpression, memberExpression, expressionIfFalse, errorPos);
                 }
 
-                if (!hasDefaultParameter)
-                {
-                    // If no default parameter has been supplied and the member expression is a single expression, just return it.
-                    return memberExpression;
-                }
-
-                bool canBeNullableType = TypeHelper.IsNullableType(memberExpression.Type) || !memberExpression.Type.GetTypeInfo().IsPrimitive;
-                if (canBeNullableType)
-                {
-                    // For nullable objects, generate 'x != null ? x : null'
-                    var notEqualToNull = _expressionHelper.GenerateNotEqual(memberExpression, Expression.Constant(null));
-                    return GenerateConditional(notEqualToNull, memberExpression, expressionIfFalse, errorPos);
-                }
-
-                // For non-nullable with default, just ignore default and return the single expression.
                 return memberExpression;
             }
 
@@ -1415,40 +1400,30 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (type == null)
             {
-#if !UAP10_0
-                if (_parsingConfig != null && _parsingConfig.UseDynamicObjectClassForAnonymousTypes)
+#if UAP10_0
+                type = typeof(DynamicClass);
+                Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
+
+                ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
+
+                var arrayIndexParams = new List<Expression>();
+                for (int i = 0; i < expressions.Count; i++)
                 {
-#endif
-                    type = typeof(DynamicClass);
-                    Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
-#if NET35 || NET40
-                    ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetConstructors().First();
-#else
-                    ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
-#endif
-                    var arrayIndexParams = new List<Expression>();
-                    for (int i = 0; i < expressions.Count; i++)
-                    {
-                        // Just convert the expression always to an object expression.
-                        UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
-                        NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
+                    // Just convert the expression always to an object expression.
+                    UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
+                    NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
 
-                        arrayIndexParams.Add(parameter);
-                    }
-
-                    // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
-                    NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
-
-                    // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
-#if NET35 || NET40
-                    ConstructorInfo constructor = type.GetConstructors().First();
-#else
-                    ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
-#endif
-                    return Expression.New(constructor, newArrayExpression);
-#if !UAP10_0
+                    arrayIndexParams.Add(parameter);
                 }
 
+                // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
+                NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
+
+                // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
+                ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
+
+                return Expression.New(constructor, newArrayExpression);
+#else
                 type = DynamicClassFactory.CreateType(properties, _createParameterCtor);
 #endif
             }
@@ -1469,7 +1444,6 @@ namespace System.Linq.Dynamic.Core.Parser
                 for (int i = 0; i < propertyTypes.Length; i++)
                 {
                     Type propertyType = propertyTypes[i];
-                    // Type expressionType = expressions[i].Type;
 
                     // Promote from Type to Nullable Type if needed
                     expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));

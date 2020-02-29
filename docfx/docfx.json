@@ -1,0 +1,45 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [ "**/System.Linq.Dynamic.Core.csproj" ],
+          "exclude": [ "**/bin/**", "**/obj/**" ],
+          "src": "../src"
+        }
+      ],
+      "dest": "obj/api"
+    }
+  ],
+  "build": {
+    "maxParallelism": 2,
+    "content": [
+      {
+	    "files": [ "**/*.yml" ],
+        "src": "obj/api",
+        "dest": "api"
+      },
+      {
+        "files": [ "*.md", "toc.yml" ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [ ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "apidoc/*.yml"
+        ]
+      }
+    ],
+    "globalMetadata": {
+      "_enableSearch": true
+    },
+    "markdownEngineName": "markdig",
+    "dest": "../docs",
+    "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ]
+  }
+}

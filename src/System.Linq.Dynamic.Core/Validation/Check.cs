@@ -12,11 +12,9 @@ namespace System.Linq.Dynamic.Core.Validation
     [DebuggerStepThrough]
     internal static class Check
     {
-        [ContractAnnotation("value:null => halt")]
         public static T Condition<T>([NoEnumeration] T value, [NotNull] Predicate<T> condition, [InvokerParameterName] [NotNull] string parameterName)
         {
             NotNull(condition, nameof(condition));
-            NotNull(value, nameof(value));
 
             if (!condition(value))
             {
