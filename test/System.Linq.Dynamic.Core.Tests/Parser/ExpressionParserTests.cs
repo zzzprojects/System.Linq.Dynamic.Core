@@ -71,10 +71,10 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Theory]
-        [InlineData("string(null)", null)]
         [InlineData("string(\"\")", "")]
         [InlineData("string(\"a\")", "a")]
-        public void Parse_CastStringShouldReturnConstantExpression(string expression, object result)
+        [InlineData("int(42)", 42)]
+        public void Parse_CastStringIntShouldReturnConstantExpression(string expression, object result)
         {
             // Arrange
             ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x") };
@@ -88,20 +88,27 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Theory]
-        [InlineData("int?(null)", null)]
-        [InlineData("int?(5)", 5)]
-        [InlineData("int(42)", 42)]
-        public void Parse_CastIntShouldReturnConstantExpression(string expression, object result)
+#if NET452
+        [InlineData("int?(5)", typeof(int?), "Convert(5)")]
+        [InlineData("int?(null)", typeof(int?), "Convert(null)")]
+        [InlineData("string(null)", typeof(string), "Convert(null)")]
+#else
+        [InlineData("int?(5)", typeof(int?), "Convert(5, Nullable`1)")]
+        [InlineData("int?(null)", typeof(int?), "Convert(null, Nullable`1)")]
+        [InlineData("string(null)", typeof(string), "Convert(null, String)")]
+#endif
+        public void Parse_NullableShouldReturnNullable(string expression, object resultType, object result)
         {
             // Arrange
             ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x") };
             var sut = new ExpressionParser(parameters, expression, null, null);
 
             // Act
-            var constantExpression = (ConstantExpression)sut.Parse(null);
+            var unaryExpression = (UnaryExpression)sut.Parse(null);
 
             // Assert
-            Check.That(constantExpression.Value).Equals(result);
+            Check.That(unaryExpression.Type).Equals(resultType);
+            Check.That(unaryExpression.ToString()).Equals(result);
         }
     }
 }
