@@ -981,7 +981,9 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _textParser.ValidateToken(TokenId.Identifier);
 
-            if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value))
+            if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value) &&
+                    // When the type and property have the same name the parser takes the property instead of type
+                    !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
             {
                 Type typeValue = value as Type;
                 if (typeValue != null)
