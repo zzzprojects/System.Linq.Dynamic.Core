@@ -1518,10 +1518,12 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 Expression[] args = shorthand ? new[] { ParseStringLiteral() } : ParseArgumentList();
 
-                // If only 1 argument, and the arg is ConstantExpression, just return the ConstantExpression
-                if (args.Length == 1 && args[0] is ConstantExpression)
+                // If only 1 argument, and the arg is ConstantExpression, return the conversion
+                // If only 1 argument, and the arg is null, return the conversion (Can't use constructor)
+                if (args.Length == 1 
+                    && (args[0] == null || args[0] is ConstantExpression))
                 {
-                    return args[0];
+                    return GenerateConversion(args[0], type, errorPos);
                 }
 
                 // If only 1 argument, and if the type is a ValueType and argType is also a ValueType, just Convert
