@@ -22,6 +22,14 @@ namespace System.Linq.Dynamic.Core
             EvaluateGroupByAtDatabase = true
         };
 
+        /// <summary>
+        /// Default ParsingConfig for CosmosDb
+        /// </summary>
+        public static ParsingConfig DefaultCosmosDb { get; } = new ParsingConfig
+        {
+            RenameEmptyParameterExpressionNames = true
+        };
+
         private IDynamicLinkCustomTypeProvider _customTypeProvider;
 
         private IExpressionPromoter _expressionPromoter;
@@ -126,6 +134,13 @@ namespace System.Linq.Dynamic.Core
         /// Default value is false.
         /// </summary>
         public bool RenameParameterExpression { get; set; } = false;
+
+        /// <summary>
+        /// Prevents any System.Linq.Expressions.ParameterExpression.Name value from being empty by substituting a random 16 character word.
+        /// 
+        /// Default value is false.
+        /// </summary>
+        public bool RenameEmptyParameterExpressionNames { get; set; } = false;
 
         /// <summary>
         /// By default when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor. Use
