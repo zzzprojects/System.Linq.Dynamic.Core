@@ -1,3 +1,8 @@
+# 1.0.22.0 (18 March 2020)
+- [#352](https://github.com/StefH/System.Linq.Dynamic.Core/pull/352) - Nested Cosmos Db compatibility contributed by [countincognito](https://github.com/countincognito)
+- [#354](https://github.com/StefH/System.Linq.Dynamic.Core/pull/354) - Fix correctly type cast of nulls (and other constants) contributed by [rockResolve](https://github.com/rockResolve)
+- [#339](https://github.com/StefH/System.Linq.Dynamic.Core/issues/339) - Error creating Null string [bug]
+
 # 1.0.21.0 (29 February 2020)
 - [#340](https://github.com/StefH/System.Linq.Dynamic.Core/pull/340) - Better error message in case property or field is not present in new() [feature] contributed by [StefH](https://github.com/StefH)
 - [#342](https://github.com/StefH/System.Linq.Dynamic.Core/pull/342) - Fix np(...) logic when default value is supplied [bug] contributed by [StefH](https://github.com/StefH)
