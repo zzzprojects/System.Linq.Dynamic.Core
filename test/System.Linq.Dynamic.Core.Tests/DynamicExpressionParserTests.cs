@@ -5,7 +5,6 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
-using FluentAssertions;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 

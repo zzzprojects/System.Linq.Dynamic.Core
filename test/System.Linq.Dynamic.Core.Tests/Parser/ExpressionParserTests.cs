@@ -1,6 +1,11 @@
-﻿using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Expressions;
+﻿using Moq;
 using NFluent;
+using System.Collections.Generic;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Dynamic.Core.Tests.Entities;
+using System.Linq.Expressions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
@@ -109,6 +114,51 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             // Assert
             Check.That(unaryExpression.Type).Equals(resultType);
             Check.That(unaryExpression.ToString()).Equals(result);
+        }
+
+        private readonly ParsingConfig _parsingConfig;
+        private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicTypeProviderMock;
+
+        public ExpressionParserTests()
+        {
+            _dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            _dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns(new HashSet<Type>() { typeof(Company), typeof(MainCompany) });
+            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Company).FullName)).Returns(typeof(Company));
+            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(MainCompany).FullName)).Returns(typeof(MainCompany));
+            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Company")).Returns(typeof(Company));
+            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("MainCompany")).Returns(typeof(MainCompany));
+
+            _parsingConfig = new ParsingConfig
+            {
+                CustomTypeProvider = _dynamicTypeProviderMock.Object
+            };
+        }
+
+        [Theory]
+        [InlineData("it.MainCompany.Name != null", "(company.MainCompany.Name != null)")]
+        [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
+        [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
+        [InlineData("MainCompany.Name", "company.MainCompany.Name")]
+        [InlineData("Company.Name", "No property or field 'Name' exists in type 'Company'")]
+        public void Parse_PrioritizePropertyOrFieldOverTheType(string expression, string result)
+        {
+            // Arrange
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
+            var sut = new ExpressionParser(parameters, expression, null, _parsingConfig);
+
+            // Act
+            string parsedExpression = null;
+            try
+            {
+                parsedExpression = sut.Parse(null).ToString();
+            }
+            catch (ParseException e)
+            {
+                parsedExpression = e.Message;
+            }
+
+            // Assert
+            Check.That(parsedExpression).Equals(result);
         }
     }
 }

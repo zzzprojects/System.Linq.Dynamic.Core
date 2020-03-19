@@ -981,7 +981,9 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _textParser.ValidateToken(TokenId.Identifier);
 
-            if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value))
+            if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value) &&
+                // Prioritize property or field over the type
+                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
             {
                 Type typeValue = value as Type;
                 if (typeValue != null)
@@ -1691,7 +1693,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
             }
 #endif
-            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback)
+            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instance != null)
             {
                 MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
                 if (indexerMethod != null)
@@ -2028,14 +2030,14 @@ namespace System.Linq.Dynamic.Core.Parser
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
                 // Try to find a property with the specified memberName
-                MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
                 if (member != null)
                 {
                     return member;
                 }
 
                 // If no property is found, try to get a field with the specified memberName
-                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (!staticAccess || x.IsStatic) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
                 if (member != null)
                 {
                     return member;
