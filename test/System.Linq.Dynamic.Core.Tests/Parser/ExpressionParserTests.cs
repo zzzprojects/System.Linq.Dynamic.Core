@@ -153,6 +153,5 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             // Assert
             Check.That(parsedExpression).Equals(result);
         }
-
     }
 }
