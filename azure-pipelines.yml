@@ -86,10 +86,11 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
 
+# -n true --> https://github.com/NuGet/Home/issues/8148
 - task: DotNetCoreCLI@2
   displayName: Push to MyGet
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) # Do not run for PullRequests
   inputs:
     command: custom
     custom: nuget
-    arguments: push $(Build.ArtifactStagingDirectory)\packages\*.nupkg --source https://www.myget.org/F/system-linq-dynamic-core/api/v3/index.json --no-service-endpoint --api-key $(MyGetKey)
+    arguments: push $(Build.ArtifactStagingDirectory)\packages\*.nupkg -n true -s https://www.myget.org/F/system-linq-dynamic-core/api/v3/index.json --no-service-endpoint --api-key $(MyGetKey)

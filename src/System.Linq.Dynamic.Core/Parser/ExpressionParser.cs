@@ -998,7 +998,9 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _textParser.ValidateToken(TokenId.Identifier);
 
-            if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value))
+            if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value) &&
+                // Prioritize property or field over the type
+                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
             {
                 Type typeValue = value as Type;
                 if (typeValue != null)
@@ -1417,40 +1419,30 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (type == null)
             {
-#if !UAP10_0
-                if (_parsingConfig != null && _parsingConfig.UseDynamicObjectClassForAnonymousTypes)
+#if UAP10_0
+                type = typeof(DynamicClass);
+                Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
+
+                ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
+
+                var arrayIndexParams = new List<Expression>();
+                for (int i = 0; i < expressions.Count; i++)
                 {
-#endif
-                    type = typeof(DynamicClass);
-                    Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
-#if NET35 || NET40
-                    ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetConstructors().First();
-#else
-                    ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
-#endif
-                    var arrayIndexParams = new List<Expression>();
-                    for (int i = 0; i < expressions.Count; i++)
-                    {
-                        // Just convert the expression always to an object expression.
-                        UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
-                        NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
+                    // Just convert the expression always to an object expression.
+                    UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
+                    NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
 
-                        arrayIndexParams.Add(parameter);
-                    }
-
-                    // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
-                    NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
-
-                    // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
-#if NET35 || NET40
-                    ConstructorInfo constructor = type.GetConstructors().First();
-#else
-                    ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
-#endif
-                    return Expression.New(constructor, newArrayExpression);
-#if !UAP10_0
+                    arrayIndexParams.Add(parameter);
                 }
 
+                // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
+                NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
+
+                // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
+                ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
+
+                return Expression.New(constructor, newArrayExpression);
+#else
                 type = DynamicClassFactory.CreateType(properties, _createParameterCtor);
 #endif
             }
@@ -1471,7 +1463,6 @@ namespace System.Linq.Dynamic.Core.Parser
                 for (int i = 0; i < propertyTypes.Length; i++)
                 {
                     Type propertyType = propertyTypes[i];
-                    // Type expressionType = expressions[i].Type;
 
                     // Promote from Type to Nullable Type if needed
                     expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
@@ -1483,12 +1474,29 @@ namespace System.Linq.Dynamic.Core.Parser
             MemberBinding[] bindings = new MemberBinding[properties.Count];
             for (int i = 0; i < bindings.Length; i++)
             {
-                PropertyInfo property = type.GetProperty(properties[i].Name);
-                Type propertyType = property.PropertyType;
-                // Type expressionType = expressions[i].Type;
+                string propertyOrFieldName = properties[i].Name;
+                Type propertyOrFieldType;
+                MemberInfo memberInfo;
+                PropertyInfo propertyInfo = type.GetProperty(propertyOrFieldName);
+                if (propertyInfo != null)
+                {
+                    memberInfo = propertyInfo;
+                    propertyOrFieldType = propertyInfo.PropertyType;
+                }
+                else
+                {
+                    FieldInfo fieldInfo = type.GetField(propertyOrFieldName);
+                    if (fieldInfo == null)
+                    {
+                        throw ParseError(Res.UnknownPropertyOrField, propertyOrFieldName, TypeHelper.GetTypeName(type));
+                    }
+
+                    memberInfo = fieldInfo;
+                    propertyOrFieldType = fieldInfo.FieldType;
+                }
 
                 // Promote from Type to Nullable Type if needed
-                bindings[i] = Expression.Bind(property, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
+                bindings[i] = Expression.Bind(memberInfo, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true));
             }
 
             return Expression.MemberInit(Expression.New(type), bindings);
@@ -1523,11 +1531,19 @@ namespace System.Linq.Dynamic.Core.Parser
                 _textParser.NextToken();
             }
 
-            // This is a shorthand for explicitely converting a string to something
+            // This is a shorthand for explicitly converting a string to something
             bool shorthand = _textParser.CurrentToken.Id == TokenId.StringLiteral;
             if (_textParser.CurrentToken.Id == TokenId.OpenParen || shorthand)
             {
                 Expression[] args = shorthand ? new[] { ParseStringLiteral() } : ParseArgumentList();
+
+                // If only 1 argument, and the arg is ConstantExpression, return the conversion
+                // If only 1 argument, and the arg is null, return the conversion (Can't use constructor)
+                if (args.Length == 1 
+                    && (args[0] == null || args[0] is ConstantExpression))
+                {
+                    return GenerateConversion(args[0], type, errorPos);
+                }
 
                 // If only 1 argument, and if the type is a ValueType and argType is also a ValueType, just Convert
                 if (args.Length == 1)
@@ -1540,7 +1556,10 @@ namespace System.Linq.Dynamic.Core.Parser
                     }
                 }
 
-                switch (_methodFinder.FindBestMethod(type.GetConstructors(), args, out MethodBase method))
+                var constructorsWithOutPointerArguments = type.GetConstructors()
+                    .Where(c => !c.GetParameters().Any(p => p.ParameterType.GetTypeInfo().IsPointer))
+                    .ToArray();
+                switch (_methodFinder.FindBestMethod(constructorsWithOutPointerArguments, args, out MethodBase method))
                 {
                     case 0:
                         if (args.Length == 1)
@@ -1691,7 +1710,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
             }
 #endif
-            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback)
+            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instance != null)
             {
                 MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
                 if (indexerMethod != null)
@@ -1733,7 +1752,7 @@ namespace System.Linq.Dynamic.Core.Parser
             var oldParent = _parent;
 
             ParameterExpression outerIt = _it;
-            ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty);
+            ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty, _parsingConfig.RenameEmptyParameterExpressionNames);
 
             _parent = _it;
 
@@ -2028,14 +2047,14 @@ namespace System.Linq.Dynamic.Core.Parser
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
                 // Try to find a property with the specified memberName
-                MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
                 if (member != null)
                 {
                     return member;
                 }
 
                 // If no property is found, try to get a field with the specified memberName
-                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (!staticAccess || x.IsStatic) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
                 if (member != null)
                 {
                     return member;

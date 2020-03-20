@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>ConsoleAppCosmosDb</RootNamespace>
+    <AssemblyName>ConsoleAppCosmosDb</AssemblyName>
+    <StartupObject>ConsoleAppCosmosDb.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\ConsoleApp_net452_CosmosDb\Entities\Entity.cs" Link="Entities\Entity.cs" />
+    <Compile Include="..\ConsoleApp_net452_CosmosDb\Entities\EntityData.cs" Link="Entities\EntityData.cs" />
+    <Compile Include="..\ConsoleApp_net452_CosmosDb\Entities\EntityReading.cs" Link="Entities\EntityReading.cs" />
+    <Compile Include="..\ConsoleApp_net452_CosmosDb\Entities\EntityReadingValue.cs" Link="Entities\EntityReadingValue.cs" />
+    <Compile Include="..\ConsoleApp_net452_CosmosDb\Program.cs" Link="Program.cs" />
+  </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.5.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Entities\" />
+    </ItemGroup>
+    
+</Project>

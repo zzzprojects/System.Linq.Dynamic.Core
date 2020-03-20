@@ -1006,6 +1006,25 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Theory]
+        [InlineData("c => c.Age == 8", "([a-z]{16}) =\\> \\(\\1\\.Age == 8\\)")]
+        [InlineData("c => c.Name == \"test\"", "([a-z]{16}) =\\> \\(\\1\\.Name == \"test\"\\)")]
+        public void DynamicExpressionParser_ParseLambda_RenameEmptyParameterExpressionNames(string expressionAsString, string expected)
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                RenameEmptyParameterExpressionNames = true
+            };
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<ComplexParseLambda1Result, bool>(config, true, expressionAsString);
+            string result = expression.ToString();
+
+            // Assert
+            Check.That(result).Matches(expected);
+        }
+
+        [Theory]
         [InlineData(@"p0.Equals(""Testing"", 3)", "testinG", true)]
         [InlineData(@"p0.Equals(""Testing"", StringComparison.InvariantCultureIgnoreCase)", "testinG", true)]
         public void DynamicExpressionParser_ParseLambda_SupportEnumerationStringComparison(string expressionAsString, string testValue, bool expectedResult)

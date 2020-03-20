@@ -1294,7 +1294,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(config, nameof(config));
             Check.NotEmpty(ordering, nameof(ordering));
 
-            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty) };
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args, config);
             IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering();
 
@@ -1360,18 +1360,20 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The IQueryable to return elements from.</param>
         /// <param name="page">The page to return.</param>
         /// <param name="pageSize">The number of elements per page.</param>
+        /// <param name="rowCount">If this optional parameter has been defined, this value is used as the RowCount instead of executing a Linq `Count()`.</param>
         /// <returns>PagedResult</returns>
-        public static PagedResult PageResult([NotNull] this IQueryable source, int page, int pageSize)
+        public static PagedResult PageResult([NotNull] this IQueryable source, int page, int pageSize, int? rowCount = null)
         {
             Check.NotNull(source, nameof(source));
             Check.Condition(page, p => p > 0, nameof(page));
             Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
+            Check.Condition(rowCount, rc => rc == null || rc >= 0, nameof(rowCount));
 
             var result = new PagedResult
             {
                 CurrentPage = page,
                 PageSize = pageSize,
-                RowCount = source.Count()
+                RowCount = rowCount ?? source.Count()
             };
 
             result.PageCount = (int)Math.Ceiling((double)result.RowCount / pageSize);
@@ -1387,18 +1389,20 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The IQueryable to return elements from.</param>
         /// <param name="page">The page to return.</param>
         /// <param name="pageSize">The number of elements per page.</param>
+        /// <param name="rowCount">If this optional parameter has been defined, this value is used as the RowCount instead of executing a Linq `Count()`.</param>
         /// <returns>PagedResult{TSource}</returns>
-        public static PagedResult<TSource> PageResult<TSource>([NotNull] this IQueryable<TSource> source, int page, int pageSize)
+        public static PagedResult<TSource> PageResult<TSource>([NotNull] this IQueryable<TSource> source, int page, int pageSize, int? rowCount = null)
         {
             Check.NotNull(source, nameof(source));
             Check.Condition(page, p => p > 0, nameof(page));
             Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
+            Check.Condition(rowCount, rc => rc == null || rc >= 0, nameof(rowCount));
 
             var result = new PagedResult<TSource>
             {
                 CurrentPage = page,
                 PageSize = pageSize,
-                RowCount = Queryable.Count(source)
+                RowCount = rowCount ?? Queryable.Count(source)
             };
 
             result.PageCount = (int)Math.Ceiling((double)result.RowCount / pageSize);
@@ -1763,8 +1767,8 @@ namespace System.Linq.Dynamic.Core
             sourceSelectLambda = Expression.Lambda(sourceLambdaDelegateType, sourceSelectLambda.Body, sourceSelectLambda.Parameters);
 
             //we have to create additional lambda for result selection
-            ParameterExpression xParameter = ParameterExpressionHelper.CreateParameterExpression(source.ElementType, collectionParameterName);
-            ParameterExpression yParameter = ParameterExpressionHelper.CreateParameterExpression(sourceLambdaResultType, resultParameterName);
+            ParameterExpression xParameter = ParameterExpressionHelper.CreateParameterExpression(source.ElementType, collectionParameterName, config.RenameEmptyParameterExpressionNames);
+            ParameterExpression yParameter = ParameterExpressionHelper.CreateParameterExpression(sourceLambdaResultType, resultParameterName, config.RenameEmptyParameterExpressionNames);
 
             LambdaExpression resultSelectLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, new[] { xParameter, yParameter }, null, resultSelector, resultSelectorArgs);
             Type resultLambdaResultType = resultSelectLambda.Body.Type;
@@ -2194,7 +2198,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(config, nameof(config));
             Check.NotEmpty(ordering, nameof(ordering));
 
-            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty) };
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args, config);
             IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering(forceThenBy: true);
 

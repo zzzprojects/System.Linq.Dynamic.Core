@@ -1,3 +1,17 @@
+# 1.0.22.0 (18 March 2020)
+- [#352](https://github.com/StefH/System.Linq.Dynamic.Core/pull/352) - Nested Cosmos Db compatibility contributed by [countincognito](https://github.com/countincognito)
+- [#354](https://github.com/StefH/System.Linq.Dynamic.Core/pull/354) - Fix correctly type cast of nulls (and other constants) contributed by [rockResolve](https://github.com/rockResolve)
+- [#339](https://github.com/StefH/System.Linq.Dynamic.Core/issues/339) - Error creating Null string [bug]
+
+# 1.0.21.0 (29 February 2020)
+- [#340](https://github.com/StefH/System.Linq.Dynamic.Core/pull/340) - Better error message in case property or field is not present in new() [feature] contributed by [StefH](https://github.com/StefH)
+- [#342](https://github.com/StefH/System.Linq.Dynamic.Core/pull/342) - Fix np(...) logic when default value is supplied [bug] contributed by [StefH](https://github.com/StefH)
+- [#343](https://github.com/StefH/System.Linq.Dynamic.Core/pull/343) - DocFx [feature] contributed by [StefH](https://github.com/StefH)
+- [#349](https://github.com/StefH/System.Linq.Dynamic.Core/pull/349) - Update PagedResult logic [feature] contributed by [StefH](https://github.com/StefH)
+- [#353](https://github.com/StefH/System.Linq.Dynamic.Core/pull/353) - Remove option for 'UseDynamicObjectClassForAnonymousTypes' [bug] contributed by [StefH](https://github.com/StefH)
+- [#164](https://github.com/StefH/System.Linq.Dynamic.Core/issues/164) - Issue: The option `UseDynamicObjectClassForAnonymousTypes` does not work correctly [bug]
+- [#337](https://github.com/StefH/System.Linq.Dynamic.Core/issues/337) - np (NullPropagation) throws NullReferenceException with property on .NET Core 3.1 [bug]
+
 # 1.0.20.0 (11 January 2020)
 - [#262](https://github.com/StefH/System.Linq.Dynamic.Core/pull/262) - Z.EntityFramework.Classic contributed by [StefH](https://github.com/StefH)
 - [#286](https://github.com/StefH/System.Linq.Dynamic.Core/pull/286) - Do not generate IIF(...) when np(...) is used for a single expression [feature] contributed by [StefH](https://github.com/StefH)
@@ -11,7 +25,6 @@
 - [#311](https://github.com/StefH/System.Linq.Dynamic.Core/issues/311) - Please support LongCount() [feature]
 - [#320](https://github.com/StefH/System.Linq.Dynamic.Core/issues/320) - TypeHelper#ParseNumber TryParse does not use InvariantCulture [bug]
 - [#327](https://github.com/StefH/System.Linq.Dynamic.Core/issues/327) - Incorrect ToDynamicListAsync(this IEnumerable source, Type type) and ToDynamicArrayAsync(this IEnumerable source, Type type) behavior [bug]
-- [#337](https://github.com/StefH/System.Linq.Dynamic.Core/issues/337) - np (NullPropagation) throws NullReferenceException with property on .NET Core 3.1 [bug]
 
 # 1.0.19.0 (29 August 2019)
 - [#277](https://github.com/StefH/System.Linq.Dynamic.Core/pull/277) - DateTimeIsParsedAsUTC [feature] contributed by [StefH](https://github.com/StefH)
