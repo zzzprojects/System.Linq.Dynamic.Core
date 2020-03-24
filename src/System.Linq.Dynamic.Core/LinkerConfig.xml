@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- IL linker format: https://github.com/mono/linker#link-xml-file-examples -->
+<linker>
+    <!--Use to solve some mono problems
+    see https://github.com/mono/mono/issues/12917 and https://github.com/StefH/System.Linq.Dynamic.Core/issues/358 -->
+  <assembly fullname="System.Core">
+    <type fullname="System.Linq.Queryable" preserve="all" />
+  </assembly>
+  <assembly fullname="System.Linq.Dynamic.Core">
+    <type fullname="System.Linq.Dynamic.Core.DynamicEnumerableExtensions" preserve="all" />
+  </assembly>
+</linker>

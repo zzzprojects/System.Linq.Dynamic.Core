@@ -51,6 +51,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Remove="LinkerConfig.xml" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="LinkerConfig.xml">
+            <LogicalName>$(MSBuildProjectName).xml</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="10.4.0" PrivateAssets="All" />
     </ItemGroup>
 
