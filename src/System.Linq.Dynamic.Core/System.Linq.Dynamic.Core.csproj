@@ -13,7 +13,7 @@
         <PackageTags>system;linq;dynamic;core;dotnet;NETCoreApp;NETStandard</PackageTags>
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
         <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
-        <PackageLicenseUrl>https://raw.githubusercontent.com/StefH/System.Linq.Dynamic.Core/master/LICENSE</PackageLicenseUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
         <DefaultLanguage>en-us</DefaultLanguage>
