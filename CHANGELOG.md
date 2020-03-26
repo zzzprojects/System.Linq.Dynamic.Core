@@ -1,3 +1,9 @@
+# 1.0.23.0 (26 March 2020)
+- [#357](https://github.com/StefH/System.Linq.Dynamic.Core/pull/357) - Prioritize property or field over the type / Fix find for static property or field contributed by [konzen](https://github.com/konzen)
+- [#360](https://github.com/StefH/System.Linq.Dynamic.Core/pull/360) - Support for Blazor webassembly [feature] contributed by [julienGrd](https://github.com/julienGrd)
+- [#355](https://github.com/StefH/System.Linq.Dynamic.Core/issues/355) - Parser issue - NullReferenceException [bug]
+- [#358](https://github.com/StefH/System.Linq.Dynamic.Core/issues/358) - [Blazor webassembly] library not working with linker disabled [feature]
+
 # 1.0.22.0 (18 March 2020)
 - [#352](https://github.com/StefH/System.Linq.Dynamic.Core/pull/352) - Nested Cosmos Db compatibility contributed by [countincognito](https://github.com/countincognito)
 - [#354](https://github.com/StefH/System.Linq.Dynamic.Core/pull/354) - Fix correctly type cast of nulls (and other constants) contributed by [rockResolve](https://github.com/rockResolve)
