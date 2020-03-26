@@ -13,7 +13,7 @@
         <PackageTags>system;linq;dynamic;core;dotnet;NETCoreApp;NETStandard</PackageTags>
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
         <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
-        <PackageLicenseUrl>https://raw.githubusercontent.com/StefH/System.Linq.Dynamic.Core/master/LICENSE</PackageLicenseUrl>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
         <DefaultLanguage>en-us</DefaultLanguage>
@@ -49,6 +49,15 @@
         <DefineConstants>$(DefineConstants);WINDOWS_UWP;UAP10_0</DefineConstants>
         <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="LinkerConfig.xml" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="LinkerConfig.xml">
+            <LogicalName>$(MSBuildProjectName).xml</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="10.4.0" PrivateAssets="All" />
