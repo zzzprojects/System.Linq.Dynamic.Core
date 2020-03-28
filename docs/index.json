@@ -137,6 +137,6 @@
   "index.html": {
     "href": "index.html",
     "title": "System.Linq.Dynamic.Core",
-    "keywords": "System.Linq.Dynamic.Core This is a .NET Core / Standard port of the Microsoft assembly for the .Net 4.0 Dynamic language functionality. Overview With this library it's possible to write Dynamic LINQ queries (string based) on an IQueryable : var query = db.Customers .Where(\"City == @0 and Orders.Count >= @1\", \"London\", 10) .OrderBy(\"CompanyName\") .Select(\"new(CompanyName as Name, Phone)\");"
+    "keywords": "System.Linq.Dynamic.Core This is a .NET Core / Standard port of the Microsoft assembly for the .Net 4.0 Dynamic language functionality. Overview With this library it's possible to write Dynamic LINQ queries (string based) on an IQueryable : var query = db.Customers .Where(\"City == @0 and Orders.Count >= @1\", \"London\", 10) .OrderBy(\"CompanyName\") .Select(\"new(CompanyName as Name, Phone)\"); API Documentation See this link ."
   }
 }
