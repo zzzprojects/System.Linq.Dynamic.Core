@@ -1,5 +1,5 @@
 pool:
-  vmImage: 'vs2017-win2016'
+  vmImage: 'windows-2019'
 
 variables:
   Prerelease: 'ci'
@@ -53,7 +53,7 @@ steps:
 
 # Upload coverage to codecov.io
 - script: |
-    %USERPROFILE%\.nuget\packages\codecov\1.1.0\tools\codecov.exe -f "./test/System.Linq.Dynamic.Core.Tests/coverage.opencover.xml" -t $(CODECOV_TOKEN)
+    %USERPROFILE%\.nuget\packages\codecov\1.10.0\tools\codecov.exe -f "./test/System.Linq.Dynamic.Core.Tests/coverage.opencover.xml" -t $(CODECOV_TOKEN)
   displayName: Upload coverage to codecov.io
 
 - task: PublishTestResults@2
