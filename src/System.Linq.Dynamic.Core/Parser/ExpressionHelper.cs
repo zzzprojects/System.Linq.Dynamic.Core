@@ -270,21 +270,16 @@ namespace System.Linq.Dynamic.Core.Parser
             return true;
         }
 
-        private static Expression GetMemberExpression(Expression expression)
+        public bool ExpressionQualifiesForNullPropagation(Expression expression)
         {
-            if (expression is MemberExpression memberExpression)
-            {
-                return memberExpression;
-            }
+            return expression is MemberExpression || expression is ParameterExpression || expression is MethodCallExpression;
+        }
 
-            if (expression is ParameterExpression parameterExpression)
+        private Expression GetMemberExpression(Expression expression)
+        {
+            if (ExpressionQualifiesForNullPropagation(expression))
             {
-                return parameterExpression;
-            }
-
-            if (expression is MethodCallExpression methodCallExpression)
-            {
-                return methodCallExpression;
+                return expression;
             }
 
             if (expression is LambdaExpression lambdaExpression)
@@ -303,7 +298,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return null;
         }
 
-        private static List<Expression> CollectExpressions(bool addSelf, Expression sourceExpression)
+        private List<Expression> CollectExpressions(bool addSelf, Expression sourceExpression)
         {
             Expression expression = GetMemberExpression(sourceExpression);
 
@@ -317,24 +312,31 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            while (expression is MemberExpression memberExpression)
+            bool expressionRecognized;
+            do
             {
-                expression = GetMemberExpression(memberExpression.Expression);
-                if (expression is MemberExpression)
+                switch (expression)
+                {
+                    case MemberExpression memberExpression:
+                        expression = GetMemberExpression(memberExpression.Expression);
+                        expressionRecognized = true;
+                        break;
+
+                    case MethodCallExpression methodCallExpression:
+                        expression = methodCallExpression.Arguments.First();
+                        expressionRecognized = true;
+                        break;
+
+                    default:
+                        expressionRecognized = false;
+                        break;
+                }
+
+                if (expressionRecognized && ExpressionQualifiesForNullPropagation(expression))
                 {
                     list.Add(expression);
                 }
-            }
-
-            if (expression is ParameterExpression)
-            {
-                list.Add(expression);
-            }
-
-            if (expression is MethodCallExpression)
-            {
-                list.Add(expression);
-            }
+            } while (expressionRecognized);
 
             return list;
         }

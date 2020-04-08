@@ -5,6 +5,7 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
+using FluentAssertions;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
@@ -14,10 +15,18 @@ namespace System.Linq.Dynamic.Core.Tests
     {
         private class MyClass
         {
+            public List<string> MyStrings { get; set; }
+
+            public List<MyClass> MyClasses { get; set; }
+
             public int Foo()
             {
                 return 42;
             }
+
+            public string Name { get; set; }
+
+            public MyClass Child { get; set; }
         }
 
         private class ComplexParseLambda1Result
@@ -1043,6 +1052,40 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Check.That(result).IsEqualTo(expectedResult);
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_NullPropagation_MethodCallExpression()
+        {
+            // Arrange
+            var dataSource = new MyClass();
+
+            var expressionText = "np(MyClasses.FirstOrDefault())";
+
+            // Act
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(ParsingConfig.Default, dataSource.GetType(), typeof(MyClass), expressionText);
+            Delegate del = expression.Compile();
+            MyClass result = del.DynamicInvoke(dataSource) as MyClass;
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_NullPropagation_MethodCallExpression_With_Property()
+        {
+            // Arrange
+            var dataSource = new MyClass();
+
+            var expressionText = "np(MyClasses.FirstOrDefault().Name)";
+
+            // Act
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(ParsingConfig.Default, dataSource.GetType(), typeof(string), expressionText);
+            Delegate del = expression.Compile();
+            string result = del.DynamicInvoke(dataSource) as string;
+
+            // Assert
+            result.Should().BeNull();
         }
     }
 }
