@@ -81,6 +81,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src-blazor", "src-blazor", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppTest", "src-blazor\BlazorAppTest\BlazorAppTest.csproj", "{CD80A3AC-B0E1-45ED-BE07-DE6A0F1D4CD8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docfx", "docfx", "{012536E6-FFF6-4BF8-AB9F-196017FBB257}"
+	ProjectSection(SolutionItems) = preProject
+		docfx\build-docs.ps1 = docfx\build-docs.ps1
+		docfx\docfx.json = docfx\docfx.json
+		docfx\howto.txt = docfx\howto.txt
+		docfx\index.md = docfx\index.md
+		docfx\toc.yml = docfx\toc.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
