@@ -1071,13 +1071,13 @@ namespace System.Linq.Dynamic.Core.Tests
             result.Should().BeNull();
         }
 
-        [Fact]
-        public void DynamicExpressionParser_ParseLambda_NullPropagation_MethodCallExpression_With_Property()
+        [Theory]
+        [InlineData("np(MyClasses.FirstOrDefault().Name)")]
+        [InlineData("np(MyClasses.FirstOrDefault(Name == \"a\").Name)")]
+        public void DynamicExpressionParser_ParseLambda_NullPropagation_MethodCallExpression_With_Property(string expressionText)
         {
             // Arrange
             var dataSource = new MyClass();
-
-            var expressionText = "np(MyClasses.FirstOrDefault().Name)";
 
             // Act
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(ParsingConfig.Default, dataSource.GetType(), typeof(string), expressionText);
