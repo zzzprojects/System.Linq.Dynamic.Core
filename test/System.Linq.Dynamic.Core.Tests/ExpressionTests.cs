@@ -1343,6 +1343,8 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData("np(nested.nullablenumber, 42)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.nullablenumber != null)), Param_0.nested.nullablenumber, 42))")]
         [InlineData("np(nested._enumnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested._enumnullable, null))")]
         [InlineData("np(item.GuidNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Param_0.item.GuidNull, null))")]
+        [InlineData("np(items.FirstOrDefault())", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.items != null)), Param_0.items.FirstOrDefault(), null))")]
+        [InlineData("np(items.FirstOrDefault(it != \"x\"))", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.items != null)), Param_0.items.FirstOrDefault(Param_1 => (Param_1 != \"x\")), null))")]
         public void ExpressionTests_NullPropagating(string test, string query)
         {
             // Arrange
@@ -1378,7 +1380,8 @@ namespace System.Linq.Dynamic.Core.Tests
                         Id = 100,
                         GuidNormal = Guid.NewGuid(),
                         GuidNull = Guid.NewGuid()
-                    }
+                    },
+                    items = new [] { "a", "b" }
                 }
             }.AsQueryable();
 
