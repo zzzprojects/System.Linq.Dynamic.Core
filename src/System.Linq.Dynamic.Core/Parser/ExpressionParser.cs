@@ -797,38 +797,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _textParser.NextToken();
             return ConstantExpressionHelper.CreateLiteral(result, result);
-
-            //char quote = _textParser.CurrentToken.Text[0];
-            //string s = _textParser.CurrentToken.Text.Substring(1, _textParser.CurrentToken.Text.Length - 2);
-            //int index1 = 0;
-            //while (true)
-            //{
-            //    int index2 = s.IndexOf(quote, index1);
-            //    if (index2 < 0)
-            //    {
-            //        break;
-            //    }
-
-            //    if (index2 + 1 < s.Length && s[index2 + 1] == quote)
-            //    {
-            //        s = s.Remove(index2, 1);
-            //    }
-            //    index1 = index2 + 1;
-            //}
-
-            //if (quote == '\'')
-            //{
-            //    if (s.Length != 1)
-            //    {
-            //        throw ParseError(Res.InvalidCharacterLiteral);
-            //    }
-            //    _textParser.NextToken();
-            //    return ConstantExpressionHelper.CreateLiteral(s[0], s);
-            //}
-            //_textParser.NextToken();
-            //return ConstantExpressionHelper.CreateLiteral(s, s);
         }
-
         Expression ParseIntegerLiteral()
         {
             _textParser.ValidateToken(TokenId.IntegerLiteral);
@@ -1539,7 +1508,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                 // If only 1 argument, and the arg is ConstantExpression, return the conversion
                 // If only 1 argument, and the arg is null, return the conversion (Can't use constructor)
-                if (args.Length == 1 
+                if (args.Length == 1
                     && (args[0] == null || args[0] is ConstantExpression))
                 {
                     return GenerateConversion(args[0], type, errorPos);
