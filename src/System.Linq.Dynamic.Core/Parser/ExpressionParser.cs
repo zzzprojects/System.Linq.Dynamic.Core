@@ -1135,20 +1135,20 @@ namespace System.Linq.Dynamic.Core.Parser
                 throw ParseError(errorPos, Res.NullPropagationRequiresCorrectArgs);
             }
 
-            if (args[0] is MemberExpression memberExpression)
+            if (_expressionHelper.ExpressionQualifiesForNullPropagation(args[0]))
             {
                 bool hasDefaultParameter = args.Length == 2;
                 Expression expressionIfFalse = hasDefaultParameter ? args[1] : Expression.Constant(null);
 
-                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(memberExpression, hasDefaultParameter, out Expression generatedExpression))
+                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(args[0], hasDefaultParameter, out Expression generatedExpression))
                 {
-                    return GenerateConditional(generatedExpression, memberExpression, expressionIfFalse, errorPos);
+                    return GenerateConditional(generatedExpression, args[0], expressionIfFalse, errorPos);
                 }
 
-                return memberExpression;
+                return args[0];
             }
 
-            throw ParseError(errorPos, Res.NullPropagationRequiresMemberExpression);
+            throw ParseError(errorPos, Res.NullPropagationRequiresValidExpression);
         }
 
         // Is(...) function
