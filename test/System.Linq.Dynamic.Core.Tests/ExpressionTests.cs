@@ -1738,7 +1738,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var result1 = baseQuery.Where("it.Value == \"ab\\\"cd\"").ToList();
-            var result2 = baseQuery.Where("it.Value.IndexOf('\\') != -1").ToList();
+            var result2 = baseQuery.Where("it.Value.IndexOf('\\\\') != -1").ToList();
 
             // Assert
             Assert.Single(result1);

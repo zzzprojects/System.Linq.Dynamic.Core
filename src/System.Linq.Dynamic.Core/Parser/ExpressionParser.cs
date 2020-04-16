@@ -782,7 +782,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _textParser.ValidateToken(TokenId.StringLiteral);
 
-            string result = SpracheStringParser.ParseString(_textParser.CurrentToken.Text);
+            string result = StringParser.ParseString(_textParser.CurrentToken.Text);
 
             if (_textParser.CurrentToken.Text[0] == '\'')
             {
