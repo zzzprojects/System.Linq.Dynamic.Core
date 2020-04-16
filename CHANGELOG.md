@@ -1,3 +1,9 @@
+# 1.0.24.0 (16 April 2020)
+- [#367](https://github.com/StefH/System.Linq.Dynamic.Core/pull/367) - Azure Pipelines: fix Build (coverlet), use new vmImage and update NuGet dependencies for UnitTests [bug] contributed by [StefH](https://github.com/StefH)
+- [#368](https://github.com/StefH/System.Linq.Dynamic.Core/pull/368) - Support MethodCalls in NullPropagation function : np(...) [feature] contributed by [StefH](https://github.com/StefH)
+- [#370](https://github.com/StefH/System.Linq.Dynamic.Core/pull/370) - Add ValidatedNotNullAttribute (for SonarQube) [refactor] contributed by [StefH](https://github.com/StefH)
+- [#366](https://github.com/StefH/System.Linq.Dynamic.Core/issues/366) - Null propagation cannot be used for primitive type lists (string) [feature]
+
 # 1.0.23.0 (26 March 2020)
 - [#357](https://github.com/StefH/System.Linq.Dynamic.Core/pull/357) - Prioritize property or field over the type / Fix find for static property or field contributed by [konzen](https://github.com/konzen)
 - [#360](https://github.com/StefH/System.Linq.Dynamic.Core/pull/360) - Support for Blazor webassembly [feature] contributed by [julienGrd](https://github.com/julienGrd)
