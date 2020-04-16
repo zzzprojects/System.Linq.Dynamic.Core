@@ -30,6 +30,8 @@ namespace System.Linq.Dynamic.Core.Parser
 
         bool TryGenerateAndAlsoNotNullExpression(Expression sourceExpression, bool addSelf, out Expression generatedExpression);
 
+        bool ExpressionQualifiesForNullPropagation(Expression expression);
+
         void WrapConstantExpression(ref Expression argument);
     }
 }
