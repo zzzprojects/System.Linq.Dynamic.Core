@@ -62,6 +62,8 @@
         public const string TokenExpected = "{0} expected";
         public const string TypeHasNoNullableForm = "Type '{0}' has no nullable form";
         public const string TypeNotFound = "Type '{0}' not found";
+        public const string UnexpectedUnclosedString = "Unexpected end of string with unclosed string at position {0} near '{1}'.";
+        public const string UnexpectedUnrecognizedEscapeSequence = "Unexpected unrecognized escape sequence at position {0} near '{1}'.";
         public const string UnknownIdentifier = "Unknown identifier '{0}'";
         public const string UnknownPropertyOrField = "No property or field '{0}' exists in type '{1}'";
         public const string UnterminatedStringLiteral = "Unterminated string literal";

@@ -124,22 +124,25 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Where_Dynamic_StringQuoted()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(2, allowNullableProfiles: true);
             testList[0].UserName = @"This \""is\"" a test.";
             var qry = testList.AsQueryable();
 
-            //Act
-            var result1a = qry.Where(@"UserName == ""This \""is\"" a test.""").ToArray();
-            var result1b = qry.Where("UserName == \"This \\\"is\\\" a test.\"").ToArray();
-            var result2 = qry.Where("UserName == @0", @"This \""is\"" a test.").ToArray();
+            // Act
+            // var result1a = qry.Where(@"UserName == ""This \\""is\\"" a test.""").ToArray();
+            var result1b = qry.Where("UserName == \"This \\\\\\\"is\\\\\\\" a test.\"").ToArray();
+            var result2a = qry.Where("UserName == @0", @"This \""is\"" a test.").ToArray();
+            var result2b = qry.Where("UserName == @0", "This \\\"is\\\" a test.").ToArray();
+
             var expected = qry.Where(x => x.UserName == @"This \""is\"" a test.").ToArray();
 
-            //Assert
+            // Assert
             Assert.Single(expected);
-            Assert.Equal(expected, result1a);
+            // Assert.Equal(expected, result1a);
             Assert.Equal(expected, result1b);
-            Assert.Equal(expected, result2);
+            Assert.Equal(expected, result2a);
+            Assert.Equal(expected, result2b);
         }
 
         [Fact]
