@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
+    /// <summary>
+    /// ExpressionPromoter
+    /// </summary>
     public class ExpressionPromoter : IExpressionPromoter
     {
         private readonly NumberParser _numberParser;
@@ -24,9 +27,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return expr;
             }
 
-            var ce = expr as ConstantExpression;
-
-            if (ce != null)
+            if (expr is ConstantExpression ce)
             {
                 if (Constants.IsNull(ce))
                 {

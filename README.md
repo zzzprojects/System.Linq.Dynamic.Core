@@ -24,21 +24,17 @@ There are several documentation resources:
 | &nbsp;&nbsp;**Issues** | [![GitHub issues](https://img.shields.io/github/issues/StefH/System.Linq.Dynamic.Core.svg)](https://github.com/StefH/System.Linq.Dynamic.Core/issues) |
 | | |
 | ***Quality*** | &nbsp; |
-| &nbsp;&nbsp;**Build Azure** | [![Build Status Azure](https://stef.visualstudio.com/System.Linq.Dynamic.Core/_apis/build/status/StefH.System.Linq.Dynamic.Core)](https://stef.visualstudio.com/System.Linq.Dynamic.Core/_build/latest?definitionId=12) |
-| &nbsp;&nbsp;**CodeFactor** | [![CodeFactor](https://www.codefactor.io/repository/github/stefh/system.linq.dynamic.core/badge)](https://www.codefactor.io/repository/github/stefh/system.linq.dynamic.core)
-| &nbsp;&nbsp;**Sonar Quality Gate** | [![Sonar Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=alert_status)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core) |
-| &nbsp;&nbsp;**Sonar Bugs** | [![Sonar Bugs](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=bugs)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core&resolved=false&types=BUG) |
-| &nbsp;&nbsp;**Sonar Code Smells** | [![Sonar Code Smells](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=code_smells)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core&resolved=false&types=CODE_SMELL) |
-| &nbsp;&nbsp;**Sonar Coverage** | [![Sonar Coverage](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=coverage)](https://sonarcloud.io/component_measures?id=system.linq.dynamic.core&metric=coverage) |
-| &nbsp;&nbsp;**Codecov** | [![codecov](https://codecov.io/gh/StefH/System.Linq.Dynamic.Core/branch/master/graph/badge.svg)](https://codecov.io/gh/StefH/System.Linq.Dynamic.Core) |
-| &nbsp;&nbsp;**Coveralls** | [![Coverage Status](https://coveralls.io/repos/github/StefH/System.Linq.Dynamic.Core/badge.svg?branch=master)](https://coveralls.io/github/StefH/System.Linq.Dynamic.Core?branch=master) |
+| &nbsp;&nbsp;**Build** | [![Build Status Azure](https://stef.visualstudio.com/System.Linq.Dynamic.Core/_apis/build/status/StefH.System.Linq.Dynamic.Core)](https://stef.visualstudio.com/System.Linq.Dynamic.Core/_build/latest?definitionId=12) |
+| &nbsp;&nbsp;**Quality** | [![Sonar Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=alert_status)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core) [![CodeFactor](https://www.codefactor.io/repository/github/stefh/system.linq.dynamic.core/badge)](https://www.codefactor.io/repository/github/stefh/system.linq.dynamic.core)
+| &nbsp;&nbsp;**Sonar** | [![Sonar Bugs](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=bugs)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core&resolved=false&types=BUG) [![Sonar Code Smells](https://sonarcloud.io/api/project_badges/measure?project=system.linq.dynamic.core&metric=code_smells)](https://sonarcloud.io/project/issues?id=system.linq.dynamic.core&resolved=false&types=CODE_SMELL)|
+| &nbsp;&nbsp;**Coverage** | [![codecov](https://codecov.io/gh/StefH/System.Linq.Dynamic.Core/branch/master/graph/badge.svg)](https://codecov.io/gh/StefH/System.Linq.Dynamic.Core) [![Coverage Status](https://coveralls.io/repos/github/StefH/System.Linq.Dynamic.Core/badge.svg?branch=master)](https://coveralls.io/github/StefH/System.Linq.Dynamic.Core?branch=master)|
 | |
-| ***Nuget*** | &nbsp; |
+| ***NuGet*** | &nbsp; |
 | &nbsp;&nbsp;**System.Linq.Dynamic.Core** | [![NuGet](https://buildstats.info/nuget/System.Linq.Dynamic.Core)](https://www.nuget.org/packages/System.Linq.Dynamic.Core) |
 | &nbsp;&nbsp;**EntityFramework.DynamicLinq** | [![NuGet](https://buildstats.info/nuget/EntityFramework.DynamicLinq)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
 | &nbsp;&nbsp;**Microsoft.EntityFrameworkCore.DynamicLinq** | [![NuGet](https://buildstats.info/nuget/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 | &nbsp;&nbsp;**Z.EntityFramework.Classic.DynamicLinq** | [![NuGet](https://buildstats.info/nuget/Z.EntityFramework.Classic.DynamicLinq)](https://www.nuget.org/packages/Z.EntityFramework.Classic.DynamicLinq) |
-| ***MyGet (previews)*** | &nbsp; |
+| ***MyGet (preview)*** | &nbsp; |
 | &nbsp;&nbsp;**System.Linq.Dynamic.Core** | [![MyGet](https://buildstats.info/myget/system-linq-dynamic-core/System.Linq.Dynamic.Core)](https://www.myget.org/feed/system-linq-dynamic-core/package/nuget/System.Linq.Dynamic.Core) |
 | &nbsp;&nbsp;**EntityFramework.DynamicLinq** | [![MyGet](https://buildstats.info/myget/system-linq-dynamic-core/EntityFramework.DynamicLinq)](https://www.myget.org/feed/system-linq-dynamic-core/package/nuget/EntityFramework.DynamicLinq) |
 | &nbsp;&nbsp;**Microsoft.EntityFrameworkCore.DynamicLinq** | [![MyGet](https://buildstats.info/myget/system-linq-dynamic-core/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.myget.org/feed/system-linq-dynamic-core/package/nuget/Microsoft.EntityFrameworkCore.DynamicLinq) |

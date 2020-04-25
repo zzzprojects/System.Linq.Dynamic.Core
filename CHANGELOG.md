@@ -1,3 +1,7 @@
+# 1.1.0.0 (25 April 2020)
+- [#326](https://github.com/StefH/System.Linq.Dynamic.Core/pull/326) - Fixes for parsing escaped / quoted strings [bug] contributed by [StefH](https://github.com/StefH)
+- [#307](https://github.com/StefH/System.Linq.Dynamic.Core/issues/307) - Found problem with backslashes parsing [bug]
+
 # 1.0.24.0 (16 April 2020)
 - [#367](https://github.com/StefH/System.Linq.Dynamic.Core/pull/367) - Azure Pipelines: fix Build (coverlet), use new vmImage and update NuGet dependencies for UnitTests [bug] contributed by [StefH](https://github.com/StefH)
 - [#368](https://github.com/StefH/System.Linq.Dynamic.Core/pull/368) - Support MethodCalls in NullPropagation function : np(...) [feature] contributed by [StefH](https://github.com/StefH)
