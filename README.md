@@ -73,5 +73,5 @@ However, currently there are multiple nuget packages and projects available:
 [5a]: https://dynamiclinq.codeplex.com/
 [6a]: http://weblogs.asp.net/scottgu/dynamic-linq-part-1-using-the-linq-dynamic-query-library
 
-[doc-api]: http://stefh.github.io/System.Linq.Dynamic.Core
-[doc-wiki]: https://github.com/StefH/System.Linq.Dynamic.Core/wiki/Dynamic-Expressions
+[doc-api]: http://zzzprojects.github.io/System.Linq.Dynamic.Core
+[doc-wiki]: https://github.com/zzzprojects/System.Linq.Dynamic.Core/wiki/Dynamic-Expressions
