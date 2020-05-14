@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
-        <Authors>Stef Heyenrath</Authors>
+        <Authors>ZZZ Projects;Stef Heyenrath</Authors>
         <TargetFrameworks>net451;net46;netstandard1.3;netstandard2.0;uap10.0;netcoreapp2.1</TargetFrameworks>
         <DefineConstants>$(DefineConstants);EFCORE;EFDYNAMICFUNCTIONS</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -12,7 +12,7 @@
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
         <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
-        <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
+        <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
@@ -28,6 +28,7 @@
         <DebugType>full</DebugType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <Version>1.1.1</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">

@@ -3,7 +3,7 @@
         <!--<Version>1.0.18</Version>-->
         <Description>This is a .NETStandard / .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
         <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
-        <Authors>Microsoft;Scott Guthrie;King Wilder;Nathan Arnott;Stef Heyenrath</Authors>
+        <Authors>ZZZ Projects;Stef HeyenrathMicrosoft;Scott Guthrie;King Wilder;Nathan Arnott;Stef Heyenrath</Authors>
         <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0;uap10.0;netcoreapp2.1</TargetFrameworks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>System.Linq.Dynamic.Core</AssemblyName>
@@ -12,7 +12,7 @@
         <!--<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>-->
         <PackageTags>system;linq;dynamic;core;dotnet;NETCoreApp;NETStandard</PackageTags>
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
-        <PackageProjectUrl>https://github.com/StefH/System.Linq.Dynamic.Core</PackageProjectUrl>
+        <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
@@ -21,6 +21,8 @@
         <DebugType>full</DebugType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <Company>ZZZ Projects</Company>
+        <Copyright>Copyright © ZZZ Projects</Copyright>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
