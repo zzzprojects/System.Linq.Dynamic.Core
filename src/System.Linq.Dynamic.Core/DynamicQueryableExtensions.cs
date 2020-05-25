@@ -1273,6 +1273,18 @@ namespace System.Linq.Dynamic.Core
             return OrderBy(source, ParsingConfig.Default, ordering, args);
         }
 
+        // NEED TEXT!
+        public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
+            return (IOrderedQueryable<TSource>)InternalOrderBy((IQueryable)source, config, ordering, comparer, args);
+        }
+
+        // NEED TEXT!
+        public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
+            return OrderBy(source, ParsingConfig.Default, ordering, comparer, args);
+        }
+
         /// <summary>
         /// Sorts the elements of a sequence in ascending or descending order according to a key.
         /// </summary>
@@ -1290,6 +1302,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, params object[] args)
         {
+            return InternalOrderBy(source, config, ordering, null, args);
+        }
+
+        internal static IOrderedQueryable InternalOrderBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
             Check.NotNull(source, nameof(source));
             Check.NotNull(config, nameof(config));
             Check.NotEmpty(ordering, nameof(ordering));
@@ -1302,10 +1319,22 @@ namespace System.Linq.Dynamic.Core
 
             foreach (DynamicOrdering dynamicOrdering in dynamicOrderings)
             {
-                queryExpr = Expression.Call(
-                    typeof(Queryable), dynamicOrdering.MethodName,
-                    new[] { source.ElementType, dynamicOrdering.Selector.Type },
-                    queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
+                if (comparer == null)
+                { 
+                    queryExpr = Expression.Call(
+                        typeof(Queryable), dynamicOrdering.MethodName,
+                        new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                        queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
+                }
+                else
+                {
+                    var comparerGenericType = typeof(IComparer<>).MakeGenericType(dynamicOrdering.Selector.Type); 
+                    queryExpr = Expression.Call(
+                        typeof(Queryable), dynamicOrdering.MethodName,
+                        new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                        queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)),  
+                        Expression.Constant(comparer, comparerGenericType));
+                }
             }
 
             var optimized = OptimizeExpression(queryExpr);
@@ -2176,6 +2205,18 @@ namespace System.Linq.Dynamic.Core
         {
             return ThenBy(source, ParsingConfig.Default, ordering, args);
         }
+
+        // NEED TEXT! 
+        public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
+            return (IOrderedQueryable<TSource>)InternalThenBy((IOrderedQueryable)source, config, ordering, comparer, args);
+        }
+         
+        // NEED TEXT!
+        public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
+            return ThenBy(source, ParsingConfig.Default, ordering, comparer, args);
+        }
         /// <summary>
         /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
         /// </summary>
@@ -2194,6 +2235,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, params object[] args)
         {
+            return InternalThenBy(source, config, ordering, null, args);
+        }
+
+        internal static IOrderedQueryable InternalThenBy([NotNull] this IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
             Check.NotNull(source, nameof(source));
             Check.NotNull(config, nameof(config));
             Check.NotEmpty(ordering, nameof(ordering));
@@ -2206,10 +2252,22 @@ namespace System.Linq.Dynamic.Core
 
             foreach (DynamicOrdering dynamicOrdering in dynamicOrderings)
             {
-                queryExpr = Expression.Call(
-                    typeof(Queryable), dynamicOrdering.MethodName,
-                    new[] { source.ElementType, dynamicOrdering.Selector.Type },
-                    queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
+                if (comparer == null)
+                { 
+                    queryExpr = Expression.Call(
+                        typeof(Queryable), dynamicOrdering.MethodName,
+                        new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                        queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
+                }
+                else
+                {
+                    var comparerGenericType = typeof(IComparer<>).MakeGenericType(dynamicOrdering.Selector.Type);
+                    queryExpr = Expression.Call(
+                        typeof(Queryable), dynamicOrdering.MethodName,
+                        new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                        queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)),
+                        Expression.Constant(comparer, comparerGenericType));
+                }
             }
 
             var optimized = OptimizeExpression(queryExpr);
