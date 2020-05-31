@@ -679,7 +679,23 @@ namespace System.Linq.Dynamic.Core
             return InternalGroupBy(source, config, keySelector, resultSelector, null, args);
         }
 
-        // NEED TEXT!
+        /// <summary>
+        /// Groups the elements of a sequence according to a specified key string function 
+        /// and creates a result value from each group and its key.
+        /// </summary>
+        /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="keySelector">A string expression to specify the key for each element.</param>
+        /// <param name="resultSelector">A string expression to specify a result value from each group.</param>
+        /// <param name="equalityComparer">The comparer to use.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+        /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
+        /// <example>
+        /// <code>
+        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey", "StringProperty");
+        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
+        /// </code>
+        /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
         {
             return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, args);
@@ -724,7 +740,7 @@ namespace System.Linq.Dynamic.Core
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, args);
         }
 
-        // NEED TEXT!
+        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string, IEqualityComparer, object[])"/>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, equalityComparer, args);
@@ -756,13 +772,28 @@ namespace System.Linq.Dynamic.Core
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector);
         }
 
-        // NEED TEXT!
+        /// <summary>
+        /// Groups the elements of a sequence according to a specified key string function 
+        /// and creates a result value from each group and its key.
+        /// </summary>
+        /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="keySelector">A string expression to specify the key for each element.</param>
+        /// <param name="resultSelector">A string expression to specify a result value from each group.</param>
+        /// <param name="equalityComparer">The comparer to use.</param>
+        /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
+        /// <example>
+        /// <code>
+        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey", "StringProperty");
+        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
+        /// </code>
+        /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer)
         {
             return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, null);
         }
 
-        // NEED TEXT!
+        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string, IEqualityComparer)"/>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, equalityComparer);
@@ -789,7 +820,22 @@ namespace System.Linq.Dynamic.Core
             return InternalGroupBy(source, config, keySelector, null, args);
         }
 
-        // NEED TEXT!
+        /// <summary>
+        /// Groups the elements of a sequence according to a specified key string function 
+        /// and creates a result value from each group and its key.
+        /// </summary>
+        /// <param name="source">A <see cref="IQueryable"/> whose elements to group.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="keySelector">A string expression to specify the key for each element.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <param name="equalityComparer">The comparer to use.</param>
+        /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
+        /// <example>
+        /// <code>
+        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey");
+        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
+        /// </code>
+        /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
         {
             return InternalGroupBy(source, config, keySelector, equalityComparer, args);
@@ -831,7 +877,7 @@ namespace System.Linq.Dynamic.Core
             return GroupBy(source, ParsingConfig.Default, keySelector, args);
         }
 
-        // NEED TEXT!
+        /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, IEqualityComparer, object[])"/>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, equalityComparer, args);
@@ -1395,7 +1441,22 @@ namespace System.Linq.Dynamic.Core
             return InternalOrderBy(source, config, ordering, null, args);
         }
 
-        // NEED TEXT!
+        /// <summary>
+        /// Sorts the elements of a sequence in ascending or descending order according to a key.
+        /// </summary>
+        /// <param name="source">A sequence of values to order.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="ordering">An expression string to indicate values to order by.</param>
+        /// <param name="comparer">The comparer to use.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+        /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+        /// <example>
+        /// <code>
+        /// var resultSingle = queryable.OrderBy("NumberProperty");
+        /// var resultSingleDescending = queryable.OrderBy("NumberProperty DESC");
+        /// var resultMultiple = queryable.OrderBy("NumberProperty, StringProperty DESC");
+        /// </code>
+        /// </example>
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
         {
             return InternalOrderBy(source, config, ordering, comparer, args);
@@ -1441,9 +1502,9 @@ namespace System.Linq.Dynamic.Core
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, params object[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, args);
-        } 
+        }
 
-        // NEED TEXT!
+        /// <inheritdoc cref="OrderBy(IQueryable, ParsingConfig, string, IComparer, object[])"/>
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, IComparer comparer, params object[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, comparer, args);
@@ -2336,6 +2397,7 @@ namespace System.Linq.Dynamic.Core
         {
             return ThenBy(source, ParsingConfig.Default, ordering, comparer, args);
         }
+
         /// <summary>
         /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
         /// </summary>
@@ -2357,7 +2419,23 @@ namespace System.Linq.Dynamic.Core
             return InternalThenBy(source, config, ordering, null, args);
         }
 
-        // NEED TEXT!
+        /// <summary>
+        /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+        /// </summary>
+        /// <param name="source">A sequence of values to order.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="ordering">An expression string to indicate values to order by.</param>
+        /// <param name="comparer">The comparer to use.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+        /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+        /// <example>
+        /// <code>
+        /// var result = queryable.OrderBy("LastName");
+        /// var resultSingle = result.OrderBy("NumberProperty");
+        /// var resultSingleDescending = result.OrderBy("NumberProperty DESC");
+        /// var resultMultiple = result.OrderBy("NumberProperty, StringProperty DESC");
+        /// </code>
+        /// </example>
         public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
         {
             return InternalThenBy(source, config, ordering, comparer, args);
@@ -2405,7 +2483,7 @@ namespace System.Linq.Dynamic.Core
             return ThenBy(source, ParsingConfig.Default, ordering, args);
         }
 
-        // NEED TEXT!
+        /// <inheritdoc cref="ThenBy(IOrderedQueryable, ParsingConfig, string, IComparer, object[])"/>
         public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] string ordering, IComparer comparer, params object[] args)
         {
             return ThenBy(source, ParsingConfig.Default, ordering, comparer, args);
