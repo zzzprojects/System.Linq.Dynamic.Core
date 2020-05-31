@@ -690,12 +690,6 @@ namespace System.Linq.Dynamic.Core
         /// <param name="equalityComparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
-        /// <example>
-        /// <code>
-        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey", "StringProperty");
-        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
-        /// </code>
-        /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
         {
             return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, args);
@@ -782,12 +776,6 @@ namespace System.Linq.Dynamic.Core
         /// <param name="resultSelector">A string expression to specify a result value from each group.</param>
         /// <param name="equalityComparer">The comparer to use.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
-        /// <example>
-        /// <code>
-        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey", "StringProperty");
-        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
-        /// </code>
-        /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer)
         {
             return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, null);
@@ -830,12 +818,6 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <param name="equalityComparer">The comparer to use.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
-        /// <example>
-        /// <code>
-        /// var groupResult1 = queryable.GroupBy("NumberPropertyAsKey");
-        /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)");
-        /// </code>
-        /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
         {
             return InternalGroupBy(source, config, keySelector, equalityComparer, args);
@@ -1399,7 +1381,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
-        /// <param name="comparer">The comparer to use to order by.</param>
+        /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
@@ -1413,7 +1395,7 @@ namespace System.Linq.Dynamic.Core
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
-        /// <param name="comparer">The comparer to use to order by.</param>
+        /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string ordering, IComparer comparer, params object[] args)
@@ -1450,13 +1432,6 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-        /// <example>
-        /// <code>
-        /// var resultSingle = queryable.OrderBy("NumberProperty");
-        /// var resultSingleDescending = queryable.OrderBy("NumberProperty DESC");
-        /// var resultMultiple = queryable.OrderBy("NumberProperty, StringProperty DESC");
-        /// </code>
-        /// </example>
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
         {
             return InternalOrderBy(source, config, ordering, comparer, args);
@@ -2376,7 +2351,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
-        /// <param name="comparer">The comparer to use to order by.</param>
+        /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IOrderedQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
@@ -2390,7 +2365,7 @@ namespace System.Linq.Dynamic.Core
         /// <typeparam name="TSource">The type of the elements of source.</typeparam>
         /// <param name="source">A sequence of values to order.</param>
         /// <param name="ordering">An expression string to indicate values to order by.</param>
-        /// <param name="comparer">The comparer to use to order by.</param>
+        /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IOrderedQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
         public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] string ordering, IComparer comparer, params object[] args)
@@ -2428,14 +2403,6 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-        /// <example>
-        /// <code>
-        /// var result = queryable.OrderBy("LastName");
-        /// var resultSingle = result.OrderBy("NumberProperty");
-        /// var resultSingleDescending = result.OrderBy("NumberProperty DESC");
-        /// var resultMultiple = result.OrderBy("NumberProperty, StringProperty DESC");
-        /// </code>
-        /// </example>
         public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
         {
             return InternalThenBy(source, config, ordering, comparer, args);
