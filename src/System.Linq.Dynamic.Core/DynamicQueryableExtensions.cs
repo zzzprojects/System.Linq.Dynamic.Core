@@ -675,6 +675,17 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         [PublicAPI]
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, object[] args)
+        { 
+            return InternalGroupBy(source, config, keySelector, resultSelector, null, args);
+        }
+
+        // NEED TEXT!
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
+        {
+            return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, args);
+        }
+
+        internal static IQueryable InternalGroupBy([NotNull]  IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(config, nameof(config));
@@ -684,11 +695,24 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
             LambdaExpression elementLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, resultSelector, args);
-
-            var optimized = OptimizeExpression(Expression.Call(
-                typeof(Queryable), nameof(Queryable.GroupBy),
-                new[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
-                source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda)));
+            
+            Expression optimized = null;
+            if (equalityComparer == null)
+            {
+                optimized = OptimizeExpression(Expression.Call(
+                    typeof(Queryable), nameof(Queryable.GroupBy),
+                    new[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
+                    source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda)));
+            }
+            else
+            {
+                var equalityComparerGenericType = typeof(IEqualityComparer<>).MakeGenericType(keyLambda.Body.Type);
+                optimized = OptimizeExpression(Expression.Call(
+                    typeof(Queryable), nameof(Queryable.GroupBy),
+                    new[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
+                    source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda), 
+                    Expression.Constant(equalityComparer, equalityComparerGenericType)));
+            } 
 
             return source.Provider.CreateQuery(optimized);
         }
@@ -698,6 +722,12 @@ namespace System.Linq.Dynamic.Core
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, object[] args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, args);
+        }
+
+        // NEED TEXT!
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
+        {
+            return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, equalityComparer, args);
         }
 
         /// <summary>
@@ -717,13 +747,25 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector)
         {
-            return GroupBy(source, config, keySelector, resultSelector, null);
+            return GroupBy(source, config, keySelector, resultSelector, null, null);
         }
 
         /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string)"/>
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector);
+        }
+
+        // NEED TEXT!
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer)
+        {
+            return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, null);
+        }
+
+        // NEED TEXT!
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer)
+        {
+            return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, equalityComparer);
         }
 
         /// <summary>
@@ -743,6 +785,17 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         [PublicAPI]
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [CanBeNull] params object[] args)
+        { 
+            return InternalGroupBy(source, config, keySelector, null, args);
+        }
+
+        // NEED TEXT!
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
+        {
+            return InternalGroupBy(source, config, keySelector, equalityComparer, args);
+        }
+
+        internal static IQueryable InternalGroupBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(config, nameof(config));
@@ -751,9 +804,22 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
 
-            var optimized = OptimizeExpression(Expression.Call(
-                typeof(Queryable), nameof(Queryable.GroupBy),
-                new[] { source.ElementType, keyLambda.Body.Type }, source.Expression, Expression.Quote(keyLambda)));
+            Expression optimized = null;
+
+            if (equalityComparer == null)
+            {
+                optimized = OptimizeExpression(Expression.Call(
+                    typeof(Queryable), nameof(Queryable.GroupBy),
+                    new[] { source.ElementType, keyLambda.Body.Type }, source.Expression, Expression.Quote(keyLambda)));
+            }
+            else
+            {
+                var equalityComparerGenericType = typeof(IEqualityComparer<>).MakeGenericType(keyLambda.Body.Type);
+                optimized = OptimizeExpression(Expression.Call(
+                    typeof(Queryable), nameof(Queryable.GroupBy),
+                    new[] { source.ElementType, keyLambda.Body.Type }, source.Expression, Expression.Quote(keyLambda),
+                    Expression.Constant(equalityComparer, equalityComparerGenericType)));
+            }
 
             return source.Provider.CreateQuery(optimized);
         }
@@ -764,6 +830,13 @@ namespace System.Linq.Dynamic.Core
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, args);
         }
+
+        // NEED TEXT!
+        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
+        {
+            return GroupBy(source, ParsingConfig.Default, keySelector, equalityComparer, args);
+        }
+
         #endregion GroupBy
 
         #region GroupByMany
@@ -1322,6 +1395,12 @@ namespace System.Linq.Dynamic.Core
             return InternalOrderBy(source, config, ordering, null, args);
         }
 
+        // NEED TEXT!
+        public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
+            return InternalOrderBy(source, config, ordering, comparer, args);
+        }
+
         internal static IOrderedQueryable InternalOrderBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
         {
             Check.NotNull(source, nameof(source));
@@ -1362,6 +1441,12 @@ namespace System.Linq.Dynamic.Core
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, params object[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, args);
+        } 
+
+        // NEED TEXT!
+        public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
+            return OrderBy(source, ParsingConfig.Default, ordering, comparer, args);
         }
 
         #endregion OrderBy
@@ -2272,7 +2357,13 @@ namespace System.Linq.Dynamic.Core
             return InternalThenBy(source, config, ordering, null, args);
         }
 
-        internal static IOrderedQueryable InternalThenBy([NotNull] this IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        // NEED TEXT!
+        public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
+            return InternalThenBy(source, config, ordering, comparer, args);
+        }
+
+        internal static IOrderedQueryable InternalThenBy([NotNull] IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(config, nameof(config));
@@ -2312,6 +2403,12 @@ namespace System.Linq.Dynamic.Core
         public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] string ordering, params object[] args)
         {
             return ThenBy(source, ParsingConfig.Default, ordering, args);
+        }
+
+        // NEED TEXT!
+        public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] string ordering, IComparer comparer, params object[] args)
+        {
+            return ThenBy(source, ParsingConfig.Default, ordering, comparer, args);
         }
 
         #endregion OrderBy

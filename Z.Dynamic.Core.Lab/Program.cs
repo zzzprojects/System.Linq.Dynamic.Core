@@ -6,7 +6,7 @@ namespace Z.Dynamic.Core.Lab
 	{
 		static void Main(string[] args)
 		{
-            Request_OrderBy_StringComparer.Execute();
+            Request_GroupBy_IEqualityComparer.Execute();
 		}
 	}
 }
