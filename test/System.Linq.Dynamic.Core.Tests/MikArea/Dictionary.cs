@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
+using NFluent;
+using Xunit;
 
-namespace Z.Dynamic.Core.Lab
+namespace System.Linq.Dynamic.Core.Tests.MikArea
 {
-    class Request_AddMethod
+    class Dictionary
     {
         public class Customer
         {
@@ -22,7 +21,8 @@ namespace Z.Dynamic.Core.Lab
         {
         }
 
-        public static void Execute()
+        [Fact]
+        public void Test_ContainsKey_1()
         {
             List<Customer> customers = new List<Customer>()
             {
@@ -30,15 +30,28 @@ namespace Z.Dynamic.Core.Lab
                 new Customer() { City = "ZZZ2", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  },
                 new Customer() { City = "ZZZ3", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  }
             };
-            customers.ForEach( x=> x.Orders.Add(x.City + "TEST", new Order()));
+            customers.ForEach(x => x.Orders.Add(x.City + "TEST", new Order()));
 
-             
-             
-            var query = customers.AsQueryable()
-                .Where("Orders.ContainsKey(\"ZZZ2TEST\")", "ZZZ", 1)
+
+
+            var data = customers.AsQueryable()
+                .Where("Orders.ContainsKey(\"ZZZ2TEST\")")
                 .OrderBy("CompanyName")
                 .Select("new(City as City, Phone)").ToDynamicList();
-              
+
+            Check.That("ZZZ2").IsEqualTo((string)data.First().City);
+        }
+
+        [Fact]
+        public void Test_ContainsKey_2()
+        {
+            List<Customer> customers = new List<Customer>()
+            {
+                new Customer() { City = "ZZZ1", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>() },
+                new Customer() { City = "ZZZ2", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  },
+                new Customer() { City = "ZZZ3", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  }
+            };
+            customers.ForEach(x => x.Orders.Add(x.City + "TEST", new Order()));
 
 
 
@@ -46,6 +59,9 @@ namespace Z.Dynamic.Core.Lab
                 .Where("Orders.ContainsKey(it.City + \"TEST\")")
                 .OrderBy("City")
                 .Select("new(City as City, Phone)").ToDynamicList();
-        } 
+
+            Check.That("ZZZ1").IsEqualTo((string)data.First().City);
+            Check.That(3).IsEqualTo(data.Count);
+        }
     }
 }

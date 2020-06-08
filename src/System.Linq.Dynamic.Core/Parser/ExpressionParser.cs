@@ -1762,6 +1762,8 @@ namespace System.Linq.Dynamic.Core.Parser
             MethodInfo methodNoStatic = null;
             Type[] typeArgs = null;
 
+            // for me is not all Static but not know how do call with same logic for generic Type
+            // ==> need better name for isStatic
             if (isStatic)
             {  
                 if (new[] { "OfType", "Cast" }.Contains(methodName))
@@ -1824,6 +1826,7 @@ namespace System.Linq.Dynamic.Core.Parser
             else
             {
                 // in futur more logic here for support many case, but for now only one method is support with one argument.
+                // NOTE : this area need to go in method on futur.
                 methodNoStatic = callType.GetMethod(methodName);
                 args = new[] {   args[0] };
             }
