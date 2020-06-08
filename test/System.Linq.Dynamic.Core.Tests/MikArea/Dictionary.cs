@@ -8,7 +8,7 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.MikArea
 {
-    class Dictionary
+    public class Dictionary
     {
         public class Customer
         {
