@@ -1620,7 +1620,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     if (enumerableType != null)
                     {
                         Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                        return ParseAggregate(instance, elementType, id, errorPos, TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null);
+                        return ParseAggregate(instance, elementType, id, errorPos, type);
                     }
                 }
 
@@ -1715,17 +1715,20 @@ namespace System.Linq.Dynamic.Core.Parser
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
-
-        Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, bool isQueryable)
+          
+        Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, Type ParseMemberAccessType)
         {
             var oldParent = _parent;
+            bool isQueryable = TypeHelper.FindGenericType(typeof(IQueryable<>), ParseMemberAccessType) != null; 
+            bool isDictionary = TypeHelper.FindGenericType(typeof(Dictionary<,>), ParseMemberAccessType) != null;
+            bool isStatic = true;
 
             ParameterExpression outerIt = _it;
             ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty, _parsingConfig.RenameEmptyParameterExpressionNames);
 
             _parent = _it;
 
-            if (methodName == "Contains" || methodName == "Skip" || methodName == "Take")
+            if (methodName == "Contains" || methodName == "Skip" || methodName == "Take" || methodName == "ContainsKey")
             {
                 // for any method that acts on the parent element type, we need to specify the outerIt as scope.
                 _it = outerIt;
@@ -1750,66 +1753,94 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 callType = typeof(Queryable);
             }
-
-            Type[] typeArgs;
-            if (new[] { "OfType", "Cast" }.Contains(methodName))
+            else if (isDictionary && _methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, args))
             {
-                if (args.Length != 1)
-                {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneArg, methodName);
-                }
-
-                typeArgs = new[] { ResolveTypeFromArgumentExpression(methodName, args[0]) };
-                args = new Expression[0];
-            }
-            else if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
-            {
-                if (args.Length == 2)
-                {
-                    typeArgs = new[] { elementType, args[0].Type, args[1].Type };
-                }
-                else
-                {
-                    typeArgs = new[] { elementType, args[0].Type };
-                }
-            }
-            else if (methodName == "SelectMany")
-            {
-                var type = Expression.Lambda(args[0], innerIt).Body.Type;
-                var interfaces = type.GetInterfaces().Union(new[] { type });
-                Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
-                Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
-                typeArgs = new[] { elementType, resultType };
-            }
-            else
-            {
-                typeArgs = new[] { elementType };
+                callType = ParseMemberAccessType;
+                isStatic = false;
             }
 
-            if (args.Length == 0)
-            {
-                args = new[] { instance };
-            }
-            else
-            {
-                if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
+            MethodInfo methodNoStatic = null;
+            Type[] typeArgs = null;
+
+            if (isStatic)
+            {  
+                if (new[] { "OfType", "Cast" }.Contains(methodName))
                 {
-                    args = new[] { instance, args[0] };
+                    if (args.Length != 1)
+                    {
+                        throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneArg, methodName);
+                    }
+
+                    typeArgs = new[] { ResolveTypeFromArgumentExpression(methodName, args[0]) };
+                    args = new Expression[0];
                 }
-                else
+                else if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
                 {
                     if (args.Length == 2)
                     {
-                        args = new[] { instance, Expression.Lambda(args[0], innerIt), Expression.Lambda(args[1], innerIt) };
+                        typeArgs = new[] { elementType, args[0].Type, args[1].Type };
                     }
                     else
                     {
-                        args = new[] { instance, Expression.Lambda(args[0], innerIt) };
+                        typeArgs = new[] { elementType, args[0].Type };
+                    }
+                }
+                else if (methodName == "SelectMany")
+                {
+                    var type = Expression.Lambda(args[0], innerIt).Body.Type;
+                    var interfaces = type.GetInterfaces().Union(new[] { type });
+                    Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
+                    Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
+                    typeArgs = new[] { elementType, resultType };
+                } 
+                else
+                {
+                    typeArgs = new[] { elementType };
+                }
+
+                if (args.Length == 0)
+                {
+                    args = new[] { instance };
+                }
+                else
+                {
+                    if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
+                    {
+                        args = new[] { instance, args[0] };
+                    }
+                    else
+                    {
+                        if (args.Length == 2)
+                        {
+                            args = new[] { instance, Expression.Lambda(args[0], innerIt), Expression.Lambda(args[1], innerIt) };
+                        }
+                        else
+                        {
+                            args = new[] { instance, Expression.Lambda(args[0], innerIt) };
+                        }
                     }
                 }
             }
+            else
+            {
+                // in futur more logic here for support many case, but for now only one method is support with one argument.
+                methodNoStatic = callType.GetMethod(methodName);
+                args = new[] {   args[0] };
+            }
 
-            return Expression.Call(callType, methodName, typeArgs, args);
+            MethodCallExpression expressionCall = null;
+
+            if (isStatic)
+            { 
+                expressionCall = Expression.Call(callType, methodName, typeArgs, args);
+            }
+            else
+            {
+                expressionCall = Expression.Call(instance, methodNoStatic, args);
+            }
+
+
+            return expressionCall;
         }
 
         private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression)

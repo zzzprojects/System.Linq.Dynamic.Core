@@ -17,6 +17,7 @@
         void Average(long selector);
         void Cast(string type);
         void Contains(object selector);
+        void ContainsKey(object selector);
         void Count();
         void Count(bool predicate);
         void DefaultIfEmpty();
