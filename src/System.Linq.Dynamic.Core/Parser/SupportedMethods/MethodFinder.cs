@@ -113,9 +113,12 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         bool IsApplicable(MethodData method, Expression[] args)
         {
-            // parameter count must be equal or the last one must be a param array
             bool isParamArray = method.Parameters.Length > 0 && method.Parameters.Last().IsDefined(typeof(ParamArrayAttribute), false);
-            if (method.Parameters.Length != args.Length && !isParamArray)
+
+            // if !paramArray, the number of parameter must be equal
+            // if paramArray, the last parameter is optional
+            if ((!isParamArray && method.Parameters.Length != args.Length) ||
+                (isParamArray && method.Parameters.Length - 1 > args.Length))
             {
                 return false;
             }

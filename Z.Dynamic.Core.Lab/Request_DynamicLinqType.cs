@@ -25,6 +25,16 @@ namespace Z.Dynamic.Core.Lab
 
                 return values.ToArray();
             }
+
+            public static string[] ConvertToArray(int a, params string[] values)
+            {
+                if (values == null)
+                {
+                    return null;
+                }
+
+                return values.ToArray();
+            }
         }
 
         public static void Execute()
@@ -38,7 +48,7 @@ namespace Z.Dynamic.Core.Lab
 
             var t1 = Utils.ConvertToArray(null);
 
-            string query = "Utils.ConvertToArray(null)";
+            string query = "Utils.ConvertToArray()";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
             Delegate del = expression.Compile();
             var result = del.DynamicInvoke();

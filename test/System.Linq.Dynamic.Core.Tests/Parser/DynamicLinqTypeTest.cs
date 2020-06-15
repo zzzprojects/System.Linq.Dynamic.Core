@@ -18,6 +18,16 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
                 return values.ToArray();
             }
+
+            public static string[] ConvertToArray(int a, params string[] values)
+            {
+                if (values == null)
+                {
+                    return null;
+                }
+
+                return values.ToArray();
+            }
         }
 
 
@@ -63,6 +73,42 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var expression = DynamicExpressionParser.ParseLambda(null, query, null);
             var del = expression.Compile();
             var result = (string[]) del.DynamicInvoke();
+
+            Check.That(result.Length).Equals(1);
+            Check.That(result[0]).Equals("a");
+        }
+
+        [Fact]
+        public void ParamArray_NullValue2()
+        {
+            var query = "Utils.ConvertToArray(0, null)";
+            var expression = DynamicExpressionParser.ParseLambda(null, query, null);
+            var del = expression.Compile();
+            var result = (string[])del.DynamicInvoke();
+
+            Check.That(result).IsNull();
+        }
+
+        [Fact]
+        public void ParamArray_WithManyValue2()
+        {
+            var query = "Utils.ConvertToArray(0, \"a\", \"b\")";
+            var expression = DynamicExpressionParser.ParseLambda(null, query, null);
+            var del = expression.Compile();
+            var result = (string[])del.DynamicInvoke();
+
+            Check.That(result.Length).Equals(2);
+            Check.That(result[0]).Equals("a");
+            Check.That(result[1]).Equals("b");
+        }
+
+        [Fact]
+        public void ParamArray_WithSingleValue2()
+        {
+            var query = "Utils.ConvertToArray(0, \"a\")";
+            var expression = DynamicExpressionParser.ParseLambda(null, query, null);
+            var del = expression.Compile();
+            var result = (string[])del.DynamicInvoke();
 
             Check.That(result.Length).Equals(1);
             Check.That(result[0]).Equals("a");
