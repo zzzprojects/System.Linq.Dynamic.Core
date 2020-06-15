@@ -1616,6 +1616,15 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 if (instance != null && type != typeof(string))
                 {
+                    Type dictionaryType = TypeHelper.FindGenericType(typeof(IDictionary<,>), type);
+                    if (dictionaryType != null)
+                    {
+                        if(TryParseDictionary(instance, id, type, out var expression))
+                        {
+                            return expression;
+                        }
+                    }
+
                     Type enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
                     if (enumerableType != null)
                     {
@@ -1714,6 +1723,22 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
+        }
+
+        bool TryParseDictionary(Expression instance, string methodName, Type type, out Expression expression)
+        {
+            expression = null;
+
+            Expression[] args = ParseArgumentList();
+
+            if (!_methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, args))
+            {
+                return false;
+            }
+
+            var method = type.GetMethod(methodName);
+            expression = Expression.Call(instance, method, args);
+            return true;
         }
 
         Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, bool isQueryable)
