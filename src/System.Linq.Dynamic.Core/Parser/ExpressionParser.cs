@@ -350,7 +350,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     var args = new[] { left };
 
-                    if (_methodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, args, out MethodBase containsSignature) != 1)
+                    if (_methodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, ref args, out MethodBase containsSignature) != 1)
                     {
                         throw ParseError(op.Pos, Res.NoApplicableAggregate, nameof(IEnumerableSignatures.Contains), string.Join(",", args.Select(a => a.Type.Name).ToArray()));
                     }
@@ -1476,7 +1476,7 @@ namespace System.Linq.Dynamic.Core.Parser
             int errorPos = _textParser.CurrentToken.Pos;
             _textParser.NextToken();
             Expression[] args = ParseArgumentList();
-            if (_methodFinder.FindMethod(lambda.Type, nameof(Expression.Invoke), false, args, out MethodBase _) != 1)
+            if (_methodFinder.FindMethod(lambda.Type, nameof(Expression.Invoke), false, ref args, out MethodBase _) != 1)
             {
                 throw ParseError(errorPos, Res.ArgsIncompatibleWithLambda);
             }
@@ -1528,7 +1528,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 var constructorsWithOutPointerArguments = type.GetConstructors()
                     .Where(c => !c.GetParameters().Any(p => p.ParameterType.GetTypeInfo().IsPointer))
                     .ToArray();
-                switch (_methodFinder.FindBestMethod(constructorsWithOutPointerArguments, args, out MethodBase method))
+                switch (_methodFinder.FindBestMethod(constructorsWithOutPointerArguments, ref args, out MethodBase method))
                 {
                     case 0:
                         if (args.Length == 1)
@@ -1634,7 +1634,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
 
                 Expression[] args = ParseArgumentList();
-                switch (_methodFinder.FindMethod(type, id, instance == null, args, out MethodBase mb))
+                switch (_methodFinder.FindMethod(type, id, instance == null, ref args, out MethodBase mb))
                 {
                     case 0:
                         throw ParseError(errorPos, Res.NoApplicableMethod, id, TypeHelper.GetTypeName(type));
@@ -1731,7 +1731,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             Expression[] args = ParseArgumentList();
 
-            if (!_methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, args))
+            if (!_methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, ref args))
             {
                 return false;
             }
@@ -1765,13 +1765,13 @@ namespace System.Linq.Dynamic.Core.Parser
             _it = outerIt;
             _parent = oldParent;
 
-            if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, args))
+            if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, ref args))
             {
                 throw ParseError(errorPos, Res.NoApplicableAggregate, methodName, string.Join(",", args.Select(a => a.Type.Name).ToArray()));
             }
 
             Type callType = typeof(Enumerable);
-            if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, args))
+            if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, ref args))
             {
                 callType = typeof(Queryable);
             }
@@ -1967,7 +1967,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             Expression[] args = { expr };
 
-            if (!_methodFinder.ContainsMethod(signatures, "F", false, args))
+            if (!_methodFinder.ContainsMethod(signatures, "F", false, ref args))
             {
                 throw IncompatibleOperandError(opName, expr, errorPos);
             }
@@ -2000,12 +2000,12 @@ namespace System.Linq.Dynamic.Core.Parser
             if (nativeOperation != null)
             {
                 // first try left operand's equality operators
-                found = _methodFinder.ContainsMethod(left.Type, nativeOperation, true, args);
+                found = _methodFinder.ContainsMethod(left.Type, nativeOperation, true, ref args);
                 if (!found)
-                    found = _methodFinder.ContainsMethod(right.Type, nativeOperation, true, args);
+                    found = _methodFinder.ContainsMethod(right.Type, nativeOperation, true, ref args);
             }
 
-            if (!found && !_methodFinder.ContainsMethod(signatures, "F", false, args))
+            if (!found && !_methodFinder.ContainsMethod(signatures, "F", false, ref args))
             {
                 throw IncompatibleOperandsError(opName, left, right, errorPos);
             }
