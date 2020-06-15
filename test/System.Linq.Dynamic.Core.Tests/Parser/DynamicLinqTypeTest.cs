@@ -30,6 +30,11 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             }
         }
 
+        public class EntityValue
+        {
+            public string[] Values { get; set; }
+        }
+
 
         [Fact]
         public void ParamArray_EmptyValue()
@@ -112,6 +117,18 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             Check.That(result.Length).Equals(1);
             Check.That(result[0]).Equals("a");
+        }
+
+        [Fact]
+        public void ParamArray_Array()
+        {
+            var list = new[] { new EntityValue { }, new EntityValue { Values = new[] { "a", "b" } } }.AsQueryable();
+            var result = list.Select("Utils.ConvertToArray(Values)").ToDynamicList<string[]>();
+
+            Check.That(result.Count).Equals(2);
+            Check.That(result[0]).IsNull();
+            Check.That(result[1][0]).Equals("a");
+            Check.That(result[1][1]).Equals("b");
         }
     }
 }

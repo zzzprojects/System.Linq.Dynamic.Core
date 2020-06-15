@@ -133,6 +133,10 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                     {
                         promotedArgs[promotedArgs.Length - 1] = Expression.Constant(null, method.Parameters.Last().ParameterType);
                     }
+                    else if (method.Parameters.Length == args.Length && method.Parameters.Last().ParameterType == args.Last().Type)
+                    {
+                        promotedArgs[promotedArgs.Length - 1] = args.Last();
+                    }
                     else
                     {
                         var paramType = method.Parameters.Last().ParameterType;

@@ -6,7 +6,7 @@ namespace Z.Dynamic.Core.Lab
 	{
 		static void Main(string[] args)
 		{
-            Request_Promote.Execute();
+            Request_DynamicLinqType.Execute();
         }
 	}
 }

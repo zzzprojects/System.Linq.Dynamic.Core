@@ -46,13 +46,22 @@ namespace Z.Dynamic.Core.Lab
                 {"y", 2},
             };
 
-            var t1 = Utils.ConvertToArray(null);
+            //var t1 = Utils.ConvertToArray(null);
 
-            string query = "Utils.ConvertToArray()";
-            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
-            Delegate del = expression.Compile();
-            var result = del.DynamicInvoke();
-          
+            //string query = "Utils.ConvertToArray()";
+            //LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            //Delegate del = expression.Compile();
+            //var result = del.DynamicInvoke();
+            
+            var config = new ParsingConfig();
+  
+            var list = new[] { new X { }, new X { Values = new[] { "a", "b" } } }.AsQueryable();
+            var result = list.Select("Utils.ConvertToArray(Values)").ToDynamicList<string[]>();
+        }
+
+        public class X
+        {
+            public string[] Values { get; set; }
         }
     }
 }
