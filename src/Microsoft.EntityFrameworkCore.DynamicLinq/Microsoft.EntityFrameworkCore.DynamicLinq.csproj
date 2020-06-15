@@ -16,19 +16,13 @@
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
-        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-        <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-        <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-        <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-        <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
         <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510001}</ProjectGuid>
         <DebugType>full</DebugType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-        <Version>1.1.2</Version>
+        <Company>ZZZ Projects</Company>
+        <Copyright>Copyright © ZZZ Projects</Copyright>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
