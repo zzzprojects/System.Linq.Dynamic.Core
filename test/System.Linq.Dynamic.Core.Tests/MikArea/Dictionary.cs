@@ -63,5 +63,31 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
             Check.That("ZZZ1").IsEqualTo((string)data.First().City);
             Check.That(3).IsEqualTo(data.Count);
         }
+
+        [Fact]
+        public void Test_ContainsKey_3()
+        {
+            List<Customer> customers = new List<Customer>()
+            {
+                new Customer() { City = "ZZZ1", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>() },
+                new Customer() { City = "ZZZ2", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  },
+                new Customer() { City = "ZZZ3", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  }
+            };
+            customers.ForEach(x => x.Orders.Add(x.City + "TEST1", new Order()));
+            customers.ForEach(x => x.Orders.Add(x.City + "TEST2", new Order()));
+            var noDynamicList = customers
+                .Where(x => x.Orders.Skip(1).First().Key == (x.City + "TEST2"))
+                .OrderBy(x => x.City)
+                .ToList();
+
+            var data = customers.AsQueryable()
+                .Where("Orders.Skip(1).First().Key == (it.City + \"TEST2\")")
+                .OrderBy("City")
+                .Select("new(City as City, Phone)").ToDynamicList();
+
+            Check.That(3).IsEqualTo(noDynamicList.Count);
+            Check.That("ZZZ1").IsEqualTo((string)data.First().City);
+            Check.That(3).IsEqualTo(data.Count);
+        }
     }
 }

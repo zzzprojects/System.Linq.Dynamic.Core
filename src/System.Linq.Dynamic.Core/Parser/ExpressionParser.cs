@@ -1616,20 +1616,11 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 if (instance != null && type != typeof(string))
                 {
-                    Type dictionaryType = TypeHelper.FindGenericType(typeof(IDictionary<,>), type);
-                    if (dictionaryType != null)
-                    {
-                        if(TryParseDictionary(instance, id, type, out var expression))
-                        {
-                            return expression;
-                        }
-                    }
-
                     Type enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
                     if (enumerableType != null)
                     {
                         Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                        return ParseAggregate(instance, elementType, id, errorPos, TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null);
+                        return ParseEnumerable(instance, elementType, id, errorPos, type);
                     }
                 }
 
@@ -1725,24 +1716,11 @@ namespace System.Linq.Dynamic.Core.Parser
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
 
-        bool TryParseDictionary(Expression instance, string methodName, Type type, out Expression expression)
+        Expression ParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type type)
         {
-            expression = null;
+            bool isQueryable = TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null;
+            bool isDictionary = TypeHelper.FindGenericType(typeof(IDictionary<,>), type) != null;
 
-            Expression[] args = ParseArgumentList();
-
-            if (!_methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, ref args))
-            {
-                return false;
-            }
-
-            var method = type.GetMethod(methodName);
-            expression = Expression.Call(instance, method, args);
-            return true;
-        }
-
-        Expression ParseAggregate(Expression instance, Type elementType, string methodName, int errorPos, bool isQueryable)
-        {
             var oldParent = _parent;
 
             ParameterExpression outerIt = _it;
@@ -1750,7 +1728,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _parent = _it;
 
-            if (methodName == "Contains" || methodName == "Skip" || methodName == "Take")
+            if (methodName == "Contains" || methodName == "ContainsKey" || methodName == "Skip" || methodName == "Take")
             {
                 // for any method that acts on the parent element type, we need to specify the outerIt as scope.
                 _it = outerIt;
@@ -1761,6 +1739,12 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             Expression[] args = ParseArgumentList();
+
+            if (isDictionary && _methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, ref args))
+            {
+                var method = type.GetMethod(methodName);
+                return Expression.Call(instance, method, args);
+            }
 
             _it = outerIt;
             _parent = oldParent;
@@ -1800,8 +1784,8 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             else if (methodName == "SelectMany")
             {
-                var type = Expression.Lambda(args[0], innerIt).Body.Type;
-                var interfaces = type.GetInterfaces().Union(new[] { type });
+                var bodyType = Expression.Lambda(args[0], innerIt).Body.Type;
+                var interfaces = bodyType.GetInterfaces().Union(new[] { bodyType });
                 Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
                 Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
                 typeArgs = new[] { elementType, resultType };
