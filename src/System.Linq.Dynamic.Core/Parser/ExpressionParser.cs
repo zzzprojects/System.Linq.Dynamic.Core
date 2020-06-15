@@ -1740,14 +1740,14 @@ namespace System.Linq.Dynamic.Core.Parser
 
             Expression[] args = ParseArgumentList();
 
+            _it = outerIt;
+            _parent = oldParent;
+
             if (isDictionary && _methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, ref args))
             {
                 var method = type.GetMethod(methodName);
                 return Expression.Call(instance, method, args);
             }
-
-            _it = outerIt;
-            _parent = oldParent;
 
             if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, ref args))
             {
