@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
@@ -13,6 +14,12 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// </summary>
         /// <returns>A <see cref="HashSet{Type}" /> list of custom types.</returns>
         HashSet<Type> GetCustomTypes();
+
+        /// <summary>
+        /// Returns a list of custom extension methods that System.Linq.Dynamic.Core will understand.
+        /// </summary>
+        /// <returns>A list of custom extension methods that System.Linq.Dynamic.Core will understand.</returns>
+        Dictionary<Type, List<MethodInfo>> GetExtensionMethods();
 
         /// <summary>
         /// Resolve any type by fullname which is registered in the current application domain.

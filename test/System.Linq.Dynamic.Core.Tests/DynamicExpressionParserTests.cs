@@ -5,6 +5,7 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using FluentAssertions;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
@@ -219,6 +220,23 @@ namespace System.Linq.Dynamic.Core.Tests
                 _customTypes.Add(typeof(CustomClassWithStaticMethod));
                 _customTypes.Add(typeof(StaticHelper));
                 return _customTypes;
+            }
+
+            public Dictionary<Type, List<MethodInfo>> GetExtensionMethods()
+            {
+                var types = GetCustomTypes();
+
+                List<Tuple<Type, MethodInfo>> list = new List<Tuple<Type, MethodInfo>>();
+
+                foreach (var type in types)
+                {
+                    var extensionMethods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                        .Where(x => x.IsDefined(typeof(ExtensionAttribute), false)).ToList();
+
+                    extensionMethods.ForEach(x => list.Add(new Tuple<Type, MethodInfo>(x.GetParameters()[0].ParameterType, x)));
+                }
+
+                return list.GroupBy(x => x.Item1, tuple => tuple.Item2).ToDictionary(key => key.Key, methods => methods.ToList());
             }
 
             public Type ResolveType(string typeName)

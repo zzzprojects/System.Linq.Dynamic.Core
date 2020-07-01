@@ -4,35 +4,46 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
 {
-    public class DynamicLinqTypeTest
+    [DynamicLinqType]
+    public static class Utils
     {
-        [DynamicLinqType]
-        public static class Utils
+        public static string[] ConvertToArray(params string[] values)
         {
-            public static string[] ConvertToArray(params string[] values)
+            if (values == null)
             {
-                if (values == null)
-                {
-                    return null;
-                }
-
-                return values.ToArray();
+                return null;
             }
 
-            public static string[] ConvertToArray(int a, params string[] values)
-            {
-                if (values == null)
-                {
-                    return null;
-                }
-
-                return values.ToArray();
-            }
+            return values.ToArray();
         }
 
+        public static string[] ConvertToArray(int a, params string[] values)
+        {
+            if (values == null)
+            {
+                return null;
+            }
+
+            return values.ToArray();
+        }
+
+        public static int IncrementMe(this int values)
+        {
+            return values + 1;
+        }
+
+        public static int IncrementMe(this int values, int y)
+        {
+            return values + y;
+        }
+    }
+
+    public class DynamicLinqTypeTest
+    {
         public class EntityValue
         {
             public string[] Values { get; set; }
+            public int ValueInt { get; set; }
         }
 
 
@@ -129,6 +140,28 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             Check.That(result[0]).IsNull();
             Check.That(result[1][0]).Equals("a");
             Check.That(result[1][1]).Equals("b");
+        }
+
+        [Fact]
+        public void ExtensionMethod_NoParameter()
+        {
+            var list = new[] {new EntityValue {ValueInt = 1}, new EntityValue {ValueInt = 2}}.AsQueryable();
+            var result = list.Select("ValueInt.IncrementMe()").ToDynamicList<int>();
+
+            Check.That(result.Count).Equals(2);
+            Check.That(result[0]).Equals(2);
+            Check.That(result[1]).Equals(3);
+        }
+
+        [Fact]
+        public void ExtensionMethod_SingleParameter()
+        {
+            var list = new[] { new EntityValue { ValueInt = 1 }, new EntityValue { ValueInt = 2 } }.AsQueryable();
+            var result = list.Select("ValueInt.IncrementMe(5)").ToDynamicList<int>();
+
+            Check.That(result.Count).Equals(2);
+            Check.That(result[0]).Equals(6);
+            Check.That(result[1]).Equals(7);
         }
     }
 }

@@ -17,12 +17,15 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             _parsingConfig = parsingConfig;
         }
 
-        public bool ContainsMethod(Type type, string methodName, bool staticAccess, ref Expression[] args)
+        public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression instance, ref Expression[] args)
         {
-            return FindMethod(type, methodName, staticAccess, ref args, out _) == 1;
+            // NOTE: `instance` is not passed by ref in the method signature by design. The ContainsMethod should not change the instance.
+            // However, args by reference is required for backward compatibility (removing "ref" will break some tests)
+
+            return FindMethod(type, methodName, staticAccess, ref instance, ref args, out _) == 1;
         }
 
-        public int FindMethod(Type type, string methodName, bool staticAccess, ref Expression[] args, out MethodBase method)
+        public int FindMethod(Type type, string methodName, bool staticAccess, ref Expression instance, ref Expression[] args, out MethodBase method)
         {
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
@@ -46,6 +49,25 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 }
             }
 #endif
+
+            if (instance != null)
+            {
+                // TRY to solve with registered extension methods 
+                if (_parsingConfig.CustomTypeProvider.GetExtensionMethods().TryGetValue(type, out var methods))
+                {
+                    var argsList = args.ToList();
+                    argsList.Insert(0, instance);
+                    var extensionMethodArgs = argsList.ToArray();
+                    int count = FindBestMethod(methods.Cast<MethodBase>(), ref extensionMethodArgs, out method);
+                    if (count != 0)
+                    {
+                        instance = null;
+                        args = extensionMethodArgs;
+                        return count;
+                    }
+                }
+            }
+
             method = null;
             return 0;
         }
