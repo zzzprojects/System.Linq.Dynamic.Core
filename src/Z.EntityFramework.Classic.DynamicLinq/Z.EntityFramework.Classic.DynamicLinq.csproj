@@ -15,7 +15,7 @@
         <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/StefH/System.Linq.Dynamic.Core</RepositoryUrl>
+        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
         <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584Ea20000}</ProjectGuid>
         <DebugType>full</DebugType>
