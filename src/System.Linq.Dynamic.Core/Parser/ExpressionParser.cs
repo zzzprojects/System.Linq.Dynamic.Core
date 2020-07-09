@@ -1682,13 +1682,11 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return Expression.Field(instance, field);
             }
-
-#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
             if (type == typeof(object))
             {
-                return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instance);
+                var method = typeof(Dynamic).GetMethod("DynamicIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+                return Expression.Call(null, method, instance, Expression.Constant(id));
             }
-#endif
             if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instance != null)
             {
                 MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
@@ -1938,7 +1936,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 memberExpression = (expression as BinaryExpression).Left as MemberExpression;
             }
-
+  
             if (memberExpression != null)
             {
                 memberName = memberExpression.Member.Name;
