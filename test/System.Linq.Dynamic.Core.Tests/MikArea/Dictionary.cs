@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using NFluent;
@@ -88,6 +89,26 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
             Check.That(3).IsEqualTo(noDynamicList.Count);
             Check.That("ZZZ1").IsEqualTo((string)data.First().City);
             Check.That(3).IsEqualTo(data.Count);
+        }
+
+        [Fact]
+        public void Test_DynamicIndexCall()
+        {
+            {
+                object CreateDicParameter(string name) => new Dictionary<string, object>
+                {
+                    {"Name", new Dictionary<string, object> {{"FirstName", name }, {"LastName", name + "Test" }}},
+                };
+
+                var parType = new Dictionary<string, object>().GetType();
+                var lambda = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(parType, "item") }, typeof(object), "item.Name.FirstName + \"7\" + item.Name.LastName ").Compile();
+
+                var x1 = lambda.DynamicInvoke(CreateDicParameter("Julio"));
+                var x2 = lambda.DynamicInvoke(CreateDicParameter("John"));
+
+                Check.That(x1).IsEqualTo("Julio7JulioTest");
+                Check.That(x2).IsEqualTo("John7JohnTest");
+            }
         }
     }
 }
