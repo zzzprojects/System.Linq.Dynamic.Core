@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using FluentAssertions;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
+using System.Linq.Dynamic.Core.Tests.TestHelpers;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
@@ -295,8 +296,10 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(value).IsEqualTo(42);
         }
 
-        [Fact]
-        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true()
+        [Theory]
+        [InlineData("NullableIntValue", "42")]
+        [InlineData("NullableDoubleValue", "42.23")]
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(string propName, string valueString)
         {
             // Assign
             var config = new ParsingConfig
@@ -305,18 +308,22 @@ namespace System.Linq.Dynamic.Core.Tests
             };
 
             // Act
-            var expression = DynamicExpressionParser.ParseLambda<Person, bool>(config, false, "NullableId = 42");
+            var expression = DynamicExpressionParser.ParseLambda<SimpleValuesModel, bool>(config, false, $"{propName} = {valueString}");
             string expressionAsString = expression.ToString();
 
             // Assert
-            Check.That(expressionAsString).IsEqualTo("Param_0 => (Param_0.NullableId == value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.Nullable`1[System.Int32]]).Value)");
-            dynamic constantExpression = ((MemberExpression)(expression.Body as BinaryExpression).Right).Expression as ConstantExpression;
-            dynamic wrappedObj = constantExpression.Value;
+            var queriedProp = typeof(SimpleValuesModel).GetProperty(propName, BindingFlags.Instance | BindingFlags.Public);
+            var queriedPropType = queriedProp.PropertyType;
+            var queriedPropUnderlyingType = Nullable.GetUnderlyingType(queriedPropType);
 
-            var propertyInfo = wrappedObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
-            int? value = (int?) propertyInfo.GetValue(wrappedObj);
+            Check.That(expressionAsString).IsEqualTo($"Param_0 => (Param_0.{propName} == {ExpressionString.NullableConversion($"value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[{queriedPropUnderlyingType}]).Value")})");
+            dynamic constantExpression = ((MemberExpression)(((expression.Body as BinaryExpression).Right as UnaryExpression).Operand)).Expression as ConstantExpression;
+            object wrapperObj = constantExpression.Value;
 
-            Check.That(value).IsEqualTo(42);
+            var propertyInfo = wrapperObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
+            object value = propertyInfo.GetValue(wrapperObj);
+
+            Check.That(value).IsEqualTo(Convert.ChangeType(valueString, Nullable.GetUnderlyingType(queriedPropType) ?? queriedPropType));
         }
 
         [Theory]

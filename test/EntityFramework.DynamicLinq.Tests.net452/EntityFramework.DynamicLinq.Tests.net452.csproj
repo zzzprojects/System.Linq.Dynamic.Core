@@ -263,6 +263,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\TestEnum.cs">
       <Link>Helpers\TestEnum.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\TestHelpers\ExpressionString.cs">
+      <Link>TestHelpers\ExpressionString.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\OperatorTests.cs">
       <Link>OperatorTests.cs</Link>
     </Compile>
