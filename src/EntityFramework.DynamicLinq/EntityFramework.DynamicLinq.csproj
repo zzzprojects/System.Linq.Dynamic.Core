@@ -14,8 +14,9 @@
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
         <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
+        <PackageIconUrl>https://zzzprojects.github.io/images/logo/logo-64.png</PackageIconUrl>
+		<RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>		
         <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510000}</ProjectGuid>
         <DebugType>full</DebugType>
