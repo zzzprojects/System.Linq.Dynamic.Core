@@ -12,9 +12,8 @@ var query = db.Customers
 
 # How to use
 There are several documentation resources:
-- [Wiki][doc-wiki] : an overview from the basic functionality  (correctness ~ 80%)
+- [Getting Started](https://dynamic-linq.net/overview) : a website to get started with basic and advanced usage.
 - [API Documentation][doc-api] : a low-level API description website with some code samples
-- DynamicLinqWebDocs (TODO)
 
 # Info
 | | |
