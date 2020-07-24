@@ -2,6 +2,10 @@
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.Extensions.Logging;
 
+#if EFCORE_3X
+using Microsoft.EntityFrameworkCore.Storage;
+#endif
+
 namespace System.Linq.Dynamic.Core.Tests.Logging
 {
     public class DbLoggerProvider : ILoggerProvider

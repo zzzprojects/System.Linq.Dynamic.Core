@@ -1,0 +1,280 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Authors>Stef Heyenrath</Authors>
+        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <DefineConstants>EFCORE;EFCORE_2X</DefineConstants>
+        <AssemblyName>EntityFramework.DynamicLinq.Tests</AssemblyName>
+        <PackageId>EntityFramework.DynamicLinq.Tests</PackageId>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <ProjectGuid>{1351E7FF-4504-40C4-A0E0-42EB5CA732C1}</ProjectGuid>
+    </PropertyGroup>
+	
+	<ItemGroup>
+		<Reference Include="System" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\ComplexTests.cs">
+		  <Link>ComplexTests.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\DefaultDynamicLinqCustomTypeProviderTests.cs">
+		  <Link>DefaultDynamicLinqCustomTypeProviderTests.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\DynamicExpressionParserTests.cs">
+		  <Link>DynamicExpressionParserTests.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.Any.cs">
+		  <Link>EntitiesTests.Any.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.AnyAsync.cs">
+		  <Link>EntitiesTests.AnyAsync.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.Cast.cs">
+		  <Link>EntitiesTests.Cast.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.Count.cs">
+		  <Link>EntitiesTests.Count.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.CountAsync.cs">
+		  <Link>EntitiesTests.CountAsync.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.cs">
+		  <Link>EntitiesTests.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.Distinct.cs">
+		  <Link>EntitiesTests.Distinct.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.DynamicEnumerableExtensions.cs">
+		  <Link>EntitiesTests.DynamicEnumerableExtensions.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.FirstAsync.cs">
+		  <Link>EntitiesTests.FirstAsync.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.FirstOrDefault.cs">
+		  <Link>EntitiesTests.FirstOrDefault.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.FirstOrDefaultAsync.cs">
+		  <Link>EntitiesTests.FirstOrDefaultAsync.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.GroupBy.cs">
+		  <Link>EntitiesTests.GroupBy.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.Include.cs">
+		  <Link>EntitiesTests.Include.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.LastAsync.cs">
+		  <Link>EntitiesTests.LastAsync.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.Page.cs">
+		  <Link>EntitiesTests.Page.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.Select.cs">
+		  <Link>EntitiesTests.Select.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.TakeWhile.cs">
+		  <Link>EntitiesTests.TakeWhile.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Company.cs">
+		  <Link>Entities\Company.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Country.cs">
+		  <Link>Entities\Country.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Employee.cs">
+		  <Link>Entities\Employee.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Entity.cs">
+		  <Link>Entities\Entity.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Function.cs">
+		  <Link>Entities\Function.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\IEntity.cs">
+		  <Link>Entities\IEntity.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\MainCompany.cs">
+		  <Link>Entities\MainCompany.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\OU.cs">
+		  <Link>Entities\OU.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Product.cs">
+		  <Link>Entities\Product.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Role.cs">
+		  <Link>Entities\Role.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\SubFunction.cs">
+		  <Link>Entities\SubFunction.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\User.cs">
+		  <Link>Entities\User.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\ExpressionTests.cs">
+		  <Link>ExpressionTests.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Entities\Blog.cs">
+		  <Link>Helpers\Entities\Blog.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Entities\BlogContext.cs">
+		  <Link>Helpers\Entities\BlogContext.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Entities\Post.cs">
+		  <Link>Helpers\Entities\Post.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\ExpressionExtensions.cs">
+		  <Link>Helpers\ExpressionExtensions.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\Methods.cs">
+		  <Link>Helpers\Models\Methods.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\ModelWithEnum.cs">
+		  <Link>Helpers\Models\ModelWithEnum.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\Permission.cs">
+		  <Link>Helpers\Models\Permission.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\Person.cs">
+		  <Link>Helpers\Models\Person.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\Pet.cs">
+		  <Link>Helpers\Models\Pet.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\Role.cs">
+		  <Link>Helpers\Models\Role.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\SimpleValuesModel.cs">
+		  <Link>Helpers\Models\SimpleValuesModel.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\User.cs">
+		  <Link>Helpers\Models\User.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserProfile.cs">
+		  <Link>Helpers\Models\UserProfile.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserProfileDetails.cs">
+		  <Link>Helpers\Models\UserProfileDetails.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\UserState.cs">
+		  <Link>Helpers\Models\UserState.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\SnowflakeId.cs">
+		  <Link>Helpers\Models\SnowflakeId.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\TestEnum.cs">
+		  <Link>Helpers\TestEnum.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\OperatorTests.cs">
+		  <Link>OperatorTests.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Any.cs">
+		  <Link>QueryableTests.Any.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Cast.cs">
+		  <Link>QueryableTests.Cast.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Contains.cs">
+		  <Link>QueryableTests.Contains.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Count.cs">
+		  <Link>QueryableTests.Count.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.cs">
+		  <Link>QueryableTests.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Distinct.cs">
+		  <Link>QueryableTests.Distinct.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.First.cs">
+		  <Link>QueryableTests.First.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.FirstOrDefault.cs">
+		  <Link>QueryableTests.FirstOrDefault.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.GroupBy.cs">
+		  <Link>QueryableTests.GroupBy.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.GroupByMany.cs">
+		  <Link>QueryableTests.GroupByMany.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.GroupJoin.cs">
+		  <Link>QueryableTests.GroupJoin.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Join.cs">
+		  <Link>QueryableTests.Join.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Last.cs">
+		  <Link>QueryableTests.Last.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.OrderBy.cs">
+		  <Link>QueryableTests.OrderBy.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.OrderByDescending.cs">
+		  <Link>QueryableTests.OrderByDescending.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Page.cs">
+		  <Link>QueryableTests.Page.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Reverse.cs">
+		  <Link>QueryableTests.Reverse.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Select.cs">
+		  <Link>QueryableTests.Select.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.SelectMany.cs">
+		  <Link>QueryableTests.SelectMany.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Single.cs">
+		  <Link>QueryableTests.Single.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Skip.cs">
+		  <Link>QueryableTests.Skip.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.SkipWhile.cs">
+		  <Link>QueryableTests.SkipWhile.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Take.cs">
+		  <Link>QueryableTests.Take.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.TakeWhile.cs">
+		  <Link>QueryableTests.TakeWhile.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Where.cs">
+		  <Link>QueryableTests.Where.cs</Link>
+		</Compile>
+		<Compile Include="..\System.Linq.Dynamic.Core.Tests\SqlFunctionsTests.cs">
+		  <Link>SqlFunctionsTests.cs</Link>
+		</Compile>
+		<Compile Include="Properties\AssemblyInfo.cs" />
+	</ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="5.10.3" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
+        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.3" />
+        <PackageReference Include="QueryInterceptor.Core" Version="1.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1" />		
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.0.1" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="NFluent" Version="2.7.0" />
+        <PackageReference Include="Moq" Version="4.13.1" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="2.0.0" />
+    </ItemGroup>
+
+</Project>

@@ -17,6 +17,7 @@ namespace System.Linq.Dynamic.Core.Tests
             PopulateTestData(1, 0);
 
             var expectedQueryable1 = _context.Blogs.Where(b => b.BlogId > 0);
+
             var expected = await expectedQueryable1.FirstAsync();
 
             //Act

@@ -82,9 +82,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<bool>(_AllPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion AllAsync
+#endregion AllAsync
 
-        #region AnyAsync
+#region AnyAsync
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
         /// <summary>
@@ -164,9 +164,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<bool>(_anyPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion AnyAsync
+#endregion AnyAsync
 
-        #region AverageAsync
+#region AverageAsync
         private static readonly MethodInfo _average = GetMethod(nameof(Queryable.Average));
 
         /// <summary>
@@ -250,9 +250,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<double>(_averagePredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion AverageAsync
+#endregion AverageAsync
 
-        #region Count
+#region Count
         private static readonly MethodInfo _count = GetMethod(nameof(Queryable.Count));
 
         /// <summary>
@@ -337,9 +337,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<int>(_countPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion Count
+#endregion Count
 
-        #region FirstAsync
+#region FirstAsync
         private static readonly MethodInfo _first = GetMethod(nameof(Queryable.First));
 
         /// <summary>
@@ -422,9 +422,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_firstPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion FirstAsync
+#endregion FirstAsync
 
-        #region FirstOrDefaultAsync
+#region FirstOrDefaultAsync
         private static readonly MethodInfo _firstOrDefault = GetMethod(nameof(Queryable.FirstOrDefault));
 
         /// <summary>
@@ -514,9 +514,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_firstOrDefaultPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion FirstOrDefault
+#endregion FirstOrDefault
 
-        #region LastAsync
+#region LastAsync
         private static readonly MethodInfo _last = GetMethod(nameof(Queryable.Last));
 
         /// <summary>
@@ -599,9 +599,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_lastPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion LastAsync
+#endregion LastAsync
 
-        #region LastOrDefaultAsync
+#region LastOrDefaultAsync
         private static readonly MethodInfo _lastOrDefault = GetMethod(nameof(Queryable.LastOrDefault));
 
         /// <summary>
@@ -691,9 +691,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_lastOrDefaultPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion LastOrDefault
+#endregion LastOrDefault
 
-        #region LongCount
+#region LongCount
         private static readonly MethodInfo _longCount = GetMethod(nameof(Queryable.LongCount));
 
         /// <summary>
@@ -778,9 +778,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<long>(_longCountPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion LongCount
+#endregion LongCount
 
-        #region SingleOrDefaultAsync
+#region SingleOrDefaultAsync
         private static readonly MethodInfo _singleOrDefault = GetMethod(nameof(Queryable.SingleOrDefault));
 
         /// <summary>
@@ -863,9 +863,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_singleOrDefaultPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion SingleOrDefault
+#endregion SingleOrDefault
 
-        #region SumAsync
+#region SumAsync
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of values.
         /// </summary>
@@ -949,9 +949,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteDynamicAsync(sumSelector, source, Expression.Quote(lambda), cancellationToken);
         }
-        #endregion SumAsync
+#endregion SumAsync
 
-        #region Private Helpers
+#region Private Helpers
         private static readonly MethodInfo _executeAsyncMethod =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
 #if NETSTANDARD || UAP10_0
@@ -986,8 +986,15 @@ namespace EntityFramework.DynamicLinq
                     operatorMethodInfo = operatorMethodInfo.MakeGenericMethod(source.ElementType);
                 }
 
+#if EFCORE_3X
+                source = CastSource(source, operatorMethodInfo);
                 var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
+                return ExecuteAsync<TResult>(provider, optimized, cancellationToken);
+#else
+                var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
+
                 return provider.ExecuteAsync<TResult>(optimized, cancellationToken);
+#endif
             }
 
             throw new InvalidOperationException(Res.IQueryableProviderNotAsync);
@@ -1030,8 +1037,17 @@ namespace EntityFramework.DynamicLinq
                         ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(TResult))
                         : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
+
+
+#if EFCORE_3X
+                source = CastSource(source, operatorMethodInfo);
                 var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+                return ExecuteAsync<TResult>(provider, optimized, cancellationToken);
+#else
+                var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));
+
                 return provider.ExecuteAsync<TResult>(optimized, cancellationToken);
+#endif
             }
 
             throw new InvalidOperationException(Res.IQueryableProviderNotAsync);
@@ -1045,6 +1061,34 @@ namespace EntityFramework.DynamicLinq
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).First(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
+
+#if EFCORE_3X
+        private static IQueryable CastSource(IQueryable source, MethodInfo operatorMethodInfo)
+        {
+            if (operatorMethodInfo.GetParameters()[0].ParameterType.IsGenericType &&
+                operatorMethodInfo.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(IQueryable<>)
+                && operatorMethodInfo.GetParameters()[0].ParameterType.GetGenericArguments()[0] != source.Expression.Type.GetGenericArguments()[0])
+            {
+                source = source.Cast(operatorMethodInfo.GetParameters()[0].ParameterType.GetGenericArguments()[0]);
+            }
+
+            return source;
+        }
+
+        private static Task<TResult> ExecuteAsync<TResult>(IAsyncQueryProvider provider, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (typeof(TResult) == typeof(object) && expression.Type != typeof(object))
+            {
+                var executeAsync = typeof(IAsyncQueryProvider).GetMethod("ExecuteAsync").MakeGenericMethod(typeof(Task<>).MakeGenericType(expression.Type));
+                var task = (Task)executeAsync.Invoke(provider, new object[] { expression, cancellationToken });
+                return (Task<TResult>)(object)task.ContinueWith(x => (dynamic)x.GetType().GetProperty(nameof(Task<object>.Result)).GetValue(x), cancellationToken);
+            }
+            else
+            {
+                return provider.ExecuteAsync<Task<TResult>>(expression, cancellationToken);
+            }
+        }
+#endif
 
         private static Expression OptimizeExpression(Expression expression)
         {
@@ -1064,6 +1108,6 @@ namespace EntityFramework.DynamicLinq
 
             return expression;
         }
-        #endregion Private Helpers
+#endregion Private Helpers
     }
 }
