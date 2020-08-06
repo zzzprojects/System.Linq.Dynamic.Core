@@ -1336,7 +1336,18 @@ namespace System.Linq.Dynamic.Core.Parser
                     {
                         if (!TryGetMemberName(expr, out propName))
                         {
-                            throw ParseError(exprPos, Res.MissingAsClause);
+                            if (expr is MethodCallExpression methodCallExpression 
+                                && methodCallExpression.Arguments.Count == 1
+                                && methodCallExpression.Arguments[0] is ConstantExpression methodCallExpressionArgument
+                                && methodCallExpressionArgument.Type == typeof(string) 
+                                && properties.All(x => x.Name != (string)methodCallExpressionArgument.Value))
+                            {
+                                propName = (string)methodCallExpressionArgument.Value;
+                            }
+                            else
+                            {
+                                throw ParseError(exprPos, Res.MissingAsClause);
+                            }
                         }
                     }
 
