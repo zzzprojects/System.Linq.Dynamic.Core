@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using FluentAssertions;
 using Xunit;
 using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
+using System.Linq.Dynamic.Core.Tests.TestHelpers;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
@@ -252,6 +253,25 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = false
+            };
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<string, bool>(config, true, "s => s == \"x\"");
+
+            // Assert
+            dynamic constantExpression = (ConstantExpression)(expression.Body as BinaryExpression).Right;
+            string value = constantExpression.Value;
+
+            Check.That(value).IsEqualTo("x");
+        }
+
+        [Fact]
         public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true()
         {
             // Assign
@@ -261,16 +281,49 @@ namespace System.Linq.Dynamic.Core.Tests
             };
 
             // Act
-            var expression = DynamicExpressionParser.ParseLambda<string, bool>(config, true, "s => s == \"x\"");
+            var expression = DynamicExpressionParser.ParseLambda<Person, bool>(config, false, "Id = 42");
+            string expressionAsString = expression.ToString();
 
             // Assert
+            Check.That(expressionAsString).IsEqualTo("Param_0 => (Param_0.Id == value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.Int32]).Value)");
+
             dynamic constantExpression = ((MemberExpression)(expression.Body as BinaryExpression).Right).Expression as ConstantExpression;
             dynamic wrappedObj = constantExpression.Value;
 
             var propertyInfo = wrappedObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
-            string value = propertyInfo.GetValue(wrappedObj) as string;
+            int value = (int) propertyInfo.GetValue(wrappedObj);
 
-            Check.That(value).IsEqualTo("x");
+            Check.That(value).IsEqualTo(42);
+        }
+
+        [Theory]
+        [InlineData("NullableIntValue", "42")]
+        [InlineData("NullableDoubleValue", "42.23")]
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(string propName, string valueString)
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = true
+            };
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<SimpleValuesModel, bool>(config, false, $"{propName} = {valueString}");
+            string expressionAsString = expression.ToString();
+
+            // Assert
+            var queriedProp = typeof(SimpleValuesModel).GetProperty(propName, BindingFlags.Instance | BindingFlags.Public);
+            var queriedPropType = queriedProp.PropertyType;
+            var queriedPropUnderlyingType = Nullable.GetUnderlyingType(queriedPropType);
+
+            Check.That(expressionAsString).IsEqualTo($"Param_0 => (Param_0.{propName} == {ExpressionString.NullableConversion($"value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[{queriedPropUnderlyingType}]).Value")})");
+            dynamic constantExpression = ((MemberExpression)(((expression.Body as BinaryExpression).Right as UnaryExpression).Operand)).Expression as ConstantExpression;
+            object wrapperObj = constantExpression.Value;
+
+            var propertyInfo = wrapperObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
+            object value = propertyInfo.GetValue(wrapperObj);
+
+            Check.That(value).IsEqualTo(Convert.ChangeType(valueString, Nullable.GetUnderlyingType(queriedPropType) ?? queriedPropType));
         }
 
         [Theory]
@@ -296,25 +349,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result).IsNotNull();
             Check.That(result).HasSize(expected.Count);
             Check.That(result.ToArray()[0]).Equals(expected[0]);
-        }
-
-        [Fact]
-        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false()
-        {
-            // Assign
-            var config = new ParsingConfig
-            {
-                UseParameterizedNamesInDynamicQuery = false
-            };
-
-            // Act
-            var expression = DynamicExpressionParser.ParseLambda<string, bool>(config, true, "s => s == \"x\"");
-
-            // Assert
-            dynamic constantExpression = (ConstantExpression)(expression.Body as BinaryExpression).Right;
-            string value = constantExpression.Value;
-
-            Check.That(value).IsEqualTo("x");
         }
 
         [Fact]

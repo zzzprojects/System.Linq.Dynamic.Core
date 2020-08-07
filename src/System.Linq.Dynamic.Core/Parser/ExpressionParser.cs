@@ -737,6 +737,8 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParsePrimary()
         {
             Expression expr = ParsePrimaryStart();
+            _expressionHelper.WrapConstantExpression(ref expr);
+
             while (true)
             {
                 if (_textParser.CurrentToken.Id == TokenId.Dot)
