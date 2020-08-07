@@ -10,7 +10,7 @@ namespace System.Linq.Dynamic.Core.Tests.TestHelpers
     {
         public static string NullableConversion(string convertedExpr)
         {
-#if NET452
+#if NET452 || NET461
             return $"Convert({convertedExpr})";
 #else
             return $"Convert({convertedExpr}, Nullable`1)";

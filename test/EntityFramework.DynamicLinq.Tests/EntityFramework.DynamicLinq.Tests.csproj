@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
         <TargetFramework>net461</TargetFramework>
-        <DefineConstants>EF</DefineConstants>
+        <DefineConstants>EF;NET461</DefineConstants>
         <AssemblyName>EntityFramework.DynamicLinq.Tests</AssemblyName>
         <PackageId>EntityFramework.DynamicLinq.Tests</PackageId>
         <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
