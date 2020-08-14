@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using NFluent;
@@ -22,6 +24,19 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
         public class Order
         {
         }
+
+        class DataClass1
+        {
+            public bool IsTrue;
+            public string Name;
+        }
+        class DataClass2
+        {
+            public bool ISTrue;
+            public bool IsTrue;
+            public string Name;
+        }
+
 
         [Fact]
         public void Comparer_OrderBy_And_ThenBy()
@@ -74,6 +89,93 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
             Check.That(check.Count).IsEqualTo(check_V2.Count()); 
             Check.That(check2.Count).IsEqualTo(check2_V2.Count()); 
             Check.That(check3.Count).IsEqualTo(check3_V2.Count()); 
+        }
+
+        [Fact]
+        public void Comparer_Parameter_1()
+        { 
+
+            bool isTrue = false;
+            var abc = new List<DataClass1>() { new DataClass1() { IsTrue = true, Name = "1" } };
+            var x = new List<ParameterExpression>();
+            x.Add(Expression.Parameter(isTrue.GetType(), "isTrue"));
+            x.Add(Expression.Parameter(abc.GetType(), "abc"));
+
+            var config = new ParsingConfig();
+            string query = "abc.Where(IsTrue == true)";
+            config.IsCaseSensitive = true;
+            var e = DynamicExpressionParser.ParseLambda(config, x.ToArray(), null, query);
+            Delegate del = e.Compile();
+            var result = ((IEnumerable)del.DynamicInvoke(isTrue, abc)).GetEnumerator();
+            result.MoveNext();
+            var t = result.Current;
+            Check.That(t).IsNotNull();
+        }
+        [Fact]
+        public void Comparer_Parameter_2()
+        {
+
+            bool isTrue = false;
+            var abc = new List<DataClass1>() { new DataClass1() { IsTrue = true, Name = "1" } };
+            var x = new List<ParameterExpression>();
+            x.Add(Expression.Parameter(isTrue.GetType(), "isTrue"));
+            x.Add(Expression.Parameter(abc.GetType(), "abc"));
+
+            var config = new ParsingConfig();
+            string query = "abc.Where(IsTrue == true)"; 
+            var e = DynamicExpressionParser.ParseLambda(config, x.ToArray(), null, query);
+            Delegate del = e.Compile();
+            var result = ((IEnumerable)del.DynamicInvoke(isTrue, abc)).GetEnumerator();
+            result.MoveNext();
+            var t = result.Current;
+            Check.That(t).IsNull();
+        }
+        [Fact]
+        public void Comparer_Property_1()
+        {
+
+            bool isTrue = true;
+            var abc = new List<DataClass2>() { new DataClass2() { IsTrue = true, Name = "1" } };
+            var x = new List<ParameterExpression>();
+            x.Add(Expression.Parameter(abc.GetType(), "abc"));
+
+            var config = new ParsingConfig();
+            string query = "abc.Where(IsTrue == true)";
+            config.IsCaseSensitive = true;
+            var e = DynamicExpressionParser.ParseLambda(config, x.ToArray(), null, query);
+            Delegate del = e.Compile();
+            var result = ((IEnumerable)del.DynamicInvoke(abc)).GetEnumerator();
+            result.MoveNext();
+            var t = result.Current;
+            Check.That(t).IsNotNull();
+        }
+        [Fact]
+        public void Comparer_Property_2()
+        {
+
+            bool isTrue = true;
+            var abc = new List<DataClass2>() { new DataClass2() { IsTrue = true, Name = "1" } };
+            var x = new List<ParameterExpression>();
+            x.Add(Expression.Parameter(abc.GetType(), "abc"));
+
+            var config = new ParsingConfig();
+            string query = "abc.Where(IsTrue == true)";
+            object t = null;
+            try
+            {
+                var e = DynamicExpressionParser.ParseLambda(config, x.ToArray(), null, query);
+                Delegate del = e.Compile();
+                var result = ((IEnumerable)del.DynamicInvoke(abc)).GetEnumerator();
+                result.MoveNext();
+                t = result.Current;
+
+
+            }
+            catch (Exception exception)
+            { 
+                return;
+            }
+            Check.That(t).IsNull();
         }
     }
 }
