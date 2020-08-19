@@ -66,7 +66,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             Check.NotEmpty(expression, nameof(expression));
 
-            _symbols = new Dictionary<string, object>(parsingConfig == null ? StringComparer.OrdinalIgnoreCase : parsingConfig.IsCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
+            _symbols = new Dictionary<string, object>(parsingConfig != null && parsingConfig.IsCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
             _internals = new Dictionary<string, object>();
 
             if (parameters != null)
@@ -2037,14 +2037,8 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 MemberInfo[] members = null;
 
-                if (ParsingConfig != null && ParsingConfig.IsCaseSensitive)
-                { 
-                    members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, Type.FilterName, memberName);
-                }
-                else
-                {
-                    members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, Type.FilterNameIgnoreCase, memberName);
-                }
+                var findMembersType = ParsingConfig != null && ParsingConfig.IsCaseSensitive ? Type.FilterName : Type.FilterNameIgnoreCase;
+                members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, findMembersType, memberName);
 
                 if (members.Length != 0)
                 {
@@ -2053,18 +2047,18 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             return null;
 #else
-                var isCaseSensitive =  (ParsingConfig != null && ParsingConfig.IsCaseSensitive);
+            var isCaseSensitive =  (ParsingConfig != null && ParsingConfig.IsCaseSensitive);
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
                 // Try to find a property with the specified memberName
-                MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && ((isCaseSensitive && x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
+                MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && ((x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
                 if (member != null)
                 {
                     return member;
                 }
 
                 // If no property is found, try to get a field with the specified memberName
-                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (!staticAccess || x.IsStatic) && ((isCaseSensitive && x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
+                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (!staticAccess || x.IsStatic) && ((x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
                 if (member != null)
                 {
                     return member;

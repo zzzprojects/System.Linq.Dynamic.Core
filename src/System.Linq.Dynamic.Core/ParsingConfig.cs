@@ -22,7 +22,7 @@ namespace System.Linq.Dynamic.Core
             EvaluateGroupByAtDatabase = true
         };
 
-        // NEED TEXT
+        /// <summary>Gets or sets if parameter, method, and properties resolution should be case sensitive or not (false by default).</summary>
         public bool IsCaseSensitive { get; set; }
 
         /// <summary>
