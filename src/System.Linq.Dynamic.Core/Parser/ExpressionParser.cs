@@ -2047,7 +2047,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             return null;
 #else
-            var isCaseSensitive =  (ParsingConfig != null && ParsingConfig.IsCaseSensitive);
+            var isCaseSensitive = ParsingConfig != null && ParsingConfig.IsCaseSensitive;
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
                 // Try to find a property with the specified memberName
