@@ -66,7 +66,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             Check.NotEmpty(expression, nameof(expression));
 
-            _symbols = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            _symbols = new Dictionary<string, object>(parsingConfig == null ? StringComparer.OrdinalIgnoreCase : parsingConfig.IsCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
             _internals = new Dictionary<string, object>();
 
             if (parameters != null)
@@ -972,7 +972,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value) &&
                 // Prioritize property or field over the type
-                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
+                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false, _parsingConfig) != null))
             {
                 Type typeValue = value as Type;
                 if (typeValue != null)
@@ -1685,7 +1685,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.MakeIndex(instance, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
-            MemberInfo member = FindPropertyOrField(type, id, instance == null);
+            MemberInfo member = FindPropertyOrField(type, id, instance == null,_parsingConfig);
             if (member is PropertyInfo property)
             {
                 return Expression.Property(instance, property);
@@ -2029,13 +2029,23 @@ namespace System.Linq.Dynamic.Core.Parser
             return ParseError(errorPos, Res.IncompatibleOperands, opName, TypeHelper.GetTypeName(left.Type), TypeHelper.GetTypeName(right.Type));
         }
 
-        static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
+        static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess, ParsingConfig ParsingConfig)
         {
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
-                MemberInfo[] members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, Type.FilterNameIgnoreCase, memberName);
+                MemberInfo[] members = null;
+
+                if (ParsingConfig != null && ParsingConfig.IsCaseSensitive)
+                { 
+                    members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, Type.FilterName, memberName);
+                }
+                else
+                {
+                    members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, Type.FilterNameIgnoreCase, memberName);
+                }
+
                 if (members.Length != 0)
                 {
                     return members[0];
@@ -2043,17 +2053,18 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             return null;
 #else
+                var isCaseSensitive =  (ParsingConfig != null && ParsingConfig.IsCaseSensitive);
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
                 // Try to find a property with the specified memberName
-                MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                MemberInfo member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && ((isCaseSensitive && x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
                 if (member != null)
                 {
                     return member;
                 }
 
                 // If no property is found, try to get a field with the specified memberName
-                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (!staticAccess || x.IsStatic) && x.Name.ToLowerInvariant() == memberName.ToLowerInvariant());
+                member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (!staticAccess || x.IsStatic) && ((isCaseSensitive && x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
                 if (member != null)
                 {
                     return member;

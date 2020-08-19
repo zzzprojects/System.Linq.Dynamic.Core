@@ -299,7 +299,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Theory]
         [InlineData("NullableIntValue", "42")]
         [InlineData("NullableDoubleValue", "42.23")]
-        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(string propName, string valueString)
+       public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(string propName, string valueString)
         {
             // Assign
             var config = new ParsingConfig

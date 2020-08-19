@@ -22,6 +22,9 @@ namespace System.Linq.Dynamic.Core
             EvaluateGroupByAtDatabase = true
         };
 
+        // NEED TEXT
+        public bool IsCaseSensitive { get; set; }
+
         /// <summary>
         /// Default ParsingConfig for CosmosDb
         /// </summary>
