@@ -1294,6 +1294,152 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion LongCount
 
+        #region Max
+        private static readonly MethodInfo _max = GetMethod(nameof(Queryable.Max));
+
+        /// <summary>
+        /// Computes the max element of a sequence.
+        /// </summary>
+        /// <param name="source">A sequence of values to calculate find the max for.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Max();
+        /// var result2 = queryable.Select("Roles.Max()");
+        /// </code>
+        /// </example>
+        /// <returns>The max element in the sequence.</returns>
+        [PublicAPI]
+        public static object Max([NotNull] this IQueryable source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Execute(_max, source);
+        }
+
+        private static readonly MethodInfo _maxPredicate = GetMethod(nameof(Queryable.Max), 1);
+
+        /// <summary>
+        /// Computes the max element of a sequence.
+        /// </summary>
+        /// <param name="source">A sequence of values to calculate find the max for.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result = queryable.Max("Income");
+        /// </code>
+        /// </example>
+        /// <returns>The max element in the sequence.</returns>
+        [PublicAPI]
+        public static object Max([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(object), predicate, args);
+
+            return Execute(_maxPredicate, source, lambda);
+        }
+
+        /// <inheritdoc cref="Max(IQueryable, ParsingConfig, string, object[])"/>
+        [PublicAPI]
+        public static object Max([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return Max(source, ParsingConfig.Default, predicate, args);
+        }
+
+        /// <summary>
+        /// Computes the max element of a sequence.
+        /// </summary>
+        /// <param name="source">A sequence of values to calculate find the max for.</param>
+        /// <param name="lambda">A Lambda Expression.</param>
+        /// <returns>The max element in the sequence.</returns>
+        [PublicAPI]
+        public static object Max([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            return Execute(_maxPredicate, source, lambda);
+        }
+        #endregion Max
+
+        #region Min
+        private static readonly MethodInfo _min = GetMethod(nameof(Queryable.Min));
+
+        /// <summary>
+        /// Computes the min element of a sequence.
+        /// </summary>
+        /// <param name="source">A sequence of values to calculate find the min for.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result1 = queryable.Min();
+        /// var result2 = queryable.Select("Roles.Min()");
+        /// </code>
+        /// </example>
+        /// <returns>The min element in the sequence.</returns>
+        [PublicAPI]
+        public static object Min([NotNull] this IQueryable source)
+        {
+            Check.NotNull(source, nameof(source));
+
+            return Execute(_min, source);
+        }
+
+        private static readonly MethodInfo _minPredicate = GetMethod(nameof(Queryable.Min), 1);
+
+        /// <summary>
+        /// Computes the min element of a sequence.
+        /// </summary>
+        /// <param name="source">A sequence of values to calculate find the min for.</param>
+        /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+        /// <example>
+        /// <code language="cs">
+        /// IQueryable queryable = employees.AsQueryable();
+        /// var result = queryable.Min("Income");
+        /// </code>
+        /// </example>
+        /// <returns>The min element in the sequence.</returns>
+        [PublicAPI]
+        public static object Min([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        {
+            Check.NotNull(source, nameof(source));
+            Check.NotNull(config, nameof(config));
+            Check.NotEmpty(predicate, nameof(predicate));
+
+            bool createParameterCtor = SupportsLinqToObjects(config, source);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(object), predicate, args);
+
+            return Execute(_minPredicate, source, lambda);
+        }
+
+        /// <inheritdoc cref="Min(IQueryable, ParsingConfig, string, object[])"/>
+        [PublicAPI]
+        public static object Min([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        {
+            return Min(source, ParsingConfig.Default, predicate, args);
+        }
+
+        /// <summary>
+        /// Computes the min element of a sequence.
+        /// </summary>
+        /// <param name="source">A sequence of values to calculate find the min for.</param>
+        /// <param name="lambda">A Lambda Expression.</param>
+        /// <returns>The min element in the sequence.</returns>
+        [PublicAPI]
+        public static object Min([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        {
+            Check.NotNull(source, nameof(source));
+            return Execute(_minPredicate, source, lambda);
+        }
+        #endregion Min
+
         #region OfType
         private static readonly MethodInfo _ofType = GetGenericMethod(nameof(Queryable.OfType));
 
