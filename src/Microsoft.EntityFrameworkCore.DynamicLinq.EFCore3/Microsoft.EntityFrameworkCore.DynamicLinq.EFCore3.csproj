@@ -24,7 +24,7 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <Company>ZZZ Projects</Company>
         <Copyright>Copyright © ZZZ Projects</Copyright>
-        <Version>3.2.3</Version>
+        <Version>3.2.4</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
