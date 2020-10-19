@@ -11,7 +11,7 @@ namespace Z.Dynamic.Core.Lab
 		static void Main(string[] args)
 		{
 
-            Request_PropertyCaseSensitive.Execute();
+            Request_LambdaAddFunc.Execute();
 
             //var data = new List<object> {
             //    new { ItemCode = "AAAA", Flag = true, SoNo="aaa",JobNo="JNO01" } ,
