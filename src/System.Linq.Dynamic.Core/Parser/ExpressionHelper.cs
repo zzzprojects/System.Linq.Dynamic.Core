@@ -323,7 +323,8 @@ namespace System.Linq.Dynamic.Core.Parser
                         break;
 
                     case MethodCallExpression methodCallExpression:
-                        expression = methodCallExpression.Arguments.First();
+                        // FIX method without parameter: https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/432
+                        expression = methodCallExpression.Arguments.FirstOrDefault();
                         expressionRecognized = true;
                         break;
 

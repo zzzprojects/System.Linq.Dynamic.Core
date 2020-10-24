@@ -2,14 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 using Newtonsoft.Json;
 
 namespace Z.Dynamic.Core.Lab
 {
 	class Program
 	{
-		static void Main(string[] args)
-		{
+        public class Foo
+        {
+            public string? Bar { get; set; }
+            public string? Baz() => "zzz";
+        }
+
+        static void Main(string[] args)
+        {
+            var expression = "np(Bar.Length)";
+
+            var results = (new List<Foo>() { new Foo()}).AsQueryable().Select("np(Baz().Length)").ToDynamicList();
+
+  
+
 
             Request_LambdaAddFunc.Execute();
 
