@@ -1422,7 +1422,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
 
             // Act 2
-            var result = q.Select(expression).FirstOrDefault() as string;
+            var result = q.Select(expression).FirstOrDefault() as int?;
 
             // Assert 2
             result.Should().BeNull();
@@ -1444,7 +1444,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
 
             // Act 2
-            var result = q.Select(expression).FirstOrDefault() as string;
+            var result = q.Select(expression).FirstOrDefault() as int?;
 
             // Assert 2
             result.Should().BeNull();
@@ -1466,7 +1466,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
 
             // Act 2
-            var result = q.Select(expression).FirstOrDefault() as string;
+            var result = q.Select(expression).FirstOrDefault() as int?;
 
             // Assert 2
             result.Should().BeNull();
