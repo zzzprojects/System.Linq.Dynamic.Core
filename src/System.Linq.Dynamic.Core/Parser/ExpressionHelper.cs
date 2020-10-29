@@ -319,12 +319,12 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     case MemberExpression memberExpression:
                         expression = GetMemberExpression(memberExpression.Expression);
-                        expressionRecognized = true;
+                        expressionRecognized = expression != null;
                         break;
 
                     case MethodCallExpression methodCallExpression:
-                        expression = methodCallExpression.Object;
-                        expressionRecognized = true;
+                        expression = GetMethodCallExpression(methodCallExpression);
+                        expressionRecognized = expression != null;
                         break;
 
                     default:
@@ -339,6 +339,18 @@ namespace System.Linq.Dynamic.Core.Parser
             } while (expressionRecognized);
 
             return list;
+        }
+
+        private static Expression GetMethodCallExpression(MethodCallExpression methodCallExpression)
+        {
+            if (methodCallExpression.Object != null)
+            {
+                // Something like: "np(FooValue.Zero().Length)"
+                return methodCallExpression.Object;
+            }
+
+            // Something like: "np(MyClasses.FirstOrDefault())"
+            return methodCallExpression.Arguments.FirstOrDefault();
         }
     }
 }

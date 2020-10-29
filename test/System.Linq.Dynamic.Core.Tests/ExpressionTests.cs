@@ -1411,14 +1411,6 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange 1
             var expression = "np(FooValue.Zero().Length)";
-
-            // Act 1
-            var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
-
-            // Assert 1
-            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Zero() != null)), Convert(Param_0.FooValue.Zero().Length), null)");
-
-            // Arrange 2
             var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
 
             // Act 2
@@ -1431,44 +1423,28 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_NullPropagating_InstanceMethod_One_Argument()
         {
-            // Arrange 1
+            // Arrange
             var expression = "np(FooValue.One(1).Length)";
-
-            // Act 1
-            var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
-
-            // Assert 1
-            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.One(1) != null)), Convert(Param_0.FooValue.One(1).Length), null)");
-
-            // Arrange 2
             var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
 
-            // Act 2
+            // Act
             var result = q.Select(expression).FirstOrDefault() as int?;
 
-            // Assert 2
+            // Assert
             result.Should().BeNull();
         }
 
         [Fact]
         public void ExpressionTests_NullPropagating_InstanceMethod_Two_Arguments()
         {
-            // Arrange 1
+            // Arrange
             var expression = "np(FooValue.Two(1, 42).Length)";
-
-            // Act 1
-            var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
-
-            // Assert 1
-            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length), null)");
-
-            // Arrange 2
             var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
 
-            // Act 2
+            // Act
             var result = q.Select(expression).FirstOrDefault() as int?;
 
-            // Assert 2
+            // Assert
             result.Should().BeNull();
         }
 
