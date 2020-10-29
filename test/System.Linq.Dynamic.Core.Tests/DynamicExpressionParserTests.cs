@@ -9,7 +9,6 @@ using System.Runtime.CompilerServices;
 using FluentAssertions;
 using NFluent;
 using Xunit;
-using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
