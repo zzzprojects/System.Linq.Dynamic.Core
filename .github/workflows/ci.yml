@@ -4,13 +4,12 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: windows-latest
-    
-    env:
-      Prerelease: ci
 
     steps:
+    - name: Set the Prerelease env variable
+      run: echo "Prerelease=ci" >> $GITHUB_ENV
+          
     - name: Generate build number
       uses: einaregilsson/build-number@v1
       id: buildnumber
