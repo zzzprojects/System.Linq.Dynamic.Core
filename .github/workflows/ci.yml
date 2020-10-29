@@ -1,0 +1,33 @@
+name: Main workflow
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Set the Prerelease env variable
+      run: echo "Prerelease=ci" >> $GITHUB_ENV
+          
+    - name: Generate build number
+      uses: einaregilsson/build-number@v1
+      id: buildnumber
+      with:
+        token: ${{secrets.github_token}}   
+    
+    - name: Print new build number
+      run: |
+        echo "Build number is ${{ steps.buildnumber.outputs.build_number }}"
+        echo "Build number is ${env:BUILD_NUMBER}"
+          
+    - uses: actions/checkout@v1
+      
+    - name: Build Projects
+      run: |
+        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+    
+    - name: Run Tests
+      run: |
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f net452 -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f netcoreapp31 -p:buildType=azure-pipelines-ci
