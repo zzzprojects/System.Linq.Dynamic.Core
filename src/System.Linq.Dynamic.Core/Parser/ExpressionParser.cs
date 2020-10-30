@@ -1516,18 +1516,23 @@ namespace System.Linq.Dynamic.Core.Parser
                 _textParser.NextToken();
             }
 
+            Expression generatedExpression = null;
+
             // This is a shorthand for explicitly converting a string to something
             bool shorthand = _textParser.CurrentToken.Id == TokenId.StringLiteral;
             if (_textParser.CurrentToken.Id == TokenId.OpenParen || shorthand)
             {
                 Expression[] args = shorthand ? new[] { ParseStringLiteral() } : ParseArgumentList();
 
-                // If only 1 argument, and the arg is ConstantExpression, return the conversion
-                // If only 1 argument, and the arg is null, return the conversion (Can't use constructor)
-                if (args.Length == 1
-                    && (args[0] == null || args[0] is ConstantExpression))
+                // If only 1 argument and
+                // - the arg is ConstantExpression, return the conversion
+                // OR
+                // - the arg is null, return the conversion (Can't use constructor)
+                //
+                // Then try to GenerateConversion
+                if (args.Length == 1 && (args[0] == null || args[0] is ConstantExpression) && TryGenerateConversion(args[0], type, out generatedExpression))
                 {
-                    return GenerateConversion(args[0], type, errorPos);
+                    return generatedExpression;
                 }
 
                 // If only 1 argument, and if the type is a ValueType and argType is also a ValueType, just Convert
@@ -1547,9 +1552,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 switch (_methodFinder.FindBestMethod(constructorsWithOutPointerArguments, ref args, out MethodBase method))
                 {
                     case 0:
-                        if (args.Length == 1)
+                        if (args.Length == 1 && TryGenerateConversion(args[0], type, out generatedExpression))
                         {
-                            return GenerateConversion(args[0], type, errorPos);
+                            return generatedExpression;
                         }
 
                         throw ParseError(errorPos, Res.NoMatchingConstructor, TypeHelper.GetTypeName(type));
@@ -1562,48 +1567,55 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
+            // throw ParseError(errorPos, Res.CannotConvertValue, TypeHelper.GetTypeName(exprType), TypeHelper.GetTypeName(type));
+
             _textParser.ValidateToken(TokenId.Dot, Res.DotOrOpenParenOrStringLiteralExpected);
             _textParser.NextToken();
 
             return ParseMemberAccess(type, null);
         }
 
-        private Expression GenerateConversion(Expression expr, Type type, int errorPos)
+        private bool TryGenerateConversion(Expression sourceExpression, Type type, out Expression expression)
         {
-            Type exprType = expr.Type;
+            Type exprType = sourceExpression.Type;
             if (exprType == type)
             {
-                return expr;
+                expression = sourceExpression;
+                return true;
             }
 
             if (exprType.GetTypeInfo().IsValueType && type.GetTypeInfo().IsValueType)
             {
                 if ((TypeHelper.IsNullableType(exprType) || TypeHelper.IsNullableType(type)) && TypeHelper.GetNonNullableType(exprType) == TypeHelper.GetNonNullableType(type))
                 {
-                    return Expression.Convert(expr, type);
+                    expression = Expression.Convert(sourceExpression, type);
+                    return true;
                 }
 
                 if ((TypeHelper.IsNumericType(exprType) || TypeHelper.IsEnumType(exprType)) && TypeHelper.IsNumericType(type) || TypeHelper.IsEnumType(type))
                 {
-                    return Expression.ConvertChecked(expr, type);
+                    expression = Expression.ConvertChecked(sourceExpression, type);
+                    return true;
                 }
             }
 
             if (exprType.IsAssignableFrom(type) || type.IsAssignableFrom(exprType) || exprType.GetTypeInfo().IsInterface || type.GetTypeInfo().IsInterface)
             {
-                return Expression.Convert(expr, type);
+                expression = Expression.Convert(sourceExpression, type);
+                return true;
             }
 
             // Try to Parse the string rather than just generate the convert statement
-            if (expr.NodeType == ExpressionType.Constant && exprType == typeof(string))
+            if (sourceExpression.NodeType == ExpressionType.Constant && exprType == typeof(string))
             {
-                string text = (string)((ConstantExpression)expr).Value;
+                string text = (string)((ConstantExpression)sourceExpression).Value;
 
                 var typeConvertor = _typeConverterFactory.GetConverter(type);
                 if (typeConvertor != null)
                 {
                     var value = typeConvertor.ConvertFromInvariantString(text);
-                    return Expression.Constant(value, type);
+                    expression = Expression.Constant(value, type);
+                    return true;
                 }
             }
 
@@ -1611,10 +1623,12 @@ namespace System.Linq.Dynamic.Core.Parser
             bool explicitOperatorAvailable = exprType.GetTypeInfo().GetDeclaredMethods("op_Explicit").Any(m => m.ReturnType == type);
             if (explicitOperatorAvailable)
             {
-                return Expression.Convert(expr, type);
+                expression = Expression.Convert(sourceExpression, type);
+                return true;
             }
 
-            throw ParseError(errorPos, Res.CannotConvertValue, TypeHelper.GetTypeName(exprType), TypeHelper.GetTypeName(type));
+            expression = null;
+            return false;
         }
 
         Expression ParseMemberAccess(Type type, Expression instance)

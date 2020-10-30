@@ -1057,6 +1057,39 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(anotherId, result);
         }
 
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_Conversion_Long_To_DateTime_Via_Constructor_Valid()
+        {
+            // Arrange
+            var date = new DateTime(2000, 9, 5);
+            long ticks = date.Ticks;
+            var parameter = Expression.Parameter(typeof(DateTime));
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda(new[] { parameter }, typeof(DateTime), $"DateTime({ticks})");
+
+            // Assert
+            expression.ToString().Should().Be($"Param_0 => new DateTime({ticks})");
+
+            Delegate del = expression.Compile();
+            var result = (DateTime) del.DynamicInvoke(DateTime.Now);
+
+            result.Should().Be(date);
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_Conversion_Int_To_DateTime_Via_Constructor_Invalid()
+        {
+            // Arrange
+            var parameter = Expression.Parameter(typeof(DateTime));
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda(new[] { parameter }, typeof(DateTime), "DateTime(123)");
+
+            // Assert
+            //result.Should().Be("Param_0 => new DateTime(633979008000000000)");
+        }
+
         [Theory]
         [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]
         [InlineData("c => c.Name == \"test\"", "c => (c.Name == \"test\")")]
