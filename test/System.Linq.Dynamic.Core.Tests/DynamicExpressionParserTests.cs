@@ -23,6 +23,8 @@ namespace System.Linq.Dynamic.Core.Tests
             public string One(int x) => null;
 
             public string Two(int x, int y) => null;
+
+            public string Three(Foo a, int? b, int c) => null;
         }
 
         private class MyClass
@@ -1160,6 +1162,23 @@ namespace System.Linq.Dynamic.Core.Tests
             lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length), null)");
 #else
             lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length, Nullable`1), null)");
+#endif
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_NullPropagation_InstanceMethod_Three_Arguments_Nested()
+        {
+            // Arrange
+            var expression = "np(FooValue.Three(FooValue, np(FooValue.Two(1, 42).Length, 99), 77).Length)";
+
+            // Act
+            var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
+
+            // Assert
+#if NET452
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Three(Param_0.FooValue, Convert(IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Param_0.FooValue.Two(1, 42).Length, 99)), 77) != null)), Convert(Param_0.FooValue.Three(Param_0.FooValue, Convert(IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Param_0.FooValue.Two(1, 42).Length, 99)), 77).Length), null)");
+#else
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Three(Param_0.FooValue, Convert(IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Param_0.FooValue.Two(1, 42).Length, 99), Nullable`1), 77) != null)), Convert(Param_0.FooValue.Three(Param_0.FooValue, Convert(IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Param_0.FooValue.Two(1, 42).Length, 99), Nullable`1), 77).Length, Nullable`1), null)");
 #endif
         }
 

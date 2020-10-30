@@ -59,6 +59,8 @@ namespace System.Linq.Dynamic.Core.Tests
             public string One(int x) => null;
 
             public string Two(int x, int y) => null;
+
+            public string Three(Foo a, int? b, int c) => null;
         }
 
         [Fact]
@@ -1439,6 +1441,20 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             var expression = "np(FooValue.Two(1, 42).Length)";
+            var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
+
+            // Act
+            var result = q.Select(expression).FirstOrDefault() as int?;
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_InstanceMethod_Three_Arguments_Nested()
+        {
+            // Arrange
+            var expression = "np(FooValue.Three(FooValue, np(FooValue.Two(1, 42).Length), 77).Length)";
             var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
 
             // Act
