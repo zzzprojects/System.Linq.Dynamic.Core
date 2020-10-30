@@ -1,20 +1,30 @@
-﻿using NFluent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using System.Linq.Dynamic.Core.Tests.TestHelpers;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using FluentAssertions;
+using NFluent;
 using Xunit;
-using User = System.Linq.Dynamic.Core.Tests.Helpers.Models.User;
-using System.Linq.Dynamic.Core.Tests.TestHelpers;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
     public class DynamicExpressionParserTests
     {
+        public class Foo
+        {
+            public Foo FooValue { get; set; }
+
+            public string Zero() => null;
+
+            public string One(int x) => null;
+
+            public string Two(int x, int y) => null;
+        }
+
         private class MyClass
         {
             public List<string> MyStrings { get; set; }
@@ -291,7 +301,7 @@ namespace System.Linq.Dynamic.Core.Tests
             dynamic wrappedObj = constantExpression.Value;
 
             var propertyInfo = wrappedObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
-            int value = (int) propertyInfo.GetValue(wrappedObj);
+            int value = (int)propertyInfo.GetValue(wrappedObj);
 
             Check.That(value).IsEqualTo(42);
         }
@@ -299,7 +309,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [Theory]
         [InlineData("NullableIntValue", "42")]
         [InlineData("NullableDoubleValue", "42.23")]
-       public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(string propName, string valueString)
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(string propName, string valueString)
         {
             // Assign
             var config = new ParsingConfig
@@ -1103,20 +1113,72 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void DynamicExpressionParser_ParseLambda_NullPropagation_InstanceMethod_Zero_Arguments()
+        {
+            // Arrange
+            var expression = "np(FooValue.Zero().Length)";
+
+            // Act
+            var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
+
+            // Assert
+#if NET452
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Zero() != null)), Convert(Param_0.FooValue.Zero().Length), null)");
+#else
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Zero() != null)), Convert(Param_0.FooValue.Zero().Length, Nullable`1), null)");
+#endif
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_NullPropagation_InstanceMethod_One_Argument()
+        {
+            // Arrange
+            var expression = "np(FooValue.One(1).Length)";
+
+            // Act
+            var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
+
+            // Assert
+#if NET452
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.One(1) != null)), Convert(Param_0.FooValue.One(1).Length), null)");
+#else
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.One(1) != null)), Convert(Param_0.FooValue.One(1).Length, Nullable`1), null)");
+#endif
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_NullPropagation_InstanceMethod_Two_Arguments()
+        {
+            // Arrange
+            var expression = "np(FooValue.Two(1, 42).Length)";
+
+            // Act
+            var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
+
+            // Assert
+#if NET452
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length), null)");
+#else
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length, Nullable`1), null)");
+#endif
+        }
+
+        [Fact]
         public void DynamicExpressionParser_ParseLambda_NullPropagation_MethodCallExpression()
         {
             // Arrange
-            var dataSource = new MyClass();
+            var myClass = new MyClass();
+            var dataSource = new { MyClasses = new[] { myClass, null } };
 
             var expressionText = "np(MyClasses.FirstOrDefault())";
 
             // Act
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(ParsingConfig.Default, dataSource.GetType(), typeof(MyClass), expressionText);
             Delegate del = expression.Compile();
-            MyClass result = del.DynamicInvoke(dataSource) as MyClass;
+            var result = del.DynamicInvoke(dataSource) as MyClass;
 
             // Assert
-            result.Should().BeNull();
+            result.Should().Be(myClass);
         }
 
         [Theory]

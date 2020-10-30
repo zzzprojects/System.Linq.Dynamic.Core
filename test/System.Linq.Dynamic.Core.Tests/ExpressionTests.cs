@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using NFluent;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -47,6 +48,17 @@ namespace System.Linq.Dynamic.Core.Tests
             public int Id { get; set; }
 
             public long ObjectId { get; set; }
+        }
+
+        public class Foo
+        {
+            public Foo FooValue { get; set; }
+
+            public string Zero() => null;
+
+            public string One(int x) => null;
+
+            public string Two(int x, int y) => null;
         }
 
         [Fact]
@@ -1392,6 +1404,48 @@ namespace System.Linq.Dynamic.Core.Tests
             string queryAsString = resultDynamic.ToString();
             queryAsString = queryAsString.Substring(queryAsString.IndexOf(".Select") + 1).TrimEnd(']');
             Check.That(queryAsString).Equals(query);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_InstanceMethod_Zero_Arguments()
+        {
+            // Arrange 1
+            var expression = "np(FooValue.Zero().Length)";
+            var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
+
+            // Act 2
+            var result = q.Select(expression).FirstOrDefault() as int?;
+
+            // Assert 2
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_InstanceMethod_One_Argument()
+        {
+            // Arrange
+            var expression = "np(FooValue.One(1).Length)";
+            var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
+
+            // Act
+            var result = q.Select(expression).FirstOrDefault() as int?;
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_InstanceMethod_Two_Arguments()
+        {
+            // Arrange
+            var expression = "np(FooValue.Two(1, 42).Length)";
+            var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
+
+            // Act
+            var result = q.Select(expression).FirstOrDefault() as int?;
+
+            // Assert
+            result.Should().BeNull();
         }
 
         [Fact]
