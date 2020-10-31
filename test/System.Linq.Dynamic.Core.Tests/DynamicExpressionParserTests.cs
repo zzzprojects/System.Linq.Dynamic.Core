@@ -1122,10 +1122,10 @@ namespace System.Linq.Dynamic.Core.Tests
             var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
 
             // Assert
-#if NET452
-            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Zero() != null)), Convert(Param_0.FooValue.Zero().Length), null)");
-#else
+#if NETCOREAPP3_1
             lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Zero() != null)), Convert(Param_0.FooValue.Zero().Length, Nullable`1), null)");
+#else
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Zero() != null)), Convert(Param_0.FooValue.Zero().Length), null)");
 #endif
         }
 
@@ -1139,10 +1139,10 @@ namespace System.Linq.Dynamic.Core.Tests
             var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
 
             // Assert
-#if NET452
-            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.One(1) != null)), Convert(Param_0.FooValue.One(1).Length), null)");
-#else
+#if NETCOREAPP3_1
             lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.One(1) != null)), Convert(Param_0.FooValue.One(1).Length, Nullable`1), null)");
+#else
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.One(1) != null)), Convert(Param_0.FooValue.One(1).Length), null)");
 #endif
         }
 
@@ -1156,10 +1156,10 @@ namespace System.Linq.Dynamic.Core.Tests
             var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(Foo), null, expression, new Foo());
 
             // Assert
-#if NET452
-            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length), null)");
-#else
+#if NETCOREAPP3_1
             lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length, Nullable`1), null)");
+#else
+            lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length), null)");
 #endif
         }
 
