@@ -801,6 +801,7 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser.NextToken();
             return ConstantExpressionHelper.CreateLiteral(result, result);
         }
+
         Expression ParseIntegerLiteral()
         {
             _textParser.ValidateToken(TokenId.IntegerLiteral);
@@ -1338,10 +1339,10 @@ namespace System.Linq.Dynamic.Core.Parser
                     {
                         if (!TryGetMemberName(expr, out propName))
                         {
-                            if (expr is MethodCallExpression methodCallExpression 
+                            if (expr is MethodCallExpression methodCallExpression
                                 && methodCallExpression.Arguments.Count == 1
                                 && methodCallExpression.Arguments[0] is ConstantExpression methodCallExpressionArgument
-                                && methodCallExpressionArgument.Type == typeof(string) 
+                                && methodCallExpressionArgument.Type == typeof(string)
                                 && properties.All(x => x.Name != (string)methodCallExpressionArgument.Value))
                             {
                                 propName = (string)methodCallExpressionArgument.Value;
@@ -1611,7 +1612,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 string text = (string)((ConstantExpression)sourceExpression).Value;
 
                 var typeConvertor = _typeConverterFactory.GetConverter(type);
-                if (typeConvertor != null)
+                if (typeConvertor != null && typeConvertor.CanConvertFrom(typeof(string)))
                 {
                     var value = typeConvertor.ConvertFromInvariantString(text);
                     expression = Expression.Constant(value, type);
@@ -1699,7 +1700,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.MakeIndex(instance, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
-            MemberInfo member = FindPropertyOrField(type, id, instance == null,_parsingConfig);
+            MemberInfo member = FindPropertyOrField(type, id, instance == null, _parsingConfig);
             if (member is PropertyInfo property)
             {
                 return Expression.Property(instance, property);
@@ -1963,7 +1964,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 memberExpression = (expression as BinaryExpression).Left as MemberExpression;
             }
-  
+
             if (memberExpression != null)
             {
                 memberName = memberExpression.Member.Name;

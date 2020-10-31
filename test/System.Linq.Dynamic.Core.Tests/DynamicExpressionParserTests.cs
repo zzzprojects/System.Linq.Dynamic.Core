@@ -1055,27 +1055,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(anotherId, result);
-        }
-
-        [Theory]
-        [InlineData(123)]
-        [InlineData(633979008000000000)]
-        public void DynamicExpressionParser_ParseLambda_Conversion_Ticks_To_DateTime_Via_Constructor(object ticks)
-        {
-            // Arrange
-            var parameter = Expression.Parameter(typeof(DateTime));
-
-            // Act
-            var expression = DynamicExpressionParser.ParseLambda(new[] { parameter }, typeof(DateTime), $"DateTime({ticks})");
-
-            // Assert
-            expression.ToString().Should().Be($"Param_0 => new DateTime({ticks})");
-
-            Delegate del = expression.Compile();
-            var result = (DateTime)del.DynamicInvoke(DateTime.Now);
-
-            result.Ticks.Should().Be(Convert.ToInt64(ticks));
-        }
+        }        
 
         [Theory]
         [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]

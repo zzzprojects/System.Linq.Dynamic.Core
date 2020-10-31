@@ -10,8 +10,26 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
 {
-    public class ExpressionParserTests
+    public partial class ExpressionParserTests
     {
+        private readonly ParsingConfig _parsingConfig;
+        private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicTypeProviderMock;
+
+        public ExpressionParserTests()
+        {
+            _dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            _dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns(new HashSet<Type>() { typeof(Company), typeof(MainCompany) });
+            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Company).FullName)).Returns(typeof(Company));
+            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(MainCompany).FullName)).Returns(typeof(MainCompany));
+            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Company")).Returns(typeof(Company));
+            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("MainCompany")).Returns(typeof(MainCompany));
+
+            _parsingConfig = new ParsingConfig
+            {
+                CustomTypeProvider = _dynamicTypeProviderMock.Object
+            };
+        }
+
         [Theory]
         [InlineData("it == 1", "(x == 1)")]
         [InlineData("it eq 1", "(x == 1)")]
@@ -116,24 +134,6 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             Check.That(unaryExpression.ToString()).Equals(result);
         }
 
-        private readonly ParsingConfig _parsingConfig;
-        private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicTypeProviderMock;
-
-        public ExpressionParserTests()
-        {
-            _dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
-            _dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns(new HashSet<Type>() { typeof(Company), typeof(MainCompany) });
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Company).FullName)).Returns(typeof(Company));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(MainCompany).FullName)).Returns(typeof(MainCompany));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Company")).Returns(typeof(Company));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("MainCompany")).Returns(typeof(MainCompany));
-
-            _parsingConfig = new ParsingConfig
-            {
-                CustomTypeProvider = _dynamicTypeProviderMock.Object
-            };
-        }
-
         [Theory]
         [InlineData("it.MainCompany.Name != null", "(company.MainCompany.Name != null)")]
         [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
@@ -147,7 +147,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var sut = new ExpressionParser(parameters, expression, null, _parsingConfig);
 
             // Act
-            string parsedExpression = null;
+            string parsedExpression;
             try
             {
                 parsedExpression = sut.Parse(null).ToString();
