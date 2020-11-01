@@ -1026,14 +1026,14 @@ namespace System.Linq.Dynamic.Core.Parser
                 _externals != null && _externals.TryGetValue(_textParser.CurrentToken.Text, out value) ||
                 _internals.TryGetValue(_textParser.CurrentToken.Text, out value))
             {
-                Expression expr = value as Expression;
+                var expr = value as Expression;
                 if (expr == null)
                 {
                     expr = Expression.Constant(value);
                 }
                 else
                 {
-                    LambdaExpression lambda = expr as LambdaExpression;
+                    var lambda = expr as LambdaExpression;
                     if (lambda != null)
                     {
                         return ParseLambdaInvocation(lambda);
@@ -1710,11 +1710,13 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return Expression.Field(instance, field);
             }
+
             if (type == typeof(object))
             {
                 var method = typeof(Dynamic).GetMethod("DynamicIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
                 return Expression.Call(null, method, instance, Expression.Constant(id));
             }
+
             if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instance != null)
             {
                 MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });

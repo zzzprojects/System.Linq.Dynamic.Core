@@ -72,7 +72,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void ParseTypeAccess_Via_Constructor_String_And_UriKind_To_Uri()
         {
             // Arrange
-            string selector = "Uri(\"https://www.example.com/\", System.UriKind.Absolute)";
+            string selector = "Uri(\"https://www.example.com/\", UriKind.Absolute)";
             var parameter = Expression.Parameter(typeof(Uri));
 
             // Act
@@ -80,7 +80,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var expression = parser.Parse(typeof(Uri));
 
             // Assert
-            expression.ToString().Should().Be("https://www.example.com/");
+            expression.ToString().Should().Be("new Uri(\"https://www.example.com/\", Absolute)");
         }
     }
 }
