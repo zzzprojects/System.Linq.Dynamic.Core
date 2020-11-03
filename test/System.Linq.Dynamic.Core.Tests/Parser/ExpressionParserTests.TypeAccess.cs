@@ -7,6 +7,20 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 {
     partial class ExpressionParserTests
     {
+        [Fact]
+        public void ParseTypeAccess_Via_Constructor_CharAndInt_To_String()
+        {
+            // Arrange
+            var parameter = Expression.Parameter(typeof(string));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"string('c', 3)", new object[] { }, ParsingConfig.Default);
+            var expression = parser.Parse(typeof(string));
+
+            // Assert
+            expression.ToString().Should().Be("new String(c, 3)");
+        }
+
         [Theory]
         [InlineData(123, "new DateTime(123)")]
         [InlineData(633979008000000000, "new DateTime(633979008000000000)")]
