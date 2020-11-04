@@ -52,19 +52,22 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             expression.ToString().Should().NotBeEmpty();
         }
 
-        [Fact]
-        public void ParseTypeAccess_Via_Constructor_String_To_DateTime_Invalid()
+        [Theory]
+        [InlineData(null)]
+        [InlineData(1.1d)]
+        [InlineData(1.1f)]
+        [InlineData("\"abc\"")]
+        public void ParseTypeAccess_Via_Constructor_Any_To_DateTime_Invalid(object any)
         {
             // Arrange
-            string str = "\"abc\"";
             var parameter = Expression.Parameter(typeof(DateTime));
 
             // Act
-            var parser = new ExpressionParser(new[] { parameter }, $"DateTime({str})", new object[] { }, ParsingConfig.Default);
+            var parser = new ExpressionParser(new[] { parameter }, $"DateTime({any})", new object[] { }, ParsingConfig.Default);
             Action a = () => parser.Parse(typeof(DateTime));
 
             // Assert
-            a.Should().Throw<FormatException>();
+            a.Should().Throw<Exception>();
         }
 
         [Fact]
