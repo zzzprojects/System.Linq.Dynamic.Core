@@ -1,14 +1,26 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
     internal static class EnumerationsFromMscorlib
     {
         /// <summary>
-        /// Some enumeration types from mscorlib/netstandard.
+        /// All Enum types from mscorlib/netstandard.
         /// </summary>
-        public static readonly IDictionary<Type, int> PredefinedEnumerationTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> {
+        public static readonly IDictionary<string, Type> PredefinedEnumerationTypes = new ConcurrentDictionary<string, Type>();
+        
+
+        static EnumerationsFromMscorlib()
+        {
+#if !(UAP10_0 || NETSTANDARD || NET35 || NETCOREAPP)
+            var runtimeTypes = Assembly.Load("mscorlib").GetTypes().Where(t => t.IsEnum && t.IsPublic);
+#else
+#endif
+        }
+
+        public static readonly IDictionary<Type, int> PredefinedEnumerationTypes2 = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> {
 #if !(UAP10_0 || NETSTANDARD || NET35 || NETCOREAPP)
             { typeof(AppDomainManagerInitializationOptions), 0 },
             { typeof(Base64FormattingOptions), 0 },

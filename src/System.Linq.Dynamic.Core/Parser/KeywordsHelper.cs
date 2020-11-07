@@ -65,13 +65,15 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (config.SupportEnumerationsFromSystemNamespace)
             {
-                foreach (Type type in EnumerationsFromMscorlib.PredefinedEnumerationTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
+                foreach (var x in EnumerationsFromMscorlib.PredefinedEnumerationTypes.OrderBy(kvp => kvp.Value))
                 {
-                    if (!string.IsNullOrEmpty(type.FullName))
-                    {
-                        _keywords[type.FullName] = type;
-                    }
-                    _keywords[type.Name] = type;
+                    //if (!string.IsNullOrEmpty(type.FullName))
+                    //{
+                    //    _keywords[type.FullName] = type;
+                    //}
+                    //_keywords[type.Name] = type;
+
+                    _keywords[]
                 }
             }
 
