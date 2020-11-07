@@ -1055,7 +1055,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(anotherId, result);
-        }
+        }        
 
         [Theory]
         [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]
