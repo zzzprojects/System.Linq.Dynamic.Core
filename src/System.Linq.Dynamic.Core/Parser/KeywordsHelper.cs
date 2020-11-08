@@ -58,22 +58,16 @@ namespace System.Linq.Dynamic.Core.Parser
                 _keywords[type.Name] = type;
             }
 
-            foreach (KeyValuePair<string, Type> pair in PredefinedTypesHelper.PredefinedTypesShorthands)
+            foreach (var pair in PredefinedTypesHelper.PredefinedTypesShorthands)
             {
                 _keywords.Add(pair.Key, pair.Value);
             }
 
             if (config.SupportEnumerationsFromSystemNamespace)
             {
-                foreach (var x in EnumerationsFromMscorlib.PredefinedEnumerationTypes.OrderBy(kvp => kvp.Value))
+                foreach (var pair in EnumerationsFromMscorlib.PredefinedEnumerationTypes)
                 {
-                    //if (!string.IsNullOrEmpty(type.FullName))
-                    //{
-                    //    _keywords[type.FullName] = type;
-                    //}
-                    //_keywords[type.Name] = type;
-
-                    _keywords[]
+                    _keywords.Add(pair.Key, pair.Value);
                 }
             }
 
