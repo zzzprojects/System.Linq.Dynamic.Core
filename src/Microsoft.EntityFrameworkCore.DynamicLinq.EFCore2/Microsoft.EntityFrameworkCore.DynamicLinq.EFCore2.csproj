@@ -14,7 +14,7 @@
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
         <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-		<PackageIconUrl>https://zzzprojects.github.io/images/logo/logo-64.png</PackageIconUrl>
+        <PackageIconUrl>https://zzzprojects.github.io/images/logo/logo-64.png</PackageIconUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
         <DefaultLanguage>en-us</DefaultLanguage>
@@ -43,7 +43,7 @@
         <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core\Extensions\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core\Validation\*.cs" />
-		<Compile Include="..\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3\*.cs" />
+        <Compile Include="..\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3\*.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -52,9 +52,7 @@
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
     </ItemGroup>
 </Project>
