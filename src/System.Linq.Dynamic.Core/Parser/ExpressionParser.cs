@@ -1668,11 +1668,6 @@ namespace System.Linq.Dynamic.Core.Parser
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType));
                         }
 
-                        if (method.ReturnType == typeof(void))
-                        {
-                            throw ParseError(errorPos, Res.MethodIsVoid, id, TypeHelper.GetTypeName(method.DeclaringType));
-                        }
-
                         if (instance == null)
                         {
                             return Expression.Call(null, method, args);
