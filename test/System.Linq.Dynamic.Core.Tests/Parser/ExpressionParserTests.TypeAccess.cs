@@ -85,7 +85,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             expression.ToString().Should().Be("https://www.example.com/");
         }
 
-        [Fact(Skip = "todo")]
+        [Fact]
         public void ParseTypeAccess_Via_Constructor_String_And_UriKind_To_Uri()
         {
             // Arrange
