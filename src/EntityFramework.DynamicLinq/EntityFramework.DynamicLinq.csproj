@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+    <Import Project="../../version.xml" />
+
     <PropertyGroup>
+        <Version>1.2.$(PatchVersion)</Version>
         <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
         <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
@@ -15,8 +18,8 @@
         <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageIconUrl>https://zzzprojects.github.io/images/logo/logo-64.png</PackageIconUrl>
-		<RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>		
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
         <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510000}</ProjectGuid>
         <DebugType>full</DebugType>
@@ -49,12 +52,12 @@
         <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
         <PackageReference Include="EntityFramework" Version="6.1.3" />
     </ItemGroup>
-	
+
     <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
     </ItemGroup>-->
-	
+
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1'">
         <PackageReference Include="EntityFramework" Version="6.3.0" />
     </ItemGroup>
