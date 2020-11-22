@@ -1,14 +1,16 @@
-# v1.2.5 (15 November 2020)
+# v1.2.6 (22 November 2020)
 - [#443](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/443) - Fix MethodCallExpression when using NullPropagating (np) contributed by [StefH](https://github.com/StefH)
 - [#445](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/445) - Add GitHub action for ci build + unit tests contributed by [StefH](https://github.com/StefH)
 - [#446](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/446) - Remove MyGet links from Readme.md contributed by [StefH](https://github.com/StefH)
 - [#447](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/447) - Fix Unit tests for net452 and net461 contributed by [StefH](https://github.com/StefH)
 - [#449](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/449) - Fix DateTime constructor using ticks [bug] contributed by [StefH](https://github.com/StefH)
 - [#450](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/450) - Support the enum UriKind [feature] contributed by [StefH](https://github.com/StefH)
-- [#392](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/392) - Dynamic LINQ - Repository Future
+- [#284](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/284) - String(Null) raises Ambiguous error [bug]
 - [#432](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/432) - Clarify error message when using np with instance methods [bug]
 - [#439](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/439) - Question: DateTime constructor using ticks [bug]
 - [#442](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/442) - UriKind is not recognized in Uri constructor [bug]
+
+# v1.2.5 (24 October 2020)
 
 # v1.2.4 (19 October 2020)
 - [#429](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/429) - save contributed by [Lempireqc](https://github.com/Lempireqc)
@@ -16,11 +18,10 @@
 # v1.2.3 (11 October 2020)
 - [#428](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/428) - Add support for IQueryable.Min and .Max contributed by [gregfullman](https://github.com/gregfullman)
 - [#230](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/230) - Request for contribution
-- [#403](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/403) - Expression is missing an 'as' clause
+- [#403](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/403) - Expression is missing an 'as' clause [bug]
 - [#406](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/406) - Expression parameter should be case sensitive
-- [#410](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/410) - Methods on type 'JsonElement' are not accessible'.
+- [#410](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/410) - Methods on type 'JsonElement' are not accessible'. [wontfix]
 - [#411](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/411) - Can't apply the library while using reflection emit with dynamic linq
-- [#413](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/413) - Requested value not found error on List&lt;Enums&gt;
 - [#414](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/414) - Contains search in an Enum
 - [#416](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/416) - &quot;Target object is not an ExpandoObject&quot; exception being thrown when using GroupBy
 - [#417](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/417) - Expression is missing an 'as' clause
@@ -49,6 +50,8 @@
 - [#395](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/395) - SQL between and query
 - [#396](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/396) - No property or field 'DynamicFunctions' exists in type 'Log'
 
+# v1.1.7 (06 July 2020)
+
 # v1.1.6 (05 July 2020)
 - [#384](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/384) - Request: Please implement ContainsKey for dictionary type 
 
@@ -66,11 +69,10 @@
 - [#380](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/380) - save contributed by [Lempireqc](https://github.com/Lempireqc)
 - [#381](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/381) - save contributed by [Lempireqc](https://github.com/Lempireqc)
 - [#383](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/383) - Fixed : calling methods which return a nullable [bug] contributed by [StefH](https://github.com/StefH)
-- [#334](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/334) - Shadow properties
-- [#378](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/378) - Versioning Issue in Latest NUGET packages
+- [#378](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/378) - Versioning Issue in Latest NUGET packages [bug]
 
 # v1.1.1 (14 May 2020)
-- [#110](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/110) - Complex query, like in ParseLambda_Complex_2, internal could only be used once
+- [#110](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/110) - Complex query, like in ParseLambda_Complex_2, internal could only be used once [wontfix]
 
 # 1.1.0.0 (25 April 2020)
 - [#326](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/326) - Fixes for parsing escaped / quoted strings [bug] contributed by [StefH](https://github.com/StefH)
@@ -269,6 +271,8 @@
 - [#158](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/158) - Fix157 contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#157](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/157) - Issue : SkipWhile Method not found in mono [bug]
 - [#161](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/161) - Error (1.0.8.3 to 1.0.8.4 on EF 6.2) &quot;No generic method 'OrderBy' on type System.Linq.Queryable&quot;
+
+# 1.0.8.5 (27 April 2018)
 
 # 1.0.8.4 (25 April 2018)
 - [#159](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/159) - Performance fix (#153) contributed by [StefH](https://github.com/StefH)
