@@ -1,10 +1,11 @@
-# v1.2.6 (22 November 2020)
+# v1.2.6 (23 November 2020)
 - [#443](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/443) - Fix MethodCallExpression when using NullPropagating (np) contributed by [StefH](https://github.com/StefH)
 - [#445](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/445) - Add GitHub action for ci build + unit tests contributed by [StefH](https://github.com/StefH)
 - [#446](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/446) - Remove MyGet links from Readme.md contributed by [StefH](https://github.com/StefH)
 - [#447](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/447) - Fix Unit tests for net452 and net461 contributed by [StefH](https://github.com/StefH)
 - [#449](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/449) - Fix DateTime constructor using ticks [bug] contributed by [StefH](https://github.com/StefH)
 - [#450](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/450) - Support the enum UriKind [feature] contributed by [StefH](https://github.com/StefH)
+- [#462](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/462) - Add PatchVersion [feature] contributed by [StefH](https://github.com/StefH)
 - [#284](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/284) - String(Null) raises Ambiguous error [bug]
 - [#432](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/432) - Clarify error message when using np with instance methods [bug]
 - [#439](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/439) - Question: DateTime constructor using ticks [bug]
