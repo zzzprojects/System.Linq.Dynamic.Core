@@ -3,10 +3,6 @@
         <MsBuildAllProjects>$(MsBuildAllProjects);$(MsBuildThisFileFullPath)</MsBuildAllProjects>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <VersionPrefix>1.2.5</VersionPrefix>
-    </PropertyGroup>
-
     <Choose>
         <!-- The environment variable `Prerelease` is set in the azure-pipelines.yml file. -->
         <When Condition=" '$(Prerelease)' != '' ">

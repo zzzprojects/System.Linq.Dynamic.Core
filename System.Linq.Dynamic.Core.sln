@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		README.md = README.md
 		report\run-coverlet-local.cmd = report\run-coverlet-local.cmd
+		version.xml = version.xml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.DynamicLinq.Tests.net452", "test\EntityFramework.DynamicLinq.Tests.net452\EntityFramework.DynamicLinq.Tests.net452.csproj", "{6B45E89C-0788-4942-924F-EF6397114BD1}"

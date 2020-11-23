@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+    <Import Project="../../version.xml" />
+
     <PropertyGroup>
-        <!--<Version>1.0.18</Version>-->
+        <Version>1.2.$(PatchVersion)</Version>
         <Description>This is a .NETStandard / .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
         <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath;Microsoft;Scott Guthrie;King Wilder;Nathan Arnott</Authors>
