@@ -257,12 +257,26 @@ namespace System.Linq.Dynamic.Core.Parser
             // Reverse the list
             expressions.Reverse();
 
-            // Convert all expressions into '!= null'
-            var binaryExpressions = expressions.Select(expression => Expression.NotEqual(expression, Expression.Constant(null))).ToArray();
+            // Convert all expressions into '!= null' expressions (only if it's a NullableType)
+            var binaryExpressions = new List<Expression>();
+            foreach (var expression in expressions)
+            {
+                if (TypeHelper.TypeCanBeNull(expression.Type))
+                {
+                    int y = 9;
+                    binaryExpressions.Add(Expression.NotEqual(expression, Expression.Constant(null)));
+
+                }
+                else
+                {
+                    //binaryExpressions.Add(Expression.NotEqual(expression, Expression.Constant(null)));
+                    int yyyy = 9;
+                }
+            }
 
             // Convert all binary expressions into `AndAlso(...)`
             generatedExpression = binaryExpressions[0];
-            for (int i = 1; i < binaryExpressions.Length; i++)
+            for (int i = 1; i < binaryExpressions.Count; i++)
             {
                 generatedExpression = Expression.AndAlso(generatedExpression, binaryExpressions[i]);
             }

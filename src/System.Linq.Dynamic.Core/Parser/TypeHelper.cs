@@ -260,6 +260,13 @@ namespace System.Linq.Dynamic.Core.Parser
             return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
+        public static bool TypeCanBeNull(Type type)
+        {
+            Check.NotNull(type, nameof(type));
+
+            return !type.GetTypeInfo().IsValueType || IsNullableType(type);
+        }
+
         public static Type ToNullableType(Type type)
         {
             Check.NotNull(type, nameof(type));
