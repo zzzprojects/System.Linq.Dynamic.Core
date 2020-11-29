@@ -3,6 +3,8 @@ using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using System.Linq.Expressions;
+using FluentAssertions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -104,6 +106,38 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Where_Dynamic_IQueryable_LambdaExpression()
+        {
+            // Arrange
+            var queryable = (IQueryable)new[] { new User { Income = 5 } }.AsQueryable();
+
+            Expression<Func<User, bool>> userExpression = u => u.Income > 1;
+            LambdaExpression lambdaExpression = userExpression;
+
+            // Act
+            var result = queryable.Where(lambdaExpression);
+
+            // Assert
+            result.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void Where_Dynamic_IQueryableT_LambdaExpression()
+        {
+            // Arrange
+            var queryable = new[] { new User { Income = 5 } }.AsQueryable();
+
+            Expression<Func<User, bool>> userExpression = u => u.Income > 1;
+            LambdaExpression lambdaExpression = userExpression;
+
+            // Act
+            var result = queryable.Where(lambdaExpression);
+
+            // Assert
+            result.Should().HaveCount(1);
+        }
+
+        [Fact]
         public void Where_Dynamic_Exceptions()
         {
             //Arrange
@@ -116,7 +150,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => qry.Where("Id=123"));
 
             Assert.Throws<ArgumentNullException>(() => DynamicQueryableExtensions.Where(null, "Id=1"));
-            Assert.Throws<ArgumentNullException>(() => qry.Where(null));
+            Assert.Throws<ArgumentNullException>(() => qry.Where((string)null));
             Assert.Throws<ArgumentException>(() => qry.Where(""));
             Assert.Throws<ArgumentException>(() => qry.Where(" "));
         }

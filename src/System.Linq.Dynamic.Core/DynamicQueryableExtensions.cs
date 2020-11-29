@@ -675,7 +675,7 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         [PublicAPI]
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, object[] args)
-        { 
+        {
             return InternalGroupBy(source, config, keySelector, resultSelector, null, args);
         }
 
@@ -695,7 +695,7 @@ namespace System.Linq.Dynamic.Core
             return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, args);
         }
 
-        internal static IQueryable InternalGroupBy([NotNull]  IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
+        internal static IQueryable InternalGroupBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(config, nameof(config));
@@ -705,7 +705,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
             LambdaExpression elementLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, resultSelector, args);
-            
+
             Expression optimized = null;
             if (equalityComparer == null)
             {
@@ -720,9 +720,9 @@ namespace System.Linq.Dynamic.Core
                 optimized = OptimizeExpression(Expression.Call(
                     typeof(Queryable), nameof(Queryable.GroupBy),
                     new[] { source.ElementType, keyLambda.Body.Type, elementLambda.Body.Type },
-                    source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda), 
+                    source.Expression, Expression.Quote(keyLambda), Expression.Quote(elementLambda),
                     Expression.Constant(equalityComparer, equalityComparerGenericType)));
-            } 
+            }
 
             return source.Provider.CreateQuery(optimized);
         }
@@ -804,7 +804,7 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         [PublicAPI]
         public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [CanBeNull] params object[] args)
-        { 
+        {
             return InternalGroupBy(source, config, keySelector, null, args);
         }
 
@@ -1598,7 +1598,7 @@ namespace System.Linq.Dynamic.Core
             foreach (DynamicOrdering dynamicOrdering in dynamicOrderings)
             {
                 if (comparer == null)
-                { 
+                {
                     queryExpr = Expression.Call(
                         typeof(Queryable), dynamicOrdering.MethodName,
                         new[] { source.ElementType, dynamicOrdering.Selector.Type },
@@ -1606,11 +1606,11 @@ namespace System.Linq.Dynamic.Core
                 }
                 else
                 {
-                    var comparerGenericType = typeof(IComparer<>).MakeGenericType(dynamicOrdering.Selector.Type); 
+                    var comparerGenericType = typeof(IComparer<>).MakeGenericType(dynamicOrdering.Selector.Type);
                     queryExpr = Expression.Call(
                         typeof(Queryable), dynamicOrdering.MethodName,
                         new[] { source.ElementType, dynamicOrdering.Selector.Type },
-                        queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)),  
+                        queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)),
                         Expression.Constant(comparer, comparerGenericType));
                 }
             }
@@ -2504,7 +2504,7 @@ namespace System.Linq.Dynamic.Core
         {
             return (IOrderedQueryable<TSource>)InternalThenBy((IOrderedQueryable)source, config, ordering, comparer, args);
         }
-         
+
         /// <summary>
         /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
         /// </summary>
@@ -2569,7 +2569,7 @@ namespace System.Linq.Dynamic.Core
             foreach (DynamicOrdering dynamicOrdering in dynamicOrderings)
             {
                 if (comparer == null)
-                { 
+                {
                     queryExpr = Expression.Call(
                         typeof(Queryable), dynamicOrdering.MethodName,
                         new[] { source.ElementType, dynamicOrdering.Selector.Type },
@@ -2683,6 +2683,12 @@ namespace System.Linq.Dynamic.Core
 
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
+        }
+
+        /// <inheritdoc cref="DynamicQueryableExtensions.Where(IQueryable, LambdaExpression)"/>
+        public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] LambdaExpression lambda)
+        {
+            return (IQueryable<TSource>)Where((IQueryable)source, lambda);
         }
         #endregion
 
