@@ -1351,7 +1351,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData("np(nested.strNull, \"x\")", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.strNull != null)), Param_0.nested.strNull, \"x\"))")]
         [InlineData("np(nested.gnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.gnullable, null))")]
         [InlineData("np(nested.dtnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.dtnullable, null))")]
-        [InlineData("np(nested.dtnullable.Value.Year)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.dtnullable, null))")]
+        [InlineData("np(nested.dtnullable.Value.Year)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.dtnullable != null)), Convert(Param_0.nested.dtnullable.Value.Year, Nullable`1), null))")]
         [InlineData("np(nested.nullablenumber)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.nullablenumber, null))")]
         [InlineData("np(nested.nullablenumber, 42)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.nullablenumber != null)), Param_0.nested.nullablenumber, 42))")]
         [InlineData("np(nested._enumnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested._enumnullable, null))")]
