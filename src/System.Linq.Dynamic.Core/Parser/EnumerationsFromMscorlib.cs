@@ -29,7 +29,14 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private static IEnumerable<Type> AddEnumsFromAssembly(string assemblyName)
         {
-            return Assembly.Load(new AssemblyName(assemblyName)).GetTypes().Where(t => t.GetTypeInfo().IsEnum && t.GetTypeInfo().IsPublic);
+            try
+            {
+                return Assembly.Load(new AssemblyName(assemblyName)).GetTypes().Where(t => t.GetTypeInfo().IsEnum && t.GetTypeInfo().IsPublic);
+            }
+            catch
+            {
+                return Enumerable.Empty<Type>();
+            }
         }
 
         private static void Add(IGrouping<string, Type> group)
