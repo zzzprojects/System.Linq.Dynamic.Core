@@ -16,6 +16,7 @@
         void Average(long? selector);
         void Average(long selector);
         void Cast(string type);
+        void Cast(Type type);
         void Count();
         void Count(bool predicate);
         void DefaultIfEmpty();
@@ -36,6 +37,7 @@
         void Max(object selector);
         void Min(object selector);
         void OfType(string type);
+        void OfType(Type type);
         void OrderBy(object selector);
         void OrderByDescending(object selector);
         void Select(object selector);
