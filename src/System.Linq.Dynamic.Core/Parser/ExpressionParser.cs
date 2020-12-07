@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -11,6 +10,7 @@ using System.Linq.Dynamic.Core.TypeConverters;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -1861,7 +1861,28 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression)
         {
-            string typeName = (argumentExpression as ConstantExpression)?.Value as string;
+            switch (argumentExpression)
+            {
+                case ConstantExpression constantExpression:
+                    switch (constantExpression.Value)
+                    {
+                        case string typeName:
+                            return ResolveTypeStringFromArgument(functionName, typeName);
+
+                        case Type type:
+                            return type;
+
+                        default:
+                            throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArgOfType, functionName, "string or System.Type");
+                    }
+
+                default:
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArgOfType, functionName, "ConstantExpression");
+            }
+        }
+
+        private Type ResolveTypeStringFromArgument(string functionName, string typeName)
+        {
             if (string.IsNullOrEmpty(typeName))
             {
                 throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArg, functionName, typeName);
