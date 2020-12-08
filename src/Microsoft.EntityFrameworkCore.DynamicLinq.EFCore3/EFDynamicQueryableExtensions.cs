@@ -1,4 +1,5 @@
 ﻿#if EFCORE
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 #else
 using System.Data.Entity.Infrastructure;
@@ -1036,9 +1037,6 @@ namespace EntityFramework.DynamicLinq
                     = operatorMethodInfo.GetGenericArguments().Length == 2
                         ? operatorMethodInfo.MakeGenericMethod(source.ElementType, typeof(TResult))
                         : operatorMethodInfo.MakeGenericMethod(source.ElementType);
-
-
-
 #if EFCORE_3X
                 source = CastSource(source, operatorMethodInfo);
                 var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, new[] { source.Expression, expression }));

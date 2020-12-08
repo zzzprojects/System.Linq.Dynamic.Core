@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <DefineConstants>EF5</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="..\ConsoleAppEF2.0\Database\Brand.cs" Link="Database\Brand.cs" />
+        <Compile Include="..\ConsoleAppEF2.0\Database\Car.cs" Link="Database\Car.cs" />
+        <Compile Include="..\ConsoleAppEF2.0\Database\TestContext.cs" Link="Database\TestContext.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore5\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore5.csproj" />
+        <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+    </ItemGroup>
+
+</Project>

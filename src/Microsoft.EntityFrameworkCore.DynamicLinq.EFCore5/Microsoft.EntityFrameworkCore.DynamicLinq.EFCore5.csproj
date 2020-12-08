@@ -7,7 +7,7 @@
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
         <TargetFrameworks>netstandard2.1</TargetFrameworks>
-        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_2X;EFDYNAMICFUNCTIONS</DefineConstants>
+        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;EFDYNAMICFUNCTIONS</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
         <AssemblyOriginatorKeyFile>../Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2/Microsoft.EntityFrameworkCore.DynamicLinq.snk</AssemblyOriginatorKeyFile>
