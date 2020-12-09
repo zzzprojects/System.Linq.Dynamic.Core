@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using ConsoleAppEF2.Database;
 using System.Linq.Dynamic.Core;
-using Newtonsoft.Json;
+using ConsoleAppEF2.Database;
 
 namespace ConsoleAppEF5
 {
@@ -11,10 +10,6 @@ namespace ConsoleAppEF5
         static void Main(string[] args)
         {
             var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
-            foreach (dynamic x in users.Select("new (int?(Field) as fld, string(null) as StrNull, string(\"a\") as StrA, string(\"\") as StrEmpty1)"))
-            {
-                Console.WriteLine($"x = {JsonConvert.SerializeObject(x)}");
-            }
 
             var context = new TestContext();
 
@@ -32,6 +27,12 @@ namespace ConsoleAppEF5
                 context.Cars.Add(new Car { Brand = "Alfa", Color = "Black", Vin = "a%bc", Year = "1979", Extra = "e3", NullableInt = 3, DateLastModified = dateLastModified.AddDays(3), DateDeleted = dateDeleted.AddDays(1) }); ;
                 context.Cars.Add(new Car { Brand = "Ford", Color = "Yellow", Vin = "no", Year = "2020", DateLastModified = dateLastModified });
                 context.SaveChanges();
+            }
+
+            var orderBy = context.Cars.OrderBy("Brand DESC");
+            foreach (var x in orderBy)
+            {
+                Console.WriteLine($"orderBy = {x.Brand}");
             }
 
             var contains = context.Cars.Where("Brand.Contains(@0)", "a").ToDynamicList();
