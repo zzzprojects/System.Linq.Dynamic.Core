@@ -29,10 +29,10 @@ namespace ConsoleAppEF5
                 context.SaveChanges();
             }
 
-            var orderBy = context.Cars.OrderBy("Brand DESC");
+            var orderBy = context.Cars.OrderBy("2 DESC");
             foreach (var x in orderBy)
             {
-                Console.WriteLine($"orderBy = {x.Brand}");
+                Console.WriteLine($"orderBy 2 DESC = {x.Brand}");
             }
 
             var contains = context.Cars.Where("Brand.Contains(@0)", "a").ToDynamicList();
