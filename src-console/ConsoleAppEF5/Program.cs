@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Threading;
 using ConsoleAppEF2.Database;
 
 namespace ConsoleAppEF5
@@ -29,10 +30,20 @@ namespace ConsoleAppEF5
                 context.SaveChanges();
             }
 
-            var orderBy = context.Cars.OrderBy("2 DESC");
-            foreach (var x in orderBy)
+            context = new TestContext();
+            var orderByYear = context.Cars.OrderBy("Year DESC").ToList();
+            foreach (var x in orderByYear)
             {
-                Console.WriteLine($"orderBy 2 DESC = {x.Brand}");
+                Console.WriteLine($"orderBy Year DESC = {x.Brand}");
+            }
+
+            Thread.Sleep(500);
+
+            context = new TestContext();
+            var orderBy3 = context.Cars.OrderBy("3 DESC").ToList();
+            foreach (var x in orderBy3)
+            {
+                Console.WriteLine($"orderBy 3 DESC = {x.Brand}");
             }
 
             var contains = context.Cars.Where("Brand.Contains(@0)", "a").ToDynamicList();
