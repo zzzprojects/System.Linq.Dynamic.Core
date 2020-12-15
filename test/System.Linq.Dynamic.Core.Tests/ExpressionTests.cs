@@ -1338,6 +1338,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum), null))")]
         [InlineData("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id), null))")]
         [InlineData("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal), null))")]
+        [InlineData("np(nested.dtnullable.Value.Year)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.dtnullable != null)), Convert(Param_0.nested.dtnullable.Value.Year), null))")]
 #else
         [InlineData("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g, Nullable`1), null))")]
         [InlineData("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt, Nullable`1), null))")]
@@ -1345,6 +1346,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum, Nullable`1), null))")]
         [InlineData("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id, Nullable`1), null))")]
         [InlineData("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal, Nullable`1), null))")]
+        [InlineData("np(nested.dtnullable.Value.Year)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.dtnullable != null)), Convert(Param_0.nested.dtnullable.Value.Year, Nullable`1), null))")]
 #endif
 
         [InlineData("np(nested.strNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.strNull, null))")]
@@ -1502,8 +1504,8 @@ namespace System.Linq.Dynamic.Core.Tests
             }.AsQueryable();
 
             // Act
-            var result = q.OrderBy(x => x.date1).Select(x => x.id).ToArray();
-            var resultDynamic = q.OrderBy("np(date1)").Select("id").ToDynamicArray<int>();
+            var result = q.OrderBy(x => x.date1.Value.Year).Select(x => x.id).ToArray();
+            var resultDynamic = q.OrderBy("np(date1.Value.Year)").Select("id").ToDynamicArray<int>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);

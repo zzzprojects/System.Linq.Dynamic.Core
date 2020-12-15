@@ -5,11 +5,19 @@ using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Reflection;
 using Newtonsoft.Json;
 using Xunit;
+using FluentAssertions;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
+        public class DateTimeTest
+        {
+            public DateTimeTest Test { get; set; }
+
+            public DateTime? D { get; set; }
+        }
+
         [Fact]
         public void GroupBy_Dynamic()
         {
@@ -24,6 +32,53 @@ namespace System.Linq.Dynamic.Core.Tests
             //Assert
             Assert.Equal(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnUserName.Count());
             Assert.Equal(testList.GroupBy(x => x.Profile.Age).Count(), byAgeReturnAll.Count());
+        }
+
+        [Fact]
+        public void GroupBy_Dynamic_NullableDateTime()
+        {
+            // Arrange
+            var qry = new[] { new DateTime(2020, 1, 1), (DateTime?)null }.AsQueryable();
+
+            // Act
+            var byYear = qry.GroupBy("np(Value.Year, 2019)");
+
+            // Assert
+            byYear.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void GroupBy_Dynamic_NullableDateTime_2Levels()
+        {
+            // Arrange
+            var qry = new[]
+            {
+                new DateTimeTest { Test = new DateTimeTest { D = new DateTime(2020, 1, 1) } },
+                new DateTimeTest { Test = null }
+            }.AsQueryable();
+
+            // Act
+            var byYear = qry.GroupBy("np(Test.D.Value.Year, 2019)");
+
+            // Assert
+            byYear.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void GroupBy_Dynamic_NullableDateTime_3Levels()
+        {
+            // Arrange
+            var qry = new[]
+            {
+                new DateTimeTest { Test = new DateTimeTest { Test = new DateTimeTest { D = new DateTime(2020, 1, 1) } } },
+                new DateTimeTest { Test = null }
+            }.AsQueryable();
+
+            // Act
+            var byYear = qry.GroupBy("np(Test.Test.D.Value.Year, 2019)");
+
+            // Assert
+            byYear.Should().HaveCount(2);
         }
 
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/75
