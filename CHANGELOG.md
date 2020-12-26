@@ -1,3 +1,15 @@
+# v1.2.7 (26 December 2020)
+- [#463](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/463) - Add extension method Where&lt;TSource&gt;(...) with LambdaExpression  [feature] contributed by [StefH](https://github.com/StefH)
+- [#464](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/464) - NullPropagation operator: support nullable DateTime contributed by [StefH](https://github.com/StefH)
+- [#466](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/466) - Fix Android issue (Could not load the file 'System.Private.Corelib') [bug] contributed by [StefH](https://github.com/StefH)
+- [#467](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/467) - Support 'System.Type' in As, Is, Cast and OfType [feature] contributed by [StefH](https://github.com/StefH)
+- [#470](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/470) - Add EF 5 NuGet package [feature] contributed by [StefH](https://github.com/StefH)
+- [#424](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/424) - How to GroupBy Nullable DateTime Year? [bug]
+- [#459](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/459) - Allow `as` and `is` to use instances of `System.Type` [feature]
+- [#465](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/465) - Crash on Android (regression in 1.2.6) [bug]
+- [#468](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/468) - net5.0 OrderBy problem [bug]
+- [#473](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/473) - Exception in System.Linq.Dynamic.Core.Parser.EnumerationsFromMscorlib after update to 1.2.6 [bug]
+
 # v1.2.6 (23 November 2020)
 - [#443](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/443) - Fix MethodCallExpression when using NullPropagating (np) contributed by [StefH](https://github.com/StefH)
 - [#445](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/445) - Add GitHub action for ci build + unit tests contributed by [StefH](https://github.com/StefH)
