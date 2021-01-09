@@ -1,7 +1,19 @@
+### Library Powered By
+
+This library is powered by [Entity Framework Extensions](https://entityframework-extensions.net/?z=github&y=entityframework-plus)
+
+<a href="https://entityframework-extensions.net/?z=github&y=entityframework-plus">
+<kbd>
+<img src="https://zzzprojects.github.io/images/logo/entityframework-extensions-pub.jpg" alt="Entity Framework Extensions" />
+</kbd>
+</a>
+
+---
+
 # System.Linq.Dynamic.Core
 This is a **.NET Core / Standard port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
 
-# Overview
+## Overview
 With this library it's possible to write Dynamic LINQ queries (string based) on an `IQueryable`:
 ``` c#
 var query = db.Customers
@@ -10,12 +22,12 @@ var query = db.Customers
     .Select("new(CompanyName as Name, Phone)");
 ```
 
-# How to use
+## How to use
 There are several documentation resources:
 - [Getting Started](https://dynamic-linq.net/overview) : a website to get started with basic and advanced usage.
 - [API Documentation][doc-api] : a low-level API description website with some code samples
 
-# Info
+## Info
 | | |
 | --- | --- |
 | ***Project*** | &nbsp; |
@@ -31,16 +43,16 @@ There are several documentation resources:
 | &nbsp;&nbsp;**Microsoft.EntityFrameworkCore.DynamicLinq** | [![NuGet](https://buildstats.info/nuget/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 | &nbsp;&nbsp;**Z.EntityFramework.Classic.DynamicLinq** | [![NuGet](https://buildstats.info/nuget/Z.EntityFramework.Classic.DynamicLinq)](https://www.nuget.org/packages/Z.EntityFramework.Classic.DynamicLinq) |
 
-# Development Details
+## Development Details
 
-## Frameworks
+### Frameworks
 The following frameworks are supported:
 - net35, net40, net45, net46 and up
 - netstandard1.3, netstandard2.0 and netstandard2.1
 - netcoreapp3.1 and net5.0
 - uap10.0
 
-## Fork details
+### Fork details
 This fork takes the basic library to a new level. Contains XML Documentation and examples on how to use it. Also adds unit testing to help ensure that it works properly.
 
 Some background:
