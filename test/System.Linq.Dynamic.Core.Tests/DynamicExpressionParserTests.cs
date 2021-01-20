@@ -36,9 +36,24 @@ namespace System.Linq.Dynamic.Core.Tests
                 return 42;
             }
 
+            public void Bar()
+            {
+                Name = nameof(Foo);
+            }
+
             public string Name { get; set; }
 
             public MyClass Child { get; set; }
+        }
+
+        private class MyClassCustomTypeProvider : DefaultDynamicLinqCustomTypeProvider
+        {
+            public override HashSet<Type> GetCustomTypes()
+            {
+                var customTypes = base.GetCustomTypes();
+                customTypes.Add(typeof(MyClass));
+                return customTypes;
+            }
         }
 
         private class ComplexParseLambda1Result
@@ -1196,6 +1211,24 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_ActionDelegate_VoidMethodCallExpression()
+        {
+            // Arrange
+            var dataSource = new MyClass();
+            var expressionText = "it.Bar()";
+            var parsingConfig = new ParsingConfig { CustomTypeProvider = new MyClassCustomTypeProvider() };
+            dataSource.Name.Should().BeNull();
+
+            // Act
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(typeof(Action<MyClass>), parsingConfig, dataSource.GetType(), null, expressionText);
+            Delegate del = expression.Compile();
+            del.DynamicInvoke(dataSource);
+
+            // Assert
+            dataSource.Name.Should().NotBeNullOrEmpty();
         }
     }
 }
