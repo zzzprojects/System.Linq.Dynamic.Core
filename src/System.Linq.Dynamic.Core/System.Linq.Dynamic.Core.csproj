@@ -65,7 +65,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="10.4.0" PrivateAssets="All" />
+        <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">

@@ -50,7 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="10.2.1" PrivateAssets="All" />
+        <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="All" />
         <PackageReference Include="Z.EntityFramework.Classic" Version="7.1.7" />
     </ItemGroup>
 </Project>
