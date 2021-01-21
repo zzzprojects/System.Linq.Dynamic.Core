@@ -1706,6 +1706,22 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Field(instance, field);
             }
 
+#if !NET35
+            if (type is IDictionary<string, object> expandoObject)
+            {
+               // ParameterExpression valueBag = Expression.Parameter(typeof(Dictionary<string, object>), "valueBag");
+                ParameterExpression key = Expression.Parameter(typeof(string), "key");
+                //ParameterExpression result = Expression.Parameter(typeof(object), "result");
+                //BlockExpression block = Expression.Block(
+                //    new[] { result },
+                //    Expression.Assign(result, Expression.Property(valueBag, "Item", key)),
+                //    result
+                //);
+
+                return Expression.Property(instance, "Item", key); // Expression.Call(block, instance, Expression.Constant(id));
+            }
+#endif
+
             if (type == typeof(object))
             {
                 var method = typeof(Dynamic).GetMethod("DynamicIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);

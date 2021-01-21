@@ -13,6 +13,11 @@ namespace System.Linq.Dynamic.Core
     {
         internal static object DynamicIndex(object obj, string name)
         {
+            if (obj == null)
+            {
+                throw new ArgumentNullException("Target object is null");
+            }
+
             // CAUTION: This method is called via reflection, so even with 0 reference, the method is used
             // var method = typeof(Dynamic).GetMethod("DynamicIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             // return Expression.Call(null, method, instance, Expression.Constant(id));

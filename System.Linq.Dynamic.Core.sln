@@ -54,7 +54,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryLeakTest167", "src-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_netcore2.0_EF2.1", "src-console\ConsoleAppEF2.1\ConsoleApp_netcore2.0_EF2.1.csproj", "{EDF434F6-70C0-4005-B63E-0C365B3DA42A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_netcore2.1_EF2.1.1_InMemory", "src-console\ConsoleAppEF2.1.1_InMemory\ConsoleApp_netcore2.1_EF2.1.1_InMemory.csproj", "{E4286D1D-A98C-4516-9E47-CBF9739448DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_net5.0_EF5_InMemory", "src-console\ConsoleAppEF2.1.1_InMemory\ConsoleApp_net5.0_EF5_InMemory.csproj", "{E4286D1D-A98C-4516-9E47-CBF9739448DA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_netcore2.1_EF2.1.1", "src-console\ConsoleAppEF2.1.1\ConsoleApp_netcore2.1_EF2.1.1.csproj", "{F1880F07-238F-4A3A-9E58-141350665E1F}"
 EndProject

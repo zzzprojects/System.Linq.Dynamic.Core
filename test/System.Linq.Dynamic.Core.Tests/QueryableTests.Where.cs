@@ -193,5 +193,38 @@ namespace System.Linq.Dynamic.Core.Tests
             var newUsers = dynamicList.Select(x => new { Id = x.Id, Income = x.Income + 1111 });
             Assert.Equal(newUsers.Cast<object>().ToList(), expectedResult);
         }
+
+        [Fact]
+        public void Where_Dynamic_ExpandoObject_As_Dictionary_Is_Null_Should_Throw_ArgumentNullException()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1 } }.AsQueryable();
+
+            // Act
+            Action action = () => productsQuery.Where("Properties.Name == @0", "First Product").ToDynamicList();
+
+            // Assert
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Where_Dynamic_ExpandoObject_As_Dictionary()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1, Properties = new Dictionary<string, object> { { "Name", "test" } } } }.AsQueryable();
+
+            // Act
+            var result = productsQuery.Where("Properties.Name == @0", "test").ToDynamicList();
+
+            // Assert
+            result.Should().HaveCount(1);
+        }
+
+        public class ProductDynamic
+        {
+            public int ProductId { get; set; }
+
+            public dynamic Properties { get; set; }
+        }
     }
 }
