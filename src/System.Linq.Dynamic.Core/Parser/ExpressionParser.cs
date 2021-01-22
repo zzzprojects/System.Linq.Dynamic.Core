@@ -1632,11 +1632,11 @@ namespace System.Linq.Dynamic.Core.Parser
             return false;
         }
 
-        Expression ParseMemberAccess(Type type, Expression instance)
+        Expression ParseMemberAccess(Type type, Expression instanceExpression)
         {
-            if (instance != null)
+            if (instanceExpression != null)
             {
-                type = instance.Type;
+                type = instanceExpression.Type;
             }
 
             int errorPos = _textParser.CurrentToken.Pos;
@@ -1645,18 +1645,18 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (_textParser.CurrentToken.Id == TokenId.OpenParen)
             {
-                if (instance != null && type != typeof(string))
+                if (instanceExpression != null && type != typeof(string))
                 {
                     Type enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
                     if (enumerableType != null)
                     {
                         Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                        return ParseEnumerable(instance, elementType, id, errorPos, type);
+                        return ParseEnumerable(instanceExpression, elementType, id, errorPos, type);
                     }
                 }
 
                 Expression[] args = ParseArgumentList();
-                switch (_methodFinder.FindMethod(type, id, instance == null, ref instance, ref args, out MethodBase mb))
+                switch (_methodFinder.FindMethod(type, id, instanceExpression == null, ref instanceExpression, ref args, out MethodBase mb))
                 {
                     case 0:
                         throw ParseError(errorPos, Res.NoApplicableMethod, id, TypeHelper.GetTypeName(type));
@@ -1668,13 +1668,13 @@ namespace System.Linq.Dynamic.Core.Parser
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType));
                         }
 
-                        if (instance == null)
+                        if (instanceExpression == null)
                         {
                             return Expression.Call(null, method, args);
                         }
                         else
                         {
-                            return Expression.Call(instance, method, args);
+                            return Expression.Call(instanceExpression, method, args);
                         }
 
                     default:
@@ -1692,40 +1692,45 @@ namespace System.Linq.Dynamic.Core.Parser
 #if UAP10_0 || NETSTANDARD1_3
             if (type == typeof(DynamicClass))
             {
-                return Expression.MakeIndex(instance, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
+                return Expression.MakeIndex(instanceExpression, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
-            MemberInfo member = FindPropertyOrField(type, id, instance == null, _parsingConfig);
+            MemberInfo member = FindPropertyOrField(type, id, instanceExpression == null, _parsingConfig);
             if (member is PropertyInfo property)
             {
-                return Expression.Property(instance, property);
+                return Expression.Property(instanceExpression, property);
             }
 
             if (member is FieldInfo field)
             {
-                return Expression.Field(instance, field);
+                return Expression.Field(instanceExpression, field);
             }
 
 #if !NET35
-            // In case the type is an dynamic/ExapndoObject/Dictionary<string, object>, create IndexExpression with a string as Key.
-            if (type is IDictionary<string, object>)
+            if (type == typeof(object))
             {
-                return Expression.Property(instance, "Item", Expression.Parameter(typeof(string), "key"));
+                Expression dictionaryExpression;
+                if (type != typeof(IDictionary<string, object>))
+                {
+                    // Convert the instanceExpression to a IDictionary<string, object> Expression
+                    dictionaryExpression = Expression.Convert(instanceExpression, typeof(IDictionary<string, object>));
+                }
+                else
+                {
+                    dictionaryExpression = instanceExpression;
+                }
+
+                var itemPropertyInfo = typeof(IDictionary<string, object>).GetProperty("Item");
+                return Expression.Property(dictionaryExpression, itemPropertyInfo, new[] { Expression.Constant(id) });
             }
 #endif
 
-            if (type == typeof(object))
+            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instanceExpression != null)
             {
-                var method = typeof(Dynamic).GetMethod("DynamicIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-                return Expression.Call(null, method, instance, Expression.Constant(id));
-            }
-
-            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instance != null)
-            {
-                MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
+                MethodInfo indexerMethod = instanceExpression.Type.GetMethod("get_Item", new[] { typeof(string) });
                 if (indexerMethod != null)
                 {
-                    return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+                    return Expression.Call(instanceExpression, indexerMethod, Expression.Constant(id));
                 }
             }
 

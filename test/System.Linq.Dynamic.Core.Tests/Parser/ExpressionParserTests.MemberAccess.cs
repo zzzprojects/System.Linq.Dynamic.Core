@@ -8,7 +8,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
     partial class ExpressionParserTests
     {
         [Fact]
-        public void ParseMemberAccess_DynamicIndex()
+        public void ParseMemberAccess_DictionaryIndex()
         {
             // Arrange
             var products = (new ProductDynamic[0]).AsQueryable();
@@ -17,7 +17,11 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var expression = products.Where("Properties.Name == @0", "First Product").Expression;
 
             // Assert
-            expression.ToString().Should().StartWith("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => (DynamicIndex(Param_0.Properties, \"Name\") == Convert(\"First Product\"");
+#if NET452 || NET461
+            expression.ToString().Should().Be("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => (Convert(Param_0.Properties).Item[\"Name\"] == Convert(\"First Product\")))");
+#else
+            expression.ToString().Should().Be("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => (Convert(Param_0.Properties, IDictionary`2).Item[\"Name\"] == Convert(\"First Product\", Object)))");
+#endif
         }
     }
 
