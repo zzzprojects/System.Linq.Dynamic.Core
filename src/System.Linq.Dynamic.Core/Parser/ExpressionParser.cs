@@ -1707,18 +1707,10 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
 #if !NET35
-            if (type is IDictionary<string, object> expandoObject)
+            // In case the type is an dynamic/ExapndoObject/Dictionary<string, object>, create IndexExpression with a string as Key.
+            if (type is IDictionary<string, object>)
             {
-               // ParameterExpression valueBag = Expression.Parameter(typeof(Dictionary<string, object>), "valueBag");
-                ParameterExpression key = Expression.Parameter(typeof(string), "key");
-                //ParameterExpression result = Expression.Parameter(typeof(object), "result");
-                //BlockExpression block = Expression.Block(
-                //    new[] { result },
-                //    Expression.Assign(result, Expression.Property(valueBag, "Item", key)),
-                //    result
-                //);
-
-                return Expression.Property(instance, "Item", key); // Expression.Call(block, instance, Expression.Constant(id));
+                return Expression.Property(instance, "Item", Expression.Parameter(typeof(string), "key"));
             }
 #endif
 

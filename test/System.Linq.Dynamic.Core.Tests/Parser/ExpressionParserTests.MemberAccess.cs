@@ -17,14 +17,14 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var expression = products.Where("Properties.Name == @0", "First Product").Expression;
 
             // Assert
-            expression.ToString().Should().Be("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => (DynamicIndex(Param_0.Properties, \"Name\") == Convert(\"First Product\", Object)))");
+            expression.ToString().Should().StartWith("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => (DynamicIndex(Param_0.Properties, \"Name\") == Convert(\"First Product\"");
         }
     }
 
     public class ProductDynamic
     {
-        public virtual string ProductId { get; set; }
+        public string ProductId { get; set; }
 
-        public virtual dynamic Properties { get; set; }
+        public dynamic Properties { get; set; }
     }
 }
