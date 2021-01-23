@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq.Expressions;
 using FluentAssertions;
 using NFluent;
@@ -83,24 +84,6 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
             Check.That(3).IsEqualTo(noDynamicList.Count);
             Check.That("ZZZ1").IsEqualTo((string)data.First().City);
             Check.That(3).IsEqualTo(data.Count);
-        }
-
-        // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/397
-        [Fact]
-        public void EvalDictionaryParams2()
-        {
-            object CreateDicParameter(string name) => new Dictionary<string, object>
-                {{"Name", new Dictionary<string, object> {{"FirstName", name }}}};
-
-            var config = new ParsingConfig()
-            {
-                //CustomTypeProvider = new DefaultDynamicLinqCustomTypeProvider()
-            };
-
-            var parType = new Dictionary<string, object>().GetType();
-            var lambda = DynamicExpressionParser.ParseLambda(config, new[] { Expression.Parameter(parType, "item") }, typeof(object), "item.Name.FirstName").Compile();
-            lambda.DynamicInvoke(CreateDicParameter("Julio")).Should().Be("Julio");
-            lambda.DynamicInvoke(CreateDicParameter("John")).Should().Be("John");
         }
     }
 }

@@ -19,6 +19,7 @@ namespace System.Linq.Dynamic.Core.Parser
     /// </summary>
     public class ExpressionParser
     {
+        static readonly Type expandoObjectAsIDictionary = typeof(IDictionary<string, object>);
         static readonly string methodOrderBy = nameof(Queryable.OrderBy);
         static readonly string methodOrderByDescending = nameof(Queryable.OrderByDescending);
         static readonly string methodThenBy = nameof(Queryable.ThenBy);
@@ -1706,25 +1707,6 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Field(instanceExpression, field);
             }
 
-#if !NET35
-            if (type == typeof(object))
-            {
-                Expression dictionaryExpression;
-                if (type != typeof(IDictionary<string, object>))
-                {
-                    // Convert the instanceExpression to a IDictionary<string, object> Expression
-                    dictionaryExpression = Expression.Convert(instanceExpression, typeof(IDictionary<string, object>));
-                }
-                else
-                {
-                    dictionaryExpression = instanceExpression;
-                }
-
-                var itemPropertyInfo = typeof(IDictionary<string, object>).GetProperty("Item");
-                return Expression.Property(dictionaryExpression, itemPropertyInfo, new[] { Expression.Constant(id) });
-            }
-#endif
-
             if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instanceExpression != null)
             {
                 MethodInfo indexerMethod = instanceExpression.Type.GetMethod("get_Item", new[] { typeof(string) });
@@ -1733,6 +1715,17 @@ namespace System.Linq.Dynamic.Core.Parser
                     return Expression.Call(instanceExpression, indexerMethod, Expression.Constant(id));
                 }
             }
+
+#if !NET35
+            if (_expressionHelper.MemberExpressionIsDynamic(instanceExpression))
+            {
+                // The member is a dynamic or ExpandoObject, so convert the instanceExpression to a IDictionary<string, object> Expression
+                var dictionaryExpression = Expression.ConvertChecked(instanceExpression, expandoObjectAsIDictionary);
+
+                var itemPropertyInfo = expandoObjectAsIDictionary.GetProperty("Item");
+                return Expression.Property(dictionaryExpression, itemPropertyInfo, new[] { Expression.Constant(id) });
+            }
+#endif
 
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {

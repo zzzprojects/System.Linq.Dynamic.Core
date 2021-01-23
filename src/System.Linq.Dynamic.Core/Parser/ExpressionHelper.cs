@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
@@ -217,6 +218,15 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 #endif
             return null;
+        }
+
+        public bool MemberExpressionIsDynamic(Expression expression)
+        {
+#if NET35
+            return false;
+#else
+            return expression is MemberExpression memberExpression && memberExpression.Member.GetCustomAttribute<DynamicAttribute>() != null;
+#endif
         }
 
         private MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)

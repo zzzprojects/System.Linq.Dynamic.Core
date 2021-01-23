@@ -221,6 +221,19 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Where_Dynamic_Object_As_Dictionary_Throws_ParseException()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1, PropertiesAsObject = new Dictionary<string, object> { { "Name", "test" } } } }.AsQueryable();
+
+            // Act
+            Action action = () => productsQuery.Where("PropertiesAsObject.Name == @0", "test").ToDynamicList();
+
+            // Assert
+            action.Should().Throw<ParseException>();
+        }
+
+        [Fact]
         public void Where_Dynamic_ExpandoObject_As_Dictionary()
         {
             // Arrange
@@ -251,6 +264,8 @@ namespace System.Linq.Dynamic.Core.Tests
             public int ProductId { get; set; }
 
             public dynamic Properties { get; set; }
+
+            public object PropertiesAsObject { get; set; }
         }
     }
 }
