@@ -18,6 +18,7 @@
         public const string DotExpected = "'.' expected";
         public const string DotOrOpenParenExpected = "'.' or '(' expected";
         public const string DotOrOpenParenOrStringLiteralExpected = "'.' or '(' or string literal expected";
+        public const string DynamicExpandoObjectIsNotSupportedInDotNet3_5 = "Dynamic / ExpandoObject is not supported in .NET 3.5";
         public const string DuplicateIdentifier = "The identifier '{0}' was defined more than once";
         public const string ExpressionExpected = "Expression expected";
         public const string ExpressionTypeMismatch = "Expression of type '{0}' expected";

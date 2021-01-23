@@ -19,7 +19,6 @@ namespace System.Linq.Dynamic.Core.Parser
     /// </summary>
     public class ExpressionParser
     {
-        static readonly Type expandoObjectAsIDictionary = typeof(IDictionary<string, object>);
         static readonly string methodOrderBy = nameof(Queryable.OrderBy);
         static readonly string methodOrderByDescending = nameof(Queryable.OrderByDescending);
         static readonly string methodThenBy = nameof(Queryable.ThenBy);
@@ -1720,10 +1719,7 @@ namespace System.Linq.Dynamic.Core.Parser
             if (_expressionHelper.MemberExpressionIsDynamic(instanceExpression))
             {
                 // The member is a dynamic or ExpandoObject, so convert the instanceExpression to a IDictionary<string, object> Expression
-                var dictionaryExpression = Expression.ConvertChecked(instanceExpression, expandoObjectAsIDictionary);
-
-                var itemPropertyInfo = expandoObjectAsIDictionary.GetProperty("Item");
-                return Expression.Property(dictionaryExpression, itemPropertyInfo, new[] { Expression.Constant(id) });
+                return _expressionHelper.ConvertToExpandoObjectAndCreateAsPropertyExpression(instanceExpression, id);
             }
 #endif
 
@@ -1751,6 +1747,14 @@ namespace System.Linq.Dynamic.Core.Parser
 
                 return exp;
             }
+
+#if !NET35
+            // Last resort, convert the instanceExpression to a IDictionary<string, object> Expression
+            if (type == typeof(object))
+            {
+                return _expressionHelper.ConvertToExpandoObjectAndCreateAsPropertyExpression(instanceExpression, id);
+            }
+#endif
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }

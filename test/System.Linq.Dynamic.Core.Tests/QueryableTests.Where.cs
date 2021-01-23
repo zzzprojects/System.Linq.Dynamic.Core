@@ -221,19 +221,6 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Where_Dynamic_Object_As_Dictionary_Throws_ParseException()
-        {
-            // Arrange
-            var productsQuery = new[] { new ProductDynamic { ProductId = 1, PropertiesAsObject = new Dictionary<string, object> { { "Name", "test" } } } }.AsQueryable();
-
-            // Act
-            Action action = () => productsQuery.Where("PropertiesAsObject.Name == @0", "test").ToDynamicList();
-
-            // Assert
-            action.Should().Throw<ParseException>();
-        }
-
-        [Fact]
         public void Where_Dynamic_ExpandoObject_As_Dictionary()
         {
             // Arrange
@@ -246,6 +233,19 @@ namespace System.Linq.Dynamic.Core.Tests
             results.Should().HaveCount(1);
         }
 
+        [Fact]
+        public void Where_Dynamic_Object_As_Dictionary()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1, PropertiesAsObject = new Dictionary<string, object> { { "Name", "test" } } } }.AsQueryable();
+
+            // Act
+            var results = productsQuery.Where("PropertiesAsObject.Name == @0", "test").ToDynamicList();
+
+            // Assert
+            results.Should().HaveCount(1);
+        }
+
         [Fact(Skip = "Unable to cast object of type '<>f__AnonymousType35`1[System.String]' to type 'System.Collections.Generic.IDictionary`2[System.String,System.Object]'")]
         public void Where_Dynamic_ExpandoObject_As_AnonymousType()
         {
@@ -253,7 +253,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var productsQuery = new[] { new ProductDynamic { ProductId = 1, Properties = new { Name = "test" } } }.AsQueryable();
 
             // Act
-            var results = productsQuery.Where("Properties.Name == @0", "test").ToDynamicList<object>();
+            var results = productsQuery.Where("Properties.Name == @0", "test").ToDynamicList<ProductDynamic>();
 
             // Assert
             results.Should().HaveCount(1);
