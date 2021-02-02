@@ -27,6 +27,7 @@ namespace ExpressionSample
             try
             {
                 var problematicExpression = DynamicExpressionParser.ParseLambda(lambdaParameter, typeof(bool), "MyEnum = 1", null);
+                int ok = 0;
             }
             catch (Exception e)
             {
