@@ -25,7 +25,7 @@
         {
             try
             {
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
                 switch (Type.GetTypeCode(TypeHelper.GetNonNullableType(type)))
                 {
                     case TypeCode.SByte:

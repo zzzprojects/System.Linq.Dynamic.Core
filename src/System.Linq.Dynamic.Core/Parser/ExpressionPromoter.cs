@@ -43,7 +43,7 @@ namespace System.Linq.Dynamic.Core.Parser
                         Type target = TypeHelper.GetNonNullableType(type);
                         object value = null;
 
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
                         switch (Type.GetTypeCode(ce.Type))
                         {
                             case TypeCode.Int32:

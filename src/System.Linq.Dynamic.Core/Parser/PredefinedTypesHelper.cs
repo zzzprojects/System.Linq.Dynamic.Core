@@ -49,7 +49,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         static PredefinedTypesHelper()
         {
-#if !(NET35 || SILVERLIGHT || NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NET35 || SILVERLIGHT || NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
             //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
             //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
             //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
