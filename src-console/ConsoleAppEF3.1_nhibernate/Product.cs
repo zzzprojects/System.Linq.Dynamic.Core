@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ConsoleAppEF3_1_nhibernate
 {
@@ -6,6 +7,6 @@ namespace ConsoleAppEF3_1_nhibernate
 	{
 		public virtual Guid Id { get; set; }
 		public virtual string Name { get; set; }
-		public virtual dynamic Properties { get; set; }
+		public virtual IDictionary<string, object> Properties { get; set; }
 	}
 }
