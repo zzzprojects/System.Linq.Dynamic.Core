@@ -12,11 +12,11 @@ jobs:
     - name: Build Projects
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+
+    - name: Run Tests netcoreapp31
+      run: |
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f netcoreapp31 -p:buildType=azure-pipelines-ci
     
     - name: Run Tests net452
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f net452 -p:buildType=azure-pipelines-ci
-        
-    - name: Run Tests netcoreapp31
-      run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f netcoreapp31 -p:buildType=azure-pipelines-ci
