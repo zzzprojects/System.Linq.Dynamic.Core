@@ -195,7 +195,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Where_Dynamic_ExpandoObject_As_Dictionary_Is_Null_Should_Throw_NullReferenceException()
+        public void Where_Dynamic_ExpandoObject_As_Dictionary_Is_Null_Should_Throw_InvalidOperationException()
         {
             // Arrange
             var productsQuery = new[] { new ProductDynamic { ProductId = 1 } }.AsQueryable();
@@ -204,7 +204,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Action action = () => productsQuery.Where("Properties.Name == @0", "First Product").ToDynamicList();
 
             // Assert
-            action.Should().Throw<NullReferenceException>();
+            action.Should().Throw<InvalidOperationException>();
         }
 
         [Fact(Skip = "NP does not work here")]

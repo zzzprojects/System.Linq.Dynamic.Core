@@ -8,7 +8,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
     partial class ExpressionParserTests
     {
         [Fact]
-        public void ParseMemberAccess_DictionaryIndex()
+        public void ParseMemberAccess_DictionaryIndex_On_Dynamic()
         {
             // Arrange
             var products = (new ProductDynamic[0]).AsQueryable();
@@ -18,9 +18,9 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             // Assert
 #if NET452 || NET461
-            expression.ToString().Should().Be("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => (Convert(Param_0.Properties).Item[\"Name\"] == Convert(\"First Product\")))");
+            expression.ToString().Should().Be("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => (GetMember Name(Param_0.Properties) == Convert(\"First Product\")))");
 #else
-            expression.ToString().Should().Be("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => (Convert(Param_0.Properties, IDictionary`2).Item[\"Name\"] == Convert(\"First Product\", Object)))");
+            expression.ToString().Should().Be("System.Linq.Dynamic.Core.Tests.Parser.ProductDynamic[].Where(Param_0 => ([Dynamic] == Convert(\"First Product\", Object)))");
 #endif
         }
     }

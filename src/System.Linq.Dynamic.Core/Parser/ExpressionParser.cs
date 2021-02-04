@@ -1716,7 +1716,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
 #if !NET35 && !UAP10_0 && !NETSTANDARD1_3
-            if (type == typeof(object) && _expressionHelper.MemberExpressionIsDynamic(instanceExpression))
+            if (type == typeof(object)) // && _expressionHelper.MemberExpressionIsDynamic(instanceExpression))
             {
                 return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instanceExpression);
                 // The member is a dynamic or ExpandoObject, so convert the instanceExpression to a IDictionary<string, object> Expression
