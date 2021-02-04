@@ -41,17 +41,17 @@ namespace ConsoleAppEF3_1_nhibernate
 						Properties = properties1
 					});
 
-				//var properties2 = new
-				//{
-				//	Name = "Second Product",
-				//	Description = "Second Description"
-				//};
-				//session.Save(
-				//	new Product
-				//	{
-				//		Id = Guid.NewGuid(),
-				//		Properties = properties2
-				//	});
+				var properties2 = new
+				{
+					Name = "Second Product",
+					Description = "Second Description"
+				};
+				session.Save(
+					new Product
+					{
+						Id = Guid.NewGuid(),
+						Properties = properties2
+					});
 
 				dynamic properties3 = new ExpandoObject();
 				properties3.Name = "Third Product";
@@ -69,7 +69,7 @@ namespace ConsoleAppEF3_1_nhibernate
 			using (var session = sessions.OpenSession())
 			using (session.BeginTransaction())
 			{
-				var x = session.Query<Product>().Where(p => p.Properties["Name"] == "First Product").ToList();
+				//var x = session.Query<Product>().Where(p => p.Properties["Name"] == "First Product").ToList();
 
 				var y = session.Query<Product>()
 					.Where("Properties.Name == @0", "First Product")

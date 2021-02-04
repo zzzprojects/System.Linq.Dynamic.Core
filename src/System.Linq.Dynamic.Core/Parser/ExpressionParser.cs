@@ -1715,11 +1715,12 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-#if !NET35
-            if (_expressionHelper.MemberExpressionIsDynamic(instanceExpression))
+#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+            if (type == typeof(object) && _expressionHelper.MemberExpressionIsDynamic(instanceExpression))
             {
+                return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instanceExpression);
                 // The member is a dynamic or ExpandoObject, so convert the instanceExpression to a IDictionary<string, object> Expression
-                return _expressionHelper.ConvertToExpandoObjectAndCreateAsPropertyExpression(instanceExpression, id);
+                //return _expressionHelper.ConvertToExpandoObjectAndCreateAsPropertyExpression(instanceExpression, id);
             }
 #endif
 
@@ -1748,13 +1749,13 @@ namespace System.Linq.Dynamic.Core.Parser
                 return exp;
             }
 
-#if !NET35
-            // Last resort, convert the instanceExpression to a IDictionary<string, object> Expression
-            if (type == typeof(object))
-            {
-                return _expressionHelper.ConvertToExpandoObjectAndCreateAsPropertyExpression(instanceExpression, id);
-            }
-#endif
+//#if !NET35
+//            // Last resort, convert the instanceExpression to a IDictionary<string, object> Expression
+//            if (type == typeof(object))
+//            {
+//                return _expressionHelper.ConvertToExpandoObjectAndCreateAsPropertyExpression(instanceExpression, id);
+//            }
+//#endif
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
