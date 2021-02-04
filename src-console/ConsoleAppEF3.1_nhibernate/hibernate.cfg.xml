@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-configuration xmlns="urn:nhibernate-configuration-2.2">
+  <session-factory name="NHibernate.Test">
+    <property name="connection.driver_class">NHibernate.Driver.SQLite20Driver</property>
+    <!-- DateTimeFormatString allows to prevent storing the fact that written date was having kind UTC,
+		     which dodges the undesirable time conversion to local done on reads by System.Data.SQLite.
+		     See https://system.data.sqlite.org/index.html/tktview/44a0955ea344a777ffdbcc077831e1adc8b77a36
+		     and https://github.com/nhibernate/nhibernate-core/issues/1362 -->
+    <property name="connection.connection_string">
+      Data Source=nhibernate.db;
+      DateTimeFormatString=yyyy-MM-dd HH:mm:ss.FFFFFFF;
+    </property>
+    <property name="dialect">NHibernate.Dialect.SQLiteDialect</property>
+
+    <property name="connection.provider">NHibernate.Connection.DriverConnectionProvider, NHibernate</property>
+    <property name="connection.isolation">ReadCommitted</property> <!-- See System.Data.IsolationLevel for valid values -->
+
+    <property name="cache.provider_class">NHibernate.Cache.HashtableCacheProvider, NHibernate</property>
+    <property name="cache.use_query_cache">true</property>
+
+    <property name="query.startup_check">false</property>
+    <property name="query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
+
+    <property name="adonet.batch_size">10</property>
+    <property name="adonet.wrap_result_sets">false</property>
+
+    <property name="hbm2ddl.keywords">none</property>
+    <property name="format_sql">true</property>
+    <property name="show_sql">false</property>
+    <property name="command_timeout">444</property>
+  </session-factory>
+</hibernate-configuration>
