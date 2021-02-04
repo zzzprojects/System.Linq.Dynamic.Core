@@ -10,9 +10,6 @@ namespace System.Linq.Dynamic.Core.Parser
 {
     internal class ExpressionHelper : IExpressionHelper
     {
-        private static readonly Type expandoObjectAsIDictionaryType = typeof(IDictionary<string, object>);
-        private static readonly PropertyInfo expandoObjectItemPropertyInfo = expandoObjectAsIDictionaryType.GetProperty("Item");
-
         private readonly IConstantExpressionWrapper _constantExpressionWrapper = new ConstantExpressionWrapper();
         private readonly ParsingConfig _parsingConfig;
 
@@ -232,13 +229,12 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
         }
 
-        public Expression ConvertToExpandoObjectAndCreateAsPropertyExpression(Expression expression, string propertyName)
+        public Expression ConvertToExpandoObjectAndCreateDynamicExpression(Expression expression, Type type, string propertyName)
         {
-#if NET35
-            throw new NotSupportedException(Res.DynamicExpandoObjectIsNotSupportedInDotNet3_5);
+#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+            return Expression.Dynamic(new DynamicGetMemberBinder(propertyName, _parsingConfig), type, expression);
 #else
-            var dictionaryExpression = Expression.ConvertChecked(expression, expandoObjectAsIDictionaryType);
-            return Expression.Property(dictionaryExpression, expandoObjectItemPropertyInfo, new[] { Expression.Constant(propertyName) });
+            throw new NotSupportedException(Res.DynamicExpandoObjectIsNotSupported);
 #endif
         }
 

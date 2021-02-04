@@ -973,7 +973,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value) &&
                 // Prioritize property or field over the type
-                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false, _parsingConfig) != null))
+                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
             {
                 Type typeValue = value as Type;
                 if (typeValue != null)
@@ -1695,7 +1695,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.MakeIndex(instanceExpression, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
-            MemberInfo member = FindPropertyOrField(type, id, instanceExpression == null, _parsingConfig);
+            MemberInfo member = FindPropertyOrField(type, id, instanceExpression == null);
             if (member is PropertyInfo property)
             {
                 return Expression.Property(instanceExpression, property);
@@ -1716,11 +1716,10 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
 #if !NET35 && !UAP10_0 && !NETSTANDARD1_3
-            if (type == typeof(object)) // && _expressionHelper.MemberExpressionIsDynamic(instanceExpression))
+            if (type == typeof(object))
             {
-                return Expression.Dynamic(new DynamicGetMemberBinder(id), type, instanceExpression);
-                // The member is a dynamic or ExpandoObject, so convert the instanceExpression to a IDictionary<string, object> Expression
-                //return _expressionHelper.ConvertToExpandoObjectAndCreateAsPropertyExpression(instanceExpression, id);
+                // The member is a dynamic or ExpandoObject, so convert this
+                return _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(instanceExpression, type, id);
             }
 #endif
 
@@ -1748,14 +1747,6 @@ namespace System.Linq.Dynamic.Core.Parser
 
                 return exp;
             }
-
-//#if !NET35
-//            // Last resort, convert the instanceExpression to a IDictionary<string, object> Expression
-//            if (type == typeof(object))
-//            {
-//                return _expressionHelper.ConvertToExpandoObjectAndCreateAsPropertyExpression(instanceExpression, id);
-//            }
-//#endif
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
         }
@@ -2073,7 +2064,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return ParseError(errorPos, Res.IncompatibleOperands, opName, TypeHelper.GetTypeName(left.Type), TypeHelper.GetTypeName(right.Type));
         }
 
-        static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess, ParsingConfig ParsingConfig)
+        private MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
         {
 #if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
@@ -2081,7 +2072,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 MemberInfo[] members = null;
 
-                var findMembersType = ParsingConfig != null && ParsingConfig.IsCaseSensitive ? Type.FilterName : Type.FilterNameIgnoreCase;
+                var findMembersType = _parsingConfig?.IsCaseSensitive == true ? Type.FilterName : Type.FilterNameIgnoreCase;
                 members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, findMembersType, memberName);
 
                 if (members.Length != 0)
@@ -2091,7 +2082,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             return null;
 #else
-            var isCaseSensitive = ParsingConfig != null && ParsingConfig.IsCaseSensitive;
+            var isCaseSensitive = _parsingConfig?.IsCaseSensitive == true;
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
                 // Try to find a property with the specified memberName

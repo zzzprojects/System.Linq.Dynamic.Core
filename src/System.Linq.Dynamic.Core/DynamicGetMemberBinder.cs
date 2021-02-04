@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core
 {
@@ -14,7 +15,7 @@ namespace System.Linq.Dynamic.Core
     {
         private static readonly PropertyInfo Indexer = typeof(IDictionary<string, object>).GetProperty("Item");
 
-        public DynamicGetMemberBinder(string name) : base(name, true)
+        public DynamicGetMemberBinder(string name, [CanBeNull] ParsingConfig config) : base(name, !(config?.IsCaseSensitive == true))
         {
         }
 
