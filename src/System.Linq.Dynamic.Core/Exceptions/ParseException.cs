@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-#if !(SILVERLIGHT || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD || PORTABLE || WPSL)
+#if !(SILVERLIGHT || WINDOWS_APP ||  UAP10_0 || NETSTANDARD || PORTABLE || WPSL)
 using System.Runtime.Serialization;
 #endif
 
@@ -9,7 +9,7 @@ namespace System.Linq.Dynamic.Core.Exceptions
     /// <summary>
     /// Represents errors that occur while parsing dynamic linq string expressions.
     /// </summary>
-#if !(SILVERLIGHT || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD || PORTABLE || WPSL || NETSTANDARD2_0)
+#if !(SILVERLIGHT || WINDOWS_APP ||  UAP10_0 || NETSTANDARD || PORTABLE || WPSL || NETSTANDARD2_0)
     [Serializable]
 #endif
     public sealed class ParseException : Exception
@@ -39,7 +39,7 @@ namespace System.Linq.Dynamic.Core.Exceptions
             return string.Format(CultureInfo.CurrentCulture, Res.ParseExceptionFormat, Message, Position);
         }
 
-#if !(SILVERLIGHT || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD || PORTABLE || WPSL || NETSTANDARD2_0)
+#if !(SILVERLIGHT || WINDOWS_APP ||  UAP10_0 || NETSTANDARD || PORTABLE || WPSL || NETSTANDARD2_0)
         ParseException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

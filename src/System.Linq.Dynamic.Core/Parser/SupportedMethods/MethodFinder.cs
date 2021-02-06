@@ -27,7 +27,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         public int FindMethod(Type type, string methodName, bool staticAccess, ref Expression instance, ref Expression[] args, out MethodBase method)
         {
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in SelfAndBaseTypes(type))
             {
@@ -115,7 +115,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 if (members.Length != 0)
                 {
                     IEnumerable<MethodBase> methods = members.OfType<PropertyInfo>().
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
                         Select(p => (MethodBase)p.GetGetMethod()).
                         Where(m => m != null);
 #else

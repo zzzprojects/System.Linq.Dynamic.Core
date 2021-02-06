@@ -2064,7 +2064,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess, ParsingConfig ParsingConfig)
         {
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
