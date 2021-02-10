@@ -43,7 +43,7 @@ namespace System.Linq.Dynamic.Core.Parser
                         Type target = TypeHelper.GetNonNullableType(type);
                         object value = null;
 
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
                         switch (Type.GetTypeCode(ce.Type))
                         {
                             case TypeCode.Int32:
@@ -70,12 +70,14 @@ namespace System.Linq.Dynamic.Core.Parser
 #else
                         if (ce.Type == typeof(int) || ce.Type == typeof(uint) || ce.Type == typeof(long) || ce.Type == typeof(ulong))
                         {
-                            value = _numberParser.ParseNumber(text, target);
-
-                            // Make sure an enum value stays an enum value
+                            // If target is an enum value, just use the Value from the ConstantExpression
                             if (target.GetTypeInfo().IsEnum)
                             {
-                                value = Enum.ToObject(target, value);
+                                value = Enum.ToObject(target, ce.Value);
+                            }
+                            else
+                            {
+                                value = _numberParser.ParseNumber(text, target);
                             }
                         }
                         else if (ce.Type == typeof(double))

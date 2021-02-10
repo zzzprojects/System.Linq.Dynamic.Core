@@ -76,7 +76,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             return null;
         }
 
-#if (WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if (WINDOWS_APP || UAP10_0 || NETSTANDARD)
         /// <summary>
         /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
         /// </summary>

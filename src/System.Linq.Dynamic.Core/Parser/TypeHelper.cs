@@ -32,7 +32,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public static bool IsCompatibleWith(Type source, Type target)
         {
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
             if (source == target)
             {
                 return true;
@@ -288,7 +288,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             type = GetNonNullableType(type);
 
-#if !(NETFX_CORE || WINDOWS_APP || DOTNET5_1 || UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
             if (type.GetTypeInfo().IsEnum)
             {
                 return 0;
