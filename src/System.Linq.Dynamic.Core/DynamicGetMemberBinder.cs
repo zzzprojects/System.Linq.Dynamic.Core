@@ -1,4 +1,5 @@
 ﻿#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq.Expressions;
@@ -7,14 +8,10 @@ using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core
 {
-    /// <summary>
-    /// Based on SqlLinq by dkackman. https://github.com/dkackman/SqlLinq/blob/210b594e37f14061424397368ed750ce547c21e7/License.md
-    /// </summary>
     /// <seealso cref="GetMemberBinder" />
     internal class DynamicGetMemberBinder : GetMemberBinder
     {
-        private static readonly Type IDictionaryType = typeof(IDictionary<string, object>);
-        private static readonly PropertyInfo Indexer = IDictionaryType.GetProperty("Item");
+        private static readonly MethodInfo DynamicGetMemberMethod = typeof(DynamicGetMemberBinder).GetMethod(nameof(GetDynamicMember));
 
         public DynamicGetMemberBinder(string name, [CanBeNull] ParsingConfig config) : base(name, !(config?.IsCaseSensitive == true))
         {
@@ -22,16 +19,32 @@ namespace System.Linq.Dynamic.Core
 
         public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
         {
-            var dictionary = target.Value as IDictionary<string, object>;
-            if (dictionary == null)
-            {
-                throw new InvalidOperationException("Target object is not an ExpandoObject");
-            }
+            var instance = Expression.Call(
+                DynamicGetMemberMethod,
+                target.Expression,
+                Expression.Constant(Name),
+                Expression.Constant(IgnoreCase));
+            return DynamicMetaObject.Create(target.Value, instance);
+        }
 
-            var instance = Expression.ConvertChecked(target.Expression, IDictionaryType);
-            var indexExpression = Expression.MakeIndex(instance, Indexer, new Expression[] { Expression.Constant(Name) });
+        public static object GetDynamicMember(object value, string name, bool ignoreCase)
+        {
+            if (value == null)
+                throw new InvalidOperationException();
 
-            return DynamicMetaObject.Create(dictionary, indexExpression);
+            if (value is IDictionary<string, object> dict1)
+                return dict1[name];
+
+            if (value is IDictionary dict2)
+                return dict2[name];
+
+            var flags = BindingFlags.Instance | BindingFlags.Public;
+            if (ignoreCase) flags |= BindingFlags.IgnoreCase;
+            var property = value.GetType().GetProperty(name, flags);
+            if (property == null)
+                throw new InvalidOperationException();
+
+            return property.GetValue(value, null);
         }
     }
 }
