@@ -1610,12 +1610,12 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(qry.OrderBy(x => x.Id).ThenByDescending(x => x.Profile.Age).ToArray()).ContainsExactly(orderBy.ToArray());
         }
 
-        //[Fact]
+        [Fact]
         public void ExpressionTests_Select_DynamicObjects()
         {
             // Arrange
             dynamic a1 = new { Name = "a", BlogId = 100 };
-            dynamic a2 = new { Name = "b", BlogId = 200 };
+            dynamic a2 = new { BlogId = 200, Name = "b" };
             var list = new List<dynamic> { a1, a2 };
             IQueryable qry = list.AsQueryable();
 

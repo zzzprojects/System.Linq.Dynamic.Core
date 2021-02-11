@@ -246,7 +246,7 @@ namespace System.Linq.Dynamic.Core.Tests
             results.Should().HaveCount(1);
         }
 
-        [Fact(Skip = "Unable to cast object of type '<>f__AnonymousType35`1[System.String]' to type 'System.Collections.Generic.IDictionary`2[System.String,System.Object]'")]
+        [Fact]
         public void Where_Dynamic_ExpandoObject_As_AnonymousType()
         {
             // Arrange
