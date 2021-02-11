@@ -184,20 +184,6 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             Check.That(generatedExpression.ToString()).IsEqualTo("x => x.Id");
         }
 
-        //[Fact]
-        //public void ExpressionHelper_ConvertToExpandoObjectAndCreateDynamicExpression_NormalClass()
-        //{
-        //    // Assign
-        //    Expression<Func<Item, int>> expression = x => x.Id;
-
-        //    // Act
-        //    var result = _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(expression.Body, typeof(Item), "Id");
-
-        //    // Assert
-        //    result.Should().NotBeNull();
-        //    result.ToString().Should().Be("");
-        //}
-
         class Item
         {
             public int Id { get; set; }
