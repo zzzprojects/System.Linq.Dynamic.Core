@@ -1,4 +1,5 @@
-﻿using NFluent;
+﻿using FluentAssertions;
+using NFluent;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 using Xunit;
@@ -182,6 +183,20 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             Check.That(result).IsFalse();
             Check.That(generatedExpression.ToString()).IsEqualTo("x => x.Id");
         }
+
+        //[Fact]
+        //public void ExpressionHelper_ConvertToExpandoObjectAndCreateDynamicExpression_NormalClass()
+        //{
+        //    // Assign
+        //    Expression<Func<Item, int>> expression = x => x.Id;
+
+        //    // Act
+        //    var result = _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(expression.Body, typeof(Item), "Id");
+
+        //    // Assert
+        //    result.Should().NotBeNull();
+        //    result.ToString().Should().Be("");
+        //}
 
         class Item
         {
