@@ -1,3 +1,10 @@
+# v1.2.8 (12 February 2021)
+- [#455](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/455) - Ensure action delegate allows call to void methods contributed by [glopesdev](https://github.com/glopesdev)
+- [#480](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/480) - Fix DynamicIndex implementation [bug] contributed by [StefH](https://github.com/StefH)
+- [#481](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/481) - Xamarin fix Enum [bug] contributed by [StefH](https://github.com/StefH)
+- [#484](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/484) - Implement support for anonymous types as dynamic objects [bug] contributed by [hazzik](https://github.com/hazzik)
+- [#479](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/479) - Xamarin.Forms - DynamicExpressionParser.ParseLambda fails when comparing enum properties by their int value [bug]
+
 # v1.2.7 (26 December 2020)
 - [#463](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/463) - Add extension method Where&lt;TSource&gt;(...) with LambdaExpression  [feature] contributed by [StefH](https://github.com/StefH)
 - [#464](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/464) - NullPropagation operator: support nullable DateTime contributed by [StefH](https://github.com/StefH)
