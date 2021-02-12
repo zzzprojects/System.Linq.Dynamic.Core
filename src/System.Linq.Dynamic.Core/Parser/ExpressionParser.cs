@@ -973,7 +973,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object value) &&
                 // Prioritize property or field over the type
-                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false, _parsingConfig) != null))
+                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
             {
                 Type typeValue = value as Type;
                 if (typeValue != null)
@@ -1632,11 +1632,11 @@ namespace System.Linq.Dynamic.Core.Parser
             return false;
         }
 
-        Expression ParseMemberAccess(Type type, Expression instance)
+        Expression ParseMemberAccess(Type type, Expression expression)
         {
-            if (instance != null)
+            if (expression != null)
             {
-                type = instance.Type;
+                type = expression.Type;
             }
 
             int errorPos = _textParser.CurrentToken.Pos;
@@ -1645,18 +1645,18 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (_textParser.CurrentToken.Id == TokenId.OpenParen)
             {
-                if (instance != null && type != typeof(string))
+                if (expression != null && type != typeof(string))
                 {
                     Type enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
                     if (enumerableType != null)
                     {
                         Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                        return ParseEnumerable(instance, elementType, id, errorPos, type);
+                        return ParseEnumerable(expression, elementType, id, errorPos, type);
                     }
                 }
 
                 Expression[] args = ParseArgumentList();
-                switch (_methodFinder.FindMethod(type, id, instance == null, ref instance, ref args, out MethodBase mb))
+                switch (_methodFinder.FindMethod(type, id, expression == null, ref expression, ref args, out MethodBase mb))
                 {
                     case 0:
                         throw ParseError(errorPos, Res.NoApplicableMethod, id, TypeHelper.GetTypeName(type));
@@ -1668,13 +1668,13 @@ namespace System.Linq.Dynamic.Core.Parser
                             throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType));
                         }
 
-                        if (instance == null)
+                        if (expression == null)
                         {
                             return Expression.Call(null, method, args);
                         }
                         else
                         {
-                            return Expression.Call(instance, method, args);
+                            return Expression.Call(expression, method, args);
                         }
 
                     default:
@@ -1692,34 +1692,36 @@ namespace System.Linq.Dynamic.Core.Parser
 #if UAP10_0 || NETSTANDARD1_3
             if (type == typeof(DynamicClass))
             {
-                return Expression.MakeIndex(instance, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
+                return Expression.MakeIndex(expression, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
             }
 #endif
-            MemberInfo member = FindPropertyOrField(type, id, instance == null, _parsingConfig);
+            MemberInfo member = FindPropertyOrField(type, id, expression == null);
             if (member is PropertyInfo property)
             {
-                return Expression.Property(instance, property);
+                return Expression.Property(expression, property);
             }
 
             if (member is FieldInfo field)
             {
-                return Expression.Field(instance, field);
+                return Expression.Field(expression, field);
             }
 
-            if (type == typeof(object))
+            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && expression != null)
             {
-                var method = typeof(Dynamic).GetMethod("DynamicIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-                return Expression.Call(null, method, instance, Expression.Constant(id));
-            }
-
-            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && instance != null)
-            {
-                MethodInfo indexerMethod = instance.Type.GetMethod("get_Item", new[] { typeof(string) });
+                MethodInfo indexerMethod = expression.Type.GetMethod("get_Item", new[] { typeof(string) });
                 if (indexerMethod != null)
                 {
-                    return Expression.Call(instance, indexerMethod, Expression.Constant(id));
+                    return Expression.Call(expression, indexerMethod, Expression.Constant(id));
                 }
             }
+
+#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+            if (type == typeof(object))
+            {
+                // The member is a dynamic or ExpandoObject, so convert this
+                return _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(expression, type, id);
+            }
+#endif
 
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {
@@ -2062,7 +2064,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return ParseError(errorPos, Res.IncompatibleOperands, opName, TypeHelper.GetTypeName(left.Type), TypeHelper.GetTypeName(right.Type));
         }
 
-        static MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess, ParsingConfig ParsingConfig)
+        private MemberInfo FindPropertyOrField(Type type, string memberName, bool staticAccess)
         {
 #if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
@@ -2070,7 +2072,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 MemberInfo[] members = null;
 
-                var findMembersType = ParsingConfig != null && ParsingConfig.IsCaseSensitive ? Type.FilterName : Type.FilterNameIgnoreCase;
+                var findMembersType = _parsingConfig?.IsCaseSensitive == true ? Type.FilterName : Type.FilterNameIgnoreCase;
                 members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, findMembersType, memberName);
 
                 if (members.Length != 0)
@@ -2080,7 +2082,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             return null;
 #else
-            var isCaseSensitive = ParsingConfig != null && ParsingConfig.IsCaseSensitive;
+            var isCaseSensitive = _parsingConfig?.IsCaseSensitive == true;
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
                 // Try to find a property with the specified memberName

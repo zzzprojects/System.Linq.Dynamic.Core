@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="ConsoleAppEF3_1_nhibernate" namespace="ConsoleAppEF3_1_nhibernate">
+
+  <class name="Product">
+    <id name="Id" generator="guid.comb"/>
+    
+    <dynamic-component name="Properties">
+      <property name="Description" column="Description" type="String"/>
+      <property name="Name" column="Name" type="String" />
+    </dynamic-component>
+
+  </class>
+
+</hibernate-mapping>

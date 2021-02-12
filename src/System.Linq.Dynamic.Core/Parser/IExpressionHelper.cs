@@ -33,5 +33,9 @@ namespace System.Linq.Dynamic.Core.Parser
         bool ExpressionQualifiesForNullPropagation(Expression expression);
 
         void WrapConstantExpression(ref Expression argument);
+
+        bool MemberExpressionIsDynamic(Expression expression);
+
+        Expression ConvertToExpandoObjectAndCreateDynamicExpression(Expression expression, Type type, string propertyName);
     }
 }

@@ -1,4 +1,5 @@
-﻿using NFluent;
+﻿using FluentAssertions;
+using NFluent;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 using Xunit;

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using FluentAssertions;
 using NFluent;
 using Xunit;
 
@@ -18,6 +16,7 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
             public string CompanyName { get; set; }
             public string Phone { get; set; }
         }
+
         public class Order
         {
         }
@@ -25,15 +24,13 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
         [Fact]
         public void Test_ContainsKey_1()
         {
-            List<Customer> customers = new List<Customer>()
+            var customers = new List<Customer>()
             {
                 new Customer() { City = "ZZZ1", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>() },
                 new Customer() { City = "ZZZ2", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  },
                 new Customer() { City = "ZZZ3", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  }
             };
             customers.ForEach(x => x.Orders.Add(x.City + "TEST", new Order()));
-
-
 
             var data = customers.AsQueryable()
                 .Where("Orders.ContainsKey(\"ZZZ2TEST\")")
@@ -46,15 +43,13 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
         [Fact]
         public void Test_ContainsKey_2()
         {
-            List<Customer> customers = new List<Customer>()
+            var customers = new List<Customer>()
             {
                 new Customer() { City = "ZZZ1", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>() },
                 new Customer() { City = "ZZZ2", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  },
                 new Customer() { City = "ZZZ3", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  }
             };
             customers.ForEach(x => x.Orders.Add(x.City + "TEST", new Order()));
-
-
 
             var data = customers.AsQueryable()
                 .Where("Orders.ContainsKey(it.City + \"TEST\")")
@@ -68,7 +63,7 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
         [Fact]
         public void Test_ContainsKey_3()
         {
-            List<Customer> customers = new List<Customer>()
+            var customers = new List<Customer>()
             {
                 new Customer() { City = "ZZZ1", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>() },
                 new Customer() { City = "ZZZ2", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  },
@@ -91,24 +86,22 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
             Check.That(3).IsEqualTo(data.Count);
         }
 
-        [Fact(Skip = "fails in CI")]
+        [Fact] // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/397
         public void Test_DynamicIndexCall()
         {
+            object CreateDicParameter(string name) => new Dictionary<string, object>
             {
-                object CreateDicParameter(string name) => new Dictionary<string, object>
-                {
-                    {"Name", new Dictionary<string, object> {{"FirstName", name }, {"LastName", name + "Test" }}},
-                };
+                { "Name", new Dictionary<string, object> { {"FirstName", name }, { "LastName", name + "Test" } } }
+            };
 
-                var parType = new Dictionary<string, object>().GetType();
-                var lambda = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(parType, "item") }, typeof(object), "item.Name.FirstName + \"7\" + item.Name.LastName ").Compile();
+            var parType = new Dictionary<string, object>().GetType();
+            var lambda = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(parType, "item") }, typeof(object), "item.Name.FirstName + \"7\" + item.Name.LastName ").Compile();
 
-                var x1 = lambda.DynamicInvoke(CreateDicParameter("Julio"));
-                var x2 = lambda.DynamicInvoke(CreateDicParameter("John"));
+            var x1 = lambda.DynamicInvoke(CreateDicParameter("Julio"));
+            var x2 = lambda.DynamicInvoke(CreateDicParameter("John"));
 
-                Check.That(x1).IsEqualTo("Julio7JulioTest");
-                Check.That(x2).IsEqualTo("John7JohnTest");
-            }
+            Check.That(x1).IsEqualTo("Julio7JulioTest");
+            Check.That(x2).IsEqualTo("John7JohnTest");
         }
     }
 }

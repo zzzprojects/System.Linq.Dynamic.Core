@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>ConsoleAppEF3_1_nhibernate</RootNamespace>
+    <AssemblyName>ConsoleAppEF3_1_nhibernate</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="*.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="*.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="NHibernate" Version="5.3.5" />
+    <PackageReference Include="System.Data.Sqlite.Core" Version="1.0.113.7" />
+    <!--<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.7" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+  </ItemGroup>
+
+</Project>

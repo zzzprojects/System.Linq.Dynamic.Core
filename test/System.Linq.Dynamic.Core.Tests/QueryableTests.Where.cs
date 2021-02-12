@@ -193,5 +193,79 @@ namespace System.Linq.Dynamic.Core.Tests
             var newUsers = dynamicList.Select(x => new { Id = x.Id, Income = x.Income + 1111 });
             Assert.Equal(newUsers.Cast<object>().ToList(), expectedResult);
         }
+
+        [Fact]
+        public void Where_Dynamic_ExpandoObject_As_Dictionary_Is_Null_Should_Throw_InvalidOperationException()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1 } }.AsQueryable();
+
+            // Act
+            Action action = () => productsQuery.Where("Properties.Name == @0", "First Product").ToDynamicList();
+
+            // Assert
+            action.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact(Skip = "NP does not work here")]
+        public void Where_Dynamic_ExpandoObject_As_Dictionary_Is_Null_With_NullPropagating()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1 } }.AsQueryable();
+
+            // Act
+            var results = productsQuery.Where("np(Properties.Name, \"no\") == @0", "First Product").ToDynamicList();
+
+            // Assert
+            results.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void Where_Dynamic_ExpandoObject_As_Dictionary()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1, Properties = new Dictionary<string, object> { { "Name", "test" } } } }.AsQueryable();
+
+            // Act
+            var results = productsQuery.Where("Properties.Name == @0", "test").ToDynamicList();
+
+            // Assert
+            results.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void Where_Dynamic_Object_As_Dictionary()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1, PropertiesAsObject = new Dictionary<string, object> { { "Name", "test" } } } }.AsQueryable();
+
+            // Act
+            var results = productsQuery.Where("PropertiesAsObject.Name == @0", "test").ToDynamicList();
+
+            // Assert
+            results.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void Where_Dynamic_ExpandoObject_As_AnonymousType()
+        {
+            // Arrange
+            var productsQuery = new[] { new ProductDynamic { ProductId = 1, Properties = new { Name = "test" } } }.AsQueryable();
+
+            // Act
+            var results = productsQuery.Where("Properties.Name == @0", "test").ToDynamicList<ProductDynamic>();
+
+            // Assert
+            results.Should().HaveCount(1);
+        }
+
+        public class ProductDynamic
+        {
+            public int ProductId { get; set; }
+
+            public dynamic Properties { get; set; }
+
+            public object PropertiesAsObject { get; set; }
+        }
     }
 }

@@ -1610,12 +1610,12 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(qry.OrderBy(x => x.Id).ThenByDescending(x => x.Profile.Age).ToArray()).ContainsExactly(orderBy.ToArray());
         }
 
-        //[Fact]
+        [Fact]
         public void ExpressionTests_Select_DynamicObjects()
         {
             // Arrange
             dynamic a1 = new { Name = "a", BlogId = 100 };
-            dynamic a2 = new { Name = "b", BlogId = 200 };
+            dynamic a2 = new { BlogId = 200, Name = "b" };
             var list = new List<dynamic> { a1, a2 };
             IQueryable qry = list.AsQueryable();
 
@@ -1626,7 +1626,6 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
 
-#if !NETCOREAPP
         [Fact]
         [Trait("Issue", "136")]
         public void ExpressionTests_Select_ExpandoObjects()
@@ -1635,9 +1634,11 @@ namespace System.Linq.Dynamic.Core.Tests
             dynamic a = new ExpandoObject();
             a.Name = "a";
             a.BlogId = 100;
+            
             dynamic b = new ExpandoObject();
             b.Name = "b";
             b.BlogId = 200;
+            
             var list = new List<dynamic> { a, b };
             IQueryable qry = list.AsQueryable();
 
@@ -1647,7 +1648,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Assert.Equal(new[] { 100, 200 }, result.ToDynamicArray<int>());
         }
-#endif
+
         [Fact]
         public void ExpressionTests_Shift()
         {
