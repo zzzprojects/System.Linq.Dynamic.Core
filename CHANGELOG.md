@@ -1,8 +1,9 @@
-# v1.2.8 (12 February 2021)
+# v1.2.8 (13 February 2021)
 - [#455](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/455) - Ensure action delegate allows call to void methods contributed by [glopesdev](https://github.com/glopesdev)
 - [#480](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/480) - Fix DynamicIndex implementation [bug] contributed by [StefH](https://github.com/StefH)
 - [#481](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/481) - Xamarin fix Enum [bug] contributed by [StefH](https://github.com/StefH)
 - [#484](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/484) - Implement support for anonymous types as dynamic objects [bug] contributed by [hazzik](https://github.com/hazzik)
+- [#448](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/448) - Dynamic.DynamicIndex is exposed in the expression [bug]
 - [#479](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/479) - Xamarin.Forms - DynamicExpressionParser.ParseLambda fails when comparing enum properties by their int value [bug]
 
 # v1.2.7 (26 December 2020)
@@ -40,7 +41,6 @@
 - [#230](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/230) - Request for contribution
 - [#403](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/403) - Expression is missing an 'as' clause [bug]
 - [#406](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/406) - Expression parameter should be case sensitive
-- [#410](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/410) - Methods on type 'JsonElement' are not accessible'. [wontfix]
 - [#411](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/411) - Can't apply the library while using reflection emit with dynamic linq
 - [#414](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/414) - Contains search in an Enum
 - [#416](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/416) - &quot;Target object is not an ExpandoObject&quot; exception being thrown when using GroupBy
@@ -92,7 +92,6 @@
 - [#378](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/378) - Versioning Issue in Latest NUGET packages [bug]
 
 # v1.1.1 (14 May 2020)
-- [#110](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/110) - Complex query, like in ParseLambda_Complex_2, internal could only be used once [wontfix]
 
 # 1.1.0.0 (25 April 2020)
 - [#326](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/326) - Fixes for parsing escaped / quoted strings [bug] contributed by [StefH](https://github.com/StefH)
@@ -173,10 +172,8 @@
 # 1.0.13.0 (03 May 2019)
 - [#264](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/264) - Fix escape characters parsing [bug] contributed by [StefH](https://github.com/StefH)
 - [#266](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/266) - Make ExpressionPromoter public + Fix issue with null constant expression compare [bug] contributed by [david-garcia-garcia](https://github.com/david-garcia-garcia)
-- [#154](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/154) - Remark: Semantic Versioning... [wontfix]
 - [#163](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/163) - Issue: Using escaped strings is not working correctly [bug]
 - [#240](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/240) - Question: What is the proper way to construct a dynamic query for EF Core using DateTime or Nullable DateTime?
-- [#244](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/244) - Possible to add 'Compare' Extension method [wontfix]
 
 # 1.0.12.0 (26 March 2019)
 - [#260](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/260) - Fix for Nullable Enum filter contributed by [StefH](https://github.com/StefH)
