@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
-        <TargetFrameworks>net452;netcoreapp3.1</TargetFrameworks>
+        <!--<TargetFrameworks>net452;netcoreapp3.1</TargetFrameworks>-->
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
         <DebugType>full</DebugType>
         <SignAssembly>True</SignAssembly>
@@ -72,12 +73,6 @@
 
     <ItemGroup>
         <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-      <PackageReference Include="NodaTime">
-        <Version>3.0.5</Version>
-      </PackageReference>
     </ItemGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
