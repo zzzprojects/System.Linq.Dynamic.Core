@@ -1,10 +1,12 @@
 ﻿using FluentAssertions;
-using NodaTime;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Dynamic.Core.TypeConverters;
 using Xunit;
+#if !NET452
 using static System.Linq.Dynamic.Core.Tests.TypeConvertors.NodaTimeConverterTests;
+using NodaTime;
+#endif
 
 namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
 {
