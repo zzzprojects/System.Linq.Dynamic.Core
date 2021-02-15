@@ -73,6 +73,12 @@
         <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
     </ItemGroup>
 
+    <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+      <PackageReference Include="NodaTime">
+        <Version>3.0.5</Version>
+      </PackageReference>
+    </ItemGroup>
+
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
         <DefineConstants>$(DefineConstants);NETCOREAPP;EFCORE;EFCORE_2X</DefineConstants>
     </PropertyGroup>
