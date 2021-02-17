@@ -122,8 +122,6 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
             // Arrange
             var config = new ParsingConfig
             {
-                CustomTypeProvider = new NodaCustomTypeProvider(),
-
                 TypeConverters = new Dictionary<Type, TypeConverter>
                 {
                     { typeof(LocalDate), new LocalDateConverter() }
@@ -146,8 +144,6 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
             // Arrange
             var config = new ParsingConfig
             {
-                // CustomTypeProvider = new NodaCustomTypeProvider(),
-
                 TypeConverters = new Dictionary<Type, TypeConverter>
                 {
                     { typeof(LocalDate), new LocalDateConverter() }
@@ -164,7 +160,7 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
 
         public class LocalDateConverter : TypeConverter
         {
-            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => true; //  sourceType == typeof(string);
+            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(string);
 
             public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
             {
@@ -176,35 +172,6 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
             }
 
             protected ParseResult<LocalDate> Convert(object value) => LocalDatePattern.Iso.Parse(value as string);
-        }
-
-        public class NodaCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
-        {
-            public HashSet<Type> GetCustomTypes()
-            {
-                return new HashSet<Type>
-                {
-                    { typeof(LocalDate) },
-                    { typeof(LocalDate?) },
-                    { typeof(LocalTime) },
-                    { typeof(LocalTime?) }
-                };
-            }
-
-            public Dictionary<Type, List<MethodInfo>> GetExtensionMethods()
-            {
-                throw new NotImplementedException();
-            }
-
-            public Type ResolveType([NotNullAttribute] string typeName)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Type ResolveTypeBySimpleName([NotNullAttribute] string simpleTypeName)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }
