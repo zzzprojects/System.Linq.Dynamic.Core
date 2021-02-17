@@ -52,7 +52,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
             if (instance != null)
             {
-                // TRY to solve with registered extension methods 
+                // Try to solve with registered extension methods 
                 if (_parsingConfig.CustomTypeProvider.GetExtensionMethods().TryGetValue(type, out var methods))
                 {
                     var argsList = args.ToList();
@@ -164,11 +164,11 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                         var paramType = method.Parameters.Last().ParameterType;
                         var paramElementType = paramType.GetElementType();
 
-                        List<Expression> arrayInitializerExpressions = new List<Expression>();
+                        var arrayInitializerExpressions = new List<Expression>();
 
                         for (int j = method.Parameters.Length - 1; j < args.Length; j++)
                         {
-                            Expression promoted = this._parsingConfig.ExpressionPromoter.Promote(args[j], paramElementType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
+                            Expression promoted = _parsingConfig.ExpressionPromoter.Promote(args[j], paramElementType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
                             if (promoted == null)
                             {
                                 return false;
@@ -190,7 +190,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                         return false;
                     }
 
-                    Expression promoted = this._parsingConfig.ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
+                    Expression promoted = _parsingConfig.ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
                     if (promoted == null)
                     {
                         return false;
@@ -299,7 +299,10 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             if (!types.Contains(type))
             {
                 types.Add(type);
-                foreach (Type t in type.GetInterfaces()) AddInterface(types, t);
+                foreach (Type t in type.GetInterfaces())
+                {
+                    AddInterface(types, t);
+                }
             }
         }
     }

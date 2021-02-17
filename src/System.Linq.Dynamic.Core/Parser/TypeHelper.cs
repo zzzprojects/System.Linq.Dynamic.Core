@@ -243,6 +243,40 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
         }
 
+        public static bool IsClass(Type type)
+        {
+            bool result = false;
+            if (type.GetTypeInfo().IsClass)
+            {
+                // Is Class or Delegate
+                if (type != typeof(Delegate))
+                {
+                    result = true;
+                }
+            }
+            return result;
+        }
+
+        public static bool IsStruct(Type type)
+        {
+            var nonNullableType = GetNonNullableType(type);
+            if (nonNullableType.GetTypeInfo().IsValueType)
+            {
+                if (!nonNullableType.GetTypeInfo().IsPrimitive)
+                {
+                    if (nonNullableType != typeof(decimal) && nonNullableType != typeof(DateTime) && nonNullableType != typeof(Guid))
+                    {
+                        if (!nonNullableType.GetTypeInfo().IsEnum)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static bool IsEnumType(Type type)
         {
             return GetNonNullableType(type).GetTypeInfo().IsEnum;
@@ -288,7 +322,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             type = GetNonNullableType(type);
 
-#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
             if (type.GetTypeInfo().IsEnum)
             {
                 return 0;
