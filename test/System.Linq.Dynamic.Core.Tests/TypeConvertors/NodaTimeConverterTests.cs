@@ -32,7 +32,7 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         }
 
         [Fact]
-        public void FilterByDate_WithTypeConverter()
+        public void FilterByLocalDate_WithTypeConverter()
         {
             // Arrange
             var config = new ParsingConfig
@@ -51,7 +51,7 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         }
 
         [Fact]
-        public void FilterByNullableDate_WithTypeConverter()
+        public void FilterByNullableLocalDate_WithTypeConverter()
         {
             // Arrange
             var config = new ParsingConfig
@@ -70,7 +70,7 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         }
 
         [Fact]
-        public void FilterByDate_WithDynamicExpressionParser()
+        public void FilterByLocalDate_WithDynamicExpressionParser()
         {
             // Arrange
             var config = new ParsingConfig
@@ -83,6 +83,26 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
 
             // Act
             var expr = DynamicExpressionParser.ParseLambda<Entity, bool>(config, false, "BirthDate == @0", "1987-10-12");
+            var result = entities.AsQueryable().Where(expr).ToList();
+
+            // Assert
+            Assert.Single(result);
+        }
+
+        [Fact]
+        public void FilterByNUllableLocalDate_WithDynamicExpressionParser()
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                TypeConverters = new Dictionary<Type, TypeConverter>
+                {
+                    { typeof(LocalDate), new LocalDateConverter() }
+                }
+            };
+
+            // Act
+            var expr = DynamicExpressionParser.ParseLambda<Entity, bool>(config, false, "BirthDateNullable == \"1987-10-12\"");
             var result = entities.AsQueryable().Where(expr).ToList();
 
             // Assert
