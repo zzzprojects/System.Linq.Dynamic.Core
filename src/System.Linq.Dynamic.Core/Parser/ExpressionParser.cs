@@ -1825,6 +1825,11 @@ namespace System.Linq.Dynamic.Core.Parser
                 Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
                 typeArgs = new[] { elementType, resultType };
             }
+            else if (methodName == "AVG" || methodName == "SUM" || methodName == "SORT" || methodName == "LAST")
+            {
+                callType = typeof(CustomEnumerable);
+                typeArgs = new Type[0];
+            }
             else
             {
                 typeArgs = new[] { elementType };
@@ -1839,6 +1844,10 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
                 {
                     args = new[] { instance, args[0] };
+                }
+                else if(methodName == "AVG" || methodName == "SUM" || methodName == "SORT" || methodName == "LAST")
+                {
+
                 }
                 else
                 {

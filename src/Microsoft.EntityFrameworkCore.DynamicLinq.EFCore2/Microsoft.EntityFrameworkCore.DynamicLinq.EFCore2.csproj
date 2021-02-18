@@ -6,7 +6,7 @@
         <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1</TargetFrameworks>
         <DefineConstants>$(DefineConstants);EFCORE;EFCORE_2X;EFDYNAMICFUNCTIONS</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
@@ -30,7 +30,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.1</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

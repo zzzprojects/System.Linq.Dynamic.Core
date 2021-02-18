@@ -1,4 +1,6 @@
-﻿namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
+﻿using System.Collections.Generic;
+
+namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
     internal interface IEnumerableSignatures
     {
@@ -14,7 +16,7 @@
         void Average(int? selector);
         void Average(int selector);
         void Average(long? selector);
-        void Average(long selector);
+        void Average(long selector);        
         void Cast(string type);
         void Cast(Type type);
         void Contains(object selector);
@@ -68,5 +70,20 @@
         // Executors
         void ToArray();
         void ToList();
+
+
+        //--------  Custom  --------
+        void AVG();
+        void AVG(IEnumerable<double> t);
+
+        void SUM();
+        void SUM(IEnumerable<double> t);
+
+        void SORT(IEnumerable<double> t);
+        void SORT(IEnumerable<double> t, int dir);
+
+        void LAST(IEnumerable<double> t);
+
+
     }
 }
