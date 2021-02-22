@@ -206,6 +206,12 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
         {
             bool better = false;
+            //If args count is 0, than parametereless method is better than method method with parameters
+			if (args.Length == 0)
+            {
+                better = (first.Parameters.Length == 0) && (second.Parameters.Length != 0);
+            }			
+			
             for (int i = 0; i < args.Length; i++)
             {
                 CompareConversionType result = CompareConversions(args[i].Type, first.Parameters[i].ParameterType, second.Parameters[i].ParameterType);
