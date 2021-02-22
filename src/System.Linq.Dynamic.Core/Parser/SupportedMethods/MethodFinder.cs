@@ -168,7 +168,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
                         for (int j = method.Parameters.Length - 1; j < args.Length; j++)
                         {
-                            Expression promoted = this._parsingConfig.ExpressionPromoter.Promote(args[j], paramElementType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
+                            Expression promoted = _parsingConfig.ExpressionPromoter.Promote(args[j], paramElementType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
                             if (promoted == null)
                             {
                                 return false;
@@ -190,7 +190,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                         return false;
                     }
 
-                    Expression promoted = this._parsingConfig.ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
+                    Expression promoted = _parsingConfig.ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
                     if (promoted == null)
                     {
                         return false;
@@ -205,13 +205,13 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
         bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
         {
-            bool better = false;
-            //If args count is 0, than parametereless method is better than method method with parameters
-			if (args.Length == 0)
+            // If args count is 0 -> parametereless method is better than method method with parameters
+            if (args.Length == 0)
             {
-                better = (first.Parameters.Length == 0) && (second.Parameters.Length != 0);
-            }			
-			
+                return first.Parameters.Length == 0 && second.Parameters.Length != 0;
+            }
+
+            bool better = false;
             for (int i = 0; i < args.Length; i++)
             {
                 CompareConversionType result = CompareConversions(args[i].Type, first.Parameters[i].ParameterType, second.Parameters[i].ParameterType);

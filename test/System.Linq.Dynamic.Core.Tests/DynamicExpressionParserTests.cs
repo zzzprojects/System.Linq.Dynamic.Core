@@ -1230,5 +1230,33 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             dataSource.Name.Should().NotBeNullOrEmpty();
         }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_String_TrimEnd_0_Parameters()
+        {
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<string, bool>(new ParsingConfig(), false, "TrimEnd().EndsWith(@0)", "test");
+
+            var @delegate = expression.Compile();
+
+            var result = (bool) @delegate.DynamicInvoke("This is a test  ");
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_String_TrimEnd_1_Parameter()
+        {
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<string, bool>(new ParsingConfig(), false, "TrimEnd('.').EndsWith(@0)", "test");
+
+            var @delegate = expression.Compile();
+
+            var result = (bool)@delegate.DynamicInvoke("This is a test...");
+
+            // Assert
+            result.Should().BeTrue();
+        }
     }
 }
