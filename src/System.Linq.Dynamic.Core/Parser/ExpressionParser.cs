@@ -517,7 +517,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     if (!typesAreSameAndImplementCorrectInterface)
                     {
-                        if (left.Type.GetTypeInfo().IsClass && right is ConstantExpression)
+                        if ((TypeHelper.IsClass(left.Type) || TypeHelper.IsStruct(left.Type)) && right is ConstantExpression)
                         {
                             if (HasImplicitConversion(left.Type, right.Type))
                             {
@@ -528,7 +528,7 @@ namespace System.Linq.Dynamic.Core.Parser
                                 right = Expression.Convert(right, left.Type);
                             }
                         }
-                        else if (right.Type.GetTypeInfo().IsClass && left is ConstantExpression)
+                        else if ((TypeHelper.IsClass(right.Type) || TypeHelper.IsStruct(right.Type)) && left is ConstantExpression)
                         {
                             if (HasImplicitConversion(right.Type, left.Type))
                             {
@@ -2042,7 +2042,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 // first try left operand's equality operators
                 found = _methodFinder.ContainsMethod(left.Type, nativeOperation, true, null, ref args);
                 if (!found)
+                {
                     found = _methodFinder.ContainsMethod(right.Type, nativeOperation, true, null, ref args);
+                }
             }
 
             if (!found && !_methodFinder.ContainsMethod(signatures, "F", false, null, ref args))

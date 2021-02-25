@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
 
@@ -184,5 +186,10 @@ namespace System.Linq.Dynamic.Core
         /// Default value is CultureInfo.InvariantCulture
         /// </summary>
         public CultureInfo NumberParseCulture { get; set; } = CultureInfo.InvariantCulture;
+
+        /// <summary>
+        /// Additional TypeConverters
+        /// </summary>
+        public IDictionary<Type, TypeConverter> TypeConverters { get; set; }
     }
 }
