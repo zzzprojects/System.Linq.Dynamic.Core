@@ -1,3 +1,9 @@
+# v1.2.9 (26 March 2021)
+- [#485](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/485) - Add TypeConverters to config [feature] contributed by [StefH](https://github.com/StefH)
+- [#488](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/488) - If args count is 0 -&gt; parametereless method is better than method with parameters [bug] contributed by [AndriiZ](https://github.com/AndriiZ)
+- [#477](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/477) - How to use Dynamic LINQ with custom types (i.e NodaTime) ?  [feature]
+- [#487](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/487) - DynamicExpressionParser.ParseLambda can not parse 'TrimEnd' string method [bug]
+
 # v1.2.8 (13 February 2021)
 - [#455](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/455) - Ensure action delegate allows call to void methods contributed by [glopesdev](https://github.com/glopesdev)
 - [#480](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/480) - Fix DynamicIndex implementation [bug] contributed by [StefH](https://github.com/StefH)

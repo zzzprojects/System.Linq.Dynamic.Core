@@ -1,3 +1,3 @@
 https://github.com/StefH/GitHubReleaseNotes
 
-GitHubReleaseNotes --path . --output CHANGELOG.md --exclude-labels invalid question documentation wontfix --language en --version v1.2.8
+GitHubReleaseNotes --path . --output CHANGELOG.md --exclude-labels invalid question documentation wontfix --language en --version v1.2.9
