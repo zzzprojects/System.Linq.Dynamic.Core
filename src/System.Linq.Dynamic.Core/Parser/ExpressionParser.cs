@@ -1754,7 +1754,7 @@ namespace System.Linq.Dynamic.Core.Parser
         Expression ParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type type)
         {
             bool isQueryable = TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null;
-            bool isDictionary = TypeHelper.FindGenericType(typeof(IDictionary<,>), type) != null;
+            bool isDictionary = TypeHelper.IsDictionary(type);
 
             var oldParent = _parent;
 

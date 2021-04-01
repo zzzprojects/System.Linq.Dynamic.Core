@@ -17,10 +17,13 @@ namespace System.Linq.Dynamic.Core.Parser
 
                 if (generic.GetTypeInfo().IsInterface)
                 {
-                    foreach (Type intfType in type.GetInterfaces())
+                    foreach (Type interfaceType in type.GetInterfaces())
                     {
-                        Type found = FindGenericType(generic, intfType);
-                        if (found != null) return found;
+                        Type found = FindGenericType(generic, interfaceType);
+                        if (found != null)
+                        {
+                            return found;
+                        }
                     }
                 }
 
@@ -439,6 +442,17 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             return null;
+        }
+
+        public static bool IsDictionary(Type type)
+        {
+            return
+                FindGenericType(typeof(IDictionary<,>), type) != null ||
+#if NET35 || NET40
+                false;
+#else
+                FindGenericType(typeof(IReadOnlyDictionary<,>), type) != null;
+#endif
         }
     }
 }
