@@ -54,8 +54,8 @@ namespace System.Linq.Dynamic.Core.Parser
                 return false;
             }
 
-            TypeCode sc = st.GetTypeInfo().IsEnum ? TypeCode.Object : Type.GetTypeCode(st);
-            TypeCode tc = tt.GetTypeInfo().IsEnum ? TypeCode.Object : Type.GetTypeCode(tt);
+            TypeCode sc = st.GetTypeInfo().IsEnum ? TypeCode.Int64 : Type.GetTypeCode(st);
+            TypeCode tc = tt.GetTypeInfo().IsEnum ? TypeCode.Int64 : Type.GetTypeCode(tt);
             switch (sc)
             {
                 case TypeCode.SByte:
@@ -71,6 +71,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 case TypeCode.Byte:
                     switch (tc)
                     {
@@ -87,6 +88,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 case TypeCode.Int16:
                     switch (tc)
                     {
@@ -99,6 +101,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 case TypeCode.UInt16:
                     switch (tc)
                     {
@@ -113,6 +116,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 case TypeCode.Int32:
                     switch (tc)
                     {
@@ -124,6 +128,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 case TypeCode.UInt32:
                     switch (tc)
                     {
@@ -136,6 +141,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 case TypeCode.Int64:
                     switch (tc)
                     {
@@ -146,6 +152,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 case TypeCode.UInt64:
                     switch (tc)
                     {
@@ -156,6 +163,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 case TypeCode.Single:
                     switch (tc)
                     {
@@ -164,6 +172,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             return true;
                     }
                     break;
+
                 default:
                     if (st == tt)
                     {
