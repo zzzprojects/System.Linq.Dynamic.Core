@@ -61,6 +61,16 @@ namespace System.Linq.Dynamic.Core.Tests
             public string Two(int x, int y) => null;
         }
 
+        public class SourceClass
+        {
+            public int A { get; set; }
+        }
+
+        public class TargetClass
+        {
+            public TestEnum A { get; set; }
+        }
+
         [Fact]
         public void ExpressionTests_Add_Number()
         {
@@ -596,6 +606,20 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_Cast_Int_To_Enum()
+        {
+            // Arrange
+            var enumvalue = TestEnum.Var1;
+            var qry = new List<SourceClass> { new SourceClass { A = (int)enumvalue } }.AsQueryable();
+
+            // Act
+            var result = qry.Select<TargetClass>("new(A)").ToArray();
+
+            // Assert
+            result.Should().ContainEquivalentOf(new TargetClass { A = enumvalue });
         }
 
         [Fact]
@@ -1634,11 +1658,11 @@ namespace System.Linq.Dynamic.Core.Tests
             dynamic a = new ExpandoObject();
             a.Name = "a";
             a.BlogId = 100;
-            
+
             dynamic b = new ExpandoObject();
             b.Name = "b";
             b.BlogId = 200;
-            
+
             var list = new List<dynamic> { a, b };
             IQueryable qry = list.AsQueryable();
 
