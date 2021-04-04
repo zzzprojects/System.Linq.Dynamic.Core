@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Interface for providing functionality to find custom types for or resolve any type.
-    /// Note that interface will be marked obsolete in the next version. Use <see cref="IDynamicLinqCustomTypeProvider"/> instead.
+    /// Note that this interface will be marked obsolete in the next version. Use <see cref="IDynamicLinqCustomTypeProvider"/> instead.
     /// </summary>
     public interface IDynamicLinkCustomTypeProvider : IDynamicLinqCustomTypeProvider
     {
