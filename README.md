@@ -22,10 +22,12 @@ var query = db.Customers
     .Select("new(CompanyName as Name, Phone)");
 ```
 
-## How to use
-There are several documentation resources:
-- [Getting Started](https://dynamic-linq.net/overview) : a website to get started with basic and advanced usage.
-- [API Documentation][doc-api] : a low-level API description website with some code samples
+## Useful links
+
+- [Website](https://dynamic-linq.net/)
+- [Documentation](https://dynamic-linq.net/overview)
+- [Online examples](https://dynamic-linq.net/online-examples)
+- [nuget](https://www.nuget.org/packages/System.Linq.Dynamic.Core/) 
 
 ## Info
 | | |
