@@ -488,7 +488,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_Select_1()
+        public void DynamicExpressionParser_ParseLambda_Select_NewObject()
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
@@ -496,7 +496,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var externals = new Dictionary<string, object>
             {
-                {"Users", qry}
+                { "Users", qry }
             };
 
             // Act
@@ -510,7 +510,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_Select_2()
+        public void DynamicExpressionParser_ParseLambda_Select_It()
         {
             // Arrange
             var testList = User.GenerateSampleModels(5);
@@ -518,11 +518,55 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var externals = new Dictionary<string, object>
             {
-                {"Users", qry}
+                { "Users", qry }
             };
 
             // Act
             string query = "Users.Select(j => j)";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            Delegate del = expression.Compile();
+            object result = del.DynamicInvoke();
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        //[Fact]
+        public void DynamicExpressionParser_ParseLambda_Select_Integer()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(5);
+            var qry = testList.AsQueryable();
+
+            var externals = new Dictionary<string, object>
+            {
+                { "Users", qry }
+            };
+
+            // Act
+            string query = "Users.Select(j => 1)";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            Delegate del = expression.Compile();
+            object result = del.DynamicInvoke();
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_SelectWithIndex()
+        {
+            // Arrange
+            var qry = User.GenerateSampleModels(5).AsQueryable();
+
+            var externals = new Dictionary<string, object>
+            {
+                { "Users", qry }
+            };
+
+            // Act
+            //string query = "Users.Select((item, index) => (item.Id.ToString(), index))";
+            string query = "Users.Select((item, index) => item)";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
             Delegate del = expression.Compile();
             object result = del.DynamicInvoke();

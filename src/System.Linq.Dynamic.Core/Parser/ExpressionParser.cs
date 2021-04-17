@@ -254,6 +254,22 @@ namespace System.Linq.Dynamic.Core.Parser
             return expr;
         }
 
+        //Expression ParseLambdaOperator()
+        //{
+        //    Expression expr = ParseOrOperator();
+        //    if (_textParser.CurrentToken.Id == TokenId.Lambda)
+        //    {
+        //        _textParser.NextToken();
+        //        //if (_textParser.CurrentToken.Id == TokenId.Identifier || _textParser.CurrentToken.Id == TokenId.OpenParen)
+        //        {
+        //            var right = ParseConditionalOperator();
+        //            return Expression.Lambda(right, new[] { (ParameterExpression)expr });
+        //        }
+        //        _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
+        //    }
+        //    return expr;
+        //}
+
         // Or operator
         // - ||
         // - Or
@@ -1898,7 +1914,34 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
             _textParser.NextToken();
+
+            // Select((item, index) => ...
+            if (_textParser.CurrentToken.Id == TokenId.OpenParen)
+            {
+                var ids = new List<string>();
+                while (_textParser.CurrentToken.Id != TokenId.CloseParen)
+                {
+                    _textParser.NextToken(); // Advance to the 'x'
+                    
+                    ids.Add(_textParser.CurrentToken.Text);
+                    //ids.Add(ParseArguments());
+                    
+                    _textParser.NextToken(); // Get next token, which can be a Comma or a CloseParen
+                }
+
+                _textParser.NextToken();
+
+                int x = 0;
+
+                var funcType = Expression.GetFuncType(_it.Type, typeof(int));
+
+                return new [] { Expression.Parameter(funcType, "func")  as Expression };
+
+                // public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, int, TResult> selector);
+            }
+
             Expression[] args = _textParser.CurrentToken.Id != TokenId.CloseParen ? ParseArguments() : new Expression[0];
+            
             _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
             _textParser.NextToken();
             return args;
