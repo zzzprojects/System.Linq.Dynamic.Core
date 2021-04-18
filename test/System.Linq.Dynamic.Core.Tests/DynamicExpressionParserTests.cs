@@ -578,7 +578,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_SelectWithItemAndIndex_And_Integer()
+        public void DynamicExpressionParser_ParseLambda_SelectWithItemAndIndex_And_String()
         {
             // Arrange
             var qry = User.GenerateSampleModels(5).AsQueryable();
@@ -589,7 +589,8 @@ namespace System.Linq.Dynamic.Core.Tests
             };
 
             // Act
-            string query = "Users.Select((item, index) => 1)";
+            var _ = qry.Select((u, i) => "test");
+            string query = "Users.Select((item, index) => \"test\")";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
             Delegate del = expression.Compile();
             object result = del.DynamicInvoke();

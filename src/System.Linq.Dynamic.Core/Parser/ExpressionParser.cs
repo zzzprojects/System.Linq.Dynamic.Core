@@ -227,7 +227,7 @@ namespace System.Linq.Dynamic.Core.Parser
         // ?? (null-coalescing) operator
         Expression ParseNullCoalescingOperator()
         {
-            Expression expr = ParseLambdaOperator(_it?.Type);
+            Expression expr = ParseLambdaOperator();
             if (_textParser.CurrentToken.Id == TokenId.NullCoalescing)
             {
                 _textParser.NextToken();
@@ -238,10 +238,10 @@ namespace System.Linq.Dynamic.Core.Parser
         }
 
         // => operator - Added Support for projection operator
-        Expression ParseLambdaOperator(Type typeToCheck)
+        Expression ParseLambdaOperator()
         {
             Expression expr = ParseOrOperator();
-            if (_textParser.CurrentToken.Id == TokenId.Lambda && typeToCheck == expr.Type)
+            if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == expr.Type)
             {
                 _textParser.NextToken();
                 if (_textParser.CurrentToken.Id == TokenId.Identifier || _textParser.CurrentToken.Id == TokenId.OpenParen)
@@ -1026,15 +1026,13 @@ namespace System.Linq.Dynamic.Core.Parser
                 _externals != null && _externals.TryGetValue(_textParser.CurrentToken.Text, out value) ||
                 _internals.TryGetValue(_textParser.CurrentToken.Text, out value))
             {
-                var expr = value as Expression;
-                if (expr == null)
+                if (!(value is Expression expr))
                 {
                     expr = Expression.Constant(value);
                 }
                 else
                 {
-                    var lambda = expr as LambdaExpression;
-                    if (lambda != null)
+                    if (expr is LambdaExpression lambda)
                     {
                         return ParseLambdaInvocation(lambda);
                     }
@@ -1727,7 +1725,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 // This might be an internal variable for use within a lambda expression, so store it as such
                 _internals.Add(id, _it);
-                string _previousItName = ItName;
+                string previousItName = ItName;
 
                 // Also store ItName (only once)
                 if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
@@ -1743,7 +1741,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                 // Restore previous context and clear internals
                 _internals.Remove(id);
-                ItName = _previousItName;
+                ItName = previousItName;
 
                 return exp;
             }
@@ -1773,7 +1771,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 _it = innerIt;
             }
 
-            Expression[] args = ParseArgumentList();
+            Expression[] args = ParseArgumentListNew(out ParameterExpression newIt);
 
             _it = outerIt;
             _parent = oldParent;
@@ -1806,7 +1804,36 @@ namespace System.Linq.Dynamic.Core.Parser
                 typeArgs = new[] { ResolveTypeFromArgumentExpression(methodName, args[0]) };
                 args = new Expression[0];
             }
-            else if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
+            else if (new[] { "Select" }.Contains(methodName))
+            {
+                //if (args.Length != 1)
+                //{
+                //    throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneArg, methodName);
+                //}
+                //if (args.Length == 2)
+                //{
+                //    typeArgs = new[] { elementType, args[0].Type, args[1].Type };
+                //}
+                //else
+                //{
+                //    typeArgs = new[] { elementType, args[0].Type };
+                //}
+
+                if (newIt != null)
+                {
+                    // elementType = newIt.Type;
+                    // innerIt = newIt;
+
+                    //typeArgs = new[] { newIt.Type };x
+                    var le = Expression.Lambda(args[0], newIt);
+                    return Expression.Call(callType, methodName, new []{ elementType, le.Type }, le);
+                }
+                else
+                {
+                    typeArgs = new[] {elementType, args[0].Type};
+                }
+            }
+            else if (new[] { "Min", "Max", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
             {
                 if (args.Length == 2)
                 {
@@ -1898,6 +1925,16 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
             _textParser.NextToken();
+            Expression[] args = _textParser.CurrentToken.Id != TokenId.CloseParen ? ParseArguments() : new Expression[0];
+            _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
+            _textParser.NextToken();
+            return args;
+        }
+
+        Expression[] ParseArgumentListNew(out ParameterExpression newIt)
+        {
+            _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
+            _textParser.NextToken();
 
             // Select((item, index) => ...
             if (_textParser.CurrentToken.Id == TokenId.OpenParen)
@@ -1906,32 +1943,25 @@ namespace System.Linq.Dynamic.Core.Parser
                 while (_textParser.CurrentToken.Id != TokenId.CloseParen)
                 {
                     _textParser.NextToken(); // Advance to the 'x'
-                    
+
                     ids.Add(_textParser.CurrentToken.Text);
-                    
+
                     _textParser.NextToken(); // Get next token, which can be a Comma or a CloseParen
                 }
 
-                //_textParser.NextToken();
+                _textParser.NextToken();
 
-                string id = ids[0];
-
-                var funcType = Expression.GetFuncType(_it.Type, typeof(int));
-
-                //if (_textParser.CurrentToken.Id == TokenId.Lambda)
-                //{
-                    _textParser.NextToken();
-
-                    var e = ParseLambdaOperator(funcType);
-                    return new[] { e };
-
-                    _internals.Add(id, _it);
+                //  string id = ids[0];
+                
+                if (_textParser.CurrentToken.Id == TokenId.Lambda)
+                {
+                    //  _internals.Add(id, _it.Type);
                     string previousItName = ItName;
 
                     // Also store ItName (only once)
                     if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
                     {
-                        ItName = id;
+                        //     ItName = id;
                     }
 
                     // next
@@ -1940,16 +1970,28 @@ namespace System.Linq.Dynamic.Core.Parser
                     LastLambdaItName = ItName;
                     var exp = ParseConditionalOperator();
 
+                    _expressionHelper.WrapConstantExpression(ref exp);
+
                     // Restore previous context and clear internals
-                    _internals.Remove(id);
+                    //    _internals.Remove(id);
                     ItName = previousItName;
 
-                    return new[] { exp };
-                //}
-               // else
-              //  {
-                    //throw new NotImplementedException(); // TODO
-               // }
+                    _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
+                    _textParser.NextToken();
+
+                    
+
+                    var funcType = Expression.GetFuncType(_it.Type, typeof(int), exp.Type);
+                    newIt = ParameterExpressionHelper.CreateParameterExpression(funcType, string.Empty, _parsingConfig.RenameEmptyParameterExpressionNames);
+
+
+                    //var l = Expression.Lambda(exp, funcParameterExpression);
+
+                    return new Expression[] { exp };
+                }
+
+                throw new NotImplementedException(); // TODO
+
 
                 //var funcType = Expression.GetFuncType(_it.Type, typeof(int));
 
@@ -1958,8 +2000,10 @@ namespace System.Linq.Dynamic.Core.Parser
                 // public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, int, TResult> selector);
             }
 
+            newIt = null;
+
             Expression[] args = _textParser.CurrentToken.Id != TokenId.CloseParen ? ParseArguments() : new Expression[0];
-            
+
             _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
             _textParser.NextToken();
             return args;
