@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
@@ -329,7 +330,8 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assign
             var config = new ParsingConfig
             {
-                UseParameterizedNamesInDynamicQuery = true
+                UseParameterizedNamesInDynamicQuery = true,
+                NumberParseCulture = CultureInfo.GetCultureInfo("en")
             };
 
             // Act
@@ -531,7 +533,29 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.NotNull(result);
         }
 
-        //[Fact]
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_Select_ItWithProperty()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(5);
+            var qry = testList.AsQueryable();
+
+            var externals = new Dictionary<string, object>
+            {
+                { "Users", qry }
+            };
+
+            // Act
+            string query = "Users.Select(j => j.UserName)";
+            LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
+            Delegate del = expression.Compile();
+            object result = del.DynamicInvoke();
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
         public void DynamicExpressionParser_ParseLambda_Select_Integer()
         {
             // Arrange
@@ -554,7 +578,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_SelectWithIndex()
+        public void DynamicExpressionParser_ParseLambda_SelectWithItemAndIndex_And_Integer()
         {
             // Arrange
             var qry = User.GenerateSampleModels(5).AsQueryable();
@@ -565,8 +589,7 @@ namespace System.Linq.Dynamic.Core.Tests
             };
 
             // Act
-            //string query = "Users.Select((item, index) => (item.Id.ToString(), index))";
-            string query = "Users.Select((item, index) => item)";
+            string query = "Users.Select((item, index) => 1)";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
             Delegate del = expression.Compile();
             object result = del.DynamicInvoke();

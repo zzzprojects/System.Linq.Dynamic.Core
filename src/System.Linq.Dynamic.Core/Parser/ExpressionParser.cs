@@ -227,7 +227,7 @@ namespace System.Linq.Dynamic.Core.Parser
         // ?? (null-coalescing) operator
         Expression ParseNullCoalescingOperator()
         {
-            Expression expr = ParseLambdaOperator();
+            Expression expr = ParseLambdaOperator(_it?.Type);
             if (_textParser.CurrentToken.Id == TokenId.NullCoalescing)
             {
                 _textParser.NextToken();
@@ -238,10 +238,10 @@ namespace System.Linq.Dynamic.Core.Parser
         }
 
         // => operator - Added Support for projection operator
-        Expression ParseLambdaOperator()
+        Expression ParseLambdaOperator(Type typeToCheck)
         {
             Expression expr = ParseOrOperator();
-            if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == expr.Type)
+            if (_textParser.CurrentToken.Id == TokenId.Lambda && typeToCheck == expr.Type)
             {
                 _textParser.NextToken();
                 if (_textParser.CurrentToken.Id == TokenId.Identifier || _textParser.CurrentToken.Id == TokenId.OpenParen)
@@ -253,22 +253,6 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             return expr;
         }
-
-        //Expression ParseLambdaOperator()
-        //{
-        //    Expression expr = ParseOrOperator();
-        //    if (_textParser.CurrentToken.Id == TokenId.Lambda)
-        //    {
-        //        _textParser.NextToken();
-        //        //if (_textParser.CurrentToken.Id == TokenId.Identifier || _textParser.CurrentToken.Id == TokenId.OpenParen)
-        //        {
-        //            var right = ParseConditionalOperator();
-        //            return Expression.Lambda(right, new[] { (ParameterExpression)expr });
-        //        }
-        //        _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
-        //    }
-        //    return expr;
-        //}
 
         // Or operator
         // - ||
@@ -1924,18 +1908,52 @@ namespace System.Linq.Dynamic.Core.Parser
                     _textParser.NextToken(); // Advance to the 'x'
                     
                     ids.Add(_textParser.CurrentToken.Text);
-                    //ids.Add(ParseArguments());
                     
                     _textParser.NextToken(); // Get next token, which can be a Comma or a CloseParen
                 }
 
-                _textParser.NextToken();
+                //_textParser.NextToken();
 
-                int x = 0;
+                string id = ids[0];
 
                 var funcType = Expression.GetFuncType(_it.Type, typeof(int));
 
-                return new [] { Expression.Parameter(funcType, "func")  as Expression };
+                //if (_textParser.CurrentToken.Id == TokenId.Lambda)
+                //{
+                    _textParser.NextToken();
+
+                    var e = ParseLambdaOperator(funcType);
+                    return new[] { e };
+
+                    _internals.Add(id, _it);
+                    string previousItName = ItName;
+
+                    // Also store ItName (only once)
+                    if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
+                    {
+                        ItName = id;
+                    }
+
+                    // next
+                    _textParser.NextToken();
+
+                    LastLambdaItName = ItName;
+                    var exp = ParseConditionalOperator();
+
+                    // Restore previous context and clear internals
+                    _internals.Remove(id);
+                    ItName = previousItName;
+
+                    return new[] { exp };
+                //}
+               // else
+              //  {
+                    //throw new NotImplementedException(); // TODO
+               // }
+
+                //var funcType = Expression.GetFuncType(_it.Type, typeof(int));
+
+                //return new [] { Expression.Parameter(funcType, $"func_{ids[0]}_{ids[1]}")  as Expression };
 
                 // public static IEnumerable<TResult> Select<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, int, TResult> selector);
             }
