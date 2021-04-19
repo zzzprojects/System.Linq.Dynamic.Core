@@ -590,6 +590,8 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var _ = qry.Select((u, i) => "test");
+           // var xx = (qry as IQueryable).Select((u, i) => "test");
+
             string query = "Users.Select((item, index) => \"test\")";
             LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
             Delegate del = expression.Compile();
