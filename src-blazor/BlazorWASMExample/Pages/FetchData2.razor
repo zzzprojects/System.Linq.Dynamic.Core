@@ -1,0 +1,98 @@
+﻿@page "/fetchdata2"
+@using System.Linq.Dynamic.Core
+@inject HttpClient Http
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="d-flex">
+        <h3>Order by</h3>
+        <div class="form-inline ml-4">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="rbOrder" id="cbOrder" checked="@isDescending" @onclick="@SetOrderingDirection">
+                <label class="form-check-label" for="cbOrder">descending</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-inline">
+        @foreach (var member in typeof(WeatherForecast).GetProperties().Select(p => p.Name))
+        {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rbOrder" id="@("rbOrder" + member)" checked="@(currentOrder == member)" @onchange="@((args) => SetOrder(member))">
+                <label class="form-check-label" for="@("rbOrder" + member)">@member</label>
+            </div>
+        }
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[] forecasts;
+    private string currentOrder;
+    private bool isDescending;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+    }
+
+    protected void SetOrder(string propertyName)
+    {
+        currentOrder = propertyName;
+        Order();
+    }
+
+    protected void SetOrderingDirection()
+    {
+        isDescending = !isDescending;
+        Order();
+    }
+
+    private void Order()
+    {
+        if (!string.IsNullOrEmpty(currentOrder))
+        {
+            forecasts = forecasts.AsQueryable().OrderBy($"{currentOrder} {(isDescending ? "descending" : "ascending")}").ToArray();
+        }
+
+    }
+
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public string Summary { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}

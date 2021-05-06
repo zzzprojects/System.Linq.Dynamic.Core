@@ -1,0 +1,492 @@
+﻿{
+  "postCode": {
+    "Name": "postCode",
+    "Label": "Property Postcode",
+    "ValidationRules": [
+      {
+        "MaxLength": 8
+      },
+      {}
+    ],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "TE1 6BN"
+  },
+  "sale_property_price": {
+    "Name": "sale_property_price",
+    "Label": "Property Price",
+    "ValidationRules": [],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.Nullable`1[[System.Int64, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": 799995
+  },
+  "sale_property_hold_status": {
+    "Name": "sale_property_hold_status",
+    "Label": "Freehold or Leasehold Property?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "freehold",
+        "Value": "Freehold"
+      },
+      {
+        "Id": "leasehold",
+        "Value": "Leasehold"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "freehold"
+  },
+  "mortgage_exist": {
+    "Name": "mortgage_exist",
+    "Label": "Is there an existing mortgage on the property?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "yes"
+  },
+  "sale_shared_ownership": {
+    "Name": "sale_shared_ownership",
+    "Label": "Is the property owned via the Shared Ownership Scheme?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "no"
+  },
+  "sale_property_no_of_sellers": {
+    "Name": "sale_property_no_of_sellers",
+    "Label": "Number of Sellers?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "1",
+        "Value": "Just Me"
+      },
+      {
+        "Id": "2",
+        "Value": "Me and One Other"
+      },
+      {
+        "Id": "3",
+        "Value": "3"
+      },
+      {
+        "Id": "4",
+        "Value": "4"
+      },
+      {
+        "Id": "5",
+        "Value": "5"
+      },
+      {
+        "Id": "6",
+        "Value": "6"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "2"
+  },
+  "purchase_postcode": {
+    "Name": "purchase_postcode",
+    "Label": "Property Postcode",
+    "ValidationRules": [
+      {
+        "MaxLength": 8
+      },
+      {}
+    ],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "TE1 7BN"
+  },
+  "purchase_property_price": {
+    "Name": "purchase_property_price",
+    "Label": "Property Price",
+    "ValidationRules": [],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.Nullable`1[[System.Int64, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": 500000
+  },
+  "purchase_property_hold_status": {
+    "Name": "purchase_property_hold_status",
+    "Label": "Freehold or Leasehold Property?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "freehold",
+        "Value": "Freehold"
+      },
+      {
+        "Id": "leasehold",
+        "Value": "Leasehold"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "freehold"
+  },
+  "newbuild": {
+    "Name": "newbuild",
+    "Label": "Is the property a new build?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "no"
+  },
+  "purchase_shared_ownership": {
+    "Name": "purchase_shared_ownership",
+    "Label": "Are you purchasing the property via the Shared Ownership scheme?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "no"
+  },
+  "obtain_mortgage": {
+    "Name": "obtain_mortgage",
+    "Label": "Are you obtaining a mortgage to purchase the property?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "yes"
+  },
+  "purchase_buy_to_let": {
+    "Name": "purchase_buy_to_let",
+    "Label": "Are you purchasing the property as a Buy to Let property?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "no"
+  },
+  "additional_property": {
+    "Name": "additional_property",
+    "Label": "Will the purchase of the property result in you owning two or more properties?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "yes"
+  },
+  "purchase_property_no_of_buyers": {
+    "Name": "purchase_property_no_of_buyers",
+    "Label": "Number of Buyers?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "1",
+        "Value": "Just Me"
+      },
+      {
+        "Id": "2",
+        "Value": "Me and One Other"
+      },
+      {
+        "Id": "3",
+        "Value": "3"
+      },
+      {
+        "Id": "4",
+        "Value": "4"
+      },
+      {
+        "Id": "5",
+        "Value": "5"
+      },
+      {
+        "Id": "6",
+        "Value": "6"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "2"
+  },
+  "gifted_deposit": {
+    "Name": "gifted_deposit",
+    "Label": "Are you being gifted any of your deposit by a third party?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "Not Sure",
+        "Value": "Not Sure"
+      },
+      {
+        "Id": "No Gifted Deposit",
+        "Value": "No Gifted Deposit"
+      },
+      {
+        "Id": "1 Gifted Deposit",
+        "Value": "1 Gifted Deposit"
+      },
+      {
+        "Id": "2 Gifted Deposits",
+        "Value": "2 Gifted Deposits"
+      },
+      {
+        "Id": "3+ Gifted Deposits",
+        "Value": "3 or more Gifted Deposits"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "No Gifted Deposit"
+  },
+  "help_to_buy_isa": {
+    "Name": "help_to_buy_isa",
+    "Label": "Are you using any Help to Buy ISAs for your purchase?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "No",
+        "Value": "No"
+      },
+      {
+        "Id": "1 ISA",
+        "Value": "1 ISA"
+      },
+      {
+        "Id": "2 ISAs",
+        "Value": "2 ISAs"
+      },
+      {
+        "Id": "3+ ISAs",
+        "Value": "3 or more ISAs"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "No"
+  },
+  "right_to_buy_scheme": {
+    "Name": "right_to_buy_scheme",
+    "Label": "Are you using the government Right to Buy Scheme?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "no"
+  },
+  "help_to_buy_equity": {
+    "Name": "help_to_buy_equity",
+    "Label": "Are you using a Help to Buy equity loan?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "yes",
+        "Value": "Yes"
+      },
+      {
+        "Id": "no",
+        "Value": "No"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "no"
+  },
+  "instruct_time": {
+    "Name": "instruct_time",
+    "Label": "When are you looking to instruct?",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [
+      {
+        "Id": "Within 1 week",
+        "Value": "Within 1 week"
+      },
+      {
+        "Id": "Within 1 month",
+        "Value": "Within 1 month"
+      },
+      {
+        "Id": "Within 3 months",
+        "Value": "Within 3 months"
+      },
+      {
+        "Id": "Not Sure",
+        "Value": "Not Sure"
+      }
+    ],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "Within 1 month"
+  },
+  "special_instructions": {
+    "Name": "special_instructions",
+    "Label": "Special Instructions",
+    "ValidationRules": [],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "This is a test"
+  },
+  "firstName": {
+    "Name": "firstName",
+    "Label": "First Name",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "James"
+  },
+  "lastName": {
+    "Name": "lastName",
+    "Label": "Surname",
+    "ValidationRules": [
+      {}
+    ],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "Woodley"
+  },
+  "email": {
+    "Name": "email",
+    "Label": "Email",
+    "ValidationRules": [
+      {},
+      {}
+    ],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "max@whiteford.com"
+  },
+  "phone": {
+    "Name": "phone",
+    "Label": "Phone Number",
+    "ValidationRules": [
+      {},
+      {}
+    ],
+    "Children": [],
+    "InclusionRules": "",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": "01234 567890"
+  },
+  "inclusion_test": {
+    "Name": "inclusion_test",
+    "Label": "Testing the Inclusion Rules",
+    "ValidationRules": [],
+    "Children": [],
+    "InclusionRules": "Name == \"additional_property\" && Value == \"yes\"",
+    "ValueType": "System.String, System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e",
+    "Value": ""
+  }
+}

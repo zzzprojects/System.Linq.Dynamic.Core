@@ -1,0 +1,700 @@
+﻿[
+  {
+    "name": "postCode",
+    "label": "Property Postcode",
+    "placeholder": "Please type your postcode",
+    "tooltip": "We use your postcode to match you to relevant conveyancers",
+    "style": null,
+    "group": "Sale Details",
+    "validationRules": [
+      {
+        "name": "max-length",
+        "parameters": [
+          "8"
+        ]
+      },
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [],
+    "elementType": "text",
+    "orderingIndex": 0,
+    "page": 1,
+    "inclusionRule": ""
+  },
+  {
+    "name": "sale_property_price",
+    "label": "Property Price",
+    "placeholder": "Please enter the price of the propety being sold",
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Sale Details",
+    "validationRules": [],
+    "children": [],
+    "elementType": "number",
+    "orderingIndex": 1,
+    "page": 1,
+    "inclusionRule": ""
+  },
+  {
+    "name": "sale_property_hold_status",
+    "label": "Freehold or Leasehold Property?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Sale Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "freehold",
+        "value": "Freehold"
+      },
+      {
+        "id": "leasehold",
+        "value": "Leasehold"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 2,
+    "page": 1,
+    "inclusionRule": ""
+  },
+  {
+    "name": "mortgage_exist",
+    "label": "Is there an existing mortgage on the property?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Sale Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 3,
+    "page": 1,
+    "inclusionRule": ""
+  },
+  {
+    "name": "sale_shared_ownership",
+    "label": "Is the property owned via the Shared Ownership Scheme?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Sale Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 4,
+    "page": 1,
+    "inclusionRule": ""
+  },
+  {
+    "name": "sale_property_no_of_sellers",
+    "label": "Number of Sellers?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Sale Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "1",
+        "value": "Just Me"
+      },
+      {
+        "id": "2",
+        "value": "Me and One Other"
+      },
+      {
+        "id": "3",
+        "value": "3"
+      },
+      {
+        "id": "4",
+        "value": "4"
+      },
+      {
+        "id": "5",
+        "value": "5"
+      },
+      {
+        "id": "6",
+        "value": "6"
+      }
+    ],
+    "elementType": "dropdown",
+    "orderingIndex": 5,
+    "page": 1,
+    "inclusionRule": ""
+  },
+  {
+    "name": "purchase_postcode",
+    "label": "Property Postcode",
+    "placeholder": "Please type your postcode",
+    "tooltip": "We use your postcode to match you to relevant conveyancers",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "max-length",
+        "parameters": [
+          "8"
+        ]
+      },
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [],
+    "elementType": "text",
+    "orderingIndex": 6,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "purchase_property_price",
+    "label": "Property Price",
+    "placeholder": "Please enter the price of the propety being purchased",
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [],
+    "children": [],
+    "elementType": "number",
+    "orderingIndex": 7,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "purchase_property_hold_status",
+    "label": "Freehold or Leasehold Property?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "freehold",
+        "value": "Freehold"
+      },
+      {
+        "id": "leasehold",
+        "value": "Leasehold"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 8,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "newbuild",
+    "label": "Is the property a new build?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 9,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "purchase_shared_ownership",
+    "label": "Are you purchasing the property via the Shared Ownership scheme?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 10,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "obtain_mortgage",
+    "label": "Are you obtaining a mortgage to purchase the property?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 11,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "purchase_buy_to_let",
+    "label": "Are you purchasing the property as a Buy to Let property?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 12,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "additional_property",
+    "label": "Will the purchase of the property result in you owning two or more properties?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 13,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "purchase_property_no_of_buyers",
+    "label": "Number of Buyers?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "1",
+        "value": "Just Me"
+      },
+      {
+        "id": "2",
+        "value": "Me and One Other"
+      },
+      {
+        "id": "3",
+        "value": "3"
+      },
+      {
+        "id": "4",
+        "value": "4"
+      },
+      {
+        "id": "5",
+        "value": "5"
+      },
+      {
+        "id": "6",
+        "value": "6"
+      }
+    ],
+    "elementType": "dropdown",
+    "orderingIndex": 14,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "gifted_deposit",
+    "label": "Are you being gifted any of your deposit by a third party?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "Not Sure",
+        "value": "Not Sure"
+      },
+      {
+        "id": "No Gifted Deposit",
+        "value": "No Gifted Deposit"
+      },
+      {
+        "id": "1 Gifted Deposit",
+        "value": "1 Gifted Deposit"
+      },
+      {
+        "id": "2 Gifted Deposits",
+        "value": "2 Gifted Deposits"
+      },
+      {
+        "id": "3+ Gifted Deposits",
+        "value": "3 or more Gifted Deposits"
+      }
+    ],
+    "elementType": "dropdown",
+    "orderingIndex": 15,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "help_to_buy_isa",
+    "label": "Are you using any Help to Buy ISAs for your purchase?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "No",
+        "value": "No"
+      },
+      {
+        "id": "1 ISA",
+        "value": "1 ISA"
+      },
+      {
+        "id": "2 ISAs",
+        "value": "2 ISAs"
+      },
+      {
+        "id": "3+ ISAs",
+        "value": "3 or more ISAs"
+      }
+    ],
+    "elementType": "dropdown",
+    "orderingIndex": 16,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "right_to_buy_scheme",
+    "label": "Are you using the government Right to Buy Scheme?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 17,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "help_to_buy_equity",
+    "label": "Are you using a Help to Buy equity loan?",
+    "placeholder": null,
+    "tooltip": "We use this information to calculate the cost of conveyancing",
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "yes",
+        "value": "Yes"
+      },
+      {
+        "id": "no",
+        "value": "No"
+      }
+    ],
+    "elementType": "radio",
+    "orderingIndex": 18,
+    "page": 2,
+    "inclusionRule": ""
+  },
+  {
+    "name": "instruct_time",
+    "label": "When are you looking to instruct?",
+    "placeholder": null,
+    "tooltip": "Please indicate when you are looking to instruct.",
+    "style": null,
+    "group": "Your Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [
+      {
+        "id": "Within 1 week",
+        "value": "Within 1 week"
+      },
+      {
+        "id": "Within 1 month",
+        "value": "Within 1 month"
+      },
+      {
+        "id": "Within 3 months",
+        "value": "Within 3 months"
+      },
+      {
+        "id": "Not Sure",
+        "value": "Not Sure"
+      }
+    ],
+    "elementType": "dropdown",
+    "orderingIndex": 19,
+    "page": 3,
+    "inclusionRule": ""
+  },
+  {
+    "name": "special_instructions",
+    "label": "Special Instructions",
+    "placeholder": "Special Instructions: Please list extra considerations e.g. joint ownership / probate, sale / housing association / speed essential.",
+    "tooltip": "Special Instructions: Please list extra considerations e.g. joint ownership / probate, sale / housing association / speed essential.",
+    "style": null,
+    "group": "Your Details",
+    "validationRules": [],
+    "children": [],
+    "elementType": "textarea",
+    "orderingIndex": 20,
+    "page": 3,
+    "inclusionRule": ""
+  },
+  {
+    "name": "firstName",
+    "label": "First Name",
+    "placeholder": "Please enter your first name",
+    "tooltip": "Please enter your first name",
+    "style": null,
+    "group": "Your Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [],
+    "elementType": "text",
+    "orderingIndex": 21,
+    "page": 3,
+    "inclusionRule": ""
+  },
+  {
+    "name": "lastName",
+    "label": "Surname",
+    "placeholder": "Please enter your surname",
+    "tooltip": "Please enter your surname",
+    "style": null,
+    "group": "Your Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      }
+    ],
+    "children": [],
+    "elementType": "text",
+    "orderingIndex": 22,
+    "page": 3,
+    "inclusionRule": ""
+  },
+  {
+    "name": "email",
+    "label": "Email",
+    "placeholder": "Email Address",
+    "tooltip": "We require a valid email address to provide you with quotes",
+    "style": null,
+    "group": "Your Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      },
+      {
+        "name": "email",
+        "parameters": []
+      }
+    ],
+    "children": [],
+    "elementType": "text",
+    "orderingIndex": 23,
+    "page": 3,
+    "inclusionRule": ""
+  },
+  {
+    "name": "phone",
+    "label": "Phone Number",
+    "placeholder": "Phone Number",
+    "tooltip": "Please enter the best phone number for us to contact you on",
+    "style": null,
+    "group": "Your Details",
+    "validationRules": [
+      {
+        "name": "required",
+        "parameters": []
+      },
+      {
+        "name": "tel",
+        "parameters": []
+      }
+    ],
+    "children": [],
+    "elementType": "text",
+    "orderingIndex": 24,
+    "page": 3,
+    "inclusionRule": ""
+  },
+  {
+    "name": "inclusion_test",
+    "label": "Testing the Inclusion Rules",
+    "placeholder": null,
+    "tooltip": null,
+    "style": null,
+    "group": "Purchase Details",
+    "validationRules": [],
+    "children": [],
+    "elementType": "text",
+    "orderingIndex": 25,
+    "page": 2,
+    "inclusionRule": "Name == \"additional_property\" && Value == \"yes\""
+  }
+]
