@@ -1836,7 +1836,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             else
             {
-                if (new[] { "Concat", "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
+                if (new[] { "Concat", "Contains", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union" }.Contains(methodName))
                 {
                     args = new[] { instance, args[0] };
                 }

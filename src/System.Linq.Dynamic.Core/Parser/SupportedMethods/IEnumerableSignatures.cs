@@ -26,12 +26,14 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         void DefaultIfEmpty();
         void DefaultIfEmpty(object defaultValue);
         void Distinct();
+        void Except(IEnumerable enumerable);
         void First();
         void First(bool predicate);
         void FirstOrDefault();
         void FirstOrDefault(bool predicate);
         void GroupBy(object keySelector);
         void GroupBy(object keySelector, object elementSelector);
+        void Intersect(IEnumerable enumerable);
         void Last();
         void Last(bool predicate);
         void LastOrDefault();
@@ -66,6 +68,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         void TakeWhile(bool predicate);
         void ThenBy(object selector);
         void ThenByDescending(object selector);
+        void Union(IEnumerable enumerable);
         void Where(bool predicate);
 
         // Executors

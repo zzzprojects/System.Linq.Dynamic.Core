@@ -324,26 +324,6 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion AsEnumerable
 
-        #region Concat
-        private static readonly MethodInfo _concat = GetGenericMethod(nameof(Queryable.Concat));
-
-        /// <summary>
-        /// Concatenates two sequences.
-        /// </summary>
-        /// <param name="source1">The first sequence to concatenate.</param>
-        /// <param name="source2">The sequence to concatenate to the first sequence.</param>
-        /// <returns>An <see cref="IQueryable"/> that contains the concatenated elements of the two input sequences.</returns>
-        public static IQueryable Concat([NotNull] this IQueryable source1, [NotNull] IEnumerable source2)
-        {
-            Check.NotNull(source1, nameof(source1));
-            Check.NotNull(source2, nameof(source2));
-
-            var expression2 = Expression.Constant(source2);
-
-            return CreateQuery(_concat, source1, expression2);
-        }
-        #endregion
-
         #region Cast
         private static readonly MethodInfo _cast = GetGenericMethod(nameof(Queryable.Cast));
 
