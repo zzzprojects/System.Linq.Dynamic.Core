@@ -3,7 +3,7 @@
 
     <PropertyGroup>
         <!--<Version>6.2.$(PatchVersion)</Version>-->
-        <Version>6.0.preview.3.21201.2</Version>
+        <Version>6.0.0-preview.3.21201.2</Version>
         <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
@@ -31,7 +31,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>net5.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

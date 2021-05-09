@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6.csproj" />
+      <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6.csproj" />
     </ItemGroup>
 
 </Project>
