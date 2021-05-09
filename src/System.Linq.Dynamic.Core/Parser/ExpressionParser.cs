@@ -1817,7 +1817,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     typeArgs = new[] { elementType, args[0].Type };
                 }
             }
-            else if (methodName == "SelectMany" )
+            else if (methodName == "SelectMany")
             {
                 var bodyType = Expression.Lambda(args[0], innerIt).Body.Type;
                 var interfaces = bodyType.GetInterfaces().Union(new[] { bodyType });
@@ -1825,14 +1825,6 @@ namespace System.Linq.Dynamic.Core.Parser
                 Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
                 typeArgs = new[] { elementType, resultType };
             }
-            //else if (methodName == "Concat")
-            //{
-            //    //var bodyType = Expression.Lambda(args[0], innerIt).Body.Type;
-            //    //var interfaces = bodyType.GetInterfaces().Union(new[] { bodyType });
-            //    //Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
-            //    //Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
-            //    typeArgs = new [] { elementType };
-            //}
             else
             {
                 typeArgs = new[] { elementType };
@@ -1844,7 +1836,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             else
             {
-                if (new[] { "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
+                if (new[] { "Concat", "Contains", "Take", "Skip", "DefaultIfEmpty" }.Contains(methodName))
                 {
                     args = new[] { instance, args[0] };
                 }

@@ -1,4 +1,6 @@
-﻿namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
+﻿using System.Collections;
+
+namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
     internal interface IQueryableSignatures
     {
@@ -15,6 +17,7 @@
         void Average(int selector);
         void Average(long? selector);
         void Average(long selector);
+        void Concat(IEnumerable enumerable);
         void Cast(string type);
         void Cast(Type type);
         void Count();

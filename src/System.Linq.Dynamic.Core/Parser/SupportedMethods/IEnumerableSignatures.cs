@@ -1,4 +1,6 @@
-﻿namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
+﻿using System.Collections;
+
+namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
     internal interface IEnumerableSignatures
     {
@@ -17,7 +19,7 @@
         void Average(long selector);
         void Cast(string type);
         void Cast(Type type);
-        void Concat(object enumerable);
+        void Concat(IEnumerable enumerable);
         void Contains(object selector);
         void Count();
         void Count(bool predicate);
