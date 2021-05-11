@@ -12,6 +12,8 @@ namespace ConsoleAppEF2.Database
         [NotMapped]
         public dynamic Properties { get; set; }
 
+        public int? NullableInt { get; set; }
+
         public Dictionary<string, object> Dict { get; set; }
     }
 }

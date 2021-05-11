@@ -37,7 +37,11 @@ namespace ConsoleAppEF5
                 Console.WriteLine($"orderBy Year DESC = {x.Brand}");
             }
 
-            Thread.Sleep(500);
+            var orderByNullableInt = context.Cars.OrderBy("np(NullableInt)").ToList();
+            foreach (var x in orderByNullableInt)
+            {
+                Console.WriteLine($"orderBy NullableInt = {x.Brand} {x.NullableInt}");
+            }
 
             context = new TestContext();
             var orderBy3 = context.Cars.OrderBy("3 DESC").ToList();
