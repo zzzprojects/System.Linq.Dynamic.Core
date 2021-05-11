@@ -36,6 +36,11 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         {
             return values + y;
         }
+
+        public static int IncrementMeAlso(this int values)
+        {
+            return values + 1;
+        }
     }
 
     public class DynamicLinqTypeTest
@@ -64,7 +69,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var query = "Utils.ConvertToArray(null)";
             var expression = DynamicExpressionParser.ParseLambda(null, query, null);
             var del = expression.Compile();
-            var result = (string[]) del.DynamicInvoke();
+            var result = (string[])del.DynamicInvoke();
 
             Check.That(result).IsNull();
         }
@@ -75,7 +80,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var query = "Utils.ConvertToArray(\"a\", \"b\")";
             var expression = DynamicExpressionParser.ParseLambda(null, query, null);
             var del = expression.Compile();
-            var result = (string[]) del.DynamicInvoke();
+            var result = (string[])del.DynamicInvoke();
 
             Check.That(result.Length).Equals(2);
             Check.That(result[0]).Equals("a");
@@ -88,7 +93,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var query = "Utils.ConvertToArray(\"a\")";
             var expression = DynamicExpressionParser.ParseLambda(null, query, null);
             var del = expression.Compile();
-            var result = (string[]) del.DynamicInvoke();
+            var result = (string[])del.DynamicInvoke();
 
             Check.That(result.Length).Equals(1);
             Check.That(result[0]).Equals("a");
@@ -145,7 +150,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [Fact]
         public void ExtensionMethod_NoParameter()
         {
-            var list = new[] {new EntityValue {ValueInt = 1}, new EntityValue {ValueInt = 2}}.AsQueryable();
+            var list = new[] { new EntityValue { ValueInt = 1 }, new EntityValue { ValueInt = 2 } }.AsQueryable();
             var result = list.Select("ValueInt.IncrementMe()").ToDynamicList<int>();
 
             Check.That(result.Count).Equals(2);

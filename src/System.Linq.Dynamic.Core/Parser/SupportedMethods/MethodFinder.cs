@@ -32,7 +32,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             foreach (Type t in SelfAndBaseTypes(type))
             {
                 MemberInfo[] members = t.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName);
-                int count = FindBestMethod(members.Cast<MethodBase>(), ref args, out method);
+                int count = FindBestMethodBasedOnArguments(members.Cast<MethodBase>(), ref args, out method);
                 if (count != 0)
                 {
                     return count;
@@ -41,8 +41,8 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 #else
             foreach (Type t in SelfAndBaseTypes(type))
             {
-                MethodInfo[] methods = t.GetTypeInfo().DeclaredMethods.Where(x => (x.IsStatic || !staticAccess) && x.Name.ToLowerInvariant() == methodName.ToLowerInvariant()).ToArray();
-                int count = FindBestMethod(methods, ref args, out method);
+                var methods = t.GetTypeInfo().DeclaredMethods.Where(m => (m.IsStatic || !staticAccess) && m.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase)).ToArray();
+                int count = FindBestMethodBasedOnArguments(methods, ref args, out method);
                 if (count != 0)
                 {
                     return count;
@@ -52,13 +52,23 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
             if (instance != null)
             {
-                // Try to solve with registered extension methods 
-                if (_parsingConfig.CustomTypeProvider.GetExtensionMethods().TryGetValue(type, out var methods))
+                // Try to solve with registered extension methods from this type and all base types
+                var methods = new List<MethodInfo>();
+                foreach (var t in SelfAndBaseTypes(type))
+                {
+                    if (_parsingConfig.CustomTypeProvider.GetExtensionMethods().TryGetValue(t, out var extensionMethodsOfType))
+                    {
+                        methods.AddRange(extensionMethodsOfType.Where(m => m.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase) && !m.IsGenericMethod));
+                    }
+                }
+
+                if (methods.Any())
                 {
                     var argsList = args.ToList();
                     argsList.Insert(0, instance);
+
                     var extensionMethodArgs = argsList.ToArray();
-                    int count = FindBestMethod(methods.Cast<MethodBase>(), ref extensionMethodArgs, out method);
+                    int count = FindBestMethodBasedOnArguments(methods.Cast<MethodBase>(), ref extensionMethodArgs, out method);
                     if (count != 0)
                     {
                         instance = null;
@@ -72,10 +82,9 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return 0;
         }
 
-        public int FindBestMethod(IEnumerable<MethodBase> methods, ref Expression[] args, out MethodBase method)
+        public int FindBestMethodBasedOnArguments(IEnumerable<MethodBase> methods, ref Expression[] args, out MethodBase method)
         {
-            // passing args by reference is now required with the params array support.
-
+            // Passing args by reference is now required with the params array support.
             var inlineArgs = args;
 
             MethodData[] applicable = methods
@@ -85,7 +94,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
             if (applicable.Length > 1)
             {
-                applicable = applicable.Where(m => applicable.All(n => m == n || IsBetterThan(inlineArgs, m, n))).ToArray();
+                applicable = applicable.Where(m => applicable.All(n => m == n || FirstIsBetterThanSecond(inlineArgs, m, n))).ToArray();
             }
 
             if (args.Length == 2 && applicable.Length > 1 && (args[0].Type == typeof(Guid?) || args[1].Type == typeof(Guid?)))
@@ -121,7 +130,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 #else
                     Select(p => (MethodBase)p.GetMethod);
 #endif
-                    int count = FindBestMethod(methods, ref args, out method);
+                    int count = FindBestMethodBasedOnArguments(methods, ref args, out method);
                     if (count != 0)
                     {
                         return count;
@@ -203,9 +212,9 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return true;
         }
 
-        bool IsBetterThan(Expression[] args, MethodData first, MethodData second)
+        bool FirstIsBetterThanSecond(Expression[] args, MethodData first, MethodData second)
         {
-            // If args count is 0 -> parametereless method is better than method method with parameters
+            // If args count is 0 -> parameterless method is better than method method with parameters
             if (args.Length == 0)
             {
                 return first.Parameters.Length == 0 && second.Parameters.Length != 0;
