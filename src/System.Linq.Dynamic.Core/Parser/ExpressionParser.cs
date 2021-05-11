@@ -1550,7 +1550,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 var constructorsWithOutPointerArguments = type.GetConstructors()
                     .Where(c => !c.GetParameters().Any(p => p.ParameterType.GetTypeInfo().IsPointer))
                     .ToArray();
-                switch (_methodFinder.FindBestMethod(constructorsWithOutPointerArguments, ref args, out MethodBase method))
+                switch (_methodFinder.FindBestMethodBasedOnArguments(constructorsWithOutPointerArguments, ref args, out MethodBase method))
                 {
                     case 0:
                         if (args.Length == 1 && TryGenerateConversion(args[0], type, out generatedExpression))
