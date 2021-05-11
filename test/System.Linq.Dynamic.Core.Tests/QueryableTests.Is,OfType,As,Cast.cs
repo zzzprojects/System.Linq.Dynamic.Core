@@ -1,6 +1,8 @@
-﻿using NFluent;
+﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Entities;
+using FluentAssertions;
+using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -173,6 +175,32 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Check.That(countAsDynamic).Equals(1);
+        }
+
+        public class AS_A { }
+        public class AS_B : AS_A
+        {
+            public string MyProperty { get; set; }
+        }
+
+        [Fact]
+        [Trait("bug", "452")]
+        public void As_UnaryExpression()
+        {
+            // Arrange
+            var a = new AS_A();
+            var b = new AS_B { MyProperty = "x" };
+            var lst = new List<AS_A>()
+            {
+                a,
+                b
+            };
+
+            // Act
+            var result = lst.AsQueryable().Where($"np(as(\"{typeof(AS_B).FullName}\").MyProperty) = \"x\"");
+
+            // Assert
+            result.ToDynamicArray().Should().HaveCount(1).And.Contain(b);
         }
 
         [Fact]

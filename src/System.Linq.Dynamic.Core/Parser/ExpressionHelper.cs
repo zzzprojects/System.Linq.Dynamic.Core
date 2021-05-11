@@ -294,7 +294,11 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public bool ExpressionQualifiesForNullPropagation(Expression expression)
         {
-            return expression is MemberExpression || expression is ParameterExpression || expression is MethodCallExpression;
+            return
+                expression is MemberExpression ||
+                expression is ParameterExpression || 
+                expression is MethodCallExpression ||
+                expression is UnaryExpression;
         }
 
         private Expression GetMemberExpression(Expression expression)
@@ -349,6 +353,11 @@ namespace System.Linq.Dynamic.Core.Parser
                         expressionRecognized = expression != null;
                         break;
 
+                    case UnaryExpression unaryExpression:
+                        expression = GetUnaryExpression(unaryExpression);
+                        expressionRecognized = expression != null;
+                        break;
+
                     default:
                         expressionRecognized = false;
                         break;
@@ -373,6 +382,11 @@ namespace System.Linq.Dynamic.Core.Parser
 
             // Something like: "np(MyClasses.FirstOrDefault())"
             return methodCallExpression.Arguments.FirstOrDefault();
+        }
+
+        private static Expression GetUnaryExpression(UnaryExpression unaryExpression)
+        {
+            return unaryExpression.Operand;
         }
     }
 }
