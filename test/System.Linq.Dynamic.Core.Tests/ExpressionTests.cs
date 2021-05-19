@@ -11,6 +11,16 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
+    public enum TestEnumPublic : sbyte
+    {
+        Var1 = 0,
+        Var2 = 1,
+        Var3 = 2,
+        Var4 = 4,
+        Var5 = 8,
+        Var6 = 16
+    }
+
     public class ExpressionTests
     {
         public enum TestEnum2 : sbyte
@@ -20,7 +30,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Var3 = 2,
             Var4 = 4,
             Var5 = 8,
-            Var6 = 16,
+            Var6 = 16
         }
 
         public class TestEnumClass
@@ -30,6 +40,8 @@ namespace System.Linq.Dynamic.Core.Tests
             public TestEnum2 B { get; set; }
 
             public TestEnum2? C { get; set; }
+
+            public TestEnumPublic E { get; set; }
 
             public int Id { get; set; }
         }
@@ -701,11 +713,13 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Enum_Property_Equality_Using_Inline()
         {
             // Arrange
-            var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
+            var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
+            string enumType = typeof(TestEnumPublic).FullName;
+            var type = Type.GetType(enumType);
 
             // Act
-            var resultEqualEnumParamLeft = qry.Where("TestEnum2.Var2 == it.B").ToDynamicArray();
-            var resultEqualEnumParamRight = qry.Where("it.B == TestEnum2.Var2").ToDynamicArray();
+            var resultEqualEnumParamLeft = qry.Where($"{enumType}.Var2 == it.B").ToDynamicArray();
+            var resultEqualEnumParamRight = qry.Where($"it.B == {enumType}.Var2").ToDynamicArray();
 
             var resultEqualIntParamLeft = qry.Where("1 == it.B").ToDynamicArray();
             var resultEqualIntParamRight = qry.Where("it.B == 1").ToDynamicArray();

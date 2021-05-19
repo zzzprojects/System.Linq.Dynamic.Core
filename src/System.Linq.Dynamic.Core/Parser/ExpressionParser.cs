@@ -1045,6 +1045,43 @@ namespace System.Linq.Dynamic.Core.Parser
                 return expr;
             }
 
+            // This could be enum like "MyEnum.Value1"
+            if (_textParser.CurrentToken.Id == TokenId.Identifier)
+            {
+                var parts = new List<string> { _textParser.CurrentToken.Text };
+
+                _textParser.NextToken();
+                _textParser.ValidateToken(TokenId.Dot, Res.DotExpected);
+                while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+                {
+                    parts.Add(_textParser.CurrentToken.Text);
+
+                    _textParser.NextToken();
+                    _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
+
+                    parts.Add(_textParser.CurrentToken.Text);
+
+                    _textParser.NextToken();
+                }
+
+                var enumTypeAsString = string.Join("", parts.Take(parts.Count - 2).ToArray());
+                var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, false);
+                //var enumType = Type.GetType(enumTypeAsString);
+                if (enumType == null)
+                {
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
+                }
+
+                string enumValue = parts.Last();
+                var @enum = TypeHelper.ParseEnum(enumValue, enumType);
+                if (@enum == null)
+                {
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValue, enumTypeAsString);
+                }
+
+                return Expression.Constant(@enum);
+            }
+
             if (_it != null)
             {
                 return ParseMemberAccess(null, _it);
@@ -1682,7 +1719,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            if (type.GetTypeInfo().IsEnum)
+            if (TypeHelper.IsEnumType(type))
             {
                 var @enum = Enum.Parse(type, id, true);
 
