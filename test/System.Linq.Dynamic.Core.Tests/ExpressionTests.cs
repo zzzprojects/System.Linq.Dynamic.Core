@@ -677,7 +677,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Enum_Property()
+        public void ExpressionTests_Enum_Property_Equality_Using_Argument()
         {
             // Arrange
             var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
@@ -688,6 +688,27 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var resultEqualIntParamLeft = qry.Where("@0 == it.B", 1).ToDynamicArray();
             var resultEqualIntParamRight = qry.Where("it.B == @0", 1).ToDynamicArray();
+
+            // Assert
+            Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum2.Var2);
+            Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnum2.Var2);
+
+            Check.That(resultEqualIntParamLeft.Single()).Equals(TestEnum2.Var2);
+            Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum2.Var2);
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_Property_Equality_Using_Inline()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
+
+            // Act
+            var resultEqualEnumParamLeft = qry.Where("TestEnum2.Var2 == it.B").ToDynamicArray();
+            var resultEqualEnumParamRight = qry.Where("it.B == TestEnum2.Var2").ToDynamicArray();
+
+            var resultEqualIntParamLeft = qry.Where("1 == it.B").ToDynamicArray();
+            var resultEqualIntParamRight = qry.Where("it.B == 1").ToDynamicArray();
 
             // Assert
             Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum2.Var2);
