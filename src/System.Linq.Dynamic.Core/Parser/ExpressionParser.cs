@@ -1718,10 +1718,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            if (TypeHelper.IsEnumType(type))
+            var @enum = TypeHelper.ParseEnum(id, type);
+            if (@enum != null)
             {
-                var @enum = Enum.Parse(type, id, true);
-
                 return Expression.Constant(@enum);
             }
 
@@ -1788,7 +1787,7 @@ namespace System.Linq.Dynamic.Core.Parser
             if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
             {
                 var parts = new List<string> { id };
-                
+
                 while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
                 {
                     if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
@@ -1811,16 +1810,16 @@ namespace System.Linq.Dynamic.Core.Parser
                     throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
                 }
 
-                string enumValue = parts.LastOrDefault();
-                if (enumValue == null)
+                string enumValueAsString = parts.LastOrDefault();
+                if (enumValueAsString == null)
                 {
                     throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueExpected);
                 }
 
-                var @enum = TypeHelper.ParseEnum(enumValue, enumType);
-                if (@enum == null)
+                var enumValue = TypeHelper.ParseEnum(enumValueAsString, enumType);
+                if (enumValue == null)
                 {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValue, enumTypeAsString);
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValueAsString, enumTypeAsString);
                 }
 
                 return Expression.Constant(@enum);

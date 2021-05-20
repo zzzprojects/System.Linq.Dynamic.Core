@@ -791,6 +791,48 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Enum_Property_Equality_Using_PublicEnum_Invalid_Inline_Should_Throw_ParseException()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
+            string enumType = "a.b.c";
+
+            // Act
+            Action a = () => qry.Where($"{enumType}.Var2 == it.E").ToDynamicArray();
+
+            // Assert
+            a.Should().Throw<ParseException>().WithMessage("Enum type 'b.c' not found");
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_Property_Equality_Using_PublicEnum_InvalidValue_Inline_Should_Throw_ParseException()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
+            string enumType = typeof(TestEnumPublic).FullName;
+
+            // Act
+            Action a = () => qry.Where($"{enumType}.VarInvalid == it.E").ToDynamicArray();
+
+            // Assert
+            a.Should().Throw<ParseException>().WithMessage("Enum value 'VarInvalid' is not defined in enum type 'System.Linq.Dynamic.Core.Tests.TestEnumPublic'");
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_Property_Equality_Using_PublicEnum_MissingValue_Inline_Should_Throw_ParseException()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
+            string enumType = typeof(TestEnumPublic).FullName;
+
+            // Act
+            Action a = () => qry.Where($"{enumType}. == it.E").ToDynamicArray();
+
+            // Assert
+            a.Should().Throw<ParseException>().WithMessage("Enum type 'System.Linq.Dynamic.Core.Tests.' not found");
+        }
+
+        [Fact]
         public void ExpressionTests_Enum_NullableProperty()
         {
             // Arrange
