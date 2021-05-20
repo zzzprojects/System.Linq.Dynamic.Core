@@ -31,7 +31,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             _cacheCustomTypes = cacheCustomTypes;
         }
 
-        /// <inheritdoc cref="IDynamicLinkCustomTypeProvider.GetCustomTypes"/>
+        /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.GetCustomTypes"/>
         public virtual HashSet<Type> GetCustomTypes()
         {
             if (_cacheCustomTypes)
@@ -47,7 +47,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             return GetCustomTypesInternal();
         }
 
-        /// <inheritdoc cref="IDynamicLinkCustomTypeProvider.GetExtensionMethods"/>
+        /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.GetExtensionMethods"/>
         public Dictionary<Type, List<MethodInfo>> GetExtensionMethods()
         {
             if (_cacheCustomTypes)
@@ -63,7 +63,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             return GetExtensionMethodsInternal();
         }
 
-        /// <inheritdoc cref="IDynamicLinkCustomTypeProvider.ResolveType"/>
+        /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.ResolveType"/>
         public Type ResolveType(string typeName)
         {
             Check.NotEmpty(typeName, nameof(typeName));
@@ -72,7 +72,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
             return ResolveType(assemblies, typeName);
         }
 
-        /// <inheritdoc cref="IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName"/>
+        /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName"/>
         public Type ResolveTypeBySimpleName(string simpleTypeName)
         {
             Check.NotEmpty(simpleTypeName, nameof(simpleTypeName));
@@ -91,7 +91,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         {
             var types = GetCustomTypes();
 
-            List<Tuple<Type, MethodInfo>> list= new List<Tuple<Type, MethodInfo>>();
+            List<Tuple<Type, MethodInfo>> list = new List<Tuple<Type, MethodInfo>>();
 
             foreach (var type in types)
             {
