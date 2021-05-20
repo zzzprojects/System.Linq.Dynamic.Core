@@ -773,7 +773,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Enum_Property_Equality_Using_Enum_Name_Inline_Should_Throw_ParseException()
+        public void ExpressionTests_Enum_Property_Equality_Using_Enum_Name_Inline_Should_Throw_Exception()
         {
             // Arrange
             var config = new ParsingConfig
@@ -787,7 +787,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Action a = () => qry.Where(config, $"{enumType}.Var2 == it.B").ToDynamicArray();
 
             // Assert
-            a.Should().Throw<ParseException>();
+            a.Should().Throw<Exception>();
         }
 
         [Fact]

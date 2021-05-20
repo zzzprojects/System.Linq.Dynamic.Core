@@ -1757,75 +1757,85 @@ namespace System.Linq.Dynamic.Core.Parser
                 return _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(expression, type, id);
             }
 #endif
-
+            // Parse as Lambda
             if (_textParser.CurrentToken.Id == TokenId.Lambda && _it.Type == type)
             {
-                // This might be an internal variable for use within a lambda expression, so store it as such
-                _internals.Add(id, _it);
-                string _previousItName = ItName;
-
-                // Also store ItName (only once)
-                if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
-                {
-                    ItName = id;
-                }
-
-                // next
-                _textParser.NextToken();
-
-                LastLambdaItName = ItName;
-                var exp = ParseConditionalOperator();
-
-                // Restore previous context and clear internals
-                _internals.Remove(id);
-                ItName = _previousItName;
-
-                return exp;
+                return ParseAsLambda(id);
             }
 
             // This could be enum like "A.B.C.MyEnum.Value1" or "A.B.C+MyEnum.Value1"
             if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
             {
-                var parts = new List<string> { id };
-
-                while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
-                {
-                    if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
-                    {
-                        parts.Add(_textParser.CurrentToken.Text);
-                        _textParser.NextToken();
-                    }
-
-                    if (_textParser.CurrentToken.Id == TokenId.Identifier)
-                    {
-                        parts.Add(_textParser.CurrentToken.Text);
-                        _textParser.NextToken();
-                    }
-                }
-
-                var enumTypeAsString = string.Join("", parts.Take(parts.Count - 2).ToArray());
-                var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, true);
-                if (enumType == null)
-                {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
-                }
-
-                string enumValueAsString = parts.LastOrDefault();
-                if (enumValueAsString == null)
-                {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueExpected);
-                }
-
-                var enumValue = TypeHelper.ParseEnum(enumValueAsString, enumType);
-                if (enumValue == null)
-                {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValueAsString, enumTypeAsString);
-                }
-
-                return Expression.Constant(@enum);
+                return ParseAsEnum(id);
             }
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
+        }
+
+        private Expression ParseAsLambda(string id)
+        {
+            // This might be an internal variable for use within a lambda expression, so store it as such
+            _internals.Add(id, _it);
+            string _previousItName = ItName;
+
+            // Also store ItName (only once)
+            if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
+            {
+                ItName = id;
+            }
+
+            // next
+            _textParser.NextToken();
+
+            LastLambdaItName = ItName;
+            var exp = ParseConditionalOperator();
+
+            // Restore previous context and clear internals
+            _internals.Remove(id);
+            ItName = _previousItName;
+
+            return exp;
+        }
+
+        private Expression ParseAsEnum(string id)
+        {
+            var parts = new List<string> { id };
+
+            while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+            {
+                if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+                {
+                    parts.Add(_textParser.CurrentToken.Text);
+                    _textParser.NextToken();
+                }
+
+                if (_textParser.CurrentToken.Id == TokenId.Identifier)
+                {
+                    parts.Add(_textParser.CurrentToken.Text);
+                    _textParser.NextToken();
+                }
+            }
+
+            var enumTypeAsString = string.Join("", parts.Take(parts.Count - 2).ToArray());
+            var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, true);
+            if (enumType == null)
+            {
+                throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
+            }
+
+            string enumValueAsString = parts.LastOrDefault();
+            if (enumValueAsString == null)
+            {
+                throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueExpected);
+            }
+
+            var enumValue = TypeHelper.ParseEnum(enumValueAsString, enumType);
+            if (enumValue == null)
+            {
+                throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValueAsString, enumTypeAsString);
+            }
+
+            return Expression.Constant(enumValue);
         }
 
         Expression ParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type type)
