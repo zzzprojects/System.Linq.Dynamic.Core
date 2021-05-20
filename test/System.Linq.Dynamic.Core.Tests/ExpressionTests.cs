@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
-using Newtonsoft.Json.Linq;
-using NFluent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using FluentAssertions;
+using Newtonsoft.Json.Linq;
+using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -710,26 +710,84 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Enum_Property_Equality_Using_Inline()
+        public void ExpressionTests_Enum_Property_Equality_With_Integer_Inline()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
+
+            // Act
+            var resultEqualIntParamLeft = qry.Where("1 == it.E").ToDynamicArray();
+            var resultEqualIntParamRight = qry.Where("it.E == 1").ToDynamicArray();
+
+            // Assert
+            Check.That(resultEqualIntParamLeft.Single()).Equals(TestEnumPublic.Var2);
+            Check.That(resultEqualIntParamRight.Single()).Equals(TestEnumPublic.Var2);
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_Property_Equality_Using_PublicEnum_And_FullName_Inline()
         {
             // Arrange
             var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
             string enumType = typeof(TestEnumPublic).FullName;
-            var type = Type.GetType(enumType);
+
+            // Act
+            var resultEqualEnumParamLeft = qry.Where($"{enumType}.Var2 == it.E").ToDynamicArray();
+            var resultEqualEnumParamRight = qry.Where($"it.E == {enumType}.Var2").ToDynamicArray();
+
+            // Assert
+            Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnumPublic.Var2);
+            Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnumPublic.Var2);
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_Property_Equality_Using_Enum_And_FullName_Inline()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
+            string enumType = typeof(TestEnum2).FullName;
 
             // Act
             var resultEqualEnumParamLeft = qry.Where($"{enumType}.Var2 == it.B").ToDynamicArray();
             var resultEqualEnumParamRight = qry.Where($"it.B == {enumType}.Var2").ToDynamicArray();
 
-            var resultEqualIntParamLeft = qry.Where("1 == it.B").ToDynamicArray();
-            var resultEqualIntParamRight = qry.Where("it.B == 1").ToDynamicArray();
-
             // Assert
             Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum2.Var2);
             Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnum2.Var2);
+        }
 
-            Check.That(resultEqualIntParamLeft.Single()).Equals(TestEnum2.Var2);
-            Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum2.Var2);
+        [Fact]
+        public void ExpressionTests_Enum_Property_Equality_Using_PublicEnum_Name_Inline()
+        {
+            // Arrange
+            var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
+            string enumType = typeof(TestEnumPublic).FullName;
+
+            // Act
+            var resultEqualEnumParamLeft = qry.Where($"{enumType}.Var2 == it.E").ToDynamicArray();
+            var resultEqualEnumParamRight = qry.Where($"it.E == {enumType}.Var2").ToDynamicArray();
+
+            // Assert
+            Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnumPublic.Var2);
+            Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnumPublic.Var2);
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_Property_Equality_Using_Enum_Name_Inline_Should_Throw_ParseException()
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                ResolveTypesBySimpleName = true
+            };
+            var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
+            string enumType = typeof(TestEnum2).Name;
+
+            // Act
+            Action a = () => qry.Where(config, $"{enumType}.Var2 == it.B").ToDynamicArray();
+
+            // Assert
+            a.Should().Throw<ParseException>();
         }
 
         [Fact]

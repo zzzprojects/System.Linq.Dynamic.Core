@@ -1045,42 +1045,41 @@ namespace System.Linq.Dynamic.Core.Parser
                 return expr;
             }
 
-            // This could be enum like "MyEnum.Value1"
-            if (_textParser.CurrentToken.Id == TokenId.Identifier)
-            {
-                var parts = new List<string> { _textParser.CurrentToken.Text };
+            //// This could be enum like "MyEnum.Value1"
+            //if (_textParser.CurrentToken.Id == TokenId.Identifier)
+            //{
+            //    var parts = new List<string> { _textParser.CurrentToken.Text };
 
-                _textParser.NextToken();
-                _textParser.ValidateToken(TokenId.Dot, Res.DotExpected);
-                while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
-                {
-                    parts.Add(_textParser.CurrentToken.Text);
+            //    _textParser.NextToken();
+            //    _textParser.ValidateToken(TokenId.Dot, Res.DotExpected);
+            //    while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+            //    {
+            //        parts.Add(_textParser.CurrentToken.Text);
 
-                    _textParser.NextToken();
-                    _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
+            //        _textParser.NextToken();
+            //        _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
 
-                    parts.Add(_textParser.CurrentToken.Text);
+            //        parts.Add(_textParser.CurrentToken.Text);
 
-                    _textParser.NextToken();
-                }
+            //        _textParser.NextToken();
+            //    }
 
-                var enumTypeAsString = string.Join("", parts.Take(parts.Count - 2).ToArray());
-                var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, false);
-                //var enumType = Type.GetType(enumTypeAsString);
-                if (enumType == null)
-                {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
-                }
+            //    var enumTypeAsString = string.Join("", parts.Take(parts.Count - 2).ToArray());
+            //    var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, true);
+            //    if (enumType == null)
+            //    {
+            //        throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
+            //    }
 
-                string enumValue = parts.Last();
-                var @enum = TypeHelper.ParseEnum(enumValue, enumType);
-                if (@enum == null)
-                {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValue, enumTypeAsString);
-                }
+            //    string enumValue = parts.Last();
+            //    var @enum = TypeHelper.ParseEnum(enumValue, enumType);
+            //    if (@enum == null)
+            //    {
+            //        throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValue, enumTypeAsString);
+            //    }
 
-                return Expression.Constant(@enum);
-            }
+            //    return Expression.Constant(@enum);
+            //}
 
             if (_it != null)
             {
@@ -1783,6 +1782,48 @@ namespace System.Linq.Dynamic.Core.Parser
                 ItName = _previousItName;
 
                 return exp;
+            }
+
+            // This could be enum like "A.B.C.MyEnum.Value1" or "A.B.C+MyEnum.Value1"
+            if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+            {
+                var parts = new List<string> { id };
+                
+                while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+                {
+                    if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+                    {
+                        parts.Add(_textParser.CurrentToken.Text);
+                        _textParser.NextToken();
+                    }
+
+                    if (_textParser.CurrentToken.Id == TokenId.Identifier)
+                    {
+                        parts.Add(_textParser.CurrentToken.Text);
+                        _textParser.NextToken();
+                    }
+                }
+
+                var enumTypeAsString = string.Join("", parts.Take(parts.Count - 2).ToArray());
+                var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, true);
+                if (enumType == null)
+                {
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
+                }
+
+                string enumValue = parts.LastOrDefault();
+                if (enumValue == null)
+                {
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueExpected);
+                }
+
+                var @enum = TypeHelper.ParseEnum(enumValue, enumType);
+                if (@enum == null)
+                {
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValue, enumTypeAsString);
+                }
+
+                return Expression.Constant(@enum);
             }
 
             throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
