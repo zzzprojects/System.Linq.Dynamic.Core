@@ -20,6 +20,9 @@
         public const string DotOrOpenParenOrStringLiteralExpected = "'.' or '(' or string literal expected";
         public const string DynamicExpandoObjectIsNotSupported = "Dynamic / ExpandoObject is not supported in .NET 3.5, UAP and .NETStandard 1.3";
         public const string DuplicateIdentifier = "The identifier '{0}' was defined more than once";
+        public const string EnumTypeNotFound = "Enum type '{0}' not found";
+        public const string EnumValueExpected = "Enum value expected";
+        public const string EnumValueNotDefined = "Enum value '{0}' is not defined in enum type '{1}'";
         public const string ExpressionExpected = "Expression expected";
         public const string ExpressionTypeMismatch = "Expression of type '{0}' expected";
         public const string FirstExprMustBeBool = "The first expression must be of type 'Boolean'";
