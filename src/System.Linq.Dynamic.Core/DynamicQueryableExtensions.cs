@@ -26,7 +26,7 @@ namespace System.Linq.Dynamic.Core
     public static class DynamicQueryableExtensions
     {
 #if !(WINDOWS_APP45x || SILVERLIGHT)
-        private static readonly TraceSource TraceSource = new TraceSource(typeof(DynamicQueryableExtensions).Name);
+        private static readonly TraceSource TraceSource = new TraceSource(nameof(DynamicQueryableExtensions));
 #endif
 
         private static Expression OptimizeExpression(Expression expression)
@@ -76,7 +76,7 @@ namespace System.Linq.Dynamic.Core
             {
                 ParameterInfo lastParameter = m.GetParameters().LastOrDefault();
 
-                return lastParameter != null ? TypeHelper.GetUnderlyingType(lastParameter.ParameterType) == property.PropertyType : false;
+                return lastParameter != null && TypeHelper.GetUnderlyingType(lastParameter.ParameterType) == property.PropertyType;
             });
 
             // Sum, Average

@@ -1,4 +1,6 @@
-﻿namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
+﻿using System.Collections;
+
+namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
     internal interface IQueryableSignatures
     {
@@ -15,6 +17,7 @@
         void Average(int selector);
         void Average(long? selector);
         void Average(long selector);
+        void Concat(IEnumerable enumerable);
         void Cast(string type);
         void Cast(Type type);
         void Count();
@@ -22,12 +25,14 @@
         void DefaultIfEmpty();
         void DefaultIfEmpty(object defaultValue);
         void Distinct();
+        void Except(IEnumerable enumerable);
         void First();
         void First(bool predicate);
         void FirstOrDefault();
         void FirstOrDefault(bool predicate);
         void GroupBy(object keySelector);
         void GroupBy(object keySelector, object elementSelector);
+        void Intersect(IEnumerable enumerable);
         void Last();
         void Last(bool predicate);
         void LastOrDefault();
@@ -62,6 +67,7 @@
         void TakeWhile(bool predicate);
         void ThenBy(object selector);
         void ThenByDescending(object selector);
+        void Union(IEnumerable enumerable);
         void Where(bool predicate);
     }
 }

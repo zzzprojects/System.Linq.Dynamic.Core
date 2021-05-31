@@ -1,4 +1,6 @@
-﻿namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
+﻿using System.Collections;
+
+namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 {
     internal interface IEnumerableSignatures
     {
@@ -17,18 +19,21 @@
         void Average(long selector);
         void Cast(string type);
         void Cast(Type type);
+        void Concat(IEnumerable enumerable);
         void Contains(object selector);
         void Count();
         void Count(bool predicate);
         void DefaultIfEmpty();
         void DefaultIfEmpty(object defaultValue);
         void Distinct();
+        void Except(IEnumerable enumerable);
         void First();
         void First(bool predicate);
         void FirstOrDefault();
         void FirstOrDefault(bool predicate);
         void GroupBy(object keySelector);
         void GroupBy(object keySelector, object elementSelector);
+        void Intersect(IEnumerable enumerable);
         void Last();
         void Last(bool predicate);
         void LastOrDefault();
@@ -63,6 +68,7 @@
         void TakeWhile(bool predicate);
         void ThenBy(object selector);
         void ThenByDescending(object selector);
+        void Union(IEnumerable enumerable);
         void Where(bool predicate);
 
         // Executors

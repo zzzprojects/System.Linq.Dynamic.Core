@@ -54,8 +54,6 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
         [Theory]
         [InlineData(null)]
-        [InlineData(1.1d)]
-        [InlineData(1.1f)]
         [InlineData("\"abc\"")]
         public void ParseTypeAccess_Via_Constructor_Any_To_DateTime_Invalid(object any)
         {
