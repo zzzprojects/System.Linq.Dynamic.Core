@@ -1,3 +1,20 @@
+# v1.2.10 (31 May 2021)
+- [#476](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/476) - Add IDynamicLinqCustomTypeProvider contributed by [StefH](https://github.com/StefH)
+- [#495](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/495) - Fix ContainsKey in IReadOnlyDictionary&lt;,&gt; [bug] contributed by [StefH](https://github.com/StefH)
+- [#496](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/496) - Fixed selecting int property into enum property [bug] contributed by [StefH](https://github.com/StefH)
+- [#506](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/506) - Add Concat, Union, Except and Intersect [feature] contributed by [StefH](https://github.com/StefH)
+- [#508](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/508) - Create EF6 preview NuGet [feature] contributed by [StefH](https://github.com/StefH)
+- [#509](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/509) - Fix np(...) with UnaryExpression [bug] contributed by [StefH](https://github.com/StefH)
+- [#510](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/510) - Fix FindMethod for extension methods [bug] contributed by [StefH](https://github.com/StefH)
+- [#514](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/514) - Fix Enum [bug] contributed by [StefH](https://github.com/StefH)
+- [#438](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/438) - Typo in IDynamicLinkCustomTypeProvider name [bug]
+- [#452](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/452) - Filter properties of a derived class on a list of base class objects [bug]
+- [#490](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/490) - Selecting int property into enum throws an exception [bug]
+- [#494](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/494) - No applicable aggregate method 'ContainsKey(String)' exists [bug]
+- [#497](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/497) - Extending with extensions methods (DynamicLinqType attribute) [bug]
+- [#499](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/499) - Feature: Support for Concat and optionally Union, Except, Intersect [feature]
+- [#513](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/513) - Where throws exception when property name doesn't match enum name [bug]
+
 # v1.2.9 (26 March 2021)
 - [#485](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/485) - Add TypeConverters to config [feature] contributed by [StefH](https://github.com/StefH)
 - [#488](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/488) - If args count is 0 -&gt; parametereless method is better than method with parameters [bug] contributed by [AndriiZ](https://github.com/AndriiZ)
