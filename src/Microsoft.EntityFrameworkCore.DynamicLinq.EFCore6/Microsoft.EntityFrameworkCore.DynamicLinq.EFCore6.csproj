@@ -3,7 +3,7 @@
 
     <PropertyGroup>
         <!--<Version>6.2.$(PatchVersion)</Version>-->
-        <Version>6.0.0-preview.3.21201.2</Version>
+        <Version>6.0.0-preview.4.21253.1</Version>
         <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
@@ -55,6 +55,6 @@
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.3.21201.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.4.21253.1" />
     </ItemGroup>
 </Project>
