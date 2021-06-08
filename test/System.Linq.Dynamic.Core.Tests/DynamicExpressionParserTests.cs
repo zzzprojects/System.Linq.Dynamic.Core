@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
@@ -1070,7 +1070,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(anotherId, result);
-        }        
+        }
 
         [Theory]
         [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]
@@ -1258,5 +1258,58 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             result.Should().BeTrue();
         }
+
+        public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider
+        {
+            public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_GenericExtensionMethod()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(51);
+            var config = new ParsingConfig()
+            {
+                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod()
+            };
+
+            // Act
+            string query = "x => MethodsItemExtension.Functions.EfCoreCollate(x.UserName, \"tlh-KX\")==\"User4\" || MethodsItemExtension.Functions.EfCoreCollate(x.UserName, \"tlh-KX\")==\"User2\"";
+            var expression = DynamicExpressionParser.ParseLambda<User, bool>(config, false, query);
+            var del = expression.Compile();
+
+            var result = Enumerable.Where(testList, del);
+
+
+            var expected = testList.Where(x => new string[] { "User4", "User2" }.Contains(x.UserName)).ToList();
+
+            // Assert
+            Check.That(result).IsNotNull();
+            Check.That(result).HasSize(expected.Count);
+            Check.That(result).Equals(expected);
+        }
+
+        //[Fact]
+        //public void DynamicExpressionParser_ParseLambda__GenericExtension()
+        //{
+        //    var config = new ParsingConfig
+        //    {
+        //        CustomTypeProvider = new ExpressionTests.DefaultDynamicLinqCustomTypeProviderForStaticTesting()
+        //    };
+
+        //    // Arrange
+        //    var list = new[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
+
+        //    // Act
+        //    var methods = new Methods();
+        //    var expectedResult = list.Where(x => MethodsItemExtension.Functions.EfCoreCollate(x.Value, "tlh-KX") == 2);
+        //    var result = list.AsQueryable().Where(config, "MethodsItemExtension.Functions.EfCoreCollate(it.Value,\"tlh-KX\")==2");
+
+        //    // Assert
+        //    Assert.Equal(expectedResult.Count(), result.Count());
+        //}
+
+
     }
 }
