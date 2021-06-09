@@ -59,6 +59,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("is blazor wasm" + (Type.GetType("Mono.Runtime") != null));
+
         forecasts = await Http.GetJsonAsync<WeatherForecast[]>("sample-data/weather.json");
     }
 
