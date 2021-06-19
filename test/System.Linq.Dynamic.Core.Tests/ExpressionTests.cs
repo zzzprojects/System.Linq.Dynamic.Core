@@ -1671,7 +1671,23 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_NestedInteger_WithoutDefaultValue()
+        public void ExpressionTests_NullPropagating_Nested1Integer_WithoutDefaultValue()
+        {
+            // Arrange
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].NullableInt = null; // Set the NullableInt to null for first User
+
+            // Act
+            var result = testModels.AsQueryable().Select(t => t != null && t.NullableInt != null ? t.NullableInt : null).ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(it.Profile.UserProfileDetails.Id)").ToDynamicArray<int?>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+        
+        [Fact]
+        public void ExpressionTests_NullPropagating_Nested3Integer_WithoutDefaultValue()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
@@ -1715,7 +1731,23 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagatingNested_WithDefaultValue()
+        public void ExpressionTests_NullPropagatingNested1_WithDefaultValue()
+        {
+            // Arrange
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].UserName = null; // Set the UserName to null for first User
+
+            // Act
+            var result = testModels.AsQueryable().Select(t => t != null && t.UserName != null ? t.UserName : "x").ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(it.UserName, \"x\")").ToDynamicArray<string>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagatingNested3_WithDefaultValue()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
