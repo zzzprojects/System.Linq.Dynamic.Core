@@ -1166,7 +1166,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 bool hasDefaultParameter = args.Length == 2;
                 Expression expressionIfFalse = hasDefaultParameter ? args[1] : Expression.Constant(null);
 
-                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(args[0], hasDefaultParameter, out Expression generatedExpression))
+                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(args[0], true, out Expression generatedExpression))
                 {
                     return GenerateConditional(generatedExpression, args[0], expressionIfFalse, errorPos);
                 }
