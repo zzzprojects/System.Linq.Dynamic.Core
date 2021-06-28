@@ -301,6 +301,15 @@ namespace System.Linq.Dynamic.Core.Parser
                 expression is UnaryExpression;
         }
 
+        public Expression GenerateDefaultExpression(Type type)
+        {
+#if NET35
+            return Expression.Constant(Activator.CreateInstance(type));
+#else
+            return Expression.Default(type);
+#endif
+        }
+
         private Expression GetMemberExpression(Expression expression)
         {
             if (ExpressionQualifiesForNullPropagation(expression))
@@ -335,11 +344,11 @@ namespace System.Linq.Dynamic.Core.Parser
                 switch (expression)
                 {
                     case MemberExpression memberExpression:
-                        //list.Add(sourceExpression);
-                        if (TypeHelper.IsNullableType(memberExpression.Type) || !memberExpression.Type.GetTypeInfo().IsValueType)
-                        {
-                            list.Add(sourceExpression);
-                        }
+                        list.Add(sourceExpression);
+                        //if (TypeHelper.IsNullableType(memberExpression.Type) || !memberExpression.Type.GetTypeInfo().IsValueType)
+                        //{
+                        //    list.Add(sourceExpression);
+                        //}
                         break;
 
                     default:

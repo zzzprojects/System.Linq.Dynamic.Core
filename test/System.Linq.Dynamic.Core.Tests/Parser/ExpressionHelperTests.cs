@@ -139,7 +139,27 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             // Assert
             Check.That(result).IsTrue();
-            Check.That(generatedExpression.ToString()).IsEqualTo("(((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null))");
+            Check.That(generatedExpression.ToString()).IsEqualTo("((((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null)) AndAlso (x => x.Relation1.Relation2.Id != null))");
+        }
+
+        [Fact]
+        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_Nested3NonNullable_Config_Has_UseDefault()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                NullPropagatingUseDefaultValueForNonNullableValueTypes = true
+            };
+            var expressionHelper = new ExpressionHelper(config);
+
+            Expression<Func<Item, int>> expression = x => x.Relation1.Relation2.Id;
+
+            // Act
+            bool result = expressionHelper.TryGenerateAndAlsoNotNullExpression(expression, true, out Expression generatedExpression);
+
+            // Assert
+            Check.That(result).IsTrue();
+            Check.That(generatedExpression.ToString()).IsEqualTo("((((x != null) AndAlso (x.Relation1 != null)) AndAlso (x.Relation1.Relation2 != null)) AndAlso (x => x.Relation1.Relation2.Id != null))");
         }
 
         [Fact]
@@ -199,17 +219,17 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Fact]
-        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_NonNullable()
+        public void ExpressionHelper_TryGenerateAndAlsoNotNullExpression_Nullable()
         {
             // Assign
-            Expression<Func<Item, int>> expression = x => x.Id;
+            Expression<Func<Item, int?>> expression = x => x.Id;
 
             // Act
             bool result = _expressionHelper.TryGenerateAndAlsoNotNullExpression(expression, true, out Expression generatedExpression);
 
             // Assert
-            Check.That(result).IsFalse();
-            Check.That(generatedExpression.ToString()).IsEqualTo("x => x.Id");
+            result.Should().BeTrue();
+            generatedExpression.ToString().Should().StartWith("((x != null) AndAlso (x =>").And.EndWith("!= null))");
         }
 
         class Item
