@@ -344,11 +344,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 switch (expression)
                 {
                     case MemberExpression memberExpression:
-                        list.Add(sourceExpression);
-                        //if (TypeHelper.IsNullableType(memberExpression.Type) || !memberExpression.Type.GetTypeInfo().IsValueType)
-                        //{
-                        //    list.Add(sourceExpression);
-                        //}
+                        list.Add(memberExpression);
                         break;
 
                     default:
