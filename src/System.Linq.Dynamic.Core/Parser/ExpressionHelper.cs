@@ -343,8 +343,8 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 switch (expression)
                 {
-                    case MemberExpression memberExpression:
-                        list.Add(memberExpression);
+                    case MemberExpression _:
+                        list.Add(sourceExpression);
                         break;
 
                     default:
