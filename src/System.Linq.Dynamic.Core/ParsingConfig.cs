@@ -191,5 +191,12 @@ namespace System.Linq.Dynamic.Core
         /// Additional TypeConverters
         /// </summary>
         public IDictionary<Type, TypeConverter> TypeConverters { get; set; }
+
+        /// <summary>
+        /// When using the NullPropagating function np(...), use a "default value" for non-nullable value types instead of "null value".
+        /// 
+        /// Default value is false.
+        /// </summary>
+        public bool NullPropagatingUseDefaultValueForNonNullableValueTypes { get; set; } = false;
     }
 }

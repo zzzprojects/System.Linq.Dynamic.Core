@@ -296,9 +296,18 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             return
                 expression is MemberExpression ||
-                expression is ParameterExpression || 
+                expression is ParameterExpression ||
                 expression is MethodCallExpression ||
                 expression is UnaryExpression;
+        }
+
+        public Expression GenerateDefaultExpression(Type type)
+        {
+#if NET35
+            return Expression.Constant(Activator.CreateInstance(type));
+#else
+            return Expression.Default(type);
+#endif
         }
 
         private Expression GetMemberExpression(Expression expression)
@@ -330,11 +339,16 @@ namespace System.Linq.Dynamic.Core.Parser
 
             var list = new List<Expression>();
 
-            if (addSelf && expression is MemberExpression memberExpressionFirst)
+            if (addSelf)
             {
-                if (TypeHelper.IsNullableType(memberExpressionFirst.Type) || !memberExpressionFirst.Type.GetTypeInfo().IsValueType)
+                switch (expression)
                 {
-                    list.Add(sourceExpression);
+                    case MemberExpression _:
+                        list.Add(sourceExpression);
+                        break;
+
+                    default:
+                        break;
                 }
             }
 

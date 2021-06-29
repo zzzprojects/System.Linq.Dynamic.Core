@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
@@ -327,9 +328,11 @@ namespace System.Linq.Dynamic.Core.Tests
         public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(string propName, string valueString)
         {
             // Assign
+            var culture = CultureInfo.CreateSpecificCulture("en-US");
             var config = new ParsingConfig
             {
-                UseParameterizedNamesInDynamicQuery = true
+                UseParameterizedNamesInDynamicQuery = true,
+                NumberParseCulture = culture
             };
 
             // Act
@@ -348,7 +351,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var propertyInfo = wrapperObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
             object value = propertyInfo.GetValue(wrapperObj);
 
-            Check.That(value).IsEqualTo(Convert.ChangeType(valueString, Nullable.GetUnderlyingType(queriedPropType) ?? queriedPropType));
+            value.Should().Be(Convert.ChangeType(valueString, Nullable.GetUnderlyingType(queriedPropType) ?? queriedPropType, culture));
         }
 
         [Theory]
@@ -1070,7 +1073,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(anotherId, result);
-        }        
+        }
 
         [Theory]
         [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]
@@ -1239,7 +1242,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var @delegate = expression.Compile();
 
-            var result = (bool) @delegate.DynamicInvoke("This is a test  ");
+            var result = (bool)@delegate.DynamicInvoke("This is a test  ");
 
             // Assert
             result.Should().BeTrue();

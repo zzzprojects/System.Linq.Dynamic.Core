@@ -219,7 +219,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 _textParser.ValidateToken(TokenId.Colon, Res.ColonExpected);
                 _textParser.NextToken();
                 Expression expr2 = ParseConditionalOperator();
-                expr = GenerateConditional(expr, expr1, expr2, errorPos);
+                expr = GenerateConditional(expr, expr1, expr2, false, errorPos);
             }
             return expr;
         }
@@ -1145,7 +1145,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 throw ParseError(errorPos, Res.IifRequiresThreeArgs);
             }
 
-            return GenerateConditional(args[0], args[1], args[2], errorPos);
+            return GenerateConditional(args[0], args[1], args[2], false, errorPos);
         }
 
         // np(...) function
@@ -1166,9 +1166,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 bool hasDefaultParameter = args.Length == 2;
                 Expression expressionIfFalse = hasDefaultParameter ? args[1] : Expression.Constant(null);
 
-                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(args[0], hasDefaultParameter, out Expression generatedExpression))
+                if (_expressionHelper.TryGenerateAndAlsoNotNullExpression(args[0], true, out Expression generatedExpression))
                 {
-                    return GenerateConditional(generatedExpression, args[0], expressionIfFalse, errorPos);
+                    return GenerateConditional(generatedExpression, args[0], expressionIfFalse, true, errorPos);
                 }
 
                 return args[0];
@@ -1234,7 +1234,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return Expression.ConvertChecked(_it, resolvedType);
         }
 
-        Expression GenerateConditional(Expression test, Expression expressionIfTrue, Expression expressionIfFalse, int errorPos)
+        Expression GenerateConditional(Expression test, Expression expressionIfTrue, Expression expressionIfFalse, bool nullPropagating, int errorPos)
         {
             if (test.Type != typeof(bool))
             {
@@ -1244,30 +1244,71 @@ namespace System.Linq.Dynamic.Core.Parser
             if (expressionIfTrue.Type != expressionIfFalse.Type)
             {
                 // If expressionIfTrue is a null constant and expressionIfFalse is ValueType:
-                // - create nullable constant from expressionIfTrue with type from expressionIfFalse
-                // - convert expressionIfFalse to nullable (unless it's already nullable)
                 if (Constants.IsNull(expressionIfTrue) && expressionIfFalse.Type.GetTypeInfo().IsValueType)
                 {
-                    Type nullableType = TypeHelper.ToNullableType(expressionIfFalse.Type);
-                    expressionIfTrue = Expression.Constant(null, nullableType);
-                    if (!TypeHelper.IsNullableType(expressionIfFalse.Type))
+                    if (nullPropagating && _parsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes)
                     {
-                        expressionIfFalse = Expression.Convert(expressionIfFalse, nullableType);
+                        // If expressionIfFalse is a non-nullable type:
+                        //  generate default expression from the expressionIfFalse-type for expressionIfTrue
+                        // Else
+                        //  create nullable constant from expressionIfTrue with type from expressionIfFalse
+
+                        if (!TypeHelper.IsNullableType(expressionIfFalse.Type))
+                        {
+                            expressionIfTrue = _expressionHelper.GenerateDefaultExpression(expressionIfFalse.Type);
+                        }
+                        else
+                        {
+                            expressionIfTrue = Expression.Constant(null, expressionIfFalse.Type);
+                        }
+                    }
+                    else
+                    {
+                        // - create nullable constant from expressionIfTrue with type from expressionIfFalse
+                        // - convert expressionIfFalse to nullable (unless it's already nullable)
+
+                        Type nullableType = TypeHelper.ToNullableType(expressionIfFalse.Type);
+                        expressionIfTrue = Expression.Constant(null, nullableType);
+
+                        if (!TypeHelper.IsNullableType(expressionIfFalse.Type))
+                        {
+                            expressionIfFalse = Expression.Convert(expressionIfFalse, nullableType);
+                        }
                     }
 
                     return Expression.Condition(test, expressionIfTrue, expressionIfFalse);
                 }
 
                 // If expressionIfFalse is a null constant and expressionIfTrue is a ValueType:
-                // - create nullable constant from expressionIfFalse with type from expressionIfTrue
-                // - convert expressionIfTrue to nullable (unless it's already nullable)
                 if (Constants.IsNull(expressionIfFalse) && expressionIfTrue.Type.GetTypeInfo().IsValueType)
                 {
-                    Type nullableType = TypeHelper.ToNullableType(expressionIfTrue.Type);
-                    expressionIfFalse = Expression.Constant(null, nullableType);
-                    if (!TypeHelper.IsNullableType(expressionIfTrue.Type))
+                    if (nullPropagating && _parsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes)
                     {
-                        expressionIfTrue = Expression.Convert(expressionIfTrue, nullableType);
+                        // If expressionIfTrue is a non-nullable type:
+                        //  generate default expression from the expressionIfFalse-type for expressionIfFalse
+                        // Else
+                        //  create nullable constant from expressionIfFalse with type from expressionIfTrue
+
+                        if (!TypeHelper.IsNullableType(expressionIfTrue.Type))
+                        {
+                            expressionIfFalse = _expressionHelper.GenerateDefaultExpression(expressionIfTrue.Type);
+                        }
+                        else
+                        {
+                            expressionIfFalse = Expression.Constant(null, expressionIfTrue.Type);
+                        }
+                    }
+                    else
+                    {
+                        // - create nullable constant from expressionIfFalse with type from expressionIfTrue
+                        // - convert expressionIfTrue to nullable (unless it's already nullable)
+
+                        Type nullableType = TypeHelper.ToNullableType(expressionIfTrue.Type);
+                        expressionIfFalse = Expression.Constant(null, nullableType);
+                        if (!TypeHelper.IsNullableType(expressionIfTrue.Type))
+                        {
+                            expressionIfTrue = Expression.Convert(expressionIfTrue, nullableType);
+                        }
                     }
 
                     return Expression.Condition(test, expressionIfTrue, expressionIfFalse);
