@@ -1541,19 +1541,21 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Theory]
-        [InlineData("np(str)", "Select(Param_0 => Param_0.str)")]
-        [InlineData("np(strNull)", "Select(Param_0 => Param_0.strNull)")]
+        [InlineData("np(str)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.str != null)), Param_0.str, null))")]
         [InlineData("np(str, \"x\")", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.str != null)), Param_0.str, \"x\"))")]
-        [InlineData("np(g)", "Select(Param_0 => Param_0.g)")]
-        [InlineData("np(gnullable)", "Select(Param_0 => Param_0.gnullable)")]
-        [InlineData("np(dt)", "Select(Param_0 => Param_0.dt)")]
-        [InlineData("np(dtnullable)", "Select(Param_0 => Param_0.dtnullable)")]
-        [InlineData("np(number)", "Select(Param_0 => Param_0.number)")]
-        [InlineData("np(nullablenumber)", "Select(Param_0 => Param_0.nullablenumber)")]
-        [InlineData("np(_enum)", "Select(Param_0 => Param_0._enum)")]
-        [InlineData("np(_enumnullable)", "Select(Param_0 => Param_0._enumnullable)")]
+        [InlineData("np(strNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.strNull != null)), Param_0.strNull, null))")]
+        [InlineData("np(strNull, \"x\")", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.strNull != null)), Param_0.strNull, \"x\"))")]
+        [InlineData("np(gnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.gnullable != null)), Param_0.gnullable, null))")]
+        [InlineData("np(dtnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.dtnullable != null)), Param_0.dtnullable, null))")]
+        [InlineData("np(number, 42)", "Select(Param_0 => IIF((Param_0 != null), Param_0.number, 42))")]
+        [InlineData("np(nullablenumber)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nullablenumber != null)), Param_0.nullablenumber, null))")]
+        [InlineData("np(_enumnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0._enumnullable != null)), Param_0._enumnullable, null))")]
 
 #if NET452
+        [InlineData("np(dt)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0.dt), null))")]
+        [InlineData("np(_enum)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0._enum), null))")]
+        [InlineData("np(g)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0.g), null))")]
+        [InlineData("np(number)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0.number), null))")]
         [InlineData("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g), null))")]
         [InlineData("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt), null))")]
         [InlineData("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.number), null))")]
@@ -1562,23 +1564,27 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal), null))")]
         [InlineData("np(nested.dtnullable.Value.Year)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.dtnullable != null)), Convert(Param_0.nested.dtnullable.Value.Year), null))")]
 #else
+        [InlineData("np(dt)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0.dt, Nullable`1), null))")]
+        [InlineData("np(_enum)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0._enum, Nullable`1), null))")]
+        [InlineData("np(g)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0.g, Nullable`1), null))")]
+        [InlineData("np(number)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0.number, Nullable`1), null))")]
         [InlineData("np(nested.g)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.g, Nullable`1), null))")]
         [InlineData("np(nested.dt)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.dt, Nullable`1), null))")]
         [InlineData("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested.number, Nullable`1), null))")]
+        [InlineData("np(nested.number, 42)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.number, 42))")]
         [InlineData("np(nested._enum)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Convert(Param_0.nested._enum, Nullable`1), null))")]
         [InlineData("np(item.Id)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.Id, Nullable`1), null))")]
         [InlineData("np(item.GuidNormal)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Convert(Param_0.item.GuidNormal, Nullable`1), null))")]
         [InlineData("np(nested.dtnullable.Value.Year)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.dtnullable != null)), Convert(Param_0.nested.dtnullable.Value.Year, Nullable`1), null))")]
 #endif
-
-        [InlineData("np(nested.strNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.strNull, null))")]
+        [InlineData("np(nested.strNull)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.strNull != null)), Param_0.nested.strNull, null))")]
         [InlineData("np(nested.strNull, \"x\")", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.strNull != null)), Param_0.nested.strNull, \"x\"))")]
-        [InlineData("np(nested.gnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.gnullable, null))")]
-        [InlineData("np(nested.dtnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.dtnullable, null))")]
-        [InlineData("np(nested.nullablenumber)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.nullablenumber, null))")]
+        [InlineData("np(nested.gnullable)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.gnullable != null)), Param_0.nested.gnullable, null))")]
+        [InlineData("np(nested.dtnullable)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.dtnullable != null)), Param_0.nested.dtnullable, null))")]
+        [InlineData("np(nested.nullablenumber)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.nullablenumber != null)), Param_0.nested.nullablenumber, null))")]
         [InlineData("np(nested.nullablenumber, 42)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.nullablenumber != null)), Param_0.nested.nullablenumber, 42))")]
-        [InlineData("np(nested._enumnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested._enumnullable, null))")]
-        [InlineData("np(item.GuidNull)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.item != null)), Param_0.item.GuidNull, null))")]
+        [InlineData("np(nested._enumnullable)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested._enumnullable != null)), Param_0.nested._enumnullable, null))")]
+        [InlineData("np(item.GuidNull)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.item != null)) AndAlso (Param_0.item.GuidNull != null)), Param_0.item.GuidNull, null))")]
         [InlineData("np(items.FirstOrDefault())", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.items != null)), Param_0.items.FirstOrDefault(), null))")]
         [InlineData("np(items.FirstOrDefault(it != \"x\"))", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.items != null)), Param_0.items.FirstOrDefault(Param_1 => (Param_1 != \"x\")), null))")]
         public void ExpressionTests_NullPropagating(string test, string query)
@@ -1629,6 +1635,66 @@ namespace System.Linq.Dynamic.Core.Tests
             queryAsString = queryAsString.Substring(queryAsString.IndexOf(".Select") + 1).TrimEnd(']');
             Check.That(queryAsString).Equals(query);
         }
+
+        [Theory]
+        [InlineData("np(number)", "Select(Param_0 => IIF((Param_0 != null), Param_0.number, default(Int32)))")]
+        [InlineData("np(number, 42)", "Select(Param_0 => IIF((Param_0 != null), Param_0.number, 42))")]
+        [InlineData("np(nested.dtnullable.Value.Year)", "Select(Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.nested != null)) AndAlso (Param_0.nested.dtnullable != null)), Param_0.nested.dtnullable.Value.Year, default(Int32)))")]
+        [InlineData("np(nested.number)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nested != null)), Param_0.nested.number, default(Int32)))")]
+        public void ExpressionTests_NullPropagating_Config_Has_UseDefault(string test, string query)
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                NullPropagatingUseDefaultValueForNonNullableValueTypes = true
+            };
+
+            var q = new[]
+            {
+                new
+                {
+                    g = Guid.NewGuid(),
+                    gnullable = (Guid?) Guid.NewGuid(),
+                    dt = DateTime.Now,
+                    dtnullable = (DateTime?) DateTime.Now,
+                    _enum = TestEnum2.Var1,
+                    _enumnullable = (TestEnum2?) TestEnum2.Var2,
+                    number = 1,
+                    nullablenumber = (int?) 2,
+                    str = "str",
+                    strNull = (string) null,
+                    nested = new
+                    {
+                        g = Guid.NewGuid(),
+                        gnullable = (Guid?) Guid.NewGuid(),
+                        dt = DateTime.Now,
+                        dtnullable = (DateTime?) DateTime.Now,
+                        _enum = TestEnum2.Var1,
+                        _enumnullable = (TestEnum2?) TestEnum2.Var2,
+                        number = 1,
+                        nullablenumber = (int?) 2,
+                        str = "str",
+                        strNull = (string) null
+                    },
+                    item = new TestGuidNullClass
+                    {
+                        Id = 100,
+                        GuidNormal = Guid.NewGuid(),
+                        GuidNull = Guid.NewGuid()
+                    },
+                    items = new [] { "a", "b" }
+                }
+            }.AsQueryable();
+
+            // Act
+            var resultDynamic = q.Select(config, test);
+
+            // Assert
+            string queryAsString = resultDynamic.ToString();
+            queryAsString = queryAsString.Substring(queryAsString.IndexOf(".Select") + 1).TrimEnd(']');
+            Check.That(queryAsString).Equals(query);
+        }
+
 
         [Fact]
         public void ExpressionTests_NullPropagating_InstanceMethod_Zero_Arguments()
@@ -1734,7 +1800,23 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagating_NestedInteger_WithoutDefaultValue()
+        public void ExpressionTests_NullPropagating_Nested1Integer_WithoutDefaultValue()
+        {
+            // Arrange
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].NullableInt = null; // Set the NullableInt to null for first User
+
+            // Act
+            var result = testModels.AsQueryable().Select(t => t != null && t.NullableInt != null ? t.NullableInt : null).ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(it.NullableInt)").ToDynamicArray<int?>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_Nested3Integer_WithoutDefaultValue()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();
@@ -1744,6 +1826,27 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var result = testModels.AsQueryable().Select(t => t != null && t.Profile != null && t.Profile.UserProfileDetails != null ? (long?)t.Profile.UserProfileDetails.Id : null).ToArray();
             var resultDynamic = testModels.AsQueryable().Select("np(it.Profile.UserProfileDetails.Id)").ToDynamicArray<long?>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagating_Nested3Integer_WithoutDefaultValue_Config_Has_UseDefault()
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                NullPropagatingUseDefaultValueForNonNullableValueTypes = true
+            };
+
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].Profile = null; // Set the Profile to null for first User
+
+            // Act
+            var result = testModels.AsQueryable().Select(t => t != null && t.Profile != null && t.Profile.UserProfileDetails != null ? t.Profile.UserProfileDetails.Id : default(long)).ToArray();
+            var resultDynamic = testModels.AsQueryable().Select(config, "np(it.Profile.UserProfileDetails.Id)").ToDynamicArray<long>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);
@@ -1778,7 +1881,23 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_NullPropagatingNested_WithDefaultValue()
+        public void ExpressionTests_NullPropagatingNested1_WithDefaultValue()
+        {
+            // Arrange
+            var testModels = User.GenerateSampleModels(2, true).ToList();
+            testModels.Add(null); // Add null User
+            testModels[0].UserName = null; // Set the UserName to null for first User
+
+            // Act
+            var result = testModels.AsQueryable().Select(t => t != null && t.UserName != null ? t.UserName : "x").ToArray();
+            var resultDynamic = testModels.AsQueryable().Select("np(it.UserName, \"x\")").ToDynamicArray<string>();
+
+            // Assert
+            Check.That(resultDynamic).ContainsExactly(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_NullPropagatingNested3_WithDefaultValue()
         {
             // Arrange
             var testModels = User.GenerateSampleModels(2, true).ToList();

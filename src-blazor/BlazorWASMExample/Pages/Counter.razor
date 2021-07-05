@@ -1,4 +1,8 @@
 ﻿@page "/counter"
+@using System.Linq.Dynamic.Core
+@using System.Reflection.Emit
+@using System.Reflection 
+@using Microsoft.AspNetCore.Components.WebAssembly.Infrastructure
 
 <h1>Counter</h1>
 
@@ -7,10 +11,47 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
+    private static string DynamicAssemblyName = "System.Linq.Dynamic.Core.DynamicClasses, Version=1.0.0.0";
+    private static string DynamicModuleName = "System.Linq.Dynamic.Core.DynamicClasses";
+
     private int currentCount = 0;
 
     private void IncrementCount()
     {
         currentCount++;
+
+        var dynamicProperties = new List<DynamicProperty>();
+        dynamicProperties.Add(new DynamicProperty("Name", typeof(string)));
+        dynamicProperties.Add(new DynamicProperty("Age", typeof(int)));
+
+        try
+        {
+            Console.WriteLine("FrameworkDescription " + System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
+            Console.WriteLine("OSArchitecture       " + System.Runtime.InteropServices.RuntimeInformation.OSArchitecture);
+            Console.WriteLine("OSDescription        " + System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            Console.WriteLine("ProcessArchitecture  " + System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture);
+            Console.WriteLine("RuntimeIdentifier    " + System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier);
+
+            Console.WriteLine("is blazor wasm" + (Type.GetType("Mono.Runtime") != null));
+
+            var c = System.Runtime.InteropServices.OSPlatform.Create("BROWSER");
+            Console.WriteLine(c);
+
+            var i = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(c);
+            Console.WriteLine(i);
+
+            var model = DynamicClassFactory.CreateType(dynamicProperties);
+
+            Console.WriteLine(model.GetType());
+
+            foreach (var p in model.GetProperties())
+            {
+                Console.WriteLine(p.Name + " - " + p.PropertyType);
+            }
+        }
+        catch (Exception exception)
+        {
+            throw;
+        }
     }
 }

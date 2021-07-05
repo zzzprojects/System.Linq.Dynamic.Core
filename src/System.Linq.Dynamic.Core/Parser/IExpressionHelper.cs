@@ -37,5 +37,7 @@ namespace System.Linq.Dynamic.Core.Parser
         bool MemberExpressionIsDynamic(Expression expression);
 
         Expression ConvertToExpandoObjectAndCreateDynamicExpression(Expression expression, Type type, string propertyName);
+
+        Expression GenerateDefaultExpression(Type type);
     }
 }
