@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace System.Linq.Dynamic.Core
 {
 #if NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER  || NETSTANDARD1_3_OR_GREATER || UAP10_0
-    public static class DynamicQueryable_FormattableString_Extensions
+    public static class DynamicQueryableWithFormattableStringExtensions
     {
         public static IQueryable WhereInterpolated([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] FormattableString predicate)
         {
