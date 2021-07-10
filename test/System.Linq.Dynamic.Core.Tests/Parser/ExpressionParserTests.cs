@@ -93,6 +93,20 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             Check.That(parsedExpression).Equals(result);
         }
 
+        [Fact]
+        public void Parse_ParseMultipleInOperators()
+        {
+            // Arrange
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x") };
+            var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name in (\"A\", \"B\")", null, null);
+
+            // Act
+            var parsedExpression = sut.Parse(null).ToString();
+
+            // Assert
+            Check.That(parsedExpression).Equals("(((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso ((x.Name == \"A\") OrElse (x.Name == \"B\")))");
+        }
+
         [Theory]
         [InlineData("string(\"\")", "")]
         [InlineData("string(\"a\")", "a")]

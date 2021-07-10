@@ -283,7 +283,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
-                Expression right = ParseComparisonOperator();
+                Expression right = ParseIn();
                 CheckAndPromoteOperands(typeof(ILogicalSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                 left = Expression.AndAlso(left, right);
             }
