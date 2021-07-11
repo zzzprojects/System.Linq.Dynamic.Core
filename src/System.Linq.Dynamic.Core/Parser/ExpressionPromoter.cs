@@ -60,7 +60,10 @@ namespace System.Linq.Dynamic.Core.Parser
                                 break;
 
                             case TypeCode.Double:
-                                if (target == typeof(decimal) || target == typeof(double)) value = _numberParser.ParseNumber(text, target);
+                                if (target == typeof(decimal) || target == typeof(double))
+                                {
+                                    value = _numberParser.ParseNumber(text, target);
+                                }
                                 break;
 
                             case TypeCode.String:

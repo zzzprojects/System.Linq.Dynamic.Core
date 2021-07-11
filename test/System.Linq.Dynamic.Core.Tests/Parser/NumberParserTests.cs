@@ -1,6 +1,7 @@
-﻿using System.Globalization;
-using NFluent;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Dynamic.Core.Parser;
+using FluentAssertions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
@@ -9,34 +10,108 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
     {
         private readonly ParsingConfig _parsingConfig = new ParsingConfig();
 
-        private readonly NumberParser _sut;
-
-        public NumberParserTests()
+        public static object[][] Decimals()
         {
-            _sut = new NumberParser(_parsingConfig);
+            return new object[][]
+            {
+                new object[] { "de-DE", "1", 1m },
+                new object[] { "de-DE", "-42", -42m },
+                new object[] { "de-DE", "3,215", 3.215m },
+                new object[] { "de-DE", "3.215", 3215m },
+
+                new object[] { null, "1", 1m },
+                new object[] { null, "-42", -42m },
+                new object[] { null, "3,215", 3215m },
+                new object[] { null, "3.215", 3.215m }
+            };
         }
-
-        [Fact]
-        public void NumberParser_ParseNumber_Decimal_With_DefaultCulture()
+        [Theory]
+        [MemberData(nameof(Decimals))]
+        public void NumberParser_ParseNumber_Decimal(string culture, string text, decimal expected)
         {
+            // Arrange
+            if (culture != null)
+            {
+                _parsingConfig.NumberParseCulture = CultureInfo.CreateSpecificCulture(culture);
+            }
+
             // Act
-            var result = _sut.ParseNumber("3.21", typeof(decimal));
+            var result = new NumberParser(_parsingConfig).ParseNumber(text, typeof(decimal));
 
             // Assert
-            Check.That(result).Equals(3.21m);
+            result.Should().Be(expected);
         }
 
-        [Fact]
-        public void NumberParser_ParseNumber_Decimal_With_GermanCulture()
+        public static object[][] Floats()
         {
-            // Assign
-            _parsingConfig.NumberParseCulture = CultureInfo.CreateSpecificCulture("de-DE");
+            return new object[][]
+            {
+                new object[] { "de-DE", "1", 1f },
+                new object[] { "de-DE", "-42", -42f },
+                new object[] { "de-DE", "3,215", 3.215f },
+                new object[] { "de-DE", "3.215", 3215f },
+                new object[] { "de-DE", "1,2345E-4", 0.00012345f },
+                new object[] { "de-DE", "1,2345E4", 12345d },
+
+                new object[] { null, "1", 1f },
+                new object[] { null, "-42", -42f },
+                new object[] { null, "3,215", 3215f },
+                new object[] { null, "3.215", 3.215f },
+                new object[] { null, "1.2345E-4", 0.00012345f },
+                new object[] { null, "1.2345E4", 12345f }
+            };
+        }
+        [Theory]
+        [MemberData(nameof(Floats))]
+        public void NumberParser_ParseNumber_Float(string culture, string text, float expected)
+        {
+            // Arrange
+            if (culture != null)
+            {
+                _parsingConfig.NumberParseCulture = CultureInfo.CreateSpecificCulture(culture);
+            }
 
             // Act
-            var result = _sut.ParseNumber("3,21", typeof(decimal));
+            var result = new NumberParser(_parsingConfig).ParseNumber(text, typeof(float));
 
             // Assert
-            Check.That(result).Equals(3.21m);
+            result.Should().Be(expected);
+        }
+
+        public static IEnumerable<object[]> Doubles()
+        {
+            return new object[][]
+            {
+                new object[] { "de-DE", "1", 1d },
+                new object[] { "de-DE", "-42", -42d },
+                new object[] { "de-DE", "3,215", 3.215d },
+                new object[] { "de-DE", "3.215", 3215d },
+                new object[] { "de-DE", "1,2345E-4", 0.00012345d },
+                new object[] { "de-DE", "1,2345E4", 12345d },
+
+                new object[] { null, "1", 1d },
+                new object[] { null, "-42", -42d },
+                new object[] { null, "3,215", 3215d },
+                new object[] { null, "3.215", 3.215d },
+                new object[] { null, "1.2345E-4", 0.00012345d },
+                new object[] { null, "1.2345E4", 12345d }
+            };
+        }
+        [Theory]
+        [MemberData(nameof(Doubles))]
+        public void NumberParser_ParseNumber_Double(string culture, string text, double expected)
+        {
+            // Arrange
+            if (culture != null)
+            {
+                _parsingConfig.NumberParseCulture = CultureInfo.CreateSpecificCulture(culture);
+            }
+
+            // Act
+            var result = new NumberParser(_parsingConfig).ParseNumber(text, typeof(double));
+
+            // Assert
+            result.Should().Be(expected);
         }
     }
 }
