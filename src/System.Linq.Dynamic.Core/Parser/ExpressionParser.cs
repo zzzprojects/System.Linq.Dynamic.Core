@@ -904,40 +904,10 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser.ValidateToken(TokenId.RealLiteral);
 
             string text = _textParser.CurrentToken.Text;
-            
 
             _textParser.NextToken();
 
             return ParseRealLiteral(text, text[text.Length - 1], true);
-            //object o;
-            //switch (qualifier)
-            //{
-            //    case 'f':
-            //    case 'F':
-            //        o = _numberParser.ParseNumber(text.Substring(0, text.Length - 1), typeof(float));
-            //        break;
-
-            //    case 'm':
-            //    case 'M':
-            //        o = _numberParser.ParseNumber(text.Substring(0, text.Length - 1), typeof(decimal));
-            //        break;
-
-            //    case 'd':
-            //    case 'D':
-            //        o = _numberParser.ParseNumber(text.Substring(0, text.Length - 1), typeof(double));
-            //        break;
-
-            //    default:
-            //        o = _numberParser.ParseNumber(text, typeof(double));
-            //        break;
-            //}
-
-            //if (o != null)
-            //{
-            //    return ConstantExpressionHelper.CreateLiteral(o, text);
-            //}
-
-            //throw ParseError(Res.InvalidRealLiteral, text);
         }
 
         Expression ParseRealLiteral(string text, char qualifier, bool stripQualifier)
@@ -972,53 +942,6 @@ namespace System.Linq.Dynamic.Core.Parser
 
             throw ParseError(Res.InvalidRealLiteral, text);
         }
-
-        //Expression TryParseAsFloat(string text, char qualifier)
-        //{
-        //    if (qualifier == 'F' || qualifier == 'f')
-        //    {
-        //        if (_numberParser.TryParseNumber(text.Substring(0, text.Length - 1), typeof(float), out var f))
-        //        {
-        //            return ConstantExpressionHelper.CreateLiteral(f, text);
-        //        }
-        //    }
-
-        //    // not possible to find float qualifier, so try to parse as decimal
-        //    return TryParseAsDecimal(text, qualifier);
-        //}
-
-        //Expression TryParseAsDecimal(string text, char qualifier)
-        //{
-        //    if (qualifier == 'M' || qualifier == 'm')
-        //    {
-        //        if (_numberParser.TryParseNumber(text.Substring(0, text.Length - 1), typeof(decimal), out var d))
-        //        {
-        //            return ConstantExpressionHelper.CreateLiteral(d, text);
-        //        }
-        //    }
-
-        //    // not possible to find float qualifier, so try to parse as double
-        //    return TryParseAsDouble(text, qualifier);
-        //}
-
-        //Expression TryParseAsDouble(string text, char qualifier)
-        //{
-        //    object d;
-        //    if (qualifier == 'D' || qualifier == 'd')
-        //    {
-        //        if (_numberParser.TryParseNumber(text.Substring(0, text.Length - 1), typeof(double), out d))
-        //        {
-        //            return ConstantExpressionHelper.CreateLiteral(d, text);
-        //        }
-        //    }
-
-        //    if (_numberParser.TryParseNumber(text, typeof(double), out d))
-        //    {
-        //        return ConstantExpressionHelper.CreateLiteral(d, text);
-        //    }
-
-        //    throw ParseError(Res.InvalidRealLiteral, text);
-        //}
 
         Expression ParseParenExpression()
         {
