@@ -51,14 +51,18 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
                 new object[] { "de-DE", "3,215", 3.215f },
                 new object[] { "de-DE", "3.215", 3215f },
                 new object[] { "de-DE", "1,2345E-4", 0.00012345f },
+                new object[] { "de-DE", "1,2345e-4", 0.00012345f },
                 new object[] { "de-DE", "1,2345E4", 12345d },
+                new object[] { "de-DE", "1,2345e4", 12345d },
 
                 new object[] { null, "1", 1f },
                 new object[] { null, "-42", -42f },
                 new object[] { null, "3,215", 3215f },
                 new object[] { null, "3.215", 3.215f },
                 new object[] { null, "1.2345E-4", 0.00012345f },
-                new object[] { null, "1.2345E4", 12345f }
+                new object[] { null, "1.2345e-4", 0.00012345f },
+                new object[] { null, "1.2345E4", 12345f },
+                new object[] { null, "1.2345e4", 12345f }
             };
         }
         [Theory]
@@ -87,14 +91,18 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
                 new object[] { "de-DE", "3,215", 3.215d },
                 new object[] { "de-DE", "3.215", 3215d },
                 new object[] { "de-DE", "1,2345E-4", 0.00012345d },
+                new object[] { "de-DE", "1,2345e-4", 0.00012345d },
                 new object[] { "de-DE", "1,2345E4", 12345d },
+                new object[] { "de-DE", "1,2345e4", 12345d },
 
                 new object[] { null, "1", 1d },
                 new object[] { null, "-42", -42d },
                 new object[] { null, "3,215", 3215d },
                 new object[] { null, "3.215", 3.215d },
                 new object[] { null, "1.2345E-4", 0.00012345d },
-                new object[] { null, "1.2345E4", 12345d }
+                new object[] { null, "1.2345e-4", 0.00012345d },
+                new object[] { null, "1.2345E4", 12345d },
+                new object[] { null, "1.2345e4", 12345d }
             };
         }
         [Theory]
