@@ -28,6 +28,7 @@ namespace System.Linq.Dynamic.Core.Parser
         private readonly MethodFinder _methodFinder;
         private readonly IKeywordsHelper _keywordsHelper;
         private readonly TextParser _textParser;
+        private readonly NumberParser _numberParser;
         private readonly IExpressionHelper _expressionHelper;
         private readonly ITypeFinder _typeFinder;
         private readonly ITypeConverterFactory _typeConverterFactory;
@@ -83,6 +84,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _keywordsHelper = new KeywordsHelper(_parsingConfig);
             _textParser = new TextParser(_parsingConfig, expression);
+            _numberParser = new NumberParser(parsingConfig);
             _methodFinder = new MethodFinder(_parsingConfig);
             _expressionHelper = new ExpressionHelper(_parsingConfig);
             _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
@@ -876,16 +878,14 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (!string.IsNullOrEmpty(qualifier))
                 {
                     if (qualifier == "L" || qualifier == "l")
+                    {
                         return ConstantExpressionHelper.CreateLiteral(value, text);
+                    }
 
-                    if (qualifier == "F" || qualifier == "f")
-                        return TryParseAsFloat(text, qualifier[0]);
-
-                    if (qualifier == "D" || qualifier == "d")
-                        return TryParseAsDouble(text, qualifier[0]);
-
-                    if (qualifier == "M" || qualifier == "m")
-                        return TryParseAsDecimal(text, qualifier[0]);
+                    if (qualifier == "F" || qualifier == "f" || qualifier == "D" || qualifier == "d" || qualifier == "M" || qualifier == "m")
+                    {
+                        return ParseRealLiteral(text, qualifier[0], false);
+                    }
 
                     throw ParseError(Res.MinusCannotBeAppliedToUnsignedInteger);
                 }
@@ -904,54 +904,40 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser.ValidateToken(TokenId.RealLiteral);
 
             string text = _textParser.CurrentToken.Text;
-            char qualifier = text[text.Length - 1];
 
             _textParser.NextToken();
-            return TryParseAsFloat(text, qualifier);
+
+            return ParseRealLiteral(text, text[text.Length - 1], true);
         }
 
-        Expression TryParseAsFloat(string text, char qualifier)
+        Expression ParseRealLiteral(string text, char qualifier, bool stripQualifier)
         {
-            if (qualifier == 'F' || qualifier == 'f')
+            object o;
+            switch (qualifier)
             {
-                if (float.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Float, _parsingConfig.NumberParseCulture, out float f))
-                {
-                    return ConstantExpressionHelper.CreateLiteral(f, text);
-                }
+                case 'f':
+                case 'F':
+                    o = _numberParser.ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(float));
+                    break;
+
+                case 'm':
+                case 'M':
+                    o = _numberParser.ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(decimal));
+                    break;
+
+                case 'd':
+                case 'D':
+                    o = _numberParser.ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(double));
+                    break;
+
+                default:
+                    o = _numberParser.ParseNumber(text, typeof(double));
+                    break;
             }
 
-            // not possible to find float qualifier, so try to parse as double
-            return TryParseAsDecimal(text, qualifier);
-        }
-
-        Expression TryParseAsDecimal(string text, char qualifier)
-        {
-            if (qualifier == 'M' || qualifier == 'm')
+            if (o != null)
             {
-                if (decimal.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Number, _parsingConfig.NumberParseCulture, out decimal d))
-                {
-                    return ConstantExpressionHelper.CreateLiteral(d, text);
-                }
-            }
-
-            // not possible to find float qualifier, so try to parse as double
-            return TryParseAsDouble(text, qualifier);
-        }
-
-        Expression TryParseAsDouble(string text, char qualifier)
-        {
-            double d;
-            if (qualifier == 'D' || qualifier == 'd')
-            {
-                if (double.TryParse(text.Substring(0, text.Length - 1), NumberStyles.Number, _parsingConfig.NumberParseCulture, out d))
-                {
-                    return ConstantExpressionHelper.CreateLiteral(d, text);
-                }
-            }
-
-            if (double.TryParse(text, NumberStyles.Number, _parsingConfig.NumberParseCulture, out d))
-            {
-                return ConstantExpressionHelper.CreateLiteral(d, text);
+                return ConstantExpressionHelper.CreateLiteral(o, text);
             }
 
             throw ParseError(Res.InvalidRealLiteral, text);
@@ -1044,42 +1030,6 @@ namespace System.Linq.Dynamic.Core.Parser
 
                 return expr;
             }
-
-            //// This could be enum like "MyEnum.Value1"
-            //if (_textParser.CurrentToken.Id == TokenId.Identifier)
-            //{
-            //    var parts = new List<string> { _textParser.CurrentToken.Text };
-
-            //    _textParser.NextToken();
-            //    _textParser.ValidateToken(TokenId.Dot, Res.DotExpected);
-            //    while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
-            //    {
-            //        parts.Add(_textParser.CurrentToken.Text);
-
-            //        _textParser.NextToken();
-            //        _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
-
-            //        parts.Add(_textParser.CurrentToken.Text);
-
-            //        _textParser.NextToken();
-            //    }
-
-            //    var enumTypeAsString = string.Join("", parts.Take(parts.Count - 2).ToArray());
-            //    var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, true);
-            //    if (enumType == null)
-            //    {
-            //        throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
-            //    }
-
-            //    string enumValue = parts.Last();
-            //    var @enum = TypeHelper.ParseEnum(enumValue, enumType);
-            //    if (@enum == null)
-            //    {
-            //        throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValue, enumTypeAsString);
-            //    }
-
-            //    return Expression.Constant(@enum);
-            //}
 
             if (_it != null)
             {

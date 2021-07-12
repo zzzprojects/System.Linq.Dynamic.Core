@@ -644,21 +644,114 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(typeof(int), expression.Body.Type);
         }
 
-        [Fact]
-        public void DynamicExpressionParser_ParseLambda_RealNumbers()
+        public static object[][] Decimals()
         {
+            return new object[][]
+            {
+                new object[] { "de-DE", "1m", 1f },
+                new object[] { "de-DE", "-42,0m", -42m },
+                new object[] { "de-DE", "3,215m", 3.215m },
+
+                new object[] { null, "1m", 1f },
+                new object[] { null, "-42.0m", -42m },
+                new object[] { null, "3.215m", 3.215m }
+            };
+        }
+        [Theory]
+        [MemberData(nameof(Decimals))]
+        public void DynamicExpressionParser_ParseLambda_Decimal(string culture, string expression, decimal expected)
+        {
+            // Arrange
+            var config = new ParsingConfig();
+            if (culture != null)
+            {
+                config.NumberParseCulture = CultureInfo.CreateSpecificCulture(culture);
+            }
+
             var parameters = new ParameterExpression[0];
 
-            var result1 = DynamicExpressionParser.ParseLambda(parameters, typeof(double), "0.10");
-            var result2 = DynamicExpressionParser.ParseLambda(parameters, typeof(double), "0.10d");
-            var result3 = DynamicExpressionParser.ParseLambda(parameters, typeof(float), "0.10f");
-            var result4 = DynamicExpressionParser.ParseLambda(parameters, typeof(decimal), "0.10m");
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(config, parameters, typeof(decimal), expression);
+            var result = lambda.Compile().DynamicInvoke();
 
             // Assert
-            Assert.Equal(0.10d, result1.Compile().DynamicInvoke());
-            Assert.Equal(0.10d, result2.Compile().DynamicInvoke());
-            Assert.Equal(0.10f, result3.Compile().DynamicInvoke());
-            Assert.Equal(0.10m, result4.Compile().DynamicInvoke());
+            result.Should().Be(expected);
+        }
+
+        public static object[][] Floats()
+        {
+            return new object[][]
+            {
+                new object[] { "de-DE", "1F", 1f },
+                new object[] { "de-DE", "1f", 1f },
+                new object[] { "de-DE", "-42f", -42d },
+                new object[] { "de-DE", "3,215f", 3.215d },
+
+                new object[] { null, "1F", 1f },
+                new object[] { null, "1f", 1f },
+                new object[] { null, "-42f", -42d },
+                new object[] { null, "3.215f", 3.215d },
+            };
+        }
+        [Theory]
+        [MemberData(nameof(Floats))]
+        public void DynamicExpressionParser_ParseLambda_Float(string culture, string expression, float expected)
+        {
+            // Arrange
+            var config = new ParsingConfig();
+            if (culture != null)
+            {
+                config.NumberParseCulture = CultureInfo.CreateSpecificCulture(culture);
+            }
+
+            var parameters = new ParameterExpression[0];
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(config, parameters, typeof(float), expression);
+            var result = lambda.Compile().DynamicInvoke();
+
+            // Assert
+            result.Should().Be(expected);
+        }
+
+        public static IEnumerable<object[]> Doubles()
+        {
+            return new object[][]
+            {
+                new object[] { "de-DE", "1D", 1d },
+                new object[] { "de-DE", "1d", 1d },
+                new object[] { "de-DE", "-42d", -42d },
+                new object[] { "de-DE", "3,215d", 3.215d },
+                new object[] { "de-DE", "1,2345E-4", 0.00012345d },
+                new object[] { "de-DE", "1,2345E4", 12345d },
+
+                new object[] { null, "1D", 1d },
+                new object[] { null, "1d", 1d },
+                new object[] { null, "-42d", -42d },
+                new object[] { null, "3.215d", 3.215d },
+                new object[] { null, "1.2345E-4", 0.00012345d },
+                new object[] { null, "1.2345E4", 12345d }
+            };
+        }
+        [Theory]
+        [MemberData(nameof(Doubles))]
+        public void DynamicExpressionParser_ParseLambda_Double(string culture, string expression, double expected)
+        {
+            // Arrange
+            var config = new ParsingConfig();
+            if (culture != null)
+            {
+                config.NumberParseCulture = CultureInfo.CreateSpecificCulture(culture);
+            }
+
+            var parameters = new ParameterExpression[0];
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(config, parameters, typeof(double), expression);
+            var result = lambda.Compile().DynamicInvoke();
+
+            // Assert
+            result.Should().Be(expected);
         }
 
         [Fact]
