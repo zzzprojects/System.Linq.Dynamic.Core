@@ -25,7 +25,7 @@ namespace EntityFramework.DynamicLinq
 #if EFCORE || (NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER || UAP10_0)
     public static class EFDynamicQueryableWithFormattableStringExtensions
     {
-        
+
         private static string ParseFormattableString(FormattableString predicate, out object[] args)
         {
             string predicateStr = predicate.Format;
@@ -88,7 +88,7 @@ namespace EntityFramework.DynamicLinq
         public static Task<int> CountInterpolatedAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] FormattableString predicate)
         {
             string predicateStr = ParseFormattableString(predicate, out object[] args);
-            return EntityFrameworkDynamicQueryableExtensions.CountAsync(source, cancellationToken,predicateStr, args);
+            return EntityFrameworkDynamicQueryableExtensions.CountAsync(source, cancellationToken, predicateStr, args);
         }
 
         [PublicAPI]
@@ -116,7 +116,7 @@ namespace EntityFramework.DynamicLinq
         public static Task<dynamic> FirstOrDefaultInterpolatedAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] FormattableString predicate)
         {
             string predicateStr = ParseFormattableString(predicate, out object[] args);
-            return EntityFrameworkDynamicQueryableExtensions.FirstOrDefaultAsync(source, cancellationToken,predicateStr, args);
+            return EntityFrameworkDynamicQueryableExtensions.FirstOrDefaultAsync(source, cancellationToken, predicateStr, args);
         }
 
         [PublicAPI]
@@ -130,7 +130,7 @@ namespace EntityFramework.DynamicLinq
         public static Task<dynamic> LastInterpolatedAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] FormattableString predicate)
         {
             string predicateStr = ParseFormattableString(predicate, out object[] args);
-            return EntityFrameworkDynamicQueryableExtensions.LastAsync(source, cancellationToken,predicateStr, args);
+            return EntityFrameworkDynamicQueryableExtensions.LastAsync(source, cancellationToken, predicateStr, args);
         }
 
         [PublicAPI]
@@ -158,7 +158,7 @@ namespace EntityFramework.DynamicLinq
         public static Task<long> LongCountInterpolatedAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] FormattableString predicate)
         {
             string predicateStr = ParseFormattableString(predicate, out object[] args);
-            return EntityFrameworkDynamicQueryableExtensions.LongCountAsync(source, cancellationToken,predicateStr, args);
+            return EntityFrameworkDynamicQueryableExtensions.LongCountAsync(source, cancellationToken, predicateStr, args);
         }
 
         [PublicAPI]
@@ -172,7 +172,7 @@ namespace EntityFramework.DynamicLinq
         public static Task<dynamic> SingleOrDefaultInterpolatedAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] FormattableString predicate)
         {
             string predicateStr = ParseFormattableString(predicate, out object[] args);
-            return EntityFrameworkDynamicQueryableExtensions.SingleOrDefaultAsync(source, cancellationToken,predicateStr, args);
+            return EntityFrameworkDynamicQueryableExtensions.SingleOrDefaultAsync(source, cancellationToken, predicateStr, args);
         }
 
         [PublicAPI]
@@ -186,9 +186,9 @@ namespace EntityFramework.DynamicLinq
         public static Task<dynamic> SumInterpolatedAsync([NotNull] this IQueryable source, CancellationToken cancellationToken, [NotNull] FormattableString selector)
         {
             string selectorStr = ParseFormattableString(selector, out object[] args);
-            return EntityFrameworkDynamicQueryableExtensions.SumAsync(source, cancellationToken,selectorStr, args);
+            return EntityFrameworkDynamicQueryableExtensions.SumAsync(source, cancellationToken, selectorStr, args);
         }
-        
+
     }
 #endif
 }

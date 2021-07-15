@@ -9,10 +9,10 @@ using Xunit;
 namespace System.Linq.Dynamic.Core.Tests
 {
 #if NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER || UAP10_0
-    public partial class QueryableTests 
+    public partial class QueryableTests
     {
 
-    [Fact]
+        [Fact]
         public void All_WithArgs_FS()
         {
             const int value = 50;
@@ -284,7 +284,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             //Act
             string value = "User4";
-            var expected = testListQry.Single(u => u.UserName ==value);
+            var expected = testListQry.Single(u => u.UserName == value);
             var result = testListQry.SingleInterpolated($"UserName == {value}");
 
             //Assert
@@ -462,7 +462,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             string s = "First Product";
-            Action action = () => productsQuery.WhereInterpolated($"Properties.Name == {s}" ).ToDynamicList();
+            Action action = () => productsQuery.WhereInterpolated($"Properties.Name == {s}").ToDynamicList();
 
             // Assert
             action.Should().Throw<InvalidOperationException>();
@@ -476,7 +476,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             string s = "First Product";
-            var results = productsQuery.WhereInterpolated($"np(Properties.Name, \"no\") == {s}" ).ToDynamicList();
+            var results = productsQuery.WhereInterpolated($"np(Properties.Name, \"no\") == {s}").ToDynamicList();
 
             // Assert
             results.Should().HaveCount(0);

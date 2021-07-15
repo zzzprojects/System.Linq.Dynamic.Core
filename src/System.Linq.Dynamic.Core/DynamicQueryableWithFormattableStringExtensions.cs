@@ -301,7 +301,7 @@ namespace System.Linq.Dynamic.Core
         public static IQueryable SelectManyInterpolated([NotNull] this IQueryable source, [NotNull] Type resultType, [NotNull] FormattableString selector)
         {
             string selectorStr = ParseFormattableString(selector, out object[] args);
-            return DynamicQueryableExtensions.SelectMany(source, resultType,selectorStr, args);
+            return DynamicQueryableExtensions.SelectMany(source, resultType, selectorStr, args);
         }
 
         public static IQueryable<TResult> SelectManyInterpolated<TResult>([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] FormattableString selector)
@@ -343,7 +343,7 @@ namespace System.Linq.Dynamic.Core
         public static IOrderedQueryable<TSource> OrderByInterpolated<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] FormattableString ordering, IComparer comparer)
         {
             string orderingStr = ParseFormattableString(ordering, out object[] args);
-            return DynamicQueryableExtensions.OrderBy(source, config, orderingStr, comparer,args);
+            return DynamicQueryableExtensions.OrderBy(source, config, orderingStr, comparer, args);
         }
 
         public static IOrderedQueryable<TSource> OrderByInterpolated<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] FormattableString ordering)
@@ -403,7 +403,7 @@ namespace System.Linq.Dynamic.Core
         public static IOrderedQueryable<TSource> ThenByInterpolated<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] FormattableString ordering, IComparer comparer)
         {
             string orderingStr = ParseFormattableString(ordering, out object[] args);
-            return DynamicQueryableExtensions.ThenBy(source,  orderingStr, comparer, args);
+            return DynamicQueryableExtensions.ThenBy(source, orderingStr, comparer, args);
         }
 
         public static IOrderedQueryable<TSource> ThenByInterpolated<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] FormattableString ordering)
@@ -412,12 +412,12 @@ namespace System.Linq.Dynamic.Core
             return DynamicQueryableExtensions.ThenBy(source, orderingStr, args);
         }
 
-        private static string ParseFormattableString(FormattableString predicate,out object[] args)
+        private static string ParseFormattableString(FormattableString predicate, out object[] args)
         {
             string predicateStr = predicate.Format;
             predicateStr = Regex.Replace(predicateStr, @"{(\d+)}", "@$1");//replace {0} with @0
             args = predicate.GetArguments();
-            return predicateStr;            
+            return predicateStr;
         }
     }
 #endif
