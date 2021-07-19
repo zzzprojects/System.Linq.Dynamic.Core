@@ -2,8 +2,7 @@
     <Import Project="../../version.xml" />
 
     <PropertyGroup>
-        <!--<Version>6.2.$(PatchVersion)</Version>-->
-        <Version>6.0.0-preview.4.21253.1</Version>
+        <Version>6.2.$(PatchVersion)-preview.4.21253.1</Version>
         <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
