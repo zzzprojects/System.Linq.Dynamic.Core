@@ -15,14 +15,15 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void All_WithArgs_FS()
         {
-            const int value = 50;
-
             //Arrange
+            const int value = 50;
+            const string username = "test123";
             var queryable = User.GenerateSampleModels(100).AsQueryable();
 
             //Act
-            bool expected = queryable.All(u => u.Income > value);
-            bool result = queryable.AllInterpolated($"Income > {value}");
+            bool expected = queryable.All(u => u.Income > value && u.UserName != username);
+            bool result = queryable.AllInterpolated($"Income > {value} && UserName != {username}");
+            
             //Assert
             Assert.Equal(expected, result);
         }

@@ -1,3 +1,14 @@
+# v1.2.11 (19 July 2021)
+- [#518](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/518) - Fix exception in DynamicClassFactory.CreateType when using Blazor WebAssembly [bug] contributed by [StefH](https://github.com/StefH)
+- [#522](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/522) - Fix logic for np(...) : always add source object and use configurable default value for non-nullable value-types [bug] contributed by [StefH](https://github.com/StefH)
+- [#524](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/524) - Parse in operator before comparisons [bug] contributed by [igitur](https://github.com/igitur)
+- [#530](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/530) - Add support of Interpolated strings. contributed by [yangzhongke](https://github.com/yangzhongke)
+- [#532](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/532) - Fix NumberParsing for double with exponent [bug] contributed by [StefH](https://github.com/StefH)
+- [#516](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/516) - Unable to use DynamicClassFactory.CreateType from Blazor WebAssembly [bug]
+- [#520](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/520) - np operator ignores single member access when no default value passed in
+- [#527](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/527) - Do you have any plan to support interpolated String? [feature]
+- [#531](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/531) - Number parsing rejecting doubles in scientific notation [bug]
+
 # v1.2.10 (31 May 2021)
 - [#476](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/476) - Add IDynamicLinqCustomTypeProvider contributed by [StefH](https://github.com/StefH)
 - [#495](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/495) - Fix ContainsKey in IReadOnlyDictionary&lt;,&gt; [bug] contributed by [StefH](https://github.com/StefH)
@@ -30,6 +41,7 @@
 - [#479](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/479) - Xamarin.Forms - DynamicExpressionParser.ParseLambda fails when comparing enum properties by their int value [bug]
 
 # v1.2.7 (26 December 2020)
+- [#462](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/462) - Add PatchVersion [feature] contributed by [StefH](https://github.com/StefH)
 - [#463](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/463) - Add extension method Where&lt;TSource&gt;(...) with LambdaExpression  [feature] contributed by [StefH](https://github.com/StefH)
 - [#464](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/464) - NullPropagation operator: support nullable DateTime contributed by [StefH](https://github.com/StefH)
 - [#466](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/466) - Fix Android issue (Could not load the file 'System.Private.Corelib') [bug] contributed by [StefH](https://github.com/StefH)
@@ -41,14 +53,13 @@
 - [#468](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/468) - net5.0 OrderBy problem [bug]
 - [#473](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/473) - Exception in System.Linq.Dynamic.Core.Parser.EnumerationsFromMscorlib after update to 1.2.6 [bug]
 
-# v1.2.6 (23 November 2020)
+# v1.2.6 (22 November 2020)
 - [#443](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/443) - Fix MethodCallExpression when using NullPropagating (np) contributed by [StefH](https://github.com/StefH)
 - [#445](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/445) - Add GitHub action for ci build + unit tests contributed by [StefH](https://github.com/StefH)
 - [#446](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/446) - Remove MyGet links from Readme.md contributed by [StefH](https://github.com/StefH)
 - [#447](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/447) - Fix Unit tests for net452 and net461 contributed by [StefH](https://github.com/StefH)
 - [#449](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/449) - Fix DateTime constructor using ticks [bug] contributed by [StefH](https://github.com/StefH)
 - [#450](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/450) - Support the enum UriKind [feature] contributed by [StefH](https://github.com/StefH)
-- [#462](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/462) - Add PatchVersion [feature] contributed by [StefH](https://github.com/StefH)
 - [#284](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/284) - String(Null) raises Ambiguous error [bug]
 - [#432](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/432) - Clarify error message when using np with instance methods [bug]
 - [#439](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/439) - Question: DateTime constructor using ticks [bug]
