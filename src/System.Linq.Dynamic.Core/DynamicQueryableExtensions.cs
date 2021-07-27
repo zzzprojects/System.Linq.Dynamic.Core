@@ -585,6 +585,7 @@ namespace System.Linq.Dynamic.Core
 
         #region FirstOrDefault
         private static readonly MethodInfo _firstOrDefault = GetMethod(nameof(Queryable.FirstOrDefault));
+        private static readonly MethodInfo _firstOrDefaultPredicate = GetMethodWithOneLambdaExpression(nameof(Queryable.FirstOrDefault));
 
         /// <summary>
         /// Returns the first element of a sequence, or a default value if the sequence contains no elements.
@@ -653,7 +654,6 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_firstOrDefaultPredicate, source, lambda);
         }
-        private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1);
         #endregion FirstOrDefault
 
         #region GroupBy
@@ -2812,6 +2812,9 @@ namespace System.Linq.Dynamic.Core
 
         private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
+
+        private static MethodInfo GetMethodWithOneLambdaExpression(string name) =>
+            GetMethod(name, 1, mi => mi.GetParameters().Last().ParameterType.GetTypeInfo().BaseType == typeof(LambdaExpression));
 
         private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null)
         {
