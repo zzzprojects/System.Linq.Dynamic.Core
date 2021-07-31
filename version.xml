@@ -1,5 +1,5 @@
 <Project>
   <PropertyGroup>
-    <PatchVersion>12-preview-01</PatchVersion>
+    <PatchVersion>12</PatchVersion>
   </PropertyGroup>
 </Project>
