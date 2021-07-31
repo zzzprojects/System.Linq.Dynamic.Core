@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Dynamic.Core.Util;
 
 #if WINDOWS_APP
 using System;
@@ -101,7 +102,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Aggregate
 
         #region All
-        private static readonly MethodInfo _AllPredicate = GetMethod(nameof(Queryable.All), 1);
+        private static readonly MethodInfo _AllPredicate = QueryableMethodFinder.GetMethod(nameof(Queryable.All), 1);
 
         /// <summary>
         ///     Determines whether all the elements of a sequence satisfy a condition.
@@ -155,7 +156,7 @@ namespace System.Linq.Dynamic.Core
         #endregion AllAsync
 
         #region Any
-        private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
+        private static readonly MethodInfo _any = QueryableMethodFinder.GetMethod(nameof(Queryable.Any));
 
         /// <summary>
         /// Determines whether a sequence contains any elements.
@@ -175,7 +176,7 @@ namespace System.Linq.Dynamic.Core
             return Execute<bool>(_any, source);
         }
 
-        private static readonly MethodInfo _anyPredicate = GetMethod(nameof(Queryable.Any), 1);
+        private static readonly MethodInfo _anyPredicate = QueryableMethodFinder.GetMethod(nameof(Queryable.Any), 1);
 
         /// <summary>
         /// Determines whether a sequence contains any elements.
@@ -245,7 +246,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            var average = GetMethod(nameof(Queryable.Average), source.ElementType, typeof(double));
+            var average = QueryableMethodFinder.GetMethod(nameof(Queryable.Average), source.ElementType, typeof(double));
             return Execute<double>(average, source);
         }
 
@@ -295,7 +296,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(lambda, nameof(lambda));
 
-            var averageSelector = GetMethod(nameof(Queryable.Average), lambda.GetReturnType(), typeof(double), 1);
+            var averageSelector = QueryableMethodFinder.GetMethod(nameof(Queryable.Average), lambda.GetReturnType(), typeof(double), 1);
             return Execute<double>(averageSelector, source, lambda);
         }
         #endregion Average
@@ -325,7 +326,7 @@ namespace System.Linq.Dynamic.Core
         #endregion AsEnumerable
 
         #region Cast
-        private static readonly MethodInfo _cast = GetGenericMethod(nameof(Queryable.Cast));
+        private static readonly MethodInfo _cast = QueryableMethodFinder.GetGenericMethod(nameof(Queryable.Cast));
 
         /// <summary>
         /// Converts the elements of an <see cref="IQueryable"/> to the specified type.
@@ -375,7 +376,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Cast
 
         #region Count
-        private static readonly MethodInfo _count = GetMethod(nameof(Queryable.Count));
+        private static readonly MethodInfo _count = QueryableMethodFinder.GetMethod(nameof(Queryable.Count));
 
         /// <summary>
         /// Returns the number of elements in a sequence.
@@ -395,7 +396,7 @@ namespace System.Linq.Dynamic.Core
             return Execute<int>(_count, source);
         }
 
-        private static readonly MethodInfo _countPredicate = GetMethod(nameof(Queryable.Count), 1);
+        private static readonly MethodInfo _countPredicate = QueryableMethodFinder.GetMethod(nameof(Queryable.Count), 1);
 
         /// <summary>
         /// Returns the number of elements in a sequence.
@@ -448,8 +449,8 @@ namespace System.Linq.Dynamic.Core
         #endregion Count
 
         #region DefaultIfEmpty
-        private static readonly MethodInfo _defaultIfEmpty = GetMethod(nameof(Queryable.DefaultIfEmpty));
-        private static readonly MethodInfo _defaultIfEmptyWithParam = GetMethod(nameof(Queryable.DefaultIfEmpty), 1);
+        private static readonly MethodInfo _defaultIfEmpty = QueryableMethodFinder.GetMethod(nameof(Queryable.DefaultIfEmpty));
+        private static readonly MethodInfo _defaultIfEmptyWithParam = QueryableMethodFinder.GetMethod(nameof(Queryable.DefaultIfEmpty), 1);
 
         /// <summary>
         /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
@@ -488,7 +489,7 @@ namespace System.Linq.Dynamic.Core
         #endregion
 
         #region Distinct
-        private static readonly MethodInfo _distinct = GetMethod(nameof(Queryable.Distinct));
+        private static readonly MethodInfo _distinct = QueryableMethodFinder.GetMethod(nameof(Queryable.Distinct));
 
         /// <summary>
         /// Returns distinct elements from a sequence by using the default equality comparer to compare values.
@@ -511,7 +512,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Distinct
 
         #region First
-        private static readonly MethodInfo _first = GetMethod(nameof(Queryable.First));
+        private static readonly MethodInfo _first = QueryableMethodFinder.GetMethod(nameof(Queryable.First));
 
         /// <summary>
         /// Returns the first element of a sequence.
@@ -529,7 +530,7 @@ namespace System.Linq.Dynamic.Core
             return Execute(_first, source);
         }
 
-        private static readonly MethodInfo _firstPredicate = GetMethod(nameof(Queryable.First), 1);
+        private static readonly MethodInfo _firstPredicate = QueryableMethodFinder.GetMethod(nameof(Queryable.First), 1);
 
         /// <summary>
         /// Returns the first element of a sequence that satisfies a specified condition.
@@ -584,7 +585,8 @@ namespace System.Linq.Dynamic.Core
         #endregion First
 
         #region FirstOrDefault
-        private static readonly MethodInfo _firstOrDefault = GetMethod(nameof(Queryable.FirstOrDefault));
+        private static readonly MethodInfo _firstOrDefault = QueryableMethodFinder.GetMethod(nameof(Queryable.FirstOrDefault));
+        private static readonly MethodInfo _firstOrDefaultPredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.FirstOrDefault));
 
         /// <summary>
         /// Returns the first element of a sequence, or a default value if the sequence contains no elements.
@@ -653,7 +655,6 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_firstOrDefaultPredicate, source, lambda);
         }
-        private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1);
         #endregion FirstOrDefault
 
         #region GroupBy
@@ -1079,7 +1080,9 @@ namespace System.Linq.Dynamic.Core
         #endregion Join
 
         #region Last
-        private static readonly MethodInfo _last = GetMethod(nameof(Queryable.Last));
+        private static readonly MethodInfo _last = QueryableMethodFinder.GetMethod(nameof(Queryable.Last));
+        private static readonly MethodInfo _lastPredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.Last));
+
         /// <summary>
         /// Returns the last element of a sequence.
         /// </summary>
@@ -1095,8 +1098,6 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_last, source);
         }
-
-        private static readonly MethodInfo _lastPredicate = GetMethod(nameof(Queryable.Last), 1);
 
         /// <summary>
         /// Returns the last element of a sequence that satisfies a specified condition.
@@ -1151,7 +1152,9 @@ namespace System.Linq.Dynamic.Core
         #endregion Last
 
         #region LastOrDefault
-        private static readonly MethodInfo _lastDefault = GetMethod(nameof(Queryable.LastOrDefault));
+        private static readonly MethodInfo _lastDefault = QueryableMethodFinder.GetMethod(nameof(Queryable.LastOrDefault));
+        private static readonly MethodInfo _lastDefaultPredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.LastOrDefault));
+
         /// <summary>
         /// Returns the last element of a sequence, or a default value if the sequence contains no elements.
         /// </summary>
@@ -1167,8 +1170,6 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_lastDefault, source);
         }
-
-        private static readonly MethodInfo _lastDefaultPredicate = GetMethod(nameof(Queryable.LastOrDefault), 1);
 
         /// <summary>
         /// Returns the last element of a sequence that satisfies a specified condition, or a default value if the sequence contains no elements.
@@ -1222,7 +1223,8 @@ namespace System.Linq.Dynamic.Core
         #endregion LastOrDefault
 
         #region LongCount
-        private static readonly MethodInfo _longCount = GetMethod(nameof(Queryable.LongCount));
+        private static readonly MethodInfo _longCount = QueryableMethodFinder.GetMethod(nameof(Queryable.LongCount));
+        private static readonly MethodInfo _longCountPredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.LongCount));
 
         /// <summary>
         /// Returns the number of elements in a sequence.
@@ -1241,8 +1243,6 @@ namespace System.Linq.Dynamic.Core
 
             return Execute<long>(_longCount, source);
         }
-
-        private static readonly MethodInfo _longCountPredicate = GetMethod(nameof(Queryable.LongCount), 1);
 
         /// <summary>
         /// Returns the number of elements in a sequence.
@@ -1295,7 +1295,8 @@ namespace System.Linq.Dynamic.Core
         #endregion LongCount
 
         #region Max
-        private static readonly MethodInfo _max = GetMethod(nameof(Queryable.Max));
+        private static readonly MethodInfo _max = QueryableMethodFinder.GetMethod(nameof(Queryable.Max));
+        private static readonly MethodInfo _maxPredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.Max));
 
         /// <summary>
         /// Computes the max element of a sequence.
@@ -1316,8 +1317,6 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_max, source);
         }
-
-        private static readonly MethodInfo _maxPredicate = GetMethod(nameof(Queryable.Max), 1);
 
         /// <summary>
         /// Computes the max element of a sequence.
@@ -1368,7 +1367,8 @@ namespace System.Linq.Dynamic.Core
         #endregion Max
 
         #region Min
-        private static readonly MethodInfo _min = GetMethod(nameof(Queryable.Min));
+        private static readonly MethodInfo _min = QueryableMethodFinder.GetMethod(nameof(Queryable.Min));
+        private static readonly MethodInfo _minPredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.Min));
 
         /// <summary>
         /// Computes the min element of a sequence.
@@ -1389,8 +1389,6 @@ namespace System.Linq.Dynamic.Core
 
             return Execute(_min, source);
         }
-
-        private static readonly MethodInfo _minPredicate = GetMethod(nameof(Queryable.Min), 1);
 
         /// <summary>
         /// Computes the min element of a sequence.
@@ -1441,7 +1439,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Min
 
         #region OfType
-        private static readonly MethodInfo _ofType = GetGenericMethod(nameof(Queryable.OfType));
+        private static readonly MethodInfo _ofType = QueryableMethodFinder.GetGenericMethod(nameof(Queryable.OfType));
 
         /// <summary>
         /// Filters the elements of an <see cref="IQueryable"/> based on a specified type.
@@ -2104,6 +2102,9 @@ namespace System.Linq.Dynamic.Core
         #endregion SelectMany
 
         #region Single/SingleOrDefault
+        private static readonly MethodInfo _singlePredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.Single));
+        private static readonly MethodInfo _singleDefaultPredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.SingleOrDefault));
+
         /// <summary>
         /// Returns the only element of a sequence, and throws an exception if there
         /// is not exactly one element in the sequence.
@@ -2121,8 +2122,6 @@ namespace System.Linq.Dynamic.Core
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Single), new[] { source.ElementType }, source.Expression));
             return source.Provider.Execute(optimized);
         }
-
-        private static readonly MethodInfo _singlePredicate = GetMethod(nameof(Queryable.Single), 1);
 
         /// <summary>
         /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if there
@@ -2195,8 +2194,6 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.Execute(optimized);
         }
 
-        private static readonly MethodInfo _singleDefaultPredicate = GetMethod(nameof(Queryable.SingleOrDefault), 1);
-
         /// <summary>
         /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
         /// is empty; and throws an exception if there is not exactly one element in the sequence.
@@ -2253,7 +2250,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Single/SingleOrDefault
 
         #region Skip
-        private static readonly MethodInfo _skip = GetMethod(nameof(Queryable.Skip), 1);
+        private static readonly MethodInfo _skip = QueryableMethodFinder.GetMethod(nameof(Queryable.Skip), 1);
 
         /// <summary>
         /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
@@ -2275,15 +2272,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Skip
 
         #region SkipWhile
-
-        private static readonly MethodInfo _skipWhilePredicate = GetMethod(nameof(Queryable.SkipWhile), 1, mi =>
-        {
-            return mi.GetParameters().Length == 2 &&
-                   mi.GetParameters()[1].ParameterType.GetTypeInfo().IsGenericType &&
-                   mi.GetParameters()[1].ParameterType.GetGenericTypeDefinition() == typeof(Expression<>) &&
-                   mi.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetTypeInfo().IsGenericType &&
-                   mi.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetGenericTypeDefinition() == typeof(Func<,>);
-        });
+        private static readonly MethodInfo _skipWhilePredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.SkipWhile));
 
         /// <summary>
         /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
@@ -2317,7 +2306,6 @@ namespace System.Linq.Dynamic.Core
         {
             return SkipWhile(source, ParsingConfig.Default, predicate, args);
         }
-
         #endregion SkipWhile
 
         #region Sum
@@ -2338,7 +2326,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source, nameof(source));
 
-            var sum = GetMethod(nameof(Queryable.Sum), source.ElementType);
+            var sum = QueryableMethodFinder.GetMethod(nameof(Queryable.Sum), source.ElementType);
             return Execute<object>(sum, source);
         }
 
@@ -2366,7 +2354,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
-            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
+            var sumSelector = QueryableMethodFinder.GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
 
             return Execute<object>(sumSelector, source, lambda);
         }
@@ -2390,14 +2378,14 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source, nameof(source));
             Check.NotNull(lambda, nameof(lambda));
 
-            var sumSelector = GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
+            var sumSelector = QueryableMethodFinder.GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
 
             return Execute<object>(sumSelector, source, lambda);
         }
         #endregion Sum
 
         #region Take
-        private static readonly MethodInfo _take = GetMethod(nameof(Queryable.Take), 1);
+        private static readonly MethodInfo _take = QueryableMethodFinder.GetMethodWithIntParameter(nameof(Queryable.Take));
         /// <summary>
         /// Returns a specified number of contiguous elements from the start of a sequence.
         /// </summary>
@@ -2414,15 +2402,7 @@ namespace System.Linq.Dynamic.Core
         #endregion Take
 
         #region TakeWhile
-
-        private static readonly MethodInfo _takeWhilePredicate = GetMethod(nameof(Queryable.TakeWhile), 1, mi =>
-        {
-            return mi.GetParameters().Length == 2 &&
-                   mi.GetParameters()[1].ParameterType.GetTypeInfo().IsGenericType &&
-                   mi.GetParameters()[1].ParameterType.GetGenericTypeDefinition() == typeof(Expression<>) &&
-                   mi.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetTypeInfo().IsGenericType &&
-                   mi.GetParameters()[1].ParameterType.GetGenericArguments()[0].GetGenericTypeDefinition() == typeof(Func<,>);
-        });
+        private static readonly MethodInfo _takeWhilePredicate = QueryableMethodFinder.GetMethodWithExpressionParameter(nameof(Queryable.TakeWhile));
 
         /// <summary>
         /// Returns elements from a sequence as long as a specified condition is true.
@@ -2693,7 +2673,6 @@ namespace System.Linq.Dynamic.Core
         #endregion
 
         #region Private Helpers
-
         private static bool SupportsLinqToObjects(ParsingConfig config, IQueryable query)
         {
             return config.QueryableAnalyzer.SupportsLinqToObjects(query);
@@ -2773,9 +2752,8 @@ namespace System.Linq.Dynamic.Core
 
             return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
-
-        private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)
-            => Execute(operatorMethodInfo, source, Expression.Quote(expression));
+        private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression) =>
+            Execute(operatorMethodInfo, source, Expression.Quote(expression));
 
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, Expression expression)
         {
@@ -2802,29 +2780,7 @@ namespace System.Linq.Dynamic.Core
             return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
 
-        private static MethodInfo GetGenericMethod(string name)
-        {
-            return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
-        }
 
-        private static MethodInfo GetMethod(string name, Type argumentType, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            GetMethod(name, returnType, parameterCount, mi => mi.ToString().Contains(argumentType.ToString()) && ((predicate == null) || predicate(mi)));
-
-        private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
-
-        private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null)
-        {
-            try
-            {
-                return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi =>
-                    mi.GetParameters().Length == parameterCount + 1 && (predicate == null || predicate(mi)));
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Specific method not found: " + name, ex);
-            }
-        }
         #endregion Private Helpers
     }
 }

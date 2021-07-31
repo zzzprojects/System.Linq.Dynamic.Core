@@ -10,6 +10,17 @@ namespace ConsoleAppEF5
     {
         static void Main(string[] args)
         {
+            var e = new int[0].AsQueryable();
+            var q = new[] { 1 }.AsQueryable();
+
+            var a = q.FirstOrDefault();
+            // var b = e.FirstOrDefault(44); only .NET 6.0
+
+            var c = q.FirstOrDefault(i => i == 0);
+            // var d = q.FirstOrDefault(i => i == 0, 42); only .NET 6.0
+
+            int y = 0;
+
             var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
 
             var context = new TestContext();
@@ -102,9 +113,9 @@ namespace ConsoleAppEF5
             {
                 users.Select<User>(config, "new User(1 as FieldDoesNotExist)");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(ex);
             }
 
             foreach (dynamic x in users.Select("new (FirstName, string(\"a\") as StrA, string('c') as StrCh, string(\"\") as StrEmpty1, string('\0') as StrEmpty2, string(null) as StrNull)"))
