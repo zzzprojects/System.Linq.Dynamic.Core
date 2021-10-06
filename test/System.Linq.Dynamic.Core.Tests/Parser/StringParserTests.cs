@@ -34,7 +34,8 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
         [Theory]
         [InlineData("'s'", "s")]
-        [InlineData("'\\r'", "\r")]
+        [InlineData("'\\r'", "\\r")]
+        [InlineData("'\\\r'", "\\\r")]
         [InlineData("'\\\\'", "\\")]
         public void StringParser_Parse_SingleQuotedString(string input, string expectedResult)
         {
@@ -46,6 +47,9 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Theory]
+        [InlineData("\"\\\\\"", "\\")]
+        [InlineData("\"\n\"", "\n")]
+        [InlineData("\"\\\\new\"", "\\new")]
         [InlineData("\"\"", "")]
         [InlineData("\"[]\"", "[]")]
         [InlineData("\"()\"", "()")]
@@ -59,6 +63,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData("\"\\\"\\\"\"", "\"\"")]
         [InlineData("\"\\\\\"", "\\")]
         [InlineData("\"AB YZ 19 \uD800\udc05 \u00e4\"", "AB YZ 19 \uD800\udc05 \u00e4")]
+        [InlineData("\"\\\\192.168.1.1\\audio\\new\"", "\\192.168.1.1\\audio\\new")]
         public void StringParser_Parse_DoubleQuotedString(string input, string expectedResult)
         {
             // Act

@@ -15,7 +15,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             var inputStringBuilder = new StringBuilder(s);
             var tempStringBuilder = new StringBuilder();
-            string found = null;
+            //string found = null;
 
             char quote = inputStringBuilder[0];
             int pos = 1;
@@ -42,8 +42,8 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
                 else if (ch == quote)
                 {
-                    found = Replace(tempStringBuilder);
-                    break;
+                    // End double-quote found, return.
+                    return tempStringBuilder.ToString();
                 }
                 else
                 {
@@ -53,29 +53,29 @@ namespace System.Linq.Dynamic.Core.Parser
                 pos++;
             }
 
-            if (found == null)
-            {
-                throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.UnexpectedUnclosedString, pos, inputStringBuilder.ToString()), pos);
-            }
+            //if (found == null)
+            //{
+            //    throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.UnexpectedUnclosedString, pos, inputStringBuilder.ToString()), pos);
+            //}
 
-            return found;
+            throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.UnexpectedUnclosedString, pos, inputStringBuilder.ToString()), pos);
         }
 
-        private static string Replace(StringBuilder inputStringBuilder)
-        {
-            var sb = new StringBuilder(inputStringBuilder.ToString())
-                .Replace(@"\\", "\\") // \\ – backslash
-                .Replace(@"\0", "\0") // Unicode character 0
-                .Replace(@"\a", "\a") // Alert(character 7)
-                .Replace(@"\b", "\b") // Backspace(character 8)
-                .Replace(@"\f", "\f") // Form feed(character 12)
-                .Replace(@"\n", "\n") // New line(character 10)
-                .Replace(@"\r", "\r") // Carriage return (character 13)
-                .Replace(@"\t", "\t") // Horizontal tab(character 9)
-                .Replace(@"\v", "\v") // Vertical quote(character 11)
-            ; 
+        //private static string Replace(StringBuilder inputStringBuilder)
+        //{
+        //    var sb = new StringBuilder(inputStringBuilder.ToString())
+        //        .Replace(@"\\", "\\") // \\ – backslash
+        //        .Replace(@"\0", "\0") // Unicode character 0
+        //        .Replace(@"\a", "\a") // Alert(character 7)
+        //        .Replace(@"\b", "\b") // Backspace(character 8)
+        //        .Replace(@"\f", "\f") // Form feed(character 12)
+        //        .Replace(@"\n", "\n") // New line(character 10)
+        //        .Replace(@"\r", "\r") // Carriage return (character 13)
+        //        .Replace(@"\t", "\t") // Horizontal tab(character 9)
+        //        .Replace(@"\v", "\v") // Vertical quote(character 11)
+        //    ; 
 
-            return sb.ToString();
-        }
+        //    return sb.ToString();
+        //}
     }
 }
