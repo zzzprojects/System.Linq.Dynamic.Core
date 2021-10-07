@@ -873,11 +873,11 @@ namespace System.Linq.Dynamic.Core.Tests
             var expression = DynamicExpressionParser.ParseLambda(
                 new[] { Expression.Parameter(typeof(string), "Property1") },
                 typeof(bool),
-                string.Format("Property1 == {0}", "\"test\\\\\\new\""));
+                string.Format("Property1 == {0}", "\"test\\\\new\""));
 
             string rightValue = ((BinaryExpression)expression.Body).Right.ToString();
             Assert.Equal(typeof(Boolean), expression.Body.Type);
-            Assert.Equal("\"test\\\\new\"", rightValue);
+            Assert.Equal("\"test\\new\"", rightValue);
         }
 
         [Fact]
