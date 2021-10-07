@@ -22,17 +22,21 @@
         <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
         <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510000}</ProjectGuid>
-        <DebugType>full</DebugType>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <Company>ZZZ Projects</Company>
         <Copyright>Copyright © ZZZ Projects</Copyright>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <!--<IncludeSource>True</IncludeSource>
         <IncludeSymbols>True</IncludeSymbols>
         <PathMap>$(MSBuildProjectDirectory)=/</PathMap>-->
+        <DebugType>portable</DebugType>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
