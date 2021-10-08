@@ -10,13 +10,38 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [Theory]
         [InlineData("'s")]
         [InlineData("\"s")]
-        public void StringParser_WithUnexpectedUnclosedString_ThrowsException(string input)
+        public void StringParser_With_UnexpectedUnclosedString_ThrowsException(string input)
         {
             // Act
             var exception = Assert.Throws<ParseException>(() => StringParser.ParseString(input));
 
             // Assert
             Assert.Equal($"Unexpected end of string with unclosed string at position 2 near '{input}'.", exception.Message);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        [InlineData("x")]
+        public void StringParser_With_InvalidStringLength_ThrowsException(string input)
+        {
+            // Act
+            Action action = () => StringParser.ParseString(input);
+
+            // Assert
+            action.Should().Throw<ParseException>().WithMessage($"String '{input}' should have at least 2 characters.");
+        }
+
+        [Theory]
+        [InlineData("xx")]
+        [InlineData("  ")]
+        public void StringParser_With_InvalidStringQuoteCharacter_ThrowsException(string input)
+        {
+            // Act
+            Action action = () => StringParser.ParseString(input);
+
+            // Assert
+            action.Should().Throw<ParseException>().WithMessage("An escaped string should start with a double (\") or a single (') quote.");
         }
 
         [Fact]
@@ -26,16 +51,17 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             string input = new string(new[] { '"', '\\', 'u', '?', '"' });
 
             // Act
-            var exception = Assert.Throws<ParseException>(() => StringParser.ParseString(input));
+            Action action = () => StringParser.ParseString(input);
 
             // Assert
-            Assert.Equal("Unexpected unrecognized escape sequence at position 1 near '\\u?'.", exception.Message);
+            action.Should().Throw<ParseException>();
         }
 
         [Theory]
+        [InlineData("''", "")]
         [InlineData("'s'", "s")]
-        [InlineData("'\\r'", "\r")]
         [InlineData("'\\\\'", "\\")]
+        [InlineData("'\\n'", "\n")]
         public void StringParser_Parse_SingleQuotedString(string input, string expectedResult)
         {
             // Act
@@ -47,6 +73,10 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
         [Theory]
         [InlineData("\"\"", "")]
+        [InlineData("\"\\\\\"", "\\")]
+        [InlineData("\"\\n\"", "\n")]
+        [InlineData("\"\\\\n\"", "\\n")]
+        [InlineData("\"\\\\new\"", "\\new")]
         [InlineData("\"[]\"", "[]")]
         [InlineData("\"()\"", "()")]
         [InlineData("\"(\\\"\\\")\"", "(\"\")")]
@@ -57,8 +87,8 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData("\"ab\\\"cd\"", "ab\"cd")]
         [InlineData("\"\\\"\"", "\"")]
         [InlineData("\"\\\"\\\"\"", "\"\"")]
-        [InlineData("\"\\\\\"", "\\")]
         [InlineData("\"AB YZ 19 \uD800\udc05 \u00e4\"", "AB YZ 19 \uD800\udc05 \u00e4")]
+        [InlineData("\"\\\\\\\\192.168.1.1\\\\audio\\\\new\"", "\\\\192.168.1.1\\audio\\new")]
         public void StringParser_Parse_DoubleQuotedString(string input, string expectedResult)
         {
             // Act

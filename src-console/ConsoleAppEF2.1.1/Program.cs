@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ConsoleAppEF2.Database;
@@ -74,6 +75,13 @@ namespace ConsoleAppEF211
 
         static void Main(string[] args)
         {
+            var value = "\"\\\\192.168.1.1\\audio\\new\"";
+            var dataParameter = Expression.Parameter(typeof(Dictionary<string, object>), "data");
+            var sourceExpr = DynamicExpressionParser.ParseLambda(new[] { dataParameter }, typeof(object), value);
+            var func = sourceExpr.Compile();
+            var resultX = func.DynamicInvoke(new Dictionary<string, object>());
+            Console.WriteLine(resultX);
+
             IQueryable qry = GetQueryable();
 
             var result = qry.Select("it").OrderBy("Value");

@@ -43,6 +43,8 @@
         public const string InvalidIntegerLiteral = "Invalid integer literal '{0}'";
         public const string InvalidIntegerQualifier = "Invalid integer literal qualifier '{0}'";
         public const string InvalidRealLiteral = "Invalid real literal '{0}'";
+        public const string InvalidStringQuoteCharacter = "An escaped string should start with a double (\") or a single (') quote.";
+        public const string InvalidStringLength = "String '{0}' should have at least {1} characters.";
         public const string IsNullRequiresTwoArgs = "The 'isnull' function requires two arguments";
         public const string MethodIsVoid = "Method '{0}' in type '{1}' does not return a value";
         public const string MethodsAreInaccessible = "Methods on type '{0}' are not accessible";
