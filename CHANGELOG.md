@@ -1,3 +1,10 @@
+# v1.2.13 (09 October 2021)
+- [#517](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/517) - support for generic (static) methods, thus also support for extension&#8230; [feature] contributed by [dogguts](https://github.com/dogguts)
+- [#546](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/546) - Fix StringParser to handle (escaped) newline correctly [bug] contributed by [StefH](https://github.com/StefH)
+- [#547](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/547) - Set DebugType to portable for 'Release' builds [feature] contributed by [StefH](https://github.com/StefH)
+- [#544](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/544) - 'System.Linq.Dynamic.Core.pdb' is using a deprecated debug information level [feature]
+- [#545](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/545) - Unable to escape backslashes correctly [bug]
+
 # v1.2.12 (31 July 2021)
 - [#535](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/535) - Fix DynamicQueryableExtensions for .NET 6 [bug] contributed by [StefH](https://github.com/StefH)
 - [#493](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/493) - System.Linq.Queryable breaking changes in .NET 6  [bug]
@@ -45,6 +52,7 @@
 - [#479](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/479) - Xamarin.Forms - DynamicExpressionParser.ParseLambda fails when comparing enum properties by their int value [bug]
 
 # v1.2.7 (26 December 2020)
+- [#462](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/462) - Add PatchVersion [feature] contributed by [StefH](https://github.com/StefH)
 - [#463](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/463) - Add extension method Where&lt;TSource&gt;(...) with LambdaExpression  [feature] contributed by [StefH](https://github.com/StefH)
 - [#464](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/464) - NullPropagation operator: support nullable DateTime contributed by [StefH](https://github.com/StefH)
 - [#466](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/466) - Fix Android issue (Could not load the file 'System.Private.Corelib') [bug] contributed by [StefH](https://github.com/StefH)
@@ -56,14 +64,13 @@
 - [#468](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/468) - net5.0 OrderBy problem [bug]
 - [#473](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/473) - Exception in System.Linq.Dynamic.Core.Parser.EnumerationsFromMscorlib after update to 1.2.6 [bug]
 
-# v1.2.6 (23 November 2020)
+# v1.2.6 (22 November 2020)
 - [#443](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/443) - Fix MethodCallExpression when using NullPropagating (np) contributed by [StefH](https://github.com/StefH)
 - [#445](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/445) - Add GitHub action for ci build + unit tests contributed by [StefH](https://github.com/StefH)
 - [#446](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/446) - Remove MyGet links from Readme.md contributed by [StefH](https://github.com/StefH)
 - [#447](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/447) - Fix Unit tests for net452 and net461 contributed by [StefH](https://github.com/StefH)
 - [#449](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/449) - Fix DateTime constructor using ticks [bug] contributed by [StefH](https://github.com/StefH)
 - [#450](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/450) - Support the enum UriKind [feature] contributed by [StefH](https://github.com/StefH)
-- [#462](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/462) - Add PatchVersion [feature] contributed by [StefH](https://github.com/StefH)
 - [#284](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/284) - String(Null) raises Ambiguous error [bug]
 - [#432](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/432) - Clarify error message when using np with instance methods [bug]
 - [#439](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/439) - Question: DateTime constructor using ticks [bug]
