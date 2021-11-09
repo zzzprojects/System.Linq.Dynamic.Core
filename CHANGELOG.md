@@ -1,3 +1,6 @@
+# 1.2.14 (09 November 2021)
+- [#551](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/551) - Use Microsoft.EntityFrameworkCore 6.0.0 [feature] contributed by [StefH](https://github.com/StefH)
+
 # v1.2.13 (09 October 2021)
 - [#517](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/517) - support for generic (static) methods, thus also support for extension&#8230; [feature] contributed by [dogguts](https://github.com/dogguts)
 - [#546](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/546) - Fix StringParser to handle (escaped) newline correctly [bug] contributed by [StefH](https://github.com/StefH)

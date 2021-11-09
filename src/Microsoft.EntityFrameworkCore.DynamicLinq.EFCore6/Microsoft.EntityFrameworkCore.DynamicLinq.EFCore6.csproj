@@ -6,7 +6,7 @@
         <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
-        <TargetFrameworks>net5.0</TargetFrameworks>
+        <TargetFrameworks>net6.0</TargetFrameworks>
         <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;EFDYNAMICFUNCTIONS</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
