@@ -812,6 +812,7 @@ namespace System.Linq.Dynamic.Core.Parser
             string qualifier = null;
             char last = text[text.Length - 1];
             bool isHexadecimal = text.StartsWith(text[0] == '-' ? "-0x" : "0x", StringComparison.OrdinalIgnoreCase);
+            bool isBinary = text.StartsWith("0b", StringComparison.OrdinalIgnoreCase);
             char[] qualifierLetters = isHexadecimal
                                           ? new[] { 'U', 'u', 'L', 'l' }
                                           : new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
@@ -830,7 +831,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (text[0] != '-')
             {
-                if (isHexadecimal)
+                if (isHexadecimal || isBinary)
                 {
                     text = text.Substring(2);
                 }

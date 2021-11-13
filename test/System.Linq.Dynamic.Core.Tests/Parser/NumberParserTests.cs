@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Parser;
-using FluentAssertions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
@@ -25,6 +25,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
                 new object[] { null, "3.215", 3.215m }
             };
         }
+
         [Theory]
         [MemberData(nameof(Decimals))]
         public void NumberParser_ParseNumber_Decimal(string culture, string text, decimal expected)

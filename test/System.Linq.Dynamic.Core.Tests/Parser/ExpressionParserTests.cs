@@ -1,6 +1,8 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
 using NFluent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser;
@@ -28,6 +30,36 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             {
                 CustomTypeProvider = _dynamicTypeProviderMock.Object
             };
+        }
+
+        [Fact]
+        public void Parse_ParseBinaryInteger()
+        {
+            // Arrange
+            var expression = "0b1100000011101";
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+            var sut = new ExpressionParser(parameters, expression, null, null);
+
+            // Act
+            var parsedExpression = sut.Parse(null).ToString();
+
+            // Assert
+            parsedExpression.Should().Be(int.Parse(expression, NumberStyles.HexNumber).ToString());
+        }
+
+        [Fact]
+        public void Parse_ParseHexadecimalInteger()
+        {
+            // Arrange
+            var expression = "0xFF";
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+            var sut = new ExpressionParser(parameters, expression, null, null);
+
+            // Act
+            var parsedExpression = sut.Parse(null).ToString();
+
+            // Assert
+            parsedExpression.Should().Be(int.Parse(expression, NumberStyles.HexNumber).ToString());
         }
 
         [Theory]
