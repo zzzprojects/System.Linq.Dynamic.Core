@@ -44,7 +44,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var parsedExpression = sut.Parse(null).ToString();
 
             // Assert
-            parsedExpression.Should().Be(int.Parse(expression, NumberStyles.HexNumber).ToString());
+            parsedExpression.Should().Be("6173");
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var parsedExpression = sut.Parse(null).ToString();
 
             // Assert
-            parsedExpression.Should().Be(int.Parse(expression, NumberStyles.HexNumber).ToString());
+            parsedExpression.Should().Be("255");
         }
 
         [Theory]

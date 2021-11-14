@@ -809,7 +809,14 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser.ValidateToken(TokenId.IntegerLiteral);
 
             string text = _textParser.CurrentToken.Text;
-            
+
+            var tokenPosition = _textParser.CurrentToken.Pos;
+
+            var ex =  _numberParser.ParseNumber(tokenPosition, text);
+            _textParser.NextToken();
+            return ex;
+
+
             string qualifier = null;
             char last = text[text.Length - 1];
             bool isNegative = text[0] == '-';
