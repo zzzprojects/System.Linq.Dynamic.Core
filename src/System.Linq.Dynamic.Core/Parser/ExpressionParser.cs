@@ -809,13 +809,15 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser.ValidateToken(TokenId.IntegerLiteral);
 
             string text = _textParser.CurrentToken.Text;
+            
             string qualifier = null;
             char last = text[text.Length - 1];
-            bool isHexadecimal = text.StartsWith(text[0] == '-' ? "-0x" : "0x", StringComparison.OrdinalIgnoreCase);
-            bool isBinary = text.StartsWith("0b", StringComparison.OrdinalIgnoreCase);
+            bool isNegative = text[0] == '-';
+            bool isHexadecimal = text.StartsWith(isNegative ? "-0x" : "0x", StringComparison.OrdinalIgnoreCase);
+            bool isBinary = text.StartsWith(isNegative ? "-0b" : "0b", StringComparison.OrdinalIgnoreCase);
             char[] qualifierLetters = isHexadecimal
-                                          ? new[] { 'U', 'u', 'L', 'l' }
-                                          : new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
+                ? new[] { 'U', 'u', 'L', 'l' }
+                : new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
 
             if (qualifierLetters.Contains(last))
             {
@@ -829,7 +831,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 text = text.Substring(0, text.Length - count);
             }
 
-            if (text[0] != '-')
+            if (!isNegative)
             {
                 if (isHexadecimal || isBinary)
                 {
