@@ -131,13 +131,12 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData("-42", -42)]
         [InlineData("0xff", 255)]
         [InlineData("0b1100000011101", 6173)]
-        [InlineData("3.215", 3.215)]
-        public void NumberParser_ParseNumber(string text, double expected)
+        public void NumberParser_ParseIntegerLiteral(string text, double expected)
         {
             // Arrange
 
             // Act
-            var result = new NumberParser(_parsingConfig).ParseNumber(0, text) as ConstantExpression;
+            var result = new NumberParser(_parsingConfig).ParseIntegerLiteral(0, text) as ConstantExpression;
 
             // Assert
             result.Value.Should().Be(expected);

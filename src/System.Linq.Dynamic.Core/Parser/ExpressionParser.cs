@@ -812,7 +812,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             var tokenPosition = _textParser.CurrentToken.Pos;
 
-            var ex =  _numberParser.ParseNumber(tokenPosition, text);
+            var ex =  _numberParser.ParseIntegerLiteral(tokenPosition, text);
             _textParser.NextToken();
             return ex;
 

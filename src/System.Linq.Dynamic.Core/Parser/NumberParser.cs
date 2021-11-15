@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
@@ -28,12 +29,14 @@ namespace System.Linq.Dynamic.Core.Parser
         }
 
         /// <summary>
-        /// Tries to parse the number (text) into the specified type.
+        /// Tries to parse the text into a IntegerLiteral ConstantExpression.
         /// </summary>
         /// <param name="tokenPosition">The current token position (needed for error reporting).</param>
         /// <param name="text">The text.</param>
-        public Expression ParseNumber(int tokenPosition, string text)
+        public Expression ParseIntegerLiteral(int tokenPosition, string text)
         {
+            Check.NotEmpty(text, nameof(text));
+
             string qualifier = null;
             var last = text[text.Length - 1];
             var isNegative = text[0] == '-';
