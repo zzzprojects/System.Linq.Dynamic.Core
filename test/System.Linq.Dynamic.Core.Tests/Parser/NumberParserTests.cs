@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Expressions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
@@ -66,6 +67,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
                 new object[] { null, "1.2345e4", 12345f }
             };
         }
+
         [Theory]
         [MemberData(nameof(Floats))]
         public void NumberParser_ParseNumber_Float(string culture, string text, float expected)
@@ -106,6 +108,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
                 new object[] { null, "1.2345e4", 12345d }
             };
         }
+
         [Theory]
         [MemberData(nameof(Doubles))]
         public void NumberParser_ParseNumber_Double(string culture, string text, double expected)
@@ -121,6 +124,23 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             // Assert
             result.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("42", 42)]
+        [InlineData("-42", -42)]
+        [InlineData("0xff", 255)]
+        [InlineData("0b1100000011101", 6173)]
+        [InlineData("3.215", 3.215)]
+        public void NumberParser_ParseNumber(string text, double expected)
+        {
+            // Arrange
+
+            // Act
+            var result = new NumberParser(_parsingConfig).ParseNumber(0, text) as ConstantExpression;
+
+            // Assert
+            result.Value.Should().Be(expected);
         }
     }
 }
