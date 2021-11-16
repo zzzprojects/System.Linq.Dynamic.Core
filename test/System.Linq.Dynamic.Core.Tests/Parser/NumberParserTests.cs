@@ -129,8 +129,19 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [Theory]
         [InlineData("42", 42)]
         [InlineData("-42", -42)]
+        [InlineData("77u", 77)]
+        [InlineData("77l", 77)]
+        [InlineData("77ul", 77)]
         [InlineData("0xff", 255)]
+        [InlineData("-0xff", -255)]
         [InlineData("0b1100000011101", 6173)]
+        [InlineData("-0b1100000011101", -6173)]
+        [InlineData("123d", 123d)]
+        [InlineData("123f", 123f)]
+        [InlineData("123m", 123)]
+        [InlineData("-123d", -123d)]
+        [InlineData("-123f", -123f)]
+        [InlineData("-123m", -123)]
         public void NumberParser_ParseIntegerLiteral(string text, double expected)
         {
             // Arrange

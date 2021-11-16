@@ -2,7 +2,6 @@
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
         <TargetFrameworks>net452;netcoreapp3.1</TargetFrameworks>
-        <!--<TargetFramework>netcoreapp31</TargetFramework>-->
         <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
         <DebugType>full</DebugType>
         <SignAssembly>True</SignAssembly>
@@ -56,17 +55,6 @@
 
         <ProjectReference Include="..\..\src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj" />
     </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="2.0.0" />
-        <PackageReference Include="NodaTime" Version="2.4.7" />
-
-        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2.csproj" />
-    </ItemGroup>
 	
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
@@ -79,15 +67,22 @@
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3.csproj" />
     </ItemGroup>
 
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="5.0.27" />
+        <PackageReference Include="NodaTime" Version="2.4.7" />
+
+        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore5\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore5.csproj" />
+    </ItemGroup>
+
     <ItemGroup>
         <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
     </ItemGroup>
-
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
-        <DefineConstants>$(DefineConstants);NETCOREAPP;EFCORE;EFCORE_2X</DefineConstants>
-    </PropertyGroup>
 	
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' ">
         <DefineConstants>$(DefineConstants);NETCOREAPP;EFCORE;EFCORE_3X</DefineConstants>
     </PropertyGroup>
 </Project>

@@ -15,7 +15,8 @@ namespace System.Linq.Dynamic.Core.Parser
         private static readonly Regex RegexBinary32 = new Regex("^[01]{1,32}$", RegexOptions.Compiled);
         private static readonly Regex RegexBinary64 = new Regex("^[01]{1,64}$", RegexOptions.Compiled);
         private static readonly char[] Qualifiers = new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
-        private static readonly char[] QualifiersForHex = new[] { 'U', 'u', 'L', 'l' };
+        private static readonly char[] QualifiersHex = new[] { 'U', 'u', 'L', 'l' };
+        private static readonly string[] QualifiersReal = new[] { "F", "f", "D", "d", "M", "m" };
 
         private readonly CultureInfo _culture;
 
@@ -37,17 +38,17 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             Check.NotEmpty(text, nameof(text));
 
-            string qualifier = null;
             var last = text[text.Length - 1];
             var isNegative = text[0] == '-';
             var isHexadecimal = text.StartsWith(isNegative ? "-0x" : "0x", StringComparison.OrdinalIgnoreCase);
             var isBinary = text.StartsWith(isNegative ? "-0b" : "0b", StringComparison.OrdinalIgnoreCase);
-            var qualifierLetters = isHexadecimal ? QualifiersForHex : Qualifiers;
+            var qualifiers = isHexadecimal ? QualifiersHex : Qualifiers;
 
-            if (qualifierLetters.Contains(last))
+            string qualifier = null;
+            if (qualifiers.Contains(last))
             {
                 int pos = text.Length - 1, count = 0;
-                while (qualifierLetters.Contains(text[pos]))
+                while (qualifiers.Contains(text[pos]))
                 {
                     ++count;
                     --pos;
@@ -83,6 +84,11 @@ namespace System.Linq.Dynamic.Core.Parser
                     if (qualifier == "L" || qualifier == "l")
                     {
                         return ConstantExpressionHelper.CreateLiteral((long)unsignedValue, text);
+                    }
+
+                    if (QualifiersReal.Contains(qualifier))
+                    {
+                        return ParseRealLiteral(text, qualifier[0], false);
                     }
 
                     return ConstantExpressionHelper.CreateLiteral(unsignedValue, text);
@@ -133,9 +139,9 @@ namespace System.Linq.Dynamic.Core.Parser
                     return ConstantExpressionHelper.CreateLiteral(value, text);
                 }
 
-                if (qualifier == "F" || qualifier == "f" || qualifier == "D" || qualifier == "d" || qualifier == "M" || qualifier == "m")
+                if (QualifiersReal.Contains(qualifier))
                 {
-                    return ParseAsReal(text, qualifier[0], false);
+                    return ParseRealLiteral(text, qualifier[0], false);
                 }
 
                 throw new ParseException(Res.MinusCannotBeAppliedToUnsignedInteger, tokenPosition);
@@ -149,22 +155,10 @@ namespace System.Linq.Dynamic.Core.Parser
             return ConstantExpressionHelper.CreateLiteral(value, text);
         }
 
-        private Expression ParseAsBinary(int tokenPosition, string text, bool isNegative)
-        {
-            if (RegexBinary32.IsMatch(text))
-            {
-                return ConstantExpressionHelper.CreateLiteral((isNegative ? -1 : 1) * Convert.ToInt32(text, 2), text);
-            }
-
-            if (RegexBinary64.IsMatch(text))
-            {
-                return ConstantExpressionHelper.CreateLiteral((isNegative ? -1 : 1) * Convert.ToInt64(text, 2), text);
-            }
-
-            throw new ParseException(string.Format(_culture, Res.InvalidBinaryIntegerLiteral, text), tokenPosition);
-        }
-
-        private Expression ParseAsReal(string text, char qualifier, bool stripQualifier)
+        /// <summary>
+        /// Parse the text into a Real ConstantExpression.
+        /// </summary>
+        public Expression ParseRealLiteral(string text, char qualifier, bool stripQualifier)
         {
             switch (qualifier)
             {
@@ -286,6 +280,21 @@ namespace System.Linq.Dynamic.Core.Parser
             }
 
             return null;
+        }
+
+        private Expression ParseAsBinary(int tokenPosition, string text, bool isNegative)
+        {
+            if (RegexBinary32.IsMatch(text))
+            {
+                return ConstantExpressionHelper.CreateLiteral((isNegative ? -1 : 1) * Convert.ToInt32(text, 2), text);
+            }
+
+            if (RegexBinary64.IsMatch(text))
+            {
+                return ConstantExpressionHelper.CreateLiteral((isNegative ? -1 : 1) * Convert.ToInt64(text, 2), text);
+            }
+
+            throw new ParseException(string.Format(_culture, Res.InvalidBinaryIntegerLiteral, text), tokenPosition);
         }
     }
 }
