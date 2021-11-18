@@ -10,6 +10,8 @@ namespace ConsoleAppEF31
     {
         static void Main(string[] args)
         {
+            Issue553();
+
             var users = new[] { new User { FirstName = "Doe" } }.AsQueryable();
             foreach (dynamic x in users.Select("new (int?(Field) as fld, string(null) as StrNull, string(\"a\") as StrA, string(\"\") as StrEmpty1)"))
             {
@@ -95,6 +97,19 @@ namespace ConsoleAppEF31
             {
                 Console.WriteLine($"x.FirstName = '{x.FirstName}' ; x.Str = '{x.Str == null}'");
             }
+        }
+
+        private static void Issue553()
+        {
+            var expression = "new System.Collections.Generic.Dictionary<string, string>() { { \"First\", \"A\" }, { \"Second\", \"B\" } }[it]";
+
+            var lambda = DynamicExpressionParser.ParseLambda<string, string>(ParsingConfig.Default, true, expression);
+
+            var compiled = lambda.Compile();
+            var input = "First";
+            var result = compiled(input);
+
+            Console.WriteLine($"result = '{result}'");
         }
 
         public class User

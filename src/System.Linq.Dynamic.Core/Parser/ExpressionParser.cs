@@ -1316,6 +1316,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     {
                         throw ParseError(Res.IdentifierExpected);
                     }
+
                     newTypeName += sep + _textParser.CurrentToken.Text;
                     _textParser.NextToken();
                 }

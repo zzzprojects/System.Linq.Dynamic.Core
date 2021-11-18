@@ -19,7 +19,8 @@ namespace System.Linq.Dynamic.Core.Parser
             { "long", typeof(long) },
             { "ulong", typeof(ulong) },
             { "bool", typeof(bool) },
-            { "float", typeof(float) }
+            { "float", typeof(float) },
+            { "string", typeof(string) }
         };
 
         public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> {
@@ -44,7 +45,8 @@ namespace System.Linq.Dynamic.Core.Parser
             { typeof(Guid), 0 },
             { typeof(Math), 0 },
             { typeof(Convert), 0 },
-            { typeof(Uri), 0 }
+            { typeof(Uri), 0 },
+            { typeof(Dictionary<string, string>), 0 }
         });
 
         static PredefinedTypesHelper()

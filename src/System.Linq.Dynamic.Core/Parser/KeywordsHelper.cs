@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -53,14 +54,17 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 if (!string.IsNullOrEmpty(type.FullName))
                 {
-                    _keywords[type.FullName] = type;
+                    _keywords[GetFormattedName(type, type.FullName)] = type;
                 }
-                _keywords[type.Name] = type;
+                _keywords[GetFormattedName(type, type.Name)] = type;
             }
 
             foreach (var pair in PredefinedTypesHelper.PredefinedTypesShorthands)
             {
-                _keywords.Add(pair.Key, pair.Value);
+                if (!_keywords.ContainsKey(pair.Key))
+                {
+                    _keywords.Add(pair.Key, pair.Value);
+                }
             }
 
             if (config.SupportEnumerationsFromSystemNamespace)
@@ -84,6 +88,23 @@ namespace System.Linq.Dynamic.Core.Parser
         public bool TryGetValue(string name, out object type)
         {
             return _keywords.TryGetValue(name, out type);
+        }
+
+        public static string GetFormattedName(Type type, string name)
+        {
+            var typeInfo = type.GetTypeInfo();
+            
+            if (typeInfo.IsGenericType)
+            {
+                var genericArguments = typeInfo
+                    .GetGenericTypeArguments()
+                    .Select(typeArgument => PredefinedTypesHelper.PredefinedTypesShorthands.FirstOrDefault(k => k.Value == typeArgument).Key ?? typeArgument.Name)
+                    .ToArray();
+
+                return $"{name.Substring(0, name.IndexOf("`"))}<{string.Join(", ", genericArguments)}>";
+            }
+
+            return name;
         }
     }
 }
