@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Dynamic.Core;
 
 namespace ConsoleApp_net6._0
@@ -10,8 +9,6 @@ namespace ConsoleApp_net6._0
         {
             Normal();
             Dynamic();
-
-            int y = 0;
         }
 
         private static void Normal()
@@ -26,6 +23,8 @@ namespace ConsoleApp_net6._0
             var d = q.FirstOrDefault(i => i == 0, 42);
 
             var t = q.Take(1);
+
+            var al = q.All("it >= 0");
         }
 
         private static void Dynamic()
