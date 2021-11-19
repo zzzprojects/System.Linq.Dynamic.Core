@@ -1321,6 +1321,31 @@ namespace System.Linq.Dynamic.Core.Parser
                     _textParser.NextToken();
                 }
 
+                if (_textParser.CurrentToken.Id == TokenId.LessThan)
+                {
+                    _textParser.NextToken();
+
+                    var genericTypeArguments = new List<string>();
+                    while (_textParser.CurrentToken.Id != TokenId.GreaterThan)
+                    {
+                        if (_textParser.CurrentToken.Id == TokenId.Comma)
+                        {
+                            _textParser.NextToken();
+                        }
+
+                        if (_textParser.CurrentToken.Id != TokenId.Identifier)
+                        {
+                            throw ParseError(Res.IdentifierExpected);
+                        }
+
+                        genericTypeArguments.Add(_textParser.CurrentToken.Text);
+                        _textParser.NextToken();
+                    }
+
+                    newTypeName = $"{newTypeName}<{string.Join(", ", genericTypeArguments.ToArray())}>";
+                    _textParser.NextToken();
+                }
+
                 newType = _typeFinder.FindTypeByName(newTypeName, new[] { _it, _parent, _root }, false);
                 if (newType == null)
                 {
