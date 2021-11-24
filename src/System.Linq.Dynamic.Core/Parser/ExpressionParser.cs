@@ -1466,20 +1466,25 @@ namespace System.Linq.Dynamic.Core.Parser
 
             Type[] propertyTypes = propertyInfos.Select(p => p.PropertyType).ToArray();
             ConstructorInfo ctor = type.GetConstructor(propertyTypes);
-            if (ctor != null && ctor.GetParameters().Length == expressions.Count)
+            if (ctor != null)
             {
-                var expressionsPromoted = new List<Expression>();
-
-                // Loop all expressions and promote if needed
-                for (int i = 0; i < propertyTypes.Length; i++)
+                var ctorParameters = ctor.GetParameters();
+                if (ctorParameters.Length == expressions.Count)
                 {
-                    Type propertyType = propertyTypes[i];
+                    var expressionsPromoted = new List<Expression>();
+                    // Loop all expressions and promote if needed
+                    for (int i = 0; i < ctorParameters.Length; i++)
+                    {
+                        Type propertyType = ctorParameters[i].ParameterType;
+                        string cParameterName = ctorParameters[i].Name;
+                        var propertyAndIndex = properties.Select((p, index) => new { p, index })
+                            .First(p => p.p.Name == cParameterName && p.p.Type == propertyType);
+                        // Promote from Type to Nullable Type if needed
+                        expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[propertyAndIndex.index], propertyType, true, true));
+                    }
 
-                    // Promote from Type to Nullable Type if needed
-                    expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyType, true, true));
+                    return Expression.New(ctor, expressionsPromoted, (IEnumerable<MemberInfo>)propertyInfos);
                 }
-
-                return Expression.New(ctor, expressionsPromoted, (IEnumerable<MemberInfo>)propertyInfos);
             }
 
             MemberBinding[] bindings = new MemberBinding[properties.Count];
