@@ -100,7 +100,8 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
         
         [Theory]
-        [InlineData("new(2 as b, 1 as a)", "new(1 as a, 2 as b)")]
+        [InlineData("new(1 as a, 2 as b)", "new*(a = 1, b = 2)")]
+        [InlineData("new(2 as b, 1 as a)", "new*(a = 1, b = 2)")]
         public void ParseTypeAccess_Via_Constructor_DynamicType_To_String(string newExpression, string newExpression2)
         {
             // Arrange
@@ -113,13 +114,10 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             // Act
             var parser = new ExpressionParser(new[] { parameter, parameter2 }, newExpression, new object[] { }, ParsingConfig.Default);
-            var parser2 = new ExpressionParser(new[] { parameter, parameter2 }, newExpression2, new object[] { }, ParsingConfig.Default);
 
             var expression = parser.Parse(returnType);
-            var expression2 = parser2.Parse(returnType);
             // Assert
-            expression.ToString().Should().Be("new "+ returnType.Name + "(a = 1, b = 2)");
-            expression2.ToString().Should().Be("new "+ returnType.Name + "(a = 1, b = 2)");
+            expression.ToString().Should().Match(newExpression2);
         }
     }
 }
