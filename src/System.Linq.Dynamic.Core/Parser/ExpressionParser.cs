@@ -1478,7 +1478,7 @@ namespace System.Linq.Dynamic.Core.Parser
                         Type propertyType = ctorParameters[i].ParameterType;
                         string cParameterName = ctorParameters[i].Name;
                         var propertyAndIndex = properties.Select((p, index) => new { p, index })
-                            .First(p => p.p.Name == cParameterName && p.p.Type == propertyType);
+                            .First(p => p.p.Name == cParameterName && (p.p.Type == propertyType || p.p.Type == Nullable.GetUnderlyingType(propertyType)));
                         // Promote from Type to Nullable Type if needed
                         expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[propertyAndIndex.index], propertyType, true, true));
                     }

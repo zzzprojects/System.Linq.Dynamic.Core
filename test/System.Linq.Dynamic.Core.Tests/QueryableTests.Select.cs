@@ -45,13 +45,13 @@ namespace System.Linq.Dynamic.Core.Tests
             public int Sec { get; set; }
             public int? SecNull { get; set; }
 
-            public ExampleWithConstructor(DateTime t, DayOfWeek? dn, DayOfWeek d, int s, int? sn)
+            public ExampleWithConstructor(DateTime Time, DayOfWeek? DOWNull, DayOfWeek DOW, int Sec, int? SecNull)
             {
-                Time = t;
-                DOWNull = dn;
-                DOW = d;
-                Sec = s;
-                SecNull = sn;
+                this.Time = Time;
+                this.DOWNull = DOWNull;
+                this.DOW = DOW;
+                this.Sec = Sec;
+                this.SecNull = SecNull;
             }
         }
 
