@@ -809,94 +809,12 @@ namespace System.Linq.Dynamic.Core.Parser
             _textParser.ValidateToken(TokenId.IntegerLiteral);
 
             string text = _textParser.CurrentToken.Text;
-            string qualifier = null;
-            char last = text[text.Length - 1];
-            bool isHexadecimal = text.StartsWith(text[0] == '-' ? "-0x" : "0x", StringComparison.OrdinalIgnoreCase);
-            char[] qualifierLetters = isHexadecimal
-                                          ? new[] { 'U', 'u', 'L', 'l' }
-                                          : new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
 
-            if (qualifierLetters.Contains(last))
-            {
-                int pos = text.Length - 1, count = 0;
-                while (qualifierLetters.Contains(text[pos]))
-                {
-                    ++count;
-                    --pos;
-                }
-                qualifier = text.Substring(text.Length - count, count);
-                text = text.Substring(0, text.Length - count);
-            }
+            var tokenPosition = _textParser.CurrentToken.Pos;
 
-            if (text[0] != '-')
-            {
-                if (isHexadecimal)
-                {
-                    text = text.Substring(2);
-                }
-
-                if (!ulong.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, _parsingConfig.NumberParseCulture, out ulong value))
-                {
-                    throw ParseError(Res.InvalidIntegerLiteral, text);
-                }
-
-                _textParser.NextToken();
-                if (!string.IsNullOrEmpty(qualifier))
-                {
-                    if (qualifier == "U" || qualifier == "u") return ConstantExpressionHelper.CreateLiteral((uint)value, text);
-                    if (qualifier == "L" || qualifier == "l") return ConstantExpressionHelper.CreateLiteral((long)value, text);
-
-                    // in case of UL, just return
-                    return ConstantExpressionHelper.CreateLiteral(value, text);
-                }
-
-                // if (value <= (int)short.MaxValue) return ConstantExpressionHelper.CreateLiteral((short)value, text);
-                if (value <= int.MaxValue) return ConstantExpressionHelper.CreateLiteral((int)value, text);
-                if (value <= uint.MaxValue) return ConstantExpressionHelper.CreateLiteral((uint)value, text);
-                if (value <= long.MaxValue) return ConstantExpressionHelper.CreateLiteral((long)value, text);
-
-                return ConstantExpressionHelper.CreateLiteral(value, text);
-            }
-            else
-            {
-                if (isHexadecimal)
-                {
-                    text = text.Substring(3);
-                }
-
-                if (!long.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, _parsingConfig.NumberParseCulture, out long value))
-                {
-                    throw ParseError(Res.InvalidIntegerLiteral, text);
-                }
-
-                if (isHexadecimal)
-                {
-                    value = -value;
-                }
-
-                _textParser.NextToken();
-                if (!string.IsNullOrEmpty(qualifier))
-                {
-                    if (qualifier == "L" || qualifier == "l")
-                    {
-                        return ConstantExpressionHelper.CreateLiteral(value, text);
-                    }
-
-                    if (qualifier == "F" || qualifier == "f" || qualifier == "D" || qualifier == "d" || qualifier == "M" || qualifier == "m")
-                    {
-                        return ParseRealLiteral(text, qualifier[0], false);
-                    }
-
-                    throw ParseError(Res.MinusCannotBeAppliedToUnsignedInteger);
-                }
-
-                if (value <= int.MaxValue)
-                {
-                    return ConstantExpressionHelper.CreateLiteral((int)value, text);
-                }
-
-                return ConstantExpressionHelper.CreateLiteral(value, text);
-            }
+            var constantExpression = _numberParser.ParseIntegerLiteral(tokenPosition, text);
+            _textParser.NextToken();
+            return constantExpression;
         }
 
         Expression ParseRealLiteral()
@@ -907,40 +825,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _textParser.NextToken();
 
-            return ParseRealLiteral(text, text[text.Length - 1], true);
-        }
-
-        Expression ParseRealLiteral(string text, char qualifier, bool stripQualifier)
-        {
-            object o;
-            switch (qualifier)
-            {
-                case 'f':
-                case 'F':
-                    o = _numberParser.ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(float));
-                    break;
-
-                case 'm':
-                case 'M':
-                    o = _numberParser.ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(decimal));
-                    break;
-
-                case 'd':
-                case 'D':
-                    o = _numberParser.ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(double));
-                    break;
-
-                default:
-                    o = _numberParser.ParseNumber(text, typeof(double));
-                    break;
-            }
-
-            if (o != null)
-            {
-                return ConstantExpressionHelper.CreateLiteral(o, text);
-            }
-
-            throw ParseError(Res.InvalidRealLiteral, text);
+            return _numberParser.ParseRealLiteral(text, text[text.Length - 1], true);
         }
 
         Expression ParseParenExpression()

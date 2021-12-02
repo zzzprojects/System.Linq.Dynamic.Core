@@ -568,36 +568,16 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(resultValues.ToArray(), result2.ToArray());
         }
 
-        //[Fact]
-        //public void ExpressionTests_Double2()
-        //{
-        //    GlobalConfig.NumberDecimalSeparator = ',';
-
-        //    // Arrange
-        //    var values = new[] { 1d, 2D, 3d }.AsQueryable();
-        //    var resultValues = new[] { 2d, 3d }.AsQueryable();
-
-        //    // Act
-        //    var result1 = values.Where("it == 2 or it == 3");
-        //    var result2 = values.Where("it > 1,99");
-
-        //    // Assert
-        //    Assert.Equal(resultValues.ToArray(), result1.ToArray());
-        //    Assert.Equal(resultValues.ToArray(), result2.ToArray());
-
-        //    GlobalConfig.NumberDecimalSeparator = default(char);
-        //}
-
         [Fact]
         public void ExpressionTests_DoubleQualifiers()
         {
             // Arrange
-            var values = new[] { 1d, 2D, 3d }.AsQueryable();
-            var resultValues = new[] { 2d, 3d }.AsQueryable();
+            var values = new[] { 1d, 2D, 3d, -10d }.AsQueryable();
+            var resultValues = new[] { 2d, 3d, -10d }.AsQueryable();
 
             // Act
-            var result1 = values.Where("it == 2d or it == 3D");
-            var result2 = values.Where("it == 2.00d or it == 3.0D");
+            var result1 = values.Where("it == 2d or it == 3D or it == -10d");
+            var result2 = values.Where("it == 2.00d or it == 3.0D or it == -10.000D");
 
             // Assert
             Assert.Equal(resultValues.ToArray(), result1.ToArray());

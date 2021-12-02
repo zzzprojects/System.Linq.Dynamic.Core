@@ -339,6 +339,24 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                             NextChar();
                         } while (char.IsDigit(_ch));
 
+                        bool binaryInteger = false;
+                        if (_ch == 'B' || _ch == 'b')
+                        {
+                            NextChar();
+                            ValidateBinaryChar();
+                            do
+                            {
+                                NextChar();
+                            } while (IsZeroOrOne(_ch));
+
+                            binaryInteger = true;
+                        }
+
+                        if (binaryInteger)
+                        {
+                            break;
+                        }
+
                         bool hexInteger = false;
                         if (_ch == 'X' || _ch == 'x')
                         {
@@ -453,6 +471,14 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             }
         }
 
+        private void ValidateBinaryChar()
+        {
+            if (!IsZeroOrOne(_ch))
+            {
+                throw ParseError(_textPos, Res.BinraryCharExpected);
+            }
+        }
+
         private Exception ParseError(string format, params object[] args)
         {
             return ParseError(CurrentToken.Pos, format, args);
@@ -482,6 +508,11 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             }
 
             return false;
+        }
+
+        private static bool IsZeroOrOne(char c)
+        {
+            return c == '0' || c == '1';
         }
     }
 }

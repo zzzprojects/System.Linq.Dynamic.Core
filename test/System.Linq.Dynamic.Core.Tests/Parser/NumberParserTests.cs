@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Parser;
-using FluentAssertions;
+using System.Linq.Expressions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
@@ -25,6 +26,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
                 new object[] { null, "3.215", 3.215m }
             };
         }
+
         [Theory]
         [MemberData(nameof(Decimals))]
         public void NumberParser_ParseNumber_Decimal(string culture, string text, decimal expected)
@@ -65,6 +67,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
                 new object[] { null, "1.2345e4", 12345f }
             };
         }
+
         [Theory]
         [MemberData(nameof(Floats))]
         public void NumberParser_ParseNumber_Float(string culture, string text, float expected)
@@ -105,6 +108,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
                 new object[] { null, "1.2345e4", 12345d }
             };
         }
+
         [Theory]
         [MemberData(nameof(Doubles))]
         public void NumberParser_ParseNumber_Double(string culture, string text, double expected)
@@ -120,6 +124,33 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             // Assert
             result.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("42", 42)]
+        [InlineData("-42", -42)]
+        [InlineData("77u", 77)]
+        [InlineData("77l", 77)]
+        [InlineData("77ul", 77)]
+        [InlineData("0xff", 255)]
+        [InlineData("-0xff", -255)]
+        [InlineData("0b1100000011101", 6173)]
+        [InlineData("-0b1100000011101", -6173)]
+        [InlineData("123d", 123d)]
+        [InlineData("123f", 123f)]
+        [InlineData("123m", 123)]
+        [InlineData("-123d", -123d)]
+        [InlineData("-123f", -123f)]
+        [InlineData("-123m", -123)]
+        public void NumberParser_ParseIntegerLiteral(string text, double expected)
+        {
+            // Arrange
+
+            // Act
+            var result = new NumberParser(_parsingConfig).ParseIntegerLiteral(0, text) as ConstantExpression;
+
+            // Assert
+            result.Value.Should().Be(expected);
         }
     }
 }
