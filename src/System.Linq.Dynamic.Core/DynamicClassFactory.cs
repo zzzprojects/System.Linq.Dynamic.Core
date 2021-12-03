@@ -72,7 +72,7 @@ namespace System.Linq.Dynamic.Core
         static DynamicClassFactory()
         {
             var assemblyName = new AssemblyName(DynamicAssemblyName);
-            var assemblyBuilder = AssemblyBuilderFactory.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+            var assemblyBuilder = AssemblyBuilderFactory.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
 
             ModuleBuilder = assemblyBuilder.DefineDynamicModule(DynamicModuleName);
         }
