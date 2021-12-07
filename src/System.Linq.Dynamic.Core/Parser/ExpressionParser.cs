@@ -1471,16 +1471,25 @@ namespace System.Linq.Dynamic.Core.Parser
                 var ctorParameters = ctor.GetParameters();
                 if (ctorParameters.Length == expressions.Count)
                 {
+                    bool bindParametersSequentially = !properties.All(p => ctorParameters
+                        .Any(cp => cp.Name == p.Name && (cp.ParameterType == p.Type || p.Type == Nullable.GetUnderlyingType(cp.ParameterType))));
                     var expressionsPromoted = new List<Expression>();
                     // Loop all expressions and promote if needed
                     for (int i = 0; i < ctorParameters.Length; i++)
                     {
-                        Type propertyType = ctorParameters[i].ParameterType;
-                        string cParameterName = ctorParameters[i].Name;
-                        var propertyAndIndex = properties.Select((p, index) => new { p, index })
-                            .First(p => p.p.Name == cParameterName && (p.p.Type == propertyType || p.p.Type == Nullable.GetUnderlyingType(propertyType)));
-                        // Promote from Type to Nullable Type if needed
-                        expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[propertyAndIndex.index], propertyType, true, true));
+                        if (bindParametersSequentially)
+                        {
+                            expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyTypes[i], true, true));
+                        }
+                        else
+                        {
+                            Type propertyType = ctorParameters[i].ParameterType;
+                            string cParameterName = ctorParameters[i].Name;
+                            var propertyAndIndex = properties.Select((p, index) => new { p, index })
+                                .First(p => p.p.Name == cParameterName && (p.p.Type == propertyType || p.p.Type == Nullable.GetUnderlyingType(propertyType)));
+                            // Promote from Type to Nullable Type if needed
+                            expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[propertyAndIndex.index], propertyType, true, true));
+                        }
                     }
 
                     return Expression.New(ctor, expressionsPromoted, (IEnumerable<MemberInfo>)propertyInfos);
