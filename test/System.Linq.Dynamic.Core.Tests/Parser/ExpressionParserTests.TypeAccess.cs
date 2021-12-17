@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core.Parser;
+﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 using FluentAssertions;
 using Xunit;
@@ -96,6 +97,27 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             // Assert
             expression.ToString().Should().Be("new Uri(\"https://www.example.com/\", Absolute)");
+        }
+        
+        [Theory]
+        [InlineData("new(1 as a, 2 as b)", "new*(a = 1, b = 2)")]
+        [InlineData("new(2 as b, 1 as a)", "new*(a = 1, b = 2)")]
+        public void ParseTypeAccess_Via_Constructor_DynamicType_To_String(string newExpression, string newExpression2)
+        {
+            // Arrange
+            var parameter = Expression.Parameter(typeof(int));
+            var parameter2 = Expression.Parameter(typeof(int));
+            var returnType = DynamicClassFactory.CreateType(new List<DynamicProperty> {
+                new DynamicProperty("a", typeof(int)),
+                new DynamicProperty("b", typeof(int))
+            });
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter, parameter2 }, newExpression, new object[] { }, ParsingConfig.Default);
+
+            var expression = parser.Parse(returnType);
+            // Assert
+            expression.ToString().Should().Match(newExpression2);
         }
     }
 }
