@@ -1,6 +1,10 @@
-﻿namespace System.Linq.Dynamic.Core.Tokenizer
+﻿#pragma warning disable CS1591
+namespace System.Linq.Dynamic.Core.Tokenizer
 {
-    internal enum TokenId
+    /// <summary>
+    /// TokenId which defines the text which is parsed.
+    /// </summary>
+    public enum TokenId
     {
         Unknown,
         End,
@@ -10,7 +14,7 @@
         RealLiteral,
         Exclamation,
         Percent,
-        Amphersand,
+        Ampersand,
         OpenParen,
         CloseParen,
         OpenCurlyParen,
@@ -30,7 +34,7 @@
         CloseBracket,
         Bar,
         ExclamationEqual,
-        DoubleAmphersand,
+        DoubleAmpersand,
         LessThanEqual,
         LessGreater,
         DoubleEqual,

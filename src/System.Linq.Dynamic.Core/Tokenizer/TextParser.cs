@@ -4,11 +4,13 @@ using System.Linq.Dynamic.Core.Exceptions;
 
 namespace System.Linq.Dynamic.Core.Tokenizer
 {
-    internal class TextParser
+    /// <summary>
+    /// TextParser which can be used to parse a text into tokens.
+    /// </summary>
+    public class TextParser
     {
         private const char DefaultNumberDecimalSeparator = '.';
-
-        private static readonly char[] EscapeCharacters = new[] { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
+        private static readonly char[] EscapeCharacters = { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
 
         // These aliases are supposed to simply the where clause and make it more human readable
         private static readonly Dictionary<string, TokenId> PredefinedOperatorAliases = new Dictionary<string, TokenId>(StringComparer.OrdinalIgnoreCase)
@@ -26,8 +28,8 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             { "GreaterThan", TokenId.GreaterThan },
             { "ge", TokenId.GreaterThanEqual },
             { "GreaterThanEqual", TokenId.GreaterThanEqual },
-            { "and", TokenId.DoubleAmphersand },
-            { "AndAlso", TokenId.DoubleAmphersand },
+            { "and", TokenId.DoubleAmpersand },
+            { "AndAlso", TokenId.DoubleAmpersand },
             { "or", TokenId.DoubleBar },
             { "OrElse", TokenId.DoubleBar },
             { "not", TokenId.Exclamation },
@@ -41,8 +43,17 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
         private int _textPos;
         private char _ch;
+
+        /// <summary>
+        /// The current parsed <see cref="Token"/>.
+        /// </summary>
         public Token CurrentToken;
 
+        /// <summary>
+        /// Constructor for TextParser
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="text"></param>
         public TextParser(ParsingConfig config, string text)
         {
             _config = config;
@@ -70,16 +81,18 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             _ch = _textPos < _textLen ? _text[_textPos] : '\0';
         }
 
+        /// <summary>
+        /// Peek the next character.
+        /// </summary>
+        /// <returns>The next character, or \0 if end of string.</returns>
         public char PeekNextChar()
         {
-            if (_textPos + 1 < _textLen)
-            {
-                return _text[_textPos + 1];
-            }
-
-            return '\0';
+            return _textPos + 1 < _textLen ? _text[_textPos + 1] : '\0';
         }
 
+        /// <summary>
+        /// Go to the next token.
+        /// </summary>
         public void NextToken()
         {
             while (char.IsWhiteSpace(_ch))
@@ -115,11 +128,11 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                     if (_ch == '&')
                     {
                         NextChar();
-                        tokenId = TokenId.DoubleAmphersand;
+                        tokenId = TokenId.DoubleAmpersand;
                     }
                     else
                     {
-                        tokenId = TokenId.Amphersand;
+                        tokenId = TokenId.Ampersand;
                     }
                     break;
 
@@ -431,19 +444,16 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             CurrentToken.Id = GetAliasedTokenId(tokenId, CurrentToken.Text);
         }
 
-        public void ValidateToken(TokenId t, string errorMessage)
+        /// <summary>
+        /// Check if the current token is the specified <see cref="TokenId"/>.
+        /// </summary>
+        /// <param name="tokenId">The tokenId to check.</param>
+        /// <param name="errorMessage">The (optional) error message.</param>
+        public void ValidateToken(TokenId tokenId, string errorMessage = null)
         {
-            if (CurrentToken.Id != t)
+            if (CurrentToken.Id != tokenId)
             {
-                throw ParseError(errorMessage);
-            }
-        }
-
-        public void ValidateToken(TokenId t)
-        {
-            if (CurrentToken.Id != t)
-            {
-                throw ParseError(Res.SyntaxError);
+                throw ParseError(errorMessage ?? Res.SyntaxError);
             }
         }
 
