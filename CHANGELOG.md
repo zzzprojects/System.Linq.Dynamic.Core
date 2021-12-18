@@ -1,7 +1,8 @@
-# v1.2.15 (17 December 2021)
+# v1.2.15 (18 December 2021)
 - [#554](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/554) - Support for parsing Binary Integer [feature] contributed by [StefH](https://github.com/StefH)
 - [#557](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/557) - bind expressions to correct constructor parameter [feature] contributed by [jonasdaniels](https://github.com/jonasdaniels)
 - [#558](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/558) - Allow assembly to be collected [bug] contributed by [hemirunner426](https://github.com/hemirunner426)
+- [#561](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/561) - Fix NET35 build + add unit test for OrderBy with IComparer [bug] contributed by [StefH](https://github.com/StefH)
 - [#552](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/552) - Missing parse from binary literal to integer [bug]
 
 # v1.2.14 (09 November 2021)
