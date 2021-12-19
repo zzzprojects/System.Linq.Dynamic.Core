@@ -107,7 +107,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWASMExample", "src-bl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6", "src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6.csproj", "{D28F6393-B56B-40A2-AF67-E8D669F42546}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_net5.0_EF6_InMemory", "src-console\ConsoleAppEF6_InMemory\ConsoleApp_net5.0_EF6_InMemory.csproj", "{4CC563F6-5352-4A77-A8C0-DC0D77A71DBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_net6.0_EF6_InMemory", "src-console\ConsoleAppEF6_InMemory\ConsoleApp_net6.0_EF6_InMemory.csproj", "{4CC563F6-5352-4A77-A8C0-DC0D77A71DBB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_net6.0", "src-console\ConsoleApp_net6.0\ConsoleApp_net6.0.csproj", "{C206917D-6E90-4A31-8533-AF2DD68FF738}"
 EndProject

@@ -1,4 +1,6 @@
-﻿using System.Linq.Dynamic.Core.Exceptions;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using Xunit;
 
@@ -6,8 +8,21 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
+        internal class IntComparer : IComparer<int>, IComparer
+        {
+            public int Compare(int x, int y)
+            {
+                return -1;
+            }
+
+            public int Compare(object x, object y)
+            {
+                return -1;
+            }
+        }
+
         [Fact]
-        public void OrderBy_Dynamic_IComparer()
+        public void OrderBy_Dynamic_IComparer_StringComparer()
         {
             // Arrange
             var testList = User.GenerateSampleModels(2);
@@ -16,6 +31,21 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var orderBy = testList.OrderBy(x => x.UserName, StringComparer.OrdinalIgnoreCase).ToArray();
             var orderByDynamic = qry.OrderBy("UserName", StringComparer.OrdinalIgnoreCase).ToArray();
+
+            // Assert
+            Assert.Equal(orderBy, orderByDynamic);
+        }
+
+        [Fact]
+        public void OrderBy_Dynamic_IComparer_IntComparer()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(2);
+            var qry = testList.AsQueryable();
+
+            // Act
+            var orderBy = testList.OrderBy(x => x.Income, new IntComparer()).ToArray();
+            var orderByDynamic = qry.OrderBy("Income", new IntComparer()).ToArray();
 
             // Assert
             Assert.Equal(orderBy, orderByDynamic);
