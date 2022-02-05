@@ -277,7 +277,37 @@ namespace System.Linq.Dynamic.Core.Tests
                 return ResolveTypeBySimpleName(assemblies, typeName);
             }
         }
+#if NETCOREAPP3_1
+        [Fact]
+        public void Test_DateTime_Formats()
+        {
+            var value = new DateTime(2022, 1, 2, 3, 4, 0);
 
+            // test cultures
+            var cultureEn = CultureInfo.GetCultureInfo("en-US");
+            var cultureRu = CultureInfo.GetCultureInfo("ru-RU");
+
+            // compile lamdba delegate
+            var template = @"p0.ToString(""dd\/MM HH:mm"")";
+            var p0 = Expression.Parameter(typeof(DateTime), "p0");
+            var expression = DynamicExpressionParser.ParseLambda(new[] { p0 }, typeof(string), template);
+            var del = expression.Compile();
+
+            // en-US culture tests
+            CultureInfo.CurrentCulture = cultureEn;
+            CultureInfo.CurrentUICulture = cultureEn;
+
+            Assert.Equal("02/01 03:04", value.ToString(@"dd\/MM HH:mm")); // v1.2.12 - ok, v.1.2.15 - ok
+            Assert.Equal("02/01 03:04", del.DynamicInvoke(value)); // v1.2.12 - ok, v.1.2.15 - ok
+
+            // ru-RU culture tests
+            CultureInfo.CurrentCulture = cultureRu;
+            CultureInfo.CurrentUICulture = cultureRu;
+
+            Assert.Equal("02/01 03:04", value.ToString(@"dd\/MM HH:mm")); // v1.2.12 - ok, v.1.2.15 - ok
+            Assert.Equal("02/01 03:04", del.DynamicInvoke(value)); // v1.2.12 - ok, v.1.2.15 - failure (Actual: 02.01 03:04)
+        }
+#endif
         [Fact]
         public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false()
         {
