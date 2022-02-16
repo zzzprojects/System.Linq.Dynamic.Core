@@ -289,12 +289,29 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assign
             var qry = new BaseEmployee[]
             {
-                new Worker { Name = "1" }, new Worker { Name = "2" }
+                new Worker { Name = "1", Other = "x" }, new Worker { Name = "2" }
             }.AsQueryable();
 
             // Act
             var cast = qry.Select(c => (Worker)c).ToArray();
             var castDynamic = qry.Select("Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")").ToDynamicArray();
+
+            // Assert
+            Check.That(cast.Length).Equals(castDynamic.Length);
+        }
+
+        [Fact]
+        public void IsAndCastToType_Dynamic_ActingOnIt_And_GetProperty()
+        {
+            // Assign
+            var qry = new BaseEmployee[]
+            {
+                new Worker { Name = "1", Other = "x" }, new Boss { Name = "2", Function = "y" }
+            }.AsQueryable();
+
+            // Act
+            var cast = qry.Select(c => (c is Worker) ? (c as Worker).Other : "-").ToArray();
+            var castDynamic = qry.Select("iif(Is(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\"), Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Other, \"-\")").ToDynamicArray();
 
             // Assert
             Check.That(cast.Length).Equals(castDynamic.Length);
