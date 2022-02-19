@@ -1133,8 +1133,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     {
                         // - create nullable constant from expressionIfTrue with type from expressionIfFalse
                         // - convert expressionIfFalse to nullable (unless it's already nullable)
-
-                        Type nullableType = TypeHelper.ToNullableType(expressionIfFalse.Type);
+                        var nullableType = TypeHelper.ToNullableType(expressionIfFalse.Type);
                         expressionIfTrue = Expression.Constant(null, nullableType);
 
                         if (!TypeHelper.IsNullableType(expressionIfFalse.Type))
@@ -1375,10 +1374,10 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
             }
 
-            IEnumerable<PropertyInfo> propertyInfos = type.GetProperties();
+            var propertyInfos = type.GetProperties();
             if (type.GetTypeInfo().BaseType == typeof(DynamicClass))
             {
-                propertyInfos = propertyInfos.Where(x => x.Name != "Item");
+                propertyInfos = propertyInfos.Where(x => x.Name != "Item").ToArray();
             }
 
             Type[] propertyTypes = propertyInfos.Select(p => p.PropertyType).ToArray();
@@ -1990,7 +1989,7 @@ namespace System.Linq.Dynamic.Core.Parser
             var memberExpression = expression as MemberExpression;
             if (memberExpression == null && expression.NodeType == ExpressionType.Coalesce)
             {
-                memberExpression = (expression as BinaryExpression).Left as MemberExpression;
+                memberExpression = (expression as BinaryExpression)?.Left as MemberExpression;
             }
 
             if (memberExpression != null)
