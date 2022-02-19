@@ -29,7 +29,8 @@
         public const string FirstExprMustBeBool = "The first expression must be of type 'Boolean'";
         public const string FunctionRequiresOneArg = "The '{0}' function requires one argument";
         public const string FunctionRequiresOneNotNullArg = "The '{0}' function requires one argument which is not null.";
-        public const string FunctionRequiresOneNotNullArgOfType = "The '{0}' function requires one argument of type {1} which is not null.";
+        public const string FunctionRequiresNotNullArgOfType = "The '{0}' function requires the {1}argument to be not null and of type {2}.";
+        public const string FunctionRequiresOneOrTwoArgs = "The '{0}' function requires 1 or 2 arguments";
         public const string HexCharExpected = "Hexadecimal character expected";
         public const string IQueryableProviderNotAsync = "The provider for the source IQueryable doesn't implement IAsyncQueryProvider/IDbAsyncQueryProvider. Only providers that implement IAsyncQueryProvider/IDbAsyncQueryProvider can be used for Entity Framework asynchronous operations.";
         public const string IdentifierExpected = "Identifier expected";
