@@ -1,3 +1,8 @@
+# v1.2.16 (19 February 2022)
+- [#562](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/562) - Make TextParser public [feature] contributed by [StefH](https://github.com/StefH)
+- [#563](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/563) - GitHub Actions: use actions/checkout@v2 [security] contributed by [StefH](https://github.com/StefH)
+- [#567](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/567) - Add support for property for Is,As and Cast [feature] contributed by [StefH](https://github.com/StefH)
+
 # v1.2.15 (18 December 2021)
 - [#554](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/554) - Support for parsing Binary Integer [feature] contributed by [StefH](https://github.com/StefH)
 - [#557](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/557) - bind expressions to correct constructor parameter [feature] contributed by [jonasdaniels](https://github.com/jonasdaniels)
