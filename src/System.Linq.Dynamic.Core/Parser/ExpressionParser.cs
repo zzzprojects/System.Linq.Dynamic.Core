@@ -904,10 +904,9 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
                 else
                 {
-                    var lambda = expr as LambdaExpression;
-                    if (lambda != null)
+                    if (expr is LambdaExpression lambdaExpression)
                     {
-                        return ParseLambdaInvocation(lambda);
+                        return ParseLambdaInvocation(lambdaExpression);
                     }
                 }
 
@@ -1021,14 +1020,25 @@ namespace System.Linq.Dynamic.Core.Parser
 
             Expression[] args = ParseArgumentList();
 
-            if (args.Length != 1)
+            if (args.Length != 1 && args.Length != 2)
             {
-                throw ParseError(errorPos, Res.FunctionRequiresOneArg, functionName);
+                throw ParseError(errorPos, Res.FunctionRequiresOneOrTwoArgs, functionName);
             }
 
-            Type resolvedType = ResolveTypeFromArgumentExpression(functionName, args[0]);
+            Expression typeArgument;
+            Expression it;
+            if (args.Length == 1)
+            {
+                typeArgument = args[0];
+                it = _it;
+            }
+            else
+            {
+                typeArgument = args[1];
+                it = args[0];
+            }
 
-            return Expression.TypeIs(_it, resolvedType);
+            return Expression.TypeIs(it, ResolveTypeFromArgumentExpression(functionName, typeArgument, args.Length));
         }
 
         // As(...) function
@@ -1040,14 +1050,25 @@ namespace System.Linq.Dynamic.Core.Parser
 
             Expression[] args = ParseArgumentList();
 
-            if (args.Length != 1)
+            if (args.Length != 1 && args.Length != 2)
             {
-                throw ParseError(errorPos, Res.FunctionRequiresOneArg, functionName);
+                throw ParseError(errorPos, Res.FunctionRequiresOneOrTwoArgs, functionName);
             }
 
-            Type resolvedType = ResolveTypeFromArgumentExpression(functionName, args[0]);
+            Expression typeArgument;
+            Expression it;
+            if (args.Length == 1)
+            {
+                typeArgument = args[0];
+                it = _it;
+            }
+            else
+            {
+                typeArgument = args[1];
+                it = args[0];
+            }
 
-            return Expression.TypeAs(_it, resolvedType);
+            return Expression.TypeAs(it, ResolveTypeFromArgumentExpression(functionName, typeArgument, args.Length));
         }
 
         // Cast(...) function
@@ -1059,14 +1080,25 @@ namespace System.Linq.Dynamic.Core.Parser
 
             Expression[] args = ParseArgumentList();
 
-            if (args.Length != 1)
+            if (args.Length != 1 && args.Length != 2)
             {
-                throw ParseError(errorPos, Res.FunctionRequiresOneArg, functionName);
+                throw ParseError(errorPos, Res.FunctionRequiresOneOrTwoArgs, functionName);
             }
 
-            Type resolvedType = ResolveTypeFromArgumentExpression(functionName, args[0]);
+            Expression typeArgument;
+            Expression it;
+            if (args.Length == 1)
+            {
+                typeArgument = args[0];
+                it = _it;
+            }
+            else
+            {
+                typeArgument = args[1];
+                it = args[0];
+            }
 
-            return Expression.ConvertChecked(_it, resolvedType);
+            return Expression.ConvertChecked(it, ResolveTypeFromArgumentExpression(functionName, typeArgument, args.Length));
         }
 
         Expression GenerateConditional(Expression test, Expression expressionIfTrue, Expression expressionIfFalse, bool nullPropagating, int errorPos)
@@ -1101,8 +1133,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     {
                         // - create nullable constant from expressionIfTrue with type from expressionIfFalse
                         // - convert expressionIfFalse to nullable (unless it's already nullable)
-
-                        Type nullableType = TypeHelper.ToNullableType(expressionIfFalse.Type);
+                        var nullableType = TypeHelper.ToNullableType(expressionIfFalse.Type);
                         expressionIfTrue = Expression.Constant(null, nullableType);
 
                         if (!TypeHelper.IsNullableType(expressionIfFalse.Type))
@@ -1343,10 +1374,10 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
             }
 
-            IEnumerable<PropertyInfo> propertyInfos = type.GetProperties();
+            var propertyInfos = type.GetProperties();
             if (type.GetTypeInfo().BaseType == typeof(DynamicClass))
             {
-                propertyInfos = propertyInfos.Where(x => x.Name != "Item");
+                propertyInfos = propertyInfos.Where(x => x.Name != "Item").ToArray();
             }
 
             Type[] propertyTypes = propertyInfos.Select(p => p.PropertyType).ToArray();
@@ -1836,8 +1867,9 @@ namespace System.Linq.Dynamic.Core.Parser
             return Expression.Call(callType, methodName, typeArgs, args);
         }
 
-        private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression)
+        private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression, int? arguments = null)
         {
+            string argument = arguments == null ? string.Empty : arguments == 1 ? "first " : "second ";
             switch (argumentExpression)
             {
                 case ConstantExpression constantExpression:
@@ -1850,21 +1882,16 @@ namespace System.Linq.Dynamic.Core.Parser
                             return type;
 
                         default:
-                            throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArgOfType, functionName, "string or System.Type");
+                            throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresNotNullArgOfType, functionName, argument, "string or System.Type");
                     }
 
                 default:
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArgOfType, functionName, "ConstantExpression");
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresNotNullArgOfType, functionName, argument, "ConstantExpression");
             }
         }
 
         private Type ResolveTypeStringFromArgument(string functionName, string typeName)
         {
-            if (string.IsNullOrEmpty(typeName))
-            {
-                throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArg, functionName, typeName);
-            }
-
             Type resultType = _typeFinder.FindTypeByName(typeName, new[] { _it, _parent, _root }, true);
             if (resultType == null)
             {
@@ -1962,7 +1989,7 @@ namespace System.Linq.Dynamic.Core.Parser
             var memberExpression = expression as MemberExpression;
             if (memberExpression == null && expression.NodeType == ExpressionType.Coalesce)
             {
-                memberExpression = (expression as BinaryExpression).Left as MemberExpression;
+                memberExpression = (expression as BinaryExpression)?.Left as MemberExpression;
             }
 
             if (memberExpression != null)
