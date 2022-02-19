@@ -1893,11 +1893,6 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private Type ResolveTypeStringFromArgument(string functionName, string typeName)
         {
-            if (string.IsNullOrEmpty(typeName))
-            {
-                throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneNotNullArg, functionName, typeName);
-            }
-
             Type resultType = _typeFinder.FindTypeByName(typeName, new[] { _it, _parent, _root }, true);
             if (resultType == null)
             {

@@ -24,8 +24,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _keywordsHelper.TryGetValue(name, out object type);
 
-            Type result = type as Type;
-            if (result != null)
+            if (type is Type result)
             {
                 return result;
             }
