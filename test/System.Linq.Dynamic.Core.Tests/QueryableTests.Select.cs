@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using FluentAssertions;
 using Linq.PropertyTranslator.Core;
 using QueryInterceptor.Core;
 using Xunit;
 using NFluent;
+using Newtonsoft.Json.Linq;
 #if EFCORE
 using Microsoft.AspNetCore.Identity;
 #else
@@ -346,6 +348,29 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Check.That(result).Equals("System.Int32[].Select(it => (it * it))");
+        }
+
+        [Fact]
+        public void Select_Dynamic_JObject_With_Array_Should_Use_Correct_Indexer()
+        {
+            // Arrange
+            var j = new JObject
+            {
+                {"I", new JValue(9)},
+                {"A", new JArray(new[] {1,2,3}) } ,
+                {"L", new JValue(5)}
+            };
+            var queryable = new[] { j }.AsQueryable();
+
+            // Act
+            var result = queryable.Select("new (long(I) as I, (new [] { long(A[0]), long(A[1]), long(A[2])}) as A, long(L) as L)").ToDynamicArray().First();
+
+            // Assert
+            Assert.Equal(9, result.I);
+            Assert.Equal(5, result.L);
+            Assert.Equal(1, result.A[0]);
+            Assert.Equal(2, result.A[1]);
+            Assert.Equal(3, result.A[2]);
         }
 
         [Fact]
