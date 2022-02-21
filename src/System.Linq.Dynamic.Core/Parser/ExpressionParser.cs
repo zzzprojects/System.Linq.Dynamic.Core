@@ -1965,7 +1965,16 @@ namespace System.Linq.Dynamic.Core.Parser
                     throw ParseError(errorPos, Res.NoApplicableIndexer,
                         TypeHelper.GetTypeName(expr.Type));
                 case 1:
-                    return Expression.Call(expr, (MethodInfo)mb, args);
+                    var indexMethod = (MethodInfo)mb;
+                    var indexParameterType = indexMethod.GetParameters().First().ParameterType;
+
+                    var indexArgumentExpression = args[0]; // Indexer only has 1 parameter, so we can use args[0] here
+                    if (indexParameterType != indexArgumentExpression.Type)
+                    {
+                        indexArgumentExpression = Expression.Convert(indexArgumentExpression, indexParameterType);
+                    }
+
+                    return Expression.Call(expr, indexMethod, indexArgumentExpression);
 
                 default:
                     throw ParseError(errorPos, Res.AmbiguousIndexerInvocation, TypeHelper.GetTypeName(expr.Type));
