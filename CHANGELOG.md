@@ -1,3 +1,6 @@
+# v1.2.17 (21 February 2022)
+- [#569](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/569) - Fix logic for indexer when parameter-type differs [bug] contributed by [StefH](https://github.com/StefH)
+
 # v1.2.16 (19 February 2022)
 - [#562](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/562) - Make TextParser public [feature] contributed by [StefH](https://github.com/StefH)
 - [#563](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/563) - GitHub Actions: use actions/checkout@v2 [security] contributed by [StefH](https://github.com/StefH)
