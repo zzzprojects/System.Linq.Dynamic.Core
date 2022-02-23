@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using FluentAssertions;
@@ -46,6 +47,7 @@ namespace System.Linq.Dynamic.Core.Tests
             public DayOfWeek DOW { get; set; }
             public int Sec { get; set; }
             public int? SecNull { get; set; }
+            // public long X { get; set; }
 
             public ExampleWithConstructor(DateTime t, DayOfWeek? dn, DayOfWeek d, int s, int? sn)
             {
@@ -269,6 +271,20 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(resultDynamic.First()).Equals(result.First());
             Check.That(resultDynamic.Last()).Equals(result.Last());
+        }
+
+        [Fact]
+        public void Select_Dynamic_SystemType()
+        {
+            // Arrange
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+            var queryable = new[] { "" }.AsQueryable();
+
+            // Act
+            var result = queryable.Select(config, "new System.IO.DirectoryInfo(~ as path)");
+
+            // Assert
+            Assert.NotNull(result);
         }
 
         [Fact]

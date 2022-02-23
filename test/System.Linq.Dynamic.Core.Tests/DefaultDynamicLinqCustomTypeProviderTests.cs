@@ -1,5 +1,6 @@
-﻿#if NET452
+﻿using System.IO;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
+using FluentAssertions;
 using NFluent;
 using Xunit;
 
@@ -12,6 +13,16 @@ namespace System.Linq.Dynamic.Core.Tests
         public DefaultDynamicLinqCustomTypeProviderTests()
         {
             _sut = new DefaultDynamicLinqCustomTypeProvider();
+        }
+
+        [Fact]
+        public void DefaultDynamicLinqCustomTypeProvider_ResolveSystemType()
+        {
+            // Act
+            var type = _sut.ResolveType(typeof(DirectoryInfo).FullName);
+
+            // Assert
+            type.Should().Be(typeof(DirectoryInfo));
         }
 
         [Fact]
@@ -45,4 +56,3 @@ namespace System.Linq.Dynamic.Core.Tests
         }
     }
 }
-#endif
