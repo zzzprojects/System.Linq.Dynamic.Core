@@ -274,17 +274,33 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Select_Dynamic_SystemType()
+        public void Select_Dynamic_SystemType1()
         {
             // Arrange
             var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
-            var queryable = new[] { "" }.AsQueryable();
+            var queryable = new[] { "test" }.AsQueryable();
 
             // Act
-            var result = queryable.Select(config, "new System.IO.DirectoryInfo(~ as path)");
+            var result = queryable.Select(config, $"new {typeof(DirectoryInfo).FullName}(~ as path)").ToDynamicArray().First();
 
             // Assert
             Assert.NotNull(result);
+            Assert.Equal(result.Name, "test");
+        }
+
+        [Fact]
+        public void Select_Dynamic_SystemType2()
+        {
+            // Arrange
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+            var queryable = new[] { "test" }.AsQueryable();
+
+            // Act
+            var result = queryable.Select<DirectoryInfo>(config, "new (~ as path)").ToDynamicArray().First();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(result.Name, "test");
         }
 
         [Fact]
