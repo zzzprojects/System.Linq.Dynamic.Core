@@ -1374,7 +1374,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
             }
 
-            // Option 1a. Try to find a constructor with the exact argument-types and exact same order
+            // Option 1. Try to find a constructor with the exact argument-types and exact same order
             var constructorArgumentTypes = properties.Select(p => p.Type).ToArray();
             var exactConstructor = type.GetConstructor(constructorArgumentTypes);
             if (exactConstructor != null)
@@ -1385,36 +1385,6 @@ namespace System.Linq.Dynamic.Core.Parser
                     .ToArray();
 
                 return Expression.New(exactConstructor, expressionsPromoted);
-            }
-
-            // Option 1b
-            var sameNumberOfParametersConstructors = type.GetConstructors().Where(c => c.GetParameters().Length == properties.Count);
-            foreach (var c in sameNumberOfParametersConstructors)
-            {
-                int matches = 0;
-                var parameters = c.GetParameters();
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    if (parameters[i].ParameterType == properties[i].Type)
-                    {
-                        matches++;
-                    }
-                    else if (TypeHelper.IsNullableType(parameters[i].ParameterType) &&
-                             TypeHelper.GetNonNullableType(parameters[i].ParameterType) == properties[i].Type)
-                    {
-                        matches++;
-                    }
-                }
-
-                if (matches == properties.Count)
-                {
-                    // Promote from Type to Nullable Type if needed
-                    var expressionsPromoted = c.GetParameters()
-                        .Select((t, i) => _parsingConfig.ExpressionPromoter.Promote(expressions[i], t.ParameterType, true, true))
-                        .ToArray();
-
-                    return Expression.New(c, expressionsPromoted);
-                }
             }
 
             // Option 2. Try to bind via different way (TODO : investigate if this code block is correct and is needed) 

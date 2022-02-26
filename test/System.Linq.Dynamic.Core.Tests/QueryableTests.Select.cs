@@ -59,6 +59,20 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
+        public class ExampleWithConstructor2
+        {
+            public int? Value { get; set; }
+
+            public ExampleWithConstructor2(bool b)
+            {
+            }
+
+            public ExampleWithConstructor2(int? value)
+            {
+                Value = value;
+            }
+        }
+
         /// <summary>
         /// Cannot work with property which in base class. https://github.com/StefH/System.Linq.Dynamic.Core/issues/23
         /// </summary>
@@ -267,6 +281,22 @@ namespace System.Linq.Dynamic.Core.Tests
                 .Select(d => new ExampleWithConstructor(d, d.DayOfWeek, d.DayOfWeek, d.Second, d.Second));
             IQueryable<ExampleWithConstructor> resultDynamic = dates
                 .Select<ExampleWithConstructor>(config, "new (it as Time, DayOfWeek as DOWNull, DayOfWeek as DOW, Second as Sec, int?(Second) as SecNull)");
+
+            // Assert
+            Check.That(resultDynamic.First()).Equals(result.First());
+            Check.That(resultDynamic.Last()).Equals(result.Last());
+        }
+
+        [Fact]
+        public void Select_Dynamic_IntoTypeWithNullableParameterInConstructor()
+        {
+            // Arrange
+            var values = Enumerable.Repeat(0, 3).AsQueryable();
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+
+            // Act
+            var result = values.Select(v => new ExampleWithConstructor2(v));
+            var resultDynamic = values.Select<ExampleWithConstructor2>(config, "new (it as value)");
 
             // Assert
             Check.That(resultDynamic.First()).Equals(result.First());
