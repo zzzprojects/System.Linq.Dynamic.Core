@@ -1374,20 +1374,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
             }
 
-            // Option 1. Try to find a constructor with the exact argument-types and exact same order
-            var constructorArgumentTypes = properties.Select(p => p.Type).ToArray();
-            var exactConstructor = type.GetConstructor(constructorArgumentTypes);
-            if (exactConstructor != null)
-            {
-                // Promote from Type to Nullable Type if needed
-                var expressionsPromoted = exactConstructor.GetParameters()
-                    .Select((t, i) => _parsingConfig.ExpressionPromoter.Promote(expressions[i], t.ParameterType, true, true))
-                    .ToArray();
-
-                return Expression.New(exactConstructor, expressionsPromoted);
-            }
-
-            // Option 2. Try to bind via different way (TODO : investigate if this code block is correct and is needed) 
+            // Option 1. Try to bind via properties (TODO : investigate if this code block is 100% correct and is needed) 
             var propertyInfos = type.GetProperties();
             if (type.GetTypeInfo().BaseType == typeof(DynamicClass))
             {
@@ -1426,7 +1413,20 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            // Option 3. Call the default (empty) constructor and set the members
+            // Option 2. Try to find a constructor with the exact argument-types and exact same order
+            var constructorArgumentTypes = properties.Select(p => p.Type).ToArray();
+            var exactConstructor = type.GetConstructor(constructorArgumentTypes);
+            if (exactConstructor != null)
+            {
+                // Promote from Type to Nullable Type if needed
+                var expressionsPromoted = exactConstructor.GetParameters()
+                    .Select((t, i) => _parsingConfig.ExpressionPromoter.Promote(expressions[i], t.ParameterType, true, true))
+                    .ToArray();
+
+                return Expression.New(exactConstructor, expressionsPromoted);
+            }
+
+            // Option 2. Call the default (empty) constructor and set the members
             var memberBindings = new MemberBinding[properties.Count];
             for (int i = 0; i < memberBindings.Length; i++)
             {

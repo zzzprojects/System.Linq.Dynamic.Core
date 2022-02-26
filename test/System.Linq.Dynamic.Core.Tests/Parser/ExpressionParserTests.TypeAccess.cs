@@ -100,8 +100,8 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
         
         [Theory]
-        [InlineData("new(1 as a, 2 as b)", "new*(1, 2)")]
-        [InlineData("new(2 as b, 1 as a)", "new*(2, 1)")]
+        [InlineData("new(1 as a, 2 as b)", "new*(a = 1, b = 2)")]
+        [InlineData("new(2 as b, 1 as a)", "new*(a = 1, b = 2)")]
         public void ParseTypeAccess_Via_Constructor_DynamicType_To_String(string newExpression, string newExpression2)
         {
             // Arrange
