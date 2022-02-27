@@ -15,11 +15,11 @@ jobs:
 
     - name: Run Tests net6.0
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -f net5.0 -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci
 
     - name: Run Tests net5.0
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net5/System.Linq.Dynamic.Core.Tests.Net5.csproj -c Release -f net5.0 -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net5/System.Linq.Dynamic.Core.Tests.Net5.csproj -c Release -p:buildType=azure-pipelines-ci
 
     - name: Run Tests netcoreapp31
       run: |
