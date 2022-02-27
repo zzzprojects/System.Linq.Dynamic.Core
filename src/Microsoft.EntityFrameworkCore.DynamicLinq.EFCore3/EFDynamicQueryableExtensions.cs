@@ -456,7 +456,7 @@ namespace EntityFramework.DynamicLinq
             return ExecuteAsync<dynamic>(_firstOrDefault, source, cancellationToken);
         }
 
-        private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1);
+        private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1, mi => mi.GetParameters()[1].Name == "predicate");
 
         /// <summary>
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition
@@ -811,7 +811,7 @@ namespace EntityFramework.DynamicLinq
             return ExecuteAsync<dynamic>(_singleOrDefault, source, cancellationToken);
         }
 
-        private static readonly MethodInfo _singleOrDefaultPredicate = GetMethod(nameof(Queryable.SingleOrDefault), 1);
+        private static readonly MethodInfo _singleOrDefaultPredicate = GetMethod(nameof(Queryable.SingleOrDefault), 1, mi => mi.GetParameters()[1].Name == "predicate");
 
         /// <summary>
         ///     Asynchronously returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists.
@@ -1058,7 +1058,15 @@ namespace EntityFramework.DynamicLinq
         private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
 
-        private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) => typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).First(mi => mi.GetParameters().Length == parameterCount + 1 && ((predicate == null) || predicate(mi)));
+        private static MethodInfo GetMethod(
+            string name,
+            int parameterCount = 0,
+            Func<MethodInfo, bool> predicate = null) =>
+            typeof(Queryable)
+                .GetTypeInfo()
+                .GetDeclaredMethods(name)
+                .Where(mi => mi.GetParameters().Length == parameterCount + 1)
+                .First(mi => predicate == null || predicate(mi));
 
 #if EFCORE_3X
         private static IQueryable CastSource(IQueryable source, MethodInfo operatorMethodInfo)
