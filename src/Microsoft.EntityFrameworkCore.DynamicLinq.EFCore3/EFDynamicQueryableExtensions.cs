@@ -28,6 +28,7 @@ namespace EntityFramework.DynamicLinq
     /// </summary>
     public static class EntityFrameworkDynamicQueryableExtensions
     {
+        // ReSharper disable once UseNameOfInsteadOfTypeOf
         private static readonly TraceSource TraceSource = new TraceSource(typeof(EntityFrameworkDynamicQueryableExtensions).Name);
 
         #region AllAsync
@@ -83,9 +84,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<bool>(_AllPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion AllAsync
+        #endregion AllAsync
 
-#region AnyAsync
+        #region AnyAsync
         private static readonly MethodInfo _any = GetMethod(nameof(Queryable.Any));
 
         /// <summary>
@@ -165,10 +166,10 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<bool>(_anyPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion AnyAsync
+        #endregion AnyAsync
 
-#region AverageAsync
-        private static readonly MethodInfo _average = GetMethod(nameof(Queryable.Average));
+        #region AverageAsync
+        private static readonly MethodInfo _averageForDouble = GetMethod(nameof(Queryable.Average), 0, mi => mi.ReturnType == typeof(double));
 
         /// <summary>
         ///     Asynchronously computes the average of a sequence of values.
@@ -192,10 +193,10 @@ namespace EntityFramework.DynamicLinq
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
 
-            return ExecuteAsync<double>(_average, source, cancellationToken);
+            return ExecuteAsync<double>(_averageForDouble, source, cancellationToken);
         }
 
-        private static readonly MethodInfo _averagePredicate = GetMethod(nameof(Queryable.Average), 1);
+        private static readonly MethodInfo _averagePredicateForDouble = GetMethod(nameof(Queryable.Average), 1, mi => mi.ReturnType == typeof(double));
 
         /// <summary>
         ///     Asynchronously computes the average of a sequence of values that is obtained by invoking a projection function on each element of the input sequence.
@@ -249,11 +250,11 @@ namespace EntityFramework.DynamicLinq
 
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(false, source.ElementType, null, selector, args);
 
-            return ExecuteAsync<double>(_averagePredicate, source, Expression.Quote(lambda), cancellationToken);
+            return ExecuteAsync<double>(_averagePredicateForDouble, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion AverageAsync
+        #endregion AverageAsync
 
-#region Count
+        #region Count
         private static readonly MethodInfo _count = GetMethod(nameof(Queryable.Count));
 
         /// <summary>
@@ -338,9 +339,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<int>(_countPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion Count
+        #endregion Count
 
-#region FirstAsync
+        #region FirstAsync
         private static readonly MethodInfo _first = GetMethod(nameof(Queryable.First));
 
         /// <summary>
@@ -423,9 +424,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_firstPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion FirstAsync
+        #endregion FirstAsync
 
-#region FirstOrDefaultAsync
+        #region FirstOrDefaultAsync
         private static readonly MethodInfo _firstOrDefault = GetMethod(nameof(Queryable.FirstOrDefault));
 
         /// <summary>
@@ -455,7 +456,7 @@ namespace EntityFramework.DynamicLinq
             return ExecuteAsync<dynamic>(_firstOrDefault, source, cancellationToken);
         }
 
-        private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1);
+        private static readonly MethodInfo _firstOrDefaultPredicate = GetMethod(nameof(Queryable.FirstOrDefault), 1, mi => mi.GetParameters()[1].Name == "predicate");
 
         /// <summary>
         ///     Asynchronously returns the first element of a sequence that satisfies a specified condition
@@ -515,9 +516,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_firstOrDefaultPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion FirstOrDefault
+        #endregion FirstOrDefault
 
-#region LastAsync
+        #region LastAsync
         private static readonly MethodInfo _last = GetMethod(nameof(Queryable.Last));
 
         /// <summary>
@@ -600,9 +601,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_lastPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion LastAsync
+        #endregion LastAsync
 
-#region LastOrDefaultAsync
+        #region LastOrDefaultAsync
         private static readonly MethodInfo _lastOrDefault = GetMethod(nameof(Queryable.LastOrDefault));
 
         /// <summary>
@@ -692,9 +693,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_lastOrDefaultPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion LastOrDefault
+        #endregion LastOrDefault
 
-#region LongCount
+        #region LongCount
         private static readonly MethodInfo _longCount = GetMethod(nameof(Queryable.LongCount));
 
         /// <summary>
@@ -779,9 +780,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<long>(_longCountPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion LongCount
+        #endregion LongCount
 
-#region SingleOrDefaultAsync
+        #region SingleOrDefaultAsync
         private static readonly MethodInfo _singleOrDefault = GetMethod(nameof(Queryable.SingleOrDefault));
 
         /// <summary>
@@ -810,7 +811,7 @@ namespace EntityFramework.DynamicLinq
             return ExecuteAsync<dynamic>(_singleOrDefault, source, cancellationToken);
         }
 
-        private static readonly MethodInfo _singleOrDefaultPredicate = GetMethod(nameof(Queryable.SingleOrDefault), 1);
+        private static readonly MethodInfo _singleOrDefaultPredicate = GetMethod(nameof(Queryable.SingleOrDefault), 1, mi => mi.GetParameters()[1].Name == "predicate");
 
         /// <summary>
         ///     Asynchronously returns the only element of a sequence that satisfies a specified condition or a default value if no such element exists.
@@ -864,9 +865,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteAsync<dynamic>(_singleOrDefaultPredicate, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion SingleOrDefault
+        #endregion SingleOrDefault
 
-#region SumAsync
+        #region SumAsync
         /// <summary>
         ///     Asynchronously computes the sum of a sequence of values.
         /// </summary>
@@ -950,9 +951,9 @@ namespace EntityFramework.DynamicLinq
 
             return ExecuteDynamicAsync(sumSelector, source, Expression.Quote(lambda), cancellationToken);
         }
-#endregion SumAsync
+        #endregion SumAsync
 
-#region Private Helpers
+        #region Private Helpers
         private static readonly MethodInfo _executeAsyncMethod =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
 #if NETSTANDARD || UAP10_0
@@ -1057,8 +1058,15 @@ namespace EntityFramework.DynamicLinq
         private static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
             GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
 
-        private static MethodInfo GetMethod(string name, int parameterCount = 0, Func<MethodInfo, bool> predicate = null) =>
-            typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).First(mi => (mi.GetParameters().Length == parameterCount + 1) && ((predicate == null) || predicate(mi)));
+        private static MethodInfo GetMethod(
+            string name,
+            int parameterCount = 0,
+            Func<MethodInfo, bool> predicate = null) =>
+            typeof(Queryable)
+                .GetTypeInfo()
+                .GetDeclaredMethods(name)
+                .Where(mi => mi.GetParameters().Length == parameterCount + 1)
+                .First(mi => predicate == null || predicate(mi));
 
 #if EFCORE_3X
         private static IQueryable CastSource(IQueryable source, MethodInfo operatorMethodInfo)
@@ -1106,6 +1114,6 @@ namespace EntityFramework.DynamicLinq
 
             return expression;
         }
-#endregion Private Helpers
+        #endregion Private Helpers
     }
 }

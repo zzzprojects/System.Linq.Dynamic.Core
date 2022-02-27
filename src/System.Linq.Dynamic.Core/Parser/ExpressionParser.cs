@@ -1374,24 +1374,25 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
             }
 
+            // Option 1. Try to bind via properties (TODO : investigate if this code block is 100% correct and is needed) 
             var propertyInfos = type.GetProperties();
             if (type.GetTypeInfo().BaseType == typeof(DynamicClass))
             {
                 propertyInfos = propertyInfos.Where(x => x.Name != "Item").ToArray();
             }
-
-            Type[] propertyTypes = propertyInfos.Select(p => p.PropertyType).ToArray();
-            ConstructorInfo ctor = type.GetConstructor(propertyTypes);
+            var propertyTypes = propertyInfos.Select(p => p.PropertyType).ToArray();
+            var ctor = type.GetConstructor(propertyTypes);
             if (ctor != null)
             {
-                var ctorParameters = ctor.GetParameters();
-                if (ctorParameters.Length == expressions.Count)
+                var constructorParameters = ctor.GetParameters();
+                if (constructorParameters.Length == expressions.Count)
                 {
-                    bool bindParametersSequentially = !properties.All(p => ctorParameters
+                    bool bindParametersSequentially = !properties.All(p => constructorParameters
                         .Any(cp => cp.Name == p.Name && (cp.ParameterType == p.Type || p.Type == Nullable.GetUnderlyingType(cp.ParameterType))));
                     var expressionsPromoted = new List<Expression>();
+
                     // Loop all expressions and promote if needed
-                    for (int i = 0; i < ctorParameters.Length; i++)
+                    for (int i = 0; i < constructorParameters.Length; i++)
                     {
                         if (bindParametersSequentially)
                         {
@@ -1399,8 +1400,8 @@ namespace System.Linq.Dynamic.Core.Parser
                         }
                         else
                         {
-                            Type propertyType = ctorParameters[i].ParameterType;
-                            string cParameterName = ctorParameters[i].Name;
+                            Type propertyType = constructorParameters[i].ParameterType;
+                            string cParameterName = constructorParameters[i].Name;
                             var propertyAndIndex = properties.Select((p, index) => new { p, index })
                                 .First(p => p.p.Name == cParameterName && (p.p.Type == propertyType || p.p.Type == Nullable.GetUnderlyingType(propertyType)));
                             // Promote from Type to Nullable Type if needed
@@ -1412,8 +1413,22 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            MemberBinding[] bindings = new MemberBinding[properties.Count];
-            for (int i = 0; i < bindings.Length; i++)
+            // Option 2. Try to find a constructor with the exact argument-types and exact same order
+            var constructorArgumentTypes = properties.Select(p => p.Type).ToArray();
+            var exactConstructor = type.GetConstructor(constructorArgumentTypes);
+            if (exactConstructor != null)
+            {
+                // Promote from Type to Nullable Type if needed
+                var expressionsPromoted = exactConstructor.GetParameters()
+                    .Select((t, i) => _parsingConfig.ExpressionPromoter.Promote(expressions[i], t.ParameterType, true, true))
+                    .ToArray();
+
+                return Expression.New(exactConstructor, expressionsPromoted);
+            }
+
+            // Option 2. Call the default (empty) constructor and set the members
+            var memberBindings = new MemberBinding[properties.Count];
+            for (int i = 0; i < memberBindings.Length; i++)
             {
                 string propertyOrFieldName = properties[i].Name;
                 Type propertyOrFieldType;
@@ -1437,10 +1452,10 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
 
                 // Promote from Type to Nullable Type if needed
-                bindings[i] = Expression.Bind(memberInfo, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true));
+                memberBindings[i] = Expression.Bind(memberInfo, _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true));
             }
 
-            return Expression.MemberInit(Expression.New(type), bindings);
+            return Expression.MemberInit(Expression.New(type), memberBindings);
         }
 
         Expression ParseLambdaInvocation(LambdaExpression lambda)
@@ -1524,8 +1539,6 @@ namespace System.Linq.Dynamic.Core.Parser
                         throw ParseError(errorPos, Res.AmbiguousConstructorInvocation, TypeHelper.GetTypeName(type));
                 }
             }
-
-            // throw ParseError(errorPos, Res.CannotConvertValue, TypeHelper.GetTypeName(exprType), TypeHelper.GetTypeName(type));
 
             _textParser.ValidateToken(TokenId.Dot, Res.DotOrOpenParenOrStringLiteralExpected);
             _textParser.NextToken();

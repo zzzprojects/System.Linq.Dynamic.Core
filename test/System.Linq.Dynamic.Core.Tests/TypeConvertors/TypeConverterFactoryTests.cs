@@ -54,7 +54,7 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         [Theory]
         [InlineData(typeof(LocalDate), typeof(LocalDateConverter))]
         [InlineData(typeof(LocalDate?), typeof(LocalDateConverter))]
-        public void GetConverter_WithCustomConverer_ReturnsCorrectTypeConverter(Type type, Type expected)
+        public void GetConverter_WithCustomConverter_ReturnsCorrectTypeConverter(Type type, Type expected)
         {
             // Arrange
             var parsingConfig = new ParsingConfig

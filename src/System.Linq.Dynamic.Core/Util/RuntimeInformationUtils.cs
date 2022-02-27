@@ -6,7 +6,7 @@
 
         static RuntimeInformationUtils()
         {
-#if NET35 || NET40 || NET45 || NET46 || UAP10_0
+#if NET35 || NET40 || NET45 || NET452 || NET46 || UAP10_0
             IsBlazorWASM = false;
 #else
             IsBlazorWASM =
