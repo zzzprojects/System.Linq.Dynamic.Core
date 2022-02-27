@@ -403,7 +403,7 @@ namespace System.Linq.Dynamic.Core.Tests
             {
                 RenameParameterExpression = true
             };
-            var queryable = Array.Empty<int>().AsQueryable();
+            var queryable = new int[0].AsQueryable();
 
             // Act
             string result = queryable.Select<int>(config, "it * it").ToString();
