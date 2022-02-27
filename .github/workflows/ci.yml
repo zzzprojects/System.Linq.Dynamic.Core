@@ -15,7 +15,7 @@ jobs:
 
     - name: Run Tests net5.0
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f net5.0 -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.Net5.csproj -c Release -f net5.0 -p:buildType=azure-pipelines-ci
 
     - name: Run Tests netcoreapp31
       run: |
