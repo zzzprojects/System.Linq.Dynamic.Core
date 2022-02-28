@@ -681,12 +681,24 @@ namespace System.Linq.Dynamic.Core.Tests
             var resultEqualIntParamLeft = qry.Where("@0 == it.B", 1).ToDynamicArray();
             var resultEqualIntParamRight = qry.Where("it.B == @0", 1).ToDynamicArray();
 
+            var resultEqualDecimalParamLeft = qry.Where("@0 == it.B", 1m).ToDynamicArray();
+            var resultEqualDecimalParamRight = qry.Where("it.B == @0", 1m).ToDynamicArray();
+
+            var resultEqualDoubleParamLeft = qry.Where("@0 == it.B", 1.0).ToDynamicArray();
+            var resultEqualDoubleParamRight = qry.Where("it.B == @0", 1.0).ToDynamicArray();
+
             // Assert
             Check.That(resultEqualEnumParamLeft.Single()).Equals(TestEnum2.Var2);
             Check.That(resultEqualEnumParamRight.Single()).Equals(TestEnum2.Var2);
 
             Check.That(resultEqualIntParamLeft.Single()).Equals(TestEnum2.Var2);
             Check.That(resultEqualIntParamRight.Single()).Equals(TestEnum2.Var2);
+
+            Check.That(resultEqualDecimalParamLeft.Single()).Equals(TestEnum2.Var2);
+            Check.That(resultEqualDecimalParamRight.Single()).Equals(TestEnum2.Var2);
+
+            Check.That(resultEqualDoubleParamLeft.Single()).Equals(TestEnum2.Var2);
+            Check.That(resultEqualDoubleParamRight.Single()).Equals(TestEnum2.Var2);
         }
 
         [Fact]
