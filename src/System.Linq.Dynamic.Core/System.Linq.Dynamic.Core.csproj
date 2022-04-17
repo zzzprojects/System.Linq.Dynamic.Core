@@ -6,7 +6,7 @@
         <Description>This is a .NETStandard / .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
         <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath;Microsoft;Scott Guthrie;King Wilder;Nathan Arnott</Authors>
-        <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0;netstandard2.1;uap10.0;netcoreapp2.1;net5.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net35;net40;net45;net452;net46;netstandard1.3;netstandard2.0;netstandard2.1;uap10.0;netcoreapp2.1;net5.0;net6.0</TargetFrameworks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>System.Linq.Dynamic.Core</AssemblyName>
         <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
@@ -40,7 +40,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>net40;net45;net46;netstandard1.3;netstandard2.0;netcoreapp2.1</TargetFrameworks>
+        <TargetFrameworks>net40;net45;net46;netstandard1.3;netstandard2.0;netcoreapp2.1;net5.0;net6.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">

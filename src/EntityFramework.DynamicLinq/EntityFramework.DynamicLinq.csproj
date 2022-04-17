@@ -6,7 +6,7 @@
         <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
         <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
-        <TargetFrameworks>net45;net46;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>net45;net452;net46;netstandard2.1</TargetFrameworks>
         <DefineConstants>EF;EFDYNAMICFUNCTIONS</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>EntityFramework.DynamicLinq</AssemblyName>

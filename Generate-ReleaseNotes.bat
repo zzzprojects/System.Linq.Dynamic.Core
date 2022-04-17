@@ -1,5 +1,5 @@
 rem https://github.com/StefH/GitHubReleaseNotes
 
-SET version=v1.2.15
+SET version=v1.2.18
 
 GitHubReleaseNotes --output CHANGELOG.md --exclude-labels invalid question documentation wontfix --language en --version %version% --token %GH_TOKEN%

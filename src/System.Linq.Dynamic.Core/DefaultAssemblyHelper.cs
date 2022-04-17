@@ -1,48 +1,39 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core
 {
     internal class DefaultAssemblyHelper : IAssemblyHelper
     {
-#if DOTNET5_4
         public Assembly[] GetAssemblies()
         {
-            var assemblyNames = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.LibraryManager.GetLibraries()
-                .SelectMany(lib => lib.Assemblies)
-                .Distinct()
-                .ToArray();
+#if WINDOWS_APP || UAP10_0 || NETSTANDARD || WPSL
+            throw new NotSupportedException();
+#elif NET35
 
-            var assemblies = new System.Collections.Generic.List<Assembly>();
-            foreach (var assembly in assemblyNames.Select(Assembly.Load))
+            return AppDomain.CurrentDomain.GetAssemblies();
+#else
+            // https://stackoverflow.com/a/2384679/255966
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            var loadedPaths = loadedAssemblies.Where(a => !a.IsDynamic).Select(a => a.Location).ToArray();
+
+            var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+            var pathsToLoad = referencedPaths.Where(r => !loadedPaths.Contains(r, StringComparer.InvariantCultureIgnoreCase));
+
+            foreach (var path in pathsToLoad)
             {
                 try
                 {
-                    var dummy = assembly.DefinedTypes.ToArray();
-                    // just load all types and skip this assembly of one or more types cannot be resolved
-                    assemblies.Add(assembly);
+                    loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path)));
                 }
-                catch (Exception)
+                catch
                 {
+                    // Ignore
                 }
             }
 
-            return assemblies.ToArray();
-        }
-
-#elif WINDOWS_APP || UAP10_0 || NETSTANDARD || WPSL
-        public Assembly[] GetAssemblies()
-        {
-            throw new NotSupportedException();
-        }
-#else
-        public Assembly[] GetAssemblies()
-        {
-#if NETCORE1_1
-            return AppDomain.NetCoreApp.AppDomain.CurrentDomain.GetAssemblies(thisType).ToArray();
-#else
-            return AppDomain.CurrentDomain.GetAssemblies();
+            return loadedAssemblies.ToArray();
 #endif
         }
-#endif
     }
-    }
+}

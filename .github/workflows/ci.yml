@@ -4,14 +4,22 @@ on: [push]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     steps:  
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
       
     - name: Build Projects
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+
+    - name: Run Tests net6.0
+      run: |
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci
+
+    - name: Run Tests net5.0
+      run: |
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net5/System.Linq.Dynamic.Core.Tests.Net5.csproj -c Release -p:buildType=azure-pipelines-ci
 
     - name: Run Tests netcoreapp31
       run: |

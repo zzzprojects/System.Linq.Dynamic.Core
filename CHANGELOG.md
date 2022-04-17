@@ -1,3 +1,17 @@
+# v1.2.18 (03 March 2022)
+- [#573](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/573) - Updated 'new' command (finding a constructor with exact argument-types and same order) [feature] contributed by [StefH](https://github.com/StefH)
+- [#574](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/574) - Bump bootstrap from 3.3.6 to 3.4.1 in /web/DynamicLinqWebDocs [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
+- [#576](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/576) - fix enums could not be cast to decimal [feature] contributed by [jogibear9988](https://github.com/jogibear9988)
+- [#571](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/571) - ParseException: 'Type 'System.IO.DirectoryInfo' not found' [bug]
+
+# v1.2.17 (21 February 2022)
+- [#569](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/569) - Fix logic for indexer when parameter-type differs [bug] contributed by [StefH](https://github.com/StefH)
+
+# v1.2.16 (19 February 2022)
+- [#562](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/562) - Make TextParser public [feature] contributed by [StefH](https://github.com/StefH)
+- [#563](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/563) - GitHub Actions: use actions/checkout@v2 [security] contributed by [StefH](https://github.com/StefH)
+- [#567](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/567) - Add support for property for Is,As and Cast [feature] contributed by [StefH](https://github.com/StefH)
+
 # v1.2.15 (18 December 2021)
 - [#554](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/554) - Support for parsing Binary Integer [feature] contributed by [StefH](https://github.com/StefH)
 - [#557](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/557) - bind expressions to correct constructor parameter [feature] contributed by [jonasdaniels](https://github.com/jonasdaniels)

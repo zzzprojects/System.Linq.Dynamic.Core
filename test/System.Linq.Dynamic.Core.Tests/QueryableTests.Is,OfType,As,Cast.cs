@@ -289,12 +289,49 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assign
             var qry = new BaseEmployee[]
             {
-                new Worker { Name = "1" }, new Worker { Name = "2" }
+                new Worker { Name = "1", Other = "x" }, 
+                new Worker { Name = "2" }
             }.AsQueryable();
 
             // Act
             var cast = qry.Select(c => (Worker)c).ToArray();
             var castDynamic = qry.Select("Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\")").ToDynamicArray();
+
+            // Assert
+            Check.That(cast.Length).Equals(castDynamic.Length);
+        }
+
+        [Fact]
+        public void IsAndCastToType_Dynamic_ActingOnIt_And_GetProperty()
+        {
+            // Assign
+            var qry = new BaseEmployee[]
+            {
+                new Worker { Name = "1", Other = "x" }, 
+                new Boss { Name = "2", Function = "y" }
+            }.AsQueryable();
+
+            // Act
+            var cast = qry.Select(c => c is Worker ? ((Worker)c).Other : "-").ToArray();
+            var castDynamic = qry.Select("iif(Is(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\"), Cast(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Other, \"-\")").ToDynamicArray();
+
+            // Assert
+            Check.That(cast.Length).Equals(castDynamic.Length);
+        }
+
+        [Fact]
+        public void IsAndCastToType_Dynamic_ActingOnProperty_And_GetProperty()
+        {
+            // Assign
+            var qry = new []
+            {
+                new EmployeeWrapper { Employee = new Worker { Name = "1", Other = "x" } }, 
+                new EmployeeWrapper { Employee = new Boss { Name = "2", Function = "y" } }
+            }.AsQueryable();
+
+            // Act
+            var cast = qry.Select(c => c.Employee is Worker ? ((Worker) c.Employee).Other : "-").ToArray();
+            var castDynamic = qry.Select("iif(Is(Employee, \"System.Linq.Dynamic.Core.Tests.Entities.Worker\"), Cast(Employee, \"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Other, \"-\")").ToDynamicArray();
 
             // Assert
             Check.That(cast.Length).Equals(castDynamic.Length);

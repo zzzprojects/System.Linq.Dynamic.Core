@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using FluentAssertions;
 using Linq.PropertyTranslator.Core;
 using QueryInterceptor.Core;
 using Xunit;
 using NFluent;
+using Newtonsoft.Json.Linq;
 #if EFCORE
 using Microsoft.AspNetCore.Identity;
 #else
@@ -44,6 +47,7 @@ namespace System.Linq.Dynamic.Core.Tests
             public DayOfWeek DOW { get; set; }
             public int Sec { get; set; }
             public int? SecNull { get; set; }
+            // public long X { get; set; }
 
             public ExampleWithConstructor(DateTime t, DayOfWeek? dn, DayOfWeek d, int s, int? sn)
             {
@@ -52,6 +56,20 @@ namespace System.Linq.Dynamic.Core.Tests
                 DOW = d;
                 Sec = s;
                 SecNull = sn;
+            }
+        }
+
+        public class ExampleWithConstructor2
+        {
+            public int? Value { get; set; }
+
+            public ExampleWithConstructor2(bool b)
+            {
+            }
+
+            public ExampleWithConstructor2(int? value)
+            {
+                Value = value;
             }
         }
 
@@ -270,6 +288,52 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Select_Dynamic_IntoTypeWithNullableParameterInConstructor()
+        {
+            // Arrange
+            var values = Enumerable.Repeat(0, 3).AsQueryable();
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+
+            // Act
+            var result = values.Select(v => new ExampleWithConstructor2(v));
+            var resultDynamic = values.Select<ExampleWithConstructor2>(config, "new (it as value)");
+
+            // Assert
+            Check.That(resultDynamic.First()).Equals(result.First());
+            Check.That(resultDynamic.Last()).Equals(result.Last());
+        }
+
+        [Fact]
+        public void Select_Dynamic_SystemType1()
+        {
+            // Arrange
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+            var queryable = new[] { "test" }.AsQueryable();
+
+            // Act
+            var result = queryable.Select(config, $"new {typeof(DirectoryInfo).FullName}(~ as path)").ToDynamicArray().First();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(result.Name, "test");
+        }
+
+        [Fact]
+        public void Select_Dynamic_SystemType2()
+        {
+            // Arrange
+            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+            var queryable = new[] { "test" }.AsQueryable();
+
+            // Act
+            var result = queryable.Select<DirectoryInfo>(config, "new (~ as path)").ToDynamicArray().First();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(result.Name, "test");
+        }
+
+        [Fact]
         public void Select_Dynamic_WithField()
         {
             // Arrange
@@ -346,6 +410,33 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Check.That(result).Equals("System.Int32[].Select(it => (it * it))");
+        }
+
+#if NET5_0 || NET6_0
+        [Fact(Skip = "Fails sometimes in GitHub CI build")]
+#else
+        [Fact]
+#endif
+        public void Select_Dynamic_JObject_With_Array_Should_Use_Correct_Indexer()
+        {
+            // Arrange
+            var j = new JObject
+            {
+                {"I", new JValue(9)},
+                {"A", new JArray(new[] {1,2,3}) },
+                {"L", new JValue(5)}
+            };
+            var queryable = new[] { j }.AsQueryable();
+
+            // Act
+            var result = queryable.Select("new (long(I) as I, (new [] { long(A[0]), long(A[1]), long(A[2])}) as A, long(L) as L)").ToDynamicArray().First();
+
+            // Assert
+            Assert.Equal(9, result.I);
+            Assert.Equal(5, result.L);
+            Assert.Equal(1, result.A[0]);
+            Assert.Equal(2, result.A[1]);
+            Assert.Equal(3, result.A[2]);
         }
 
         [Fact]

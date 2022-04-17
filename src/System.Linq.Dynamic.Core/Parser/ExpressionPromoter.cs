@@ -105,6 +105,11 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (TypeHelper.IsCompatibleWith(expr.Type, type))
             {
+                if (type == typeof(decimal) && TypeHelper.IsEnumType(expr.Type))
+                {
+                    return Expression.Convert(Expression.Convert(expr, Enum.GetUnderlyingType(expr.Type)), type);
+                }
+
                 if (type.GetTypeInfo().IsValueType || exact || expr.Type.GetTypeInfo().IsValueType && convertExpr)
                 {
                     return Expression.Convert(expr, type);
