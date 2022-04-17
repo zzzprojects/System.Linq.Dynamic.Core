@@ -1753,7 +1753,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            var enumTypeAsString = string.Join("", parts.Take(parts.Count - 2).ToArray());
+            var enumTypeAsString = string.Concat(parts.Take(parts.Count - 2).ToArray());
             var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, true);
             if (enumType == null)
             {

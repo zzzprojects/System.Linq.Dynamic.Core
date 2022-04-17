@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{25E69107-C89E-4807-AA31-C49423F0F1E3}"
 	ProjectSection(SolutionItems) = preProject
 		.deployment = .deployment
+		.editorconfig = .editorconfig
 		azure-pipelines.yml = azure-pipelines.yml
 		CHANGELOG.md = CHANGELOG.md
 		Directory.Build.props = Directory.Build.props

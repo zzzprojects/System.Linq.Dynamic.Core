@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ConsoleAppEF2.Database;
-using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -18,13 +18,19 @@ namespace ConsoleAppEF2
         {
             public HashSet<Type> GetCustomTypes()
             {
-                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                // https://stackoverflow.com/a/2384679/255966
+                var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+                var loadedPaths = loadedAssemblies.Where(a => !a.IsDynamic).Select(a => a.Location).ToArray();
 
-                var set = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
+                var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+                var toLoad = referencedPaths.Where(r => !loadedPaths.Contains(r, StringComparer.InvariantCultureIgnoreCase)).ToList();
 
-                set.Add(typeof(TestContext));
+                toLoad.ForEach(path => loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path))));
 
-                return set;
+                return new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(loadedAssemblies))
+                {
+                    typeof(TestContext)
+                };
             }
 
             public Dictionary<Type, List<MethodInfo>> GetExtensionMethods()
