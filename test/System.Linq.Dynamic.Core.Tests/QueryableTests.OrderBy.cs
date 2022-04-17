@@ -52,6 +52,36 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void OrderBy_Dynamic_IComparer_IntComparer_Asc()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(2);
+            var qry = testList.AsQueryable();
+
+            // Act
+            var orderBy = testList.OrderBy(x => x.Income, new IntComparer()).ToArray();
+            var orderByDynamic = qry.OrderBy("Income asc", new IntComparer()).ToArray();
+
+            // Assert
+            Assert.Equal(orderBy, orderByDynamic);
+        }
+
+        [Fact]
+        public void OrderBy_Dynamic_IComparer_IntComparer_Desc()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(2);
+            var qry = testList.AsQueryable();
+
+            // Act
+            var orderBy = testList.OrderByDescending(x => x.Income, new IntComparer()).ToArray();
+            var orderByDynamic = qry.OrderBy("Income desc", new IntComparer()).ToArray();
+
+            // Assert
+            Assert.Equal(orderBy, orderByDynamic);
+        }
+
+        [Fact]
         public void OrderBy_Dynamic()
         {
             // Arrange
