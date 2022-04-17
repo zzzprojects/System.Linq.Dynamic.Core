@@ -1713,7 +1713,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             // This might be an internal variable for use within a lambda expression, so store it as such
             _internals.Add(id, _it);
-            string _previousItName = ItName;
+            string previousItName = ItName;
 
             // Also store ItName (only once)
             if (string.Equals(ItName, KeywordsHelper.KEYWORD_IT))
@@ -1729,7 +1729,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             // Restore previous context and clear internals
             _internals.Remove(id);
-            ItName = _previousItName;
+            ItName = previousItName;
 
             return exp;
         }

@@ -1,13 +1,12 @@
-﻿using FluentAssertions;
-using Moq;
-using NFluent;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Tests.Entities;
 using System.Linq.Expressions;
+using FluentAssertions;
+using Moq;
+using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
@@ -15,21 +14,37 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
     public partial class ExpressionParserTests
     {
         private readonly ParsingConfig _parsingConfig;
-        private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicTypeProviderMock;
 
         public ExpressionParserTests()
         {
-            _dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
-            _dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns(new HashSet<Type>() { typeof(Company), typeof(MainCompany) });
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Company).FullName)).Returns(typeof(Company));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(MainCompany).FullName)).Returns(typeof(MainCompany));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Company")).Returns(typeof(Company));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("MainCompany")).Returns(typeof(MainCompany));
+            var dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns(new HashSet<Type>() { typeof(Company), typeof(MainCompany) });
+            dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Company).FullName)).Returns(typeof(Company));
+            dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(MainCompany).FullName)).Returns(typeof(MainCompany));
+            dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Company")).Returns(typeof(Company));
+            dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("MainCompany")).Returns(typeof(MainCompany));
 
             _parsingConfig = new ParsingConfig
             {
-                CustomTypeProvider = _dynamicTypeProviderMock.Object
+                CustomTypeProvider = dynamicTypeProviderMock.Object
             };
+        }
+
+        [Fact]
+        public void Parse_ParseBaseClassVirtualMethodInfo_580()
+        {
+            // Arrange
+            Expression<Func<int?, string>> expr = x => x.ToString();
+            var declaringType = ((MethodCallExpression)expr.Body).Method.DeclaringType; // typeof(Object)
+            
+            // Act
+            var selector = "ToString()";
+            var parameterExpression = ParameterExpressionHelper.CreateParameterExpression(typeof(int?), "x");
+            var parser = new ExpressionParser(new[] { parameterExpression }, selector, new object[] { }, ParsingConfig.Default);
+            var parsedExpression = parser.Parse(null);
+
+            // Assert
+            ((MethodCallExpression)parsedExpression).Method.DeclaringType.Should().Be(declaringType);
         }
 
         [Fact]
