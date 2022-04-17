@@ -60,8 +60,8 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 
             foreach (var assembly in assemblies)
             {
-                var fullnames = assembly.GetTypes().Select(t => t.FullName).Distinct();
-                var firstMatchingFullname = fullnames.FirstOrDefault(fn => fn.EndsWith($".{simpleTypeName}"));
+                var fullNames = assembly.GetTypes().Select(t => t.FullName).Distinct();
+                var firstMatchingFullname = fullNames.FirstOrDefault(fn => fn.EndsWith($".{simpleTypeName}"));
 
                 if (firstMatchingFullname != null)
                 {
@@ -128,8 +128,10 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
 
                 try
                 {
-                    definedTypes = assembly.GetExportedTypes()
-                        .Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false)).ToArray();
+                    definedTypes = assembly
+                        .GetExportedTypes()
+                        .Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false))
+                        .ToArray();
                 }
                 catch (ReflectionTypeLoadException reflectionTypeLoadException)
                 {
