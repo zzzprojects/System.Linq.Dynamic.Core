@@ -1927,11 +1927,13 @@ namespace System.Linq.Dynamic.Core
                 // lambda.Body.Type.GetGenericArguments()[0] when used over an array as GetGenericArguments() returns an empty array.
                 if (lambda.Body.Type.IsArray)
                 {
+                    // In case of an Array, get the type via GetElementType().
                     resultType = lambda.Body.Type.GetElementType();
                 }
                 else
                 {
-                    resultType = lambda.Body.Type.GetGenericArguments()[0];
+                    var genericArguments = lambda.Body.Type.GetGenericArguments();
+                    resultType = genericArguments.Any() ? genericArguments[0] : typeof(object);
                 }
             }
 
