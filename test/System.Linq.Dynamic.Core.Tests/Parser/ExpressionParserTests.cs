@@ -139,6 +139,20 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             Check.That(parsedExpression).Equals("(((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso ((x.Name == \"A\") OrElse (x.Name == \"B\")))");
         }
 
+        [Fact]
+        public void Parse_ParseInWrappedInParenthesis()
+        {
+            // Arrange
+            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x") };
+            var sut = new ExpressionParser(parameters, "(MainCompanyId in @0)", new object[] { new long?[] { 1, 2 } }, null);
+
+            // Act
+            var parsedExpression = sut.Parse(null).ToString();
+
+            // Assert
+            Check.That(parsedExpression).Equals("value(System.Nullable`1[System.Int64][]).Contains(x.MainCompanyId)");
+        }
+
         [Theory]
         [InlineData("string(\"\")", "")]
         [InlineData("string(\"a\")", "a")]
