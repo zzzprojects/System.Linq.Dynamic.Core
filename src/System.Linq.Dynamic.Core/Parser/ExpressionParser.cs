@@ -340,6 +340,9 @@ namespace System.Linq.Dynamic.Core.Parser
                             throw ParseError(op.Pos, Res.CloseParenOrCommaExpected);
                         }
                     }
+
+                    // Since this started with an open paren, make sure to move off the close
+                    _textParser.NextToken();
                 }
                 else if (_textParser.CurrentToken.Id == TokenId.Identifier) // a single argument
                 {
@@ -368,8 +371,6 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     throw ParseError(op.Pos, Res.OpenParenOrIdentifierExpected);
                 }
-
-                _textParser.NextToken();
             }
 
             return accumulate;
