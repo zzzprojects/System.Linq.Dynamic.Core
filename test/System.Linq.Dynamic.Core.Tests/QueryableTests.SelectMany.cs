@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -104,6 +106,22 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void SelectMany_Dynamic_OverJArray_TResult()
+        {
+            // Arrange
+            var array1 = JArray.Parse("[1,2,3]");
+            var array2 = JArray.Parse("[4,5,6]");
+
+            // Act
+            var expectedResult = new[] { array1, array2 }.SelectMany(it => it).ToArray();
+            var result = new[] { array1, array2 }.AsQueryable().SelectMany("it").ToDynamicArray<JToken>();
+
+            // Assert
+            result.Should().BeEquivalentTo(expectedResult);
+            // result.Should().HaveCount(6).And.Subject.Select(j => j.Value).Should().ContainInOrder(new[] { 1, 2, 3, 4, 5, 6 });
+        }
+
+        [Fact]
         public void SelectMany_Dynamic_OverArray_TResult()
         {
             var testList = new[]
@@ -115,6 +133,21 @@ namespace System.Linq.Dynamic.Core.Tests
 
             var expectedResult = testList.SelectMany(it => it).ToList();
             var result = testList.AsQueryable().SelectMany<Permission>("it").ToList();
+
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Fact]
+        public void SelectMany_Dynamic_OverArray_Int()
+        {
+            var testList = new[]
+            {
+                new[] { 1, 2, 3 },
+                new[] { 4, 5, 6 }
+            };
+
+            var expectedResult = testList.SelectMany(it => it).ToList();
+            var result = testList.AsQueryable().SelectMany<int>("it").ToList();
 
             Assert.Equal(expectedResult, result);
         }
