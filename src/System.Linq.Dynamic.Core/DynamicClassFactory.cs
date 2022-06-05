@@ -89,15 +89,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparerGenericType">The GenericType</param>
         /// <param name="comparer">The <see cref="IComparer"/> instance</param>
         /// <returns>Type</returns>
-        public static Type CreateGenericComparerType(Type comparerGenericType, IComparer comparer)
+        public static Type CreateGenericComparerType(Type comparerGenericType, Type comparerType)
         {
             Check.NotNull(comparerGenericType, nameof(comparerGenericType));
-            Check.NotNull(comparer, nameof(comparer));
+            Check.NotNull(comparerType, nameof(comparerType));
 
-            var comparerType = comparer.GetType();
-            string key = $"{comparerGenericType.FullName}_{comparerType.FullName}";
+            var key = $"{comparerGenericType.FullName}_{comparerType.FullName}";
 
-            if (!GeneratedTypes.TryGetValue(key, out Type type))
+            if (!GeneratedTypes.TryGetValue(key, out var type))
             {
                 // We create only a single class at a time, through this lock
                 // Note that this is a variant of the double-checked locking.

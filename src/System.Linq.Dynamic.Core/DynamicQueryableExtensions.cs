@@ -1581,7 +1581,7 @@ namespace System.Linq.Dynamic.Core
             return InternalOrderBy(source, config, ordering, comparer, args);
         }
 
-        internal static IOrderedQueryable InternalOrderBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        internal static IOrderedQueryable InternalOrderBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, object comparer, params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(config, nameof(config));
@@ -1605,11 +1605,27 @@ namespace System.Linq.Dynamic.Core
                 else
                 {
                     var comparerGenericType = typeof(IComparer<>).MakeGenericType(dynamicOrdering.Selector.Type);
+
+                    ConstantExpression constant;
+                    if (comparerGenericType.IsInstanceOfType(comparer))
+                    {
+                        constant = Expression.Constant(comparer, comparerGenericType);
+                    }
+                    else
+                    {
+#if !UAP10_0
+                        var newType = DynamicClassFactory.CreateGenericComparerType(comparerGenericType, comparer.GetType());
+                        constant = Expression.Constant(Activator.CreateInstance(newType), comparerGenericType);
+#else
+                        constant = Expression.Constant(comparer, comparerGenericType);
+#endif
+                    }
+
                     queryExpr = Expression.Call(
                         typeof(Queryable), dynamicOrdering.MethodName,
                         new[] { source.ElementType, dynamicOrdering.Selector.Type },
                         queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)),
-                        Expression.Constant(comparer, comparerGenericType));
+                        constant);
                 }
             }
 

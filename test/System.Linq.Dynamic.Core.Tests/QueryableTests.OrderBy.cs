@@ -8,27 +8,19 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
-        internal class IntComparerBoth : IComparer<int>
+        public class IntComparerT : IComparer<int>
         {
             public int Compare(int x, int y)
             {
-                return new IntComparer().Compare(x, y);
+                return -1 * new CaseInsensitiveComparer().Compare(y, x); // revert to unit-test correctly
             }
         }
 
-        internal class IntComparerT : IComparer<int>
-        {
-            public int Compare(int x, int y)
-            {
-                return -1;
-            }
-        }
-
-        internal class IntComparer : IComparer
+        public class ObjectComparer : IComparer
         {
             public int Compare(object x, object y)
             {
-                return -1;
+                return -1 * new CaseInsensitiveComparer().Compare(y, x); // revert to unit-test correctly
             }
         }
 
@@ -56,7 +48,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var orderBy = testList.OrderBy(x => x.Income, new IntComparerT()).ToArray();
-            var orderByDynamic = qry.OrderBy("Income", new IntComparer()).ToArray();
+            var orderByDynamic = qry.OrderBy("Income", new ObjectComparer()).ToArray();
 
             // Assert
             Assert.Equal(orderBy, orderByDynamic);
@@ -72,21 +64,6 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var orderBy = testList.OrderBy(x => x.Income, new IntComparerT()).ToArray();
             var orderByDynamic = qry.OrderBy("Income", new IntComparerT()).ToArray();
-
-            // Assert
-            Assert.Equal(orderBy, orderByDynamic);
-        }
-
-        [Fact]
-        public void OrderBy_Dynamic_IComparer_IntComparerBoth()
-        {
-            // Arrange
-            var testList = User.GenerateSampleModels(2);
-            var qry = testList.AsQueryable();
-
-            // Act
-            var orderBy = testList.OrderBy(x => x.Income, new IntComparerBoth()).ToArray();
-            var orderByDynamic = qry.OrderBy("Income", new IntComparerBoth()).ToArray();
 
             // Assert
             Assert.Equal(orderBy, orderByDynamic);

@@ -15,7 +15,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var comparerGenericType = typeof(IComparer<>).MakeGenericType(typeof(int));
 
             // Act
-            var type = DynamicClassFactory.CreateGenericComparerType(comparerGenericType, comparer);
+            var type = DynamicClassFactory.CreateGenericComparerType(comparerGenericType, comparer.GetType());
 
             // Assert
             var instance = (IComparer<int>)Activator.CreateInstance(type);
