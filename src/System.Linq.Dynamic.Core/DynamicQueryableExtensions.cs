@@ -1564,6 +1564,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, params object[] args)
         {
+            if (args.Length > 0 && args[0] != null && args[0].GetType().GetInterfaces().Any(i => i.Name.Contains("IComparer`1")))
+            {
+                return InternalOrderBy(source, ParsingConfig.Default, ordering, args[0], args);
+            }
+
             return InternalOrderBy(source, config, ordering, null, args);
         }
 

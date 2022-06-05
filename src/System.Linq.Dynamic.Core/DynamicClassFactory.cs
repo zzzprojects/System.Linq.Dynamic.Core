@@ -87,7 +87,7 @@ namespace System.Linq.Dynamic.Core
         /// Create a GenericComparerType based on the GenericType and an instance of a <see cref="IComparer"/>.
         /// </summary>
         /// <param name="comparerGenericType">The GenericType</param>
-        /// <param name="comparer">The <see cref="IComparer"/> instance</param>
+        /// <param name="comparerType">The <see cref="IComparer"/> instance</param>
         /// <returns>Type</returns>
         public static Type CreateGenericComparerType(Type comparerGenericType, Type comparerType)
         {

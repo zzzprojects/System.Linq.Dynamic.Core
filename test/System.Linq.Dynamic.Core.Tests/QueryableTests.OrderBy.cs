@@ -12,7 +12,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             public int Compare(int x, int y)
             {
-                return -1 * new CaseInsensitiveComparer().Compare(y, x); // revert to unit-test correctly
+                return new CaseInsensitiveComparer().Compare(y, x);
             }
         }
 
@@ -20,7 +20,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             public int Compare(object x, object y)
             {
-                return -1 * new CaseInsensitiveComparer().Compare(y, x); // revert to unit-test correctly
+                return new CaseInsensitiveComparer().Compare(y, x);
             }
         }
 
@@ -40,10 +40,10 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void OrderBy_Dynamic_IComparer_IntComparer()
+        public void OrderBy_Dynamic_IComparer_ObjectComparer()
         {
             // Arrange
-            var testList = User.GenerateSampleModels(2);
+            var testList = User.GenerateSampleModels(3);
             var qry = testList.AsQueryable();
 
             // Act
@@ -58,7 +58,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void OrderBy_Dynamic_IComparer_IntComparerT()
         {
             // Arrange
-            var testList = User.GenerateSampleModels(2);
+            var testList = User.GenerateSampleModels(3);
             var qry = testList.AsQueryable();
 
             // Act
