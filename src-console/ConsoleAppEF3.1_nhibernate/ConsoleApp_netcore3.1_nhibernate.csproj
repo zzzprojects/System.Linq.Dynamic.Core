@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="log4net" Version="2.0.14" />
     <PackageReference Include="NHibernate" Version="5.3.5" />
     <PackageReference Include="System.Data.Sqlite.Core" Version="1.0.113.7" />
     <!--<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.7" />-->

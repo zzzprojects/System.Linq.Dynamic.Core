@@ -35,18 +35,18 @@
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.4.4" />
-        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="NodaTime" Version="2.4.7" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.3" />
-        <PackageReference Include="QueryInterceptor.Core" Version="1.0.5" />
+        <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.5" />
+        <PackageReference Include="QueryInterceptor.Core" Version="1.0.7" />
         <PackageReference Include="EntityFramework" Version="6.2.0" />
         <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.1" />
         <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="NFluent" Version="2.7.0" />
+        <PackageReference Include="NFluent" Version="2.8.0" />
         <PackageReference Include="Moq" Version="4.13.1" />
         <PackageReference Include="LinqKit.EntityFramework" Version="1.1.15" />
     </ItemGroup>

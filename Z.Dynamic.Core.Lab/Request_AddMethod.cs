@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace Z.Dynamic.Core.Lab
 {
@@ -24,7 +19,7 @@ namespace Z.Dynamic.Core.Lab
 
         public static void Execute()
         {
-            List<Customer> customers = new List<Customer>()
+            var customers = new List<Customer>()
             {
                 new Customer() { City = "ZZZ1", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>() },
                 new Customer() { City = "ZZZ2", CompanyName = "ZZZ", Orders = new Dictionary<string, Order>()  },
@@ -32,15 +27,10 @@ namespace Z.Dynamic.Core.Lab
             };
             customers.ForEach(x => x.Orders.Add(x.City + "TEST", new Order()));
 
-
-
             var query = customers.AsQueryable()
                 .Where("Orders.ContainsKey(\"ZZZ2TEST\")", "ZZZ", 1)
                 .OrderBy("CompanyName")
                 .Select("new(City as City, Phone)").ToDynamicList();
-
-
-
 
             var data = customers.AsQueryable()
                 .Where("Orders.ContainsKey(it.City + \"TEST\")")
