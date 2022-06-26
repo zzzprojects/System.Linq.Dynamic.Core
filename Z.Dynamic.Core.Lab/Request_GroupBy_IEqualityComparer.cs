@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Text;
 
 namespace Z.Dynamic.Core.Lab
 {
@@ -21,7 +20,7 @@ namespace Z.Dynamic.Core.Lab
 
         public static void Execute()
         {
-            List<Customer> customers = new List<Customer>() { new Customer() { City = "ZZZ" }, new Customer() { City = "ZzZ" } }; 
+            var customers = new List<Customer>() { new Customer() { City = "ZZZ" }, new Customer() { City = "ZzZ" } }; 
             var check = customers.GroupBy(x => x.City, StringComparer.InvariantCultureIgnoreCase).ToList();
 
             var query = customers.AsQueryable().GroupBy("City", StringComparer.InvariantCultureIgnoreCase).ToDynamicList();
@@ -29,4 +28,4 @@ namespace Z.Dynamic.Core.Lab
             var queraay = customers.AsQueryable().GroupBy("City", "new(CompanyName as Name, Phone)" ).ToDynamicList();
         } 
     }
-} 
+}

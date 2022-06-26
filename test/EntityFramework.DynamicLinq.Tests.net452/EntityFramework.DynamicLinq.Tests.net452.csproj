@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\xunit.runner.visualstudio.2.4.1\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.4.1\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="..\..\packages\xunit.runner.visualstudio.2.4.3\build\net452\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.4.3\build\net452\xunit.runner.visualstudio.props')" />
   <Import Project="..\..\packages\xunit.core.2.4.1\build\xunit.core.props" Condition="Exists('..\..\packages\xunit.core.2.4.1\build\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -46,8 +46,8 @@
     <Reference Include="FluentAssertions, Version=5.10.3.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FluentAssertions.5.10.3\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="Linq.PropertyTranslator.Core, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Linq.PropertyTranslator.Core.1.0.3.0\lib\net452\Linq.PropertyTranslator.Core.dll</HintPath>
+    <Reference Include="Linq.PropertyTranslator.Core, Version=1.0.5.0, Culture=neutral, PublicKeyToken=3379bb52ef788d82, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Linq.PropertyTranslator.Core.1.0.5\lib\net452\Linq.PropertyTranslator.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -67,14 +67,14 @@
     <Reference Include="Moq, Version=4.13.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NFluent, Version=2.4.0.0, Culture=neutral, PublicKeyToken=18828b37b84b1437, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NFluent.2.7.0\lib\net45\NFluent.dll</HintPath>
+      <HintPath>..\..\packages\NFluent.2.8.0\lib\net45\NFluent.dll</HintPath>
     </Reference>
-    <Reference Include="QueryInterceptor.Core, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\QueryInterceptor.Core.1.0.5.0\lib\net452\QueryInterceptor.Core.dll</HintPath>
+    <Reference Include="QueryInterceptor.Core, Version=1.0.7.0, Culture=neutral, PublicKeyToken=19f013043a0601f6, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QueryInterceptor.Core.1.0.7\lib\net40\QueryInterceptor.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -173,14 +173,26 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\EntitiesTests.TakeWhile.cs">
       <Link>EntitiesTests.TakeWhile.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\BaseEmployee.cs">
+      <Link>Entities\BaseEmployee.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Boss.cs">
+      <Link>Entities\Boss.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Company.cs">
       <Link>Entities\Company.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\CompanyWithBaseEmployees.cs">
+      <Link>Entities\CompanyWithBaseEmployees.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Country.cs">
       <Link>Entities\Country.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Employee.cs">
       <Link>Entities\Employee.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\EmployeeWrapper.cs">
+      <Link>Entities\EmployeeWrapper.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Entity.cs">
       <Link>Entities\Entity.cs</Link>
@@ -208,6 +220,9 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\User.cs">
       <Link>Entities\User.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Worker.cs">
+      <Link>Entities\Worker.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\ExpressionTests.cs">
       <Link>ExpressionTests.cs</Link>
@@ -263,6 +278,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\TestEnum.cs">
       <Link>Helpers\TestEnum.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Is,OfType,As,Cast.cs">
+      <Link>QueryableTests.Is,OfType,As,Cast.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\TestHelpers\ExpressionString.cs">
       <Link>TestHelpers\ExpressionString.cs</Link>
     </Compile>
@@ -271,9 +289,6 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Any.cs">
       <Link>QueryableTests.Any.cs</Link>
-    </Compile>
-    <Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Cast.cs">
-      <Link>QueryableTests.Cast.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Contains.cs">
       <Link>QueryableTests.Contains.cs</Link>
@@ -365,7 +380,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Parser\" />
-    <Folder Include="TestHelpers\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
@@ -380,7 +394,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\xunit.core.2.4.1\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.4.1\build\xunit.core.props'))" />
     <Error Condition="!Exists('..\..\packages\xunit.core.2.4.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.core.2.4.1\build\xunit.core.targets'))" />
-    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.4.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.4.1\build\net20\xunit.runner.visualstudio.props'))" />
+    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.4.3\build\net452\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.4.3\build\net452\xunit.runner.visualstudio.props'))" />
   </Target>
   <Import Project="..\..\packages\xunit.core.2.4.1\build\xunit.core.targets" Condition="Exists('..\..\packages\xunit.core.2.4.1\build\xunit.core.targets')" />
 </Project>

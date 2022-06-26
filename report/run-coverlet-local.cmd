@@ -1,6 +1,18 @@
-set buildType=azure-pipelines-ci
-dotnet test ..\test\System.Linq.Dynamic.Core.Tests\System.Linq.Dynamic.Core.Tests.csproj -c Debug -f netcoreapp2.1 /p:CollectCoverage=true /p:CoverletOutputFormat=\"opencover,lcov\" /p:CoverletOutput="../../report/"
+rem Run this in a CommandPrompt, not in PowerShell.
 
-%USERPROFILE%\.nuget\packages\ReportGenerator\3.1.2\tools\ReportGenerator.exe -reports:"coverage.opencover.xml" -targetdir:"coverlet"
+SET buildType=azure-pipelines-ci
+SET testproject=..\test\System.Linq.Dynamic.Core.Tests.Net6\System.Linq.Dynamic.Core.Tests.Net6.csproj
+
+del coverage.info
+del coverage.opencover.xml
+del /q coverlet\*.*
+
+dotnet clean %testproject%
+
+dotnet build %testproject% -c Debug -f net6.0
+
+dotnet test %testproject% -c Debug -f net6.0 --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="../../report/"
+
+%USERPROFILE%\.nuget\packages\ReportGenerator\4.8.13\tools\net5.0\ReportGenerator.exe -reports:"coverage.opencover.xml" -targetdir:"coverlet"
 
 start coverlet\index.htm

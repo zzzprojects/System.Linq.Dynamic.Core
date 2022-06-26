@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
-using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace Z.Dynamic.Core.Lab
 {
@@ -48,9 +43,6 @@ namespace Z.Dynamic.Core.Lab
 
     public class Request_DynamicLinqType
     {
-
-        
-
         public static void Execute()
         {
             var externals = new Dictionary<string, object>
@@ -66,14 +58,14 @@ namespace Z.Dynamic.Core.Lab
             //LambdaExpression expression = DynamicExpressionParser.ParseLambda(null, query, externals);
             //Delegate del = expression.Compile();
             //var result = del.DynamicInvoke();
-            
+
             var config = new ParsingConfig();
 
             //var list = new[] { new X { }, new X { Values = new[] { "a", "b" } } }.AsQueryable();
             //var result = list.Select("Utils.ConvertToArray(Values)").ToDynamicList<string[]>();
 
 
-            var list = new[] { new X { Test = 1}, new X { Test = 2}}.AsQueryable();
+            var list = new[] { new X { Test = 1 }, new X { Test = 2 } }.AsQueryable();
             var result = list.Select("Test.IncrementMe(5)").ToDynamicList<int>();
         }
 
