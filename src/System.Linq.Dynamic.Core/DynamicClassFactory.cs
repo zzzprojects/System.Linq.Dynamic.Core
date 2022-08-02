@@ -444,9 +444,10 @@ namespace System.Linq.Dynamic.Core
 
         /// <summary>
         /// Generates the key.
-        /// Anonymous classes are generics based. The generic classes are distinguished by number of parameters and name of parameters. The specific types of the parameters are the generic arguments.
+        /// Anonymous classes are generics based. The generic classes are distinguished by number of parameters and name of parameters.
+        /// The specific types of the parameters are the generic arguments.
         /// </summary>
-        /// <param name="dynamicProperties">The dynamic propertys.</param>
+        /// <param name="dynamicProperties">The dynamic properties.</param>
         /// <param name="createParameterCtor">if set to <c>true</c> [create parameter ctor].</param>
         /// <returns></returns>
         private static string GenerateKey(IEnumerable<DynamicProperty> dynamicProperties, bool createParameterCtor)
