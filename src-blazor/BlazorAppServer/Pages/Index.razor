@@ -1,6 +1,10 @@
 ﻿@page "/"
 @using System.Linq.Dynamic.Core
 
+Current Culture = @System.Globalization.CultureInfo.CurrentCulture
+
+<hr />
+
 <pre>contractList : All</pre>
 @foreach (var contract in ContractListAll)
 {
