@@ -16,6 +16,14 @@ namespace System.Linq.Dynamic.Core.Tests
             }
         }
 
+        public class StringComparerT : IComparer<string>
+        {
+            public int Compare(string x, string y)
+            {
+                return new CaseInsensitiveComparer().Compare(y, x);
+            }
+        }
+
         public class ObjectComparer : IComparer
         {
             public int Compare(object x, object y)
@@ -62,7 +70,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = testList.AsQueryable();
 
             // Act
-            var orderBy = testList.OrderBy(x => x.UserName, StringComparer.OrdinalIgnoreCase).ToArray();
+            var orderBy = testList.OrderBy(x => x.UserName, new StringComparerT()).ToArray();
             var orderByDynamic = qry.OrderBy("UserName", new ObjectComparer()).ToArray();
 
             // Assert

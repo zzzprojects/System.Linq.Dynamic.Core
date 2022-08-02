@@ -108,6 +108,7 @@ namespace System.Linq.Dynamic.Core
                         var compareMethodGeneric = comparerGenericType.GetMethod("Compare");
                         var compareMethod = typeof(IComparer).GetMethod("Compare");
                         var compareCtor = comparerType.GetConstructor(Type.EmptyTypes);
+                        var genericType = comparerGenericType.GetGenericArguments()[0];
 
                         var typeBuilder = ModuleBuilder.DefineType(key, TypeAttributes.AnsiClass | TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoLayout, typeof(object));
                         typeBuilder.AddInterfaceImplementation(comparerGenericType);
@@ -134,9 +135,9 @@ namespace System.Linq.Dynamic.Core
                         methodBuilderIL.Emit(OpCodes.Ldarg_0);
                         methodBuilderIL.Emit(OpCodes.Ldfld, fieldBuilder);
                         methodBuilderIL.Emit(OpCodes.Ldarg_1);
-                        methodBuilderIL.Emit(OpCodes.Box, typeof(int));
+                        methodBuilderIL.Emit(OpCodes.Box, genericType);
                         methodBuilderIL.Emit(OpCodes.Ldarg_2);
-                        methodBuilderIL.Emit(OpCodes.Box, typeof(int));
+                        methodBuilderIL.Emit(OpCodes.Box, genericType);
                         methodBuilderIL.Emit(OpCodes.Callvirt, compareMethod);
                         methodBuilderIL.Emit(OpCodes.Ret);
 
