@@ -8,7 +8,7 @@ namespace System.Linq.Dynamic.Core.Tests
     public class DynamicClassFactoryTests
     {
         [Fact]
-        public void CreateGenericComparerType()
+        public void CreateGenericComparerTypeForInt()
         {
             // Assign
             var comparer = new IntComparer();
@@ -26,6 +26,28 @@ namespace System.Linq.Dynamic.Core.Tests
             equal.Should().Be(0);
 
             int lessThan = instance.Compare(2, 1);
+            lessThan.Should().Be(-1);
+        }
+
+        [Fact]
+        public void CreateGenericComparerTypeForString()
+        {
+            // Assign
+            var comparer = new IntComparer();
+            var comparerGenericType = typeof(IComparer<>).MakeGenericType(typeof(string));
+
+            // Act
+            var type = DynamicClassFactory.CreateGenericComparerType(comparerGenericType, comparer.GetType());
+
+            // Assert
+            var instance = (IComparer<string>)Activator.CreateInstance(type);
+            int greaterThan = instance.Compare("a", "b");
+            greaterThan.Should().Be(1);
+
+            int equal = instance.Compare("a", "a");
+            equal.Should().Be(0);
+
+            int lessThan = instance.Compare("b", "a");
             lessThan.Should().Be(-1);
         }
     }
