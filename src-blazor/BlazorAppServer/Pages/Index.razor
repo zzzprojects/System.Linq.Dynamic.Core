@@ -1,0 +1,40 @@
+﻿@page "/"
+@using System.Linq.Dynamic.Core
+
+Current Culture = @System.Globalization.CultureInfo.CurrentCulture
+
+<hr />
+
+<pre>contractList : All</pre>
+@foreach (var contract in ContractListAll)
+{
+    <div>@contract.DateC.ToString()</div>
+}
+
+<hr />
+
+<pre>contractList : Where</pre>
+@foreach (var contract in ContractList)
+{
+    <div>@contract.DateC.ToString()</div>
+}
+
+@code {
+    public List<Contract> ContractList = new();
+    public List<Contract> ContractListAll = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    public async Task LoadDataAsync()
+    {
+        await using var context = new EntityContext();
+        await context.Database.EnsureCreatedAsync();
+
+        ContractList = context.Contracts.Where("DateC <= DateTime(2021, 1, 1)").ToList();
+
+        ContractListAll = context.Contracts.ToList();
+    }
+}
