@@ -104,43 +104,23 @@ namespace System.Linq.Dynamic.Core
         #region All
         private static readonly MethodInfo _AllPredicate = QueryableMethodFinder.GetMethod(nameof(Queryable.All), 1);
 
-        /// <summary>
-        ///     Determines whether all the elements of a sequence satisfy a condition.
-        /// </summary>
-        /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that All asynchronous operations have completed before calling another method on this context.
-        /// </remarks>
-        /// <param name="source">
-        ///     An <see cref="IQueryable" /> to calculate the All of.
-        /// </param>
-        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <summary>Determines whether all the elements of a sequence satisfy a condition.</summary>
+        /// <param name="source">A sequence whose elements to test for a condition.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>
-        ///     true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.
-        /// </returns>
+        /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
         [PublicAPI]
         public static bool All([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
             return All(source, ParsingConfig.Default, predicate, args);
         }
 
-        /// <summary>
-        ///     Determines whether all the elements of a sequence satisfy a condition.
-        /// </summary>
-        /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that All asynchronous operations have completed before calling another method on this context.
-        /// </remarks>
-        /// <param name="source">
-        ///     An <see cref="IQueryable" /> to calculate the All of.
-        /// </param>
+        /// <summary>Determines whether all the elements of a sequence satisfy a condition.</summary>
+        /// <param name="source">A sequence whose elements to test for a condition.</param>
         /// <param name="config">The <see cref="ParsingConfig"/>.</param>
-        /// <param name="predicate">A projection function to apply to each element.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-        /// <returns>
-        ///     true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.
-        /// </returns>
+        /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
         [PublicAPI]
         public static bool All([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
@@ -153,7 +133,7 @@ namespace System.Linq.Dynamic.Core
 
             return Execute<bool>(_AllPredicate, source, Expression.Quote(lambda));
         }
-        #endregion AllAsync
+        #endregion All
 
         #region Any
         private static readonly MethodInfo _any = QueryableMethodFinder.GetMethod(nameof(Queryable.Any));
