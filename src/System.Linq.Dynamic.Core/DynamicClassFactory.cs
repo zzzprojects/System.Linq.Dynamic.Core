@@ -108,6 +108,7 @@ namespace System.Linq.Dynamic.Core
                         var compareMethodGeneric = comparerGenericType.GetMethod("Compare");
                         var compareMethod = typeof(IComparer).GetMethod("Compare");
                         var compareCtor = comparerType.GetConstructor(Type.EmptyTypes);
+                        var genericType = comparerGenericType.GetGenericArguments()[0];
 
                         var typeBuilder = ModuleBuilder.DefineType(key, TypeAttributes.AnsiClass | TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoLayout, typeof(object));
                         typeBuilder.AddInterfaceImplementation(comparerGenericType);
@@ -134,9 +135,9 @@ namespace System.Linq.Dynamic.Core
                         methodBuilderIL.Emit(OpCodes.Ldarg_0);
                         methodBuilderIL.Emit(OpCodes.Ldfld, fieldBuilder);
                         methodBuilderIL.Emit(OpCodes.Ldarg_1);
-                        methodBuilderIL.Emit(OpCodes.Box, typeof(int));
+                        methodBuilderIL.Emit(OpCodes.Box, genericType);
                         methodBuilderIL.Emit(OpCodes.Ldarg_2);
-                        methodBuilderIL.Emit(OpCodes.Box, typeof(int));
+                        methodBuilderIL.Emit(OpCodes.Box, genericType);
                         methodBuilderIL.Emit(OpCodes.Callvirt, compareMethod);
                         methodBuilderIL.Emit(OpCodes.Ret);
 
@@ -443,9 +444,10 @@ namespace System.Linq.Dynamic.Core
 
         /// <summary>
         /// Generates the key.
-        /// Anonymous classes are generics based. The generic classes are distinguished by number of parameters and name of parameters. The specific types of the parameters are the generic arguments.
+        /// Anonymous classes are generics based. The generic classes are distinguished by number of parameters and name of parameters.
+        /// The specific types of the parameters are the generic arguments.
         /// </summary>
-        /// <param name="dynamicProperties">The dynamic propertys.</param>
+        /// <param name="dynamicProperties">The dynamic properties.</param>
         /// <param name="createParameterCtor">if set to <c>true</c> [create parameter ctor].</param>
         /// <returns></returns>
         private static string GenerateKey(IEnumerable<DynamicProperty> dynamicProperties, bool createParameterCtor)
