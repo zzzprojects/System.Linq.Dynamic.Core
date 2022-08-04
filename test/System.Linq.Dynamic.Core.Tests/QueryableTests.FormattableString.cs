@@ -1,9 +1,8 @@
-﻿using FluentAssertions;
-using NFluent;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using FluentAssertions;
+using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -15,31 +14,31 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void All_WithArgs_FS()
         {
-            //Arrange
+            // Arrange
             const int value = 50;
             const string username = "test123";
             var queryable = User.GenerateSampleModels(100).AsQueryable();
 
-            //Act
-            bool expected = queryable.All(u => u.Income > value && u.UserName != username);
-            bool result = queryable.AllInterpolated($"Income > {value} && UserName != {username}");
-            
-            //Assert
+            // Act
+            var expected = queryable.All(u => u.Income > value && u.UserName != username);
+            var result = queryable.AllInterpolated($"Income > {value} && UserName != {username}");
+
+            // Assert
             Assert.Equal(expected, result);
         }
 
         [Fact]
         public void Any_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var queryable = User.GenerateSampleModels(100).AsQueryable();
 
-            int value = 50;
-            //Act
-            bool expected = queryable.Any(u => u.Income > value);
-            bool result = queryable.AnyInterpolated($"Income > {value}");
+            var value = 50;
+            // Act
+            var expected = queryable.Any(u => u.Income > value);
+            var result = queryable.AnyInterpolated($"Income > {value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected, result);
         }
 
@@ -48,14 +47,14 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             const int value = 50;
 
-            //Arrange
+            // Arrange
             var queryable = User.GenerateSampleModels(100).AsQueryable();
 
-            //Act
-            bool expected = queryable.Any(u => u.Income > value);
-            bool result = queryable.AnyInterpolated($"Income > {value}");
+            // Act
+            var expected = queryable.Any(u => u.Income > value);
+            var result = queryable.AnyInterpolated($"Income > {value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected, result);
         }
 
@@ -117,45 +116,44 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void First_Predicate_FS()
         {
-            //Arrange
+            // Arrange
+            var income = 1000;
             var testList = User.GenerateSampleModels(100);
             var queryable = testList.AsQueryable();
 
-            //Act
-            int value = 1000;
-            var expected = queryable.First(u => u.Income > value);
-            var result = queryable.FirstInterpolated($"Income > {value}");
+            // Act
+            var expected = queryable.First(u => u.Income > income);
+            var result = queryable.FirstInterpolated($"Income > {income}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected as object, result);
         }
 
         [Fact]
         public void First_Predicate_WithArgs_FS()
         {
-            const int value = 1000;
-
-            //Arrange
+            // Arrange
+            var income = 1000;
             var testList = User.GenerateSampleModels(100);
             var queryable = testList.AsQueryable();
 
-            //Act
-            var expected = queryable.First(u => u.Income > value);
-            var result = queryable.FirstInterpolated($"Income > {value}");
+            // Act
+            var expected = queryable.First(u => u.Income > income);
+            var result = queryable.FirstInterpolated($"Income > {income}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected as object, result);
         }
 
         [Fact]
         public void FirstOrDefault_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100);
             var queryable = testList.AsQueryable();
 
             // Act
-            int value = 1000;
+            var value = 1000;
             var expected = queryable.FirstOrDefault(u => u.Income > value);
             var result = queryable.FirstOrDefaultInterpolated($"Income > {value}");
 
@@ -183,46 +181,46 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Last_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100);
             var queryable = testList.AsQueryable();
 
-            //Act
-            int value = 1000;
+            // Act
+            var value = 1000;
             var expected = queryable.Last(u => u.Income > value);
             var result = queryable.LastInterpolated($"Income > {value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected as object, result);
         }
 
         [Fact]
         public void LastOrDefault_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100);
             var queryable = testList.AsQueryable();
 
-            //Act
-            int value = 1000;
+            // Act
+            var value = 1000;
             var expected = queryable.LastOrDefault(u => u.Income > value);
             var result = queryable.LastOrDefaultInterpolated($"Income > {value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected as object, result);
         }
 
         [Fact]
         public void LongCount_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var queryable = User.GenerateSampleModels(100).AsQueryable();
 
-            //Act
-            long expected = queryable.LongCount(u => u.Income > 50);
-            long result = queryable.LongCount("Income > 50");
+            // Act
+            var expected = queryable.LongCount(u => u.Income > 50);
+            var result = queryable.LongCount("Income > 50");
 
-            //Assert
+            // Assert
             Assert.Equal(expected, result);
         }
 
@@ -231,14 +229,14 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             const int value = 50;
 
-            //Arrange
+            // Arrange
             var queryable = User.GenerateSampleModels(100).AsQueryable();
 
-            //Act
-            long expected = queryable.LongCount(u => u.Income > value);
-            long result = queryable.LongCountInterpolated($"Income >{value}");
+            // Act
+            var expected = queryable.LongCount(u => u.Income > value);
+            var result = queryable.LongCountInterpolated($"Income >{value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected, result);
         }
 
@@ -261,13 +259,13 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void OrderBy_Dynamic_Exceptions_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
             var qry = testList.AsQueryable();
 
-            //Act
-            int bad = 3;
-            int id = 123;
+            // Act
+            var bad = 3;
+            var id = 123;
             Assert.Throws<ParseException>(() => qry.OrderByInterpolated($"Bad={bad}"));
             Assert.Throws<ParseException>(() => qry.WhereInterpolated($"Id={id}"));
 
@@ -279,82 +277,80 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Single_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100);
             var testListQry = testList.AsQueryable();
 
-            //Act
-            string value = "User4";
+            // Act
+            var value = "User4";
             var expected = testListQry.Single(u => u.UserName == value);
             var result = testListQry.SingleInterpolated($"UserName == {value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected as object, result);
         }
 
         [Fact]
         public void SingleOrDefault_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100);
             var testListQry = testList.AsQueryable();
 
-            //Act
-            string value = "User4";
+            // Act
+            var value = "User4";
             var expected = testListQry.SingleOrDefault(u => u.UserName == value);
             var result = testListQry.SingleOrDefaultInterpolated($"UserName == {value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected as object, result);
         }
 
         [Fact]
         public void SkipWhile_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100);
             IQueryable testListQry = testList.AsQueryable();
 
-            //Act
-            int value = 1000;
+            // Act
+            var value = 1000;
             var expected = testList.SkipWhile(u => u.Income > value);
             var result = testListQry.SkipWhileInterpolated($"Income > {value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected.ToArray(), result.Cast<User>().ToArray());
         }
 
         [Fact]
         public void SkipWhile_Predicate_Args_FS()
         {
-            const int income = 1000;
-
-            //Arrange
+            // Arrange
+            var income = 1000;
             var testList = User.GenerateSampleModels(100);
             IQueryable testListQry = testList.AsQueryable();
 
-            //Act
-            int value = 1000;
-            var expected = testList.SkipWhile(u => u.Income > value);
-            var result = testListQry.SkipWhileInterpolated($"Income > {value}");
+            // Act
+            var expected = testList.SkipWhile(u => u.Income > income);
+            var result = testListQry.SkipWhileInterpolated($"Income > {income}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected.ToArray(), result.Cast<User>().ToArray());
         }
 
         [Fact]
         public void TakeWhile_Predicate_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100);
             IQueryable testListQry = testList.AsQueryable();
 
-            //Act
-            int value = 1000;
+            // Act
+            var value = 1000;
             var expected = testList.TakeWhile(u => u.Income > 1000);
             var result = testListQry.TakeWhileInterpolated($"Income > {value}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected.ToArray(), result.Cast<User>().ToArray());
         }
 
@@ -363,28 +359,28 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             const int income = 1000;
 
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100);
             IQueryable testListQry = testList.AsQueryable();
 
-            //Act
+            // Act
             var expected = testList.TakeWhile(u => u.Income > income);
             var result = testListQry.TakeWhileInterpolated($"Income > {income}");
 
-            //Assert
+            // Assert
             Assert.Equal(expected.ToArray(), result.Cast<User>().ToArray());
         }
 
         [Fact]
         public void ThenBy_Dynamic_Exceptions_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
             var qry = testList.AsQueryable();
 
-            //Act
-            int bad = 3;
-            int id = 123;
+            // Act
+            var bad = 3;
+            var id = 123;
             var ordered = qry.OrderBy("Id");
             Assert.Throws<ParseException>(() => ordered.ThenByInterpolated($"Bad={bad}"));
             Assert.Throws<ParseException>(() => ordered.WhereInterpolated($"Id={id}"));
@@ -397,13 +393,13 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Where_Dynamic_Exceptions_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
             var qry = testList.AsQueryable();
 
-            //Act
-            int bad = 3;
-            int id = 123;
+            // Act
+            var bad = 3;
+            var id = 123;
             Assert.Throws<InvalidOperationException>(() => qry.WhereInterpolated($"Id"));
             Assert.Throws<ParseException>(() => qry.WhereInterpolated($"Bad={bad}"));
             Assert.Throws<ParseException>(() => qry.WhereInterpolated($"Id={id}"));
@@ -424,8 +420,8 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             // var result1a = qry.Where(@"UserName == ""This \\""is\\"" a test.""").ToArray();
             var result1b = qry.WhereInterpolated($"UserName == \"This \\\\\\\"is\\\\\\\" a test.\"").ToArray();
-            string s1 = @"This \""is\"" a test.";
-            string s2 = "This \\\"is\\\" a test.";
+            var s1 = @"This \""is\"" a test.";
+            var s2 = "This \\\"is\\\" a test.";
             var result2a = qry.WhereInterpolated($"UserName == {s1}").ToArray();
             var result2b = qry.WhereInterpolated($"UserName == {s2}").ToArray();
 
@@ -442,12 +438,12 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void Where_Dynamic_SelectNewObjects_FS()
         {
-            //Arrange
+            // Arrange
             var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
             var qry = testList.AsQueryable();
 
-            //Act
-            int value = 4000;
+            // Act
+            var value = 4000;
             var expectedResult = testList.Where(x => x.Income > value).Select(x => new { Id = x.Id, Income = x.Income + 1111 });
             var dynamicList = qry.WhereInterpolated($"Income > {value}").ToDynamicList();
 
@@ -462,7 +458,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var productsQuery = new[] { new ProductDynamic { ProductId = 1 } }.AsQueryable();
 
             // Act
-            string s = "First Product";
+            var s = "First Product";
             Action action = () => productsQuery.WhereInterpolated($"Properties.Name == {s}").ToDynamicList();
 
             // Assert
@@ -476,7 +472,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var productsQuery = new[] { new ProductDynamic { ProductId = 1 } }.AsQueryable();
 
             // Act
-            string s = "First Product";
+            var s = "First Product";
             var results = productsQuery.WhereInterpolated($"np(Properties.Name, \"no\") == {s}").ToDynamicList();
 
             // Assert
@@ -490,7 +486,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var productsQuery = new[] { new ProductDynamic { ProductId = 1, Properties = new Dictionary<string, object> { { "Name", "test" } } } }.AsQueryable();
 
             // Act
-            string s = "test";
+            var s = "test";
             var results = productsQuery.WhereInterpolated($"Properties.Name == {s}").ToDynamicList();
 
             // Assert
@@ -504,7 +500,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var productsQuery = new[] { new ProductDynamic { ProductId = 1, PropertiesAsObject = new Dictionary<string, object> { { "Name", "test" } } } }.AsQueryable();
 
             // Act
-            string s = "test";
+            var s = "test";
             var results = productsQuery.WhereInterpolated($"PropertiesAsObject.Name == {s}").ToDynamicList();
 
             // Assert
@@ -518,7 +514,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var productsQuery = new[] { new ProductDynamic { ProductId = 1, Properties = new { Name = "test" } } }.AsQueryable();
 
             // Act
-            string s = "test";
+            var s = "test";
             var results = productsQuery.WhereInterpolated($"Properties.Name == {s}").ToDynamicList<ProductDynamic>();
 
             // Assert
