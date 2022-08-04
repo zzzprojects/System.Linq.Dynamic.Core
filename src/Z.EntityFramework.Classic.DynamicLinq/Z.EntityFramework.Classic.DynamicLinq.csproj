@@ -3,7 +3,6 @@
 
     <PropertyGroup>
         <Version>1.2.$(PatchVersion)</Version>
-
         <Description>Dynamic Linq extensions for Z.EntityFramework.Classic which adds Async support</Description>
         <AssemblyTitle>Z.EntityFramework.Classic.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
@@ -27,6 +26,8 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <Company>ZZZ Projects</Company>
         <Copyright>Copyright © ZZZ Projects</Copyright>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

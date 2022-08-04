@@ -10,7 +10,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ToDynamicList()
         {
             // Arrange
-            var testList = User.GenerateSampleModels(51);
+            var testList = User.GenerateSampleModels(3);
             IQueryable testListQry = testList.AsQueryable();
 
             // Act
@@ -25,7 +25,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public async Task ToDynamicListAsync()
         {
             // Arrange
-            var testList = User.GenerateSampleModels(51);
+            var testList = User.GenerateSampleModels(3);
             IQueryable testListQry = testList.AsQueryable();
 
             // Act
