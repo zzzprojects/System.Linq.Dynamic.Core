@@ -188,6 +188,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Country.cs">
       <Link>Entities\Country.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Department.cs">
+      <Link>Entities\Department.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Employee.cs">
       <Link>Entities\Employee.cs</Link>
     </Compile>
