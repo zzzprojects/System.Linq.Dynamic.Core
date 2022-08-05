@@ -177,6 +177,52 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(countAsDynamic).Equals(1);
         }
 
+        [Fact]
+        public void As_Dynamic_ActingOnProperty()
+        {
+            // Assign
+            var qry = new[]
+            {
+                new Department
+                {
+                    Employee = new Worker { Name = "1" }
+                },
+                new Department
+                {
+                    Employee = new Boss { Name = "b" }
+                }
+            }.AsQueryable();
+
+            // Act
+            int countAsDynamic = qry.Count("As(Employee, \"System.Linq.Dynamic.Core.Tests.Entities.Worker\") != null");
+
+            // Assert
+            countAsDynamic.Should().Be(1);
+        }
+
+        [Fact]
+        public void As_Dynamic_ActingOnProperty_WithType()
+        {
+            // Assign
+            var qry = new[]
+            {
+                new Department
+                {
+                    Employee = new Worker { Name = "1" }
+                },
+                new Department
+                {
+                    Employee = new Boss { Name = "b" }
+                }
+            }.AsQueryable();
+
+            // Act
+            int countAsDynamic = qry.Count("As(Employee, @0) != null", typeof(Worker));
+
+            // Assert
+            countAsDynamic.Should().Be(1);
+        }
+
         public class AS_A { }
         public class AS_B : AS_A
         {
@@ -190,7 +236,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Arrange
             var a = new AS_A();
             var b = new AS_B { MyProperty = "x" };
-            var lst = new List<AS_A>()
+            var lst = new List<AS_A>
             {
                 a,
                 b
@@ -289,7 +335,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assign
             var qry = new BaseEmployee[]
             {
-                new Worker { Name = "1", Other = "x" }, 
+                new Worker { Name = "1", Other = "x" },
                 new Worker { Name = "2" }
             }.AsQueryable();
 
@@ -307,7 +353,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assign
             var qry = new BaseEmployee[]
             {
-                new Worker { Name = "1", Other = "x" }, 
+                new Worker { Name = "1", Other = "x" },
                 new Boss { Name = "2", Function = "y" }
             }.AsQueryable();
 
@@ -323,14 +369,14 @@ namespace System.Linq.Dynamic.Core.Tests
         public void IsAndCastToType_Dynamic_ActingOnProperty_And_GetProperty()
         {
             // Assign
-            var qry = new []
+            var qry = new[]
             {
-                new EmployeeWrapper { Employee = new Worker { Name = "1", Other = "x" } }, 
+                new EmployeeWrapper { Employee = new Worker { Name = "1", Other = "x" } },
                 new EmployeeWrapper { Employee = new Boss { Name = "2", Function = "y" } }
             }.AsQueryable();
 
             // Act
-            var cast = qry.Select(c => c.Employee is Worker ? ((Worker) c.Employee).Other : "-").ToArray();
+            var cast = qry.Select(c => c.Employee is Worker ? ((Worker)c.Employee).Other : "-").ToArray();
             var castDynamic = qry.Select("iif(Is(Employee, \"System.Linq.Dynamic.Core.Tests.Entities.Worker\"), Cast(Employee, \"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Other, \"-\")").ToDynamicArray();
 
             // Assert
