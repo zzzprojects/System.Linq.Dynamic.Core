@@ -9,25 +9,6 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
-        public class Samples
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public List<Result> Results { get; set; }
-        }
-
-        public class SoilSamples : Samples
-        {
-            public int Deep { get; set; }
-        }
-
-        public class Result
-        {
-            public int Id { get; set; }
-            public int Value { get; set; }
-            public Samples Sample { get; set; }
-        }
-
         [Fact]
         public void Join_InheritedClasses()
         {
@@ -44,23 +25,27 @@ namespace System.Linq.Dynamic.Core.Tests
             var people = new List<Person> { magnus, terry, charlotte };
             var pets = new List<Pet> { barley, boots, whiskers, daisy };
 
-            // Act
+            // Act 1
             var realQuery = people.AsQueryable()
                 .Join(
                     pets,
                     person => person,
                     pet => pet.Owner,
-                    (person, pet) => new { OwnerName = person.Name, Pet = pet.Name });
+                    (person, pet) => new { OwnerName = person.Name, Pet = pet.Name }
+                );
             var realResult = realQuery.ToList();
 
+            // Act 2
             var dynamicQuery = people.AsQueryable()
                 .Join(
                     pets,
                     "it",
                     "Owner",
-                    "new(outer.Name as OwnerName, inner.Name as Pet)");
+                    "new(outer.Name as OwnerName, inner.Name as Pet)"
+                );
             var dynamicResult = dynamicQuery.ToDynamicList();
 
+            // Assert
             realResult.Should().BeEquivalentTo(dynamicResult);
         }
 
@@ -80,43 +65,27 @@ namespace System.Linq.Dynamic.Core.Tests
             var people = new List<Person> { magnus, terry, charlotte };
             var pets = new List<Pet> { barley, boots, whiskers, daisy };
 
-            // Act
+            // Act 1
             var realQuery = people.AsQueryable()
                 .Join(
                     pets,
                     person => person,
                     pet => pet.Owner,
-                    (person, pet) => new { OwnerName = person.Name, Pet = pet.Name });
+                    (person, pet) => new { OwnerName = person.Name, Pet = pet.Name }
+                );
+            var realResult = realQuery.ToList();
 
+            // Act 2
             var dynamicQuery = people.AsQueryable()
                 .Join(
                     pets,
                     "it",
                     "Owner",
                     "new(outer.Name as OwnerName, inner.Name as Pet)");
+            var dynamicResult = dynamicQuery.ToDynamicList();
 
             // Assert
-            var realResult = realQuery.ToArray();
-
-#if NETSTANDARD
-            var dynamicResult = dynamicQuery.ToDynamicArray<DynamicClass>();
-
-            Assert.Equal(realResult.Length, dynamicResult.Length);
-            for (int i = 0; i < realResult.Length; i++)
-            {
-                Assert.Equal(realResult[i].OwnerName, dynamicResult[i].GetDynamicPropertyValue<string>("OwnerName"));
-                Assert.Equal(realResult[i].Pet, dynamicResult[i].GetDynamicPropertyValue<string>("Pet"));
-            }
-#else
-            var dynamicResult = dynamicQuery.ToDynamicArray();
-
-            Assert.Equal(realResult.Length, dynamicResult.Length);
-            for (int i = 0; i < realResult.Length; i++)
-            {
-                Assert.Equal(realResult[i].OwnerName, ((dynamic)dynamicResult[i]).OwnerName);
-                Assert.Equal(realResult[i].Pet, ((dynamic)dynamicResult[i]).Pet);
-            }
-#endif
+            realResult.Should().BeEquivalentTo(dynamicResult);
         }
 
         [Fact]
