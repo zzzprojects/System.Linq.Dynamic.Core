@@ -7,7 +7,7 @@ using ConsoleAppEF2.Database;
 
 namespace ConsoleAppEF5
 {
-    // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/570
+    // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/519
     // Here Appilicability is a property within Settings type, and WinApplicability is a derived type of Applicability. SKUs is a property within WinApplicability.
     public class Settings
     {
