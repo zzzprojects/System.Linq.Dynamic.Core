@@ -2683,29 +2683,42 @@ namespace System.Linq.Dynamic.Core
 
         private static void CheckOuterAndInnerTypes(ParsingConfig config, bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object[] args)
         {
-            Type outerSelectorReturnType = outerSelectorLambda.Body.Type;
-            Type innerSelectorReturnType = innerSelectorLambda.Body.Type;
+            var outerSelectorReturnTypes = TypeHelper.GetSelfAndBaseTypes(outerSelectorLambda.Body.Type, true);
+            var innerSelectorReturnTypes = TypeHelper.GetSelfAndBaseTypes(innerSelectorLambda.Body.Type, true);
 
-            // If types are not the same, try to convert to Nullable and generate new LambdaExpression
-            if (outerSelectorReturnType != innerSelectorReturnType)
+            foreach (var outerSelectorReturnTypeInLoop in outerSelectorReturnTypes)
             {
-                if (TypeHelper.IsNullableType(outerSelectorReturnType) && !TypeHelper.IsNullableType(innerSelectorReturnType))
-                {
-                    innerSelectorReturnType = ExpressionParser.ToNullableType(innerSelectorReturnType);
-                    innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, innerSelectorReturnType, innerKeySelector, args);
-                }
-                else if (!TypeHelper.IsNullableType(outerSelectorReturnType) && TypeHelper.IsNullableType(innerSelectorReturnType))
-                {
-                    outerSelectorReturnType = ExpressionParser.ToNullableType(outerSelectorReturnType);
-                    outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, outerSelectorReturnType, outerKeySelector, args);
-                }
+                var outerSelectorBodyType = outerSelectorReturnTypeInLoop;
 
-                // If types are still not the same, throw an Exception
-                if (outerSelectorReturnType != innerSelectorReturnType)
+                foreach (var innerSelectorReturnTypeInLoop in innerSelectorReturnTypes)
                 {
-                    throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.IncompatibleTypes, outerSelectorReturnType, innerSelectorReturnType), -1);
+                    var innerSelectorBodyType = innerSelectorReturnTypeInLoop;
+
+                    // If types are not the same, try to convert to Nullable and generate new LambdaExpression
+                    if (outerSelectorBodyType != innerSelectorBodyType)
+                    {
+                        if (TypeHelper.IsNullableType(outerSelectorReturnTypeInLoop) && !TypeHelper.IsNullableType(innerSelectorReturnTypeInLoop))
+                        {
+                            innerSelectorBodyType = ExpressionParser.ToNullableType(innerSelectorReturnTypeInLoop);
+                            innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, innerSelectorBodyType, innerKeySelector, args);
+                        }
+                        else if (!TypeHelper.IsNullableType(outerSelectorReturnTypeInLoop) && TypeHelper.IsNullableType(innerSelectorReturnTypeInLoop))
+                        {
+                            outerSelectorBodyType = ExpressionParser.ToNullableType(outerSelectorReturnTypeInLoop);
+                            outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, outerSelectorBodyType, outerKeySelector, args);
+                        }
+                    }
+
+                    if (outerSelectorBodyType == innerSelectorBodyType)
+                    {
+                        // Types are equal (maybe after converting to nullable or after lopping), return from method.
+                        return;
+                    }
                 }
             }
+
+            // If types are still not the same, throw an Exception
+            throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.IncompatibleTypes, outerSelectorLambda.Body.Type, innerSelectorLambda.Body.Type), -1);
         }
 
         // Code below is based on https://github.com/aspnet/EntityFramework/blob/9186d0b78a3176587eeb0f557c331f635760fe92/src/Microsoft.EntityFrameworkCore/EntityFrameworkQueryableExtensions.cs

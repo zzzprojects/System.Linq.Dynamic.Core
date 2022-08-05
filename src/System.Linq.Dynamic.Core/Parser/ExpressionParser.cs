@@ -2102,10 +2102,8 @@ namespace System.Linq.Dynamic.Core.Parser
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
-                MemberInfo[] members = null;
-
                 var findMembersType = _parsingConfig?.IsCaseSensitive == true ? Type.FilterName : Type.FilterNameIgnoreCase;
-                members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, findMembersType, memberName);
+                var members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, findMembersType, memberName);
 
                 if (members.Length != 0)
                 {

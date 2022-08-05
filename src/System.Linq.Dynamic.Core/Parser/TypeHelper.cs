@@ -411,15 +411,18 @@ namespace System.Linq.Dynamic.Core.Parser
             return type;
         }
 
-        public static IEnumerable<Type> GetSelfAndBaseTypes(Type type)
+        public static IList<Type> GetSelfAndBaseTypes(Type type, bool excludeObject = false)
         {
+            Check.NotNull(type, nameof(type));
+
             if (type.GetTypeInfo().IsInterface)
             {
                 var types = new List<Type>();
                 AddInterface(types, type);
                 return types;
             }
-            return GetSelfAndBaseClasses(type);
+
+            return GetSelfAndBaseClasses(type).Where(t => !excludeObject || t != typeof(object)).ToList();
         }
 
         private static IEnumerable<Type> GetSelfAndBaseClasses(Type type)
@@ -431,11 +434,12 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        private static void AddInterface(List<Type> types, Type type)
+        private static void AddInterface(ICollection<Type> types, Type type)
         {
             if (!types.Contains(type))
             {
                 types.Add(type);
+
                 foreach (Type t in type.GetInterfaces())
                 {
                     AddInterface(types, t);

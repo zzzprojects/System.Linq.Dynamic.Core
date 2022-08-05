@@ -1,7 +1,7 @@
-﻿using JetBrains.Annotations;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Validation;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.TypeConverters
 {

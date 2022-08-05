@@ -1,9 +1,9 @@
-﻿using JetBrains.Annotations;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.TypeConverters
 {
-    interface ITypeConverterFactory
+    internal interface ITypeConverterFactory
     {
         /// <summary>
         /// Returns a type converter for the specified type.
