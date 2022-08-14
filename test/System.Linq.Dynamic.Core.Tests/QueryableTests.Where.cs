@@ -180,6 +180,24 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Where_Dynamic_EmptyString()
+        {
+            // Arrange
+            var testList = User.GenerateSampleModels(2, allowNullableProfiles: true);
+            var qry = testList.AsQueryable();
+
+            // Act
+            var expected1 = qry.Where(u => u.UserName != string.Empty).ToArray();
+            var expected2 = qry.Where(u => u.UserName != "").ToArray();
+            var resultDynamic1 = qry.Where("UserName != @0", string.Empty).ToArray();
+            var resultDynamic2 = qry.Where("UserName != @0", "").ToArray();
+
+            // Assert
+            resultDynamic1.Should().Contain(expected1);
+            resultDynamic2.Should().Contain(expected2);
+        }
+
+        [Fact]
         public void Where_Dynamic_SelectNewObjects()
         {
             //Arrange
