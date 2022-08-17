@@ -26,6 +26,8 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <Company>ZZZ Projects</Company>
         <Copyright>Copyright © ZZZ Projects</Copyright>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

@@ -13,6 +13,7 @@
     <AssemblyName>EntityFramework.DynamicLinq.Tests.net452</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+      <LangVersion>10</LangVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>

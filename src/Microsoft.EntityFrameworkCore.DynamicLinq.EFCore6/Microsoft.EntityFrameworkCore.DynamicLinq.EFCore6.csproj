@@ -7,7 +7,7 @@
         <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
         <Authors>ZZZ Projects;Stef Heyenrath</Authors>
         <TargetFrameworks>net6.0</TargetFrameworks>
-        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;EFDYNAMICFUNCTIONS</DefineConstants>
+        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;EFDYNAMICFUNCTIONS;ASYNCENUMERABLE</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
         <AssemblyOriginatorKeyFile>../Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2/Microsoft.EntityFrameworkCore.DynamicLinq.snk</AssemblyOriginatorKeyFile>
@@ -26,6 +26,8 @@
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <Company>ZZZ Projects</Company>
         <Copyright>Copyright © ZZZ Projects</Copyright>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

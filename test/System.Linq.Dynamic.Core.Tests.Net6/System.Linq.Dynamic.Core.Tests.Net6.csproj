@@ -52,4 +52,10 @@
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\*\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\*\*\*.cs" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="TestResults\**" />
+      <EmbeddedResource Remove="TestResults\**" />
+      <None Remove="TestResults\**" />
+    </ItemGroup>
 </Project>

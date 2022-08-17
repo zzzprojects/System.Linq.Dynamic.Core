@@ -426,5 +426,4 @@ namespace System.Linq.Dynamic.Core
         }
     }
 #endif
-
 }
