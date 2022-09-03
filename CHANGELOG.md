@@ -1,3 +1,11 @@
+# v1.2.20 (03 September 2022)
+- [#619](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/619) - Fix generic comparer type [bug] contributed by [StefH](https://github.com/StefH)
+- [#620](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/620) - ToDynamicListAsync uses IAsyncEnumerable (if applicable) [feature] contributed by [StefH](https://github.com/StefH)
+- [#622](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/622) - Add unit tests for &quot;As acting on property&quot; [feature, test] contributed by [StefH](https://github.com/StefH)
+- [#625](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/625) - Add unit test for Where with empty string [test] contributed by [StefH](https://github.com/StefH)
+- [#616](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/616) - Example in Documentation is not working in Blazor Server: Expression with DateTime
+- [#617](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/617) - &quot;Failed to compare two elements in the array.&quot; System.InvalidOperationException (V1.2.19 compared to V1.2.18)
+
 # v1.2.19 (26 June 2022)
 - [#579](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/579) - Support Struct for DynamicLinqTypeAttribute [feature] contributed by [StefH](https://github.com/StefH)
 - [#583](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/583) - Fix example 'ConsoleApp_netcore2.1_EF2.1.1' [bug] contributed by [StefH](https://github.com/StefH)
