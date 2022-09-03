@@ -2,31 +2,15 @@
     <Import Project="../../version.xml" />
 
     <PropertyGroup>
-        <Version>1.2.$(PatchVersion)</Version>
-        <Description>This is a .NETStandard / .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
-        <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
-        <Authors>ZZZ Projects;Stef Heyenrath;Microsoft;Scott Guthrie;King Wilder;Nathan Arnott</Authors>
-        <TargetFrameworks>net35;net40;net45;net452;net46;netstandard1.3;netstandard2.0;netstandard2.1;uap10.0;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>System.Linq.Dynamic.Core</AssemblyName>
         <AssemblyOriginatorKeyFile>System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
-        <SignAssembly>true</SignAssembly>
-        <!--<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>-->
+        <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
+        <Authors>ZZZ Projects;Stef Heyenrath;Microsoft;Scott Guthrie;King Wilder;Nathan Arnott</Authors>
+        <Description>This is a .NETStandard / .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
         <PackageTags>system;linq;dynamic;core;dotnet;NETCoreApp;NETStandard</PackageTags>
-        <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
-        <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <PackageIconUrl>https://zzzprojects.github.io/images/logo/logo-64.png</PackageIconUrl>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
-        <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510002}</ProjectGuid>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-        <Company>ZZZ Projects</Company>
-        <Copyright>Copyright © ZZZ Projects</Copyright>
-        <LangVersion>10</LangVersion>
-        <Nullable>enable</Nullable>
+        <TargetFrameworks>net35;net40;net45;net452;net46;netstandard1.3;netstandard2.0;netstandard2.1;uap10.0;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+        <Version>1.2.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -75,7 +59,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="All" />
+        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
