@@ -116,12 +116,11 @@ namespace System.Linq.Dynamic.Core
             Check.HasNoNulls(parameters, nameof(parameters));
             Check.NotEmpty(expression, nameof(expression));
 
-            LambdaExpression? lambdaExpression = null;
-
             var parser = new ExpressionParser(parameters, expression, values, parsingConfig);
 
             var parsedExpression = parser.Parse(resultType, createParameterCtor);
 
+            LambdaExpression lambdaExpression;
             if (parsingConfig != null && parsingConfig.RenameParameterExpression && parameters.Length == 1)
             {
                 var renamer = new ParameterExpressionRenamer(parser.LastLambdaItName);
@@ -179,8 +178,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="Expression"/></returns>
         [PublicAPI]
-        public static Expression<Func<TResult>> ParseLambda<TResult>([NotNull] Type delegateType, [CanBeNull] ParsingConfig parsingConfig, bool createParameterCtor, [NotNull] ParameterExpression[] parameters, [NotNull] string expression, params object[] values)
+        public static Expression<Func<TResult>> ParseLambda<TResult>(Type delegateType, ParsingConfig? parsingConfig, bool createParameterCtor, ParameterExpression[] parameters, string expression, params object[] values)
         {
+            Check.NotNull(delegateType, nameof(delegateType));
+
             return (Expression<Func<TResult>>)ParseLambda(delegateType, parsingConfig, createParameterCtor, parameters, typeof(TResult), expression, values);
         }
 
@@ -194,7 +195,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(bool createParameterCtor, [NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(bool createParameterCtor, Type itType, Type? resultType, string expression, params object[] values)
         {
             Check.NotNull(itType, nameof(itType));
             Check.NotEmpty(expression, nameof(expression));
@@ -213,7 +214,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="Expression"/></returns>
         [PublicAPI]
-        public static Expression<Func<T, TResult>> ParseLambda<T, TResult>([CanBeNull] ParsingConfig parsingConfig, bool createParameterCtor, [NotNull] string expression, params object[] values)
+        public static Expression<Func<T, TResult>> ParseLambda<T, TResult>(ParsingConfig? parsingConfig, bool createParameterCtor, string expression, params object[] values)
         {
             Check.NotEmpty(expression, nameof(expression));
 
@@ -232,8 +233,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="Expression"/></returns>
         [PublicAPI]
-        public static Expression<Func<T, TResult>> ParseLambda<T, TResult>([NotNull] Type delegateType, [CanBeNull] ParsingConfig parsingConfig, bool createParameterCtor, [NotNull] string expression, params object[] values)
+        public static Expression<Func<T, TResult>> ParseLambda<T, TResult>(Type delegateType, ParsingConfig? parsingConfig, bool createParameterCtor, string expression, params object[] values)
         {
+            Check.NotNull(delegateType, nameof(delegateType));
             Check.NotEmpty(expression, nameof(expression));
 
             return (Expression<Func<T, TResult>>)ParseLambda(delegateType, parsingConfig, createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(T), string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false) }, typeof(TResult), expression, values);
@@ -248,7 +250,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([CanBeNull] ParsingConfig parsingConfig, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda(ParsingConfig? parsingConfig, Type? resultType, string expression, params object[] values)
         {
             return ParseLambda(parsingConfig, true, resultType, expression, values);
         }
@@ -263,8 +265,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] Type delegateType, [CanBeNull] ParsingConfig parsingConfig, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda(Type delegateType, ParsingConfig? parsingConfig, Type? resultType, string expression, params object[] values)
         {
+            Check.NotNull(delegateType, nameof(delegateType));
+
             return ParseLambda(delegateType, parsingConfig, true, resultType, expression, values);
         }
 
@@ -276,7 +280,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda(Type? resultType, string expression, params object[] values)
         {
             Check.NotEmpty(expression, nameof(expression));
 
@@ -301,8 +305,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(Type itType, Type? resultType, string expression, params object[] values)
         {
+            Check.NotNull(itType, nameof(itType));
+
             return ParseLambda(true, itType, resultType, expression, values);
         }
 
@@ -316,8 +322,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([CanBeNull] ParsingConfig parsingConfig, [NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(ParsingConfig? parsingConfig, Type itType, Type? resultType, string expression, params object[] values)
         {
+            Check.NotNull(itType, nameof(itType));
+
             return ParseLambda(parsingConfig, true, itType, resultType, expression, values);
         }
 
@@ -332,8 +340,11 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] Type delegateType, [CanBeNull] ParsingConfig parsingConfig, [NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(Type delegateType, ParsingConfig? parsingConfig, Type itType, Type? resultType, string expression, params object[] values)
         {
+            Check.NotNull(delegateType, nameof(delegateType));
+            Check.NotNull(itType, nameof(itType));
+
             return ParseLambda(delegateType, parsingConfig, true, itType, resultType, expression, values);
         }
 
@@ -348,7 +359,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([CanBeNull] ParsingConfig parsingConfig, bool createParameterCtor, [NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(ParsingConfig? parsingConfig, bool createParameterCtor, Type itType, Type? resultType, string expression, params object[] values)
         {
             Check.NotNull(itType, nameof(itType));
             Check.NotEmpty(expression, nameof(expression));
@@ -368,8 +379,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] Type delegateType, [CanBeNull] ParsingConfig parsingConfig, bool createParameterCtor, [NotNull] Type itType, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(Type delegateType, ParsingConfig? parsingConfig, bool createParameterCtor, Type itType, Type? resultType, string expression, params object[] values)
         {
+            Check.NotNull(delegateType, nameof(delegateType));
             Check.NotNull(itType, nameof(itType));
             Check.NotEmpty(expression, nameof(expression));
 
@@ -385,7 +397,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(ParameterExpression[] parameters, Type? resultType, string expression, params object[] values)
         {
             return ParseLambda(null, true, parameters, resultType, expression, values);
         }
@@ -400,8 +412,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] Type delegateType, [NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(Type delegateType, ParameterExpression[] parameters, Type? resultType, string expression, params object[] values)
         {
+            Check.NotNull(delegateType, nameof(delegateType));
+
             return ParseLambda(delegateType, null, true, parameters, resultType, expression, values);
         }
 
@@ -415,7 +429,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([CanBeNull] ParsingConfig parsingConfig, [NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(ParsingConfig? parsingConfig, ParameterExpression[] parameters, Type? resultType, string expression, params object[] values)
         {
             return ParseLambda(parsingConfig, true, parameters, resultType, expression, values);
         }
@@ -431,8 +445,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda([NotNull] Type delegateType, [CanBeNull] ParsingConfig parsingConfig, [NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, string expression, params object[] values)
+        public static LambdaExpression ParseLambda(Type delegateType, ParsingConfig? parsingConfig, ParameterExpression[] parameters, Type? resultType, string expression, params object[] values)
         {
+            Check.NotNull(delegateType, nameof(delegateType));
+
             return ParseLambda(delegateType, parsingConfig, true, parameters, resultType, expression, values);
         }
 
@@ -446,7 +462,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(bool createParameterCtor, [NotNull] ParameterExpression[] parameters, [CanBeNull] Type resultType, [NotNull] string expression, params object[] values)
+        public static LambdaExpression ParseLambda(bool createParameterCtor, ParameterExpression[] parameters, Type? resultType, string expression, params object[] values)
         {
             return ParseLambda(null, createParameterCtor, parameters, resultType, expression, values);
         }

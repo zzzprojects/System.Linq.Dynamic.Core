@@ -17,7 +17,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             _parsingConfig = parsingConfig;
         }
 
-        public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression instance, ref Expression[] args)
+        public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression? instance, ref Expression[] args)
         {
             // NOTE: `instance` is not passed by ref in the method signature by design. The ContainsMethod should not change the instance.
             // However, args by reference is required for backward compatibility (removing "ref" will break some tests)
@@ -25,7 +25,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return FindMethod(type, methodName, staticAccess, ref instance, ref args, out _) == 1;
         }
 
-        public int FindMethod(Type type, string methodName, bool staticAccess, ref Expression instance, ref Expression[] args, out MethodBase method)
+        public int FindMethod(Type type, string methodName, bool staticAccess, ref Expression? instance, ref Expression[] args, out MethodBase? method)
         {
 #if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
             BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
@@ -82,7 +82,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return 0;
         }
 
-        public int FindBestMethodBasedOnArguments(IEnumerable<MethodBase> methods, ref Expression[] args, out MethodBase method)
+        public int FindBestMethodBasedOnArguments(IEnumerable<MethodBase> methods, ref Expression[] args, out MethodBase? method)
         {
             // Passing args by reference is now required with the params array support.
             var inlineArgs = args;
@@ -124,7 +124,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return applicable.Length;
         }
 
-        public int FindIndexer(Type type, Expression[] args, out MethodBase method)
+        public int FindIndexer(Type type, Expression[] args, out MethodBase? method)
         {
             foreach (Type t in SelfAndBaseTypes(type))
             {
@@ -179,19 +179,19 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                     else
                     {
                         var paramType = method.Parameters.Last().ParameterType;
-                        var paramElementType = paramType.GetElementType();
+                        var paramElementType = paramType.GetElementType()!;
 
                         var arrayInitializerExpressions = new List<Expression>();
 
                         for (int j = method.Parameters.Length - 1; j < args.Length; j++)
                         {
-                            Expression promoted = _parsingConfig.ExpressionPromoter.Promote(args[j], paramElementType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
-                            if (promoted == null)
+                            var promotedExpression = _parsingConfig.ExpressionPromoter.Promote(args[j], paramElementType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
+                            if (promotedExpression == null)
                             {
                                 return false;
                             }
 
-                            arrayInitializerExpressions.Add(promoted);
+                            arrayInitializerExpressions.Add(promotedExpression);
                         }
 
                         var paramExpression = Expression.NewArrayInit(paramElementType, arrayInitializerExpressions);
@@ -207,12 +207,12 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                         return false;
                     }
 
-                    Expression promoted = _parsingConfig.ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
-                    if (promoted == null)
+                    var promotedExpression = _parsingConfig.ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
+                    if (promotedExpression == null)
                     {
                         return false;
                     }
-                    promotedArgs[i] = promoted;
+                    promotedArgs[i] = promotedExpression;
                 }
             }
 

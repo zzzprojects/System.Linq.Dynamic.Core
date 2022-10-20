@@ -19,8 +19,8 @@ namespace System.Linq.Dynamic.Core.Parser
             _numberParser = new NumberParser(config);
         }
 
-        /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)"/>
-        public virtual Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
+        /// <inheritdoc />
+        public virtual Expression? Promote(Expression expr, Type type, bool exact, bool convertExpr)
         {
             if (expr.Type == type || type.IsGenericParameter)
             {
@@ -41,7 +41,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     if (ConstantExpressionHelper.TryGetText(ce, out string text))
                     {
                         Type target = TypeHelper.GetNonNullableType(type);
-                        object value = null;
+                        object? value = null;
 
 #if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
                         switch (Type.GetTypeCode(ce.Type))
@@ -55,7 +55,7 @@ namespace System.Linq.Dynamic.Core.Parser
                                 // Make sure an enum value stays an enum value
                                 if (target.IsEnum)
                                 {
-                                    value = Enum.ToObject(target, value);
+                                    value = Enum.ToObject(target, value!);
                                 }
                                 break;
 
