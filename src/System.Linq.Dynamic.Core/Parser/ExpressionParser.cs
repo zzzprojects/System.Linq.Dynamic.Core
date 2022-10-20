@@ -10,7 +10,6 @@ using System.Linq.Dynamic.Core.TypeConverters;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
-using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -38,8 +37,8 @@ namespace System.Linq.Dynamic.Core.Parser
         private IDictionary<string, object> _externals;
         private ParameterExpression _it;
         private ParameterExpression _parent;
-        private ParameterExpression _root;
-        private Type _resultType;
+        private ParameterExpression? _root;
+        private Type? _resultType;
         private bool _createParameterCtor;
 
         /// <summary>
@@ -63,7 +62,7 @@ namespace System.Linq.Dynamic.Core.Parser
         /// <param name="expression">The expression.</param>
         /// <param name="values">The values.</param>
         /// <param name="parsingConfig">The parsing configuration.</param>
-        public ExpressionParser([CanBeNull] ParameterExpression[] parameters, [NotNull] string expression, [CanBeNull] object[] values, [CanBeNull] ParsingConfig parsingConfig)
+        public ExpressionParser(ParameterExpression[]? parameters, string expression, object[]? values, ParsingConfig? parsingConfig)
         {
             Check.NotEmpty(expression, nameof(expression));
 
@@ -145,7 +144,7 @@ namespace System.Linq.Dynamic.Core.Parser
         /// <param name="resultType">Type of the result.</param>
         /// <param name="createParameterCtor">if set to <c>true</c> [create parameter ctor].</param>
         /// <returns>Expression</returns>
-        public Expression Parse([CanBeNull] Type resultType, bool createParameterCtor = true)
+        public Expression Parse(Type? resultType, bool createParameterCtor = true)
         {
             _resultType = resultType;
             _createParameterCtor = createParameterCtor;
@@ -355,7 +354,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
                     var args = new[] { left };
 
-                    Expression nullExpressionReference = null;
+                    Expression? nullExpressionReference = null;
                     if (_methodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, ref nullExpressionReference, ref args, out MethodBase containsSignature) != 1)
                     {
                         throw ParseError(op.Pos, Res.NoApplicableAggregate, nameof(IEnumerableSignatures.Contains), string.Join(",", args.Select(a => a.Type.Name).ToArray()));
@@ -440,7 +439,7 @@ namespace System.Linq.Dynamic.Core.Parser
                    _textParser.CurrentToken.Id == TokenId.GreaterThan || _textParser.CurrentToken.Id == TokenId.GreaterThanEqual ||
                    _textParser.CurrentToken.Id == TokenId.LessThan || _textParser.CurrentToken.Id == TokenId.LessThanEqual)
             {
-                ConstantExpression constantExpr;
+                ConstantExpression? constantExpr;
                 TypeConverter typeConverter;
                 Token op = _textParser.CurrentToken;
                 _textParser.NextToken();
@@ -516,7 +515,6 @@ namespace System.Linq.Dynamic.Core.Parser
                             typesAreSameAndImplementCorrectInterface = interfaces.Any(x => x.GetGenericTypeDefinition() == typeof(IComparable<>));
                         }
                     }
-
 
                     if (!typesAreSameAndImplementCorrectInterface)
                     {

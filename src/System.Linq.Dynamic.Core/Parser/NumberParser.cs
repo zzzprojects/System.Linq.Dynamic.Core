@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
@@ -24,7 +23,7 @@ namespace System.Linq.Dynamic.Core.Parser
         /// Initializes a new instance of the <see cref="NumberParser"/> class.
         /// </summary>
         /// <param name="config">The ParsingConfig.</param>
-        public NumberParser([CanBeNull] ParsingConfig config)
+        public NumberParser(ParsingConfig? config)
         {
             _culture = config?.NumberParseCulture ?? CultureInfo.InvariantCulture;
         }
@@ -44,7 +43,7 @@ namespace System.Linq.Dynamic.Core.Parser
             var isBinary = text.StartsWith(isNegative ? "-0b" : "0b", StringComparison.OrdinalIgnoreCase);
             var qualifiers = isHexadecimal ? QualifiersHex : Qualifiers;
 
-            string qualifier = null;
+            string? qualifier = null;
             if (qualifiers.Contains(last))
             {
                 int pos = text.Length - 1, count = 0;
@@ -74,7 +73,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     throw new ParseException(string.Format(_culture, Res.InvalidIntegerLiteral, text), tokenPosition);
                 }
 
-                if (!string.IsNullOrEmpty(qualifier))
+                if (!string.IsNullOrEmpty(qualifier) && qualifier!.Length > 0)
                 {
                     if (qualifier == "U" || qualifier == "u")
                     {
@@ -132,7 +131,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 value = -value;
             }
 
-            if (!string.IsNullOrEmpty(qualifier))
+            if (!string.IsNullOrEmpty(qualifier) && qualifier!.Length > 0)
             {
                 if (qualifier == "L" || qualifier == "l")
                 {
@@ -185,10 +184,10 @@ namespace System.Linq.Dynamic.Core.Parser
         /// <param name="text">The text.</param>
         /// <param name="type">The type.</param>
         /// <param name="result">The result.</param>
-        public bool TryParseNumber(string text, Type type, out object result)
+        public bool TryParseNumber(string text, Type type, out object? result)
         {
             result = ParseNumber(text, type);
-            return type != null;
+            return result != null;
         }
 
         /// <summary>
@@ -196,7 +195,7 @@ namespace System.Linq.Dynamic.Core.Parser
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="type">The type.</param>
-        public object ParseNumber(string text, Type type)
+        public object? ParseNumber(string text, Type type)
         {
             try
             {
