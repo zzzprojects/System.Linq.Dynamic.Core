@@ -104,9 +104,17 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
 
             if (applicable.Length == 1)
             {
-                MethodData md = applicable[0];
-                method = ((MethodInfo)md.MethodBase).GetBaseDefinition();
-                args = md.Args;
+                var methodData = applicable[0];
+                if (methodData.MethodBase is MethodInfo methodInfo)
+                {
+                    method = methodInfo.GetBaseDefinition();
+                }
+                else
+                {
+                    method = methodData.MethodBase;
+                }
+
+                args = methodData.Args;
             }
             else
             {
