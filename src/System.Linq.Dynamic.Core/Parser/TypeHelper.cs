@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.Parser
 {
     internal static class TypeHelper
     {
-        public static Type? FindGenericType(Type generic, Type type)
+        public static Type? FindGenericType(Type generic, Type? type)
         {
             while (type != null && type != typeof(object))
             {
@@ -443,9 +443,9 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public static object? ParseEnum(string value, Type type)
+        public static object? ParseEnum(string value, Type? type)
         {
-            if (type.GetTypeInfo().IsEnum && Enum.IsDefined(type, value))
+            if (type is { } && type.GetTypeInfo().IsEnum && Enum.IsDefined(type, value))
             {
                 return Enum.Parse(type, value, true);
             }
@@ -453,7 +453,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return null;
         }
 
-        public static bool IsDictionary(Type type)
+        public static bool IsDictionary(Type? type)
         {
             return
                 FindGenericType(typeof(IDictionary<,>), type) != null ||

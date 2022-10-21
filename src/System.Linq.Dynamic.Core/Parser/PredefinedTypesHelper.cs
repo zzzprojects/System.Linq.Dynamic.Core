@@ -74,7 +74,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             try
             {
-                Type efType = Type.GetType(typeName);
+                Type? efType = Type.GetType(typeName);
                 if (efType != null)
                 {
                     PredefinedTypes.Add(efType, x);
