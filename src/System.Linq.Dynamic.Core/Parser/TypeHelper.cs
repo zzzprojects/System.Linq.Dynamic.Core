@@ -377,8 +377,13 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
         }
 
-        public static string GetTypeName(Type type)
+        public static string GetTypeName(Type? type)
         {
+            if (type == null)
+            {
+                return "null";
+            }
+
             Type baseType = GetNonNullableType(type);
 
             string name = baseType.Name;
