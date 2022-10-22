@@ -163,18 +163,18 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 case 'f':
                 case 'F':
-                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(float)), text);
+                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(float))!, text);
 
                 case 'm':
                 case 'M':
-                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(decimal)), text);
+                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(decimal))!, text);
 
                 case 'd':
                 case 'D':
-                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(double)), text);
+                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(double))!, text);
 
                 default:
-                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double)), text);
+                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, text);
             }
         }
 

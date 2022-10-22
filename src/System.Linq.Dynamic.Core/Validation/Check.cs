@@ -1,136 +1,123 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using JetBrains.Annotations;
-// using System.Reflection;
+using System.Runtime.CompilerServices;
 
-// Copied from https://github.com/aspnet/EntityFramework/blob/dev/src/Shared/Check.cs
-namespace System.Linq.Dynamic.Core.Validation
+// Copied from https://github.com/StefH/Stef.Validation
+namespace System.Linq.Dynamic.Core.Validation;
+
+[DebuggerStepThrough]
+internal static class Check
 {
-    [DebuggerStepThrough]
-    internal static class Check
+    public static T Condition<T>(T value, Predicate<T> predicate, [CallerArgumentExpression("value")] string? parameterName = null)
     {
-        public static T Condition<T>([ValidatedNotNull, NoEnumeration] T value, [ValidatedNotNull, NotNull] Predicate<T> condition, [InvokerParameterName, ValidatedNotNull, NotNull] string parameterName)
+        NotNull(predicate, nameof(predicate));
+
+        if (!predicate(value))
         {
-            NotNull(condition, nameof(condition));
+            NotNullOrEmpty(parameterName, nameof(parameterName));
 
-            if (!condition(value))
-            {
-                NotEmpty(parameterName, nameof(parameterName));
-
-                throw new ArgumentOutOfRangeException(parameterName);
-            }
-
-            return value;
+            throw new ArgumentOutOfRangeException(parameterName);
         }
 
-        [ContractAnnotation("value:null => halt")]
-        public static T NotNull<T>([ValidatedNotNull, NoEnumeration] T value, [InvokerParameterName, ValidatedNotNull, NotNull] string parameterName)
+        return value;
+    }
+
+    public static T NotNull<T>(T value, [CallerArgumentExpression("value")] string? parameterName = null)
+    {
+        if (value is null)
         {
-            if (ReferenceEquals(value, null))
-            {
-                NotEmpty(parameterName, nameof(parameterName));
+            NotNullOrEmpty(parameterName, nameof(parameterName));
 
-                throw new ArgumentNullException(parameterName);
-            }
-
-            return value;
+            throw new ArgumentNullException(parameterName);
         }
 
-        [ContractAnnotation("value:null => halt")]
-        public static T NotNull<T>(
-            [NoEnumeration] T value,
-            [InvokerParameterName, ValidatedNotNull, NotNull] string parameterName,
-            [ValidatedNotNull, NotNull] string propertyName)
+        return value;
+    }
+
+    public static T NotNull<T>(T value, string parameterName, string propertyName)
+    {
+        if (value is null)
         {
-            if (ReferenceEquals(value, null))
-            {
-                NotEmpty(parameterName, nameof(parameterName));
-                NotEmpty(propertyName, nameof(propertyName));
+            NotNullOrEmpty(parameterName, nameof(parameterName));
+            NotNullOrEmpty(propertyName, nameof(propertyName));
 
-                throw new ArgumentException(CoreStrings.ArgumentPropertyNull(propertyName, parameterName));
-            }
-
-            return value;
+            throw new ArgumentException(CoreStrings.ArgumentPropertyNull(propertyName, parameterName));
         }
 
-        //[ContractAnnotation("value:null => halt")]
-        //public static IList<T> NotEmpty<T>(IList<T> value, [InvokerParameterName, ValidatedNotNull, NotNull] string parameterName)
-        //{
-        //    NotNull(value, parameterName);
+        return value;
+    }
 
-        //    if (value.Count == 0)
-        //    {
-        //        NotEmpty(parameterName, nameof(parameterName));
+    public static IEnumerable<T> NotNullOrEmpty<T>(IEnumerable<T> value, [CallerArgumentExpression("value")] string? parameterName = null)
+    {
+        IEnumerable<T> result = NotNull(value, parameterName);
 
-        //        throw new ArgumentException(CoreStrings.CollectionArgumentIsEmpty(parameterName));
-        //    }
-
-        //    return value;
-        //}
-
-        [ContractAnnotation("value:null => halt")]
-        public static string NotEmpty(string value, [InvokerParameterName, ValidatedNotNull, NotNull] string parameterName)
+        // ReSharper disable once PossibleMultipleEnumeration
+        if (!result.Any())
         {
-            Exception e = null;
-            if (ReferenceEquals(value, null))
-            {
-                e = new ArgumentNullException(parameterName);
-            }
-            else if (value.Trim().Length == 0)
-            {
-                e = new ArgumentException(CoreStrings.ArgumentIsEmpty(parameterName));
-            }
+            NotNullOrEmpty(parameterName, nameof(parameterName));
 
-            if (e != null)
-            {
-                NotEmpty(parameterName, nameof(parameterName));
-
-                throw e;
-            }
-
-            return value;
+            throw new ArgumentException(CoreStrings.CollectionArgumentIsEmpty(parameterName));
         }
 
-        //public static string NullButNotEmpty(string value, [InvokerParameterName, ValidatedNotNull, NotNull] string parameterName)
-        //{
-        //    if (!ReferenceEquals(value, null) && value.Length == 0)
-        //    {
-        //        NotEmpty(parameterName, nameof(parameterName));
+        // ReSharper disable once PossibleMultipleEnumeration
+        return result;
+    }
 
-        //        throw new ArgumentException(CoreStrings.ArgumentIsEmpty(parameterName));
-        //    }
+    public static string NotEmpty(string? value, [CallerArgumentExpression("value")] string? parameterName = null) =>
+        NotNullOrWhiteSpace(value, parameterName);
 
-        //    return value;
-        //}
-
-        public static IList<T> HasNoNulls<T>(IList<T> value, [InvokerParameterName, ValidatedNotNull, NotNull] string parameterName)
-            where T : class
+    public static string NotNullOrEmpty(string? value, [CallerArgumentExpression("value")] string? parameterName = null)
+    {
+        if (value is null)
         {
-            NotNull(value, parameterName);
+            NotNullOrEmpty(parameterName, nameof(parameterName));
 
-            if (value.Any(e => e == null))
-            {
-                NotEmpty(parameterName, nameof(parameterName));
-
-                throw new ArgumentException(parameterName);
-            }
-
-            return value;
+            throw new ArgumentNullException(parameterName);
         }
 
-        //public static Type ValidEntityType(Type value, [InvokerParameterName, ValidatedNotNull, NotNull] string parameterName)
-        //{
-        //    if (!value.GetTypeInfo().IsClass)
-        //    {
-        //        NotEmpty(parameterName, nameof(parameterName));
+        if (string.IsNullOrEmpty(value))
+        {
+            throw new ArgumentException(CoreStrings.ArgumentIsEmpty(parameterName));
+        }
 
-        //        throw new ArgumentException(CoreStrings.InvalidEntityType(value, parameterName));
-        //    }
+        return value;
+    }
 
-        //    return value;
-        //}
+    public static string NotNullOrWhiteSpace(string? value, [CallerArgumentExpression("value")] string? parameterName = null)
+    {
+        if (value is null)
+        {
+            NotNullOrEmpty(parameterName, nameof(parameterName));
+
+            throw new ArgumentNullException(parameterName);
+        }
+
+        if (value.IsNullOrWhiteSpace())
+        {
+            throw new ArgumentException(CoreStrings.ArgumentIsEmpty(parameterName));
+        }
+
+        return value;
+    }
+
+    public static IEnumerable<T> HasNoNulls<T>(IEnumerable<T> value, [CallerArgumentExpression("value")] string? parameterName = null)
+    {
+        if (value is null)
+        {
+            NotNullOrEmpty(parameterName, nameof(parameterName));
+
+            throw new ArgumentNullException(parameterName);
+        }
+
+        // ReSharper disable once PossibleMultipleEnumeration
+        if (value.Any(v => v is null))
+        {
+            NotNullOrEmpty(parameterName, nameof(parameterName));
+
+            throw new ArgumentException(parameterName);
+        }
+
+        // ReSharper disable once PossibleMultipleEnumeration
+        return value;
     }
 }

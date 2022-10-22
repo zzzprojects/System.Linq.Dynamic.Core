@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
@@ -25,16 +24,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
         /// <returns>An array that contains the elements from the input sequence.</returns>
 #if NET35
-        public static object[] ToDynamicArray([NotNull] this IEnumerable source)
+        public static object[] ToDynamicArray(this IEnumerable source)
         {
-            Check.NotNull(source, nameof(source));
-            return CastToArray<object>(source);
+            return CastToArray<object>(Check.NotNull(source));
         }
 #else
-        public static dynamic[] ToDynamicArray([NotNull] this IEnumerable source)
+        public static dynamic[] ToDynamicArray(this IEnumerable source)
         {
-            Check.NotNull(source, nameof(source));
-            return CastToArray<dynamic>(source);
+            return CastToArray<dynamic>(Check.NotNull(source));
         }
 #endif
 
@@ -44,10 +41,9 @@ namespace System.Linq.Dynamic.Core
         /// <typeparam name="T">The generic type.</typeparam>
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
         /// <returns>An Array{T} that contains the elements from the input sequence.</returns>
-        public static T[] ToDynamicArray<T>([NotNull] this IEnumerable source)
+        public static T[] ToDynamicArray<T>(this IEnumerable source)
         {
-            Check.NotNull(source, nameof(source));
-            return CastToArray<T>(source);
+            return CastToArray<T>(Check.NotNull(source));
         }
 
         /// <summary>
@@ -57,13 +53,13 @@ namespace System.Linq.Dynamic.Core
         /// <param name="type">A <see cref="Type"/> cast to.</param>
         /// <returns>An Array that contains the elements from the input sequence.</returns>
 #if NET35
-        public static object[] ToDynamicArray([NotNull] this IEnumerable source, [NotNull] Type type)
+        public static object[] ToDynamicArray(this IEnumerable source, Type type)
 #else
-        public static dynamic[] ToDynamicArray([NotNull] this IEnumerable source, [NotNull] Type type)
+        public static dynamic[] ToDynamicArray(this IEnumerable source, Type type)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(source);
+            Check.NotNull(type);
 
             IEnumerable result = (IEnumerable)ToDynamicArrayGenericMethod.MakeGenericMethod(type).Invoke(source, new object[] { source });
 #if NET35
@@ -79,16 +75,15 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
         /// <returns>A List that contains the elements from the input sequence.</returns>
 #if NET35
-        public static List<object> ToDynamicList([NotNull] this IEnumerable source)
+        public static List<object> ToDynamicList(this IEnumerable source)
 #else
-        public static List<dynamic> ToDynamicList([NotNull] this IEnumerable source)
+        public static List<dynamic> ToDynamicList(this IEnumerable source)
 #endif
         {
-            Check.NotNull(source, nameof(source));
 #if NET35
-            return CastToList<object>(source);
+            return CastToList<object>(Check.NotNull(source));
 #else
-            return CastToList<dynamic>(source);
+            return CastToList<dynamic>(Check.NotNull(source));
 #endif
         }
 
@@ -99,15 +94,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="type">A <see cref="Type"/> cast to.</param>
         /// <returns>A List that contains the elements from the input sequence.</returns>
 #if NET35
-        public static List<object> ToDynamicList([NotNull] this IEnumerable source, [NotNull] Type type)
+        public static List<object> ToDynamicList(this IEnumerable source, Type type)
 #else
-        public static List<dynamic> ToDynamicList([NotNull] this IEnumerable source, [NotNull] Type type)
+        public static List<dynamic> ToDynamicList(this IEnumerable source, Type type)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(type, nameof(type));
-
-            return ToDynamicArray(source, type).ToList();
+            return ToDynamicArray(Check.NotNull(source), Check.NotNull(type)).ToList();
         }
 
         /// <summary>
@@ -116,10 +108,9 @@ namespace System.Linq.Dynamic.Core
         /// <typeparam name="T">Generic Type</typeparam>
         /// <param name="source">A <see cref="IEnumerable"/> to create an array from.</param>
         /// <returns>A List{T} that contains the elements from the input sequence.</returns>
-        public static List<T> ToDynamicList<T>([NotNull] this IEnumerable source)
+        public static List<T> ToDynamicList<T>(this IEnumerable source)
         {
-            Check.NotNull(source, nameof(source));
-            return CastToList<T>(source);
+            return CastToList<T>(Check.NotNull(source));
         }
 
         internal static T[] CastToArray<T>(IEnumerable source)

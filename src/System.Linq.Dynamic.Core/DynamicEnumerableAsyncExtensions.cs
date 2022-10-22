@@ -117,6 +117,7 @@ namespace System.Linq.Dynamic.Core
         }
 
 #pragma warning disable CS1998
+        // ReSharper disable once UnusedParameter.Local
         private static async Task<List<T>> ToListAsync<T>(IEnumerable source, CancellationToken cancellationToken)
 #pragma warning restore CS1998
         {

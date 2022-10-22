@@ -57,25 +57,25 @@ namespace System.Linq.Dynamic.Core
         /// <param name="function">The name of the function to run. Can be Sum, Average, Min or Max.</param>
         /// <param name="member">The name of the property to aggregate over.</param>
         /// <returns>The value of the aggregate function run over the specified property.</returns>
-        public static object Aggregate([NotNull] this IQueryable source, [NotNull] string function, [NotNull] string member)
+        public static object Aggregate(this IQueryable source, string function, string member)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotEmpty(function, nameof(function));
-            Check.NotEmpty(member, nameof(member));
+            Check.NotNull(source);
+            Check.NotEmpty(function);
+            Check.NotEmpty(member);
 
             // Properties
-            PropertyInfo property = source.ElementType.GetProperty(member);
+            PropertyInfo property = source.ElementType.GetProperty(member)!;
             ParameterExpression parameter = ParameterExpressionHelper.CreateParameterExpression(source.ElementType, "s");
             Expression selector = Expression.Lambda(Expression.MakeMemberAccess(parameter, property), parameter);
             // We've tried to find an expression of the type Expression<Func<TSource, TAcc>>,
             // which is expressed as ( (TSource s) => s.Price );
 
-            var methods = typeof(Queryable).GetMethods().Where(x => x.Name == function && x.IsGenericMethod);
+            var methods = typeof(Queryable).GetMethods().Where(x => x.Name == function && x.IsGenericMethod).ToArray();
 
             // Method
-            MethodInfo aggregateMethod = methods.SingleOrDefault(m =>
+            MethodInfo? aggregateMethod = methods.SingleOrDefault(m =>
             {
-                ParameterInfo lastParameter = m.GetParameters().LastOrDefault();
+                var lastParameter = m.GetParameters().LastOrDefault();
 
                 return lastParameter != null && TypeHelper.GetUnderlyingType(lastParameter.ParameterType) == property.PropertyType;
             });
@@ -96,7 +96,7 @@ namespace System.Linq.Dynamic.Core
             return source.Provider.Execute(
                 Expression.Call(
                     null,
-                    aggregateMethod.MakeGenericMethod(source.ElementType, property.PropertyType),
+                    aggregateMethod!.MakeGenericMethod(source.ElementType, property.PropertyType),
                     new[] { source.Expression, Expression.Quote(selector) }));
         }
         #endregion Aggregate
@@ -110,7 +110,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
         [PublicAPI]
-        public static bool All([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static bool All(this IQueryable source, string predicate, params object?[]? args)
         {
             return All(source, ParsingConfig.Default, predicate, args);
         }
@@ -122,11 +122,11 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
         [PublicAPI]
-        public static bool All([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static bool All(this IQueryable source, ParsingConfig config, string predicate, params object?[]? args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
@@ -813,7 +813,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
 
-            Expression optimized = null;
+            Expression? optimized = null;
 
             if (equalityComparer == null)
             {
@@ -1427,12 +1427,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">An <see cref="IQueryable"/> whose elements to filter.</param>
         /// <param name="type">The type to filter the elements of the sequence on.</param>
         /// <returns>A collection that contains the elements from source that have the type.</returns>
-        public static IQueryable OfType([NotNull] this IQueryable source, [NotNull] Type type)
+        public static IQueryable OfType(this IQueryable source, Type type)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(source);
+            Check.NotNull(type);
 
-            var optimized = OptimizeExpression(Expression.Call(null, _ofType.MakeGenericMethod(new Type[] { type }), new Expression[] { source.Expression }));
+            var optimized = OptimizeExpression(Expression.Call(null, _ofType.MakeGenericMethod(type), new[] { source.Expression }));
 
             return source.Provider.CreateQuery(optimized);
         }
@@ -1444,14 +1444,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="typeName">The type to filter the elements of the sequence on.</param>
         /// <returns>A collection that contains the elements from source that have the type.</returns>
-        public static IQueryable OfType([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string typeName)
+        public static IQueryable OfType(this IQueryable source, ParsingConfig config, string typeName)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(typeName, nameof(typeName));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(typeName);
 
             var finder = new TypeFinder(config, new KeywordsHelper(config));
-            Type type = finder.FindTypeByName(typeName, null, true);
+            Type type = finder.FindTypeByName(typeName, null, true)!;
 
             return OfType(source, type);
         }
@@ -1462,7 +1462,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">An <see cref="IQueryable"/> whose elements to filter.</param>
         /// <param name="typeName">The type to filter the elements of the sequence on.</param>
         /// <returns>A collection that contains the elements from source that have the type.</returns>
-        public static IQueryable OfType([NotNull] this IQueryable source, [NotNull] string typeName)
+        public static IQueryable OfType(this IQueryable source, string typeName)
         {
             return OfType(source, ParsingConfig.Default, typeName);
         }
@@ -1703,7 +1703,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="pageSize">The number of elements per page.</param>
         /// <param name="rowCount">If this optional parameter has been defined, this value is used as the RowCount instead of executing a Linq `Count()`.</param>
         /// <returns>PagedResult{TSource}</returns>
-        public static PagedResult<TSource> PageResult<TSource>([NotNull] this IQueryable<TSource> source, int page, int pageSize, int? rowCount = null)
+        public static PagedResult<TSource> PageResult<TSource>(this IQueryable<TSource> source, int page, int pageSize, int? rowCount = null)
         {
             Check.NotNull(source, nameof(source));
             Check.Condition(page, p => p > 0, nameof(page));
