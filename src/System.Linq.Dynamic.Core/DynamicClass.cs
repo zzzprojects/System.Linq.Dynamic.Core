@@ -18,24 +18,28 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public abstract class DynamicClass : DynamicObject
 {
-    private readonly Dictionary<string, object?> _propertiesDictionary = new();
+    private Dictionary<string, object?>? _propertiesDictionary = null;
 
     private Dictionary<string, object?> Properties
     {
         get
         {
-            foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            if (_propertiesDictionary == null)
             {
-                int parameters = pi.GetIndexParameters().Length;
-                if (parameters > 0)
+                _propertiesDictionary = new();
+                foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    // The property is an indexer, skip this.
-                    continue;
-                }
+                    int parameters = pi.GetIndexParameters().Length;
+                    if (parameters > 0)
+                    {
+                        // The property is an indexer, skip this.
+                        continue;
+                    }
 
-                _propertiesDictionary.Add(pi.Name, pi.GetValue(this, null));
+                    _propertiesDictionary.Add(pi.Name, pi.GetValue(this, null));
+                }
             }
-            
+
             return _propertiesDictionary;
         }
     }
