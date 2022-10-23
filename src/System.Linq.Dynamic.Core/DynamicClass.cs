@@ -18,7 +18,7 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public abstract class DynamicClass : DynamicObject
 {
-    private Dictionary<string, object?>? _propertiesDictionary = null;
+    private Dictionary<string, object?>? _propertiesDictionary;
 
     private Dictionary<string, object?> Properties
     {
@@ -27,6 +27,7 @@ public abstract class DynamicClass : DynamicObject
             if (_propertiesDictionary == null)
             {
                 _propertiesDictionary = new();
+
                 foreach (PropertyInfo pi in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
                     int parameters = pi.GetIndexParameters().Length;
@@ -150,7 +151,7 @@ public abstract class DynamicClass : DynamicObject
     /// <returns>
     /// true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)
     /// </returns>
-    public override bool TrySetMember(SetMemberBinder binder, object value)
+    public override bool TrySetMember(SetMemberBinder binder, object? value)
     {
         string name = binder.Name;
         if (Properties.ContainsKey(name))
