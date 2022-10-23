@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
-using static System.Console;
-using static System.Linq.Expressions.Expression;
-using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Dynamic.Core;
 using Xunit;
+using static System.Linq.Expressions.Expression;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
 {

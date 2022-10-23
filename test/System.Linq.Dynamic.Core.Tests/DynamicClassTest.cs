@@ -2,100 +2,101 @@
 using FluentAssertions;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests;
-
-public class DynamicClassTest
+namespace System.Linq.Dynamic.Core.Tests
 {
-    [Fact]
-    public void DynamicClass_GetProperties_Should_Work()
+    public class DynamicClassTest
     {
-        // Arrange
-        var range = new List<object>
+        [Fact]
+        public void DynamicClass_GetProperties_Should_Work()
         {
-            new { FieldName = "TestFieldName", Value = 3.14159 }
-        };
+            // Arrange
+            var range = new List<object>
+            {
+                new { FieldName = "TestFieldName", Value = 3.14159 }
+            };
 
-        // Act
-        var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
-        var item = rangeResult.First();
+            // Act
+            var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
+            var item = rangeResult.First();
 
-        var call = () => item.GetDynamicMemberNames();
-        call.Should().NotThrow();
-    }
+            var call = () => item.GetDynamicMemberNames();
+            call.Should().NotThrow();
+        }
 
-    [Fact]
-    public void DynamicClass_GetPropertyValue_Should_Work()
-    {
-        // Arrange
-        var test = "Test";
-        var range = new List<object>
+        [Fact]
+        public void DynamicClass_GetPropertyValue_Should_Work()
         {
-            new { FieldName = test, Value = 3.14159 }
-        };
+            // Arrange
+            var test = "Test";
+            var range = new List<object>
+            {
+                new { FieldName = test, Value = 3.14159 }
+            };
 
-        // Act
-        var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
-        var item = rangeResult.First();
+            // Act
+            var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
+            var item = rangeResult.First();
 
-        var value = item.FieldName as string;
-        value.Should().Be(test);
-    }
+            var value = item.FieldName as string;
+            value.Should().Be(test);
+        }
 
-    [Fact]
-    public void DynamicClass_GettingValue_ByIndex_Should_Work()
-    {
-        // Arrange
-        var test = "Test";
-        var range = new List<object>
+        [Fact]
+        public void DynamicClass_GettingValue_ByIndex_Should_Work()
         {
-            new { FieldName = test, Value = 3.14159 }
-        };
+            // Arrange
+            var test = "Test";
+            var range = new List<object>
+            {
+                new { FieldName = test, Value = 3.14159 }
+            };
 
-        // Act
-        var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
-        var item = rangeResult.First();
+            // Act
+            var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
+            var item = rangeResult.First();
 
-        var value = item["FieldName"] as string;
-        value.Should().Be(test);
-    }
+            var value = item["FieldName"] as string;
+            value.Should().Be(test);
+        }
 
-    [Fact]
-    public void DynamicClass_SettingExistingPropertyValue_ByIndex_Should_Work()
-    {
-        // Arrange
-        var test = "Test";
-        var newTest = "abc";
-        var range = new List<object>
+        [Fact]
+        public void DynamicClass_SettingExistingPropertyValue_ByIndex_Should_Work()
         {
-            new { FieldName = test, Value = 3.14159 }
-        };
+            // Arrange
+            var test = "Test";
+            var newTest = "abc";
+            var range = new List<object>
+            {
+                new { FieldName = test, Value = 3.14159 }
+            };
 
-        // Act
-        var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
-        var item = rangeResult.First();
+            // Act
+            var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
+            var item = rangeResult.First();
 
-        item["FieldName"] = newTest;
-        var value = item["FieldName"] as string;
-        value.Should().Be(newTest);
-    }
+            item["FieldName"] = newTest;
+            var value = item["FieldName"] as string;
+            value.Should().Be(newTest);
+        }
 
-    [Fact]
-    public void DynamicClass_SettingNewProperty_ByIndex_Should_Work()
-    {
-        // Arrange
-        var test = "Test";
-        var newTest = "abc";
-        var range = new List<object>
+        [Fact]
+        public void DynamicClass_SettingNewProperty_ByIndex_Should_Work()
         {
-            new { FieldName = test, Value = 3.14159 }
-        };
+            // Arrange
+            var test = "Test";
+            var newTest = "abc";
+            var range = new List<object>
+            {
+                new { FieldName = test, Value = 3.14159 }
+            };
 
-        // Act
-        var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
-        var item = rangeResult.First();
+            // Act
+            var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
+            var item = rangeResult.First();
 
-        item["X"] = newTest;
-        var value = item["X"] as string;
-        value.Should().Be(newTest);
+            item["X"] = newTest;
+            var value = item["X"] as string;
+            value.Should().Be(newTest);
+        }
     }
 }
