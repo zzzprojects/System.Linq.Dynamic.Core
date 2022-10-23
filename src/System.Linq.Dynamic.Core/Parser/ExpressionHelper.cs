@@ -14,9 +14,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         internal ExpressionHelper(ParsingConfig parsingConfig)
         {
-            Check.NotNull(parsingConfig, nameof(parsingConfig));
-
-            _parsingConfig = parsingConfig;
+            _parsingConfig = Check.NotNull(parsingConfig);
         }
 
         public void WrapConstantExpression(ref Expression argument)
@@ -186,16 +184,16 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (rightType == typeof(string) && right.NodeType == ExpressionType.Constant)
             {
-                right = OptimizeStringForEqualityIfPossible((string)((ConstantExpression)right).Value, leftType) ?? right;
+                right = OptimizeStringForEqualityIfPossible((string?)((ConstantExpression)right).Value, leftType) ?? right;
             }
 
             if (leftType == typeof(string) && left.NodeType == ExpressionType.Constant)
             {
-                left = OptimizeStringForEqualityIfPossible((string)((ConstantExpression)left).Value, rightType) ?? left;
+                left = OptimizeStringForEqualityIfPossible((string?)((ConstantExpression)left).Value, rightType) ?? left;
             }
         }
 
-        public Expression? OptimizeStringForEqualityIfPossible(string text, Type type)
+        public Expression? OptimizeStringForEqualityIfPossible(string? text, Type type)
         {
             if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
             {
@@ -309,7 +307,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
         }
 
-        private Expression? GetMemberExpression(Expression expression)
+        private Expression? GetMemberExpression(Expression? expression)
         {
             if (ExpressionQualifiesForNullPropagation(expression))
             {

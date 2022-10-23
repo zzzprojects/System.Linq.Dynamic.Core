@@ -1,12 +1,11 @@
 ﻿using System.Linq.Expressions;
 
-namespace System.Linq.Dynamic.Core.Parser
+namespace System.Linq.Dynamic.Core.Parser;
+
+internal static class Constants
 {
-    internal static class Constants
+    public static bool IsNull(Expression exp)
     {
-        public static bool IsNull(Expression exp)
-        {
-            return exp is ConstantExpression cExp && cExp.Value == null;
-        }
+        return exp is ConstantExpression { Value: null };
     }
 }

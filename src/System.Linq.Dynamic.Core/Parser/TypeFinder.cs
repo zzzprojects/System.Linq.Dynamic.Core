@@ -10,8 +10,8 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public TypeFinder(ParsingConfig parsingConfig, IKeywordsHelper keywordsHelper)
         {
-            Check.NotNull(parsingConfig, nameof(parsingConfig));
-            Check.NotNull(keywordsHelper, nameof(keywordsHelper));
+            Check.NotNull(parsingConfig);
+            Check.NotNull(keywordsHelper);
 
             _keywordsHelper = keywordsHelper;
             _parsingConfig = parsingConfig;
@@ -19,7 +19,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public Type? FindTypeByName(string name, ParameterExpression?[]? expressions, bool forceUseCustomTypeProvider)
         {
-            Check.NotEmpty(name, nameof(name));
+            Check.NotEmpty(name);
 
             _keywordsHelper.TryGetValue(name, out var type);
 

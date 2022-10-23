@@ -93,7 +93,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(ParsingConfig? parsingConfig, bool createParameterCtor, ParameterExpression[] parameters, Type? resultType, string expression, params object?[] values)
+        public static LambdaExpression ParseLambda(ParsingConfig? parsingConfig, bool createParameterCtor, ParameterExpression[] parameters, Type? resultType, string expression, params object?[]? values)
         {
             return ParseLambda(null, parsingConfig, createParameterCtor, parameters, resultType, expression, values);
         }
@@ -110,7 +110,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(Type? delegateType, ParsingConfig? parsingConfig, bool createParameterCtor, ParameterExpression[] parameters, Type? resultType, string expression, params object?[] values)
+        public static LambdaExpression ParseLambda(Type? delegateType, ParsingConfig? parsingConfig, bool createParameterCtor, ParameterExpression[] parameters, Type? resultType, string expression, params object?[]? values)
         {
             Check.NotNull(parameters, nameof(parameters));
             Check.HasNoNulls(parameters, nameof(parameters));
@@ -349,7 +349,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="values">An object array that contains zero or more objects which are used as replacement values.</param>
         /// <returns>The generated <see cref="LambdaExpression"/></returns>
         [PublicAPI]
-        public static LambdaExpression ParseLambda(ParsingConfig? parsingConfig, bool createParameterCtor, Type itType, Type? resultType, string expression, params object?[] values)
+        public static LambdaExpression ParseLambda(ParsingConfig? parsingConfig, bool createParameterCtor, Type itType, Type? resultType, string expression, params object?[]? values)
         {
             Check.NotNull(itType, nameof(itType));
             Check.NotEmpty(expression, nameof(expression));

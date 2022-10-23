@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 #if !(WINDOWS_APP45x || SILVERLIGHT)
@@ -24,10 +25,11 @@ namespace System.Linq.Dynamic.Core
     /// It allows dynamic string based querying. Very handy when, at compile time, you don't know the type of queries that will be generated,
     /// or when downstream components only return column names to sort and filter by.
     /// </summary>
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public static class DynamicQueryableExtensions
     {
 #if !(WINDOWS_APP45x || SILVERLIGHT)
-        private static readonly TraceSource TraceSource = new TraceSource(nameof(DynamicQueryableExtensions));
+        private static readonly TraceSource TraceSource = new(nameof(DynamicQueryableExtensions));
 #endif
 
         private static Expression OptimizeExpression(Expression expression)
@@ -87,7 +89,7 @@ namespace System.Linq.Dynamic.Core
                     Expression.Call(
                         null,
                         aggregateMethod.MakeGenericMethod(source.ElementType),
-                        new[] { source.Expression, Expression.Quote(selector) }));
+                        new[] { source.Expression, Expression.Quote(selector) }))!;
             }
 
             // Min, Max
@@ -97,7 +99,7 @@ namespace System.Linq.Dynamic.Core
                 Expression.Call(
                     null,
                     aggregateMethod!.MakeGenericMethod(source.ElementType, property.PropertyType),
-                    new[] { source.Expression, Expression.Quote(selector) }));
+                    new[] { source.Expression, Expression.Quote(selector) }))!;
         }
         #endregion Aggregate
 
@@ -110,7 +112,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
         [PublicAPI]
-        public static bool All(this IQueryable source, string predicate, params object?[]? args)
+        public static bool All(this IQueryable source, string predicate, params object?[] args)
         {
             return All(source, ParsingConfig.Default, predicate, args);
         }
@@ -122,7 +124,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
         [PublicAPI]
-        public static bool All(this IQueryable source, ParsingConfig config, string predicate, params object?[]? args)
+        public static bool All(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
             Check.NotNull(source);
             Check.NotNull(config);
@@ -149,11 +151,9 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
-        public static bool Any([NotNull] this IQueryable source)
+        public static bool Any(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
-
-            return Execute<bool>(_any, source);
+            return Execute<bool>(_any, Check.NotNull(source));
         }
 
         private static readonly MethodInfo _anyPredicate = QueryableMethodFinder.GetMethod(nameof(Queryable.Any), 1);
@@ -175,11 +175,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
         [PublicAPI]
-        public static bool Any([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static bool Any(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -188,7 +188,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="Any(IQueryable, ParsingConfig, string, object[])"/>
-        public static bool Any([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static bool Any(this IQueryable source, string predicate, params object?[] args)
         {
             return Any(source, ParsingConfig.Default, predicate, args);
         }
@@ -199,10 +199,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A sequence to check for being empty.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
-        public static bool Any([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static bool Any(this IQueryable source, LambdaExpression lambda)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(lambda, nameof(lambda));
+            Check.NotNull(source);
+            Check.NotNull(lambda);
 
             return Execute<bool>(_anyPredicate, source, lambda);
         }
@@ -222,9 +222,9 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The average of the values in the sequence.</returns>
         [PublicAPI]
-        public static double Average([NotNull] this IQueryable source)
+        public static double Average(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             var average = QueryableMethodFinder.GetMethod(nameof(Queryable.Average), source.ElementType, typeof(double));
             return Execute<double>(average, source);
@@ -245,11 +245,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The average of the values in the sequence.</returns>
         [PublicAPI]
-        public static double Average([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static double Average(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -259,7 +259,7 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="Average(IQueryable, ParsingConfig, string, object[])"/>
         [PublicAPI]
-        public static double Average([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static double Average(this IQueryable source, string predicate, params object?[] args)
         {
             return Average(source, ParsingConfig.Default, predicate, args);
         }
@@ -271,10 +271,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A Lambda Expression.</param>
         /// <returns>The average of the values in the sequence.</returns>
         [PublicAPI]
-        public static double Average([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static double Average(this IQueryable source, LambdaExpression lambda)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(lambda, nameof(lambda));
+            Check.NotNull(source);
+            Check.NotNull(lambda);
 
             var averageSelector = QueryableMethodFinder.GetMethod(nameof(Queryable.Average), lambda.GetReturnType(), typeof(double), 1);
             return Execute<double>(averageSelector, source, lambda);
@@ -288,14 +288,14 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">The sequence to type as <see cref="IEnumerable{T}"/> of <see cref="object"/>.</param>
         /// <returns>The input typed as <see cref="IEnumerable{T}"/> of <see cref="object"/>.</returns>
-        public static IEnumerable<object> AsEnumerable([NotNull] this IQueryable source)
+        public static IEnumerable<object> AsEnumerable(this IQueryable source)
 #else
         /// <summary>
         /// Returns the input typed as <see cref="IEnumerable{T}"/> of dynamic.
         /// </summary>
         /// <param name="source">The sequence to type as <see cref="IEnumerable{T}"/> of dynamic.</param>
         /// <returns>The input typed as <see cref="IEnumerable{T}"/> of dynamic.</returns>
-        public static IEnumerable<dynamic> AsEnumerable([NotNull] this IQueryable source)
+        public static IEnumerable<dynamic> AsEnumerable(this IQueryable source)
 #endif
         {
             foreach (var obj in source)
@@ -314,12 +314,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be converted.</param>
         /// <param name="type">The type to convert the elements of source to.</param>
         /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
-        public static IQueryable Cast([NotNull] this IQueryable source, [NotNull] Type type)
+        public static IQueryable Cast(this IQueryable source, Type type)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(source);
+            Check.NotNull(type);
 
-            var optimized = OptimizeExpression(Expression.Call(null, _cast.MakeGenericMethod(new Type[] { type }), new Expression[] { source.Expression }));
+            var optimized = OptimizeExpression(Expression.Call(null, _cast.MakeGenericMethod(new[] { type }), new[] { source.Expression }));
 
             return source.Provider.CreateQuery(optimized);
         }
@@ -331,14 +331,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="typeName">The type to convert the elements of source to.</param>
         /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
-        public static IQueryable Cast([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string typeName)
+        public static IQueryable Cast(this IQueryable source, ParsingConfig config, string typeName)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(typeName, nameof(typeName));
 
             var finder = new TypeFinder(config, new KeywordsHelper(config));
-            Type type = finder.FindTypeByName(typeName, null, true);
+            Type type = finder.FindTypeByName(typeName, null, true)!;
 
             return Cast(source, type);
         }
@@ -349,7 +349,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be converted.</param>
         /// <param name="typeName">The type to convert the elements of source to.</param>
         /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
-        public static IQueryable Cast([NotNull] this IQueryable source, [NotNull] string typeName)
+        public static IQueryable Cast(this IQueryable source, string typeName)
         {
             return Cast(source, ParsingConfig.Default, typeName);
         }
@@ -369,9 +369,9 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>The number of elements in the input sequence.</returns>
-        public static int Count([NotNull] this IQueryable source)
+        public static int Count(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute<int>(_count, source);
         }
@@ -395,11 +395,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         [PublicAPI]
-        public static int Count([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static int Count(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -408,7 +408,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="Count(IQueryable, ParsingConfig, string, object[])"/>
-        public static int Count([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static int Count(this IQueryable source, string predicate, params object?[] args)
         {
             return Count(source, ParsingConfig.Default, predicate, args);
         }
@@ -419,10 +419,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
-        public static int Count([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static int Count(this IQueryable source, LambdaExpression lambda)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(lambda, nameof(lambda));
+            Check.NotNull(source);
+            Check.NotNull(lambda);
 
             return Execute<int>(_countPredicate, source, lambda);
         }
@@ -442,9 +442,9 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>An <see cref="IQueryable"/> that contains default if source is empty; otherwise, source.</returns>
-        public static IQueryable DefaultIfEmpty([NotNull] this IQueryable source)
+        public static IQueryable DefaultIfEmpty(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return CreateQuery(_defaultIfEmpty, source);
         }
@@ -460,9 +460,9 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>An <see cref="IQueryable"/> that contains defaultValue if source is empty; otherwise, source.</returns>
-        public static IQueryable DefaultIfEmpty([NotNull] this IQueryable source, [CanBeNull] object defaultValue)
+        public static IQueryable DefaultIfEmpty(this IQueryable source, object? defaultValue)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return CreateQuery(_defaultIfEmptyWithParam, source, Expression.Constant(defaultValue));
         }
@@ -483,9 +483,9 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>An <see cref="IQueryable"/> that contains distinct elements from the source sequence.</returns>
-        public static IQueryable Distinct([NotNull] this IQueryable source)
+        public static IQueryable Distinct(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return CreateQuery(_distinct, source);
         }
@@ -500,12 +500,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
         /// <returns>The first element in source.</returns>
 #if NET35
-        public static object First([NotNull] this IQueryable source)
+        public static object First(this IQueryable source)
 #else
-        public static dynamic First([NotNull] this IQueryable source)
+        public static dynamic First(this IQueryable source)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute(_first, source);
         }
@@ -522,14 +522,14 @@ namespace System.Linq.Dynamic.Core
         /// <returns>The first element in source that passes the test in predicate.</returns>
         [PublicAPI]
 #if NET35
-        public static object First([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object First(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #else
-        public static dynamic First([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic First(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -539,9 +539,9 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="First(IQueryable, ParsingConfig, string, object[])"/>
 #if NET35
-        public static object First([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static object First(this IQueryable source, string predicate, params object?[] args)
 #else
-        public static dynamic First([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static dynamic First(this IQueryable source, string predicate, params object?[] args)
 #endif
         {
             return First(source, ParsingConfig.Default, predicate, args);
@@ -554,12 +554,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object First([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object First(this IQueryable source, LambdaExpression lambda)
 #else
-        public static dynamic First([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static dynamic First(this IQueryable source, LambdaExpression lambda)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             return Execute(_firstPredicate, source, lambda);
         }
         #endregion First
@@ -574,12 +574,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
         /// <returns>default if source is empty; otherwise, the first element in source.</returns>
 #if NET35
-        public static object FirstOrDefault([NotNull] this IQueryable source)
+        public static object FirstOrDefault(this IQueryable source)
 #else
-        public static dynamic FirstOrDefault([NotNull] this IQueryable source)
+        public static dynamic FirstOrDefault(this IQueryable source)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute(_firstOrDefault, source);
         }
@@ -594,14 +594,14 @@ namespace System.Linq.Dynamic.Core
         /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
         [PublicAPI]
 #if NET35
-        public static object FirstOrDefault([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object FirstOrDefault(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #else
-        public static dynamic FirstOrDefault([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic FirstOrDefault(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -611,9 +611,9 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="FirstOrDefault(IQueryable, ParsingConfig, string, object[])"/>
 #if NET35
-        public static object FirstOrDefault([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static object FirstOrDefault(this IQueryable source, string predicate, params object?[] args)
 #else
-        public static dynamic FirstOrDefault([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static dynamic FirstOrDefault(this IQueryable source, string predicate, params object?[] args)
 #endif
         {
             return FirstOrDefault(source, ParsingConfig.Default, predicate, args);
@@ -626,12 +626,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
 #if NET35
-        public static object FirstOrDefault([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object FirstOrDefault(this IQueryable source, LambdaExpression lambda)
 #else
-        public static dynamic FirstOrDefault([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static dynamic FirstOrDefault(this IQueryable source, LambdaExpression lambda)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute(_firstOrDefaultPredicate, source, lambda);
         }
@@ -655,7 +655,7 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         [PublicAPI]
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, object[] args)
+        public static IQueryable GroupBy(this IQueryable source, ParsingConfig config, string keySelector, string resultSelector, object[] args)
         {
             return InternalGroupBy(source, config, keySelector, resultSelector, null, args);
         }
@@ -671,23 +671,23 @@ namespace System.Linq.Dynamic.Core
         /// <param name="equalityComparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
+        public static IQueryable GroupBy(this IQueryable source, ParsingConfig config, string keySelector, string resultSelector, IEqualityComparer? equalityComparer, object[]? args)
         {
             return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, args);
         }
 
-        internal static IQueryable InternalGroupBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
+        internal static IQueryable InternalGroupBy(IQueryable source, ParsingConfig config, string keySelector, string resultSelector, IEqualityComparer? equalityComparer, object[]? args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(keySelector, nameof(keySelector));
             Check.NotEmpty(resultSelector, nameof(resultSelector));
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
             LambdaExpression elementLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, resultSelector, args);
 
-            Expression optimized = null;
+            Expression? optimized;
             if (equalityComparer == null)
             {
                 optimized = OptimizeExpression(Expression.Call(
@@ -710,13 +710,13 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string, object[])"/>
         [PublicAPI]
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, object[] args)
+        public static IQueryable GroupBy(this IQueryable source, string keySelector, string resultSelector, object[] args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, args);
         }
 
         /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string, IEqualityComparer, object[])"/>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer, object[] args)
+        public static IQueryable GroupBy(this IQueryable source, string keySelector, string resultSelector, IEqualityComparer equalityComparer, object[] args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, equalityComparer, args);
         }
@@ -736,13 +736,13 @@ namespace System.Linq.Dynamic.Core
         /// var groupResult2 = queryable.GroupBy("new (NumberPropertyAsKey, StringPropertyAsKey)", "new (StringProperty1, StringProperty2)");
         /// </code>
         /// </example>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector)
+        public static IQueryable GroupBy(this IQueryable source, ParsingConfig config, string keySelector, string resultSelector)
         {
             return GroupBy(source, config, keySelector, resultSelector, null, null);
         }
 
         /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string)"/>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector)
+        public static IQueryable GroupBy(this IQueryable source, string keySelector, string resultSelector)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector);
         }
@@ -757,13 +757,13 @@ namespace System.Linq.Dynamic.Core
         /// <param name="resultSelector">A string expression to specify a result value from each group.</param>
         /// <param name="equalityComparer">The comparer to use.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer)
+        public static IQueryable GroupBy(this IQueryable source, ParsingConfig config, string keySelector, string resultSelector, IEqualityComparer equalityComparer)
         {
             return InternalGroupBy(source, config, keySelector, resultSelector, equalityComparer, null);
         }
 
         /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, string, IEqualityComparer)"/>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [NotNull] string resultSelector, IEqualityComparer equalityComparer)
+        public static IQueryable GroupBy(this IQueryable source, string keySelector, string resultSelector, IEqualityComparer equalityComparer)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, resultSelector, equalityComparer);
         }
@@ -784,7 +784,7 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         [PublicAPI]
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, [CanBeNull] params object[] args)
+        public static IQueryable GroupBy(this IQueryable source, ParsingConfig config, string keySelector, params object[]? args)
         {
             return InternalGroupBy(source, config, keySelector, null, args);
         }
@@ -799,22 +799,21 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <param name="equalityComparer">The comparer to use.</param>
         /// <returns>A <see cref="IQueryable"/> where each element represents a projection over a group and its key.</returns>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
+        public static IQueryable GroupBy(this IQueryable source, ParsingConfig config, string keySelector, IEqualityComparer equalityComparer, params object[]? args)
         {
             return InternalGroupBy(source, config, keySelector, equalityComparer, args);
         }
 
-        internal static IQueryable InternalGroupBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
+        internal static IQueryable InternalGroupBy(IQueryable source, ParsingConfig config, string keySelector, IEqualityComparer? equalityComparer, params object[]? args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(keySelector, nameof(keySelector));
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
 
-            Expression? optimized = null;
-
+            Expression? optimized;
             if (equalityComparer == null)
             {
                 optimized = OptimizeExpression(Expression.Call(
@@ -835,13 +834,13 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, object[])"/>
         [PublicAPI]
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, [CanBeNull] params object[] args)
+        public static IQueryable GroupBy(this IQueryable source, string keySelector, params object[]? args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, args);
         }
 
         /// <inheritdoc cref="GroupBy(IQueryable, ParsingConfig, string, IEqualityComparer, object[])"/>
-        public static IQueryable GroupBy([NotNull] this IQueryable source, [NotNull] string keySelector, IEqualityComparer equalityComparer, [CanBeNull] params object[] args)
+        public static IQueryable GroupBy(this IQueryable source, string keySelector, IEqualityComparer equalityComparer, params object[]? args)
         {
             return GroupBy(source, ParsingConfig.Default, keySelector, equalityComparer, args);
         }
@@ -858,11 +857,11 @@ namespace System.Linq.Dynamic.Core
         /// <param name="config">The <see cref="ParsingConfig"/>.</param>
         /// <param name="keySelectors"><see cref="string"/> expressions to specify the keys for each element.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of type <see cref="GroupResult"/> where each element represents a projection over a group, its key, and its subgroups.</returns>
-        public static IEnumerable<GroupResult> GroupByMany<TElement>([NotNull] this IEnumerable<TElement> source, [NotNull] ParsingConfig config, params string[] keySelectors)
+        public static IEnumerable<GroupResult> GroupByMany<TElement>(this IEnumerable<TElement> source, ParsingConfig config, params string[] keySelectors)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.HasNoNulls(keySelectors, nameof(keySelectors));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.HasNoNulls(keySelectors);
 
             var selectors = new List<Func<TElement, object>>(keySelectors.Length);
 
@@ -877,7 +876,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="GroupByMany{TElement}(IEnumerable{TElement}, ParsingConfig, string[])"/>
-        public static IEnumerable<GroupResult> GroupByMany<TElement>([NotNull] this IEnumerable<TElement> source, params string[] keySelectors)
+        public static IEnumerable<GroupResult> GroupByMany<TElement>(this IEnumerable<TElement> source, params string[] keySelectors)
         {
             return GroupByMany(source, ParsingConfig.Default, keySelectors);
         }
@@ -890,10 +889,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IEnumerable{T}"/> whose elements to group.</param>
         /// <param name="keySelectors">Lambda expressions to specify the keys for each element.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> of type <see cref="GroupResult"/> where each element represents a projection over a group, its key, and its subgroups.</returns>
-        public static IEnumerable<GroupResult> GroupByMany<TElement>([NotNull] this IEnumerable<TElement> source, params Func<TElement, object>[] keySelectors)
+        public static IEnumerable<GroupResult> GroupByMany<TElement>(this IEnumerable<TElement> source, params Func<TElement, object>[] keySelectors)
         {
-            Check.NotNull(source, nameof(source));
-            Check.HasNoNulls(keySelectors, nameof(keySelectors));
+            Check.NotNull(source);
+            Check.HasNoNulls(keySelectors);
 
             return GroupByManyInternal(source, keySelectors, 0);
         }
@@ -902,7 +901,7 @@ namespace System.Linq.Dynamic.Core
         {
             if (currentSelector >= keySelectors.Length)
             {
-                return null;
+                return null!; // TODO
             }
 
             var selector = keySelectors[currentSelector];
@@ -932,10 +931,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="resultSelector">A dynamic function to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> obtained by performing a grouped join on two sequences.</returns>
-        public static IQueryable GroupJoin([NotNull] this IQueryable outer, [NotNull] ParsingConfig config, [NotNull] IEnumerable inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, [NotNull] string resultSelector, params object[] args)
+        public static IQueryable GroupJoin(this IQueryable outer, ParsingConfig config, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object?[] args)
         {
             Check.NotNull(outer, nameof(outer));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(config);
             Check.NotNull(inner, nameof(inner));
             Check.NotEmpty(outerKeySelector, nameof(outerKeySelector));
             Check.NotEmpty(innerKeySelector, nameof(innerKeySelector));
@@ -944,7 +943,7 @@ namespace System.Linq.Dynamic.Core
             Type outerType = outer.ElementType;
             Type innerType = inner.AsQueryable().ElementType;
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, outer);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, outer);
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, null, innerKeySelector, args);
 
@@ -969,7 +968,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="GroupJoin(IQueryable, ParsingConfig, IEnumerable, string, string, string, object[])"/>
-        public static IQueryable GroupJoin([NotNull] this IQueryable outer, [NotNull] IEnumerable inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, [NotNull] string resultSelector, params object[] args)
+        public static IQueryable GroupJoin(this IQueryable outer, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object?[] args)
         {
             return GroupJoin(outer, ParsingConfig.Default, inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
@@ -987,12 +986,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="resultSelector">A dynamic function to create a result element from two matching elements.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>An <see cref="IQueryable"/> obtained by performing an inner join on two sequences.</returns>
-        public static IQueryable Join([NotNull] this IQueryable outer, [NotNull] ParsingConfig config, [NotNull] IEnumerable inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, [NotNull] string resultSelector, params object[] args)
+        public static IQueryable Join(this IQueryable outer, ParsingConfig config, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object?[] args)
         {
             //http://stackoverflow.com/questions/389094/how-to-create-a-dynamic-linq-join-extension-method
 
             Check.NotNull(outer, nameof(outer));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(config);
             Check.NotNull(inner, nameof(inner));
             Check.NotEmpty(outerKeySelector, nameof(outerKeySelector));
             Check.NotEmpty(innerKeySelector, nameof(innerKeySelector));
@@ -1001,7 +1000,7 @@ namespace System.Linq.Dynamic.Core
             Type outerType = outer.ElementType;
             Type innerType = inner.AsQueryable().ElementType;
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, outer);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, outer);
             LambdaExpression outerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, outerType, null, outerKeySelector, args);
             LambdaExpression innerSelectorLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, innerType, null, innerKeySelector, args);
 
@@ -1029,7 +1028,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="Join(IQueryable, ParsingConfig, IEnumerable, string, string, string, object[])"/>
-        public static IQueryable Join([NotNull] this IQueryable outer, [NotNull] IEnumerable inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, [NotNull] string resultSelector, params object[] args)
+        public static IQueryable Join(this IQueryable outer, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object?[] args)
         {
             return Join(outer, ParsingConfig.Default, inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
@@ -1047,13 +1046,13 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicates as parameters.  Similar to the way String.Format formats strings.</param>
         /// <remarks>This overload only works on elements where both sequences and the resulting element match.</remarks>
         /// <returns>An <see cref="IQueryable{T}"/> that has elements of type TResult obtained by performing an inner join on two sequences.</returns>
-        public static IQueryable<TElement> Join<TElement>([NotNull] this IQueryable<TElement> outer, [NotNull] ParsingConfig config, [NotNull] IEnumerable<TElement> inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, string resultSelector, params object[] args)
+        public static IQueryable<TElement> Join<TElement>(this IQueryable<TElement> outer, ParsingConfig config, IEnumerable<TElement> inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object?[] args)
         {
             return (IQueryable<TElement>)Join(outer, config, (IEnumerable)inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
 
         /// <inheritdoc cref="Join{TElement}(IQueryable{TElement}, ParsingConfig, IEnumerable{TElement}, string, string, string, object[])"/>
-        public static IQueryable<TElement> Join<TElement>([NotNull] this IQueryable<TElement> outer, [NotNull] IEnumerable<TElement> inner, [NotNull] string outerKeySelector, [NotNull] string innerKeySelector, string resultSelector, params object[] args)
+        public static IQueryable<TElement> Join<TElement>(this IQueryable<TElement> outer, IEnumerable<TElement> inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object?[] args)
         {
             return Join(outer, ParsingConfig.Default, inner, outerKeySelector, innerKeySelector, resultSelector, args);
         }
@@ -1069,12 +1068,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
         /// <returns>The last element in source.</returns>
 #if NET35
-        public static object Last([NotNull] this IQueryable source)
+        public static object Last(this IQueryable source)
 #else
-        public static dynamic Last([NotNull] this IQueryable source)
+        public static dynamic Last(this IQueryable source)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute(_last, source);
         }
@@ -1088,14 +1087,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object Last([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object Last(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #else
-        public static dynamic Last([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic Last(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -1105,9 +1104,9 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="Last(IQueryable, ParsingConfig, string, object[])"/>
 #if NET35
-        public static object Last([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static object Last(this IQueryable source, string predicate, params object?[] args)
 #else
-        public static dynamic Last([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static dynamic Last(this IQueryable source, string predicate, params object?[] args)
 #endif
         {
             return Last(source, ParsingConfig.Default, predicate, args);
@@ -1121,12 +1120,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object Last([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object Last(this IQueryable source, LambdaExpression lambda)
 #else
-        public static dynamic Last([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static dynamic Last(this IQueryable source, LambdaExpression lambda)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             return Execute(_lastPredicate, source, lambda);
         }
         #endregion Last
@@ -1141,12 +1140,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
         /// <returns>default if source is empty; otherwise, the last element in source.</returns>
 #if NET35
-        public static object LastOrDefault([NotNull] this IQueryable source)
+        public static object LastOrDefault(this IQueryable source)
 #else
-        public static dynamic LastOrDefault([NotNull] this IQueryable source)
+        public static dynamic LastOrDefault(this IQueryable source)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute(_lastDefault, source);
         }
@@ -1160,14 +1159,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object LastOrDefault([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object LastOrDefault(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #else
-        public static dynamic LastOrDefault([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic LastOrDefault(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -1177,9 +1176,9 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="LastOrDefault(IQueryable, ParsingConfig, string, object[])"/>
 #if NET35
-        public static object LastOrDefault([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static object LastOrDefault(this IQueryable source, string predicate, params object?[] args)
 #else
-        public static dynamic LastOrDefault([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static dynamic LastOrDefault(this IQueryable source, string predicate, params object?[] args)
 #endif
         {
             return LastOrDefault(source, ParsingConfig.Default, predicate, args);
@@ -1192,12 +1191,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object LastOrDefault([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object LastOrDefault(this IQueryable source, LambdaExpression lambda)
 #else
-        public static dynamic LastOrDefault([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static dynamic LastOrDefault(this IQueryable source, LambdaExpression lambda)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             return Execute(_lastDefaultPredicate, source, lambda);
         }
         #endregion LastOrDefault
@@ -1217,9 +1216,9 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>The number of elements in the input sequence.</returns>
-        public static long LongCount([NotNull] this IQueryable source)
+        public static long LongCount(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute<long>(_longCount, source);
         }
@@ -1241,11 +1240,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
         [PublicAPI]
-        public static long LongCount([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static long LongCount(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -1254,7 +1253,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="LongCount(IQueryable, ParsingConfig, string, object[])"/>
-        public static long LongCount([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static long LongCount(this IQueryable source, string predicate, params object?[] args)
         {
             return LongCount(source, ParsingConfig.Default, predicate, args);
         }
@@ -1265,10 +1264,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The <see cref="IQueryable"/> that contains the elements to be counted.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
-        public static long LongCount([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static long LongCount(this IQueryable source, LambdaExpression lambda)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(lambda, nameof(lambda));
+            Check.NotNull(source);
+            Check.NotNull(lambda);
 
             return Execute<long>(_longCountPredicate, source, lambda);
         }
@@ -1291,9 +1290,9 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The max element in the sequence.</returns>
         [PublicAPI]
-        public static object Max([NotNull] this IQueryable source)
+        public static object Max(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute(_max, source);
         }
@@ -1313,11 +1312,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The max element in the sequence.</returns>
         [PublicAPI]
-        public static object Max([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object Max(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(object), predicate, args);
@@ -1327,7 +1326,7 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="Max(IQueryable, ParsingConfig, string, object[])"/>
         [PublicAPI]
-        public static object Max([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static object Max(this IQueryable source, string predicate, params object?[] args)
         {
             return Max(source, ParsingConfig.Default, predicate, args);
         }
@@ -1339,9 +1338,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A Lambda Expression.</param>
         /// <returns>The max element in the sequence.</returns>
         [PublicAPI]
-        public static object Max([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object Max(this IQueryable source, LambdaExpression lambda)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             return Execute(_maxPredicate, source, lambda);
         }
         #endregion Max
@@ -1363,9 +1362,9 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The min element in the sequence.</returns>
         [PublicAPI]
-        public static object Min([NotNull] this IQueryable source)
+        public static object Min(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Execute(_min, source);
         }
@@ -1385,11 +1384,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The min element in the sequence.</returns>
         [PublicAPI]
-        public static object Min([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object Min(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(object), predicate, args);
@@ -1399,7 +1398,7 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="Min(IQueryable, ParsingConfig, string, object[])"/>
         [PublicAPI]
-        public static object Min([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static object Min(this IQueryable source, string predicate, params object?[] args)
         {
             return Min(source, ParsingConfig.Default, predicate, args);
         }
@@ -1411,9 +1410,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A Lambda Expression.</param>
         /// <returns>The min element in the sequence.</returns>
         [PublicAPI]
-        public static object Min([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object Min(this IQueryable source, LambdaExpression lambda)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             return Execute(_minPredicate, source, lambda);
         }
         #endregion Min
@@ -1487,13 +1486,13 @@ namespace System.Linq.Dynamic.Core
         /// ]]>
         /// </code>
         /// </example>
-        public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string ordering, params object[] args)
+        public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, ParsingConfig config, string ordering, params object?[] args)
         {
             return (IOrderedQueryable<TSource>)OrderBy((IQueryable)source, config, ordering, args);
         }
 
         /// <inheritdoc cref="OrderBy{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])"/>
-        public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string ordering, params object[] args)
+        public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string ordering, params object?[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, args);
         }
@@ -1508,9 +1507,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-        public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, ParsingConfig config, string ordering, IComparer comparer, params object?[] args)
         {
-            return (IOrderedQueryable<TSource>)InternalOrderBy((IQueryable)source, config, ordering, comparer, args);
+            return (IOrderedQueryable<TSource>)InternalOrderBy(source, config, ordering, comparer, args);
         }
 
         /// <summary>
@@ -1522,7 +1521,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-        public static IOrderedQueryable<TSource> OrderBy<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string ordering, IComparer comparer, params object[] args)
+        public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string ordering, IComparer comparer, params object?[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, comparer, args);
         }
@@ -1542,11 +1541,11 @@ namespace System.Linq.Dynamic.Core
         /// var resultMultiple = queryable.OrderBy("NumberProperty, StringProperty DESC");
         /// </code>
         /// </example>
-        public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, params object[] args)
+        public static IOrderedQueryable OrderBy(this IQueryable source, ParsingConfig config, string ordering, params object?[] args)
         {
-            if (args.Length > 0 && args[0] != null && args[0].GetType().GetInterfaces().Any(i => i.Name.Contains("IComparer`1")))
+            if (args.Length > 0 && args[0] != null && args[0]!.GetType().GetInterfaces().Any(i => i.Name.Contains("IComparer`1")))
             {
-                return InternalOrderBy(source, ParsingConfig.Default, ordering, args[0], args);
+                return InternalOrderBy(source, ParsingConfig.Default, ordering, args[0]!, args);
             }
 
             return InternalOrderBy(source, config, ordering, null, args);
@@ -1561,15 +1560,15 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-        public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        public static IOrderedQueryable OrderBy(this IQueryable source, ParsingConfig config, string ordering, IComparer comparer, params object?[] args)
         {
             return InternalOrderBy(source, config, ordering, comparer, args);
         }
 
-        internal static IOrderedQueryable InternalOrderBy([NotNull] IQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, object comparer, params object[] args)
+        internal static IOrderedQueryable InternalOrderBy(IQueryable source, ParsingConfig config, string ordering, object? comparer, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(ordering, nameof(ordering));
 
             ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
@@ -1619,13 +1618,13 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="OrderBy(IQueryable, ParsingConfig, string, object[])"/>
-        public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, params object[] args)
+        public static IOrderedQueryable OrderBy(this IQueryable source, string ordering, params object?[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, args);
         }
 
         /// <inheritdoc cref="OrderBy(IQueryable, ParsingConfig, string, IComparer, object[])"/>
-        public static IOrderedQueryable OrderBy([NotNull] this IQueryable source, [NotNull] string ordering, IComparer comparer, params object[] args)
+        public static IOrderedQueryable OrderBy(this IQueryable source, string ordering, IComparer comparer, params object?[] args)
         {
             return OrderBy(source, ParsingConfig.Default, ordering, comparer, args);
         }
@@ -1640,9 +1639,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="page">The page to return.</param>
         /// <param name="pageSize">The number of elements per page.</param>
         /// <returns>A <see cref="IQueryable"/> that contains the paged elements.</returns>
-        public static IQueryable Page([NotNull] this IQueryable source, int page, int pageSize)
+        public static IQueryable Page(this IQueryable source, int page, int pageSize)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             Check.Condition(page, p => p > 0, nameof(page));
             Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
 
@@ -1657,9 +1656,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="page">The page to return.</param>
         /// <param name="pageSize">The number of elements per page.</param>
         /// <returns>A <see cref="IQueryable{TSource}"/> that contains the paged elements.</returns>
-        public static IQueryable<TSource> Page<TSource>([NotNull] this IQueryable<TSource> source, int page, int pageSize)
+        public static IQueryable<TSource> Page<TSource>(this IQueryable<TSource> source, int page, int pageSize)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             Check.Condition(page, p => p > 0, nameof(page));
             Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
 
@@ -1674,9 +1673,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="pageSize">The number of elements per page.</param>
         /// <param name="rowCount">If this optional parameter has been defined, this value is used as the RowCount instead of executing a Linq `Count()`.</param>
         /// <returns>PagedResult</returns>
-        public static PagedResult PageResult([NotNull] this IQueryable source, int page, int pageSize, int? rowCount = null)
+        public static PagedResult PageResult(this IQueryable source, int page, int pageSize, int? rowCount = null)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             Check.Condition(page, p => p > 0, nameof(page));
             Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
             Check.Condition(rowCount, rc => rc == null || rc >= 0, nameof(rowCount));
@@ -1705,7 +1704,7 @@ namespace System.Linq.Dynamic.Core
         /// <returns>PagedResult{TSource}</returns>
         public static PagedResult<TSource> PageResult<TSource>(this IQueryable<TSource> source, int page, int pageSize, int? rowCount = null)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             Check.Condition(page, p => p > 0, nameof(page));
             Check.Condition(pageSize, ps => ps > 0, nameof(pageSize));
             Check.Condition(rowCount, rc => rc == null || rc >= 0, nameof(rowCount));
@@ -1730,9 +1729,9 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         /// <param name="source">A sequence of values to reverse.</param>
         /// <returns>A <see cref="IQueryable"/> whose elements correspond to those of the input sequence in reverse order.</returns>
-        public static IQueryable Reverse([NotNull] this IQueryable source)
+        public static IQueryable Reverse(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             return Queryable.Reverse((IQueryable<object>)source);
         }
@@ -1753,13 +1752,13 @@ namespace System.Linq.Dynamic.Core
         /// var dynamicObject = queryable.Select("new (StringProperty1, StringProperty2 as OtherStringPropertyName)");
         /// </code>
         /// </example>
-        public static IQueryable Select([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string selector, params object[] args)
+        public static IQueryable Select(this IQueryable source, ParsingConfig config, string selector, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(selector, nameof(selector));
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, selector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
@@ -1772,7 +1771,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="Select(IQueryable, ParsingConfig, string, object[])"/>
-        public static IQueryable Select([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
+        public static IQueryable Select(this IQueryable source, string selector, params object?[] args)
         {
             return Select(source, ParsingConfig.Default, selector, args);
         }
@@ -1794,13 +1793,13 @@ namespace System.Linq.Dynamic.Core
         /// ]]>
         /// </code>
         /// </example>
-        public static IQueryable<TResult> Select<TResult>([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string selector, params object[] args)
+        public static IQueryable<TResult> Select<TResult>(this IQueryable source, ParsingConfig config, string selector, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(selector, nameof(selector));
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(TResult), selector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
@@ -1812,7 +1811,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="Select{TResult}(IQueryable, ParsingConfig, string, object[])"/>
-        public static IQueryable<TResult> Select<TResult>([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
+        public static IQueryable<TResult> Select<TResult>(this IQueryable source, string selector, params object?[] args)
         {
             return Select<TResult>(source, ParsingConfig.Default, selector, args);
         }
@@ -1832,14 +1831,14 @@ namespace System.Linq.Dynamic.Core
         /// var users = queryable.Select(typeof(User), "new (Username, Pwd as Password)");
         /// </code>
         /// </example>
-        public static IQueryable Select([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] Type resultType, [NotNull] string selector, params object[] args)
+        public static IQueryable Select(this IQueryable source, ParsingConfig config, Type resultType, string selector, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotNull(resultType, nameof(resultType));
             Check.NotEmpty(selector, nameof(selector));
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, resultType, selector, args);
 
             var optimized = OptimizeExpression(Expression.Call(
@@ -1851,7 +1850,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="Select(IQueryable, ParsingConfig, Type, string, object[])"/>
-        public static IQueryable Select([NotNull] this IQueryable source, [NotNull] Type resultType, [NotNull] string selector, params object[] args)
+        public static IQueryable Select(this IQueryable source, Type resultType, string selector, params object?[] args)
         {
             return Select(source, ParsingConfig.Default, resultType, selector, args);
         }
@@ -1872,13 +1871,13 @@ namespace System.Linq.Dynamic.Core
         /// var roles = users.SelectMany("Roles");
         /// </code>
         /// </example>
-        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string selector, params object[] args)
+        public static IQueryable SelectMany(this IQueryable source, ParsingConfig config, string selector, params object?[] args)
         {
             return SelectManyInternal(source, config, null, selector, args);
         }
 
         /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, object[])"/>
-        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
+        public static IQueryable SelectMany(this IQueryable source, string selector, params object?[] args)
         {
             return SelectMany(source, ParsingConfig.Default, selector, args);
         }
@@ -1897,10 +1896,10 @@ namespace System.Linq.Dynamic.Core
         /// var permissions = users.SelectMany(typeof(Permission), "Roles.SelectMany(Permissions)");
         /// </code>
         /// </example>
-        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] Type resultType, [NotNull] string selector, params object[] args)
+        public static IQueryable SelectMany(this IQueryable source, ParsingConfig config, Type resultType, string selector, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotNull(resultType, nameof(resultType));
             Check.NotEmpty(selector, nameof(selector));
 
@@ -1908,14 +1907,14 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, Type, string, object[])"/>
-        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] Type resultType, [NotNull] string selector, params object[] args)
+        public static IQueryable SelectMany(this IQueryable source, Type resultType, string selector, params object?[] args)
         {
             return SelectMany(source, ParsingConfig.Default, resultType, selector, args);
         }
 
-        private static IQueryable SelectManyInternal(IQueryable source, ParsingConfig config, Type resultType, string selector, params object[] args)
+        private static IQueryable SelectManyInternal(IQueryable source, ParsingConfig config, Type? resultType, string selector, params object?[] args)
         {
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, selector, args);
 
             //Extra help to get SelectMany to work from StackOverflow Answer
@@ -1969,13 +1968,13 @@ namespace System.Linq.Dynamic.Core
         /// ]]>
         /// </code>
         /// </example>
-        public static IQueryable<TResult> SelectMany<TResult>([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string selector, params object[] args)
+        public static IQueryable<TResult> SelectMany<TResult>(this IQueryable source, ParsingConfig config, string selector, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(selector, nameof(selector));
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
@@ -1994,7 +1993,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="SelectMany{TResult}(IQueryable, ParsingConfig, string, object[])"/>
-        public static IQueryable<TResult> SelectMany<TResult>([NotNull] this IQueryable source, [NotNull] string selector, params object[] args)
+        public static IQueryable<TResult> SelectMany<TResult>(this IQueryable source, string selector, params object?[] args)
         {
             return SelectMany<TResult>(source, ParsingConfig.Default, selector, args);
         }
@@ -2023,13 +2022,13 @@ namespace System.Linq.Dynamic.Core
         /// ]]>
         /// </code>
         /// </example>
-        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string collectionSelector, [NotNull] string resultSelector, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
+        public static IQueryable SelectMany(this IQueryable source, ParsingConfig config, string collectionSelector, string resultSelector, object[]? collectionSelectorArgs = null, params object[]? resultSelectorArgs)
         {
             return SelectMany(source, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
         }
 
         /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, string, string, string, object[], object[])"/>
-        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string collectionSelector, [NotNull] string resultSelector, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
+        public static IQueryable SelectMany(this IQueryable source, string collectionSelector, string resultSelector, object[]? collectionSelectorArgs = null, params object[]? resultSelectorArgs)
         {
             return SelectMany(source, ParsingConfig.Default, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
         }
@@ -2060,16 +2059,24 @@ namespace System.Linq.Dynamic.Core
         /// ]]>
         /// </code>
         /// </example>
-        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string collectionSelector, [NotNull] string resultSelector, [NotNull] string collectionParameterName, [NotNull] string resultParameterName, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
+        public static IQueryable SelectMany(
+            this IQueryable source,
+            ParsingConfig config,
+            string collectionSelector,
+            string resultSelector,
+            string collectionParameterName,
+            string resultParameterName,
+            object?[]? collectionSelectorArgs = null,
+            params object[]? resultSelectorArgs)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(collectionSelector, nameof(collectionSelector));
             Check.NotEmpty(collectionParameterName, nameof(collectionParameterName));
             Check.NotEmpty(resultSelector, nameof(resultSelector));
             Check.NotEmpty(resultParameterName, nameof(resultParameterName));
 
-            bool createParameterCtor = config?.EvaluateGroupByAtDatabase ?? SupportsLinqToObjects(config, source);
+            bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression sourceSelectLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, collectionSelector, collectionSelectorArgs);
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
@@ -2097,7 +2104,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, string, string, string, object[], object[])"/>
-        public static IQueryable SelectMany([NotNull] this IQueryable source, [NotNull] string collectionSelector, [NotNull] string resultSelector, [NotNull] string collectionParameterName, [NotNull] string resultParameterName, [CanBeNull] object[] collectionSelectorArgs = null, [CanBeNull] params object[] resultSelectorArgs)
+        public static IQueryable SelectMany(this IQueryable source, string collectionSelector, string resultSelector, string collectionParameterName, string resultParameterName, object[]? collectionSelectorArgs = null, params object[]? resultSelectorArgs)
         {
             return SelectMany(source, ParsingConfig.Default, collectionSelector, resultSelector, collectionParameterName, resultParameterName, collectionSelectorArgs, resultSelectorArgs);
         }
@@ -2115,12 +2122,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IQueryable"/> to return the single element of.</param>
         /// <returns>The single element of the input sequence.</returns>
 #if NET35
-        public static object Single([NotNull] this IQueryable source)
+        public static object Single(this IQueryable source)
 #else
-        public static dynamic Single([NotNull] this IQueryable source)
+        public static dynamic Single(this IQueryable source)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Single), new[] { source.ElementType }, source.Expression));
             return source.Provider.Execute(optimized);
@@ -2136,14 +2143,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object Single([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object Single(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #else
-        public static dynamic Single([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic Single(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2153,9 +2160,9 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="Single(IQueryable, ParsingConfig, string, object[])"/>
 #if NET35
-        public static object Single([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static object Single(this IQueryable source, string predicate, params object?[] args)
 #else
-        public static dynamic Single([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static dynamic Single(this IQueryable source, string predicate, params object?[] args)
 #endif
         {
             return Single(source, ParsingConfig.Default, predicate, args);
@@ -2169,12 +2176,12 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object Single([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object Single(this IQueryable source, LambdaExpression lambda)
 #else
-        public static dynamic Single([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static dynamic Single(this IQueryable source, LambdaExpression lambda)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             return Execute(_singlePredicate, source, lambda);
         }
 
@@ -2186,15 +2193,15 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IQueryable"/> to return the single element of.</param>
         /// <returns>The single element of the input sequence, or default if the sequence contains no elements.</returns>
 #if NET35
-        public static object SingleOrDefault([NotNull] this IQueryable source)
+        public static object SingleOrDefault(this IQueryable source)
 #else
-        public static dynamic SingleOrDefault([NotNull] this IQueryable source)
+        public static dynamic SingleOrDefault(this IQueryable source)
 #endif
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.SingleOrDefault), new[] { source.ElementType }, source.Expression));
-            return source.Provider.Execute(optimized);
+            return source.Provider.Execute(optimized)!;
         }
 
         /// <summary>
@@ -2207,14 +2214,14 @@ namespace System.Linq.Dynamic.Core
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object SingleOrDefault([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object SingleOrDefault(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #else
-        public static dynamic SingleOrDefault([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static dynamic SingleOrDefault(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2224,9 +2231,9 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="SingleOrDefault(IQueryable, ParsingConfig, string, object[])"/>
 #if NET35
-        public static object SingleOrDefault([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static object SingleOrDefault(this IQueryable source, string predicate, params object?[] args)
 #else
-        public static dynamic SingleOrDefault([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static dynamic SingleOrDefault(this IQueryable source, string predicate, params object?[] args)
 #endif
         {
             return SingleOrDefault(source, ParsingConfig.Default, predicate, args);
@@ -2240,13 +2247,13 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>The first element in source that passes the test in predicate.</returns>
 #if NET35
-        public static object SingleOrDefault([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object SingleOrDefault(this IQueryable source, LambdaExpression lambda)
 #else
-        public static dynamic SingleOrDefault([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static dynamic SingleOrDefault(this IQueryable source, LambdaExpression lambda)
 #endif
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(lambda, nameof(lambda));
+            Check.NotNull(source);
+            Check.NotNull(lambda);
 
             return Execute(_singleDefaultPredicate, source, lambda);
         }
@@ -2261,9 +2268,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IQueryable"/> to return elements from.</param>
         /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
         /// <returns>A <see cref="IQueryable"/> that contains elements that occur after the specified index in the input sequence.</returns>
-        public static IQueryable Skip([NotNull] this IQueryable source, int count)
+        public static IQueryable Skip(this IQueryable source, int count)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             Check.Condition(count, x => x >= 0, nameof(count));
 
             //no need to skip if count is zero
@@ -2292,10 +2299,10 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>An <see cref="IQueryable"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
-        public static IQueryable SkipWhile([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static IQueryable SkipWhile(this IQueryable source, ParsingConfig config, string predicate, params object[]? args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotNull(predicate, nameof(predicate));
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
@@ -2305,7 +2312,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="SkipWhile(IQueryable, ParsingConfig, string, object[])"/>
-        public static IQueryable SkipWhile([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static IQueryable SkipWhile(this IQueryable source, string predicate, params object[]? args)
         {
             return SkipWhile(source, ParsingConfig.Default, predicate, args);
         }
@@ -2325,9 +2332,9 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The sum of the values in the sequence.</returns>
         [PublicAPI]
-        public static object Sum([NotNull] this IQueryable source)
+        public static object Sum(this IQueryable source)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
 
             var sum = QueryableMethodFinder.GetMethod(nameof(Queryable.Sum), source.ElementType);
             return Execute<object>(sum, source);
@@ -2348,11 +2355,11 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         /// <returns>The sum of the values in the sequence.</returns>
         [PublicAPI]
-        public static object Sum([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static object Sum(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2364,7 +2371,7 @@ namespace System.Linq.Dynamic.Core
 
         /// <inheritdoc cref="Sum(IQueryable, ParsingConfig, string, object[])"/>
         [PublicAPI]
-        public static object Sum([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static object Sum(this IQueryable source, string predicate, params object?[] args)
         {
             return Sum(source, ParsingConfig.Default, predicate, args);
         }
@@ -2376,10 +2383,10 @@ namespace System.Linq.Dynamic.Core
         /// <param name="lambda">A Lambda Expression.</param>
         /// <returns>The sum of the values in the sequence.</returns>
         [PublicAPI]
-        public static object Sum([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static object Sum(this IQueryable source, LambdaExpression lambda)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(lambda, nameof(lambda));
+            Check.NotNull(source);
+            Check.NotNull(lambda);
 
             var sumSelector = QueryableMethodFinder.GetMethod(nameof(Queryable.Sum), lambda.GetReturnType(), 1);
 
@@ -2395,9 +2402,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">The sequence to return elements from.</param>
         /// <param name="count">The number of elements to return.</param>
         /// <returns>A <see cref="IQueryable"/> that contains the specified number of elements from the start of source.</returns>
-        public static IQueryable Take([NotNull] this IQueryable source, int count)
+        public static IQueryable Take(this IQueryable source, int count)
         {
-            Check.NotNull(source, nameof(source));
+            Check.NotNull(source);
             Check.Condition(count, x => x >= 0, nameof(count));
 
             return CreateQuery(_take, source, Expression.Constant(count));
@@ -2422,10 +2429,10 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>An <see cref="IQueryable"/> that contains elements from the input sequence occurring before the element at which the test specified by predicate no longer passes.</returns>
-        public static IQueryable TakeWhile([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static IQueryable TakeWhile(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotNull(predicate, nameof(predicate));
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
@@ -2435,7 +2442,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="TakeWhile(IQueryable, ParsingConfig, string, object[])"/>
-        public static IQueryable TakeWhile([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
+        public static IQueryable TakeWhile(this IQueryable source, string predicate, params object?[] args)
         {
             return TakeWhile(source, ParsingConfig.Default, predicate, args);
         }
@@ -2462,13 +2469,13 @@ namespace System.Linq.Dynamic.Core
         /// ]]>
         /// </code>
         /// </example>
-        public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string ordering, params object[] args)
+        public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, ParsingConfig config, string ordering, params object?[] args)
         {
             return (IOrderedQueryable<TSource>)ThenBy((IOrderedQueryable)source, config, ordering, args);
         }
 
         /// <inheritdoc cref="ThenBy{TSource}(IOrderedQueryable{TSource}, ParsingConfig, string, object[])"/>
-        public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] string ordering, params object[] args)
+        public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, string ordering, params object?[] args)
         {
             return ThenBy(source, ParsingConfig.Default, ordering, args);
         }
@@ -2483,9 +2490,9 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IOrderedQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-        public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, ParsingConfig config, string ordering, IComparer comparer, params object?[] args)
         {
-            return (IOrderedQueryable<TSource>)InternalThenBy((IOrderedQueryable)source, config, ordering, comparer, args);
+            return (IOrderedQueryable<TSource>)InternalThenBy(source, config, ordering, comparer, args);
         }
 
         /// <summary>
@@ -2497,7 +2504,7 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IOrderedQueryable{T}"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-        public static IOrderedQueryable<TSource> ThenBy<TSource>([NotNull] this IOrderedQueryable<TSource> source, [NotNull] string ordering, IComparer comparer, params object[] args)
+        public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, string ordering, IComparer comparer, params object?[] args)
         {
             return ThenBy(source, ParsingConfig.Default, ordering, comparer, args);
         }
@@ -2518,7 +2525,7 @@ namespace System.Linq.Dynamic.Core
         /// var resultMultiple = result.OrderBy("NumberProperty, StringProperty DESC");
         /// </code>
         /// </example>
-        public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, params object[] args)
+        public static IOrderedQueryable ThenBy(this IOrderedQueryable source, ParsingConfig config, string ordering, params object?[] args)
         {
             return InternalThenBy(source, config, ordering, null, args);
         }
@@ -2532,15 +2539,15 @@ namespace System.Linq.Dynamic.Core
         /// <param name="comparer">The comparer to use.</param>
         /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
         /// <returns>A <see cref="IQueryable"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-        public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        public static IOrderedQueryable ThenBy(this IOrderedQueryable source, ParsingConfig config, string ordering, IComparer comparer, params object?[] args)
         {
             return InternalThenBy(source, config, ordering, comparer, args);
         }
 
-        internal static IOrderedQueryable InternalThenBy([NotNull] IOrderedQueryable source, [NotNull] ParsingConfig config, [NotNull] string ordering, IComparer comparer, params object[] args)
+        internal static IOrderedQueryable InternalThenBy(IOrderedQueryable source, ParsingConfig config, string ordering, IComparer? comparer, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
+            Check.NotNull(source);
+            Check.NotNull(config);
             Check.NotEmpty(ordering, nameof(ordering));
 
             ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
@@ -2574,13 +2581,13 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="ThenBy(IOrderedQueryable, ParsingConfig, string, object[])"/>
-        public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] string ordering, params object[] args)
+        public static IOrderedQueryable ThenBy(this IOrderedQueryable source, string ordering, params object?[] args)
         {
             return ThenBy(source, ParsingConfig.Default, ordering, args);
         }
 
         /// <inheritdoc cref="ThenBy(IOrderedQueryable, ParsingConfig, string, IComparer, object[])"/>
-        public static IOrderedQueryable ThenBy([NotNull] this IOrderedQueryable source, [NotNull] string ordering, IComparer comparer, params object[] args)
+        public static IOrderedQueryable ThenBy(this IOrderedQueryable source, string ordering, IComparer comparer, params object?[] args)
         {
             return ThenBy(source, ParsingConfig.Default, ordering, comparer, args);
         }
@@ -2606,13 +2613,13 @@ namespace System.Linq.Dynamic.Core
         /// var result5 = queryable.Where("StringProperty = @0", "abc");
         /// </code>
         /// </example>
-        public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static IQueryable<TSource> Where<TSource>(this IQueryable<TSource> source, ParsingConfig config, string predicate, params object?[] args)
         {
             return (IQueryable<TSource>)Where((IQueryable)source, config, predicate, args);
         }
 
-        /// <inheritdoc cref="DynamicQueryableExtensions.Where{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])"/>
-        public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] string predicate, params object[] args)
+        /// <inheritdoc cref="Where{TSource}(IQueryable{TSource}, ParsingConfig, string, object[])"/>
+        public static IQueryable<TSource> Where<TSource>(this IQueryable<TSource> source, string predicate, params object?[] args)
         {
             return Where(source, ParsingConfig.Default, predicate, args);
         }
@@ -2634,11 +2641,11 @@ namespace System.Linq.Dynamic.Core
         /// var result5 = queryable.Where("StringProperty = @0", "abc");
         /// </code>
         /// </example>
-        public static IQueryable Where([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] string predicate, params object[] args)
+        public static IQueryable Where(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(config, nameof(config));
-            Check.NotEmpty(predicate, nameof(predicate));
+            Check.NotNull(source);
+            Check.NotNull(config);
+            Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2648,7 +2655,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="DynamicQueryableExtensions.Where(IQueryable, ParsingConfig, string, object[])"/>
-        public static IQueryable Where([NotNull] this IQueryable source, [NotNull] string predicate, params object[] args)
+        public static IQueryable Where(this IQueryable source, string predicate, params object?[] args)
         {
             return Where(source, ParsingConfig.Default, predicate, args);
         }
@@ -2659,17 +2666,17 @@ namespace System.Linq.Dynamic.Core
         /// <param name="source">A <see cref="IQueryable"/> to filter.</param>
         /// <param name="lambda">A cached Lambda Expression.</param>
         /// <returns>A <see cref="IQueryable"/> that contains elements from the input sequence that satisfy the condition specified by LambdaExpression.</returns>
-        public static IQueryable Where([NotNull] this IQueryable source, [NotNull] LambdaExpression lambda)
+        public static IQueryable Where(this IQueryable source, LambdaExpression lambda)
         {
-            Check.NotNull(source, nameof(source));
-            Check.NotNull(lambda, nameof(lambda));
+            Check.NotNull(source);
+            Check.NotNull(lambda);
 
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
         }
 
         /// <inheritdoc cref="DynamicQueryableExtensions.Where(IQueryable, LambdaExpression)"/>
-        public static IQueryable<TSource> Where<TSource>([NotNull] this IQueryable<TSource> source, [NotNull] LambdaExpression lambda)
+        public static IQueryable<TSource> Where<TSource>(this IQueryable<TSource> source, LambdaExpression lambda)
         {
             return (IQueryable<TSource>)Where((IQueryable)source, lambda);
         }
@@ -2681,7 +2688,7 @@ namespace System.Linq.Dynamic.Core
             return config.QueryableAnalyzer.SupportsLinqToObjects(query);
         }
 
-        private static void CheckOuterAndInnerTypes(ParsingConfig config, bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object[] args)
+        private static void CheckOuterAndInnerTypes(ParsingConfig config, bool createParameterCtor, Type outerType, Type innerType, string outerKeySelector, string innerKeySelector, ref LambdaExpression outerSelectorLambda, ref LambdaExpression innerSelectorLambda, params object?[] args)
         {
             Type outerSelectorReturnType = outerSelectorLambda.Body.Type;
             Type innerSelectorReturnType = innerSelectorLambda.Body.Type;
@@ -2740,7 +2747,7 @@ namespace System.Linq.Dynamic.Core
             }
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
-            return source.Provider.Execute(optimized);
+            return source.Provider.Execute(optimized)!;
         }
 
         private static TResult Execute<TResult>(MethodInfo operatorMethodInfo, IQueryable source)
@@ -2765,7 +2772,7 @@ namespace System.Linq.Dynamic.Core
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
-            return source.Provider.Execute(optimized);
+            return source.Provider.Execute(optimized)!;
         }
 
         private static TResult Execute<TResult>(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression)

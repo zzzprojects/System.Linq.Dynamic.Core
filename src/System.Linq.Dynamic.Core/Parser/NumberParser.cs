@@ -11,11 +11,11 @@ namespace System.Linq.Dynamic.Core.Parser
     /// </summary>
     public class NumberParser
     {
-        private static readonly Regex RegexBinary32 = new Regex("^[01]{1,32}$", RegexOptions.Compiled);
-        private static readonly Regex RegexBinary64 = new Regex("^[01]{1,64}$", RegexOptions.Compiled);
-        private static readonly char[] Qualifiers = new[] { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
-        private static readonly char[] QualifiersHex = new[] { 'U', 'u', 'L', 'l' };
-        private static readonly string[] QualifiersReal = new[] { "F", "f", "D", "d", "M", "m" };
+        private static readonly Regex RegexBinary32 = new("^[01]{1,32}$", RegexOptions.Compiled);
+        private static readonly Regex RegexBinary64 = new("^[01]{1,64}$", RegexOptions.Compiled);
+        private static readonly char[] Qualifiers = { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
+        private static readonly char[] QualifiersHex = { 'U', 'u', 'L', 'l' };
+        private static readonly string[] QualifiersReal = { "F", "f", "D", "d", "M", "m" };
 
         private readonly CultureInfo _culture;
 

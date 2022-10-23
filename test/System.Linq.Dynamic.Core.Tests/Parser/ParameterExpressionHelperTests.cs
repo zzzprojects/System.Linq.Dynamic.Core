@@ -135,7 +135,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void ParameterExpressionHelper_IsNullOrWhiteSpace(string input, bool expectedResult)
         {
             // Arrange and Act
-            bool result = ParameterExpressionHelper.IsNullOrWhiteSpace(input);
+            bool result = input.IsNullOrWhiteSpace();
 
             // Assert
             Check.That(result).IsEqualTo(expectedResult);

@@ -10,13 +10,13 @@ namespace System.Linq.Dynamic.Core.TypeConverters
 
         public TypeConverterFactory(ParsingConfig config)
         {
-            _config = Check.NotNull(config, nameof(config));
+            _config = Check.NotNull(config);
         }
 
         /// <see cref="ITypeConverterFactory.GetConverter"/>
         public TypeConverter GetConverter(Type type)
         {
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(type);
 
             if (_config.DateTimeIsParsedAsUTC && (type == typeof(DateTime) || type == typeof(DateTime?)))
             {
