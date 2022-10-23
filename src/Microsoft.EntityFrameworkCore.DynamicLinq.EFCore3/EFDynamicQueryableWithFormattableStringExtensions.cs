@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+#pragma warning disable CS1591
 using JetBrains.Annotations;
 using System.Text.RegularExpressions;
 

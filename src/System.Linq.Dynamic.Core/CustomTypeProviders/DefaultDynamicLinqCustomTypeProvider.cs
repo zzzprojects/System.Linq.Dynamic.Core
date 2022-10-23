@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 namespace System.Linq.Dynamic.Core.CustomTypeProviders
 {
     /// <summary>
-    /// The default implementation for <see cref="IDynamicLinkCustomTypeProvider"/>.
+    /// The default implementation for <see cref="DefaultDynamicLinqCustomTypeProvider"/>.
     /// 
     /// Scans the current AppDomain for all types marked with <see cref="DynamicLinqTypeAttribute"/>, and adds them as custom Dynamic Link types.
     ///
@@ -19,8 +19,8 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         private readonly IAssemblyHelper _assemblyHelper = new DefaultAssemblyHelper();
         private readonly bool _cacheCustomTypes;
 
-        private HashSet<Type> _cachedCustomTypes;
-        private Dictionary<Type, List<MethodInfo>> _cachedExtensionMethods;
+        private HashSet<Type>? _cachedCustomTypes;
+        private Dictionary<Type, List<MethodInfo>>? _cachedExtensionMethods;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultDynamicLinqCustomTypeProvider"/> class.
@@ -64,7 +64,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         }
 
         /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.ResolveType"/>
-        public Type ResolveType(string typeName)
+        public Type? ResolveType(string typeName)
         {
             Check.NotEmpty(typeName, nameof(typeName));
 
@@ -73,7 +73,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         }
 
         /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName"/>
-        public Type ResolveTypeBySimpleName(string simpleTypeName)
+        public Type? ResolveTypeBySimpleName(string simpleTypeName)
         {
             Check.NotEmpty(simpleTypeName, nameof(simpleTypeName));
 

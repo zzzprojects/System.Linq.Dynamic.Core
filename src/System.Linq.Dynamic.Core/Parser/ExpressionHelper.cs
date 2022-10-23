@@ -4,7 +4,6 @@ using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -13,11 +12,9 @@ namespace System.Linq.Dynamic.Core.Parser
         private readonly IConstantExpressionWrapper _constantExpressionWrapper = new ConstantExpressionWrapper();
         private readonly ParsingConfig _parsingConfig;
 
-        internal ExpressionHelper([NotNull] ParsingConfig parsingConfig)
+        internal ExpressionHelper(ParsingConfig parsingConfig)
         {
-            Check.NotNull(parsingConfig, nameof(parsingConfig));
-
-            _parsingConfig = parsingConfig;
+            _parsingConfig = Check.NotNull(parsingConfig);
         }
 
         public void WrapConstantExpression(ref Expression argument)
@@ -187,16 +184,16 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (rightType == typeof(string) && right.NodeType == ExpressionType.Constant)
             {
-                right = OptimizeStringForEqualityIfPossible((string)((ConstantExpression)right).Value, leftType) ?? right;
+                right = OptimizeStringForEqualityIfPossible((string?)((ConstantExpression)right).Value, leftType) ?? right;
             }
 
             if (leftType == typeof(string) && left.NodeType == ExpressionType.Constant)
             {
-                left = OptimizeStringForEqualityIfPossible((string)((ConstantExpression)left).Value, rightType) ?? left;
+                left = OptimizeStringForEqualityIfPossible((string?)((ConstantExpression)left).Value, rightType) ?? left;
             }
         }
 
-        public Expression OptimizeStringForEqualityIfPossible(string text, Type type)
+        public Expression? OptimizeStringForEqualityIfPossible(string? text, Type type)
         {
             if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
             {
@@ -243,7 +240,7 @@ namespace System.Linq.Dynamic.Core.Parser
             var methodInfo = left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
             if (methodInfo == null)
             {
-                methodInfo = right.Type.GetMethod(methodName, new[] { left.Type, right.Type });
+                methodInfo = right.Type.GetMethod(methodName, new[] { left.Type, right.Type })!;
             }
 
             return methodInfo;
@@ -292,7 +289,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return true;
         }
 
-        public bool ExpressionQualifiesForNullPropagation(Expression expression)
+        public bool ExpressionQualifiesForNullPropagation(Expression? expression)
         {
             return
                 expression is MemberExpression ||
@@ -310,7 +307,7 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
         }
 
-        private Expression GetMemberExpression(Expression expression)
+        private Expression? GetMemberExpression(Expression? expression)
         {
             if (ExpressionQualifiesForNullPropagation(expression))
             {
@@ -335,7 +332,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private List<Expression> CollectExpressions(bool addSelf, Expression sourceExpression)
         {
-            Expression expression = GetMemberExpression(sourceExpression);
+            Expression? expression = GetMemberExpression(sourceExpression);
 
             var list = new List<Expression>();
 
@@ -347,6 +344,7 @@ namespace System.Linq.Dynamic.Core.Parser
                         list.Add(sourceExpression);
                         break;
 
+                    // ReSharper disable once RedundantEmptySwitchSection
                     default:
                         break;
                 }
@@ -379,14 +377,14 @@ namespace System.Linq.Dynamic.Core.Parser
 
                 if (expressionRecognized && ExpressionQualifiesForNullPropagation(expression))
                 {
-                    list.Add(expression);
+                    list.Add(expression!);
                 }
             } while (expressionRecognized);
 
             return list;
         }
 
-        private static Expression GetMethodCallExpression(MethodCallExpression methodCallExpression)
+        private static Expression? GetMethodCallExpression(MethodCallExpression methodCallExpression)
         {
             if (methodCallExpression.Object != null)
             {
@@ -398,9 +396,9 @@ namespace System.Linq.Dynamic.Core.Parser
             return methodCallExpression.Arguments.FirstOrDefault();
         }
 
-        private static Expression GetUnaryExpression(UnaryExpression unaryExpression)
+        private static Expression? GetUnaryExpression(UnaryExpression? unaryExpression)
         {
-            return unaryExpression.Operand;
+            return unaryExpression?.Operand;
         }
     }
 }

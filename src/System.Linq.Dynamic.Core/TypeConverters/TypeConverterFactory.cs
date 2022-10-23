@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Validation;
 
@@ -9,17 +8,15 @@ namespace System.Linq.Dynamic.Core.TypeConverters
     {
         private readonly ParsingConfig _config;
 
-        public TypeConverterFactory([NotNull] ParsingConfig config)
+        public TypeConverterFactory(ParsingConfig config)
         {
-            Check.NotNull(config, nameof(config));
-
-            _config = config;
+            _config = Check.NotNull(config);
         }
 
         /// <see cref="ITypeConverterFactory.GetConverter"/>
         public TypeConverter GetConverter(Type type)
         {
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(type);
 
             if (_config.DateTimeIsParsedAsUTC && (type == typeof(DateTime) || type == typeof(DateTime?)))
             {

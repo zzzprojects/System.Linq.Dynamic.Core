@@ -13,7 +13,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         private static readonly char[] EscapeCharacters = { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
 
         // These aliases are supposed to simply the where clause and make it more human readable
-        private static readonly Dictionary<string, TokenId> PredefinedOperatorAliases = new Dictionary<string, TokenId>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, TokenId> PredefinedOperatorAliases = new(StringComparer.OrdinalIgnoreCase)
         {
             { "eq", TokenId.Equal },
             { "equal", TokenId.Equal },
@@ -36,7 +36,6 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             { "mod", TokenId.Percent }
         };
 
-        private readonly ParsingConfig _config;
         private readonly char _numberDecimalSeparator;
         private readonly string _text;
         private readonly int _textLen;
@@ -56,7 +55,6 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         /// <param name="text"></param>
         public TextParser(ParsingConfig config, string text)
         {
-            _config = config;
             _numberDecimalSeparator = config.NumberParseCulture?.NumberFormat.NumberDecimalSeparator[0] ?? DefaultNumberDecimalSeparator;
 
             _text = text;
@@ -100,6 +98,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
                 NextChar();
             }
 
+            // ReSharper disable once RedundantAssignment
             TokenId tokenId = TokenId.Unknown;
             int tokenPos = _textPos;
 
@@ -449,7 +448,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
         /// </summary>
         /// <param name="tokenId">The tokenId to check.</param>
         /// <param name="errorMessage">The (optional) error message.</param>
-        public void ValidateToken(TokenId tokenId, string errorMessage = null)
+        public void ValidateToken(TokenId tokenId, string? errorMessage = null)
         {
             if (CurrentToken.Id != tokenId)
             {
@@ -514,7 +513,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
             if (c <= '\x007f')
             {
                 c |= (char)0x20;
-                return c >= 'a' && c <= 'f';
+                return c is >= 'a' and <= 'f';
             }
 
             return false;
@@ -522,7 +521,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer
 
         private static bool IsZeroOrOne(char c)
         {
-            return c == '0' || c == '1';
+            return c is '0' or '1';
         }
     }
 }

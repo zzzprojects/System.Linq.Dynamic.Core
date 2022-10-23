@@ -13,9 +13,9 @@ namespace System.Linq.Dynamic.Core
         /// The key value of the group.
         /// </summary>
 #if NET35 || SILVERLIGHT
-        public object Key { get; internal set; }
+        public object Key { get; internal set; } = null!;
 #else
-        public dynamic Key { get; internal set; }
+        public dynamic Key { get; internal set; } = null!;
 #endif
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// The resulting subgroups in the group.
         /// </summary>
-        public IEnumerable<GroupResult> Subgroups { get; internal set; }
+        public IEnumerable<GroupResult>? Subgroups { get; internal set; }
 
         /// <summary>
         /// Returns a <see cref="System.String" /> showing the key of the group and the number of items in the group.

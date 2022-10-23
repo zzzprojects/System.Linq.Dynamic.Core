@@ -19,8 +19,8 @@ namespace System.Linq.Dynamic.Core.Parser
             _numberParser = new NumberParser(config);
         }
 
-        /// <inheritdoc cref="IExpressionPromoter.Promote(Expression, Type, bool, bool)"/>
-        public virtual Expression Promote(Expression expr, Type type, bool exact, bool convertExpr)
+        /// <inheritdoc />
+        public virtual Expression? Promote(Expression expr, Type type, bool exact, bool convertExpr)
         {
             if (expr.Type == type || type.IsGenericParameter)
             {
@@ -38,10 +38,10 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
                 else
                 {
-                    if (ConstantExpressionHelper.TryGetText(ce, out string text))
+                    if (ConstantExpressionHelper.TryGetText(ce, out var text))
                     {
                         Type target = TypeHelper.GetNonNullableType(type);
-                        object value = null;
+                        object? value = null;
 
 #if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
                         switch (Type.GetTypeCode(ce.Type))
@@ -50,24 +50,24 @@ namespace System.Linq.Dynamic.Core.Parser
                             case TypeCode.UInt32:
                             case TypeCode.Int64:
                             case TypeCode.UInt64:
-                                value = _numberParser.ParseNumber(text, target);
+                                value = _numberParser.ParseNumber(text!, target);
 
                                 // Make sure an enum value stays an enum value
                                 if (target.IsEnum)
                                 {
-                                    value = Enum.ToObject(target, value);
+                                    value = Enum.ToObject(target, value!);
                                 }
                                 break;
 
                             case TypeCode.Double:
                                 if (target == typeof(decimal) || target == typeof(double))
                                 {
-                                    value = _numberParser.ParseNumber(text, target);
+                                    value = _numberParser.ParseNumber(text!, target);
                                 }
                                 break;
 
                             case TypeCode.String:
-                                value = TypeHelper.ParseEnum(text, target);
+                                value = TypeHelper.ParseEnum(text!, target);
                                 break;
                         }
 #else
@@ -80,19 +80,19 @@ namespace System.Linq.Dynamic.Core.Parser
                             }
                             else
                             {
-                                value = _numberParser.ParseNumber(text, target);
+                                value = _numberParser.ParseNumber(text!, target);
                             }
                         }
                         else if (ce.Type == typeof(double))
                         {
                             if (target == typeof(decimal) || target == typeof(double))
                             {
-                                value = _numberParser.ParseNumber(text, target);
+                                value = _numberParser.ParseNumber(text!, target);
                             }
                         }
                         else if (ce.Type == typeof(string))
                         {
-                            value = TypeHelper.ParseEnum(text, target);
+                            value = TypeHelper.ParseEnum(text!, target);
                         }
 #endif
                         if (value != null)
