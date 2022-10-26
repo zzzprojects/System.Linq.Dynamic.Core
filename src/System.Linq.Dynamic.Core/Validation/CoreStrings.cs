@@ -1,41 +1,20 @@
-﻿using System.Globalization;
-using JetBrains.Annotations;
+﻿// Copied from https://github.com/StefH/Stef.Validation
+namespace System.Linq.Dynamic.Core.Validation;
 
-// copied from https://github.com/aspnet/EntityFramework/blob/dev/src/Microsoft.EntityFrameworkCore/Properties/CoreStrings.resx
-namespace System.Linq.Dynamic.Core.Validation
+internal static class CoreStrings
 {
-    internal static class CoreStrings
+    public static string ArgumentPropertyNull(string property, string argument)
     {
-        /// <summary>
-        /// The property '{property}' of the argument '{argument}' cannot be null.
-        /// </summary>
-        public static string ArgumentPropertyNull([CanBeNull] string property, [CanBeNull] string argument)
-        {
-            return string.Format(CultureInfo.CurrentCulture, "The property '{0}' of the argument '{1}' cannot be null.", property, argument);
-        }
+        return $"The property '{property}' of the argument '{argument}' cannot be null.";
+    }
 
-        /// <summary>
-        /// The string argument '{argumentName}' cannot be empty.
-        /// </summary>
-        public static string ArgumentIsEmpty([CanBeNull] string argumentName)
-        {
-            return string.Format(CultureInfo.CurrentCulture, "The string argument '{0}' cannot be empty.", argumentName);
-        }
+    public static string ArgumentIsEmpty(string? argumentName)
+    {
+        return $"Value cannot be empty. (Parameter '{argumentName}')";
+    }
 
-        /// <summary>
-        /// The entity type '{type}' provided for the argument '{argumentName}' must be a reference type.
-        /// </summary>
-        public static string InvalidEntityType([CanBeNull] Type type, [CanBeNull] string argumentName)
-        {
-            return string.Format(CultureInfo.CurrentCulture, "The entity type '{0}' provided for the argument '{1}' must be a reference type.", type, argumentName);
-        }
-
-        /// <summary>
-        /// The collection argument '{argumentName}' must contain at least one element.
-        /// </summary>
-        public static string CollectionArgumentIsEmpty([CanBeNull] string argumentName)
-        {
-            return string.Format(CultureInfo.CurrentCulture, "The collection argument '{0}' must contain at least one element.", argumentName);
-        }
+    public static string CollectionArgumentIsEmpty(string? argumentName)
+    {
+        return $"The collection argument '{argumentName}' must contain at least one element.";
     }
 }

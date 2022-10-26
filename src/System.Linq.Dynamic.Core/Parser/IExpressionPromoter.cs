@@ -13,10 +13,10 @@ namespace System.Linq.Dynamic.Core.Parser
         /// Promote an expression
         /// </summary>
         /// <param name="expr">Source expression</param>
-        /// <param name="type">Destionation data type to promote</param>
+        /// <param name="type">Destination data type to promote</param>
         /// <param name="exact">If the match must be exact</param>
         /// <param name="convertExpr">Convert expression</param>
-        /// <returns>The promoted <see cref="Expression"/></returns>
-        Expression Promote(Expression expr, Type type, bool exact, bool convertExpr);
+        /// <returns>The promoted <see cref="Expression"/> or null.</returns>
+        Expression? Promote(Expression expr, Type type, bool exact, bool convertExpr);
     }
 }

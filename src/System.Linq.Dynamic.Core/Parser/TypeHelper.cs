@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.Parser
 {
     internal static class TypeHelper
     {
-        public static Type FindGenericType(Type generic, Type type)
+        public static Type? FindGenericType(Type generic, Type? type)
         {
             while (type != null && type != typeof(object))
             {
@@ -19,10 +19,10 @@ namespace System.Linq.Dynamic.Core.Parser
                 {
                     foreach (Type interfaceType in type.GetInterfaces())
                     {
-                        Type found = FindGenericType(generic, interfaceType);
-                        if (found != null)
+                        var foundType = FindGenericType(generic, interfaceType);
+                        if (foundType != null)
                         {
-                            return found;
+                            return foundType;
                         }
                     }
                 }
@@ -377,8 +377,13 @@ namespace System.Linq.Dynamic.Core.Parser
 #endif
         }
 
-        public static string GetTypeName(Type type)
+        public static string GetTypeName(Type? type)
         {
+            if (type == null)
+            {
+                return "null";
+            }
+
             Type baseType = GetNonNullableType(type);
 
             string name = baseType.Name;
@@ -404,7 +409,7 @@ namespace System.Linq.Dynamic.Core.Parser
             Type[] genericTypeArguments = type.GetGenericArguments();
             if (genericTypeArguments.Any())
             {
-                var outerType = GetUnderlyingType(genericTypeArguments.LastOrDefault());
+                var outerType = GetUnderlyingType(genericTypeArguments.LastOrDefault()!);
                 return Nullable.GetUnderlyingType(type) == outerType ? type : outerType;
             }
 
@@ -447,9 +452,9 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public static object ParseEnum(string value, Type type)
+        public static object? ParseEnum(string value, Type? type)
         {
-            if (type.GetTypeInfo().IsEnum && Enum.IsDefined(type, value))
+            if (type is { } && type.GetTypeInfo().IsEnum && Enum.IsDefined(type, value))
             {
                 return Enum.Parse(type, value, true);
             }
@@ -457,11 +462,12 @@ namespace System.Linq.Dynamic.Core.Parser
             return null;
         }
 
-        public static bool IsDictionary(Type type)
+        public static bool IsDictionary(Type? type)
         {
             return
                 FindGenericType(typeof(IDictionary<,>), type) != null ||
 #if NET35 || NET40
+                // ReSharper disable once RedundantLogicalConditionalExpressionOperand
                 false;
 #else
                 FindGenericType(typeof(IReadOnlyDictionary<,>), type) != null;

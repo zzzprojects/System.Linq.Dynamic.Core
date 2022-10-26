@@ -1,3 +1,21 @@
+# v1.2.21 (23 October 2022)
+- [#627](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/627) - Use PackageIcon + upgrade JetBrains.Annotations [feature] contributed by [StefH](https://github.com/StefH)
+- [#630](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/630) - Fix MethodFinder to return topmost implementation of the virtual method [feature] contributed by [jogibear9988](https://github.com/jogibear9988)
+- [#631](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/631) - Init field only on first execution [bug] contributed by [BBreiden](https://github.com/BBreiden)
+- [#636](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/636) - Fix nullable issues [bug] contributed by [StefH](https://github.com/StefH)
+- [#637](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/637) - Fixed accessing dynamic properties by index [bug] contributed by [StefH](https://github.com/StefH)
+- [#580](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/580) - C# Expressions use Base Class Virtual Methodinfo [bug]
+- [#629](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/629) - Error accessing values in DynamicClass - fails on second attempt [bug]
+- [#634](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/634) - After Upgrade NuGet-Package to 1.2.20 accessing dynamic properties by index fails [bug]
+- [#635](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/635) - Compile errors due to missing nullable reference annotations on APIs that accept null [bug]
+
+# v1.2.20 (03 September 2022)
+- [#619](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/619) - Fix generic comparer type [bug] contributed by [StefH](https://github.com/StefH)
+- [#620](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/620) - ToDynamicListAsync uses IAsyncEnumerable (if applicable) [feature] contributed by [StefH](https://github.com/StefH)
+- [#622](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/622) - Add unit tests for &quot;As acting on property&quot; [feature, test] contributed by [StefH](https://github.com/StefH)
+- [#625](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/625) - Add unit test for Where with empty string [test] contributed by [StefH](https://github.com/StefH)
+- [#617](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/617) - &quot;Failed to compare two elements in the array.&quot; System.InvalidOperationException (V1.2.19 compared to V1.2.18) [feature]
+
 # v1.2.19 (26 June 2022)
 - [#579](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/579) - Support Struct for DynamicLinqTypeAttribute [feature] contributed by [StefH](https://github.com/StefH)
 - [#583](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/583) - Fix example 'ConsoleApp_netcore2.1_EF2.1.1' [bug] contributed by [StefH](https://github.com/StefH)

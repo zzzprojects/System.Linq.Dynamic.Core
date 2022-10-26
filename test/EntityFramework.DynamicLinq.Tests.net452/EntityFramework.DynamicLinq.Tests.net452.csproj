@@ -13,6 +13,7 @@
     <AssemblyName>EntityFramework.DynamicLinq.Tests.net452</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+      <LangVersion>10</LangVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -187,6 +188,9 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Country.cs">
       <Link>Entities\Country.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Department.cs">
+      <Link>Entities\Department.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Entities\Employee.cs">
       <Link>Entities\Employee.cs</Link>

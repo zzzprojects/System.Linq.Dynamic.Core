@@ -2,30 +2,15 @@
     <Import Project="../../version.xml" />
 
     <PropertyGroup>
-        <Version>6.2.$(PatchVersion)</Version>
-        <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
-        <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
-        <Authors>ZZZ Projects;Stef Heyenrath</Authors>
-        <TargetFrameworks>net6.0</TargetFrameworks>
-        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;EFDYNAMICFUNCTIONS</DefineConstants>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
         <AssemblyOriginatorKeyFile>../Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2/Microsoft.EntityFrameworkCore.DynamicLinq.snk</AssemblyOriginatorKeyFile>
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
+        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;EFDYNAMICFUNCTIONS;ASYNCENUMERABLE</DefineConstants>
+        <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
-        <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
-        <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <PackageIconUrl>https://zzzprojects.github.io/images/logo/logo-64.png</PackageIconUrl>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
-        <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D28F6393-B56B-40A2-AF67-E8D669F42546}</ProjectGuid>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-        <Company>ZZZ Projects</Company>
-        <Copyright>Copyright © ZZZ Projects</Copyright>
+        <TargetFrameworks>net6.0</TargetFrameworks>
+        <Version>6.2.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -57,7 +42,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="All" />
+        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" PrivateAssets="All" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
     </ItemGroup>
 </Project>

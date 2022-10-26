@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Linq.Dynamic.Core.Validation;
+﻿using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 
 namespace System.Linq.Dynamic.Core.Parser
@@ -9,39 +8,39 @@ namespace System.Linq.Dynamic.Core.Parser
         private readonly IKeywordsHelper _keywordsHelper;
         private readonly ParsingConfig _parsingConfig;
 
-        public TypeFinder([NotNull] ParsingConfig parsingConfig, [NotNull] IKeywordsHelper keywordsHelper)
+        public TypeFinder(ParsingConfig parsingConfig, IKeywordsHelper keywordsHelper)
         {
-            Check.NotNull(parsingConfig, nameof(parsingConfig));
-            Check.NotNull(keywordsHelper, nameof(keywordsHelper));
+            Check.NotNull(parsingConfig);
+            Check.NotNull(keywordsHelper);
 
             _keywordsHelper = keywordsHelper;
             _parsingConfig = parsingConfig;
         }
 
-        public Type FindTypeByName(string name, ParameterExpression[] expressions, bool forceUseCustomTypeProvider)
+        public Type? FindTypeByName(string name, ParameterExpression?[]? expressions, bool forceUseCustomTypeProvider)
         {
-            Check.NotEmpty(name, nameof(name));
+            Check.NotEmpty(name);
 
-            _keywordsHelper.TryGetValue(name, out object type);
+            _keywordsHelper.TryGetValue(name, out var type);
 
-            if (type is Type result)
+            if (type is Type sameType)
             {
-                return result;
+                return sameType;
             }
 
-            if (expressions != null && TryResolveTypeUsingExpressions(name, expressions, out result))
+            if (expressions != null && TryResolveTypeUsingExpressions(name, expressions, out var resolvedType))
             {
-                return result;
+                return resolvedType;
             }
 
             return ResolveTypeByUsingCustomTypeProvider(name, forceUseCustomTypeProvider);
         }
 
-        private Type ResolveTypeByUsingCustomTypeProvider(string name, bool forceUseCustomTypeProvider)
+        private Type? ResolveTypeByUsingCustomTypeProvider(string name, bool forceUseCustomTypeProvider)
         {
             if ((forceUseCustomTypeProvider || _parsingConfig.AllowNewToEvaluateAnyType) && _parsingConfig.CustomTypeProvider != null)
             {
-                Type resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(name);
+                var resolvedType = _parsingConfig.CustomTypeProvider.ResolveType(name);
                 if (resolvedType != null)
                 {
                     return resolvedType;
@@ -57,11 +56,11 @@ namespace System.Linq.Dynamic.Core.Parser
             return null;
         }
 
-        private bool TryResolveTypeUsingExpressions(string name, ParameterExpression[] expressions, out Type result)
+        private bool TryResolveTypeUsingExpressions(string name, ParameterExpression?[] expressions, out Type? result)
         {
             foreach (var expression in expressions.Where(e => e != null))
             {
-                if (name == expression.Type.Name)
+                if (name == expression!.Type.Name)
                 {
                     result = expression.Type;
                     return true;

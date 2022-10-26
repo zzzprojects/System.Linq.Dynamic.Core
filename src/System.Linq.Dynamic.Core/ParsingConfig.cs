@@ -35,11 +35,11 @@ namespace System.Linq.Dynamic.Core
             RenameEmptyParameterExpressionNames = true
         };
 
-        private IDynamicLinkCustomTypeProvider _customTypeProvider;
+        private IDynamicLinkCustomTypeProvider? _customTypeProvider;
 
-        private IExpressionPromoter _expressionPromoter;
+        private IExpressionPromoter? _expressionPromoter;
 
-        private IQueryableAnalyzer _queryableAnalyzer;
+        private IQueryableAnalyzer? _queryableAnalyzer;
 
         /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
@@ -50,7 +50,7 @@ namespace System.Linq.Dynamic.Core
             {
 #if !( WINDOWS_APP || UAP10_0 || NETSTANDARD)
                 // only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and NET Core App 2.x
-                return _customTypeProvider ?? (_customTypeProvider = new DefaultDynamicLinqCustomTypeProvider());
+                return _customTypeProvider ??= new DefaultDynamicLinqCustomTypeProvider();
 #else
                 return _customTypeProvider;
 #endif
@@ -58,6 +58,7 @@ namespace System.Linq.Dynamic.Core
 
             set
             {
+                // ReSharper disable once RedundantCheckBeforeAssignment
                 if (_customTypeProvider != value)
                 {
                     _customTypeProvider = value;
@@ -70,10 +71,11 @@ namespace System.Linq.Dynamic.Core
         /// </summary>
         public IExpressionPromoter ExpressionPromoter
         {
-            get => _expressionPromoter ?? (_expressionPromoter = new ExpressionPromoter(this));
+            get => _expressionPromoter ??= new ExpressionPromoter(this);
 
             set
             {
+                // ReSharper disable once RedundantCheckBeforeAssignment
                 if (_expressionPromoter != value)
                 {
                     _expressionPromoter = value;
@@ -88,11 +90,12 @@ namespace System.Linq.Dynamic.Core
         {
             get
             {
-                return _queryableAnalyzer ?? (_queryableAnalyzer = new DefaultQueryableAnalyzer());
+                return _queryableAnalyzer ??= new DefaultQueryableAnalyzer();
             }
 
             set
             {
+                // ReSharper disable once RedundantCheckBeforeAssignment
                 if (_queryableAnalyzer != value)
                 {
                     _queryableAnalyzer = value;
@@ -116,7 +119,7 @@ namespace System.Linq.Dynamic.Core
         ///
         /// Default value is false.
         /// </summary>
-        public bool EvaluateGroupByAtDatabase { get; set; } = false;
+        public bool EvaluateGroupByAtDatabase { get; set; }
 
         /// <summary>
         /// Use Parameterized Names in generated dynamic SQL query.
@@ -145,7 +148,7 @@ namespace System.Linq.Dynamic.Core
         /// 
         /// Default value is false.
         /// </summary>
-        public bool RenameEmptyParameterExpressionNames { get; set; } = false;
+        public bool RenameEmptyParameterExpressionNames { get; set; }
 
         /// <summary>
         /// By default when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor. Use
@@ -185,12 +188,12 @@ namespace System.Linq.Dynamic.Core
         ///
         /// Default value is CultureInfo.InvariantCulture
         /// </summary>
-        public CultureInfo NumberParseCulture { get; set; } = CultureInfo.InvariantCulture;
+        public CultureInfo? NumberParseCulture { get; set; } = CultureInfo.InvariantCulture;
 
         /// <summary>
         /// Additional TypeConverters
         /// </summary>
-        public IDictionary<Type, TypeConverter> TypeConverters { get; set; }
+        public IDictionary<Type, TypeConverter>? TypeConverters { get; set; }
 
         /// <summary>
         /// When using the NullPropagating function np(...), use a "default value" for non-nullable value types instead of "null value".

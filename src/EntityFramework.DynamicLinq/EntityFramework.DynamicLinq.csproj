@@ -2,30 +2,16 @@
     <Import Project="../../version.xml" />
 
     <PropertyGroup>
-        <Version>1.2.$(PatchVersion)</Version>
-        <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
-        <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
-        <Authors>ZZZ Projects;Stef Heyenrath</Authors>
-        <TargetFrameworks>net45;net452;net46;netstandard2.1</TargetFrameworks>
-        <DefineConstants>EF;EFDYNAMICFUNCTIONS</DefineConstants>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>EntityFramework.DynamicLinq</AssemblyName>
         <AssemblyOriginatorKeyFile>EntityFramework.DynamicLinq.snk</AssemblyOriginatorKeyFile>
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <AssemblyTitle>EntityFramework.DynamicLinq</AssemblyTitle>
+        <DefineConstants>EF;EFDYNAMICFUNCTIONS</DefineConstants>
+        <Description>Dynamic Linq extensions for EntityFramework which adds Async support</Description>
         <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
-        <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
-        <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <PackageIconUrl>https://zzzprojects.github.io/images/logo/logo-64.png</PackageIconUrl>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
-        <DefaultLanguage>en-us</DefaultLanguage>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510000}</ProjectGuid>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-        <Company>ZZZ Projects</Company>
-        <Copyright>Copyright © ZZZ Projects</Copyright>
+        <TargetFrameworks>net45;net452;net46;netstandard2.1</TargetFrameworks>
+        <LangVersion>10</LangVersion>
+        <Version>1.2.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -33,9 +19,6 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <!--<IncludeSource>True</IncludeSource>
-        <IncludeSymbols>True</IncludeSymbols>
-        <PathMap>$(MSBuildProjectDirectory)=/</PathMap>-->
         <DebugType>portable</DebugType>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
@@ -53,7 +36,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="All" />
+        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" PrivateAssets="All" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.1'">
         <PackageReference Include="EntityFramework" Version="6.1.3" />
     </ItemGroup>
 

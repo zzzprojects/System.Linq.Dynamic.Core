@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
 
@@ -15,7 +14,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
         /// <returns><see cref="IEnumerable{Type}" /></returns>
-        protected IEnumerable<Type> FindTypesMarkedWithDynamicLinqTypeAttribute([NotNull] IEnumerable<Assembly> assemblies)
+        protected IEnumerable<Type> FindTypesMarkedWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
         {
             Check.NotNull(assemblies, nameof(assemblies));
 #if !NET35
@@ -30,7 +29,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// <param name="assemblies">The assemblies to inspect.</param>
         /// <param name="typeName">The typename to resolve.</param>
         /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
-        protected Type ResolveType([NotNull] IEnumerable<Assembly> assemblies, [NotNull] string typeName)
+        protected Type? ResolveType(IEnumerable<Assembly> assemblies, string typeName)
         {
             Check.NotNull(assemblies, nameof(assemblies));
             Check.NotEmpty(typeName, nameof(typeName));
@@ -53,19 +52,19 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// <param name="assemblies">The assemblies to inspect.</param>
         /// <param name="simpleTypeName">The simple typename to resolve.</param>
         /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
-        protected Type ResolveTypeBySimpleName([NotNull] IEnumerable<Assembly> assemblies, [NotNull] string simpleTypeName)
+        protected Type? ResolveTypeBySimpleName(IEnumerable<Assembly> assemblies, string simpleTypeName)
         {
             Check.NotNull(assemblies, nameof(assemblies));
             Check.NotEmpty(simpleTypeName, nameof(simpleTypeName));
 
             foreach (var assembly in assemblies)
             {
-                var fullNames = assembly.GetTypes().Select(t => t.FullName).Distinct();
+                var fullNames = assembly.GetTypes().Select(t => t.FullName!).Distinct();
                 var firstMatchingFullname = fullNames.FirstOrDefault(fn => fn.EndsWith($".{simpleTypeName}"));
 
                 if (firstMatchingFullname != null)
                 {
-                    Type resolvedType = assembly.GetType(firstMatchingFullname, false, true);
+                    var resolvedType = assembly.GetType(firstMatchingFullname, false, true);
                     if (resolvedType != null)
                     {
                         return resolvedType;
@@ -82,13 +81,13 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
         /// <returns><see cref="IEnumerable{Type}" /></returns>
-        protected IEnumerable<Type> GetAssemblyTypesWithDynamicLinqTypeAttribute([NotNull] IEnumerable<Assembly> assemblies)
+        protected IEnumerable<Type> GetAssemblyTypesWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
         {
             Check.NotNull(assemblies, nameof(assemblies));
 
             foreach (var assembly in assemblies)
             {
-                Type[] definedTypes = null;
+                Type[]? definedTypes = null;
 
                 try
                 {
@@ -118,13 +117,13 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// </summary>
         /// <param name="assemblies">The assemblies to process.</param>
         /// <returns><see cref="IEnumerable{Type}" /></returns>
-        protected IEnumerable<Type> GetAssemblyTypesWithDynamicLinqTypeAttribute([NotNull] IEnumerable<Assembly> assemblies)
+        protected IEnumerable<Type> GetAssemblyTypesWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
         {
             Check.NotNull(assemblies, nameof(assemblies));
 
             foreach (var assembly in assemblies.Where(a => !a.GlobalAssemblyCache)) // Skip System DLL's
             {
-                Type[] definedTypes = null;
+                Type[]? definedTypes = null;
 
                 try
                 {

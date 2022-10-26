@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+using System.Collections;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 
@@ -12,7 +14,7 @@ namespace System.Linq.Dynamic.Core
     /// </summary>
     public static class DynamicQueryableWithFormattableStringExtensions
     {
-        private static Regex ReplaceArgumentsRegex = new Regex(@"{(\d+)}", RegexOptions.Compiled);
+        private static readonly Regex ReplaceArgumentsRegex = new(@"{(\d+)}", RegexOptions.Compiled);
 
         public static IQueryable WhereInterpolated([NotNull] this IQueryable source, [NotNull] ParsingConfig config, [NotNull] FormattableString predicate)
         {
@@ -426,5 +428,5 @@ namespace System.Linq.Dynamic.Core
         }
     }
 #endif
-
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

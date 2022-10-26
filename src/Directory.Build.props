@@ -1,0 +1,26 @@
+<Project>
+    <PropertyGroup>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <ApplicationIcon>../../resources/logo.ico</ApplicationIcon>
+        <Authors>ZZZ Projects;Stef Heyenrath</Authors>
+        <Company>ZZZ Projects</Company>
+        <Copyright>Copyright © ZZZ Projects</Copyright>
+        <DefaultLanguage>en-us</DefaultLanguage>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+        <PackageIcon>logo.png</PackageIcon>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
+        <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
+        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/zzzprojects/System.Linq.Dynamic.Core</RepositoryUrl>
+        <SignAssembly>true</SignAssembly>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../resources/logo.png" Pack="true" PackagePath="" />
+    </ItemGroup>
+</Project>

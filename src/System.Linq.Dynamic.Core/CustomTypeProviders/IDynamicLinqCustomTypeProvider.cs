@@ -26,13 +26,13 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// </summary>
         /// <param name="typeName">The typename to resolve.</param>
         /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
-        Type ResolveType([NotNull] string typeName);
+        Type? ResolveType(string typeName);
 
         /// <summary>
         /// Resolve any type by the simple name which is registered in the current application domain.
         /// </summary>
         /// <param name="simpleTypeName">The typename to resolve.</param>
         /// <returns>A resolved <see cref="Type"/> or null when not found.</returns>
-        Type ResolveTypeBySimpleName([NotNull] string simpleTypeName);
+        Type? ResolveTypeBySimpleName(string simpleTypeName);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using FluentAssertions;
@@ -112,11 +111,12 @@ namespace System.Linq.Dynamic.Core.Tests.MikArea
         {
             object CreateDicParameter(string name) => new Dictionary<string, object>
             {
-                { "Name", new Dictionary<string, object> { {"FirstName", name }, { "LastName", name + "Test" } } }
+                { "Name", new Dictionary<string, object> { { "FirstName", name }, { "LastName", name + "Test" } } }
             };
 
             var parType = new Dictionary<string, object>().GetType();
-            var lambda = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(parType, "item") }, typeof(object), "item.Name.FirstName + \"7\" + item.Name.LastName ").Compile();
+            var lambda = DynamicExpressionParser.ParseLambda(new[] { Expression.Parameter(parType, "item") },
+                typeof(object), "item.Name.FirstName + \"7\" + item.Name.LastName ").Compile();
 
             var x1 = lambda.DynamicInvoke(CreateDicParameter("Julio"));
             var x2 = lambda.DynamicInvoke(CreateDicParameter("John"));

@@ -1,15 +1,71 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading;
+using System.Linq.Expressions;
 using ConsoleAppEF2.Database;
 
 namespace ConsoleAppEF5
 {
+    // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/519
+    // Here Appilicability is a property within Settings type, and WinApplicability is a derived type of Applicability. SKUs is a property within WinApplicability.
+    public class Settings
+    {
+        public Applicability Applicability { get; set; }
+    }
+
+    public class Applicability
+    {
+
+    }
+
+    public class WinApplicability : Applicability
+    {
+        public List<string> SKUs { get; set; }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
+            var settingsList = new List<Settings>
+            {
+                new()
+                {
+                    Applicability = new WinApplicability
+                    {
+                        SKUs = new List<string>
+                        {
+                            "a",
+                            "b"
+                        }
+                    }
+                },
+                new()
+                {
+                    Applicability = new WinApplicability
+                    {
+                        SKUs = new List<string>
+                        {
+                            "c"
+                        }
+                    }
+                }
+            }.AsQueryable();
+
+            var sku = "a";
+
+            var p = new ParsingConfig { ResolveTypesBySimpleName = true };
+
+            Expression<Func<Settings, bool>> expr = c => (c.Applicability as WinApplicability).SKUs.Contains(sku);
+
+            var exprDynamic = DynamicExpressionParser.ParseLambda<Settings, bool>(p, true, "As(Applicability, \"WinApplicability\").SKUs.Contains(@0)", sku);
+
+            var result = settingsList.Where(expr).ToList();
+
+            var resultDynamic = settingsList.Where(exprDynamic).ToList();
+
+
             var e = new int[0].AsQueryable();
             var q = new[] { 1 }.AsQueryable();
 
@@ -100,8 +156,8 @@ namespace ConsoleAppEF5
                 Console.WriteLine($"{car.Key}");
             }
 
-            var resultDynamic = users.Any("c => np(c.FirstName, string.Empty).ToUpper() == \"DOE\"");
-            Console.WriteLine(resultDynamic);
+            var resultDynamic1 = users.Any("c => np(c.FirstName, string.Empty).ToUpper() == \"DOE\"");
+            Console.WriteLine(resultDynamic1);
 
             var users2 = users.Select<User>(config, "new User(it.FirstName as FirstName, 1 as Field)");
             foreach (User u in users2)
