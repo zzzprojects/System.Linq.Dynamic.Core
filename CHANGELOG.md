@@ -1,13 +1,15 @@
-# v1.2.21 (23 October 2022)
+# v1.2.21 (28 October 2022)
 - [#627](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/627) - Use PackageIcon + upgrade JetBrains.Annotations [feature] contributed by [StefH](https://github.com/StefH)
 - [#630](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/630) - Fix MethodFinder to return topmost implementation of the virtual method [feature] contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#631](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/631) - Init field only on first execution [bug] contributed by [BBreiden](https://github.com/BBreiden)
 - [#636](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/636) - Fix nullable issues [bug] contributed by [StefH](https://github.com/StefH)
 - [#637](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/637) - Fixed accessing dynamic properties by index [bug] contributed by [StefH](https://github.com/StefH)
+- [#641](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/641) - Add unit test for DynamicClass SerializeToJson [feature] contributed by [StefH](https://github.com/StefH)
 - [#580](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/580) - C# Expressions use Base Class Virtual Methodinfo [bug]
 - [#629](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/629) - Error accessing values in DynamicClass - fails on second attempt [bug]
 - [#634](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/634) - After Upgrade NuGet-Package to 1.2.20 accessing dynamic properties by index fails [bug]
 - [#635](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/635) - Compile errors due to missing nullable reference annotations on APIs that accept null [bug]
+- [#640](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/640) - NullReferenceException during json serialize of DynamicClass [bug]
 
 # v1.2.20 (03 September 2022)
 - [#619](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/619) - Fix generic comparer type [bug] contributed by [StefH](https://github.com/StefH)
@@ -30,7 +32,6 @@
 - [#612](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/612) - Update dependencies (Newtonsoft.Json and more) [dependencies] contributed by [StefH](https://github.com/StefH)
 - [#511](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/511) - Strange SelectMany behaviour using JSON [bug]
 - [#548](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/548) - IComparer&lt;T&gt; not supported for OrderBy? [feature]
-- [#565](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/565) - Methods such as `OrderBy` may not be calling the correct method of the Provider.
 - [#581](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/581) - ConsoleApp_netcore2.1_EF2.1.1 fails to run with exception [bug]
 - [#586](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/586) - Parenthesis around an &quot;In&quot; expression raise an exception [bug]
 
