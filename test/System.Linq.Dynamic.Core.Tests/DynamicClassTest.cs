@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using FluentAssertions;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
@@ -97,6 +99,28 @@ namespace System.Linq.Dynamic.Core.Tests
             item["X"] = newTest;
             var value = item["X"] as string;
             value.Should().Be(newTest);
+        }
+
+        [Fact]
+        public void DynamicClass_SerializeToJson_Should_Work()
+        {
+            // Arrange
+            var props = new[]
+            {
+                new DynamicProperty("Name", typeof(string)), 
+                new DynamicProperty("Birthday", typeof(DateTime))
+            };
+            var type = DynamicClassFactory.CreateType(props);
+
+            var dynamicClass = (DynamicClass) Activator.CreateInstance(type);
+            dynamicClass.SetDynamicPropertyValue("Name", "Albert");
+            dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
+            
+            // Act
+            var json = JsonConvert.SerializeObject(dynamicClass);
+
+            // Assert
+            json.Should().Be("{\"Name\":\"Albert\",\"Birthday\":\"1879-03-14T00:00:00\"}");
         }
     }
 }
