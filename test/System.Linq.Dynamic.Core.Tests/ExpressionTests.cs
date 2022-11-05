@@ -2180,7 +2180,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = initValues.AsQueryable().Select(x => new { strValue = "str", intValue = x }).GroupBy(x => x.strValue);
 
             // Act
-            var result = qry.Select("Sum(intValue)").AsEnumerable().ToArray()[0];
+            var result = qry.Select("Sum(intValue)").AsDynamicEnumerable().ToArray()[0];
 
             // Assert
             Assert.Equal(15, result);
@@ -2194,7 +2194,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = initValues.AsQueryable().Select(x => new { strValue = "str", intValue = x }).GroupBy(x => x.strValue);
 
             // Act
-            var result = qry.Select("sum(intValue)").AsEnumerable().ToArray()[0];
+            var result = qry.Select("sum(intValue)").AsDynamicEnumerable().ToArray()[0];
 
             // Assert
             Assert.Equal(15, result);

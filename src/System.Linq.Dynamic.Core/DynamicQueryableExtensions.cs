@@ -281,21 +281,21 @@ namespace System.Linq.Dynamic.Core
         }
         #endregion Average
 
-        #region AsEnumerable
+        #region AsDynamicEnumerable
 #if NET35
         /// <summary>
         /// Returns the input typed as <see cref="IEnumerable{T}"/> of <see cref="object"/>./>
         /// </summary>
         /// <param name="source">The sequence to type as <see cref="IEnumerable{T}"/> of <see cref="object"/>.</param>
         /// <returns>The input typed as <see cref="IEnumerable{T}"/> of <see cref="object"/>.</returns>
-        public static IEnumerable<object> AsEnumerable(this IQueryable source)
+        public static IEnumerable<object> AsDynamicEnumerable(this IQueryable source)
 #else
         /// <summary>
         /// Returns the input typed as <see cref="IEnumerable{T}"/> of dynamic.
         /// </summary>
         /// <param name="source">The sequence to type as <see cref="IEnumerable{T}"/> of dynamic.</param>
         /// <returns>The input typed as <see cref="IEnumerable{T}"/> of dynamic.</returns>
-        public static IEnumerable<dynamic> AsEnumerable(this IQueryable source)
+        public static IEnumerable<dynamic> AsDynamicEnumerable(this IQueryable source)
 #endif
         {
             foreach (var obj in source)
@@ -303,7 +303,7 @@ namespace System.Linq.Dynamic.Core
                 yield return obj;
             }
         }
-        #endregion AsEnumerable
+        #endregion AsDynamicEnumerable
 
         #region Cast
         private static readonly MethodInfo _cast = QueryableMethodFinder.GetGenericMethod(nameof(Queryable.Cast));
