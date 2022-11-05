@@ -142,7 +142,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(testList.Select(x => x.UserName).ToArray(), userNames.Cast<string>().ToArray());
             Assert.Equal(
                 testList.Select(x => "{ UserName = " + x.UserName + ", MyFirstName = " + x.Profile.FirstName + " }").ToArray(),
-                userFirstName.AsEnumerable().Select(x => x.ToString()).Cast<string>().ToArray());
+                userFirstName.AsDynamicEnumerable().Select(x => x.ToString()).Cast<string>().ToArray());
             Assert.Equal(testList[0].Roles.Select(x => x.Id).ToArray(), Enumerable.ToArray(userRoles.First().RoleIds));
 #endif
         }

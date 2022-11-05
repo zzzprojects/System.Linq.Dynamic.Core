@@ -111,11 +111,11 @@ namespace System.Linq.Dynamic.Core.Tests
 #else
             Assert.Equal(
                 realQry.Select(x => x.Age).ToArray(),
-                selectQry.AsEnumerable().Select(x => x.Age).Cast<int?>().ToArray());
+                selectQry.AsDynamicEnumerable().Select(x => x.Age).Cast<int?>().ToArray());
 
             Assert.Equal(
                 realQry.Select(x => x.TotalIncome).ToArray(),
-                selectQry.AsEnumerable().Select(x => x.TotalIncome).Cast<int>().ToArray());
+                selectQry.AsDynamicEnumerable().Select(x => x.TotalIncome).Cast<int>().ToArray());
 #endif
         }
     }
