@@ -1,3 +1,7 @@
+# v1.2.22 (06 November 2022)
+- [#642](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/642) - Rename extension method &quot;AsEnumerable&quot; to &quot;AsDynamicEnumerable&quot;. [feature] contributed by [StefH](https://github.com/StefH)
+- [#304](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/304) - System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsEnumerable conflicts with System.Linq.Enumerable.AsEnumerable [bug]
+
 # v1.2.21 (28 October 2022)
 - [#627](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/627) - Use PackageIcon + upgrade JetBrains.Annotations [feature] contributed by [StefH](https://github.com/StefH)
 - [#630](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/630) - Fix MethodFinder to return topmost implementation of the virtual method [feature] contributed by [jogibear9988](https://github.com/jogibear9988)
