@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,5 +16,7 @@ namespace ConsoleAppEF2.Database
         public int? NullableInt { get; set; }
 
         public Dictionary<string, object> Dict { get; set; }
+
+        public DateTime DeletedOn { get; set; }
     }
 }

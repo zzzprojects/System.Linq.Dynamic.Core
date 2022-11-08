@@ -18,11 +18,19 @@ static class Program
         await using (var context = new TestContextEF6())
         {
             context.Products.Add(new ProductDynamic { NullableInt = 1, Dict = new Dictionary<string, object> { { "Name", "test" } } });
+
+            for (int i = 0; i < 1000; i++)
+            {
+                context.Products.Add(new ProductDynamic { NullableInt = i, DeletedOn = DateTime.Now.AddDays(i) });
+            }
+
             await context.SaveChangesAsync();
         }
 
         await using (var context = new TestContextEF6())
         {
+            var sorted = context.Products.OrderBy("DeletedOn desc").ToArray();
+
             var resultsNormal = context.Products.Where(p => p.Dict["Name"] == "test").ToListAsync();
             
             var results1 = await context.Products.Where("Dict.Name == @0", "test").ToListAsync();

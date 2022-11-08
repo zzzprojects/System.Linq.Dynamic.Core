@@ -6,7 +6,7 @@ namespace ConsoleAppEF2.Database
 {
     public class TestContext : DbContext
     {
-#if EF3 || EF5
+#if EF3 || EF5 || EF6
         public static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => {
                 builder
                     //.AddFilter("Default", LogLevel.Information)
