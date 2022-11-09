@@ -12,17 +12,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.msbuild" Version="3.1.2">
+        <PackageReference Include="coverlet.msbuild" Version="3.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-        <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+        <PackageReference Include="xunit" Version="2.4.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.collector" Version="3.1.2">
+        <PackageReference Include="coverlet.collector" Version="3.2.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
@@ -30,15 +30,15 @@
         <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.5" />
         <PackageReference Include="QueryInterceptor.Core" Version="1.0.7" />
         <PackageReference Include="NFluent" Version="2.8.0" />
-        <PackageReference Include="Moq" Version="4.13.1" />
-        <PackageReference Include="FluentAssertions" Version="5.10.3" />
+        <PackageReference Include="Moq" Version="4.18.2" />
+        <PackageReference Include="FluentAssertions" Version="6.8.0" />
 
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.0.27" />
-        <PackageReference Include="NodaTime" Version="2.4.7" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.2" />
+        <PackageReference Include="NodaTime" Version="3.1.5" />
 
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6.csproj" />
     </ItemGroup>

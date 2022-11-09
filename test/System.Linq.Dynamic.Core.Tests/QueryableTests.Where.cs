@@ -115,7 +115,7 @@ namespace System.Linq.Dynamic.Core.Tests
             LambdaExpression lambdaExpression = userExpression;
 
             // Act
-            var result = queryable.Where(lambdaExpression);
+            var result = queryable.Where(lambdaExpression).ToDynamicArray();
 
             // Assert
             result.Should().HaveCount(1);

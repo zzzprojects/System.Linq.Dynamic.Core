@@ -150,7 +150,7 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
             var qry = initValues.AsQueryable().Select(x => new { strValue = "str", intValue = x }).GroupBy(x => x.strValue);
 
             //Act
-            var result = qry.Select("Sum(intValue)").AsEnumerable().ToArray()[0];
+            var result = qry.Select("Sum(intValue)").AsDynamicEnumerable().ToArray()[0];
 
             //Assert
             Write(15, result);
@@ -173,7 +173,7 @@ namespace System.Linq.Dynamic.Core.ConsoleTestApp.net40
             //Assert
             WriteArray(range.Select(x => x * x).ToArray(), rangeResult.Cast<int>().ToArray());
             WriteArray(testList.Select(x => x.UserName).ToArray(), userNames.ToDynamicArray());
-            WriteArray(testList.Select(x => "{UserName=" + x.UserName + ", MyFirstName=" + x.Profile.FirstName + "}").ToArray(), userFirstName.AsEnumerable().Select(x => x.ToString()).ToArray());
+            WriteArray(testList.Select(x => "{UserName=" + x.UserName + ", MyFirstName=" + x.Profile.FirstName + "}").ToArray(), userFirstName.AsDynamicEnumerable().Select(x => x.ToString()).ToArray());
 
             Guid[] check = testList[0].Roles.Select(x => x.Id).ToArray();
             //dynamic f = userRoles.First();

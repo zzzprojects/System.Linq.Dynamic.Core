@@ -1,17 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <LangVersion>10</LangVersion>
+        <TargetFramework>net7.0</TargetFramework>
         <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
         <DebugType>full</DebugType>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>../../src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <IsPackable>false</IsPackable>
+
         <DefineConstants>$(DefineConstants);NETCOREAPP;EFCORE;EFCORE_3X;NETCOREAPP3_1</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
         <PackageReference Include="xunit" Version="2.4.2" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
@@ -29,19 +33,25 @@
         <PackageReference Include="Moq" Version="4.18.2" />
         <PackageReference Include="FluentAssertions" Version="6.8.0" />
 
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="5.1.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.2" />
         <PackageReference Include="NodaTime" Version="3.1.5" />
 
-        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore5\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore5.csproj" />
+        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore7\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore7.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\*\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\*\*\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="TestResults\**" />
+        <EmbeddedResource Remove="TestResults\**" />
+        <None Remove="TestResults\**" />
     </ItemGroup>
 </Project>
