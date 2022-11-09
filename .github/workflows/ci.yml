@@ -11,6 +11,10 @@ jobs:
 
     - uses: actions/setup-dotnet@v1
       with:
+       dotnet-version: '6.0.x'
+
+    - uses: actions/setup-dotnet@v1
+      with:
        dotnet-version: '7.0.x'
       
     - name: Build Projects
@@ -21,10 +25,6 @@ jobs:
       run: |
         dotnet build ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net7.csproj -c Release -p:buildType=azure-pipelines-ci
         dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net7.csproj -c Release -p:buildType=azure-pipelines-ci --no-build
-
-    - uses: actions/setup-dotnet@v1
-      with:
-       dotnet-version: '6.0.x'
 
     - name: Run Tests net6.0
       run: |
