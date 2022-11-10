@@ -37,7 +37,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.2" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="7.1.3" />
         <PackageReference Include="NodaTime" Version="3.1.5" />
 
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore7\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore7.csproj" />
