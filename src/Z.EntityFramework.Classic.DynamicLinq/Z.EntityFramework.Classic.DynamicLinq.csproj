@@ -36,7 +36,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" PrivateAssets="All" />
+        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" PrivateAssets="All" />
         <PackageReference Include="Z.EntityFramework.Classic" Version="7.1.7" />
     </ItemGroup>
 </Project>

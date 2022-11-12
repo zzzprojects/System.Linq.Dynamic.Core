@@ -41,7 +41,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var qry = new[] { new DateTime(2020, 1, 1), (DateTime?)null }.AsQueryable();
 
             // Act
-            var byYear = qry.GroupBy("np(Value.Year, 2019)");
+            var byYear = qry.GroupBy("np(Value.Year, 2019)").ToDynamicArray();
 
             // Assert
             byYear.Should().HaveCount(2);
@@ -58,7 +58,7 @@ namespace System.Linq.Dynamic.Core.Tests
             }.AsQueryable();
 
             // Act
-            var byYear = qry.GroupBy("np(Test.D.Value.Year, 2019)");
+            var byYear = qry.GroupBy("np(Test.D.Value.Year, 2019)").ToDynamicArray();
 
             // Assert
             byYear.Should().HaveCount(2);
@@ -75,7 +75,7 @@ namespace System.Linq.Dynamic.Core.Tests
             }.AsQueryable();
 
             // Act
-            var byYear = qry.GroupBy("np(Test.Test.D.Value.Year, 2019)");
+            var byYear = qry.GroupBy("np(Test.Test.D.Value.Year, 2019)").ToDynamicArray();
 
             // Assert
             byYear.Should().HaveCount(2);

@@ -8,23 +8,35 @@ jobs:
 
     steps:  
     - uses: actions/checkout@v2
+
+    - uses: actions/setup-dotnet@v1
+      with:
+       dotnet-version: '6.0.x'
+
+    - uses: actions/setup-dotnet@v1
+      with:
+       dotnet-version: '7.0.x'
       
     - name: Build Projects
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
 
+    - name: Run Tests net7.0
+      run: |
+        dotnet build ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net7.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net7.csproj -c Release -p:buildType=azure-pipelines-ci --no-build
+
     - name: Run Tests net6.0
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci
-
-    - name: Run Tests net5.0
-      run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net5/System.Linq.Dynamic.Core.Tests.Net5.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet build ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci --no-build
 
     - name: Run Tests netcoreapp31
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f netcoreapp31 -p:buildType=azure-pipelines-ci
+        dotnet build ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f netcoreapp31 -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f netcoreapp31 -p:buildType=azure-pipelines-ci --no-build
     
     - name: Run Tests net452
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f net452 -p:buildType=azure-pipelines-ci
+        dotnet build ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f net452 -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f net452 -p:buildType=azure-pipelines-ci --no-build

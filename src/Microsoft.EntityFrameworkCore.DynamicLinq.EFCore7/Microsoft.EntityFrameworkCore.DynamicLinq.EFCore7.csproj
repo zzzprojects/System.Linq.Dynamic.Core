@@ -8,9 +8,9 @@
         <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;EFDYNAMICFUNCTIONS;ASYNCENUMERABLE</DefineConstants>
         <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
         <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
-        <ProjectGuid>{D28F6393-B56B-40A2-AF67-E8D669F42546}</ProjectGuid>
-        <TargetFrameworks>net6.0</TargetFrameworks>
-        <Version>6.2.$(PatchVersion)</Version>
+        <ProjectGuid>{FB2F4C99-EC34-4D29-87E2-944B25D90ef7}</ProjectGuid>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+        <Version>7.2.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -26,7 +26,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>net6.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -43,6 +43,6 @@
 
     <ItemGroup>
         <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
     </ItemGroup>
 </Project>
