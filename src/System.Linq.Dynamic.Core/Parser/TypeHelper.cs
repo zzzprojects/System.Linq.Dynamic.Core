@@ -186,10 +186,12 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return true;
             }
+
             if (!target.GetTypeInfo().IsValueType)
             {
                 return target.IsAssignableFrom(source);
             }
+
             Type st = GetNonNullableType(source);
             Type tt = GetNonNullableType(target);
 
@@ -197,6 +199,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 return false;
             }
+
             Type sc = st.GetTypeInfo().IsEnum ? typeof(object) : st;
             Type tc = tt.GetTypeInfo().IsEnum ? typeof(object) : tt;
 
