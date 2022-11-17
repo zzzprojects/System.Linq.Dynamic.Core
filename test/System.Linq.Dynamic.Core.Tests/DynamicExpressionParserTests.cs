@@ -1482,13 +1482,48 @@ namespace System.Linq.Dynamic.Core.Tests
         public void DynamicExpressionParser_ParseLambda_Func()
         {
             // Arrange
-            var func = (Func<int, int>)DynamicExpressionParser.ParseLambda(typeof(Func<int, int>), new[] { Expression.Parameter(typeof(int), "x") }, typeof(int), "x + 1").Compile();
+            var func = (Func<int, int>)DynamicExpressionParser.ParseLambda(
+                typeof(Func<int, int>),
+                new[]
+                {
+                    Expression.Parameter(typeof(int), "x")
+                },
+                typeof(int),
+                "x + 1"
+            ).Compile();
 
             // Act
             var result = func(4);
 
             // Assert
             result.Should().Be(5);
+        }
+
+        [Theory]
+        [InlineData(1, true)]
+        [InlineData(5, false)]
+        public void DynamicExpressionParser_ParseLambda_Func2(int? input, bool expected)
+        {
+            // Arrange
+            var nullableType = typeof(int?);
+            var functionType = typeof(Func<,>).MakeGenericType(nullableType, typeof(bool));
+            var valueParameter = Expression.Parameter(nullableType, "value");
+
+            // Act 1
+            var expression = DynamicExpressionParser.ParseLambda(
+                functionType,
+                new ParsingConfig(),
+                new[] { valueParameter },
+                typeof(bool),
+                "value != null && value == 1"
+            );
+
+            // Act 2
+            var compiledExpression = expression.Compile();
+            var result = compiledExpression.DynamicInvoke(input);
+
+            // Assert
+            result.Should().Be(expected);
         }
     }
 }
