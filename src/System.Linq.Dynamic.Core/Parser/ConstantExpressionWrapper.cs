@@ -193,7 +193,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             var wrapper = new WrappedValue<TValue>(value);
 
-            return Expression.Property(Expression.Constant(wrapper), typeof(WrappedValue<TValue>).GetProperty("Value"));
+            return Expression.Property(Expression.Constant(wrapper), typeof(WrappedValue<TValue>).GetProperty("Value")!);
         }
     }
 }

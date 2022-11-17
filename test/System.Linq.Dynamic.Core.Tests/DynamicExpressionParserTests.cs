@@ -279,7 +279,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false()
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false_String()
         {
             // Assign
             var config = new ParsingConfig
@@ -291,14 +291,33 @@ namespace System.Linq.Dynamic.Core.Tests
             var expression = DynamicExpressionParser.ParseLambda<string, bool>(config, true, "s => s == \"x\"");
 
             // Assert
-            dynamic constantExpression = (ConstantExpression)(expression.Body as BinaryExpression).Right;
-            string value = constantExpression.Value;
+            ConstantExpression constantExpression = (ConstantExpression)((BinaryExpression)expression.Body).Right;
+            object value = constantExpression.Value;
 
             Check.That(value).IsEqualTo("x");
         }
 
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true()
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false_DateTime()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = false
+            };
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<Person, bool>(config, true, "D == \"2022-03-02\"");
+
+            // Assert
+            ConstantExpression constantExpression = (ConstantExpression)((BinaryExpression)expression.Body).Right;
+            object value = constantExpression.Value;
+
+            Check.That(value).IsEqualTo(new DateTime(2022, 3, 2));
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true_Int()
         {
             // Assign
             var config = new ParsingConfig
@@ -311,15 +330,40 @@ namespace System.Linq.Dynamic.Core.Tests
             var expressionAsString = expression.ToString();
 
             // Assert
-            Check.That(expressionAsString).IsEqualTo("Param_0 => (Param_0.Id == value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.Int32]).Value)");
+            expressionAsString.Should().Be("Param_0 => (Param_0.Id == value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.Int32]).Value)");
 
-            dynamic constantExpression = ((MemberExpression)(expression.Body as BinaryExpression).Right).Expression as ConstantExpression;
-            var wrappedObj = constantExpression.Value;
+            ConstantExpression constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
+            var wrappedObj = constantExpression!.Value;
 
-            var propertyInfo = wrappedObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
-            var value = (int)propertyInfo.GetValue(wrappedObj);
+            PropertyInfo propertyInfo = wrappedObj!.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
+            object value = propertyInfo!.GetValue(wrappedObj);
 
             Check.That(value).IsEqualTo(42);
+        }
+
+        [Fact(Skip = "Issue 645")]
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_true_DateTime()
+        {
+            // Assign
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = true
+            };
+
+            // Act
+            var expression = DynamicExpressionParser.ParseLambda<Person, bool>(config, false, "D = \"2022-11-16\"");
+            var expressionAsString = expression.ToString();
+
+            // Assert
+            expressionAsString.Should().Be("Param_0 => (Param_0.D == value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.DateTime]).Value)");
+
+            ConstantExpression constantExpression = (ConstantExpression)((MemberExpression)((BinaryExpression)expression.Body).Right).Expression;
+            var wrappedObj = constantExpression!.Value;
+
+            PropertyInfo propertyInfo = wrappedObj!.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
+            object value = propertyInfo!.GetValue(wrappedObj);
+
+            Check.That(value).IsEqualTo(new DateTime(2022, 11, 16));
         }
 
         [Theory]
@@ -1005,6 +1049,29 @@ namespace System.Linq.Dynamic.Core.Tests
             var lambda = DynamicExpressionParser.ParseLambda(typeof(User), null, expressionText, user);
             var boolLambda = lambda as Expression<Func<User, bool>>;
             Assert.NotNull(boolLambda);
+
+            var del = lambda.Compile();
+            var result = (bool)del.DynamicInvoke(user);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void DynamicExpressionParser_ParseLambda_With_DateTime_Equals_String()
+        {
+            // Arrange
+            var someDateTime = "2022-03-02";
+            var user = new Person
+            {
+                D = new DateTime(2022, 3, 2)
+            };
+            var expressionText = $"D == \"{someDateTime}\"";
+
+            // Act
+            var lambda = DynamicExpressionParser.ParseLambda(typeof(Person), null, expressionText, user);
+            var dtLambda = lambda as Expression<Func<Person, bool>>;
+            Assert.NotNull(dtLambda);
 
             var del = lambda.Compile();
             var result = (bool)del.DynamicInvoke(user);
