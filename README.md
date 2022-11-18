@@ -59,7 +59,7 @@ db.Customers.WhereInterpolated($"City == {cityName} and Orders.Count >= {c}");
 The following frameworks are supported:
 - net35, net40, net45, net46 and up
 - netstandard1.3, netstandard2.0 and netstandard2.1
-- netcoreapp3.1, net5.0 and net6.0
+- netcoreapp3.1, net5.0, net6.0 and net7.0
 - uap10.0
 
 ### Fork details
