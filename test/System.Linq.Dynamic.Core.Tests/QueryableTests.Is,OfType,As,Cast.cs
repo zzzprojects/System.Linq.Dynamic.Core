@@ -200,6 +200,26 @@ namespace System.Linq.Dynamic.Core.Tests
             countAsDynamic.Should().Be(1);
         }
 
+        [Fact]
+        public void As_Dynamic_ActingOnProperty_NullableInt()
+        {
+            // Assign
+            var qry = new[]
+            {
+                new { Value = (int?) null },
+                new { Value = (int?) 2 },
+                new { Value = (int?) 42 }
+
+            }.AsQueryable();
+
+            // Act
+            int count = qry.Count(x => x.Value as int? != null);
+            int? countAsDynamic = qry.Count("As(Value, \"int?\") != null");
+
+            // Assert
+            countAsDynamic.Should().Be(count);
+        }
+
         public enum TestEnum
         {
             None = 0,
