@@ -251,7 +251,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Cast_To_nullableint()
+        public void ExpressionTests_Cast_To_NullableInt()
         {
             // Arrange
             var list = new List<SimpleValuesModel>
@@ -267,8 +267,26 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<int?>());
         }
 
+        [Fact(Skip = "Issue 643")]
+        public void ExpressionTests_Cast_To_NullableEnum()
+        {
+            // Arrange
+            var nullableEnumType = $"{typeof(SimpleValuesModelEnum).FullName}?";
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { EnumValue = SimpleValuesModelEnum.A }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => (SimpleValuesModelEnum?)x.EnumValue);
+            var result = list.AsQueryable().Select($"{nullableEnumType}(EnumValue)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnum?>());
+        }
+
         [Fact]
-        public void ExpressionTests_Cast_Automatic_To_nullablelong()
+        public void ExpressionTests_Cast_Automatic_To_NullableLong()
         {
             // Arrange
             var q = new[] { null, new UserProfile(), new UserProfile { UserProfileDetails = new UserProfileDetails { Id = 42 } } }.AsQueryable();
@@ -282,7 +300,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Cast_To_newnullableint()
+        public void ExpressionTests_Cast_To_NewNullableInt()
         {
             // Arrange
             var list = new List<SimpleValuesModel>
