@@ -120,24 +120,24 @@ namespace System.Linq.Dynamic.Core
 
             var parsedExpression = parser.Parse(resultType, createParameterCtor);
 
-            LambdaExpression lambdaExpression;
+            if (parsedExpression is LambdaExpression lambdaExpression)
+            {
+                return lambdaExpression;
+            }
+
             if (parsingConfig is { RenameParameterExpression: true } && parameters.Length == 1)
             {
                 var renamer = new ParameterExpressionRenamer(parser.LastLambdaItName);
-                parsedExpression = renamer.Rename(parsedExpression, out ParameterExpression newParameterExpression);
+                parsedExpression = renamer.Rename(parsedExpression, out var newParameterExpression);
 
-                lambdaExpression = delegateType == null ?
+                return delegateType == null ?
                     Expression.Lambda(parsedExpression, newParameterExpression) :
                     Expression.Lambda(delegateType, parsedExpression, newParameterExpression);
             }
-            else
-            {
-                lambdaExpression = delegateType == null ?
-                    Expression.Lambda(parsedExpression, parameters) :
-                    Expression.Lambda(delegateType, parsedExpression, parameters);
-            }
 
-            return lambdaExpression;
+            return delegateType == null ?
+                Expression.Lambda(parsedExpression, parameters) :
+                Expression.Lambda(delegateType, parsedExpression, parameters);
         }
 
         /// <summary>
