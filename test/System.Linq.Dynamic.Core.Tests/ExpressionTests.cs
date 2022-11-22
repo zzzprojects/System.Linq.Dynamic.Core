@@ -269,7 +269,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<int?>());
         }
 
-        [Fact(Skip = "Issue 643")]
+        [Fact]
         public void ExpressionTests_Cast_To_Enum()
         {
             // Arrange
@@ -280,7 +280,6 @@ namespace System.Linq.Dynamic.Core.Tests
                 CustomTypeProvider = dynamicLinqCustomTypeProviderMock.Object
             };
 
-            var enumType = $"{typeof(SimpleValuesModelEnum).FullName}";
             var list = new List<SimpleValuesModel>
             {
                 new SimpleValuesModel { EnumValue = SimpleValuesModelEnum.A }
@@ -288,13 +287,13 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expectedResult = list.Select(x => x.EnumValue);
-            var result = list.AsQueryable().Select(config, $"{enumType}(EnumValue)");
+            var result = list.AsQueryable().Select(config, $"SimpleValuesModelEnum(EnumValue)");
 
             // Assert
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnum>());
         }
 
-        [Fact(Skip = "Issue 643")]
+        [Fact]
         public void ExpressionTests_Cast_To_NullableEnum()
         {
             // Arrange
@@ -310,7 +309,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 CustomTypeProvider = dynamicLinqCustomTypeProviderMock.Object
             };
 
-            var nullableEnumType = $"{typeof(SimpleValuesModelEnum).FullName}?";
+            //var nullableEnumType = $"{typeof(SimpleValuesModelEnum).FullName}?";
             var list = new List<SimpleValuesModel>
             {
                 new SimpleValuesModel { EnumValue = SimpleValuesModelEnum.A }
@@ -318,7 +317,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expectedResult = list.Select(x => (SimpleValuesModelEnum?)x.EnumValue);
-            var result = list.AsQueryable().Select(config, $"{nullableEnumType}(EnumValue)");
+            var result = list.AsQueryable().Select(config, $"SimpleValuesModelEnum?(EnumValue)");
 
             // Assert
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnum?>());
