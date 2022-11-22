@@ -309,7 +309,6 @@ namespace System.Linq.Dynamic.Core.Tests
                 CustomTypeProvider = dynamicLinqCustomTypeProviderMock.Object
             };
 
-            //var nullableEnumType = $"{typeof(SimpleValuesModelEnum).FullName}?";
             var list = new List<SimpleValuesModel>
             {
                 new SimpleValuesModel { EnumValue = SimpleValuesModelEnum.A }
