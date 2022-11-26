@@ -287,6 +287,23 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Cast_To_FullTypeEnum_Using_DynamicLinqType()
+        {
+            // Arrange
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { EnumValueDynamicLinqType = SimpleValuesModelEnumAsDynamicLinqType.A }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => x.EnumValueDynamicLinqType);
+            var result = list.AsQueryable().Select($"\"{typeof(SimpleValuesModelEnumAsDynamicLinqType).FullName}\"(EnumValueDynamicLinqType)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnumAsDynamicLinqType>());
+        }
+
+        [Fact]
         public void ExpressionTests_Cast_To_Enum_Using_CustomTypeProvider()
         {
             // Arrange
