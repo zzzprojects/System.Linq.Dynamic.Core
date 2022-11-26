@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using FluentAssertions;
+using Moq;
 using Newtonsoft.Json.Linq;
 using NFluent;
 using Xunit;
@@ -251,7 +253,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Cast_To_nullableint()
+        public void ExpressionTests_Cast_To_NullableInt()
         {
             // Arrange
             var list = new List<SimpleValuesModel>
@@ -268,7 +270,94 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Cast_Automatic_To_nullablelong()
+        public void ExpressionTests_Cast_To_Enum_Using_DynamicLinqType()
+        {
+            // Arrange
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { EnumValueDynamicLinqType = SimpleValuesModelEnumAsDynamicLinqType.A }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => x.EnumValueDynamicLinqType);
+            var result = list.AsQueryable().Select("SimpleValuesModelEnumAsDynamicLinqType(EnumValueDynamicLinqType)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnumAsDynamicLinqType>());
+        }
+
+        [Fact]
+        public void ExpressionTests_Cast_To_Enum_Using_CustomTypeProvider()
+        {
+            // Arrange
+            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            dynamicLinqCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type> { typeof(SimpleValuesModelEnum) });
+            var config = new ParsingConfig
+            {
+                CustomTypeProvider = dynamicLinqCustomTypeProviderMock.Object
+            };
+
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { EnumValue = SimpleValuesModelEnum.A }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => x.EnumValue);
+            var result = list.AsQueryable().Select(config, "SimpleValuesModelEnum(EnumValue)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnum>());
+        }
+
+        [Fact]
+        public void ExpressionTests_Cast_To_NullableEnum_Using_DynamicLinqType()
+        {
+            // Arrange
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { EnumValueDynamicLinqType = SimpleValuesModelEnumAsDynamicLinqType.A }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => (SimpleValuesModelEnumAsDynamicLinqType?)x.EnumValueDynamicLinqType);
+            var result = list.AsQueryable().Select("SimpleValuesModelEnumAsDynamicLinqType?(EnumValueDynamicLinqType)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnumAsDynamicLinqType?>());
+        }
+
+        [Fact]
+        public void ExpressionTests_Cast_To_NullableEnum_Using_CustomTypeProvider()
+        {
+            // Arrange
+            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            dynamicLinqCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type>
+            {
+                typeof(SimpleValuesModelEnum),
+                typeof(SimpleValuesModelEnum?)
+            });
+
+            var config = new ParsingConfig
+            {
+                CustomTypeProvider = dynamicLinqCustomTypeProviderMock.Object
+            };
+
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { EnumValue = SimpleValuesModelEnum.A }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => (SimpleValuesModelEnum?)x.EnumValue);
+            var result = list.AsQueryable().Select(config, $"SimpleValuesModelEnum?(EnumValue)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnum?>());
+        }
+
+        [Fact]
+        public void ExpressionTests_Cast_Automatic_To_NullableLong()
         {
             // Arrange
             var q = new[] { null, new UserProfile(), new UserProfile { UserProfileDetails = new UserProfileDetails { Id = 42 } } }.AsQueryable();
@@ -282,7 +371,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Cast_To_newnullableint()
+        public void ExpressionTests_Cast_To_NewNullableInt()
         {
             // Arrange
             var list = new List<SimpleValuesModel>

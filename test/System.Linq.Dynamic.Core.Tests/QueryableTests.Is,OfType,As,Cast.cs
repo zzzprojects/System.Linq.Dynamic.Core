@@ -201,6 +201,74 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void As_Dynamic_ActingOnProperty_NullableInt()
+        {
+            // Assign
+            var qry = new[]
+            {
+                new { Value = (int?) null },
+                new { Value = (int?) 2 },
+                new { Value = (int?) 42 }
+
+            }.AsQueryable();
+
+            // Act
+            int count = qry.Count(x => x.Value as int? != null);
+            int? countAsDynamic = qry.Count("As(Value, \"int?\") != null");
+
+            // Assert
+            countAsDynamic.Should().Be(count);
+        }
+
+        public enum TestEnum
+        {
+            None = 0,
+
+            X = 1
+        }
+
+        [Fact]
+        public void As_Dynamic_ActingOnProperty_NullableEnum()
+        {
+            // Assign
+            var nullableEnumType = $"{typeof(TestEnum).FullName}?";
+            var qry = new[]
+            {
+                new { Value = TestEnum.X }
+            }.AsQueryable();
+
+            // Act
+            int countAsDynamic = qry.Count($"As(Value, \"{nullableEnumType}\") != null");
+
+            // Assert
+            countAsDynamic.Should().Be(1);
+        }
+
+        [Fact]
+        public void As_Dynamic_ActingOnProperty_NullableClass()
+        {
+            // Assign
+            var nullableClassType = $"{typeof(Worker).FullName}?";
+            var qry = new[]
+            {
+                new Department
+                {
+                    NullableEmployee = new Worker { Name = "1" }
+                },
+                new Department
+                {
+                    NullableEmployee = new Boss { Name = "b" }
+                }
+            }.AsQueryable();
+
+            // Act
+            int countAsDynamic = qry.Count($"As(NullableEmployee, \"{nullableClassType}\") != null");
+
+            // Assert
+            countAsDynamic.Should().Be(1);
+        }
+
+        [Fact]
         public void As_Dynamic_ActingOnProperty_WithType()
         {
             // Assign

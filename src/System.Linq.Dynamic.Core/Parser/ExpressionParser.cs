@@ -1907,13 +1907,20 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private Type ResolveTypeStringFromArgument(string typeName)
         {
+            bool typeIsNullable = false;
+            if (typeName.EndsWith("?"))
+            {
+                typeName = typeName.TrimEnd('?');
+                typeIsNullable = true;
+            }
+
             var resultType = _typeFinder.FindTypeByName(typeName, new[] { _it, _parent, _root }, true);
             if (resultType == null)
             {
                 throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeName);
             }
 
-            return resultType;
+            return typeIsNullable ? TypeHelper.ToNullableType(resultType) : resultType;
         }
 
         private Expression[] ParseArgumentList()

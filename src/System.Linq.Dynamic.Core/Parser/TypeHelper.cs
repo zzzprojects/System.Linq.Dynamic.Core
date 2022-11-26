@@ -311,16 +311,29 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public static bool TypeCanBeNull(Type type)
         {
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(type);
 
             return !type.GetTypeInfo().IsValueType || IsNullableType(type);
         }
 
         public static Type ToNullableType(Type type)
         {
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(type);
 
-            return IsNullableType(type) ? type : typeof(Nullable<>).MakeGenericType(type);
+            if (IsNullableType(type))
+            {
+                // Already nullable, just return the type.
+                return type;
+            }
+
+            if (!type.GetTypeInfo().IsValueType)
+            {
+                // Type is a not a value type, just return the type.
+                return type;
+            }
+
+            // Convert type to a nullable type
+            return typeof(Nullable<>).MakeGenericType(type);
         }
 
         public static bool IsSignedIntegralType(Type type)
