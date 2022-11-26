@@ -1,7 +1,15 @@
-﻿
+﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+
 namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
 {
     public enum SimpleValuesModelEnum
+    {
+        A,
+        B
+    }
+
+    [DynamicLinqType]
+    public enum SimpleValuesModelEnumAsDynamicLinqType
     {
         A,
         B
@@ -22,5 +30,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
         public double? NullableDoubleValue { get; set; }
 
         public SimpleValuesModelEnum EnumValue { get; set; }
+
+        public SimpleValuesModelEnumAsDynamicLinqType EnumValueDynamicLinqType { get; set; }
     }
 }
