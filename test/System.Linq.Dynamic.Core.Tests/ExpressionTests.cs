@@ -287,6 +287,40 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_Cast_To_FullTypeDateTime_Using_DynamicLinqType()
+        {
+            // Arrange
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { DateTime = DateTime.Now }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => x.DateTime);
+            var result = list.AsQueryable().Select($"\"{typeof(DateTime).FullName}\"(DateTime)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<DateTime>());
+        }
+
+        [Fact]
+        public void ExpressionTests_Cast_To_FullTypeDateTimeNullable_Using_DynamicLinqType()
+        {
+            // Arrange
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { DateTime = DateTime.Now }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => (DateTime?)x.DateTime);
+            var result = list.AsQueryable().Select($"\"{typeof(DateTime).FullName}\"?(DateTime)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<DateTime?>());
+        }
+
+        [Fact]
         public void ExpressionTests_Cast_To_FullTypeEnum_Using_DynamicLinqType()
         {
             // Arrange
@@ -301,6 +335,23 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnumAsDynamicLinqType>());
+        }
+
+        [Fact]
+        public void ExpressionTests_Cast_To_FullTypeNullableEnum_Using_DynamicLinqType()
+        {
+            // Arrange
+            var list = new List<SimpleValuesModel>
+            {
+                new SimpleValuesModel { EnumValueDynamicLinqType = SimpleValuesModelEnumAsDynamicLinqType.A }
+            };
+
+            // Act
+            var expectedResult = list.Select(x => (SimpleValuesModelEnumAsDynamicLinqType?)x.EnumValueDynamicLinqType);
+            var result = list.AsQueryable().Select($"\"{typeof(SimpleValuesModelEnumAsDynamicLinqType).FullName}\"?(EnumValueDynamicLinqType)");
+
+            // Assert
+            Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<SimpleValuesModelEnumAsDynamicLinqType?>());
         }
 
         [Fact]

@@ -367,9 +367,13 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Theory]
-        [InlineData("NullableIntValue", "42")]
-        [InlineData("NullableDoubleValue", "42.23")]
-        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(string propName, string valueString)
+        [InlineData("NullableIntValue", "42", "Param_0 => (Param_0.NullableIntValue == value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.Nullable`1[System.Int32]]).Value)")]
+        [InlineData("NullableDoubleValue", "42.23", "Param_0 => (Param_0.NullableDoubleValue == value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[System.Nullable`1[System.Double]]).Value)")]
+        public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_ForNullableProperty_true(
+            string propName, 
+            string valueString,
+            string expected
+        )
         {
             // Assign
             var culture = CultureInfo.CreateSpecificCulture("en-US");
@@ -384,18 +388,7 @@ namespace System.Linq.Dynamic.Core.Tests
             var expressionAsString = expression.ToString();
 
             // Assert
-            var queriedProp = typeof(SimpleValuesModel).GetProperty(propName, BindingFlags.Instance | BindingFlags.Public);
-            var queriedPropType = queriedProp.PropertyType;
-            var queriedPropUnderlyingType = Nullable.GetUnderlyingType(queriedPropType);
-
-            Check.That(expressionAsString).IsEqualTo($"Param_0 => (Param_0.{propName} == {ExpressionString.NullableConversion($"value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[{queriedPropUnderlyingType}]).Value")})");
-            dynamic constantExpression = ((MemberExpression)(((expression.Body as BinaryExpression).Right as UnaryExpression).Operand)).Expression as ConstantExpression;
-            object wrapperObj = constantExpression.Value;
-
-            var propertyInfo = wrapperObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
-            var value = propertyInfo.GetValue(wrapperObj);
-
-            value.Should().Be(Convert.ChangeType(valueString, Nullable.GetUnderlyingType(queriedPropType) ?? queriedPropType, culture));
+            expressionAsString.Should().Be(expected);
         }
 
         [Theory]

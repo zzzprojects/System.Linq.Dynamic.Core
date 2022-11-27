@@ -10,6 +10,7 @@ using System.Linq.Dynamic.Core.TypeConverters;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
+using AnyOfTypes;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -734,18 +735,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private Expression ParsePrimary()
         {
-            var result = ParsePrimaryStart();
-
-            Expression expr;
-            if (result.Expression2 is { })
-            {
-                expr = result.Expression2;
-            }
-            else
-            {
-                expr = result.Expression1;
-                _expressionHelper.WrapConstantExpression(ref expr);
-            }
+            var expr = ParsePrimaryStart();
 
             while (true)
             {
@@ -771,55 +761,61 @@ namespace System.Linq.Dynamic.Core.Parser
             return expr;
         }
 
-        private ParseResult ParsePrimaryStart()
+        private Expression ParsePrimaryStart()
         {
             switch (_textParser.CurrentToken.Id)
             {
                 case TokenId.Identifier:
-                    return new ParseResult(ParseIdentifier());
+                    return ParseIdentifier();
+
                 case TokenId.StringLiteral:
-                    return ParseStringLiteral();
+                    var expressionOrType = ParseStringLiteral();
+                    return expressionOrType.IsFirst ? expressionOrType.First : ParseTypeAccess(expressionOrType.Second, false);
+
                 case TokenId.IntegerLiteral:
-                    return new ParseResult(ParseIntegerLiteral());
+                    return ParseIntegerLiteral();
+
                 case TokenId.RealLiteral:
-                    return new ParseResult(ParseRealLiteral());
+                    return ParseRealLiteral();
+
                 case TokenId.OpenParen:
-                    return new ParseResult(ParseParenExpression());
+                    return ParseParenExpression();
+
                 default:
                     throw ParseError(Res.ExpressionExpected);
             }
         }
 
-        private ParseResult ParseStringLiteral()
+        private AnyOf<Expression, Type> ParseStringLiteral()
         {
             _textParser.ValidateToken(TokenId.StringLiteral);
 
-            string result = StringParser.ParseString(_textParser.CurrentToken.Text);
+            var stringValue = StringParser.ParseString(_textParser.CurrentToken.Text);
 
             if (_textParser.CurrentToken.Text[0] == '\'')
             {
-                if (result.Length > 1)
+                if (stringValue.Length > 1)
                 {
                     throw ParseError(Res.InvalidCharacterLiteral);
                 }
 
                 _textParser.NextToken();
-                return new ParseResult(ConstantExpressionHelper.CreateLiteral(result[0], result));
+                return ConstantExpressionHelper.CreateLiteral(stringValue[0], stringValue);
             }
 
             _textParser.NextToken();
 
-            if (result.Length > 2 && result.Contains('.'))
+            if (_parsingConfig.SupportFullTypeCastingUsingDoubleQuotes && stringValue.Length > 2 && stringValue.Contains('.'))
             {
                 // Try to resolve this string as a type
-                var type = _typeFinder.FindTypeByName(result, null, false);
+                var type = _typeFinder.FindTypeByName(stringValue, null, false);
                 if (type is { })
                 {
-                    return new ParseResult(ConstantExpressionHelper.CreateLiteral(result, result), ParseTypeAccess(type));
+                    return type;
                 }
             }
 
-            return new ParseResult(ConstantExpressionHelper.CreateLiteral(result, result));
+            return ConstantExpressionHelper.CreateLiteral(stringValue, stringValue);
         }
 
         private Expression ParseIntegerLiteral()
@@ -866,7 +862,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 if (value is Type typeValue)
                 {
-                    return ParseTypeAccess(typeValue);
+                    return ParseTypeAccess(typeValue, true);
                 }
 
                 switch (value)
@@ -1498,10 +1494,13 @@ namespace System.Linq.Dynamic.Core.Parser
             return Expression.Invoke(lambda, args);
         }
 
-        private Expression ParseTypeAccess(Type type)
+        private Expression ParseTypeAccess(Type type, bool getNext)
         {
             int errorPos = _textParser.CurrentToken.Pos;
-            _textParser.NextToken();
+            if (getNext)
+            {
+                _textParser.NextToken();
+            }
 
             if (_textParser.CurrentToken.Id == TokenId.Question)
             {
@@ -1521,8 +1520,8 @@ namespace System.Linq.Dynamic.Core.Parser
                 Expression[] args;
                 if (shorthand)
                 {
-                    var stringLiteralExpression = ParseStringLiteral();
-                    args = new[] { stringLiteralExpression.Expression1 };
+                    var expressionOrType = ParseStringLiteral();
+                    args = new[] { expressionOrType.First };
                 }
                 else
                 {
