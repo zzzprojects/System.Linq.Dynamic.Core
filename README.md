@@ -45,7 +45,7 @@ db.Customers.WhereInterpolated($"City == {cityName} and Orders.Count >= {c}");
 | &nbsp;&nbsp;**Issues** | [![GitHub issues](https://img.shields.io/github/issues/StefH/System.Linq.Dynamic.Core.svg)](https://github.com/StefH/System.Linq.Dynamic.Core/issues) |
 | | |
 | ***Quality*** | &nbsp; |
-| &nbsp;&nbsp;**Main workflow** | ![Main workflow](https://github.com/zzzprojects/System.Linq.Dynamic.Core/workflows/Main%20workflow/badge.svg) |
+| &nbsp;&nbsp;**CI Workflow** | ![CI Workflow](https://github.com/zzzprojects/System.Linq.Dynamic.Core/actions/workflows/ci.yml/badge.svg) |
 | |
 | ***NuGet*** | &nbsp; |
 | &nbsp;&nbsp;**System.Linq.Dynamic.Core** | [![NuGet](https://buildstats.info/nuget/System.Linq.Dynamic.Core)](https://www.nuget.org/packages/System.Linq.Dynamic.Core) |
