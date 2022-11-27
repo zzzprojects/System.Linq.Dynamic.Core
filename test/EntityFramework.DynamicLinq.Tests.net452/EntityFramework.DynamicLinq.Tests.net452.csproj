@@ -264,6 +264,9 @@
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\SimpleValuesModel.cs">
       <Link>Helpers\Models\SimpleValuesModel.cs</Link>
     </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\SpecialPet.cs">
+      <Link>Helpers\Models\SpecialPet.cs</Link>
+    </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\Models\User.cs">
       <Link>Helpers\Models\User.cs</Link>
     </Compile>

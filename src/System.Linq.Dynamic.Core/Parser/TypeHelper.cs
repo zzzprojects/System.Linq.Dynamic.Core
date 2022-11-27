@@ -311,16 +311,29 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public static bool TypeCanBeNull(Type type)
         {
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(type);
 
             return !type.GetTypeInfo().IsValueType || IsNullableType(type);
         }
 
         public static Type ToNullableType(Type type)
         {
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(type);
 
-            return IsNullableType(type) ? type : typeof(Nullable<>).MakeGenericType(type);
+            if (IsNullableType(type))
+            {
+                // Already nullable, just return the type.
+                return type;
+            }
+
+            if (!type.GetTypeInfo().IsValueType)
+            {
+                // Type is a not a value type, just return the type.
+                return type;
+            }
+
+            // Convert type to a nullable type
+            return typeof(Nullable<>).MakeGenericType(type);
         }
 
         public static bool IsSignedIntegralType(Type type)
@@ -419,15 +432,18 @@ namespace System.Linq.Dynamic.Core.Parser
             return type;
         }
 
-        public static IEnumerable<Type> GetSelfAndBaseTypes(Type type)
+        public static IList<Type> GetSelfAndBaseTypes(Type type, bool excludeObject = false)
         {
+            Check.NotNull(type, nameof(type));
+
             if (type.GetTypeInfo().IsInterface)
             {
                 var types = new List<Type>();
                 AddInterface(types, type);
                 return types;
             }
-            return GetSelfAndBaseClasses(type);
+
+            return GetSelfAndBaseClasses(type).Where(t => !excludeObject || t != typeof(object)).ToList();
         }
 
         private static IEnumerable<Type> GetSelfAndBaseClasses(Type type)
@@ -439,11 +455,12 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        private static void AddInterface(List<Type> types, Type type)
+        private static void AddInterface(ICollection<Type> types, Type type)
         {
             if (!types.Contains(type))
             {
                 types.Add(type);
+
                 foreach (Type t in type.GetInterfaces())
                 {
                     AddInterface(types, t);

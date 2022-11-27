@@ -66,7 +66,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.ResolveType"/>
         public Type? ResolveType(string typeName)
         {
-            Check.NotEmpty(typeName, nameof(typeName));
+            Check.NotEmpty(typeName);
 
             IEnumerable<Assembly> assemblies = _assemblyHelper.GetAssemblies();
             return ResolveType(assemblies, typeName);
@@ -75,7 +75,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders
         /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName"/>
         public Type? ResolveTypeBySimpleName(string simpleTypeName)
         {
-            Check.NotEmpty(simpleTypeName, nameof(simpleTypeName));
+            Check.NotEmpty(simpleTypeName);
 
             IEnumerable<Assembly> assemblies = _assemblyHelper.GetAssemblies();
             return ResolveTypeBySimpleName(assemblies, simpleTypeName);
