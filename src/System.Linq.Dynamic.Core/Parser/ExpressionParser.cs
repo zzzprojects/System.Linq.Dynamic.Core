@@ -736,6 +736,7 @@ namespace System.Linq.Dynamic.Core.Parser
         private Expression ParsePrimary()
         {
             var expr = ParsePrimaryStart();
+            _expressionHelper.WrapConstantExpression(ref expr);
 
             while (true)
             {
@@ -769,7 +770,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     return ParseIdentifier();
 
                 case TokenId.StringLiteral:
-                    var expressionOrType = ParseStringLiteral();
+                    var expressionOrType = ParseStringLiteral(false);
                     return expressionOrType.IsFirst ? expressionOrType.First : ParseTypeAccess(expressionOrType.Second, false);
 
                 case TokenId.IntegerLiteral:
@@ -786,7 +787,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        private AnyOf<Expression, Type> ParseStringLiteral()
+        private AnyOf<Expression, Type> ParseStringLiteral(bool forceParseAsString)
         {
             _textParser.ValidateToken(TokenId.StringLiteral);
 
@@ -805,7 +806,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _textParser.NextToken();
 
-            if (_parsingConfig.SupportFullTypeCastingUsingDoubleQuotes && stringValue.Length > 2 && stringValue.Contains('.'))
+            if (_parsingConfig.SupportFullTypeCastingUsingDoubleQuotes && !forceParseAsString && stringValue.Length > 2 && stringValue.Contains('.'))
             {
                 // Try to resolve this string as a type
                 var type = _typeFinder.FindTypeByName(stringValue, null, false);
@@ -1520,7 +1521,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 Expression[] args;
                 if (shorthand)
                 {
-                    var expressionOrType = ParseStringLiteral();
+                    var expressionOrType = ParseStringLiteral(true);
                     args = new[] { expressionOrType.First };
                 }
                 else
