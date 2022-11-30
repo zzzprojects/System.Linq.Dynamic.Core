@@ -10,6 +10,7 @@ using System.Linq.Dynamic.Core.TypeConverters;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
+using AnyOfTypes;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
@@ -734,7 +735,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private Expression ParsePrimary()
         {
-            Expression expr = ParsePrimaryStart();
+            var expr = ParsePrimaryStart();
             _expressionHelper.WrapConstantExpression(ref expr);
 
             while (true)
@@ -757,6 +758,7 @@ namespace System.Linq.Dynamic.Core.Parser
                     break;
                 }
             }
+
             return expr;
         }
 
@@ -766,38 +768,55 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 case TokenId.Identifier:
                     return ParseIdentifier();
+
                 case TokenId.StringLiteral:
-                    return ParseStringLiteral();
+                    var expressionOrType = ParseStringLiteral(false);
+                    return expressionOrType.IsFirst ? expressionOrType.First : ParseTypeAccess(expressionOrType.Second, false);
+
                 case TokenId.IntegerLiteral:
                     return ParseIntegerLiteral();
+
                 case TokenId.RealLiteral:
                     return ParseRealLiteral();
+
                 case TokenId.OpenParen:
                     return ParseParenExpression();
+
                 default:
                     throw ParseError(Res.ExpressionExpected);
             }
         }
 
-        private Expression ParseStringLiteral()
+        private AnyOf<Expression, Type> ParseStringLiteral(bool forceParseAsString)
         {
             _textParser.ValidateToken(TokenId.StringLiteral);
 
-            string result = StringParser.ParseString(_textParser.CurrentToken.Text);
+            var stringValue = StringParser.ParseString(_textParser.CurrentToken.Text);
 
             if (_textParser.CurrentToken.Text[0] == '\'')
             {
-                if (result.Length > 1)
+                if (stringValue.Length > 1)
                 {
                     throw ParseError(Res.InvalidCharacterLiteral);
                 }
 
                 _textParser.NextToken();
-                return ConstantExpressionHelper.CreateLiteral(result[0], result);
+                return ConstantExpressionHelper.CreateLiteral(stringValue[0], stringValue);
             }
 
             _textParser.NextToken();
-            return ConstantExpressionHelper.CreateLiteral(result, result);
+
+            if (_parsingConfig.SupportCastingToFullyQualifiedTypeAsString && !forceParseAsString && stringValue.Length > 2 && stringValue.Contains('.'))
+            {
+                // Try to resolve this string as a type
+                var type = _typeFinder.FindTypeByName(stringValue, null, false);
+                if (type is { })
+                {
+                    return type;
+                }
+            }
+
+            return ConstantExpressionHelper.CreateLiteral(stringValue, stringValue);
         }
 
         private Expression ParseIntegerLiteral()
@@ -844,7 +863,7 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 if (value is Type typeValue)
                 {
-                    return ParseTypeAccess(typeValue);
+                    return ParseTypeAccess(typeValue, true);
                 }
 
                 switch (value)
@@ -1476,10 +1495,13 @@ namespace System.Linq.Dynamic.Core.Parser
             return Expression.Invoke(lambda, args);
         }
 
-        private Expression ParseTypeAccess(Type type)
+        private Expression ParseTypeAccess(Type type, bool getNext)
         {
             int errorPos = _textParser.CurrentToken.Pos;
-            _textParser.NextToken();
+            if (getNext)
+            {
+                _textParser.NextToken();
+            }
 
             if (_textParser.CurrentToken.Id == TokenId.Question)
             {
@@ -1496,7 +1518,16 @@ namespace System.Linq.Dynamic.Core.Parser
             bool shorthand = _textParser.CurrentToken.Id == TokenId.StringLiteral;
             if (_textParser.CurrentToken.Id == TokenId.OpenParen || shorthand)
             {
-                Expression[] args = shorthand ? new[] { ParseStringLiteral() } : ParseArgumentList();
+                Expression[] args;
+                if (shorthand)
+                {
+                    var expressionOrType = ParseStringLiteral(true);
+                    args = new[] { expressionOrType.First };
+                }
+                else
+                {
+                    args = ParseArgumentList();
+                }
 
                 // If only 1 argument and
                 // - the arg is ConstantExpression, return the conversion

@@ -107,7 +107,7 @@ namespace System.Linq.Dynamic.Core
         /// Determines if the context keywords (it, parent, and root) are valid and usable inside a Dynamic Linq string expression.  
         /// Does not affect the usability of the equivalent context symbols ($, ^ and ~).
         /// 
-        /// Default value is true.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool AreContextKeywordsEnabled { get; set; } = true;
 
@@ -117,7 +117,7 @@ namespace System.Linq.Dynamic.Core
         /// 
         /// Remark: when this setting is set to 'true', make sure to supply this ParsingConfig as first parameter on the extension methods.
         ///
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool EvaluateGroupByAtDatabase { get; set; }
 
@@ -125,28 +125,28 @@ namespace System.Linq.Dynamic.Core
         /// Use Parameterized Names in generated dynamic SQL query.
         /// See https://github.com/graeme-hill/gblog/blob/master/source_content/articles/2014.139_entity-framework-dynamic-queries-and-parameterization.mkd
         ///
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool UseParameterizedNamesInDynamicQuery { get; set; } = false;
 
         /// <summary>
         /// Allows the New() keyword to evaluate any available Type.
         ///
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool AllowNewToEvaluateAnyType { get; set; } = false;
 
         /// <summary>
         /// Renames the (Typed)ParameterExpression empty Name to a the correct supplied name from `it`.
         ///
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool RenameParameterExpression { get; set; } = false;
 
         /// <summary>
         /// Prevents any System.Linq.Expressions.ParameterExpression.Name value from being empty by substituting a random 16 character word.
         /// 
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool RenameEmptyParameterExpressionNames { get; set; }
 
@@ -155,7 +155,7 @@ namespace System.Linq.Dynamic.Core
         /// this flag to disable this behaviour and have parsing fail when parsing an expression
         /// where a member access on a non existing member happens.
         ///
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool DisableMemberAccessToIndexAccessorFallback { get; set; } = false;
 
@@ -164,7 +164,7 @@ namespace System.Linq.Dynamic.Core
         /// Use this flag to use the CustomTypeProvider to resolve types by a simple name like "Employee" instead of "MyDatabase.Entities.Employee".
         /// Note that a first matching type is returned and this functionality needs to scan all types from all assemblies, so use with caution.
         /// 
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool ResolveTypesBySimpleName { get; set; } = false;
 
@@ -179,7 +179,7 @@ namespace System.Linq.Dynamic.Core
         /// By default DateTime (like 'Fri, 10 May 2019 11:03:17 GMT') is parsed as local time.
         /// Use this flag to parse all DateTime strings as UTC.
         ///
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool DateTimeIsParsedAsUTC { get; set; } = false;
 
@@ -198,8 +198,18 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// When using the NullPropagating function np(...), use a "default value" for non-nullable value types instead of "null value".
         /// 
-        /// Default value is false.
+        /// Default value is <c>false</c>.
         /// </summary>
         public bool NullPropagatingUseDefaultValueForNonNullableValueTypes { get; set; } = false;
+
+        /// <summary>
+        /// Support casting to a full qualified type using a string (double quoted value).
+        /// <code>
+        /// var result = queryable.Select($"\"System.DateTime\"(LastUpdate)");
+        /// </code>
+        /// 
+        /// Default value is <c>true</c>.
+        /// </summary>
+        public bool SupportCastingToFullyQualifiedTypeAsString { get; set; } = true;
     }
 }

@@ -384,15 +384,15 @@ namespace System.Linq.Dynamic.Core.Tests
             var expressionAsString = expression.ToString();
 
             // Assert
-            var queriedProp = typeof(SimpleValuesModel).GetProperty(propName, BindingFlags.Instance | BindingFlags.Public);
+            var queriedProp = typeof(SimpleValuesModel).GetProperty(propName, BindingFlags.Instance | BindingFlags.Public)!;
             var queriedPropType = queriedProp.PropertyType;
             var queriedPropUnderlyingType = Nullable.GetUnderlyingType(queriedPropType);
 
             Check.That(expressionAsString).IsEqualTo($"Param_0 => (Param_0.{propName} == {ExpressionString.NullableConversion($"value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[{queriedPropUnderlyingType}]).Value")})");
-            dynamic constantExpression = ((MemberExpression)(((expression.Body as BinaryExpression).Right as UnaryExpression).Operand)).Expression as ConstantExpression;
+            dynamic constantExpression = (ConstantExpression)((MemberExpression)((UnaryExpression)((BinaryExpression)expression.Body).Right).Operand).Expression;
             object wrapperObj = constantExpression.Value;
 
-            var propertyInfo = wrapperObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public);
+            var propertyInfo = wrapperObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public)!;
             var value = propertyInfo.GetValue(wrapperObj);
 
             value.Should().Be(Convert.ChangeType(valueString, Nullable.GetUnderlyingType(queriedPropType) ?? queriedPropType, culture));

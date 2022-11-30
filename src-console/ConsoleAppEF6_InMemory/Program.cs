@@ -18,13 +18,25 @@ static class Program
         await using (var context = new TestContextEF6())
         {
             context.Products.Add(new ProductDynamic { NullableInt = 1, Dict = new Dictionary<string, object> { { "Name", "test" } } });
+            context.Products.Add(new ProductDynamic { NullableInt = 2, Dict = new Dictionary<string, object> { { "Name1", "test1" } } });
             await context.SaveChangesAsync();
         }
 
         await using (var context = new TestContextEF6())
         {
+            var intType = typeof(int).FullName;
+
+            var a1 = context.Products.Select($"\"{intType}\"(Key)").ToDynamicArray();
+            Console.WriteLine("a1 {0}", string.Join(",", a1));
+
+            var a2 = context.Products.Select($"\"{intType}\"?(Key)").ToDynamicArray();
+            Console.WriteLine("a2 {0}", string.Join(",", a2));
+        }
+
+        await using (var context = new TestContextEF6())
+        {
             var resultsNormal = context.Products.Where(p => p.Dict["Name"] == "test").ToListAsync();
-            
+
             var results1 = await context.Products.Where("Dict.Name == @0", "test").ToListAsync();
             Console.WriteLine("results1:");
             foreach (var result in results1)

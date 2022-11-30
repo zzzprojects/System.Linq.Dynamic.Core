@@ -32,5 +32,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
         public SimpleValuesModelEnum EnumValue { get; set; }
 
         public SimpleValuesModelEnumAsDynamicLinqType EnumValueDynamicLinqType { get; set; }
+
+        public DateTime DateTime { get; set; }
     }
 }

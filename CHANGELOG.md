@@ -1,3 +1,9 @@
+# v1.2.24 (27 November 2022)
+- [#621](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/621) - Fix Join on inherited class [bug] contributed by [StefH](https://github.com/StefH)
+- [#646](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/646) - Add more unittests for issue 645 contributed by [StefH](https://github.com/StefH)
+- [#647](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/647) - Support nullable notation &quot;xxx?&quot; in As expression [feature] contributed by [StefH](https://github.com/StefH)
+- [#614](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/614) - Join problem with inherited entities [bug]
+
 # v1.2.23 (12 November 2022)
 - [#644](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/644) - Add support for .NET 7 and EF Core 7 [feature] contributed by [StefH](https://github.com/StefH)
 
