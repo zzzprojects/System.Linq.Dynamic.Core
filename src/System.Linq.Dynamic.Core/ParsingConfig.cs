@@ -203,13 +203,13 @@ namespace System.Linq.Dynamic.Core
         public bool NullPropagatingUseDefaultValueForNonNullableValueTypes { get; set; } = false;
 
         /// <summary>
-        /// Support casting to a full type using double quotes.
+        /// Support casting to a full qualified type using a string (double quoted value).
         /// <code>
         /// var result = queryable.Select($"\"System.DateTime\"(LastUpdate)");
         /// </code>
         /// 
         /// Default value is <c>true</c>.
         /// </summary>
-        public bool SupportFullTypeCastingUsingDoubleQuotes { get; set; } = true;
+        public bool SupportCastingToFullyQualifiedTypeAsString { get; set; } = true;
     }
 }

@@ -806,7 +806,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             _textParser.NextToken();
 
-            if (_parsingConfig.SupportFullTypeCastingUsingDoubleQuotes && !forceParseAsString && stringValue.Length > 2 && stringValue.Contains('.'))
+            if (_parsingConfig.SupportCastingToFullyQualifiedTypeAsString && !forceParseAsString && stringValue.Length > 2 && stringValue.Contains('.'))
             {
                 // Try to resolve this string as a type
                 var type = _typeFinder.FindTypeByName(stringValue, null, false);
