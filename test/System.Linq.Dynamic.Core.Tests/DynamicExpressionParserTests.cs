@@ -1502,16 +1502,20 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Theory]
-        [InlineData("value != null && value == 1", 1, true)]
-        [InlineData("value != null && value == 1", 5, false)]
-        [InlineData("value => value != null && value == 1", 1, true)]
-        [InlineData("value => value != null && value == 1", 5, false)]
-        public void DynamicExpressionParser_ParseLambda_Func2(string test, int? input, bool expected)
+        [InlineData("value", "value != null && value == 1", 1, true)]
+        [InlineData("value", "value != null && value == 1", 5, false)]
+        [InlineData("x", "value != null && value == 1", 1, true)]
+        [InlineData("x", "value != null && value == 1", 5, false)]
+        [InlineData(null, "value != null && value == 1", 1, true)]
+        [InlineData(null, "value != null && value == 1", 5, false)]
+        [InlineData("value", "value => value != null && value == 1", 1, true)]
+        [InlineData("value", "value => value != null && value == 1", 5, false)]
+        public void DynamicExpressionParser_ParseLambda_Func2(string? paramName, string test, int? input, bool expected)
         {
             // Arrange
             var nullableType = typeof(int?);
             var delegateType = typeof(Func<,>).MakeGenericType(nullableType, typeof(bool));
-            var valueParameter = Expression.Parameter(nullableType, "value");
+            var valueParameter = paramName is not null ? Expression.Parameter(nullableType, paramName) : Expression.Parameter(nullableType);
 
             // Act 1
             var expression = DynamicExpressionParser.ParseLambda(
