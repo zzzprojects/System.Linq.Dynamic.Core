@@ -1,8 +1,11 @@
-# v1.2.24 (27 November 2022)
+# v1.2.24 (04 December 2022)
 - [#621](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/621) - Fix Join on inherited class [bug] contributed by [StefH](https://github.com/StefH)
-- [#646](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/646) - Add more unittests for issue 645 contributed by [StefH](https://github.com/StefH)
+- [#646](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/646) - Add more unittests for issue 645 [feature] contributed by [StefH](https://github.com/StefH)
 - [#647](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/647) - Support nullable notation &quot;xxx?&quot; in As expression [feature] contributed by [StefH](https://github.com/StefH)
+- [#649](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/649) - Fix DynamicExpressionParser and ExpressionPromoter to support LambdExpression [bug] contributed by [StefH](https://github.com/StefH)
+- [#653](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/653) - Add support to cast to a fully qualified type [feature] contributed by [StefH](https://github.com/StefH)
 - [#614](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/614) - Join problem with inherited entities [bug]
+- [#652](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/652) - Implement casting to fully qualified type [feature]
 
 # v1.2.23 (12 November 2022)
 - [#644](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/644) - Add support for .NET 7 and EF Core 7 [feature] contributed by [StefH](https://github.com/StefH)
