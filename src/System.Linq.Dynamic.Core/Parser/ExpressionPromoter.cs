@@ -22,7 +22,17 @@ namespace System.Linq.Dynamic.Core.Parser
         /// <inheritdoc />
         public virtual Expression? Promote(Expression expr, Type type, bool exact, bool convertExpr)
         {
-            if (expr.Type == type || type.IsGenericParameter)
+            Type returnType;
+            if (expr is LambdaExpression lambdaExpression)
+            {
+                returnType = lambdaExpression.GetReturnType();
+            }
+            else
+            {
+                returnType = expr.Type;
+            }
+
+            if (returnType == type || type.IsGenericParameter)
             {
                 return expr;
             }
@@ -103,7 +113,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
             }
 
-            if (TypeHelper.IsCompatibleWith(expr.Type, type))
+            if (TypeHelper.IsCompatibleWith(returnType, type))
             {
                 if (type == typeof(decimal) && TypeHelper.IsEnumType(expr.Type))
                 {

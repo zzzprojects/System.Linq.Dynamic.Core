@@ -580,7 +580,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
         // https://github.com/StefH/System.Linq.Dynamic.Core/issues/58
         [Fact]
-        public void DynamicExpressionParser_ParseLambda_4_Issue58()
+        public void DynamicExpressionParser_ParseLambda_Issue58()
         {
             var expressionParams = new[]
             {
@@ -1251,14 +1251,16 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Theory]
-        [InlineData("c => c.Age == 8", "c => (c.Age == 8)")]
-        [InlineData("c => c.Name == \"test\"", "c => (c.Name == \"test\")")]
-        public void DynamicExpressionParser_ParseLambda_RenameParameterExpression(string expressionAsString, string expected)
+        [InlineData(true, "c => c.Age == 8", "c => (c.Age == 8)")]
+        [InlineData(true, "c => c.Name == \"test\"", "c => (c.Name == \"test\")")]
+        [InlineData(false, "c => c.Age == 8", "Param_0 => (Param_0.Age == 8)")]
+        [InlineData(false, "c => c.Name == \"test\"", "Param_0 => (Param_0.Name == \"test\")")]
+        public void DynamicExpressionParser_ParseLambda_RenameParameterExpression(bool renameParameterExpression, string expressionAsString, string expected)
         {
             // Arrange
             var config = new ParsingConfig
             {
-                RenameParameterExpression = true
+                RenameParameterExpression = renameParameterExpression
             };
 
             // Act
@@ -1500,22 +1502,28 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Theory]
-        [InlineData(1, true)]
-        [InlineData(5, false)]
-        public void DynamicExpressionParser_ParseLambda_Func2(int? input, bool expected)
+        [InlineData("value", "value != null && value == 1", 1, true)]
+        [InlineData("value", "value != null && value == 1", 5, false)]
+        [InlineData("x", "value != null && value == 1", 1, true)]
+        [InlineData("x", "value != null && value == 1", 5, false)]
+        [InlineData(null, "value != null && value == 1", 1, true)]
+        [InlineData(null, "value != null && value == 1", 5, false)]
+        [InlineData("value", "value => value != null && value == 1", 1, true)]
+        [InlineData("value", "value => value != null && value == 1", 5, false)]
+        public void DynamicExpressionParser_ParseLambda_Func2(string? paramName, string test, int? input, bool expected)
         {
             // Arrange
             var nullableType = typeof(int?);
-            var functionType = typeof(Func<,>).MakeGenericType(nullableType, typeof(bool));
-            var valueParameter = Expression.Parameter(nullableType, "value");
+            var delegateType = typeof(Func<,>).MakeGenericType(nullableType, typeof(bool));
+            var valueParameter = paramName is not null ? Expression.Parameter(nullableType, paramName) : Expression.Parameter(nullableType);
 
             // Act 1
             var expression = DynamicExpressionParser.ParseLambda(
-                functionType,
+                delegateType,
                 new ParsingConfig(),
                 new[] { valueParameter },
                 typeof(bool),
-                "value != null && value == 1"
+                test
             );
 
             // Act 2
