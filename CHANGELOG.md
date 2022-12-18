@@ -1,4 +1,4 @@
-# v1.2.24 (04 December 2022)
+# v1.2.24 (18 December 2022)
 - [#621](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/621) - Fix Join on inherited class [bug] contributed by [StefH](https://github.com/StefH)
 - [#646](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/646) - Add more unittests for issue 645 [feature] contributed by [StefH](https://github.com/StefH)
 - [#647](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/647) - Support nullable notation &quot;xxx?&quot; in As expression [feature] contributed by [StefH](https://github.com/StefH)
