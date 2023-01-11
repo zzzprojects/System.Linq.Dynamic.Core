@@ -76,7 +76,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public Expression GenerateStringConcat(Expression left, Expression right)
         {
-            return GenerateStaticMethodCall("Concat", left, right);
+            return Expression.Add(left, right, typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) } ));
         }
 
         public Expression GenerateSubtract(Expression left, Expression right)
