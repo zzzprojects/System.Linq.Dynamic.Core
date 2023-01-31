@@ -53,6 +53,21 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             expression.ToString().Should().NotBeEmpty();
         }
 
+        [Fact]
+        public void ParseTypeAccess_Via_Constructor_Arguments_To_DateTime_Valid()
+        {
+            // Arrange
+            var arguments = "2022, 10, 31, 9, 15, 11";
+            var parameter = Expression.Parameter(typeof(DateTime));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"DateTime({arguments})", new object[] { }, ParsingConfig.Default);
+            var expression = parser.Parse(typeof(DateTime));
+
+            // Assert
+            expression.ToString().Should().NotBeEmpty();
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("\"abc\"")]

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-using FluentAssertions;
 using Linq.PropertyTranslator.Core;
 using QueryInterceptor.Core;
 using Xunit;

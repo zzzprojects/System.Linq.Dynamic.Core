@@ -855,11 +855,25 @@ namespace System.Linq.Dynamic.Core.Parser
 
         private Expression ParseIdentifier()
         {
+            // stef
             _textParser.ValidateToken(TokenId.Identifier);
 
-            if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object? value) &&
+            var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var value);
+
+            if (isValidKeyWord && _it != null)
+            {
+                var x = FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false);
+
+                if (x != null && value is Type typeValue)
+                {
+                    return ParseTypeAccess(typeValue, true);
+                }
+            }
+
+
+            if (isValidKeyWord) //&&
                 // Prioritize property or field over the type
-                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
+               // !( _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
             {
                 if (value is Type typeValue)
                 {
