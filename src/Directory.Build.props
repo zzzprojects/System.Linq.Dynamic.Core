@@ -7,7 +7,7 @@
         <Copyright>Copyright © ZZZ Projects</Copyright>
         <DefaultLanguage>en-us</DefaultLanguage>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <LangVersion>10</LangVersion>
+        <LangVersion>11</LangVersion>
         <Nullable>enable</Nullable>
         <PackageIcon>logo.png</PackageIcon>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
