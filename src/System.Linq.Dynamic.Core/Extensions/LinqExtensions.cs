@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Dynamic.Core.Validation;
 
 namespace System.Linq.Dynamic.Core.Extensions;
 
+[SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
 internal static class LinqExtensions
 {
     // Ex: collection.TakeLast(5);
@@ -11,12 +13,10 @@ internal static class LinqExtensions
         return source.Skip(Math.Max(0, source.Count() - n));
     }
 
-    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> sequence, Func<T, bool>? predicate = null)
+    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> sequence)
     {
         Check.NotNull(sequence);
 
-        return sequence
-            .Where(e => e != null)
-            .Where(e => predicate != null && predicate(e!))!;
+        return sequence.Where(e => e != null)!;
     }
 }
