@@ -13,20 +13,22 @@ namespace System.Linq.Dynamic.Core.Tests.Parser;
 
 public partial class ExpressionParserTests
 {
+    private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicTypeProviderMock;
+
     private readonly ParsingConfig _parsingConfig;
 
     public ExpressionParserTests()
     {
-        var dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
-        dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns(new HashSet<Type>() { typeof(Company), typeof(MainCompany) });
-        dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Company).FullName!)).Returns(typeof(Company));
-        dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(MainCompany).FullName!)).Returns(typeof(MainCompany));
-        dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Company")).Returns(typeof(Company));
-        dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("MainCompany")).Returns(typeof(MainCompany));
+        _dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+        _dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns(new HashSet<Type>() { typeof(Company), typeof(MainCompany) });
+        _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Company).FullName!)).Returns(typeof(Company));
+        _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(MainCompany).FullName!)).Returns(typeof(MainCompany));
+        _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Company")).Returns(typeof(Company));
+        _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("MainCompany")).Returns(typeof(MainCompany));
 
         _parsingConfig = new ParsingConfig
         {
-            CustomTypeProvider = dynamicTypeProviderMock.Object
+            CustomTypeProvider = _dynamicTypeProviderMock.Object
         };
     }
 
@@ -197,13 +199,18 @@ public partial class ExpressionParserTests
     [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
     [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
-    [InlineData("DateTime", "company.DateTime")]
     [InlineData("Company.Name", "No property or field 'Name' exists in type 'Company'")]
-    public void Parse_PrioritizePropertyOrFieldOverTheType(string expression, string result)
+    [InlineData("DateTime", "company.DateTime")]
+    public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsTrue(string expression, string result)
     {
         // Arrange
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = _dynamicTypeProviderMock.Object,
+            PrioritizePropertyOrFieldOverTheType = true
+        };
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
-        var sut = new ExpressionParser(parameters, expression, null, _parsingConfig);
+        var sut = new ExpressionParser(parameters, expression, null, config);
 
         // Act
         string parsedExpression;
@@ -217,6 +224,34 @@ public partial class ExpressionParserTests
         }
 
         // Assert
-        Check.That(parsedExpression).Equals(result);
+        parsedExpression.Should().Be(result);
+    }
+
+    [Theory]
+    [InlineData("it.MainCompany.Name != null", "(company.MainCompany.Name != null)")]
+    [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
+    [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
+    [InlineData("MainCompany.Name", "Static property requires null instance, non-static property requires non-null instance.")] // Exception
+    [InlineData("DateTime", "'.' or '(' or string literal expected")] // Exception
+    [InlineData("Company.Name", "Static property requires null instance, non-static property requires non-null instance.")] // Exception
+    public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsFalse(string expression, string result)
+    {
+        // Arrange
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
+
+        // Act
+        string parsedExpression;
+        try
+        {
+            var sut = new ExpressionParser(parameters, expression, null, _parsingConfig);
+            parsedExpression = sut.Parse(null).ToString();
+        }
+        catch (Exception e)
+        {
+            parsedExpression = e.Message;
+        }
+
+        // Assert
+        parsedExpression.Should().StartWith(result);
     }
 }

@@ -211,5 +211,14 @@ namespace System.Linq.Dynamic.Core
         /// Default value is <c>true</c>.
         /// </summary>
         public bool SupportCastingToFullyQualifiedTypeAsString { get; set; } = true;
+
+        /// <summary>
+        /// When the type and property have the same name the parser takes the property instead of type when this setting is set to <c>true</c>.
+        ///
+        /// The value from this setting should also be set to <c>true</c> when ExtensionMethods are used.
+        ///
+        /// Default value is <c>false</c>.
+        /// </summary>
+        public bool PrioritizePropertyOrFieldOverTheType { get; set; }
     }
 }

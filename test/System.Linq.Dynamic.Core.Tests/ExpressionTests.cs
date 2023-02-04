@@ -290,6 +290,10 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Cast_To_FullTypeDateTime_Using_DynamicLinqType()
         {
             // Arrange
+            var config = new ParsingConfig
+            {
+                PrioritizePropertyOrFieldOverTheType = true
+            };
             var list = new List<SimpleValuesModel>
             {
                 new SimpleValuesModel { DateTime = DateTime.Now }
@@ -297,7 +301,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expectedResult = list.Select(x => x.DateTime);
-            var result = list.AsQueryable().Select($"\"{typeof(DateTime).FullName}\"(DateTime)");
+            var result = list.AsQueryable().Select(config, $"\"{typeof(DateTime).FullName}\"(DateTime)");
 
             // Assert
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<DateTime>());
@@ -307,6 +311,10 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Cast_To_FullTypeDateTimeNullable_Using_DynamicLinqType()
         {
             // Arrange
+            var config = new ParsingConfig
+            {
+                PrioritizePropertyOrFieldOverTheType = true
+            };
             var list = new List<SimpleValuesModel>
             {
                 new SimpleValuesModel { DateTime = DateTime.Now }
@@ -314,7 +322,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expectedResult = list.Select(x => (DateTime?)x.DateTime);
-            var result = list.AsQueryable().Select($"\"{typeof(DateTime).FullName}\"?(DateTime)");
+            var result = list.AsQueryable().Select(config, $"\"{typeof(DateTime).FullName}\"?(DateTime)");
 
             // Assert
             Assert.Equal(expectedResult.ToArray(), result.ToDynamicArray<DateTime?>());
@@ -1502,7 +1510,8 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var config = new ParsingConfig
             {
-                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForStaticTesting()
+                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForStaticTesting(),
+                PrioritizePropertyOrFieldOverTheType = true
             };
 
             // Arrange
