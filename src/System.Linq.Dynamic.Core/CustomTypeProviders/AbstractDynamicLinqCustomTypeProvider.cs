@@ -94,7 +94,7 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
 
             try
             {
-                definedTypes = assembly.ExportedTypes.Where(t => t.GetTypeInfo().IsDefined(typeof(DynamicLinqTypeAttribute), false)).ToArray();
+                definedTypes = assembly.ExportedTypes.ToArray();
             }
             catch (ReflectionTypeLoadException reflectionTypeLoadException)
             {
@@ -105,7 +105,11 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
                 // Ignore all other exceptions
             }
 
-            foreach (var definedType in definedTypes.Distinct())
+            var filteredAndDistinct = definedTypes
+                .Where(t => t.GetTypeInfo().IsDefined(typeof(DynamicLinqTypeAttribute), false))
+                .Distinct();
+
+            foreach (var definedType in filteredAndDistinct)
             {
                 yield return definedType;
             }
@@ -131,10 +135,7 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
 
             try
             {
-                definedTypes = assembly
-                    .GetExportedTypes()
-                    .Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false))
-                    .ToArray();
+                definedTypes = assembly.GetExportedTypes().ToArray();
             }
             catch (ReflectionTypeLoadException reflectionTypeLoadException)
             {
@@ -145,7 +146,11 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
                 // Ignore all other exceptions
             }
 
-            foreach (var definedType in definedTypes.Distinct())
+            var filteredAndDistinct = definedTypes
+                .Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false))
+                .Distinct();
+
+            foreach (var definedType in filteredAndDistinct)
             {
                 yield return definedType;
             }
