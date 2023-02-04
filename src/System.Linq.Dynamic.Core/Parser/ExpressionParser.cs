@@ -857,9 +857,12 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             _textParser.ValidateToken(TokenId.Identifier);
 
-            if (_keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out object? value) &&
-                // Prioritize property or field over the type
-                !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null))
+            var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var value);
+
+            var extraCondition = !_parsingConfig.PrioritizePropertyOrFieldOverTheType ||
+                                 (_parsingConfig.PrioritizePropertyOrFieldOverTheType && !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null));
+
+            if (isValidKeyWord && extraCondition)
             {
                 if (value is Type typeValue)
                 {
@@ -1711,9 +1714,13 @@ namespace System.Linq.Dynamic.Core.Parser
                 return Expression.Field(expression, field);
             }
 
-            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && expression != null)
+            // #357 #662
+            var extraCheck = !_parsingConfig.PrioritizePropertyOrFieldOverTheType ||
+                              _parsingConfig.PrioritizePropertyOrFieldOverTheType && expression != null;
+
+            if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && extraCheck)
             {
-                var indexerMethod = expression.Type.GetMethod("get_Item", new[] { typeof(string) });
+                var indexerMethod = expression?.Type.GetMethod("get_Item", new[] { typeof(string) });
                 if (indexerMethod != null)
                 {
                     return Expression.Call(expression, indexerMethod, Expression.Constant(id));
@@ -2139,11 +2146,12 @@ namespace System.Linq.Dynamic.Core.Parser
         private MemberInfo? FindPropertyOrField(Type type, string memberName, bool staticAccess)
         {
 #if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
-            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
+            var extraBindingFlag = _parsingConfig.PrioritizePropertyOrFieldOverTheType && staticAccess ? BindingFlags.Static : BindingFlags.Instance;
+            var bindingFlags = BindingFlags.Public | BindingFlags.DeclaredOnly | extraBindingFlag;
             foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
             {
                 var findMembersType = _parsingConfig?.IsCaseSensitive == true ? Type.FilterName : Type.FilterNameIgnoreCase;
-                var members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, flags, findMembersType, memberName);
+                var members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, findMembersType, memberName);
 
                 if (members.Length != 0)
                 {

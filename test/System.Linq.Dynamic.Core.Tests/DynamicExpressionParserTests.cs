@@ -1449,9 +1449,10 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             var testList = User.GenerateSampleModels(51);
-            var config = new ParsingConfig()
+            var config = new ParsingConfig
             {
-                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod()
+                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod(),
+                PrioritizePropertyOrFieldOverTheType = true
             };
 
             // Act
@@ -1460,7 +1461,6 @@ namespace System.Linq.Dynamic.Core.Tests
             var del = expression.Compile();
 
             var result = Enumerable.Where(testList, del);
-
 
             var expected = testList.Where(x => new string[] { "User4", "User2" }.Contains(x.UserName)).ToList();
 

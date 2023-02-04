@@ -13,7 +13,7 @@ namespace System.Linq.Dynamic.Core.Tests
     {
         public class DateTimeTest
         {
-            public DateTimeTest Test { get; set; }
+            public DateTimeTest? Test { get; set; }
 
             public DateTime? D { get; set; }
         }
