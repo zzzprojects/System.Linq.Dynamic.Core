@@ -1,12 +1,11 @@
-﻿namespace System.Linq.Dynamic.Core.Parser
-{
-    internal class WrappedValue<TValue>
-    {
-        public TValue Value { get; private set; }
+﻿namespace System.Linq.Dynamic.Core.Parser;
 
-        public WrappedValue(TValue value)
-        {
-            Value = value;
-        }
+internal class WrappedValue<TValue>
+{
+    public TValue Value { get; }
+
+    public WrappedValue(TValue value)
+    {
+        Value = value;
     }
 }
