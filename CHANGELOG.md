@@ -1,3 +1,10 @@
+# v1.2.25 (05 February 2023)
+- [#664](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/664) - Add config setting for PrioritizePropertyOrFieldOverTheType  [feature] contributed by [StefH](https://github.com/StefH)
+- [#665](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/665) - Update AbstractDynamicLinqCustomTypeProvider to exclude null types [bug] contributed by [StefH](https://github.com/StefH)
+- [#666](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/666) -  Fixed ExpressionParser when WrappedValue-string is used for equals-operator contributed by [StefH](https://github.com/StefH)
+- [#645](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/645) - With UseParameterizedNamesInDynamicQuery, can't  compare DateTimeOffset with String [bug]
+- [#662](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/662) - System.Linq.Dynamic.Core.Exceptions.ParseException : No applicable method 'DateTime' exists in type [feature]
+
 # v1.2.24 (18 December 2022)
 - [#621](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/621) - Fix Join on inherited class [bug] contributed by [StefH](https://github.com/StefH)
 - [#646](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/646) - Add more unittests for issue 645 [feature] contributed by [StefH](https://github.com/StefH)
