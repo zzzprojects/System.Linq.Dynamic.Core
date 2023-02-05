@@ -6,8 +6,11 @@ namespace System.Linq.Dynamic.Core.Tests;
 
 public partial class QueryableTests
 {
+    /// <summary>
+    /// Issue #645
+    /// </summary>
     [Fact]
-    public void Issue_645()
+    public void When_UseParameterizedNamesInDynamicQuery_IsTrue_WrappedStringValue_Should_Be_Unwrapped()
     {
         // Arrange
         var list = new List<Customer>
@@ -37,17 +40,29 @@ public partial class QueryableTests
             UseParameterizedNamesInDynamicQuery = true
         };
 
-        // Act 1
-        var result1 = list.AsQueryable().Where(config, "LastContact = \"2022-11-16\"").ToArray();
+        // Act 1A
+        var result1A = list.AsQueryable().Where(config, "LastContact = \"2022-11-16\"").ToArray();
 
-        // Assert 1
-        result1.Should().HaveCount(1);
+        // Assert 1A
+        result1A.Should().HaveCount(1);
 
-        // Act 2
-        var result2 = list.AsQueryable().Where("Location.UpdateAt = \"2022-11-16\"").ToArray();
+        // Act 1B
+        var result1B = list.AsQueryable().Where(config, "\"2022-11-16\" == LastContact").ToArray();
 
-        // Assert 2
-        result2.Should().HaveCount(1);
+        // Assert 1B
+        result1B.Should().HaveCount(1);
+
+        // Act 2A
+        var result2A = list.AsQueryable().Where("Location.UpdateAt = \"2022-11-16\"").ToArray();
+
+        // Assert 2A
+        result2A.Should().HaveCount(1);
+
+        // Act 2B
+        var result2B = list.AsQueryable().Where("\"2022-11-16\" == Location.UpdateAt").ToArray();
+
+        // Assert 2B
+        result2B.Should().HaveCount(1);
     }
 }
 
