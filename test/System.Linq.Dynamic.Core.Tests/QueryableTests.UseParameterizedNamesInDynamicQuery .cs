@@ -37,11 +37,17 @@ public partial class QueryableTests
             UseParameterizedNamesInDynamicQuery = true
         };
 
-        // Act
-        var result = list.AsQueryable().Where(config, "LastContact = \"2022-11-16\"").ToArray();
+        // Act 1
+        var result1 = list.AsQueryable().Where(config, "LastContact = \"2022-11-16\"").ToArray();
 
-        // Assert
-        result.Should().HaveCount(1);
+        // Assert 1
+        result1.Should().HaveCount(1);
+
+        // Act 2
+        var result2 = list.AsQueryable().Where("Location.UpdateAt = \"2022-11-16\"").ToArray();
+
+        // Assert 2
+        result2.Should().HaveCount(1);
     }
 }
 
