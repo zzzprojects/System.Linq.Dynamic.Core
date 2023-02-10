@@ -476,13 +476,27 @@ public class ExpressionParser
                     {
                         left = e;
                     }
-                    else if (TypeHelper.IsEnumType(left.Type) && (constantExpr = right as ConstantExpression) != null)
+                    else if (TypeHelper.IsEnumType(left.Type))
                     {
-                        right = ParseEnumToConstantExpression(op.Pos, left.Type, constantExpr);
+                        if (right is ConstantExpression constantExprRight)
+                        {
+                            right = ParseEnumToConstantExpression(op.Pos, left.Type, constantExprRight);
+                        }
+                        else if (_expressionHelper.TryUnwrapAsExpression<string>(right, out var unwrappedConstantExprRight))
+                        {
+                            right = ParseEnumToConstantExpression(op.Pos, left.Type, unwrappedConstantExprRight);
+                        }
                     }
-                    else if (TypeHelper.IsEnumType(right.Type) && (constantExpr = left as ConstantExpression) != null)
+                    else if (TypeHelper.IsEnumType(right.Type))
                     {
-                        left = ParseEnumToConstantExpression(op.Pos, right.Type, constantExpr);
+                        if (left is ConstantExpression constantExprLeft)
+                        {
+                            left = ParseEnumToConstantExpression(op.Pos, right.Type, constantExprLeft);
+                        }
+                        else if (_expressionHelper.TryUnwrapAsExpression<string>(left, out var unwrappedConstantExprLeft))
+                        {
+                            left = ParseEnumToConstantExpression(op.Pos, right.Type, unwrappedConstantExprLeft);
+                        }
                     }
                     else
                     {
@@ -498,11 +512,11 @@ public class ExpressionParser
             {
                 left = Expression.Constant(typeConverter.ConvertFromInvariantString(stringValueL), right.Type);
             }
-            else if (_expressionHelper.TryUnwrapConstantExpression<string>(right, out var unwrappedStringValueR) && (typeConverter = _typeConverterFactory.GetConverter(left.Type)) != null)
+            else if (_expressionHelper.TryUnwrapAsValue<string>(right, out var unwrappedStringValueR) && (typeConverter = _typeConverterFactory.GetConverter(left.Type)) != null)
             {
                 right = Expression.Constant(typeConverter.ConvertFromInvariantString(unwrappedStringValueR), left.Type);
             }
-            else if (_expressionHelper.TryUnwrapConstantExpression<string>(left, out var unwrappedStringValueL) && (typeConverter = _typeConverterFactory.GetConverter(right.Type)) != null)
+            else if (_expressionHelper.TryUnwrapAsValue<string>(left, out var unwrappedStringValueL) && (typeConverter = _typeConverterFactory.GetConverter(right.Type)) != null)
             {
                 left = Expression.Constant(typeConverter.ConvertFromInvariantString(unwrappedStringValueL), right.Type);
             }
@@ -581,7 +595,7 @@ public class ExpressionParser
         return left;
     }
 
-    private bool HasImplicitConversion(Type baseType, Type targetType)
+    private static bool HasImplicitConversion(Type baseType, Type targetType)
     {
         var baseTypeHasConversion = baseType.GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Where(mi => mi.Name == "op_Implicit" && mi.ReturnType == targetType)
@@ -597,12 +611,12 @@ public class ExpressionParser
             .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
     }
 
-    private ConstantExpression ParseEnumToConstantExpression(int pos, Type leftType, ConstantExpression constantExpr)
+    private static ConstantExpression ParseEnumToConstantExpression(int pos, Type leftType, ConstantExpression constantExpr)
     {
         return Expression.Constant(ParseConstantExpressionToEnum(pos, leftType, constantExpr), leftType);
     }
 
-    private object ParseConstantExpressionToEnum(int pos, Type leftType, ConstantExpression constantExpr)
+    private static object ParseConstantExpressionToEnum(int pos, Type leftType, ConstantExpression constantExpr)
     {
         try
         {
@@ -618,7 +632,7 @@ public class ExpressionParser
 
         try
         {
-            return Enum.ToObject(TypeHelper.GetNonNullableType(leftType), constantExpr.Value);
+            return Enum.ToObject(TypeHelper.GetNonNullableType(leftType), constantExpr.Value!);
         }
         catch
         {
