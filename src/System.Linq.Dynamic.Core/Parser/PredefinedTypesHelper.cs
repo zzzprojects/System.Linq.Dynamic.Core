@@ -44,7 +44,11 @@ namespace System.Linq.Dynamic.Core.Parser
             { typeof(Guid), 0 },
             { typeof(Math), 0 },
             { typeof(Convert), 0 },
-            { typeof(Uri), 0 }
+            { typeof(Uri), 0 },
+#if NET6_0_OR_GREATER
+            { typeof(DateOnly), 0 },
+            { typeof(TimeOnly), 0 }
+#endif
         });
 
         static PredefinedTypesHelper()

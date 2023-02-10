@@ -84,6 +84,38 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             a.Should().Throw<Exception>();
         }
 
+#if NET6_0_OR_GREATER
+        [Fact]
+        public void ParseTypeAccess_Via_Constructor_String_To_DateOnly_Valid()
+        {
+            // Arrange
+            string str = "\"2020-10-31\"";
+            var parameter = Expression.Parameter(typeof(DateOnly));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"DateOnly({str})", new object[] { }, ParsingConfig.Default);
+            var expression = parser.Parse(typeof(DateOnly));
+
+            // Assert
+            expression.ToString().Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void ParseTypeAccess_Via_Constructor_Arguments_To_DateOnly_Valid()
+        {
+            // Arrange
+            var arguments = "2022, 10, 31";
+            var parameter = Expression.Parameter(typeof(DateOnly));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"DateOnly({arguments})", new object[] { }, ParsingConfig.Default);
+            var expression = parser.Parse(typeof(DateOnly));
+
+            // Assert
+            expression.ToString().Should().NotBeEmpty();
+        }
+#endif
+
         [Fact]
         public void ParseTypeAccess_Via_Constructor_String_To_Uri()
         {
