@@ -646,6 +646,29 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(lst[0], result1.Single());
             Assert.Equal(lst[0], result2.Single());
         }
+
+        [Fact]
+        public void ExpressionTests_TimeOnlyString()
+        {
+            // Arrange
+            var now = new DateTime(2023, 2, 10, 12, 13, 14);
+            var lst = new List<TimeOnly>
+            {
+                TimeOnly.FromDateTime(now),
+                TimeOnly.FromDateTime(now.AddSeconds(1)),
+                TimeOnly.FromDateTime(now.AddSeconds(2))
+            };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var testValue = "12:13:14";
+            var result1 = qry.Where("it = @0", testValue);
+            var result2 = qry.Where("@0 = it", testValue);
+
+            // Assert
+            Assert.Equal(lst[0], result1.Single());
+            Assert.Equal(lst[0], result2.Single());
+        }
 #endif
         [Fact]
         public void ExpressionTests_DecimalQualifiers()
