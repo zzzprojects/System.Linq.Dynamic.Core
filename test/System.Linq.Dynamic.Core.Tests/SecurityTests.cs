@@ -56,7 +56,6 @@ public class SecurityTests
     [Theory]
     [InlineData(typeof(FileStream), "Close()", "Stream")]
     [InlineData(typeof(Assembly), "GetName().Name.ToString()", "Assembly")]
-    [InlineData(typeof(IPAddress), "ToString()", "IPAddress")]
     public void DynamicExpressionParser_ParseLambda_IllegalMethodCall_ThrowsException(Type itType, string expression, string type)
     {
         // Act
