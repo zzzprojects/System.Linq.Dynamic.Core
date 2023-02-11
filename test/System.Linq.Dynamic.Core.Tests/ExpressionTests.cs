@@ -623,6 +623,53 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(lst[0], result2.Single());
         }
 
+#if NET6_0_OR_GREATER
+        [Fact]
+        public void ExpressionTests_DateOnlyString()
+        {
+            // Arrange
+            var now = new DateTime(2023, 2, 10, 12, 13, 14);
+            var lst = new List<DateOnly>
+            {
+                DateOnly.FromDateTime(now),
+                DateOnly.FromDateTime(now.AddDays(1)),
+                DateOnly.FromDateTime(now.AddDays(2))
+            };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var testValue = lst[0].ToString(CultureInfo.InvariantCulture);
+            var result1 = qry.Where("it = @0", testValue);
+            var result2 = qry.Where("@0 = it", testValue);
+
+            // Assert
+            Assert.Equal(lst[0], result1.Single());
+            Assert.Equal(lst[0], result2.Single());
+        }
+
+        [Fact]
+        public void ExpressionTests_TimeOnlyString()
+        {
+            // Arrange
+            var now = new DateTime(2023, 2, 10, 12, 13, 14);
+            var lst = new List<TimeOnly>
+            {
+                TimeOnly.FromDateTime(now),
+                TimeOnly.FromDateTime(now.AddSeconds(1)),
+                TimeOnly.FromDateTime(now.AddSeconds(2))
+            };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var testValue = "12:13:14";
+            var result1 = qry.Where("it = @0", testValue);
+            var result2 = qry.Where("@0 = it", testValue);
+
+            // Assert
+            Assert.Equal(lst[0], result1.Single());
+            Assert.Equal(lst[0], result2.Single());
+        }
+#endif
         [Fact]
         public void ExpressionTests_DecimalQualifiers()
         {

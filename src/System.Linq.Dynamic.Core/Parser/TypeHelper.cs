@@ -279,7 +279,13 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 if (!nonNullableType.GetTypeInfo().IsPrimitive)
                 {
-                    if (nonNullableType != typeof(decimal) && nonNullableType != typeof(DateTime) && nonNullableType != typeof(Guid))
+                    if
+                    (
+#if NET6_0_OR_GREATER
+                        nonNullableType != typeof(DateOnly) && nonNullableType != typeof(TimeOnly) &&
+#endif
+                        nonNullableType != typeof(decimal) && nonNullableType != typeof(DateTime) && nonNullableType != typeof(Guid)
+                    )
                     {
                         if (!nonNullableType.GetTypeInfo().IsEnum)
                         {
