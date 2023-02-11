@@ -84,6 +84,100 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             a.Should().Throw<Exception>();
         }
 
+#if NET6_0_OR_GREATER
+        [Fact]
+        public void ParseTypeAccess_Via_Constructor_String_To_DateOnly_Valid()
+        {
+            // Arrange
+            string str = "\"2020-10-31\"";
+            var parameter = Expression.Parameter(typeof(DateOnly));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"DateOnly({str})", new object[] { }, ParsingConfig.Default);
+            var expression = parser.Parse(typeof(DateOnly));
+
+            // Assert
+            expression.ToString().Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void ParseTypeAccess_Via_Constructor_Arguments_To_DateOnly_Valid()
+        {
+            // Arrange
+            var arguments = "2022, 10, 31";
+            var parameter = Expression.Parameter(typeof(DateOnly));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"DateOnly({arguments})", new object[] { }, ParsingConfig.Default);
+            var expression = parser.Parse(typeof(DateOnly));
+
+            // Assert
+            expression.ToString().Should().NotBeEmpty();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("\"abc\"")]
+        public void ParseTypeAccess_Via_Constructor_Any_To_DateOnly_Invalid(object any)
+        {
+            // Arrange
+            var parameter = Expression.Parameter(typeof(DateOnly));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"DateOnly({any})", new object[] { }, ParsingConfig.Default);
+            Action a = () => parser.Parse(typeof(DateOnly));
+
+            // Assert
+            a.Should().Throw<Exception>();
+        }
+
+        [Fact]
+        public void ParseTypeAccess_Via_Constructor_String_To_TimeOnly_Valid()
+        {
+            // Arrange
+            string str = "\"09:15:11\"";
+            var parameter = Expression.Parameter(typeof(TimeOnly));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"TimeOnly({str})", new object[] { }, ParsingConfig.Default);
+            var expression = parser.Parse(typeof(TimeOnly));
+
+            // Assert
+            expression.ToString().Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void ParseTypeAccess_Via_Constructor_Arguments_To_TimeOnly_Valid()
+        {
+            // Arrange
+            var arguments = "9, 15, 11";
+            var parameter = Expression.Parameter(typeof(TimeOnly));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"TimeOnly({arguments})", new object[] { }, ParsingConfig.Default);
+            var expression = parser.Parse(typeof(TimeOnly));
+
+            // Assert
+            expression.ToString().Should().NotBeEmpty();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("\"abc\"")]
+        public void ParseTypeAccess_Via_Constructor_Any_To_TimeOnly_Invalid(object any)
+        {
+            // Arrange
+            var parameter = Expression.Parameter(typeof(TimeOnly));
+
+            // Act
+            var parser = new ExpressionParser(new[] { parameter }, $"TimeOnly({any})", new object[] { }, ParsingConfig.Default);
+            Action a = () => parser.Parse(typeof(TimeOnly));
+
+            // Assert
+            a.Should().Throw<Exception>();
+        }
+#endif
+
         [Fact]
         public void ParseTypeAccess_Via_Constructor_String_To_Uri()
         {

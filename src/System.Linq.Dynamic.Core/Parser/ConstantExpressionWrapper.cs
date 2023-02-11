@@ -151,7 +151,24 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             {
                 expression = Wrap((TimeSpan?)constantExpression.Value);
             }
-
+#if NET6_0_OR_GREATER
+            else if (constantExpression.Type == typeof(DateOnly))
+            {
+                expression = Wrap((DateOnly)constantExpression.Value);
+            }
+            else if (constantExpression.Type == typeof(DateOnly?))
+            {
+                expression = Wrap((DateOnly?)constantExpression.Value);
+            }
+            else if (constantExpression.Type == typeof(TimeOnly))
+            {
+                expression = Wrap((TimeOnly)constantExpression.Value);
+            }
+            else if (constantExpression.Type == typeof(TimeOnly?))
+            {
+                expression = Wrap((TimeOnly?)constantExpression.Value);
+            }
+#endif
             return;
         }
 
@@ -189,6 +206,24 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             {
                 expression = Wrap(Expression.Lambda<Func<TimeSpan?>>(newExpression).Compile()());
             }
+#if NET6_0_OR_GREATER
+            else if (newExpression.Type == typeof(DateOnly))
+            {
+                expression = Wrap(Expression.Lambda<Func<DateOnly>>(newExpression).Compile()());
+            }
+            else if (newExpression.Type == typeof(DateOnly?))
+            {
+                expression = Wrap(Expression.Lambda<Func<DateOnly?>>(newExpression).Compile()());
+            }
+            else if (newExpression.Type == typeof(TimeOnly))
+            {
+                expression = Wrap(Expression.Lambda<Func<TimeOnly>>(newExpression).Compile()());
+            }
+            else if (newExpression.Type == typeof(TimeOnly?))
+            {
+                expression = Wrap(Expression.Lambda<Func<TimeOnly?>>(newExpression).Compile()());
+            }
+#endif
         }
     }
 

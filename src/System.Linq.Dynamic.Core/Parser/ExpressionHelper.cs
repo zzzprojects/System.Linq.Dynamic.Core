@@ -207,10 +207,23 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression? OptimizeStringForEqualityIfPossible(string? text, Type type)
     {
-        if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
+        if (type == typeof(DateTime) && DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
         {
             return Expression.Constant(dateTime, typeof(DateTime));
         }
+
+#if NET6_0_OR_GREATER
+        if (type == typeof(DateOnly) && DateOnly.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateOnly))
+        {
+            return Expression.Constant(dateOnly, typeof(DateOnly));
+        }
+
+        if (type == typeof(TimeOnly) && TimeOnly.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out var timeOnly))
+        {
+            return Expression.Constant(timeOnly, typeof(TimeOnly));
+        }
+#endif
+
 #if !NET35
         if (type == typeof(Guid) && Guid.TryParse(text, out Guid guid))
         {

@@ -1,14 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
-using System.Text.RegularExpressions;
 
 namespace System.Linq.Dynamic.Core.Parser;
 
 internal static class PredefinedTypesHelper
 {
 #if NETSTANDARD2_0
-    private static readonly string Version = Regex.Match(typeof(PredefinedTypesHelper).AssemblyQualifiedName!, @"\d+\.\d+\.\d+\.\d+").ToString();
+    private static readonly string Version = Text.RegularExpressions.Regex.Match(typeof(PredefinedTypesHelper).AssemblyQualifiedName!, @"\d+\.\d+\.\d+\.\d+").ToString();
 #endif
 
     // These shorthands have different name than actual type and therefore not recognized by default from the PredefinedTypes.
@@ -46,7 +45,11 @@ internal static class PredefinedTypesHelper
         { typeof(Guid), 0 },
         { typeof(Math), 0 },
         { typeof(Convert), 0 },
-        { typeof(Uri), 0 }
+        { typeof(Uri), 0 },
+#if NET6_0_OR_GREATER
+        { typeof(DateOnly), 0 },
+        { typeof(TimeOnly), 0 }
+#endif
     });
 
     static PredefinedTypesHelper()
