@@ -1,91 +1,83 @@
 ﻿using System.Collections.Generic;
 
-namespace System.Linq.Dynamic.Core.Parser
+namespace System.Linq.Dynamic.Core.Parser;
+
+internal class WrappedValue<TValue>
 {
-    internal class WrappedValue<TValue>
+    public TValue Value { get; }
+
+    public WrappedValue(TValue value)
     {
-        public TValue Value { get; }
+        Value = value;
+    }
 
-        public WrappedValue(TValue value)
+    public static bool operator ==(WrappedValue<TValue>? left, WrappedValue<TValue>? right)
+    {
+        if (ReferenceEquals(left, right))
         {
-            Value = value;
+            return true;
         }
 
-        public static bool operator ==(WrappedValue<TValue>? left, WrappedValue<TValue>? right)
+        if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
         {
-            if (ReferenceEquals(left, right))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
-            {
-                return false;
-            }
-
-            return EqualityComparer<TValue>.Default.Equals(left.Value, right.Value);
+            return false;
         }
 
-        public static bool operator !=(WrappedValue<TValue>? left, WrappedValue<TValue>? right)
+        return EqualityComparer<TValue>.Default.Equals(left.Value, right.Value);
+    }
+
+    public static bool operator !=(WrappedValue<TValue>? left, WrappedValue<TValue>? right)
+    {
+        return !(left == right);
+    }
+
+    public static bool operator ==(WrappedValue<TValue>? left, TValue? right)
+    {
+        if (ReferenceEquals(left, null))
         {
-            return !(left == right);
+            return false;
         }
 
-        public static bool operator ==(WrappedValue<TValue>? left, TValue? right)
-        {
-            if (ReferenceEquals(left, null))
-            {
-                return false;
-            }
+        return EqualityComparer<TValue>.Default.Equals(left.Value, right);
+    }
 
-            return EqualityComparer<TValue>.Default.Equals(left.Value, right);
+    public static bool operator !=(WrappedValue<TValue>? left, TValue? right)
+    {
+        return !(left == right);
+    }
+
+    public static bool operator ==(TValue? left, WrappedValue<TValue>? right)
+    {
+        if (ReferenceEquals(right, null))
+        {
+            return false;
         }
 
-        public static bool operator !=(WrappedValue<TValue>? left, TValue? right)
+        return EqualityComparer<TValue>.Default.Equals(left, right.Value);
+    }
+
+    public static bool operator !=(TValue? left, WrappedValue<TValue>? right)
+    {
+        return !(left == right);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
         {
-            return !(left == right);
+            return true;
         }
 
-        public static bool operator ==(TValue? left, WrappedValue<TValue>? right)
+        if (obj is not WrappedValue<TValue> other)
         {
-            if (ReferenceEquals(right, null))
-            {
-                return false;
-            }
-
-            return EqualityComparer<TValue>.Default.Equals(left, right.Value);
+            return false;
         }
 
-        public static bool operator !=(TValue? left, WrappedValue<TValue>? right)
-        {
-            return !(left == right);
-        }
+        return EqualityComparer<TValue>.Default.Equals(Value, other.Value);
+    }
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (ReferenceEquals(obj, null))
-            {
-                return false;
-            }
-
-            WrappedValue<TValue>? other = obj as WrappedValue<TValue>;
-
-            if (ReferenceEquals(other, null))
-            {
-                return false;
-            }
-
-            return EqualityComparer<TValue>.Default.Equals(Value, other.Value);
-        }
-
-        public override int GetHashCode()
-        {
-            return Value?.GetHashCode() ?? 0;
-        }
+    public override int GetHashCode()
+    {
+        return Value?.GetHashCode() ?? 0;
     }
 }
