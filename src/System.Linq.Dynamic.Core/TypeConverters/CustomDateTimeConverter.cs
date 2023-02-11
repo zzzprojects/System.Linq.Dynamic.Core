@@ -13,7 +13,11 @@ internal class CustomDateTimeConverter : DateTimeOffsetConverter
     /// <param name="value">The object to be converted.</param>
     /// <returns>A <see cref="Nullable{DateTime}"></see> that represents the specified object.</returns>
     /// <exception cref="NotSupportedException">The conversion cannot be performed.</exception>
+#if NET6_0_OR_GREATER
+    public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
+#else
     public override object? ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+#endif
     {
         var dateTimeOffset = base.ConvertFrom(context, culture, value) as DateTimeOffset?;
 

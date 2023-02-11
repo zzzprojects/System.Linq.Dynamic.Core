@@ -504,19 +504,19 @@ public class ExpressionParser
                     }
                 }
             }
-            else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string stringValueR && (typeConverter = _typeConverterFactory.GetConverter(left.Type)) != null)
+            else if ((constantExpr = right as ConstantExpression) != null && constantExpr.Value is string stringValueR && (typeConverter = _typeConverterFactory.GetConverter(left.Type)) != null && typeConverter.CanConvertFrom(right.Type))
             {
                 right = Expression.Constant(typeConverter.ConvertFromInvariantString(stringValueR), left.Type);
             }
-            else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string stringValueL && (typeConverter = _typeConverterFactory.GetConverter(right.Type)) != null)
+            else if ((constantExpr = left as ConstantExpression) != null && constantExpr.Value is string stringValueL && (typeConverter = _typeConverterFactory.GetConverter(right.Type)) != null && typeConverter.CanConvertFrom(left.Type))
             {
                 left = Expression.Constant(typeConverter.ConvertFromInvariantString(stringValueL), right.Type);
             }
-            else if (_expressionHelper.TryUnwrapAsValue<string>(right, out var unwrappedStringValueR) && (typeConverter = _typeConverterFactory.GetConverter(left.Type)) != null)
+            else if (_expressionHelper.TryUnwrapAsValue<string>(right, out var unwrappedStringValueR) && (typeConverter = _typeConverterFactory.GetConverter(left.Type)) != null && typeConverter.CanConvertFrom(right.Type))
             {
                 right = Expression.Constant(typeConverter.ConvertFromInvariantString(unwrappedStringValueR), left.Type);
             }
-            else if (_expressionHelper.TryUnwrapAsValue<string>(left, out var unwrappedStringValueL) && (typeConverter = _typeConverterFactory.GetConverter(right.Type)) != null)
+            else if (_expressionHelper.TryUnwrapAsValue<string>(left, out var unwrappedStringValueL) && (typeConverter = _typeConverterFactory.GetConverter(right.Type)) != null && typeConverter.CanConvertFrom(left.Type))
             {
                 left = Expression.Constant(typeConverter.ConvertFromInvariantString(unwrappedStringValueL), right.Type);
             }
@@ -668,10 +668,11 @@ public class ExpressionParser
     private Expression ParseAdditive()
     {
         Expression left = ParseMultiplicative();
-        while (_textParser.CurrentToken.Id == TokenId.Plus || _textParser.CurrentToken.Id == TokenId.Minus)
+        while (_textParser.CurrentToken.Id is TokenId.Plus or TokenId.Minus)
         {
             Token op = _textParser.CurrentToken;
             _textParser.NextToken();
+
             Expression right = ParseMultiplicative();
             switch (op.Id)
             {
@@ -682,12 +683,13 @@ public class ExpressionParser
                     }
                     else
                     {
-                        CheckAndPromoteOperands(typeof(IAddSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(IAddAndSubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                         left = _expressionHelper.GenerateAdd(left, right);
                     }
                     break;
+
                 case TokenId.Minus:
-                    CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
+                    CheckAndPromoteOperands(typeof(IAddAndSubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                     left = _expressionHelper.GenerateSubtract(left, right);
                     break;
             }
@@ -699,8 +701,7 @@ public class ExpressionParser
     private Expression ParseMultiplicative()
     {
         Expression left = ParseUnary();
-        while (_textParser.CurrentToken.Id == TokenId.Asterisk || _textParser.CurrentToken.Id == TokenId.Slash ||
-               _textParser.CurrentToken.Id == TokenId.Percent || TokenIdentifierIs("mod"))
+        while (_textParser.CurrentToken.Id is TokenId.Asterisk or TokenId.Slash or TokenId.Percent || TokenIdentifierIs("mod"))
         {
             Token op = _textParser.CurrentToken;
             _textParser.NextToken();
@@ -711,9 +712,11 @@ public class ExpressionParser
                 case TokenId.Asterisk:
                     left = Expression.Multiply(left, right);
                     break;
+
                 case TokenId.Slash:
                     left = Expression.Divide(left, right);
                     break;
+
                 case TokenId.Percent:
                 case TokenId.Identifier:
                     left = Expression.Modulo(left, right);
