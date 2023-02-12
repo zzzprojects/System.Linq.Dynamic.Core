@@ -313,9 +313,16 @@ public class ExpressionParser
                     Expression right = ParseUnary();
 
                     // if the identifier is an Enum, try to convert the right-side also to an Enum.
-                    if (left.Type.GetTypeInfo().IsEnum && right is ConstantExpression constantExpression)
+                    if (left.Type.GetTypeInfo().IsEnum)
                     {
-                        right = ParseEnumToConstantExpression(op.Pos, left.Type, constantExpression);
+                        if (right is ConstantExpression constantExprRight)
+                        {
+                            right = ParseEnumToConstantExpression(op.Pos, left.Type, constantExprRight);
+                        }
+                        else if (_expressionHelper.TryUnwrapAsExpression<string>(right, out var unwrappedConstantExprRight))
+                        {
+                            right = ParseEnumToConstantExpression(op.Pos, left.Type, unwrappedConstantExprRight);
+                        }
                     }
 
                     // else, check for direct type match

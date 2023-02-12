@@ -97,6 +97,176 @@ public partial class QueryableTests
         // Assert
         result.Should().HaveCount(1);
     }
+
+    [Fact]
+    public void When_UseParameterizedNamesInDynamicQuery_IsTrue_WrappedStringValueEnumAsParameter_Should_Be_Unwrapped()
+    {
+        // Arrange
+        var list = new List<Customer>
+        {
+            new()
+            {
+                Name = "Duffy",
+                GenderType = Gender.Female
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Male
+            }
+        };
+
+        var config = new ParsingConfig
+        {
+            UseParameterizedNamesInDynamicQuery = true
+        };
+
+        // Act
+        var result = list.AsQueryable().Where(config, "GenderType = @0", "Female").ToArray();
+
+        // Assert
+        result.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void When_UseParameterizedNamesInDynamicQuery_IsTrue_WrappedStringValueEnumArray_Should_Be_Unwrapped()
+    {
+        // Arrange
+        var list = new List<Customer>
+        {
+            new()
+            {
+                Name = "Duffy",
+                GenderType = Gender.Female
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Male
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Other
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Male
+            }
+        };
+
+        var config = new ParsingConfig
+        {
+            UseParameterizedNamesInDynamicQuery = true
+        };
+
+        // Act
+        var result = list.AsQueryable().Where(config, "GenderType in (\"Female\", \"Other\")").ToArray();
+
+        // Assert
+        result.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public void When_UseParameterizedNamesInDynamicQuery_IsTrue_WrappedIntergerValueEnumArray_Should_Be_Unwrapped()
+    {
+        // Arrange
+        var list = new List<Customer>
+        {
+            new()
+            {
+                Name = "Duffy",
+                GenderType = Gender.Female
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Male
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Other
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Male
+            }
+        };
+
+        var config = new ParsingConfig
+        {
+            UseParameterizedNamesInDynamicQuery = true
+        };
+
+        // Act
+        var result = list.AsQueryable().Where(config, "GenderType in (0, 2)").ToArray();
+
+        // Assert
+        result.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public void When_UseParameterizedNamesInDynamicQuery_IsTrue_WrappedIntegerValueEnum_Should_Be_Unwrapped()
+    {
+        // Arrange
+        var list = new List<Customer>
+        {
+            new()
+            {
+                Name = "Duffy",
+                GenderType = Gender.Female
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Male
+            }
+        };
+
+        var config = new ParsingConfig
+        {
+            UseParameterizedNamesInDynamicQuery = true
+        };
+
+        // Act
+        var result = list.AsQueryable().Where(config, "GenderType = 1").ToArray();
+
+        // Assert
+        result.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void When_UseParameterizedNamesInDynamicQuery_IsTrue_WrappedIntegerStringValueEnumAsParameter_Should_Be_Unwrapped()
+    {
+        // Arrange
+        var list = new List<Customer>
+        {
+            new()
+            {
+                Name = "Duffy",
+                GenderType = Gender.Female
+            },
+            new()
+            {
+                Name = "Garry",
+                GenderType = Gender.Male
+            }
+        };
+
+        var config = new ParsingConfig
+        {
+            UseParameterizedNamesInDynamicQuery = true
+        };
+
+        // Act
+        var result = list.AsQueryable().Where(config, "GenderType = @0", 1).ToArray();
+
+        // Assert
+        result.Should().HaveCount(1);
+    }
 }
 
 public class Customer
