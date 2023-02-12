@@ -26,9 +26,20 @@ internal class ExpressionHelper : IExpressionHelper
         }
     }
 
-    public bool TryUnwrapConstantExpression<TValue>(Expression? expression, [NotNullWhen(true)] out TValue? value)
+    public bool TryUnwrapAsValue<TValue>(Expression? expression, [NotNullWhen(true)] out TValue? value)
     {
-        if (_parsingConfig.UseParameterizedNamesInDynamicQuery && _constantExpressionWrapper.TryUnwrap(expression as MemberExpression, out value))
+        if (_parsingConfig.UseParameterizedNamesInDynamicQuery && _constantExpressionWrapper.TryUnwrapAsValue(expression as MemberExpression, out value))
+        {
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryUnwrapAsExpression<TValue>(Expression? expression, [NotNullWhen(true)] out ConstantExpression? value)
+    {
+        if (_parsingConfig.UseParameterizedNamesInDynamicQuery && _constantExpressionWrapper.TryUnwrapAsExpression<string>(expression as MemberExpression, out value))
         {
             return true;
         }
