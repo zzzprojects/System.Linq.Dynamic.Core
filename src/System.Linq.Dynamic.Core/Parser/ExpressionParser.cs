@@ -319,7 +319,7 @@ public class ExpressionParser
                         {
                             right = ParseEnumToConstantExpression(op.Pos, left.Type, constantExprRight);
                         }
-                        else if (_expressionHelper.TryUnwrapAsExpression<string>(right, out var unwrappedConstantExprRight))
+                        else if (_expressionHelper.TryUnwrapAsConstantExpression(right, out var unwrappedConstantExprRight))
                         {
                             right = ParseEnumToConstantExpression(op.Pos, left.Type, unwrappedConstantExprRight);
                         }
@@ -489,7 +489,7 @@ public class ExpressionParser
                         {
                             right = ParseEnumToConstantExpression(op.Pos, left.Type, constantExprRight);
                         }
-                        else if (_expressionHelper.TryUnwrapAsExpression<string>(right, out var unwrappedConstantExprRight))
+                        else if (_expressionHelper.TryUnwrapAsConstantExpression(right, out var unwrappedConstantExprRight))
                         {
                             right = ParseEnumToConstantExpression(op.Pos, left.Type, unwrappedConstantExprRight);
                         }
@@ -500,7 +500,7 @@ public class ExpressionParser
                         {
                             left = ParseEnumToConstantExpression(op.Pos, right.Type, constantExprLeft);
                         }
-                        else if (_expressionHelper.TryUnwrapAsExpression<string>(left, out var unwrappedConstantExprLeft))
+                        else if (_expressionHelper.TryUnwrapAsConstantExpression(left, out var unwrappedConstantExprLeft))
                         {
                             left = ParseEnumToConstantExpression(op.Pos, right.Type, unwrappedConstantExprLeft);
                         }

@@ -37,7 +37,9 @@ internal interface IExpressionHelper
 
     bool TryUnwrapAsValue<TValue>(Expression? expression, [NotNullWhen(true)] out TValue? value);
 
-    bool TryUnwrapAsExpression<TValue>(Expression? expression, [NotNullWhen(true)] out ConstantExpression? value);
+    bool TryUnwrapAsConstantExpression<TValue>(Expression? expression, [NotNullWhen(true)] out ConstantExpression? value);
+
+    bool TryUnwrapAsConstantExpression(Expression? expression, [NotNullWhen(true)] out ConstantExpression? value);
 
     bool MemberExpressionIsDynamic(Expression expression);
 

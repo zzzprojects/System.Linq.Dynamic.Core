@@ -169,7 +169,7 @@ public partial class QueryableTests
     }
 
     [Fact]
-    public void When_UseParameterizedNamesInDynamicQuery_IsTrue_WrappedIntergerValueEnumArray_Should_Be_Unwrapped()
+    public void When_UseParameterizedNamesInDynamicQuery_IsTrue_WrappedIntegerValueEnumArray_Should_Be_Unwrapped()
     {
         // Arrange
         var list = new List<Customer>
@@ -186,12 +186,12 @@ public partial class QueryableTests
             },
             new()
             {
-                Name = "Garry",
+                Name = "Test A",
                 GenderType = Gender.Other
             },
             new()
             {
-                Name = "Garry",
+                Name = "Test B",
                 GenderType = Gender.Male
             }
         };
@@ -205,7 +205,7 @@ public partial class QueryableTests
         var result = list.AsQueryable().Where(config, "GenderType in (0, 2)").ToArray();
 
         // Assert
-        result.Should().HaveCount(2);
+        result.Should().HaveCount(3);
     }
 
     [Fact]

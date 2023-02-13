@@ -9,5 +9,5 @@ internal interface IConstantExpressionWrapper
 
     bool TryUnwrapAsValue<TValue>(MemberExpression? expression, [NotNullWhen(true)] out TValue? value);
 
-    bool TryUnwrapAsExpression<TValue>(MemberExpression? expression, [NotNullWhen(true)] out ConstantExpression? value);
+    bool TryUnwrapAsConstantExpression<TValue>(MemberExpression? expression, [NotNullWhen(true)] out ConstantExpression? value);
 }
