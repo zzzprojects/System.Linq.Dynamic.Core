@@ -50,7 +50,7 @@ internal class ExpressionHelper : IExpressionHelper
 
     public bool TryUnwrapAsConstantExpression(Expression? expression, [NotNullWhen(true)] out ConstantExpression? value)
     {
-        if (!_parsingConfig.UseParameterizedNamesInDynamicQuery)
+        if (!_parsingConfig.UseParameterizedNamesInDynamicQuery || expression is not MemberExpression memberExpression)
         {
             value = default;
             return false;
@@ -58,10 +58,10 @@ internal class ExpressionHelper : IExpressionHelper
 
         if
         (
-            _constantExpressionWrapper.TryUnwrapAsConstantExpression<string>(expression as MemberExpression, out value) ||
-            _constantExpressionWrapper.TryUnwrapAsConstantExpression<long>(expression as MemberExpression, out value) ||
-            _constantExpressionWrapper.TryUnwrapAsConstantExpression<int>(expression as MemberExpression, out value) ||
-            _constantExpressionWrapper.TryUnwrapAsConstantExpression<short>(expression as MemberExpression, out value)
+            _constantExpressionWrapper.TryUnwrapAsConstantExpression<string>(memberExpression, out value) ||
+            _constantExpressionWrapper.TryUnwrapAsConstantExpression<int>(memberExpression, out value) ||
+            _constantExpressionWrapper.TryUnwrapAsConstantExpression<long>(memberExpression, out value) ||
+            _constantExpressionWrapper.TryUnwrapAsConstantExpression<short>(memberExpression, out value)
         )
         {
             return true;
