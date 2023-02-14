@@ -23,7 +23,7 @@ namespace System.Linq.Dynamic.Core.Tests
         Var6 = 16
     }
 
-    public class ExpressionTests
+    public partial class ExpressionTests
     {
         public enum TestEnum2 : sbyte
         {
@@ -1481,174 +1481,6 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Method_NoParams()
-        {
-            // Arrange
-            var users = User.GenerateSampleModels(3);
-
-            // Act
-            var expected = users.Where(u => u.TestMethod1());
-            var result = users.AsQueryable().Where("TestMethod1()");
-
-            // Assert
-            Assert.Equal(expected.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_Method_OneParam_With_it()
-        {
-            // Arrange
-            var users = User.GenerateSampleModels(3);
-
-            // Act
-            var expected = users.Where(u => u.TestMethod2(u));
-            var result = users.AsQueryable().Where("TestMethod2(it)");
-
-            // Assert
-            Assert.Equal(expected.Count(), result.Count());
-        }
-
-        public class DefaultDynamicLinqCustomTypeProviderForStaticTesting : CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider
-        {
-            public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_GenericStatic()
-        {
-            var config = new ParsingConfig
-            {
-                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForStaticTesting()
-            };
-
-            // Arrange
-            var list = new[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
-
-            // Act
-            var expectedResult = list.Where(x => Methods.StaticGenericMethod(x));
-            var result = list.AsQueryable().Where(config, "Methods.StaticGenericMethod(it)");
-
-            // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_Generic()
-        {
-            var config = new ParsingConfig
-            {
-                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForStaticTesting()
-            };
-
-            // Arrange
-            var list = new[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
-
-            // Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.GenericMethod(x));
-            var result = list.AsQueryable().Where("@0.GenericMethod(it)", methods);
-
-            // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_GenericExtension()
-        {
-            var config = new ParsingConfig
-            {
-                CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForStaticTesting(),
-                PrioritizePropertyOrFieldOverTheType = true
-            };
-
-            // Arrange
-            var list = new[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
-
-            // Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => MethodsItemExtension.Functions.EfCoreCollate(x.Value, "tlh-KX") == 2);
-            var result = list.AsQueryable().Where(config, "MethodsItemExtension.Functions.EfCoreCollate(it.Value,\"tlh-KX\")==2");
-
-            // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_ValueTypeToValueTypeParameter()
-        {
-            // Arrange
-            var list = new[] { 0, 1, 2, 3, 4 };
-
-            // Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method1(x));
-            var result = list.AsQueryable().Where("@0.Method1(it)", methods);
-
-            // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithCast()
-        {
-            // Arrange
-            var list = new[] { 0, 1, 2, 3, 4 };
-
-            // Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method2(x));
-            var result = list.AsQueryable().Where("@0.Method2(object(it))", methods);
-
-            // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_ValueTypeToObjectParameterWithoutCast()
-        {
-            // Arrange
-            var list = new[] { 0, 1, 2, 3, 4 };
-
-            // Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method2(x));
-            var result = list.AsQueryable().Where("@0.Method2(it)", methods);
-
-            // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_NullableValueTypeToObjectParameter()
-        {
-            // Arrange
-            var list = new int?[] { 0, 1, 2, 3, 4, null };
-
-            // Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method2(x));
-            var result = list.AsQueryable().Where("@0.Method2(it)", methods);
-
-            // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
-        public void ExpressionTests_MethodCall_ReferenceTypeToObjectParameter()
-        {
-            // Arrange
-            var list = new[] { 0, 1, 2, 3, 4 }.Select(value => new Methods.Item { Value = value }).ToArray();
-
-            // Act
-            var methods = new Methods();
-            var expectedResult = list.Where(x => methods.Method3(x));
-            var result = list.AsQueryable().Where("@0.Method3(it)", methods);
-
-            // Assert
-            Assert.Equal(expectedResult.Count(), result.Count());
-        }
-
-        [Fact]
         public void ExpressionTests_NewAnonymousType_Paren()
         {
             // Arrange
@@ -1674,21 +1506,6 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Assert
             Check.That(result).Equals(expectedResult);
-        }
-
-        [Fact]
-        public void ExpressionTests_Method_OneParam_With_user()
-        {
-            // Arrange
-            var users = User.GenerateSampleModels(10);
-            var testUser = users[2];
-
-            // Act
-            var expected = users.Where(u => u.TestMethod3(testUser));
-            var result = users.AsQueryable().Where("TestMethod3(@0)", testUser);
-
-            // Assert
-            Assert.Equal(expected.Count(), result.Count());
         }
 
         [Fact]
@@ -1899,50 +1716,7 @@ namespace System.Linq.Dynamic.Core.Tests
             queryAsString = queryAsString.Substring(queryAsString.IndexOf(".Select") + 1).TrimEnd(']');
             Check.That(queryAsString).Equals(query);
         }
-
-
-        [Fact]
-        public void ExpressionTests_NullPropagating_InstanceMethod_Zero_Arguments()
-        {
-            // Arrange 1
-            var expression = "np(FooValue.Zero().Length)";
-            var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
-
-            // Act 2
-            var result = q.Select(expression).FirstOrDefault() as int?;
-
-            // Assert 2
-            result.Should().BeNull();
-        }
-
-        [Fact]
-        public void ExpressionTests_NullPropagating_InstanceMethod_One_Argument()
-        {
-            // Arrange
-            var expression = "np(FooValue.One(1).Length)";
-            var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
-
-            // Act
-            var result = q.Select(expression).FirstOrDefault() as int?;
-
-            // Assert
-            result.Should().BeNull();
-        }
-
-        [Fact]
-        public void ExpressionTests_NullPropagating_InstanceMethod_Two_Arguments()
-        {
-            // Arrange
-            var expression = "np(FooValue.Two(1, 42).Length)";
-            var q = new[] { new Foo { FooValue = new Foo() } }.AsQueryable();
-
-            // Act
-            var result = q.Select(expression).FirstOrDefault() as int?;
-
-            // Assert
-            result.Should().BeNull();
-        }
-
+        
         [Fact]
         public void ExpressionTests_NullPropagation_Method()
         {

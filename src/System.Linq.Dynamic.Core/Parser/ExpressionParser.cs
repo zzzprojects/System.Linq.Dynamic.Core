@@ -1696,14 +1696,14 @@ public class ExpressionParser
             }
 
             Expression[] args = ParseArgumentList();
-            switch (_methodFinder.FindMethod(type, id, expression == null, ref expression, ref args, out var mb))
+            switch (_methodFinder.FindMethod(type, id, expression == null, ref expression, ref args, out var methodBase))
             {
                 case 0:
                     throw ParseError(errorPos, Res.NoApplicableMethod, id, TypeHelper.GetTypeName(type));
 
                 case 1:
-                    MethodInfo method = (MethodInfo)mb!;
-                    if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType!) && !(method.IsPublic && PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.ReturnType)))
+                    var method = (MethodInfo)methodBase!;
+                    if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType!))
                     {
                         throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType!));
                     }
