@@ -172,9 +172,9 @@ public partial class ExpressionParserTests
 
     [Theory]
 #if NET452
-        [InlineData("int?(5)", typeof(int?), "Convert(5)")]
-        [InlineData("int?(null)", typeof(int?), "Convert(null)")]
-        [InlineData("string(null)", typeof(string), "Convert(null)")]
+    [InlineData("int?(5)", typeof(int?), "Convert(5)")]
+    [InlineData("int?(null)", typeof(int?), "Convert(null)")]
+    [InlineData("string(null)", typeof(string), "Convert(null)")]
 #else
     [InlineData("int?(5)", typeof(int?), "Convert(5, Nullable`1)")]
     [InlineData("int?(null)", typeof(int?), "Convert(null, Nullable`1)")]
@@ -206,8 +206,7 @@ public partial class ExpressionParserTests
         // Arrange
         var config = new ParsingConfig
         {
-            CustomTypeProvider = _dynamicTypeProviderMock.Object,
-            PrioritizePropertyOrFieldOverTheType = true
+            CustomTypeProvider = _dynamicTypeProviderMock.Object
         };
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
         var sut = new ExpressionParser(parameters, expression, null, config);
@@ -231,9 +230,9 @@ public partial class ExpressionParserTests
     [InlineData("it.MainCompany.Name != null", "(company.MainCompany.Name != null)")]
     [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
     [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
-    [InlineData("MainCompany.Name", "Static property requires null instance, non-static property requires non-null instance.")] // Exception
-    [InlineData("DateTime", "'.' or '(' or string literal expected")] // Exception
-    [InlineData("Company.Name", "Static property requires null instance, non-static property requires non-null instance.")] // Exception
+    [InlineData("MainCompany.Name", "company.MainCompany.Name")]
+    [InlineData("DateTime", "company.DateTime")]
+    [InlineData("Company.Name", "No property or field 'Name' exists in type 'Company'")] // Exception
     public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsFalse(string expression, string result)
     {
         // Arrange
