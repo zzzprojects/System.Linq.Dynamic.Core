@@ -227,11 +227,23 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
         }
     }
 
-    public bool TryUnwrap<TValue>(MemberExpression? expression, [NotNullWhen(true)] out TValue? value)
+    public bool TryUnwrapAsValue<TValue>(MemberExpression? expression, [NotNullWhen(true)] out TValue? value)
     {
         if (expression?.Expression is ConstantExpression { Value: WrappedValue<TValue> wrapper })
         {
             value = wrapper.Value!;
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryUnwrapAsConstantExpression<TValue>(MemberExpression? expression, [NotNullWhen(true)] out ConstantExpression? value)
+    {
+        if (TryUnwrapAsValue<TValue>(expression, out var wrappedValue))
+        {
+            value = Expression.Constant(wrappedValue);
             return true;
         }
 

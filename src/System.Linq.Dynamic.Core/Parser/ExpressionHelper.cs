@@ -26,9 +26,43 @@ internal class ExpressionHelper : IExpressionHelper
         }
     }
 
-    public bool TryUnwrapConstantExpression<TValue>(Expression? expression, [NotNullWhen(true)] out TValue? value)
+    public bool TryUnwrapAsValue<TValue>(Expression? expression, [NotNullWhen(true)] out TValue? value)
     {
-        if (_parsingConfig.UseParameterizedNamesInDynamicQuery && _constantExpressionWrapper.TryUnwrap(expression as MemberExpression, out value))
+        if (_parsingConfig.UseParameterizedNamesInDynamicQuery && _constantExpressionWrapper.TryUnwrapAsValue(expression as MemberExpression, out value))
+        {
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryUnwrapAsConstantExpression<TValue>(Expression? expression, [NotNullWhen(true)] out ConstantExpression? value)
+    {
+        if (_parsingConfig.UseParameterizedNamesInDynamicQuery && _constantExpressionWrapper.TryUnwrapAsConstantExpression<TValue>(expression as MemberExpression, out value))
+        {
+            return true;
+        }
+
+        value = default;
+        return false;
+    }
+
+    public bool TryUnwrapAsConstantExpression(Expression? expression, [NotNullWhen(true)] out ConstantExpression? value)
+    {
+        if (!_parsingConfig.UseParameterizedNamesInDynamicQuery || expression is not MemberExpression memberExpression)
+        {
+            value = default;
+            return false;
+        }
+
+        if
+        (
+            _constantExpressionWrapper.TryUnwrapAsConstantExpression<string>(memberExpression, out value) ||
+            _constantExpressionWrapper.TryUnwrapAsConstantExpression<int>(memberExpression, out value) ||
+            _constantExpressionWrapper.TryUnwrapAsConstantExpression<long>(memberExpression, out value) ||
+            _constantExpressionWrapper.TryUnwrapAsConstantExpression<short>(memberExpression, out value)
+        )
         {
             return true;
         }
