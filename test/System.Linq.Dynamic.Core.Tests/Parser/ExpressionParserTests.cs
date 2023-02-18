@@ -199,7 +199,7 @@ public partial class ExpressionParserTests
     [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
     [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
-    [InlineData("Company.Name", "No property or field 'Name' exists in type 'Company'")]
+    [InlineData("Name", "company.Name")]
     [InlineData("DateTime", "company.DateTime")]
     public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsTrue(string expression, string result)
     {
@@ -229,20 +229,25 @@ public partial class ExpressionParserTests
     [Theory]
     [InlineData("it.MainCompany.Name != null", "(company.MainCompany.Name != null)")]
     [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
-    [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
+    [InlineData("Company.Equals(null, null)", "No applicable method 'Equals' exists in type 'Company'")] // Exception
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
-    [InlineData("DateTime", "company.DateTime")]
-    [InlineData("Company.Name", "No property or field 'Name' exists in type 'Company'")] // Exception
+    [InlineData("Name", "company.Name")]
+    [InlineData("it.DateTime", "company.DateTime")]
+    [InlineData("DateTime", "'.' or '(' or string literal expected")] // Exception
     public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsFalse(string expression, string result)
     {
         // Arrange
+        var config = new ParsingConfig
+        {
+            PrioritizePropertyOrFieldOverTheType = false
+        };
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
 
         // Act
         string parsedExpression;
         try
         {
-            var sut = new ExpressionParser(parameters, expression, null, _parsingConfig);
+            var sut = new ExpressionParser(parameters, expression, null, config);
             parsedExpression = sut.Parse(null).ToString();
         }
         catch (Exception e)
