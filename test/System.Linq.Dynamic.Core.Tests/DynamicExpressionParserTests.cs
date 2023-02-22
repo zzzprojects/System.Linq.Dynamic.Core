@@ -1083,6 +1083,20 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
+    public void DynamicExpressionParser_ParseLambda_With_DateTime_UtcNow_AddHours_ToString_Issue675()
+    {
+        // Arrange
+        var expressionText = "DateTime.UtcNow.AddHours(2).ToString(\"o\")";
+        var parameterExpression = Expression.Parameter(typeof(string));
+
+        // Act
+        var lambda = DynamicExpressionParser.ParseLambda(new[] { parameterExpression }, typeof(object), expressionText);
+
+        // Assert
+        lambda.Should().NotBeNull();
+    }
+
+    [Fact]
     public void DynamicExpressionParser_ParseLambda_With_Guid_Equals_String()
     {
         // Arrange
@@ -1459,7 +1473,7 @@ public class DynamicExpressionParserTests
         result.Should().BeTrue();
     }
 
-    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider
+    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
     {
         public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
     }

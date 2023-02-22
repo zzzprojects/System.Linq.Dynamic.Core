@@ -281,6 +281,10 @@ public partial class QueryableTests
     public void Where_Dynamic_DateTimeConstructor_Issue662()
     {
         // Arrange
+        var config = new ParsingConfig
+        {
+            PrioritizePropertyOrFieldOverTheType = false
+        };
         var date = new DateTime(2023, 1, 13, 12, 0, 0);
         var queryable = new List<Foo>
         {
@@ -289,13 +293,13 @@ public partial class QueryableTests
         }.AsQueryable();
 
         // Act 1
-        //var result1 = queryable.Where("DT > DateTime(2022, 1, 1, 0, 0, 0)").ToArray();
+        var result1 = queryable.Where(config, "DT > DateTime(2022, 1, 1, 0, 0, 0)").ToArray();
 
         // Assert 1
-        //result1.Should().HaveCount(1);
+        result1.Should().HaveCount(1);
 
         // Act 2
-        var result2 = queryable.Where("it.DateTime > DateTime(2022, 1, 1, 0, 0, 0)").ToArray();
+        var result2 = queryable.Where(config, "it.DateTime > DateTime(2022, 1, 1, 0, 0, 0)").ToArray();
 
         // Assert 2
         result2.Should().HaveCount(1);
