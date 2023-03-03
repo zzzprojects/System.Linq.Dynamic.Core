@@ -2,10 +2,9 @@
 - [#669](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/669) - Methods should only be callable on predefined types [security] contributed by [StefH](https://github.com/StefH)
 - [#671](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/671) - Add support for DateOnly and TimeOnly [feature] contributed by [StefH](https://github.com/StefH)
 - [#672](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/672) - Fixed ExpressionParser when WrappedValue-string is used for equals-operator for Enum [bug] contributed by [StefH](https://github.com/StefH)
-- [#674](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/674) - Stef 668 enum string wrapped contributed by [neilbgr](https://github.com/neilbgr)
+- [#674](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/674) - Fixed ExpressionParser when WrappedValue-string is used for equals-operator for Enum [refactor] contributed by [neilbgr](https://github.com/neilbgr)
 - [#676](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/676) - Change default setting for PrioritizePropertyOrFieldOverTheType to 'true'. [bug] contributed by [StefH](https://github.com/StefH)
-- [#651](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/651) - Selecting shadow properties
-- [#661](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/661) - Question on projection of child object properties in a Select.
+- [#660](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/660) - Question about security [security]
 - [#667](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/667) - DateOnly support [feature]
 - [#668](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/668) - With UseParameterizedNamesInDynamicQuery, can't compare enum type with String [bug]
 - [#675](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/675) - Expression does not parse any more 1.2.25 (works in 1.2.24) [bug]
