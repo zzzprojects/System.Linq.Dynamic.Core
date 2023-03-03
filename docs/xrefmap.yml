@@ -1,6 +1,12 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
+- uid: System
+  name: System
+  href: api/System.html
+  commentId: N:System
+  fullName: System
+  nameWithType: System
 - uid: System.Linq.Dynamic.Core
   name: System.Linq.Dynamic.Core
   href: api/System.Linq.Dynamic.Core.html
@@ -115,6 +121,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetCustomTypes
   nameWithType: DefaultDynamicLinqCustomTypeProvider.GetCustomTypes
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods
+  name: GetExtensionMethods()
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_GetExtensionMethods
+  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods()
+  nameWithType: DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods()
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods*
+  name: GetExtensionMethods
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_GetExtensionMethods_
+  commentId: Overload:System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods
+  nameWithType: DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods
 - uid: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.ResolveType(System.String)
   name: ResolveType(String)
   href: api/System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_ResolveType_System_String_
@@ -153,45 +172,64 @@ references:
   commentId: T:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider
   fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider
   nameWithType: IDynamicLinkCustomTypeProvider
-- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.GetCustomTypes
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider
+  name: IDynamicLinqCustomTypeProvider
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html
+  commentId: T:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider
+  nameWithType: IDynamicLinqCustomTypeProvider
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetCustomTypes
   name: GetCustomTypes()
-  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinkCustomTypeProvider_GetCustomTypes
-  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.GetCustomTypes
-  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.GetCustomTypes()
-  nameWithType: IDynamicLinkCustomTypeProvider.GetCustomTypes()
-- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.GetCustomTypes*
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinqCustomTypeProvider_GetCustomTypes
+  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetCustomTypes
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetCustomTypes()
+  nameWithType: IDynamicLinqCustomTypeProvider.GetCustomTypes()
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetCustomTypes*
   name: GetCustomTypes
-  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinkCustomTypeProvider_GetCustomTypes_
-  commentId: Overload:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.GetCustomTypes
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinqCustomTypeProvider_GetCustomTypes_
+  commentId: Overload:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetCustomTypes
   isSpec: "True"
-  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.GetCustomTypes
-  nameWithType: IDynamicLinkCustomTypeProvider.GetCustomTypes
-- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveType(System.String)
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetCustomTypes
+  nameWithType: IDynamicLinqCustomTypeProvider.GetCustomTypes
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetExtensionMethods
+  name: GetExtensionMethods()
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinqCustomTypeProvider_GetExtensionMethods
+  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetExtensionMethods
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetExtensionMethods()
+  nameWithType: IDynamicLinqCustomTypeProvider.GetExtensionMethods()
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetExtensionMethods*
+  name: GetExtensionMethods
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinqCustomTypeProvider_GetExtensionMethods_
+  commentId: Overload:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetExtensionMethods
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.GetExtensionMethods
+  nameWithType: IDynamicLinqCustomTypeProvider.GetExtensionMethods
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveType(System.String)
   name: ResolveType(String)
-  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinkCustomTypeProvider_ResolveType_System_String_
-  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveType(System.String)
-  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveType(System.String)
-  nameWithType: IDynamicLinkCustomTypeProvider.ResolveType(String)
-- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveType*
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinqCustomTypeProvider_ResolveType_System_String_
+  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveType(System.String)
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveType(System.String)
+  nameWithType: IDynamicLinqCustomTypeProvider.ResolveType(String)
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveType*
   name: ResolveType
-  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinkCustomTypeProvider_ResolveType_
-  commentId: Overload:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveType
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinqCustomTypeProvider_ResolveType_
+  commentId: Overload:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveType
   isSpec: "True"
-  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveType
-  nameWithType: IDynamicLinkCustomTypeProvider.ResolveType
-- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName(System.String)
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveType
+  nameWithType: IDynamicLinqCustomTypeProvider.ResolveType
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName(System.String)
   name: ResolveTypeBySimpleName(String)
-  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinkCustomTypeProvider_ResolveTypeBySimpleName_System_String_
-  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName(System.String)
-  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName(System.String)
-  nameWithType: IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName(String)
-- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName*
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinqCustomTypeProvider_ResolveTypeBySimpleName_System_String_
+  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName(System.String)
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName(System.String)
+  nameWithType: IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName(String)
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName*
   name: ResolveTypeBySimpleName
-  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinkCustomTypeProvider_ResolveTypeBySimpleName_
-  commentId: Overload:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_IDynamicLinqCustomTypeProvider_ResolveTypeBySimpleName_
+  commentId: Overload:System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName
   isSpec: "True"
-  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName
-  nameWithType: IDynamicLinkCustomTypeProvider.ResolveTypeBySimpleName
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName
+  nameWithType: IDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName
 - uid: System.Linq.Dynamic.Core.DefaultQueryableAnalyzer
   name: DefaultQueryableAnalyzer
   href: api/System.Linq.Dynamic.Core.DefaultQueryableAnalyzer.html
@@ -267,6 +305,19 @@ references:
   commentId: T:System.Linq.Dynamic.Core.DynamicClassFactory
   fullName: System.Linq.Dynamic.Core.DynamicClassFactory
   nameWithType: DynamicClassFactory
+- uid: System.Linq.Dynamic.Core.DynamicClassFactory.CreateGenericComparerType(System.Type,System.Type)
+  name: CreateGenericComparerType(Type, Type)
+  href: api/System.Linq.Dynamic.Core.DynamicClassFactory.html#System_Linq_Dynamic_Core_DynamicClassFactory_CreateGenericComparerType_System_Type_System_Type_
+  commentId: M:System.Linq.Dynamic.Core.DynamicClassFactory.CreateGenericComparerType(System.Type,System.Type)
+  fullName: System.Linq.Dynamic.Core.DynamicClassFactory.CreateGenericComparerType(System.Type, System.Type)
+  nameWithType: DynamicClassFactory.CreateGenericComparerType(Type, Type)
+- uid: System.Linq.Dynamic.Core.DynamicClassFactory.CreateGenericComparerType*
+  name: CreateGenericComparerType
+  href: api/System.Linq.Dynamic.Core.DynamicClassFactory.html#System_Linq_Dynamic_Core_DynamicClassFactory_CreateGenericComparerType_
+  commentId: Overload:System.Linq.Dynamic.Core.DynamicClassFactory.CreateGenericComparerType
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.DynamicClassFactory.CreateGenericComparerType
+  nameWithType: DynamicClassFactory.CreateGenericComparerType
 - uid: System.Linq.Dynamic.Core.DynamicClassFactory.CreateType(System.Collections.Generic.IList{System.Linq.Dynamic.Core.DynamicProperty},System.Boolean)
   name: CreateType(IList<DynamicProperty>, Boolean)
   href: api/System.Linq.Dynamic.Core.DynamicClassFactory.html#System_Linq_Dynamic_Core_DynamicClassFactory_CreateType_System_Collections_Generic_IList_System_Linq_Dynamic_Core_DynamicProperty__System_Boolean_
@@ -432,6 +483,69 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Linq.Expressions.ParameterExpression(), System.Type, System.String, System.Object())
   nameWithType: DynamicExpressionParser.ParseLambda(ParameterExpression[], Type, String, Object[])
   nameWithType.vb: DynamicExpressionParser.ParseLambda(ParameterExpression(), Type, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])
+  name: ParseLambda(Type, ParsingConfig, Boolean, ParameterExpression[], Type, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_System_Linq_Expressions_ParameterExpression___System_Type_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])
+  name.vb: ParseLambda(Type, ParsingConfig, Boolean, ParameterExpression(), Type, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.Linq.Expressions.ParameterExpression[], System.Type, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.Linq.Expressions.ParameterExpression(), System.Type, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Boolean, ParameterExpression[], Type, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Boolean, ParameterExpression(), Type, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.Type,System.String,System.Object[])
+  name: ParseLambda(Type, ParsingConfig, Boolean, Type, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_System_Type_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.Type,System.String,System.Object[])
+  name.vb: ParseLambda(Type, ParsingConfig, Boolean, Type, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.Type, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.Type, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Boolean, Type, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Boolean, Type, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.Type,System.Type,System.String,System.Object[])
+  name: ParseLambda(Type, ParsingConfig, Boolean, Type, Type, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_System_Type_System_Type_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.Type,System.Type,System.String,System.Object[])
+  name.vb: ParseLambda(Type, ParsingConfig, Boolean, Type, Type, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.Type, System.Type, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.Type, System.Type, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Boolean, Type, Type, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Boolean, Type, Type, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])
+  name: ParseLambda(Type, ParsingConfig, ParameterExpression[], Type, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Linq_Expressions_ParameterExpression___System_Type_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])
+  name.vb: ParseLambda(Type, ParsingConfig, ParameterExpression(), Type, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Linq.Expressions.ParameterExpression[], System.Type, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Linq.Expressions.ParameterExpression(), System.Type, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, ParameterExpression[], Type, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, ParameterExpression(), Type, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Type,System.String,System.Object[])
+  name: ParseLambda(Type, ParsingConfig, Type, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Type_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Type,System.String,System.Object[])
+  name.vb: ParseLambda(Type, ParsingConfig, Type, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Type, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Type, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Type, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Type, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Type,System.Type,System.String,System.Object[])
+  name: ParseLambda(Type, ParsingConfig, Type, Type, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Type_System_Type_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Type,System.Type,System.String,System.Object[])
+  name.vb: ParseLambda(Type, ParsingConfig, Type, Type, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Type, System.Type, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Type, System.Type, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Type, Type, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Type, ParsingConfig, Type, Type, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])
+  name: ParseLambda(Type, ParameterExpression[], Type, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda_System_Type_System_Linq_Expressions_ParameterExpression___System_Type_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.Linq.Expressions.ParameterExpression[],System.Type,System.String,System.Object[])
+  name.vb: ParseLambda(Type, ParameterExpression(), Type, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Expressions.ParameterExpression[], System.Type, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type, System.Linq.Expressions.ParameterExpression(), System.Type, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda(Type, ParameterExpression[], Type, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Type, ParameterExpression(), Type, String, Object())
 - uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(System.Type,System.String,System.Object[])
   name: ParseLambda(Type, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda_System_Type_System_String_System_Object___
@@ -475,6 +589,24 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(Of TResult)(System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.String, System.Object())
   nameWithType: DynamicExpressionParser.ParseLambda<TResult>(ParsingConfig, Boolean, String, Object[])
   nameWithType.vb: DynamicExpressionParser.ParseLambda(Of TResult)(ParsingConfig, Boolean, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda``1(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.Linq.Expressions.ParameterExpression[],System.String,System.Object[])
+  name: ParseLambda<TResult>(Type, ParsingConfig, Boolean, ParameterExpression[], String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda__1_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_System_Linq_Expressions_ParameterExpression___System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda``1(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.Linq.Expressions.ParameterExpression[],System.String,System.Object[])
+  name.vb: ParseLambda(Of TResult)(Type, ParsingConfig, Boolean, ParameterExpression(), String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda<TResult>(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.Linq.Expressions.ParameterExpression[], System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(Of TResult)(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.Linq.Expressions.ParameterExpression(), System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda<TResult>(Type, ParsingConfig, Boolean, ParameterExpression[], String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Of TResult)(Type, ParsingConfig, Boolean, ParameterExpression(), String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda``1(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.String,System.Object[])
+  name: ParseLambda<TResult>(Type, ParsingConfig, Boolean, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda__1_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda``1(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.String,System.Object[])
+  name.vb: ParseLambda(Of TResult)(Type, ParsingConfig, Boolean, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda<TResult>(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(Of TResult)(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda<TResult>(Type, ParsingConfig, Boolean, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Of TResult)(Type, ParsingConfig, Boolean, String, Object())
 - uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda``2(System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.String,System.Object[])
   name: ParseLambda<T, TResult>(ParsingConfig, Boolean, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda__2_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_System_String_System_Object___
@@ -484,6 +616,15 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(Of T, TResult)(System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.String, System.Object())
   nameWithType: DynamicExpressionParser.ParseLambda<T, TResult>(ParsingConfig, Boolean, String, Object[])
   nameWithType.vb: DynamicExpressionParser.ParseLambda(Of T, TResult)(ParsingConfig, Boolean, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda``2(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.String,System.Object[])
+  name: ParseLambda<T, TResult>(Type, ParsingConfig, Boolean, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicExpressionParser.html#System_Linq_Dynamic_Core_DynamicExpressionParser_ParseLambda__2_System_Type_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda``2(System.Type,System.Linq.Dynamic.Core.ParsingConfig,System.Boolean,System.String,System.Object[])
+  name.vb: ParseLambda(Of T, TResult)(Type, ParsingConfig, Boolean, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda<T, TResult>(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicExpressionParser.ParseLambda(Of T, TResult)(System.Type, System.Linq.Dynamic.Core.ParsingConfig, System.Boolean, System.String, System.Object())
+  nameWithType: DynamicExpressionParser.ParseLambda<T, TResult>(Type, ParsingConfig, Boolean, String, Object[])
+  nameWithType.vb: DynamicExpressionParser.ParseLambda(Of T, TResult)(Type, ParsingConfig, Boolean, String, Object())
 - uid: System.Linq.Dynamic.Core.DynamicProperty
   name: DynamicProperty
   href: api/System.Linq.Dynamic.Core.DynamicProperty.html
@@ -610,19 +751,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Any
   nameWithType: DynamicQueryableExtensions.Any
-- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsEnumerable(System.Linq.IQueryable)
-  name: AsEnumerable(IQueryable)
-  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_AsEnumerable_System_Linq_IQueryable_
-  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsEnumerable(System.Linq.IQueryable)
-  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsEnumerable(System.Linq.IQueryable)
-  nameWithType: DynamicQueryableExtensions.AsEnumerable(IQueryable)
-- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsEnumerable*
-  name: AsEnumerable
-  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_AsEnumerable_
-  commentId: Overload:System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsEnumerable
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsDynamicEnumerable(System.Linq.IQueryable)
+  name: AsDynamicEnumerable(IQueryable)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_AsDynamicEnumerable_System_Linq_IQueryable_
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsDynamicEnumerable(System.Linq.IQueryable)
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsDynamicEnumerable(System.Linq.IQueryable)
+  nameWithType: DynamicQueryableExtensions.AsDynamicEnumerable(IQueryable)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsDynamicEnumerable*
+  name: AsDynamicEnumerable
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_AsDynamicEnumerable_
+  commentId: Overload:System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsDynamicEnumerable
   isSpec: "True"
-  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsEnumerable
-  nameWithType: DynamicQueryableExtensions.AsEnumerable
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.AsDynamicEnumerable
+  nameWithType: DynamicQueryableExtensions.AsDynamicEnumerable
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Average(System.Linq.IQueryable)
   name: Average(IQueryable)
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Average_System_Linq_IQueryable_
@@ -828,6 +969,15 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.FirstOrDefault
   nameWithType: DynamicQueryableExtensions.FirstOrDefault
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IEqualityComparer,System.Object[])
+  name: GroupBy(IQueryable, ParsingConfig, String, IEqualityComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Collections_IEqualityComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IEqualityComparer,System.Object[])
+  name.vb: GroupBy(IQueryable, ParsingConfig, String, IEqualityComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IEqualityComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IEqualityComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, ParsingConfig, String, IEqualityComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.GroupBy(IQueryable, ParsingConfig, String, IEqualityComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
   name: GroupBy(IQueryable, ParsingConfig, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Object___
@@ -843,6 +993,21 @@ references:
   commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.String)
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.String)
   nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, ParsingConfig, String, String)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.String,System.Collections.IEqualityComparer)
+  name: GroupBy(IQueryable, ParsingConfig, String, String, IEqualityComparer)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_String_System_Collections_IEqualityComparer_
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.String,System.Collections.IEqualityComparer)
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.String, System.Collections.IEqualityComparer)
+  nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, ParsingConfig, String, String, IEqualityComparer)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.String,System.Collections.IEqualityComparer,System.Object[])
+  name: GroupBy(IQueryable, ParsingConfig, String, String, IEqualityComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_String_System_Collections_IEqualityComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.String,System.Collections.IEqualityComparer,System.Object[])
+  name.vb: GroupBy(IQueryable, ParsingConfig, String, String, IEqualityComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.String, System.Collections.IEqualityComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.String, System.Collections.IEqualityComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, ParsingConfig, String, String, IEqualityComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.GroupBy(IQueryable, ParsingConfig, String, String, IEqualityComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.String,System.Object[])
   name: GroupBy(IQueryable, ParsingConfig, String, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_String_System_Object___
@@ -852,6 +1017,15 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.String, System.Object())
   nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, ParsingConfig, String, String, Object[])
   nameWithType.vb: DynamicQueryableExtensions.GroupBy(IQueryable, ParsingConfig, String, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.Collections.IEqualityComparer,System.Object[])
+  name: GroupBy(IQueryable, String, IEqualityComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_String_System_Collections_IEqualityComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.Collections.IEqualityComparer,System.Object[])
+  name.vb: GroupBy(IQueryable, String, IEqualityComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.String, System.Collections.IEqualityComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.String, System.Collections.IEqualityComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, String, IEqualityComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.GroupBy(IQueryable, String, IEqualityComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.Object[])
   name: GroupBy(IQueryable, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_String_System_Object___
@@ -867,6 +1041,21 @@ references:
   commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.String)
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.String, System.String)
   nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, String, String)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Collections.IEqualityComparer)
+  name: GroupBy(IQueryable, String, String, IEqualityComparer)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_String_System_String_System_Collections_IEqualityComparer_
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Collections.IEqualityComparer)
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.String, System.String, System.Collections.IEqualityComparer)
+  nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, String, String, IEqualityComparer)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Collections.IEqualityComparer,System.Object[])
+  name: GroupBy(IQueryable, String, String, IEqualityComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_String_System_String_System_Collections_IEqualityComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Collections.IEqualityComparer,System.Object[])
+  name.vb: GroupBy(IQueryable, String, String, IEqualityComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.String, System.String, System.Collections.IEqualityComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable, System.String, System.String, System.Collections.IEqualityComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.GroupBy(IQueryable, String, String, IEqualityComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.GroupBy(IQueryable, String, String, IEqualityComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.GroupBy(System.Linq.IQueryable,System.String,System.String,System.Object[])
   name: GroupBy(IQueryable, String, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_GroupBy_System_Linq_IQueryable_System_String_System_String_System_Object___
@@ -1096,6 +1285,80 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.LongCount
   nameWithType: DynamicQueryableExtensions.LongCount
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable)
+  name: Max(IQueryable)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Max_System_Linq_IQueryable_
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable)
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable)
+  nameWithType: DynamicQueryableExtensions.Max(IQueryable)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
+  name: Max(IQueryable, ParsingConfig, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Max_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
+  name.vb: Max(IQueryable, ParsingConfig, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object())
+  nameWithType: DynamicQueryableExtensions.Max(IQueryable, ParsingConfig, String, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.Max(IQueryable, ParsingConfig, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable,System.Linq.Expressions.LambdaExpression)
+  name: Max(IQueryable, LambdaExpression)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Max_System_Linq_IQueryable_System_Linq_Expressions_LambdaExpression_
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable,System.Linq.Expressions.LambdaExpression)
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable, System.Linq.Expressions.LambdaExpression)
+  nameWithType: DynamicQueryableExtensions.Max(IQueryable, LambdaExpression)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable,System.String,System.Object[])
+  name: Max(IQueryable, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Max_System_Linq_IQueryable_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable,System.String,System.Object[])
+  name.vb: Max(IQueryable, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max(System.Linq.IQueryable, System.String, System.Object())
+  nameWithType: DynamicQueryableExtensions.Max(IQueryable, String, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.Max(IQueryable, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max*
+  name: Max
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Max_
+  commentId: Overload:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Max
+  nameWithType: DynamicQueryableExtensions.Max
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable)
+  name: Min(IQueryable)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Min_System_Linq_IQueryable_
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable)
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable)
+  nameWithType: DynamicQueryableExtensions.Min(IQueryable)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
+  name: Min(IQueryable, ParsingConfig, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Min_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
+  name.vb: Min(IQueryable, ParsingConfig, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object())
+  nameWithType: DynamicQueryableExtensions.Min(IQueryable, ParsingConfig, String, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.Min(IQueryable, ParsingConfig, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable,System.Linq.Expressions.LambdaExpression)
+  name: Min(IQueryable, LambdaExpression)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Min_System_Linq_IQueryable_System_Linq_Expressions_LambdaExpression_
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable,System.Linq.Expressions.LambdaExpression)
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable, System.Linq.Expressions.LambdaExpression)
+  nameWithType: DynamicQueryableExtensions.Min(IQueryable, LambdaExpression)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable,System.String,System.Object[])
+  name: Min(IQueryable, String, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Min_System_Linq_IQueryable_System_String_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable,System.String,System.Object[])
+  name.vb: Min(IQueryable, String, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable, System.String, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min(System.Linq.IQueryable, System.String, System.Object())
+  nameWithType: DynamicQueryableExtensions.Min(IQueryable, String, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.Min(IQueryable, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min*
+  name: Min
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Min_
+  commentId: Overload:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Min
+  nameWithType: DynamicQueryableExtensions.Min
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OfType(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String)
   name: OfType(IQueryable, ParsingConfig, String)
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OfType_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_
@@ -1121,6 +1384,15 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OfType
   nameWithType: DynamicQueryableExtensions.OfType
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IComparer,System.Object[])
+  name: OrderBy(IQueryable, ParsingConfig, String, IComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OrderBy_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Collections_IComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IComparer,System.Object[])
+  name.vb: OrderBy(IQueryable, ParsingConfig, String, IComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.OrderBy(IQueryable, ParsingConfig, String, IComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.OrderBy(IQueryable, ParsingConfig, String, IComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
   name: OrderBy(IQueryable, ParsingConfig, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OrderBy_System_Linq_IQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Object___
@@ -1130,6 +1402,15 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object())
   nameWithType: DynamicQueryableExtensions.OrderBy(IQueryable, ParsingConfig, String, Object[])
   nameWithType.vb: DynamicQueryableExtensions.OrderBy(IQueryable, ParsingConfig, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable,System.String,System.Collections.IComparer,System.Object[])
+  name: OrderBy(IQueryable, String, IComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OrderBy_System_Linq_IQueryable_System_String_System_Collections_IComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable,System.String,System.Collections.IComparer,System.Object[])
+  name.vb: OrderBy(IQueryable, String, IComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable, System.String, System.Collections.IComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable, System.String, System.Collections.IComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.OrderBy(IQueryable, String, IComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.OrderBy(IQueryable, String, IComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(System.Linq.IQueryable,System.String,System.Object[])
   name: OrderBy(IQueryable, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OrderBy_System_Linq_IQueryable_System_String_System_Object___
@@ -1146,6 +1427,15 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy
   nameWithType: DynamicQueryableExtensions.OrderBy
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy``1(System.Linq.IQueryable{``0},System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IComparer,System.Object[])
+  name: OrderBy<TSource>(IQueryable<TSource>, ParsingConfig, String, IComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OrderBy__1_System_Linq_IQueryable___0__System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Collections_IComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy``1(System.Linq.IQueryable{``0},System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IComparer,System.Object[])
+  name.vb: OrderBy(Of TSource)(IQueryable(Of TSource), ParsingConfig, String, IComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy<TSource>(System.Linq.IQueryable<TSource>, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(Of TSource)(System.Linq.IQueryable(Of TSource), System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.OrderBy<TSource>(IQueryable<TSource>, ParsingConfig, String, IComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.OrderBy(Of TSource)(IQueryable(Of TSource), ParsingConfig, String, IComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy``1(System.Linq.IQueryable{``0},System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
   name: OrderBy<TSource>(IQueryable<TSource>, ParsingConfig, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OrderBy__1_System_Linq_IQueryable___0__System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Object___
@@ -1155,6 +1445,15 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(Of TSource)(System.Linq.IQueryable(Of TSource), System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object())
   nameWithType: DynamicQueryableExtensions.OrderBy<TSource>(IQueryable<TSource>, ParsingConfig, String, Object[])
   nameWithType.vb: DynamicQueryableExtensions.OrderBy(Of TSource)(IQueryable(Of TSource), ParsingConfig, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Collections.IComparer,System.Object[])
+  name: OrderBy<TSource>(IQueryable<TSource>, String, IComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OrderBy__1_System_Linq_IQueryable___0__System_String_System_Collections_IComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Collections.IComparer,System.Object[])
+  name.vb: OrderBy(Of TSource)(IQueryable(Of TSource), String, IComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy<TSource>(System.Linq.IQueryable<TSource>, System.String, System.Collections.IComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy(Of TSource)(System.Linq.IQueryable(Of TSource), System.String, System.Collections.IComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.OrderBy<TSource>(IQueryable<TSource>, String, IComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.OrderBy(Of TSource)(IQueryable(Of TSource), String, IComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.OrderBy``1(System.Linq.IQueryable{``0},System.String,System.Object[])
   name: OrderBy<TSource>(IQueryable<TSource>, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_OrderBy__1_System_Linq_IQueryable___0__System_String_System_Object___
@@ -1186,12 +1485,15 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Page(Of TSource)(System.Linq.IQueryable(Of TSource), System.Int32, System.Int32)
   nameWithType: DynamicQueryableExtensions.Page<TSource>(IQueryable<TSource>, Int32, Int32)
   nameWithType.vb: DynamicQueryableExtensions.Page(Of TSource)(IQueryable(Of TSource), Int32, Int32)
-- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(System.Linq.IQueryable,System.Int32,System.Int32)
-  name: PageResult(IQueryable, Int32, Int32)
-  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_PageResult_System_Linq_IQueryable_System_Int32_System_Int32_
-  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(System.Linq.IQueryable,System.Int32,System.Int32)
-  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(System.Linq.IQueryable, System.Int32, System.Int32)
-  nameWithType: DynamicQueryableExtensions.PageResult(IQueryable, Int32, Int32)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(System.Linq.IQueryable,System.Int32,System.Int32,System.Nullable{System.Int32})
+  name: PageResult(IQueryable, Int32, Int32, Nullable<Int32>)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_PageResult_System_Linq_IQueryable_System_Int32_System_Int32_System_Nullable_System_Int32__
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(System.Linq.IQueryable,System.Int32,System.Int32,System.Nullable{System.Int32})
+  name.vb: PageResult(IQueryable, Int32, Int32, Nullable(Of Int32))
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(System.Linq.IQueryable, System.Int32, System.Int32, System.Nullable<System.Int32>)
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(System.Linq.IQueryable, System.Int32, System.Int32, System.Nullable(Of System.Int32))
+  nameWithType: DynamicQueryableExtensions.PageResult(IQueryable, Int32, Int32, Nullable<Int32>)
+  nameWithType.vb: DynamicQueryableExtensions.PageResult(IQueryable, Int32, Int32, Nullable(Of Int32))
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult*
   name: PageResult
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_PageResult_
@@ -1199,15 +1501,15 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult
   nameWithType: DynamicQueryableExtensions.PageResult
-- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)
-  name: PageResult<TSource>(IQueryable<TSource>, Int32, Int32)
-  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_PageResult__1_System_Linq_IQueryable___0__System_Int32_System_Int32_
-  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult``1(System.Linq.IQueryable{``0},System.Int32,System.Int32)
-  name.vb: PageResult(Of TSource)(IQueryable(Of TSource), Int32, Int32)
-  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult<TSource>(System.Linq.IQueryable<TSource>, System.Int32, System.Int32)
-  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(Of TSource)(System.Linq.IQueryable(Of TSource), System.Int32, System.Int32)
-  nameWithType: DynamicQueryableExtensions.PageResult<TSource>(IQueryable<TSource>, Int32, Int32)
-  nameWithType.vb: DynamicQueryableExtensions.PageResult(Of TSource)(IQueryable(Of TSource), Int32, Int32)
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult``1(System.Linq.IQueryable{``0},System.Int32,System.Int32,System.Nullable{System.Int32})
+  name: PageResult<TSource>(IQueryable<TSource>, Int32, Int32, Nullable<Int32>)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_PageResult__1_System_Linq_IQueryable___0__System_Int32_System_Int32_System_Nullable_System_Int32__
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult``1(System.Linq.IQueryable{``0},System.Int32,System.Int32,System.Nullable{System.Int32})
+  name.vb: PageResult(Of TSource)(IQueryable(Of TSource), Int32, Int32, Nullable(Of Int32))
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult<TSource>(System.Linq.IQueryable<TSource>, System.Int32, System.Int32, System.Nullable<System.Int32>)
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.PageResult(Of TSource)(System.Linq.IQueryable(Of TSource), System.Int32, System.Int32, System.Nullable(Of System.Int32))
+  nameWithType: DynamicQueryableExtensions.PageResult<TSource>(IQueryable<TSource>, Int32, Int32, Nullable<Int32>)
+  nameWithType.vb: DynamicQueryableExtensions.PageResult(Of TSource)(IQueryable(Of TSource), Int32, Int32, Nullable(Of Int32))
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Reverse(System.Linq.IQueryable)
   name: Reverse(IQueryable)
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Reverse_System_Linq_IQueryable_
@@ -1566,6 +1868,15 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.TakeWhile
   nameWithType: DynamicQueryableExtensions.TakeWhile
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IComparer,System.Object[])
+  name: ThenBy(IOrderedQueryable, ParsingConfig, String, IComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_ThenBy_System_Linq_IOrderedQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Collections_IComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IComparer,System.Object[])
+  name.vb: ThenBy(IOrderedQueryable, ParsingConfig, String, IComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.ThenBy(IOrderedQueryable, ParsingConfig, String, IComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.ThenBy(IOrderedQueryable, ParsingConfig, String, IComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable,System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
   name: ThenBy(IOrderedQueryable, ParsingConfig, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_ThenBy_System_Linq_IOrderedQueryable_System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Object___
@@ -1575,6 +1886,15 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object())
   nameWithType: DynamicQueryableExtensions.ThenBy(IOrderedQueryable, ParsingConfig, String, Object[])
   nameWithType.vb: DynamicQueryableExtensions.ThenBy(IOrderedQueryable, ParsingConfig, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable,System.String,System.Collections.IComparer,System.Object[])
+  name: ThenBy(IOrderedQueryable, String, IComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_ThenBy_System_Linq_IOrderedQueryable_System_String_System_Collections_IComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable,System.String,System.Collections.IComparer,System.Object[])
+  name.vb: ThenBy(IOrderedQueryable, String, IComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable, System.String, System.Collections.IComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable, System.String, System.Collections.IComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.ThenBy(IOrderedQueryable, String, IComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.ThenBy(IOrderedQueryable, String, IComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(System.Linq.IOrderedQueryable,System.String,System.Object[])
   name: ThenBy(IOrderedQueryable, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_ThenBy_System_Linq_IOrderedQueryable_System_String_System_Object___
@@ -1591,6 +1911,15 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy
   nameWithType: DynamicQueryableExtensions.ThenBy
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy``1(System.Linq.IOrderedQueryable{``0},System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IComparer,System.Object[])
+  name: ThenBy<TSource>(IOrderedQueryable<TSource>, ParsingConfig, String, IComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_ThenBy__1_System_Linq_IOrderedQueryable___0__System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Collections_IComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy``1(System.Linq.IOrderedQueryable{``0},System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Collections.IComparer,System.Object[])
+  name.vb: ThenBy(Of TSource)(IOrderedQueryable(Of TSource), ParsingConfig, String, IComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy<TSource>(System.Linq.IOrderedQueryable<TSource>, System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(Of TSource)(System.Linq.IOrderedQueryable(Of TSource), System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Collections.IComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.ThenBy<TSource>(IOrderedQueryable<TSource>, ParsingConfig, String, IComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.ThenBy(Of TSource)(IOrderedQueryable(Of TSource), ParsingConfig, String, IComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy``1(System.Linq.IOrderedQueryable{``0},System.Linq.Dynamic.Core.ParsingConfig,System.String,System.Object[])
   name: ThenBy<TSource>(IOrderedQueryable<TSource>, ParsingConfig, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_ThenBy__1_System_Linq_IOrderedQueryable___0__System_Linq_Dynamic_Core_ParsingConfig_System_String_System_Object___
@@ -1600,6 +1929,15 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(Of TSource)(System.Linq.IOrderedQueryable(Of TSource), System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object())
   nameWithType: DynamicQueryableExtensions.ThenBy<TSource>(IOrderedQueryable<TSource>, ParsingConfig, String, Object[])
   nameWithType.vb: DynamicQueryableExtensions.ThenBy(Of TSource)(IOrderedQueryable(Of TSource), ParsingConfig, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy``1(System.Linq.IOrderedQueryable{``0},System.String,System.Collections.IComparer,System.Object[])
+  name: ThenBy<TSource>(IOrderedQueryable<TSource>, String, IComparer, Object[])
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_ThenBy__1_System_Linq_IOrderedQueryable___0__System_String_System_Collections_IComparer_System_Object___
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy``1(System.Linq.IOrderedQueryable{``0},System.String,System.Collections.IComparer,System.Object[])
+  name.vb: ThenBy(Of TSource)(IOrderedQueryable(Of TSource), String, IComparer, Object())
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy<TSource>(System.Linq.IOrderedQueryable<TSource>, System.String, System.Collections.IComparer, System.Object[])
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy(Of TSource)(System.Linq.IOrderedQueryable(Of TSource), System.String, System.Collections.IComparer, System.Object())
+  nameWithType: DynamicQueryableExtensions.ThenBy<TSource>(IOrderedQueryable<TSource>, String, IComparer, Object[])
+  nameWithType.vb: DynamicQueryableExtensions.ThenBy(Of TSource)(IOrderedQueryable(Of TSource), String, IComparer, Object())
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.ThenBy``1(System.Linq.IOrderedQueryable{``0},System.String,System.Object[])
   name: ThenBy<TSource>(IOrderedQueryable<TSource>, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_ThenBy__1_System_Linq_IOrderedQueryable___0__System_String_System_Object___
@@ -1649,6 +1987,15 @@ references:
   fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Where(Of TSource)(System.Linq.IQueryable(Of TSource), System.Linq.Dynamic.Core.ParsingConfig, System.String, System.Object())
   nameWithType: DynamicQueryableExtensions.Where<TSource>(IQueryable<TSource>, ParsingConfig, String, Object[])
   nameWithType.vb: DynamicQueryableExtensions.Where(Of TSource)(IQueryable(Of TSource), ParsingConfig, String, Object())
+- uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Where``1(System.Linq.IQueryable{``0},System.Linq.Expressions.LambdaExpression)
+  name: Where<TSource>(IQueryable<TSource>, LambdaExpression)
+  href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Where__1_System_Linq_IQueryable___0__System_Linq_Expressions_LambdaExpression_
+  commentId: M:System.Linq.Dynamic.Core.DynamicQueryableExtensions.Where``1(System.Linq.IQueryable{``0},System.Linq.Expressions.LambdaExpression)
+  name.vb: Where(Of TSource)(IQueryable(Of TSource), LambdaExpression)
+  fullName: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Where<TSource>(System.Linq.IQueryable<TSource>, System.Linq.Expressions.LambdaExpression)
+  fullName.vb: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Where(Of TSource)(System.Linq.IQueryable(Of TSource), System.Linq.Expressions.LambdaExpression)
+  nameWithType: DynamicQueryableExtensions.Where<TSource>(IQueryable<TSource>, LambdaExpression)
+  nameWithType.vb: DynamicQueryableExtensions.Where(Of TSource)(IQueryable(Of TSource), LambdaExpression)
 - uid: System.Linq.Dynamic.Core.DynamicQueryableExtensions.Where``1(System.Linq.IQueryable{``0},System.String,System.Object[])
   name: Where<TSource>(IQueryable<TSource>, String, Object[])
   href: api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html#System_Linq_Dynamic_Core_DynamicQueryableExtensions_Where__1_System_Linq_IQueryable___0__System_String_System_Object___
@@ -2077,6 +2424,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.Parser.NumberParser.NumberParser
   nameWithType: NumberParser.NumberParser
+- uid: System.Linq.Dynamic.Core.Parser.NumberParser.ParseIntegerLiteral(System.Int32,System.String)
+  name: ParseIntegerLiteral(Int32, String)
+  href: api/System.Linq.Dynamic.Core.Parser.NumberParser.html#System_Linq_Dynamic_Core_Parser_NumberParser_ParseIntegerLiteral_System_Int32_System_String_
+  commentId: M:System.Linq.Dynamic.Core.Parser.NumberParser.ParseIntegerLiteral(System.Int32,System.String)
+  fullName: System.Linq.Dynamic.Core.Parser.NumberParser.ParseIntegerLiteral(System.Int32, System.String)
+  nameWithType: NumberParser.ParseIntegerLiteral(Int32, String)
+- uid: System.Linq.Dynamic.Core.Parser.NumberParser.ParseIntegerLiteral*
+  name: ParseIntegerLiteral
+  href: api/System.Linq.Dynamic.Core.Parser.NumberParser.html#System_Linq_Dynamic_Core_Parser_NumberParser_ParseIntegerLiteral_
+  commentId: Overload:System.Linq.Dynamic.Core.Parser.NumberParser.ParseIntegerLiteral
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Parser.NumberParser.ParseIntegerLiteral
+  nameWithType: NumberParser.ParseIntegerLiteral
 - uid: System.Linq.Dynamic.Core.Parser.NumberParser.ParseNumber(System.String,System.Type)
   name: ParseNumber(String, Type)
   href: api/System.Linq.Dynamic.Core.Parser.NumberParser.html#System_Linq_Dynamic_Core_Parser_NumberParser_ParseNumber_System_String_System_Type_
@@ -2090,6 +2450,35 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.Parser.NumberParser.ParseNumber
   nameWithType: NumberParser.ParseNumber
+- uid: System.Linq.Dynamic.Core.Parser.NumberParser.ParseRealLiteral(System.String,System.Char,System.Boolean)
+  name: ParseRealLiteral(String, Char, Boolean)
+  href: api/System.Linq.Dynamic.Core.Parser.NumberParser.html#System_Linq_Dynamic_Core_Parser_NumberParser_ParseRealLiteral_System_String_System_Char_System_Boolean_
+  commentId: M:System.Linq.Dynamic.Core.Parser.NumberParser.ParseRealLiteral(System.String,System.Char,System.Boolean)
+  fullName: System.Linq.Dynamic.Core.Parser.NumberParser.ParseRealLiteral(System.String, System.Char, System.Boolean)
+  nameWithType: NumberParser.ParseRealLiteral(String, Char, Boolean)
+- uid: System.Linq.Dynamic.Core.Parser.NumberParser.ParseRealLiteral*
+  name: ParseRealLiteral
+  href: api/System.Linq.Dynamic.Core.Parser.NumberParser.html#System_Linq_Dynamic_Core_Parser_NumberParser_ParseRealLiteral_
+  commentId: Overload:System.Linq.Dynamic.Core.Parser.NumberParser.ParseRealLiteral
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Parser.NumberParser.ParseRealLiteral
+  nameWithType: NumberParser.ParseRealLiteral
+- uid: System.Linq.Dynamic.Core.Parser.NumberParser.TryParseNumber(System.String,System.Type,System.Object@)
+  name: TryParseNumber(String, Type, out Object)
+  href: api/System.Linq.Dynamic.Core.Parser.NumberParser.html#System_Linq_Dynamic_Core_Parser_NumberParser_TryParseNumber_System_String_System_Type_System_Object__
+  commentId: M:System.Linq.Dynamic.Core.Parser.NumberParser.TryParseNumber(System.String,System.Type,System.Object@)
+  name.vb: TryParseNumber(String, Type, ByRef Object)
+  fullName: System.Linq.Dynamic.Core.Parser.NumberParser.TryParseNumber(System.String, System.Type, out System.Object)
+  fullName.vb: System.Linq.Dynamic.Core.Parser.NumberParser.TryParseNumber(System.String, System.Type, ByRef System.Object)
+  nameWithType: NumberParser.TryParseNumber(String, Type, out Object)
+  nameWithType.vb: NumberParser.TryParseNumber(String, Type, ByRef Object)
+- uid: System.Linq.Dynamic.Core.Parser.NumberParser.TryParseNumber*
+  name: TryParseNumber
+  href: api/System.Linq.Dynamic.Core.Parser.NumberParser.html#System_Linq_Dynamic_Core_Parser_NumberParser_TryParseNumber_
+  commentId: Overload:System.Linq.Dynamic.Core.Parser.NumberParser.TryParseNumber
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Parser.NumberParser.TryParseNumber
+  nameWithType: NumberParser.TryParseNumber
 - uid: System.Linq.Dynamic.Core.ParsingConfig
   name: ParsingConfig
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html
@@ -2161,6 +2550,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.Default
   nameWithType: ParsingConfig.Default
+- uid: System.Linq.Dynamic.Core.ParsingConfig.DefaultCosmosDb
+  name: DefaultCosmosDb
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_DefaultCosmosDb
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.DefaultCosmosDb
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.DefaultCosmosDb
+  nameWithType: ParsingConfig.DefaultCosmosDb
+- uid: System.Linq.Dynamic.Core.ParsingConfig.DefaultCosmosDb*
+  name: DefaultCosmosDb
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_DefaultCosmosDb_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.DefaultCosmosDb
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.DefaultCosmosDb
+  nameWithType: ParsingConfig.DefaultCosmosDb
 - uid: System.Linq.Dynamic.Core.ParsingConfig.DefaultEFCore21
   name: DefaultEFCore21
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_DefaultEFCore21
@@ -2213,6 +2615,32 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.ExpressionPromoter
   nameWithType: ParsingConfig.ExpressionPromoter
+- uid: System.Linq.Dynamic.Core.ParsingConfig.IsCaseSensitive
+  name: IsCaseSensitive
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_IsCaseSensitive
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.IsCaseSensitive
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.IsCaseSensitive
+  nameWithType: ParsingConfig.IsCaseSensitive
+- uid: System.Linq.Dynamic.Core.ParsingConfig.IsCaseSensitive*
+  name: IsCaseSensitive
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_IsCaseSensitive_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.IsCaseSensitive
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.IsCaseSensitive
+  nameWithType: ParsingConfig.IsCaseSensitive
+- uid: System.Linq.Dynamic.Core.ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes
+  name: NullPropagatingUseDefaultValueForNonNullableValueTypes
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_NullPropagatingUseDefaultValueForNonNullableValueTypes
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes
+  nameWithType: ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes
+- uid: System.Linq.Dynamic.Core.ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes*
+  name: NullPropagatingUseDefaultValueForNonNullableValueTypes
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_NullPropagatingUseDefaultValueForNonNullableValueTypes_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes
+  nameWithType: ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes
 - uid: System.Linq.Dynamic.Core.ParsingConfig.NumberParseCulture
   name: NumberParseCulture
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_NumberParseCulture
@@ -2226,6 +2654,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.NumberParseCulture
   nameWithType: ParsingConfig.NumberParseCulture
+- uid: System.Linq.Dynamic.Core.ParsingConfig.PrioritizePropertyOrFieldOverTheType
+  name: PrioritizePropertyOrFieldOverTheType
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_PrioritizePropertyOrFieldOverTheType
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.PrioritizePropertyOrFieldOverTheType
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.PrioritizePropertyOrFieldOverTheType
+  nameWithType: ParsingConfig.PrioritizePropertyOrFieldOverTheType
+- uid: System.Linq.Dynamic.Core.ParsingConfig.PrioritizePropertyOrFieldOverTheType*
+  name: PrioritizePropertyOrFieldOverTheType
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_PrioritizePropertyOrFieldOverTheType_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.PrioritizePropertyOrFieldOverTheType
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.PrioritizePropertyOrFieldOverTheType
+  nameWithType: ParsingConfig.PrioritizePropertyOrFieldOverTheType
 - uid: System.Linq.Dynamic.Core.ParsingConfig.QueryableAnalyzer
   name: QueryableAnalyzer
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_QueryableAnalyzer
@@ -2239,6 +2680,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.QueryableAnalyzer
   nameWithType: ParsingConfig.QueryableAnalyzer
+- uid: System.Linq.Dynamic.Core.ParsingConfig.RenameEmptyParameterExpressionNames
+  name: RenameEmptyParameterExpressionNames
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_RenameEmptyParameterExpressionNames
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.RenameEmptyParameterExpressionNames
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.RenameEmptyParameterExpressionNames
+  nameWithType: ParsingConfig.RenameEmptyParameterExpressionNames
+- uid: System.Linq.Dynamic.Core.ParsingConfig.RenameEmptyParameterExpressionNames*
+  name: RenameEmptyParameterExpressionNames
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_RenameEmptyParameterExpressionNames_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.RenameEmptyParameterExpressionNames
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.RenameEmptyParameterExpressionNames
+  nameWithType: ParsingConfig.RenameEmptyParameterExpressionNames
 - uid: System.Linq.Dynamic.Core.ParsingConfig.RenameParameterExpression
   name: RenameParameterExpression
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_RenameParameterExpression
@@ -2265,6 +2719,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.ResolveTypesBySimpleName
   nameWithType: ParsingConfig.ResolveTypesBySimpleName
+- uid: System.Linq.Dynamic.Core.ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
+  name: SupportCastingToFullyQualifiedTypeAsString
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_SupportCastingToFullyQualifiedTypeAsString
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
+  nameWithType: ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
+- uid: System.Linq.Dynamic.Core.ParsingConfig.SupportCastingToFullyQualifiedTypeAsString*
+  name: SupportCastingToFullyQualifiedTypeAsString
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_SupportCastingToFullyQualifiedTypeAsString_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
+  nameWithType: ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
 - uid: System.Linq.Dynamic.Core.ParsingConfig.SupportEnumerationsFromSystemNamespace
   name: SupportEnumerationsFromSystemNamespace
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_SupportEnumerationsFromSystemNamespace
@@ -2278,19 +2745,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.SupportEnumerationsFromSystemNamespace
   nameWithType: ParsingConfig.SupportEnumerationsFromSystemNamespace
-- uid: System.Linq.Dynamic.Core.ParsingConfig.UseDynamicObjectClassForAnonymousTypes
-  name: UseDynamicObjectClassForAnonymousTypes
-  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_UseDynamicObjectClassForAnonymousTypes
-  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.UseDynamicObjectClassForAnonymousTypes
-  fullName: System.Linq.Dynamic.Core.ParsingConfig.UseDynamicObjectClassForAnonymousTypes
-  nameWithType: ParsingConfig.UseDynamicObjectClassForAnonymousTypes
-- uid: System.Linq.Dynamic.Core.ParsingConfig.UseDynamicObjectClassForAnonymousTypes*
-  name: UseDynamicObjectClassForAnonymousTypes
-  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_UseDynamicObjectClassForAnonymousTypes_
-  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.UseDynamicObjectClassForAnonymousTypes
+- uid: System.Linq.Dynamic.Core.ParsingConfig.TypeConverters
+  name: TypeConverters
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_TypeConverters
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.TypeConverters
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.TypeConverters
+  nameWithType: ParsingConfig.TypeConverters
+- uid: System.Linq.Dynamic.Core.ParsingConfig.TypeConverters*
+  name: TypeConverters
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_TypeConverters_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.TypeConverters
   isSpec: "True"
-  fullName: System.Linq.Dynamic.Core.ParsingConfig.UseDynamicObjectClassForAnonymousTypes
-  nameWithType: ParsingConfig.UseDynamicObjectClassForAnonymousTypes
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.TypeConverters
+  nameWithType: ParsingConfig.TypeConverters
 - uid: System.Linq.Dynamic.Core.ParsingConfig.UseParameterizedNamesInDynamicQuery
   name: UseParameterizedNamesInDynamicQuery
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_UseParameterizedNamesInDynamicQuery
@@ -2304,3 +2771,414 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.UseParameterizedNamesInDynamicQuery
   nameWithType: ParsingConfig.UseParameterizedNamesInDynamicQuery
+- uid: System.Linq.Dynamic.Core.Tokenizer
+  name: System.Linq.Dynamic.Core.Tokenizer
+  href: api/System.Linq.Dynamic.Core.Tokenizer.html
+  commentId: N:System.Linq.Dynamic.Core.Tokenizer
+  fullName: System.Linq.Dynamic.Core.Tokenizer
+  nameWithType: System.Linq.Dynamic.Core.Tokenizer
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser
+  name: TextParser
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html
+  commentId: T:System.Linq.Dynamic.Core.Tokenizer.TextParser
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser
+  nameWithType: TextParser
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.#ctor(System.Linq.Dynamic.Core.ParsingConfig,System.String)
+  name: TextParser(ParsingConfig, String)
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser__ctor_System_Linq_Dynamic_Core_ParsingConfig_System_String_
+  commentId: M:System.Linq.Dynamic.Core.Tokenizer.TextParser.#ctor(System.Linq.Dynamic.Core.ParsingConfig,System.String)
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.TextParser(System.Linq.Dynamic.Core.ParsingConfig, System.String)
+  nameWithType: TextParser.TextParser(ParsingConfig, String)
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.#ctor*
+  name: TextParser
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser__ctor_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.TextParser.#ctor
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.TextParser
+  nameWithType: TextParser.TextParser
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.CurrentToken
+  name: CurrentToken
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_CurrentToken
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TextParser.CurrentToken
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.CurrentToken
+  nameWithType: TextParser.CurrentToken
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.NextToken
+  name: NextToken()
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_NextToken
+  commentId: M:System.Linq.Dynamic.Core.Tokenizer.TextParser.NextToken
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.NextToken()
+  nameWithType: TextParser.NextToken()
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.NextToken*
+  name: NextToken
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_NextToken_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.TextParser.NextToken
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.NextToken
+  nameWithType: TextParser.NextToken
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.PeekNextChar
+  name: PeekNextChar()
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_PeekNextChar
+  commentId: M:System.Linq.Dynamic.Core.Tokenizer.TextParser.PeekNextChar
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.PeekNextChar()
+  nameWithType: TextParser.PeekNextChar()
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.PeekNextChar*
+  name: PeekNextChar
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_PeekNextChar_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.TextParser.PeekNextChar
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.PeekNextChar
+  nameWithType: TextParser.PeekNextChar
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.ValidateToken(System.Linq.Dynamic.Core.Tokenizer.TokenId,System.String)
+  name: ValidateToken(TokenId, String)
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_ValidateToken_System_Linq_Dynamic_Core_Tokenizer_TokenId_System_String_
+  commentId: M:System.Linq.Dynamic.Core.Tokenizer.TextParser.ValidateToken(System.Linq.Dynamic.Core.Tokenizer.TokenId,System.String)
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.ValidateToken(System.Linq.Dynamic.Core.Tokenizer.TokenId, System.String)
+  nameWithType: TextParser.ValidateToken(TokenId, String)
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.ValidateToken*
+  name: ValidateToken
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_ValidateToken_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.TextParser.ValidateToken
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.ValidateToken
+  nameWithType: TextParser.ValidateToken
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token
+  name: Token
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html
+  commentId: T:System.Linq.Dynamic.Core.Tokenizer.Token
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token
+  nameWithType: Token
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token.Id
+  name: Id
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html#System_Linq_Dynamic_Core_Tokenizer_Token_Id
+  commentId: P:System.Linq.Dynamic.Core.Tokenizer.Token.Id
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token.Id
+  nameWithType: Token.Id
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token.Id*
+  name: Id
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html#System_Linq_Dynamic_Core_Tokenizer_Token_Id_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.Token.Id
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token.Id
+  nameWithType: Token.Id
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token.OriginalId
+  name: OriginalId
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html#System_Linq_Dynamic_Core_Tokenizer_Token_OriginalId
+  commentId: P:System.Linq.Dynamic.Core.Tokenizer.Token.OriginalId
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token.OriginalId
+  nameWithType: Token.OriginalId
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token.OriginalId*
+  name: OriginalId
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html#System_Linq_Dynamic_Core_Tokenizer_Token_OriginalId_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.Token.OriginalId
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token.OriginalId
+  nameWithType: Token.OriginalId
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token.Pos
+  name: Pos
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html#System_Linq_Dynamic_Core_Tokenizer_Token_Pos
+  commentId: P:System.Linq.Dynamic.Core.Tokenizer.Token.Pos
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token.Pos
+  nameWithType: Token.Pos
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token.Pos*
+  name: Pos
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html#System_Linq_Dynamic_Core_Tokenizer_Token_Pos_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.Token.Pos
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token.Pos
+  nameWithType: Token.Pos
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token.Text
+  name: Text
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html#System_Linq_Dynamic_Core_Tokenizer_Token_Text
+  commentId: P:System.Linq.Dynamic.Core.Tokenizer.Token.Text
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token.Text
+  nameWithType: Token.Text
+- uid: System.Linq.Dynamic.Core.Tokenizer.Token.Text*
+  name: Text
+  href: api/System.Linq.Dynamic.Core.Tokenizer.Token.html#System_Linq_Dynamic_Core_Tokenizer_Token_Text_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.Token.Text
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.Token.Text
+  nameWithType: Token.Text
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId
+  name: TokenId
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html
+  commentId: T:System.Linq.Dynamic.Core.Tokenizer.TokenId
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId
+  nameWithType: TokenId
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Ampersand
+  name: Ampersand
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Ampersand
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Ampersand
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Ampersand
+  nameWithType: TokenId.Ampersand
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Asterisk
+  name: Asterisk
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Asterisk
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Asterisk
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Asterisk
+  nameWithType: TokenId.Asterisk
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Bar
+  name: Bar
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Bar
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Bar
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Bar
+  nameWithType: TokenId.Bar
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseBracket
+  name: CloseBracket
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_CloseBracket
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseBracket
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseBracket
+  nameWithType: TokenId.CloseBracket
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseCurlyParen
+  name: CloseCurlyParen
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_CloseCurlyParen
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseCurlyParen
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseCurlyParen
+  nameWithType: TokenId.CloseCurlyParen
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseParen
+  name: CloseParen
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_CloseParen
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseParen
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.CloseParen
+  nameWithType: TokenId.CloseParen
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Colon
+  name: Colon
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Colon
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Colon
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Colon
+  nameWithType: TokenId.Colon
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Comma
+  name: Comma
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Comma
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Comma
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Comma
+  nameWithType: TokenId.Comma
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Dot
+  name: Dot
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Dot
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Dot
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Dot
+  nameWithType: TokenId.Dot
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleAmpersand
+  name: DoubleAmpersand
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_DoubleAmpersand
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleAmpersand
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleAmpersand
+  nameWithType: TokenId.DoubleAmpersand
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleBar
+  name: DoubleBar
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_DoubleBar
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleBar
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleBar
+  nameWithType: TokenId.DoubleBar
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleEqual
+  name: DoubleEqual
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_DoubleEqual
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleEqual
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleEqual
+  nameWithType: TokenId.DoubleEqual
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleGreaterThan
+  name: DoubleGreaterThan
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_DoubleGreaterThan
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleGreaterThan
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleGreaterThan
+  nameWithType: TokenId.DoubleGreaterThan
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleLessThan
+  name: DoubleLessThan
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_DoubleLessThan
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleLessThan
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.DoubleLessThan
+  nameWithType: TokenId.DoubleLessThan
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.End
+  name: End
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_End
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.End
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.End
+  nameWithType: TokenId.End
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Equal
+  name: Equal
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Equal
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Equal
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Equal
+  nameWithType: TokenId.Equal
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Exclamation
+  name: Exclamation
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Exclamation
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Exclamation
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Exclamation
+  nameWithType: TokenId.Exclamation
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.ExclamationEqual
+  name: ExclamationEqual
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_ExclamationEqual
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.ExclamationEqual
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.ExclamationEqual
+  nameWithType: TokenId.ExclamationEqual
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.GreaterThan
+  name: GreaterThan
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_GreaterThan
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.GreaterThan
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.GreaterThan
+  nameWithType: TokenId.GreaterThan
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.GreaterThanEqual
+  name: GreaterThanEqual
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_GreaterThanEqual
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.GreaterThanEqual
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.GreaterThanEqual
+  nameWithType: TokenId.GreaterThanEqual
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Identifier
+  name: Identifier
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Identifier
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Identifier
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Identifier
+  nameWithType: TokenId.Identifier
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.IntegerLiteral
+  name: IntegerLiteral
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_IntegerLiteral
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.IntegerLiteral
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.IntegerLiteral
+  nameWithType: TokenId.IntegerLiteral
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Lambda
+  name: Lambda
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Lambda
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Lambda
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Lambda
+  nameWithType: TokenId.Lambda
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.LessGreater
+  name: LessGreater
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_LessGreater
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.LessGreater
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.LessGreater
+  nameWithType: TokenId.LessGreater
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.LessThan
+  name: LessThan
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_LessThan
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.LessThan
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.LessThan
+  nameWithType: TokenId.LessThan
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.LessThanEqual
+  name: LessThanEqual
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_LessThanEqual
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.LessThanEqual
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.LessThanEqual
+  nameWithType: TokenId.LessThanEqual
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Minus
+  name: Minus
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Minus
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Minus
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Minus
+  nameWithType: TokenId.Minus
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.NullCoalescing
+  name: NullCoalescing
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_NullCoalescing
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.NullCoalescing
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.NullCoalescing
+  nameWithType: TokenId.NullCoalescing
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.NullPropagation
+  name: NullPropagation
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_NullPropagation
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.NullPropagation
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.NullPropagation
+  nameWithType: TokenId.NullPropagation
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenBracket
+  name: OpenBracket
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_OpenBracket
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenBracket
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenBracket
+  nameWithType: TokenId.OpenBracket
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenCurlyParen
+  name: OpenCurlyParen
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_OpenCurlyParen
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenCurlyParen
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenCurlyParen
+  nameWithType: TokenId.OpenCurlyParen
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenParen
+  name: OpenParen
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_OpenParen
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenParen
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.OpenParen
+  nameWithType: TokenId.OpenParen
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Percent
+  name: Percent
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Percent
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Percent
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Percent
+  nameWithType: TokenId.Percent
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Plus
+  name: Plus
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Plus
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Plus
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Plus
+  nameWithType: TokenId.Plus
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Question
+  name: Question
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Question
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Question
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Question
+  nameWithType: TokenId.Question
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.RealLiteral
+  name: RealLiteral
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_RealLiteral
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.RealLiteral
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.RealLiteral
+  nameWithType: TokenId.RealLiteral
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Slash
+  name: Slash
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Slash
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Slash
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Slash
+  nameWithType: TokenId.Slash
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.StringLiteral
+  name: StringLiteral
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_StringLiteral
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.StringLiteral
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.StringLiteral
+  nameWithType: TokenId.StringLiteral
+- uid: System.Linq.Dynamic.Core.Tokenizer.TokenId.Unknown
+  name: Unknown
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TokenId.html#System_Linq_Dynamic_Core_Tokenizer_TokenId_Unknown
+  commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Unknown
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Unknown
+  nameWithType: TokenId.Unknown
+- uid: System.Tuple`2
+  name: Tuple<T1, T2>
+  href: api/System.Tuple-2.html
+  commentId: T:System.Tuple`2
+  name.vb: Tuple(Of T1, T2)
+  fullName: System.Tuple<T1, T2>
+  fullName.vb: System.Tuple(Of T1, T2)
+  nameWithType: Tuple<T1, T2>
+  nameWithType.vb: Tuple(Of T1, T2)
+- uid: System.Tuple`2.Item1
+  name: Item1
+  href: api/System.Tuple-2.html#System_Tuple_2_Item1
+  commentId: P:System.Tuple`2.Item1
+  fullName: System.Tuple<T1, T2>.Item1
+  fullName.vb: System.Tuple(Of T1, T2).Item1
+  nameWithType: Tuple<T1, T2>.Item1
+  nameWithType.vb: Tuple(Of T1, T2).Item1
+- uid: System.Tuple`2.Item1*
+  name: Item1
+  href: api/System.Tuple-2.html#System_Tuple_2_Item1_
+  commentId: Overload:System.Tuple`2.Item1
+  isSpec: "True"
+  fullName: System.Tuple<T1, T2>.Item1
+  fullName.vb: System.Tuple(Of T1, T2).Item1
+  nameWithType: Tuple<T1, T2>.Item1
+  nameWithType.vb: Tuple(Of T1, T2).Item1
+- uid: System.Tuple`2.Item2
+  name: Item2
+  href: api/System.Tuple-2.html#System_Tuple_2_Item2
+  commentId: P:System.Tuple`2.Item2
+  fullName: System.Tuple<T1, T2>.Item2
+  fullName.vb: System.Tuple(Of T1, T2).Item2
+  nameWithType: Tuple<T1, T2>.Item2
+  nameWithType.vb: Tuple(Of T1, T2).Item2
+- uid: System.Tuple`2.Item2*
+  name: Item2
+  href: api/System.Tuple-2.html#System_Tuple_2_Item2_
+  commentId: Overload:System.Tuple`2.Item2
+  isSpec: "True"
+  fullName: System.Tuple<T1, T2>.Item2
+  fullName.vb: System.Tuple(Of T1, T2).Item2
+  nameWithType: Tuple<T1, T2>.Item2
+  nameWithType.vb: Tuple(Of T1, T2).Item2

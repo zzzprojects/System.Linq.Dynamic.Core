@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IQueryableAnalyzer
    ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -96,10 +96,10 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/doxfx/apiSpec/new?filename=System_Linq_Dynamic_Core_IQueryableAnalyzer_SupportsLinqToObjects_System_Linq_IQueryable_System_Linq_IQueryProvider_.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.IQueryableAnalyzer.SupportsLinqToObjects(System.Linq.IQueryable%2CSystem.Linq.IQueryProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_IQueryableAnalyzer_SupportsLinqToObjects_System_Linq_IQueryable_System_Linq_IQueryProvider_.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.IQueryableAnalyzer.SupportsLinqToObjects(System.Linq.IQueryable%2CSystem.Linq.IQueryProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/doxfx/src/System.Linq.Dynamic.Core/IQueryableAnalyzer.cs/#L16">View Source</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/IQueryableAnalyzer.cs/#L14">View Source</a>
   </span>
   <a id="System_Linq_Dynamic_Core_IQueryableAnalyzer_SupportsLinqToObjects_" data-uid="System.Linq.Dynamic.Core.IQueryableAnalyzer.SupportsLinqToObjects*"></a>
   <h4 id="System_Linq_Dynamic_Core_IQueryableAnalyzer_SupportsLinqToObjects_System_Linq_IQueryable_System_Linq_IQueryProvider_" data-uid="System.Linq.Dynamic.Core.IQueryableAnalyzer.SupportsLinqToObjects(System.Linq.IQueryable,System.Linq.IQueryProvider)">SupportsLinqToObjects(IQueryable, IQueryProvider)</h4>
@@ -108,7 +108,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">bool SupportsLinqToObjects([NotNull] IQueryable query, [CanBeNull] IQueryProvider provider = null)</code></pre>
+    <pre><code class="lang-csharp hljs">bool SupportsLinqToObjects(IQueryable query, IQueryProvider provider = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -121,13 +121,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.linq.iqueryable">IQueryable</a></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable">IQueryable</a></td>
         <td><span class="parametername">query</span></td>
         <td><p>The query to check.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.linq.iqueryprovider">IQueryProvider</a></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryprovider">IQueryProvider</a></td>
         <td><span class="parametername">provider</span></td>
         <td><p>The provider to check (can be null).</p>
 </td>
@@ -144,7 +144,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><p>true/false</p>
 </td>
       </tr>
@@ -158,15 +158,16 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/doxfx/apiSpec/new?filename=System_Linq_Dynamic_Core_IQueryableAnalyzer.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.IQueryableAnalyzer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_IQueryableAnalyzer.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.IQueryableAnalyzer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/doxfx/src/System.Linq.Dynamic.Core/IQueryableAnalyzer.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/IQueryableAnalyzer.cs/#L6" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

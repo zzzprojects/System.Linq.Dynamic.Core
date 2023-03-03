@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IExpressionPromoter
    ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -98,10 +98,10 @@ such as: int to int?</p>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/doxfx/apiSpec/new?filename=System_Linq_Dynamic_Core_Parser_IExpressionPromoter_Promote_System_Linq_Expressions_Expression_System_Type_System_Boolean_System_Boolean_.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.Parser.IExpressionPromoter.Promote(System.Linq.Expressions.Expression%2CSystem.Type%2CSystem.Boolean%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_Parser_IExpressionPromoter_Promote_System_Linq_Expressions_Expression_System_Type_System_Boolean_System_Boolean_.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.Parser.IExpressionPromoter.Promote(System.Linq.Expressions.Expression%2CSystem.Type%2CSystem.Boolean%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/doxfx/src/System.Linq.Dynamic.Core/Parser/IExpressionPromoter.cs/#L20">View Source</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/Parser/IExpressionPromoter.cs/#L20">View Source</a>
   </span>
   <a id="System_Linq_Dynamic_Core_Parser_IExpressionPromoter_Promote_" data-uid="System.Linq.Dynamic.Core.Parser.IExpressionPromoter.Promote*"></a>
   <h4 id="System_Linq_Dynamic_Core_Parser_IExpressionPromoter_Promote_System_Linq_Expressions_Expression_System_Type_System_Boolean_System_Boolean_" data-uid="System.Linq.Dynamic.Core.Parser.IExpressionPromoter.Promote(System.Linq.Expressions.Expression,System.Type,System.Boolean,System.Boolean)">Promote(Expression, Type, Boolean, Boolean)</h4>
@@ -123,25 +123,25 @@ such as: int to int?</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></td>
         <td><span class="parametername">expr</span></td>
         <td><p>Source expression</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
         <td><span class="parametername">type</span></td>
-        <td><p>Destionation data type to promote</p>
+        <td><p>Destination data type to promote</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><span class="parametername">exact</span></td>
         <td><p>If the match must be exact</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
         <td><span class="parametername">convertExpr</span></td>
         <td><p>Convert expression</p>
 </td>
@@ -158,8 +158,8 @@ such as: int to int?</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></td>
-        <td><p>The promoted <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></p>
+        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></td>
+        <td><p>The promoted <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a> or null.</p>
 </td>
       </tr>
     </tbody>
@@ -172,15 +172,16 @@ such as: int to int?</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/doxfx/apiSpec/new?filename=System_Linq_Dynamic_Core_Parser_IExpressionPromoter.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.Parser.IExpressionPromoter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_Parser_IExpressionPromoter.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.Parser.IExpressionPromoter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/doxfx/src/System.Linq.Dynamic.Core/Parser/IExpressionPromoter.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/Parser/IExpressionPromoter.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>

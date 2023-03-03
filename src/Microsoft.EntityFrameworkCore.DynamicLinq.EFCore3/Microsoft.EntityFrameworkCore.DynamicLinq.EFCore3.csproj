@@ -11,7 +11,7 @@
         <ProjectGuid>{7994FECC-965C-4A5D-8B0E-1A6EA769D4BE}</ProjectGuid>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
         <LangVersion>10</LangVersion>
-        <Version>3.2.$(PatchVersion)</Version>
+        <Version>3.3.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

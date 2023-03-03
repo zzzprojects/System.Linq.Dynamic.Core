@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace System.Linq.Dynamic.Core.CustomTypeProviders
    ">
-    <meta name="generator" content="docfx 2.48.1.0">
+    <meta name="generator" content="docfx 2.59.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -61,11 +61,11 @@
       <div class="container body-content">
         
         <div id="search-results">
-          <div class="search-list"></div>
+          <div class="search-list">Search Results for <span></span></div>
           <div class="sr-items">
             <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
           </div>
-          <ul id="pagination"></ul>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
         </div>
       </div>
       <div role="main" class="container body-content hide-when-search">
@@ -91,7 +91,7 @@
       <section><p>The abstract DynamicLinqCustomTypeProvider which is used by the DefaultDynamicLinqCustomTypeProvider and can be used by a custom TypeProvider like in .NET Core.</p>
 </section>
       <h4><a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html">DefaultDynamicLinqCustomTypeProvider</a></h4>
-      <section><p>The default implementation for <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.html">IDynamicLinkCustomTypeProvider</a>.</p>
+      <section><p>The default implementation for <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html">DefaultDynamicLinqCustomTypeProvider</a>.</p>
 <p>Scans the current AppDomain for all types marked with <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.DynamicLinqTypeAttribute.html">DynamicLinqTypeAttribute</a>, and adds them as custom Dynamic Link types.</p>
 <p>Also provides functionality to resolve a Type in the current Application Domain.</p>
 <p>This class is used as default for full .NET Framework, so not for .NET Core</p>
@@ -102,6 +102,10 @@
     <h3 id="interfaces">Interfaces
   </h3>
       <h4><a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinkCustomTypeProvider.html">IDynamicLinkCustomTypeProvider</a></h4>
+      <section><p>Interface for providing functionality to find custom types for or resolve any type.
+Note that this interface will be marked obsolete in the next version. Use <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html">IDynamicLinqCustomTypeProvider</a> instead.</p>
+</section>
+      <h4><a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html">IDynamicLinqCustomTypeProvider</a></h4>
       <section><p>Interface for providing functionality to find custom types for or resolve any type.</p>
 </section>
 </article>
@@ -114,7 +118,8 @@
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+                <h5>In This Article</h5>
+                <div></div>
               </nav>
             </div>
           </div>
