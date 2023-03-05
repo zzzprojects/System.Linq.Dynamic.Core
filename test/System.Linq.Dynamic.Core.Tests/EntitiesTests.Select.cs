@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
+using FluentAssertions;
 using Newtonsoft.Json;
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
@@ -144,6 +145,22 @@ namespace System.Linq.Dynamic.Core.Tests
                 Assert.True(expectedRow.Posts != null);
                 Assert.Equal(expectedRow.Posts.ToList(), testRow.Posts);
             }
+        }
+
+        [Fact]
+        public void Entities_Select_Blog_And_Call_Where()
+        {
+            // Arrange
+            PopulateTestData(5, 0);
+
+            // Act
+            var result = _context.Blogs
+                .Select("new (BlogId, Name)")
+                .Where("Name == \"Blog2\"")
+                .ToDynamicArray();
+
+            // Assert
+            Assert.Equal(1, result.Length);
         }
     }
 }

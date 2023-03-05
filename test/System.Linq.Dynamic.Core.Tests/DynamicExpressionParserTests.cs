@@ -1473,11 +1473,6 @@ public class DynamicExpressionParserTests
         result.Should().BeTrue();
     }
 
-    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
-    {
-        public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
-    }
-
     [Fact]
     public void DynamicExpressionParser_ParseLambda_GenericExtensionMethod()
     {
@@ -1566,5 +1561,52 @@ public class DynamicExpressionParserTests
 
         // Assert
         result.Should().Be(expected);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseComparisonOperator_DynamicClass_For_String()
+    {
+        // Arrange
+        var cc = "firstValue".ToCharArray();
+        var field = new
+        {
+            Name = "firstName",
+            Value = new string(cc)
+        };
+
+        var props = new DynamicProperty[]
+        {
+            new DynamicProperty(field.Name, typeof(string))
+        };
+
+        var type = DynamicClassFactory.CreateType(props);
+
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
+        dynamicClass.SetDynamicPropertyValue(field.Name, field.Value);
+
+        // Act 1
+        var parameters = new[] { Expression.Parameter(type, "x") };
+        var expression = DynamicExpressionParser.ParseLambda(null, new ParsingConfig(), true, parameters, null, "firstName eq \"firstValue\"");
+
+        var @delegate = expression.Compile();
+
+        var result = (bool)@delegate.DynamicInvoke(dynamicClass);
+
+        // Assert 1
+        result.Should().BeTrue();
+
+        // Arrange 2
+        var array = new[] { field }.AsQueryable();
+
+        // Act 2
+        var isValid = array.Select("it").Any("Value eq \"firstValue\"");
+
+        // Assert 2
+        isValid.Should().BeTrue();
+    }
+
+    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
+    {
+        public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
     }
 }

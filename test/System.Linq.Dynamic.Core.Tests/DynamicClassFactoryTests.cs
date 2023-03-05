@@ -78,38 +78,6 @@ public class DynamicClassFactoryTests
         int lessThan = instance.Compare(b, a);
         lessThan.Should().Be(-1);
     }
-
-    [Fact]
-    public void DynamicClassArray()
-    {
-        // Arrange
-        var field = new
-        {
-            Name = "firstName",
-            Value = "firstValue"
-        };
-        var dynamicClasses = new List<DynamicClass>();
-
-        var props = new DynamicProperty[]
-        {
-        new DynamicProperty(field.Name, typeof(string))
-        };
-
-        var type = DynamicClassFactory.CreateType(props);
-
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
-        dynamicClass.SetDynamicPropertyValue(field.Name, field.Value);
-
-        dynamicClasses.Add(dynamicClass);
-
-        var query = dynamicClasses.AsQueryable();
-
-        // Act
-        var isValid = query.Any("firstName eq \"firstValue\"");
-
-        // Assert
-        isValid.Should().BeTrue();
-    }
 }
 
 public class CustomCaseInsensitiveComparer : IComparer
