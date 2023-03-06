@@ -38,8 +38,7 @@ internal class TypeConverterFactory : ITypeConverterFactory
         }
 
 #if !SILVERLIGHT
-        var c = TypeDescriptor.GetConverter(type);
-        return c;
+        return TypeDescriptor.GetConverter(type);
 #else
         var attributes = type.GetCustomAttributes(typeof(TypeConverterAttribute), false);
 

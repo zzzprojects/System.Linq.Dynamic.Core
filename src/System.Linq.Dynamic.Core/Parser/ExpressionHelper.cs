@@ -264,14 +264,14 @@ internal class ExpressionHelper : IExpressionHelper
             return Expression.Constant(guid, typeof(Guid));
         }
 #else
-            try
-            {
-                return Expression.Constant(new Guid(text));
-            }
-            catch
-            {
-                // Doing it in old fashion way when no TryParse interface was provided by .NET
-            }
+        try
+        {
+            return Expression.Constant(new Guid(text));
+        }
+        catch
+        {
+            // Doing it in old fashion way when no TryParse interface was provided by .NET
+        }
 #endif
         return null;
     }

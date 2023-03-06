@@ -398,6 +398,23 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void CastToType_FromStringToInt()
+        {
+            // Assign
+            var qry = new[]
+            {
+                "1",
+                "2"
+            }.AsQueryable();
+
+            // Act
+            var castDynamic = qry.Select("Cast(\"int\")").ToDynamicArray();
+
+            // Assert
+            castDynamic.Should().BeEquivalentTo(new[] { 1, 2 });
+        }
+
+        [Fact]
         public void CastToType_Dynamic_ActingOnIt()
         {
             // Assign

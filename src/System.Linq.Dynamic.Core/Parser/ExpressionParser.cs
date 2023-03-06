@@ -1147,7 +1147,14 @@ public class ExpressionParser
             it = args[0];
         }
 
-        return Expression.ConvertChecked(it, ResolveTypeFromArgumentExpression(functionName, typeArgument, args.Length));
+        var destinationType = ResolveTypeFromArgumentExpression(functionName, typeArgument, args.Length);
+
+        if (TryGenerateConversion(it, destinationType, out var conversionExpression))
+        {
+            return conversionExpression;
+        }
+
+        return Expression.ConvertChecked(it, destinationType);
     }
 
     private Expression GenerateConditional(Expression test, Expression expressionIfTrue, Expression expressionIfFalse, bool nullPropagating, int errorPos)
@@ -1615,56 +1622,62 @@ public class ExpressionParser
         return ParseMemberAccess(type, null);
     }
 
-    private bool TryGenerateConversion(Expression sourceExpression, Type type, out Expression? expression)
+    private bool TryGenerateConversion(Expression sourceExpression, Type destinationType, out Expression? expression)
     {
         Type exprType = sourceExpression.Type;
-        if (exprType == type)
+        if (exprType == destinationType)
         {
             expression = sourceExpression;
             return true;
         }
 
-        if (exprType.GetTypeInfo().IsValueType && type.GetTypeInfo().IsValueType)
+        if (exprType.GetTypeInfo().IsValueType && destinationType.GetTypeInfo().IsValueType)
         {
-            if ((TypeHelper.IsNullableType(exprType) || TypeHelper.IsNullableType(type)) && TypeHelper.GetNonNullableType(exprType) == TypeHelper.GetNonNullableType(type))
+            if ((TypeHelper.IsNullableType(exprType) || TypeHelper.IsNullableType(destinationType)) && TypeHelper.GetNonNullableType(exprType) == TypeHelper.GetNonNullableType(destinationType))
             {
-                expression = Expression.Convert(sourceExpression, type);
+                expression = Expression.Convert(sourceExpression, destinationType);
                 return true;
             }
 
-            if ((TypeHelper.IsNumericType(exprType) || TypeHelper.IsEnumType(exprType)) && TypeHelper.IsNumericType(type) || TypeHelper.IsEnumType(type))
+            if ((TypeHelper.IsNumericType(exprType) || TypeHelper.IsEnumType(exprType)) && TypeHelper.IsNumericType(destinationType) || TypeHelper.IsEnumType(destinationType))
             {
-                expression = Expression.ConvertChecked(sourceExpression, type);
+                expression = Expression.ConvertChecked(sourceExpression, destinationType);
                 return true;
             }
         }
 
-        if (exprType.IsAssignableFrom(type) || type.IsAssignableFrom(exprType) || exprType.GetTypeInfo().IsInterface || type.GetTypeInfo().IsInterface)
+        if (exprType.IsAssignableFrom(destinationType) || destinationType.IsAssignableFrom(exprType) || exprType.GetTypeInfo().IsInterface || destinationType.GetTypeInfo().IsInterface)
         {
-            expression = Expression.Convert(sourceExpression, type);
+            expression = Expression.Convert(sourceExpression, destinationType);
             return true;
         }
 
         // Try to Parse the string rather than just generate the convert statement
-        if (sourceExpression.NodeType == ExpressionType.Constant && exprType == typeof(string))
+        if (sourceExpression is ConstantExpression sourceConstantExpression && sourceConstantExpression.Value is string constantStringValue)
         {
-            string text = (string)((ConstantExpression)sourceExpression).Value;
-
-            var typeConvertor = _typeConverterFactory.GetConverter(type);
+            var typeConvertor = _typeConverterFactory.GetConverter(destinationType);
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (typeConvertor != null && typeConvertor.CanConvertFrom(typeof(string)))
             {
-                var value = typeConvertor.ConvertFromInvariantString(text);
-                expression = Expression.Constant(value, type);
+                var value = typeConvertor.ConvertFromInvariantString(constantStringValue);
+                expression = Expression.Constant(value, destinationType);
                 return true;
             }
         }
 
         // Check if there are any explicit conversion operators on the source type which fit the requirement (cast to the return type).
-        bool explicitOperatorAvailable = exprType.GetTypeInfo().GetDeclaredMethods("op_Explicit").Any(m => m.ReturnType == type);
+        bool explicitOperatorAvailable = exprType.GetTypeInfo().GetDeclaredMethods("op_Explicit").Any(m => m.ReturnType == destinationType);
         if (explicitOperatorAvailable)
         {
-            expression = Expression.Convert(sourceExpression, type);
+            expression = Expression.Convert(sourceExpression, destinationType);
+            return true;
+        }
+
+        // Try to find a destinationType.Parse(...) method for the specific sourceExpression Type.
+        var parseMethod = destinationType.GetMethod("Parse", new Type[] { sourceExpression.Type });
+        if (parseMethod != null)
+        {
+            expression = Expression.Call(parseMethod, sourceExpression);
             return true;
         }
 
