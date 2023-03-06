@@ -1,3 +1,8 @@
+# v1.3.1 (06 March 2023)
+- [#680](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/680) - Bump MongoDB.Driver from 2.4.4 to 2.19.0 in /test/EntityFramework.DynamicLinq.Tests [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
+- [#681](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/681) - Bump MongoDB.Driver from 2.4.4 to 2.19.0 in /test/EntityFramework.DynamicLinq.Tests.net452 [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
+- [#684](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/684) - Add more try-catch logic to DefaultAssemblyHelper and AbstractDynamicLinqCustomTypeProvider [feature] contributed by [StefH](https://github.com/StefH)
+
 # v1.3.0 (03 March 2023)
 - [#669](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/669) - Methods should only be callable on predefined types [security] contributed by [StefH](https://github.com/StefH)
 - [#671](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/671) - Add support for DateOnly and TimeOnly [feature] contributed by [StefH](https://github.com/StefH)
