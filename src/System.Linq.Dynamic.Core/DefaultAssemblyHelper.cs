@@ -1,39 +1,60 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
 
-namespace System.Linq.Dynamic.Core
+namespace System.Linq.Dynamic.Core;
+
+internal class DefaultAssemblyHelper : IAssemblyHelper
 {
-    internal class DefaultAssemblyHelper : IAssemblyHelper
+    public Assembly[] GetAssemblies()
     {
-        public Assembly[] GetAssemblies()
-        {
 #if WINDOWS_APP || UAP10_0 || NETSTANDARD || WPSL
-            throw new NotSupportedException();
+        throw new NotSupportedException();
 #elif NET35
-
-            return AppDomain.CurrentDomain.GetAssemblies();
+        return AppDomain.CurrentDomain.GetAssemblies();
 #else
-            // https://stackoverflow.com/a/2384679/255966
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
-            var loadedPaths = loadedAssemblies.Where(a => !a.IsDynamic).Select(a => a.Location).ToArray();
-
-            var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
-            var pathsToLoad = referencedPaths.Where(r => !loadedPaths.Contains(r, StringComparer.InvariantCultureIgnoreCase));
-
-            foreach (var path in pathsToLoad)
+        // https://stackoverflow.com/a/2384679/255966
+        var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+        var loadedPaths = new List<string>();
+        foreach (var loadedAssembly in loadedAssemblies)
+        {
+            try
             {
-                try
+                if (!loadedAssembly.IsDynamic)
                 {
-                    loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path)));
-                }
-                catch
-                {
-                    // Ignore
+                    loadedPaths.Add(loadedAssembly.Location);
                 }
             }
-
-            return loadedAssemblies.ToArray();
-#endif
+            catch
+            {
+                // Ignore
+            }
         }
+
+        string[] referencedPaths;
+        try
+        {
+            referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+        }
+        catch
+        {
+            referencedPaths = new string[0];
+        }
+
+        var pathsToLoad = referencedPaths.Where(referencedPath => !loadedPaths.Contains(referencedPath, StringComparer.InvariantCultureIgnoreCase));
+        foreach (var path in pathsToLoad)
+        {
+            try
+            {
+                loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path)));
+            }
+            catch
+            {
+                // Ignore
+            }
+        }
+
+        return loadedAssemblies.ToArray();
+#endif
     }
 }
