@@ -1,12 +1,14 @@
 # v1.3.1 (06 March 2023)
+- [#680](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/680) - Bump MongoDB.Driver from 2.4.4 to 2.19.0 in /test/EntityFramework.DynamicLinq.Tests [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
+- [#681](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/681) - Bump MongoDB.Driver from 2.4.4 to 2.19.0 in /test/EntityFramework.DynamicLinq.Tests.net452 [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
+- [#684](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/684) - Add more try-catch logic to DefaultAssemblyHelper and AbstractDynamicLinqCustomTypeProvider [feature] contributed by [StefH](https://github.com/StefH)
+
+# v1.3.0 (03 March 2023)
 - [#669](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/669) - Methods should only be callable on predefined types [security] contributed by [StefH](https://github.com/StefH)
 - [#671](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/671) - Add support for DateOnly and TimeOnly [feature] contributed by [StefH](https://github.com/StefH)
 - [#672](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/672) - Fixed ExpressionParser when WrappedValue-string is used for equals-operator for Enum [bug] contributed by [StefH](https://github.com/StefH)
 - [#674](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/674) - Fixed ExpressionParser when WrappedValue-string is used for equals-operator for Enum [refactor] contributed by [neilbgr](https://github.com/neilbgr)
 - [#676](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/676) - Change default setting for PrioritizePropertyOrFieldOverTheType to 'true'. [bug] contributed by [StefH](https://github.com/StefH)
-- [#680](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/680) - Bump MongoDB.Driver from 2.4.4 to 2.19.0 in /test/EntityFramework.DynamicLinq.Tests [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
-- [#681](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/681) - Bump MongoDB.Driver from 2.4.4 to 2.19.0 in /test/EntityFramework.DynamicLinq.Tests.net452 [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
-- [#684](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/684) - Add more try-catch logic to DefaultAssemblyHelper and AbstractDynamicLinqCustomTypeProvider [feature] contributed by [StefH](https://github.com/StefH)
 - [#660](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/660) - Question about security [security]
 - [#667](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/667) - DateOnly support [feature]
 - [#668](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/668) - With UseParameterizedNamesInDynamicQuery, can't compare enum type with String [bug]
