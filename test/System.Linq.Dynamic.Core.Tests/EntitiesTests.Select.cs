@@ -148,7 +148,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Entities_Select_Blog_And_Call_Where()
+        public void Entities_Select_DynamicClass_And_Call_Where()
         {
             // Arrange
             PopulateTestData(5, 0);
@@ -156,6 +156,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var result = _context.Blogs
                 .Select("new (BlogId, Name)")
+                .Cast<DynamicClass>()
                 .Where("Name == \"Blog2\"")
                 .ToDynamicArray();
 

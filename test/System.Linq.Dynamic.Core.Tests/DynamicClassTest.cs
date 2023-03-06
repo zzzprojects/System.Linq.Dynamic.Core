@@ -151,6 +151,38 @@ public class DynamicClassTest
         typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass"); // ???
     }
 
+    [Fact]
+    public void DynamicClassArray()
+    {
+        // Arrange
+        var field = new
+        {
+            Name = "firstName",
+            Value = string.Concat("first", "Value")
+        };
+        var dynamicClasses = new List<DynamicClass>();
+
+        var props = new DynamicProperty[]
+        {
+            new DynamicProperty(field.Name, typeof(string))
+        };
+
+        var type = DynamicClassFactory.CreateType(props);
+
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
+        dynamicClass.SetDynamicPropertyValue(field.Name, field.Value);
+
+        dynamicClasses.Add(dynamicClass);
+
+        var query = dynamicClasses.AsQueryable();
+
+        // Act
+        var isValid = query.Any("firstName eq \"firstValue\"");
+
+        // Assert
+        isValid.Should().BeTrue();
+    }
+
 #if NET6_0_OR_GREATER
     [Fact]
     public void ExpandoObject_SerializeToSystemTextJson_Should_Work()
