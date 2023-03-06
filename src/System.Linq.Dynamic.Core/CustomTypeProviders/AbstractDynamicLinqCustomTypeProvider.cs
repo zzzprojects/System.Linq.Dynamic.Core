@@ -126,9 +126,8 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
         Check.NotNull(assemblies);
 
 #if !NET5_0_OR_GREATER
-        assemblies = assemblies.Where(a => !a.GlobalAssemblyCache); // Skip System DLL's
+        assemblies = assemblies.Where(a => !a.GlobalAssemblyCache).ToArray(); // Skip System DLL's
 #endif
-
         foreach (var assembly in assemblies)
         {
             var definedTypes = Type.EmptyTypes;
@@ -146,11 +145,23 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
                 // Ignore all other exceptions
             }
 
-            var filteredAndDistinct = definedTypes
-                .Where(t => t.IsDefined(typeof(DynamicLinqTypeAttribute), false))
-                .Distinct();
+            var filtered = new List<Type>();
+            foreach (var definedType in definedTypes)
+            {
+                try
+                {
+                    if (definedType.IsDefined(typeof(DynamicLinqTypeAttribute), false))
+                    {
+                        filtered.Add(definedType);
+                    }
+                }
+                catch
+                {
+                    // Ignore
+                }
+            }
 
-            foreach (var definedType in filteredAndDistinct)
+            foreach (var definedType in filtered.Distinct().ToArray())
             {
                 yield return definedType;
             }
