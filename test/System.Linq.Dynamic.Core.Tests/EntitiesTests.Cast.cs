@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using NFluent;
+﻿using NFluent;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests;
@@ -7,6 +6,7 @@ namespace System.Linq.Dynamic.Core.Tests;
 public partial class EntitiesTests
 {
     // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/577
+#if NET6_0_OR_GREATER
     [Fact]
     public void Cast_To_FromStringToInt()
     {
@@ -14,11 +14,12 @@ public partial class EntitiesTests
         PopulateTestData(2, 0);
 
         // Act
-        var result = _context.Blogs.AsQueryable().Select("int(X)").ToDynamicArray<int>();
+        var result = _context.Blogs.AsQueryable().Select("X").Select("Cast(\"int\")").ToDynamicArray<int>();
 
         // Assert
         Assert.Equal(new[] { 0, 1 }, result);
     }
+#endif
 
     // https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
     [Fact]
