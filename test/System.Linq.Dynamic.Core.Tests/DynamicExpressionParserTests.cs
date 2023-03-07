@@ -807,6 +807,35 @@ public class DynamicExpressionParserTests
         result.Should().Be(expected);
     }
 
+    public class EntityDbo
+    {
+        public string Name { get; set; }
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_StringLiteral_WithADot_As_Arg()
+    {
+        // Act
+        var expression = DynamicExpressionParser.ParseLambda(typeof(EntityDbo), typeof(bool), "Name == @0", "System.Int32");
+        var del = expression.Compile();
+        var result = del.DynamicInvoke(new EntityDbo { Name = "System.Int32" });
+
+        // Assert
+        result.Should().Be(true);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_StringLiteral_WithADot_In_Expression()
+    {
+        // Act
+        var expression = DynamicExpressionParser.ParseLambda(typeof(EntityDbo), typeof(bool), "Name == \"System.Int32\"");
+        var del = expression.Compile();
+        var result = del.DynamicInvoke(new EntityDbo { Name = "System.Int32" });
+
+        // Assert
+        result.Should().Be(true);
+    }
+
     [Fact]
     public void DynamicExpressionParser_ParseLambda_StringLiteral_ReturnsBooleanLambdaExpression()
     {
