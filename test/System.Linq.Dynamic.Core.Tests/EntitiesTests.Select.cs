@@ -148,7 +148,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void Entities_Select_DynamicClass_And_Call_Where()
+        public void Entities_Select_DynamicClass_And_Call_Any()
         {
             // Arrange
             PopulateTestData(5, 0);
@@ -157,11 +157,10 @@ namespace System.Linq.Dynamic.Core.Tests
             var result = _context.Blogs
                 .Select("new (BlogId, Name)")
                 .Cast<DynamicClass>()
-                .Where("Name == \"Blog2\"")
-                .ToDynamicArray();
+                .Any("Name == \"Blog2\"");
 
             // Assert
-            Assert.Equal(1, result.Length);
+            Assert.Equal(true, result);
         }
     }
 }
