@@ -83,6 +83,12 @@ public class DynamicExpressionParserTests
     }
 
     [DynamicLinqType]
+    public class CustomClassWithMethodWithDynamicLinqTypeAttribute
+    {
+        public int GetAge(int x) => x;
+    }
+
+    [DynamicLinqType]
     public class CustomClassWithStaticMethodWithDynamicLinqTypeAttribute
     {
         public static int GetAge(int x) => x;
@@ -1050,6 +1056,22 @@ public class DynamicExpressionParserTests
 
         // Act
         var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(CustomClassWithStaticMethodWithDynamicLinqTypeAttribute), null, expression);
+        var del = lambdaExpression.Compile();
+        var result = (int)del.DynamicInvoke(context);
+
+        // Assert
+        Check.That(result).IsEqualTo(10);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomMethod_WhenClassHasDynamicLinqTypeAttribute_ShouldWorkCorrect()
+    {
+        // Assign
+        var context = new CustomClassWithMethodWithDynamicLinqTypeAttribute();
+        var expression = $"{nameof(CustomClassWithMethodWithDynamicLinqTypeAttribute.GetAge)}(10)";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(CustomClassWithMethodWithDynamicLinqTypeAttribute), null, expression);
         var del = lambdaExpression.Compile();
         var result = (int)del.DynamicInvoke(context);
 
