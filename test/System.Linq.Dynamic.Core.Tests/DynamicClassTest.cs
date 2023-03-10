@@ -112,7 +112,7 @@ public class DynamicClassTest
         };
         var type = DynamicClassFactory.CreateType(props);
 
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
         dynamicClass.SetDynamicPropertyValue("Name", "Albert");
         dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
 
@@ -140,7 +140,7 @@ public class DynamicClassTest
         var type = DynamicClassFactory.CreateType(props);
 
         // Act
-        var dynamicInstance = (DynamicClass)Activator.CreateInstance(type);
+        var dynamicInstance = (DynamicClass)Activator.CreateInstance(type)!;
 
         // Assert 1
         var getType = dynamicInstance.GetType();
@@ -149,6 +149,134 @@ public class DynamicClassTest
         // Assert 2
         var typeOf = GetRuntimeType(dynamicInstance);
         typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass"); // ???
+    }
+
+    [Fact]
+    public void DynamicClassArray()
+    {
+        // Arrange
+        var field = new
+        {
+            Name = "firstName",
+            Value = "firstValue"
+        };
+        var dynamicClasses = new List<DynamicClass>();
+
+        var props = new DynamicProperty[]
+        {
+            new (field.Name, typeof(string))
+        };
+
+        var type = DynamicClassFactory.CreateType(props);
+
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
+        dynamicClass.SetDynamicPropertyValue(field.Name, field.Value);
+
+        dynamicClasses.Add(dynamicClass);
+
+        var query = dynamicClasses.AsQueryable();
+
+        // Act
+        var isValid = query.Any("firstName eq \"firstValue\"");
+
+        // Assert
+        isValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DynamicClassArray_Issue593_Fails()
+    {
+        // Arrange
+        var field = new
+        {
+            Name = "firstName",
+            Value = string.Concat("first", "Value")
+        };
+        var dynamicClasses = new List<DynamicClass>();
+
+        var props = new DynamicProperty[]
+        {
+            new (field.Name, typeof(string))
+        };
+
+        var type = DynamicClassFactory.CreateType(props);
+
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
+        dynamicClass.SetDynamicPropertyValue(field.Name, field.Value);
+
+        dynamicClasses.Add(dynamicClass);
+
+        var query = dynamicClasses.AsQueryable();
+
+        // Act
+        var isValid = query.Any("firstName eq \"firstValue\"");
+
+        // Assert
+        isValid.Should().BeFalse(); // This should actually be true, but fails. For solution see Issue593_Solution1 and Issue593_Solution2.
+    }
+
+    [Fact]
+    public void DynamicClassArray_Issue593_Solution1()
+    {
+        // Arrange
+        var field = new
+        {
+            Name = "firstName",
+            Value = string.Concat("first", "Value")
+        };
+        var dynamicClasses = new List<DynamicClass>();
+
+        var props = new DynamicProperty[]
+        {
+            new (field.Name, typeof(string))
+        };
+
+        var type = DynamicClassFactory.CreateType(props);
+
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
+        dynamicClass.SetDynamicPropertyValue(field.Name, field.Value);
+
+        dynamicClasses.Add(dynamicClass);
+
+        var query = dynamicClasses.AsQueryable();
+
+        // Act
+        var isValid = query.Any("firstName.ToString() eq \"firstValue\"");
+
+        // Assert
+        isValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DynamicClassArray_Issue593_Solution2()
+    {
+        // Arrange
+        var field = new
+        {
+            Name = "firstName",
+            Value = string.Concat("first", "Value")
+        };
+        var dynamicClasses = new List<DynamicClass>();
+
+        var props = new DynamicProperty[]
+        {
+            new (field.Name, typeof(string))
+        };
+
+        var type = DynamicClassFactory.CreateType(props);
+
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
+        dynamicClass.SetDynamicPropertyValue(field.Name, field.Value);
+
+        dynamicClasses.Add(dynamicClass);
+
+        var query = dynamicClasses.AsQueryable();
+
+        // Act
+        var isValid = query.Any("string(firstName) eq \"firstValue\"");
+
+        // Assert
+        isValid.Should().BeTrue();
     }
 
 #if NET6_0_OR_GREATER
@@ -178,7 +306,7 @@ public class DynamicClassTest
         };
         var type = DynamicClassFactory.CreateType(props);
 
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
         dynamicClass.SetDynamicPropertyValue("Name", "Albert");
         dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
 
@@ -200,7 +328,7 @@ public class DynamicClassTest
         };
         var type = DynamicClassFactory.CreateType(props);
 
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
         dynamicClass.SetDynamicPropertyValue("Name", "Albert");
         dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
 
@@ -222,7 +350,7 @@ public class DynamicClassTest
         };
         var type = DynamicClassFactory.CreateType(props);
 
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
         dynamicClass.SetDynamicPropertyValue("Name", "Albert");
         dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
 
@@ -244,7 +372,7 @@ public class DynamicClassTest
         };
         var type = DynamicClassFactory.CreateType(props);
 
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
         dynamicClass.SetDynamicPropertyValue("Name", "Albert");
         dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
 
