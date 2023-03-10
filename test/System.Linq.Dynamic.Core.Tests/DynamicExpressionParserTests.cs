@@ -77,6 +77,17 @@ public class DynamicExpressionParserTests
         public static int GetAge(int x) => x;
     }
 
+    public class CustomClassWithMethod
+    {
+        public int GetAge(int x) => x;
+    }
+
+    [DynamicLinqType]
+    public class CustomClassWithStaticMethodWithDynamicLinqTypeAttribute
+    {
+        public static int GetAge(int x) => x;
+    }
+
     public class CustomTextClass
     {
         public CustomTextClass(string origin)
@@ -1010,7 +1021,7 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
-    public void DynamicExpressionParser_ParseLambda_CustomMethod()
+    public void DynamicExpressionParser_ParseLambda_CustomStaticMethod_WhenClassIsReturnedByCustomTypeProvider_ShouldWorkCorrect()
     {
         // Assign
         var config = new ParsingConfig
@@ -1028,6 +1039,35 @@ public class DynamicExpressionParserTests
 
         // Assert
         Check.That(result).IsEqualTo(10);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomStaticMethod_WhenClassHasDynamicLinqTypeAttribute_ShouldWorkCorrect()
+    {
+        // Assign
+        var context = new CustomClassWithStaticMethodWithDynamicLinqTypeAttribute();
+        var expression = $"{nameof(CustomClassWithStaticMethodWithDynamicLinqTypeAttribute)}.{nameof(CustomClassWithStaticMethodWithDynamicLinqTypeAttribute.GetAge)}(10)";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(CustomClassWithStaticMethodWithDynamicLinqTypeAttribute), null, expression);
+        var del = lambdaExpression.Compile();
+        var result = (int)del.DynamicInvoke(context);
+
+        // Assert
+        Check.That(result).IsEqualTo(10);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomMethod_WhenClassDoesNotHaveDynamicLinqTypeAttribute_ShouldThrowException()
+    {
+        // Assign
+        var expression = $"{nameof(CustomClassWithMethod.GetAge)}(10)";
+
+        // Act
+        Action action = () => DynamicExpressionParser.ParseLambda(typeof(CustomClassWithMethod), null, expression);
+
+        // Assert
+        action.Should().Throw<ParseException>().WithMessage("Methods on type 'CustomClassWithMethod' are not accessible");
     }
 
     // [Fact]
