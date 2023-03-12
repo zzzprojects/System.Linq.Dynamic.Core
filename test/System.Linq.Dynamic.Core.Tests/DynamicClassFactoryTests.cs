@@ -7,6 +7,11 @@ namespace System.Linq.Dynamic.Core.Tests;
 
 public class DynamicClassFactoryTests
 {
+    public DynamicClassFactoryTests()
+    {
+        DynamicClassFactory.ClearGeneratedTypes();
+    }
+
     [Fact]
     public void CreateGenericComparerTypeForInt()
     {
@@ -20,7 +25,7 @@ public class DynamicClassFactoryTests
         var type = DynamicClassFactory.CreateGenericComparerType(comparerGenericType, comparer.GetType());
 
         // Assert
-        var instance = (IComparer<int>)Activator.CreateInstance(type);
+        var instance = (IComparer<int>)Activator.CreateInstance(type)!;
         int greaterThan = instance.Compare(a, b);
         greaterThan.Should().Be(1);
 
