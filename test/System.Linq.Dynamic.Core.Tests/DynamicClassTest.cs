@@ -8,6 +8,11 @@ namespace System.Linq.Dynamic.Core.Tests;
 
 public class DynamicClassTest
 {
+    public DynamicClassTest()
+    {
+        DynamicClassFactory.ClearGeneratedTypes();
+    }
+
     [Fact]
     public void DynamicClass_GetProperties_Should_Work()
     {
@@ -151,7 +156,8 @@ public class DynamicClassTest
         typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass"); // ???
     }
 
-    [Fact(Skip = "fails on CI build GitHub Actions")]
+    // [Fact(Skip = "fails on CI build GitHub Actions")]
+    [Fact]
     public void DynamicClassArray()
     {
         // Arrange

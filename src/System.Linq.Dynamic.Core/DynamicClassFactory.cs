@@ -38,10 +38,10 @@ namespace System.Linq.Dynamic.Core
         private static readonly MethodInfo ObjectToString = typeof(object).GetMethod("ToString", BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null)!;
 #endif
 
-        private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(Type.EmptyTypes);
+        private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(Type.EmptyTypes)!;
 #if WINDOWS_APP ||  UAP10_0 || NETSTANDARD
-        private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod("Append", new[] { typeof(string) });
-        private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod("Append", new[] { typeof(object) });
+        private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod("Append", new[] { typeof(string) })!;
+        private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod("Append", new[] { typeof(object) })!;
 #else
         private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod("Append", BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null)!;
         private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod("Append", BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(object) }, null)!;
@@ -439,6 +439,17 @@ namespace System.Linq.Dynamic.Core
             }
 
             return type;
+        }
+
+        /// <summary>
+        /// Used for unit-testing
+        /// </summary>
+        internal static void ClearGeneratedTypes()
+        {
+            lock (GeneratedTypes)
+            {
+                GeneratedTypes.Clear();
+            }
         }
 
         /// <summary>
