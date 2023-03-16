@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace System.Linq.Dynamic.Core.Tests.TestHelpers
+﻿namespace System.Linq.Dynamic.Core.Tests.TestHelpers
 {
     public static class ExpressionString
     {

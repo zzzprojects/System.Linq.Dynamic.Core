@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests.Xunit;
+namespace System.Linq.Dynamic.Core.Tests.TestHelpers;
 
 internal class SkipIfGitHubActionsAttribute : FactAttribute
 {
