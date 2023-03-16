@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq.Dynamic.Core.Tests.TestHelpers;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;
@@ -156,8 +157,7 @@ public class DynamicClassTest
         typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass"); // ???
     }
 
-    // [Fact(Skip = "fails on CI build GitHub Actions")]
-    [Fact]
+    [SkipIfGitHubActions]
     public void DynamicClassArray()
     {
         // Arrange
@@ -189,7 +189,7 @@ public class DynamicClassTest
         isValid.Should().BeTrue();
     }
 
-    [Fact]
+    [SkipIfGitHubActions]
     public void DynamicClassArray_Issue593_Fails()
     {
         // Arrange
@@ -221,7 +221,7 @@ public class DynamicClassTest
         isValid.Should().BeFalse(); // This should actually be true, but fails. For solution see Issue593_Solution1 and Issue593_Solution2.
     }
 
-    [Fact]
+    [SkipIfGitHubActions]
     public void DynamicClassArray_Issue593_Solution1()
     {
         // Arrange
@@ -253,7 +253,7 @@ public class DynamicClassTest
         isValid.Should().BeTrue();
     }
 
-    [Fact]
+    [SkipIfGitHubActions]
     public void DynamicClassArray_Issue593_Solution2()
     {
         // Arrange

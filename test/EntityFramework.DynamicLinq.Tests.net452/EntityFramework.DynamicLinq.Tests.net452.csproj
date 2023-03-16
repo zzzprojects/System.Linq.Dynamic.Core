@@ -13,7 +13,7 @@
     <AssemblyName>EntityFramework.DynamicLinq.Tests.net452</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-      <LangVersion>10</LangVersion>
+    <LangVersion>10</LangVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -287,6 +287,9 @@
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\QueryableTests.Is,OfType,As,Cast.cs">
       <Link>QueryableTests.Is,OfType,As,Cast.cs</Link>
+    </Compile>
+    <Compile Include="..\System.Linq.Dynamic.Core.Tests\TestHelpers\DisplayTestMethodNameAttribute.cs">
+      <Link>TestHelpers\DisplayTestMethodNameAttribute.cs</Link>
     </Compile>
     <Compile Include="..\System.Linq.Dynamic.Core.Tests\TestHelpers\ExpressionString.cs">
       <Link>TestHelpers\ExpressionString.cs</Link>
