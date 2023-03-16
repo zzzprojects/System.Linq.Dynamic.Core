@@ -77,6 +77,23 @@ public class DynamicExpressionParserTests
         public static int GetAge(int x) => x;
     }
 
+    public class CustomClassWithMethod
+    {
+        public int GetAge(int x) => x;
+    }
+
+    [DynamicLinqType]
+    public class CustomClassWithMethodWithDynamicLinqTypeAttribute
+    {
+        public int GetAge(int x) => x;
+    }
+
+    [DynamicLinqType]
+    public class CustomClassWithStaticMethodWithDynamicLinqTypeAttribute
+    {
+        public static int GetAge(int x) => x;
+    }
+
     public class CustomTextClass
     {
         public CustomTextClass(string origin)
@@ -813,10 +830,22 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
-    public void DynamicExpressionParser_ParseLambda_StringLiteral_WithADot()
+    public void DynamicExpressionParser_ParseLambda_StringLiteral_WithADot_As_Arg()
     {
         // Act
         var expression = DynamicExpressionParser.ParseLambda(typeof(EntityDbo), typeof(bool), "Name == @0", "System.Int32");
+        var del = expression.Compile();
+        var result = del.DynamicInvoke(new EntityDbo { Name = "System.Int32" });
+
+        // Assert
+        result.Should().Be(true);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_StringLiteral_WithADot_In_Expression()
+    {
+        // Act
+        var expression = DynamicExpressionParser.ParseLambda(typeof(EntityDbo), typeof(bool), "Name == \"System.Int32\"");
         var del = expression.Compile();
         var result = del.DynamicInvoke(new EntityDbo { Name = "System.Int32" });
 
@@ -998,7 +1027,7 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
-    public void DynamicExpressionParser_ParseLambda_CustomMethod()
+    public void DynamicExpressionParser_ParseLambda_CustomStaticMethod_WhenClassIsReturnedByCustomTypeProvider_ShouldWorkCorrect()
     {
         // Assign
         var config = new ParsingConfig
@@ -1016,6 +1045,51 @@ public class DynamicExpressionParserTests
 
         // Assert
         Check.That(result).IsEqualTo(10);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomStaticMethod_WhenClassHasDynamicLinqTypeAttribute_ShouldWorkCorrect()
+    {
+        // Assign
+        var context = new CustomClassWithStaticMethodWithDynamicLinqTypeAttribute();
+        var expression = $"{nameof(CustomClassWithStaticMethodWithDynamicLinqTypeAttribute)}.{nameof(CustomClassWithStaticMethodWithDynamicLinqTypeAttribute.GetAge)}(10)";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(CustomClassWithStaticMethodWithDynamicLinqTypeAttribute), null, expression);
+        var del = lambdaExpression.Compile();
+        var result = (int)del.DynamicInvoke(context);
+
+        // Assert
+        Check.That(result).IsEqualTo(10);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomMethod_WhenClassHasDynamicLinqTypeAttribute_ShouldWorkCorrect()
+    {
+        // Assign
+        var context = new CustomClassWithMethodWithDynamicLinqTypeAttribute();
+        var expression = $"{nameof(CustomClassWithMethodWithDynamicLinqTypeAttribute.GetAge)}(10)";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(typeof(CustomClassWithMethodWithDynamicLinqTypeAttribute), null, expression);
+        var del = lambdaExpression.Compile();
+        var result = (int)del.DynamicInvoke(context);
+
+        // Assert
+        Check.That(result).IsEqualTo(10);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomMethod_WhenClassDoesNotHaveDynamicLinqTypeAttribute_ShouldThrowException()
+    {
+        // Assign
+        var expression = $"{nameof(CustomClassWithMethod.GetAge)}(10)";
+
+        // Act
+        Action action = () => DynamicExpressionParser.ParseLambda(typeof(CustomClassWithMethod), null, expression);
+
+        // Assert
+        action.Should().Throw<ParseException>().WithMessage("Methods on type 'CustomClassWithMethod' are not accessible");
     }
 
     // [Fact]
@@ -1490,11 +1564,6 @@ public class DynamicExpressionParserTests
         result.Should().BeTrue();
     }
 
-    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
-    {
-        public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
-    }
-
     [Fact]
     public void DynamicExpressionParser_ParseLambda_GenericExtensionMethod()
     {
@@ -1583,5 +1652,52 @@ public class DynamicExpressionParserTests
 
         // Assert
         result.Should().Be(expected);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseComparisonOperator_DynamicClass_For_String()
+    {
+        // Arrange
+        var cc = "firstValue".ToCharArray();
+        var field = new
+        {
+            Name = "firstName",
+            Value = new string(cc)
+        };
+
+        var props = new DynamicProperty[]
+        {
+            new DynamicProperty(field.Name, typeof(string))
+        };
+
+        var type = DynamicClassFactory.CreateType(props);
+
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type);
+        dynamicClass.SetDynamicPropertyValue(field.Name, field.Value);
+
+        // Act 1
+        var parameters = new[] { Expression.Parameter(type, "x") };
+        var expression = DynamicExpressionParser.ParseLambda(null, new ParsingConfig(), true, parameters, null, "firstName eq \"firstValue\"");
+
+        var @delegate = expression.Compile();
+
+        var result = (bool)@delegate.DynamicInvoke(dynamicClass);
+
+        // Assert 1
+        result.Should().BeTrue();
+
+        // Arrange 2
+        var array = new[] { field }.AsQueryable();
+
+        // Act 2
+        var isValid = array.Select("it").Any("Value eq \"firstValue\"");
+
+        // Assert 2
+        isValid.Should().BeTrue();
+    }
+
+    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
+    {
+        public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
     }
 }

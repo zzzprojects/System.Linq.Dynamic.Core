@@ -802,8 +802,7 @@ public class ExpressionParser
                 return ParseIdentifier();
 
             case TokenId.StringLiteral:
-                var expressionOrType = ParseStringLiteral(false);
-                return expressionOrType.IsFirst ? expressionOrType.First : ParseTypeAccess(expressionOrType.Second, false);
+                return ParseStringLiteralAsStringExpressionOrTypeExpression();
 
             case TokenId.IntegerLiteral:
                 return ParseIntegerLiteral();
@@ -817,6 +816,32 @@ public class ExpressionParser
             default:
                 throw ParseError(Res.ExpressionExpected);
         }
+    }
+
+    private Expression ParseStringLiteralAsStringExpressionOrTypeExpression()
+    {
+        var clonedTextParser = _textParser.Clone();
+        clonedTextParser.NextToken();
+
+        // Check if next token is a "(" or a "?(".
+        // Used for casting like $"\"System.DateTime\"(Abc)" or $"\"System.DateTime\"?(Abc)".
+        // In that case, the string value is NOT forced to stay a string.
+        bool forceParseAsString = true;
+        if (clonedTextParser.CurrentToken.Id == TokenId.OpenParen)
+        {
+            forceParseAsString = false;
+        }
+        else if (clonedTextParser.CurrentToken.Id == TokenId.Question)
+        {
+            clonedTextParser.NextToken();
+            if (clonedTextParser.CurrentToken.Id == TokenId.OpenParen)
+            {
+                forceParseAsString = false;
+            }
+        }
+
+        var expressionOrType = ParseStringLiteral(forceParseAsString);
+        return expressionOrType.IsFirst ? expressionOrType.First : ParseTypeAccess(expressionOrType.Second, false);
     }
 
     private AnyOf<Expression, Type> ParseStringLiteral(bool forceParseAsString)

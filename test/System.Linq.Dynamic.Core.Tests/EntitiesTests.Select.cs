@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
+using FluentAssertions;
 using Newtonsoft.Json;
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +60,7 @@ namespace System.Linq.Dynamic.Core.Tests
             // Arrange
             PopulateTestData(5, 0);
 
-            var expected = _context.Blogs.Select(x => new {}).ToList();
+            var expected = _context.Blogs.Select(x => new { }).ToList();
 
             // Act
             var test = _context.Blogs.GroupBy(config, "BlogId", "new()").Select<object>("new()").ToList();
@@ -144,6 +145,22 @@ namespace System.Linq.Dynamic.Core.Tests
                 Assert.True(expectedRow.Posts != null);
                 Assert.Equal(expectedRow.Posts.ToList(), testRow.Posts);
             }
+        }
+
+        [Fact(Skip = "593 - this does not work")]
+        public void Entities_Select_DynamicClass_And_Call_Any()
+        {
+            // Arrange
+            PopulateTestData(5, 0);
+
+            // Act
+            var result = _context.Blogs
+                .Select("new (BlogId, Name)")
+                .Cast<DynamicClass>()
+                .Any("Name == \"Blog2\"");
+
+            // Assert
+            Assert.Equal(true, result);
         }
     }
 }
