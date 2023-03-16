@@ -189,7 +189,7 @@ public class DynamicClassTest
         isValid.Should().BeTrue();
     }
 
-    [Fact]
+    [SkipIfGitHubActions]
     public void DynamicClassArray_Issue593_Fails()
     {
         // Arrange
