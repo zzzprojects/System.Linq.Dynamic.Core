@@ -66,6 +66,50 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
         }
 
+        internal class Base { }
+
+        internal class DerivedA : Base { }
+
+        internal class DerivedB : Base { }
+
+        internal class Parent
+        {
+            public IEnumerable<Base> Children { get; set; }
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void OfType_Dynamic_WithFullName_AllowNewToEvaluateAnyType(bool allowNewToEvaluateAnyType)
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                AllowNewToEvaluateAnyType = allowNewToEvaluateAnyType
+            };
+
+            var queryable = new Parent[]
+            {
+                new()
+                {
+                    Children = new Base[]
+                    {
+                        new DerivedA(),
+                        new DerivedB()
+                    }
+                }
+            }.AsQueryable();
+
+            var fullType = typeof(DerivedA).FullName;
+
+            // Act
+            var query = queryable.Select(config, $"Children.OfType(\"{fullType}\")");
+            var result = query.ToDynamicArray();
+
+            // Assert
+            result.Should().HaveCount(1);
+        }
+
         [Fact]
         public void OfType_Dynamic_WithType()
         {
