@@ -12,6 +12,8 @@
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <ProjectGuid>{BF97CB1B-5043-4256-8F42-CF3A4F3863BE}</ProjectGuid>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>C:\Dev\GitHub\System.Linq.Dynamic.Core\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <ItemGroup>
