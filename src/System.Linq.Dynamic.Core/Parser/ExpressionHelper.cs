@@ -176,8 +176,10 @@ internal class ExpressionHelper : IExpressionHelper
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
         {
-            return Expression.GreaterThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
-                right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
+            return Expression.GreaterThanOrEqual(
+                left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
+                right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right
+            );
         }
 
         WrapConstantExpressions(ref left, ref right);
@@ -194,8 +196,10 @@ internal class ExpressionHelper : IExpressionHelper
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
         {
-            return Expression.LessThan(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
-                right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
+            return Expression.LessThan(
+                left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
+                right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right
+            );
         }
 
         WrapConstantExpressions(ref left, ref right);
@@ -212,8 +216,10 @@ internal class ExpressionHelper : IExpressionHelper
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
         {
-            return Expression.LessThanOrEqual(left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
-                right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right);
+            return Expression.LessThanOrEqual(
+                left.Type.GetTypeInfo().IsEnum ? Expression.Convert(left, Enum.GetUnderlyingType(left.Type)) : left,
+                right.Type.GetTypeInfo().IsEnum ? Expression.Convert(right, Enum.GetUnderlyingType(right.Type)) : right
+            );
         }
 
         WrapConstantExpressions(ref left, ref right);
@@ -279,7 +285,7 @@ internal class ExpressionHelper : IExpressionHelper
     public bool MemberExpressionIsDynamic(Expression expression)
     {
 #if NET35
-            return false;
+        return false;
 #else
         return expression is MemberExpression memberExpression && memberExpression.Member.GetCustomAttribute<DynamicAttribute>() != null;
 #endif
@@ -290,19 +296,8 @@ internal class ExpressionHelper : IExpressionHelper
 #if !NET35 && !UAP10_0 && !NETSTANDARD1_3
         return Expression.Dynamic(new DynamicGetMemberBinder(propertyName, _parsingConfig), type, expression);
 #else
-            throw new NotSupportedException(Res.DynamicExpandoObjectIsNotSupported);
+        throw new NotSupportedException(Res.DynamicExpandoObjectIsNotSupported);
 #endif
-    }
-
-    private MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
-    {
-        var methodInfo = left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
-        if (methodInfo == null)
-        {
-            methodInfo = right.Type.GetMethod(methodName, new[] { left.Type, right.Type })!;
-        }
-
-        return methodInfo;
     }
 
     private Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
@@ -350,17 +345,13 @@ internal class ExpressionHelper : IExpressionHelper
 
     public bool ExpressionQualifiesForNullPropagation(Expression? expression)
     {
-        return
-            expression is MemberExpression ||
-            expression is ParameterExpression ||
-            expression is MethodCallExpression ||
-            expression is UnaryExpression;
+        return expression is MemberExpression or ParameterExpression or MethodCallExpression or UnaryExpression;
     }
 
     public Expression GenerateDefaultExpression(Type type)
     {
 #if NET35
-            return Expression.Constant(Activator.CreateInstance(type));
+        return Expression.Constant(Activator.CreateInstance(type));
 #else
         return Expression.Default(type);
 #endif
@@ -391,7 +382,7 @@ internal class ExpressionHelper : IExpressionHelper
 
     private List<Expression> CollectExpressions(bool addSelf, Expression sourceExpression)
     {
-        Expression? expression = GetMemberExpression(sourceExpression);
+        var expression = GetMemberExpression(sourceExpression);
 
         var list = new List<Expression>();
 
@@ -441,6 +432,17 @@ internal class ExpressionHelper : IExpressionHelper
         } while (expressionRecognized);
 
         return list;
+    }
+
+    private static MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
+    {
+        var methodInfo = left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
+        if (methodInfo == null)
+        {
+            methodInfo = right.Type.GetMethod(methodName, new[] { left.Type, right.Type })!;
+        }
+
+        return methodInfo;
     }
 
     private static Expression? GetMethodCallExpression(MethodCallExpression methodCallExpression)

@@ -51,7 +51,7 @@ internal class TypeConverterFactory : ITypeConverterFactory
         if (converterType == null)
             return new TypeConverter();
 
-        return Activator.CreateInstance(converterType) as TypeConverter;
+        return (TypeConverter) Activator.CreateInstance(converterType);
 #endif
     }
 }
