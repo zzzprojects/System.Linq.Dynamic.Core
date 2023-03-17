@@ -1,3 +1,11 @@
+# v1.3.2-preview-01 (16 March 2023)
+- [#679](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/679) - Add some tests for DynamicClass with System.Text.Json [test] contributed by [StefH](https://github.com/StefH)
+- [#685](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/685) - Add test for DynamicExpressionParser string with a dot [test] contributed by [StefH](https://github.com/StefH)
+- [#687](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/687) - Fix parsing a string literal with a dot [bug] contributed by [StefH](https://github.com/StefH)
+- [#691](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/691) - Add internal Clear method to DynamicClassFactory for unit-testing. [test] contributed by [StefH](https://github.com/StefH)
+- [#693](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/693) - UnitTests: add and use SkipIfGitHubActionsAttribute [test] contributed by [StefH](https://github.com/StefH)
+- [#683](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/683) - DynamicExpression parser can't parse when there is a dot in a string [bug]
+
 # v1.3.1 (06 March 2023)
 - [#680](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/680) - Bump MongoDB.Driver from 2.4.4 to 2.19.0 in /test/EntityFramework.DynamicLinq.Tests [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
 - [#681](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/681) - Bump MongoDB.Driver from 2.4.4 to 2.19.0 in /test/EntityFramework.DynamicLinq.Tests.net452 [dependencies] contributed by [dependabot[bot]](https://github.com/apps/dependabot)
