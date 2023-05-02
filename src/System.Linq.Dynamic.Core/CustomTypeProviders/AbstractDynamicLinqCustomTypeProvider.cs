@@ -96,7 +96,7 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
 
             try
             {
-                definedTypes = assembly.ExportedTypes.ToArray();
+                definedTypes = assembly.GetExportedTypes();
             }
             catch (ReflectionTypeLoadException reflectionTypeLoadException)
             {
@@ -147,7 +147,7 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
 
             try
             {
-                definedTypes = assembly.GetExportedTypes();
+                definedTypes = assembly.GetTypes();
             }
             catch (ReflectionTypeLoadException reflectionTypeLoadException)
             {
