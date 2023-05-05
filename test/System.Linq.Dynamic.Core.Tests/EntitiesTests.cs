@@ -44,7 +44,6 @@ namespace System.Linq.Dynamic.Core.Tests
 #else
             _context.Database.Delete();
 #endif
-
             _context.Dispose();
             _context = null;
         }
@@ -53,7 +52,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             for (int i = 0; i < blogCount; i++)
             {
-                var blog = new Blog { Name = "Blog" + (i + 1), BlogId = 1000 + i, Created = DateTime.Now.AddDays(-Rnd.Next(0, 100)) };
+                var blog = new Blog { X = i.ToString(), Name = "Blog" + (i + 1), BlogId = 1000 + i, Created = DateTime.Now.AddDays(-Rnd.Next(0, 100)) };
 
                 _context.Blogs.Add(blog);
 

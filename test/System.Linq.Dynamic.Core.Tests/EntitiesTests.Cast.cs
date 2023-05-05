@@ -1,66 +1,81 @@
 ﻿using NFluent;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Tests;
+
+public partial class EntitiesTests
 {
-    public partial class EntitiesTests
+    // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/577
+#if NET6_0_OR_GREATER
+    [Fact]
+    public void Cast_To_FromStringToInt()
     {
-        // https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
-        [Fact]
-        public void Cast_To_nullableint()
-        {
-            // Arrange
-            PopulateTestData(1, 0);
+        // Arrange
+        PopulateTestData(2, 0);
 
-            // Act
-            var expectedResult = _context.Blogs.Select(b => (int?)b.BlogId).Count();
-            var result = _context.Blogs.AsQueryable().Select("int?(BlogId)").Count();
+        // Act
+        var result = _context.Blogs.AsQueryable().Select("X").Select("Cast(\"int\")").ToDynamicArray<int>();
 
-            // Assert
-            Assert.Equal(expectedResult, result);
-        }
+        // Assert
+        Assert.Equal(new[] { 0, 1 }, result);
+    }
+#endif
 
-        [Fact]
-        public void Cast_To_nullableint_Automatic()
-        {
-            // Arrange
-            PopulateTestData(5, 0);
+    // https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
+    [Fact]
+    public void Cast_To_nullableint()
+    {
+        // Arrange
+        PopulateTestData(1, 0);
 
-            // Act
-            var expectedResult = _context.Blogs.Select(b => b.BlogId == 2 ? (int?)b.BlogId : null).ToList();
-            var result = _context.Blogs.AsQueryable().Select("BlogId == 2 ? BlogId : null").ToDynamicList<int?>();
+        // Act
+        var expectedResult = _context.Blogs.Select(b => (int?)b.BlogId).Count();
+        var result = _context.Blogs.AsQueryable().Select("int?(BlogId)").Count();
 
-            // Assert
-            Check.That(result).ContainsExactly(expectedResult);
-        }
+        // Assert
+        Assert.Equal(expectedResult, result);
+    }
 
-        [Fact]
-        public void Cast_To_nullablelong()
-        {
-            // Arrange
-            PopulateTestData(1, 0);
+    [Fact]
+    public void Cast_To_nullableint_Automatic()
+    {
+        // Arrange
+        PopulateTestData(5, 0);
 
-            // Act
-            var expectedResult = _context.Blogs.Select(b => (long?)b.BlogId).Count();
-            var result = _context.Blogs.AsQueryable().Select("long?(BlogId)").Count();
+        // Act
+        var expectedResult = _context.Blogs.Select(b => b.BlogId == 2 ? (int?)b.BlogId : null).ToList();
+        var result = _context.Blogs.AsQueryable().Select("BlogId == 2 ? BlogId : null").ToDynamicList<int?>();
 
-            // Assert
-            Assert.Equal(expectedResult, result);
-        }
+        // Assert
+        Check.That(result).ContainsExactly(expectedResult);
+    }
 
-        // https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
-        [Fact]
-        public void Cast_To_newnullableint()
-        {
-            // Arrange
-            PopulateTestData(1, 0);
+    [Fact]
+    public void Cast_To_nullablelong()
+    {
+        // Arrange
+        PopulateTestData(1, 0);
 
-            // Act
-            var expectedResult = _context.Blogs.Select(x => new { i = (int?)x.BlogId }).Count();
-            var result = _context.Blogs.AsQueryable().Select("new (int?(BlogId) as i)").Count();
+        // Act
+        var expectedResult = _context.Blogs.Select(b => (long?)b.BlogId).Count();
+        var result = _context.Blogs.AsQueryable().Select("long?(BlogId)").Count();
 
-            //Assert
-            Assert.Equal(expectedResult, result);
-        }
+        // Assert
+        Assert.Equal(expectedResult, result);
+    }
+
+    // https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
+    [Fact]
+    public void Cast_To_newnullableint()
+    {
+        // Arrange
+        PopulateTestData(1, 0);
+
+        // Act
+        var expectedResult = _context.Blogs.Select(x => new { i = (int?)x.BlogId }).Count();
+        var result = _context.Blogs.AsQueryable().Select("new (int?(BlogId) as i)").Count();
+
+        //Assert
+        Assert.Equal(expectedResult, result);
     }
 }
