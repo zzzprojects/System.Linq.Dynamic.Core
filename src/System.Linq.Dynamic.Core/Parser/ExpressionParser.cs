@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser.SupportedMethods;
@@ -19,10 +20,10 @@ namespace System.Linq.Dynamic.Core.Parser;
 /// </summary>
 public class ExpressionParser
 {
-    private static readonly string methodOrderBy = nameof(Queryable.OrderBy);
-    private static readonly string methodOrderByDescending = nameof(Queryable.OrderByDescending);
-    private static readonly string methodThenBy = nameof(Queryable.ThenBy);
-    private static readonly string methodThenByDescending = nameof(Queryable.ThenByDescending);
+    private const string MethodOrderBy = nameof(Queryable.OrderBy);
+    private const string MethodOrderByDescending = nameof(Queryable.OrderByDescending);
+    private const string MethodThenBy = nameof(Queryable.ThenBy);
+    private const string MethodThenByDescending = nameof(Queryable.ThenByDescending);
 
     private readonly ParsingConfig _parsingConfig;
     private readonly MethodFinder _methodFinder;
@@ -51,7 +52,7 @@ public class ExpressionParser
     /// There was a problem when an expression contained multiple lambdas where
     /// the ItName was not cleared and freed for the next lambda. This variable
     /// stores the ItName of the last parsed lambda.
-    /// Not used internally by ExpressionParser, but used to preserve compatiblity of parsingConfig.RenameParameterExpression
+    /// Not used internally by ExpressionParser, but used to preserve compatibility of parsingConfig.RenameParameterExpression
     /// which was designed to only work with mono-lambda expressions.
     /// </summary>
     public string LastLambdaItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
@@ -93,7 +94,7 @@ public class ExpressionParser
     {
         foreach (ParameterExpression pe in parameters.Where(p => !string.IsNullOrEmpty(p.Name)))
         {
-            AddSymbol(pe.Name, pe);
+            AddSymbol(pe.Name!, pe);
         }
 
         // If there is only 1 ParameterExpression, do also allow access using 'it'
@@ -185,11 +186,11 @@ public class ExpressionParser
             string methodName;
             if (forceThenBy || orderings.Count > 0)
             {
-                methodName = ascending ? methodThenBy : methodThenByDescending;
+                methodName = ascending ? MethodThenBy : MethodThenByDescending;
             }
             else
             {
-                methodName = ascending ? methodOrderBy : methodOrderByDescending;
+                methodName = ascending ? MethodOrderBy : MethodOrderByDescending;
             }
 
             orderings.Add(new DynamicOrdering { Selector = expr, Ascending = ascending, MethodName = methodName });
@@ -404,11 +405,11 @@ public class ExpressionParser
             switch (op.Id)
             {
                 case TokenId.Ampersand:
-                    if (left.Type == typeof(string) && left.NodeType == ExpressionType.Constant && int.TryParse((string)((ConstantExpression)left).Value, out var parseValue) && TypeHelper.IsNumericType(right.Type))
+                    if (left.Type == typeof(string) && left.NodeType == ExpressionType.Constant && int.TryParse((string?)((ConstantExpression)left).Value, out var parseValue) && TypeHelper.IsNumericType(right.Type))
                     {
                         left = Expression.Constant(parseValue);
                     }
-                    else if (right.Type == typeof(string) && right.NodeType == ExpressionType.Constant && int.TryParse((string)((ConstantExpression)right).Value, out parseValue) && TypeHelper.IsNumericType(left.Type))
+                    else if (right.Type == typeof(string) && right.NodeType == ExpressionType.Constant && int.TryParse((string?)((ConstantExpression)right).Value, out parseValue) && TypeHelper.IsNumericType(left.Type))
                     {
                         right = Expression.Constant(parseValue);
                     }
@@ -1172,7 +1173,14 @@ public class ExpressionParser
             it = args[0];
         }
 
-        return Expression.ConvertChecked(it, ResolveTypeFromArgumentExpression(functionName, typeArgument, args.Length));
+        var destinationType = ResolveTypeFromArgumentExpression(functionName, typeArgument, args.Length);
+
+        if (TryGenerateConversion(it, destinationType, out var conversionExpression))
+        {
+            return conversionExpression;
+        }
+
+        return Expression.ConvertChecked(it, destinationType);
     }
 
     private Expression GenerateConditional(Expression test, Expression expressionIfTrue, Expression expressionIfFalse, bool nullPropagating, int errorPos)
@@ -1360,9 +1368,9 @@ public class ExpressionParser
                             && methodCallExpression.Arguments.Count == 1
                             && methodCallExpression.Arguments[0] is ConstantExpression methodCallExpressionArgument
                             && methodCallExpressionArgument.Type == typeof(string)
-                            && properties.All(x => x.Name != (string)methodCallExpressionArgument.Value))
+                            && properties.All(x => x.Name != (string?)methodCallExpressionArgument.Value))
                         {
-                            propName = (string)methodCallExpressionArgument.Value;
+                            propName = (string?)methodCallExpressionArgument.Value;
                         }
                         else
                         {
@@ -1442,7 +1450,7 @@ public class ExpressionParser
             // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
             NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
 
-            // Get the "public DynamicClass(KeyValuePair<string, object>[] propertylist)" constructor
+            // Get the "public DynamicClass(KeyValuePair<string, object>[])" constructor
             ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
 
             return Expression.New(constructor, newArrayExpression);
@@ -1621,7 +1629,7 @@ public class ExpressionParser
                 case 0:
                     if (args.Length == 1 && TryGenerateConversion(args[0], type, out generatedExpression))
                     {
-                        return generatedExpression!;
+                        return generatedExpression;
                     }
 
                     throw ParseError(errorPos, Res.NoMatchingConstructor, TypeHelper.GetTypeName(type));
@@ -1640,56 +1648,61 @@ public class ExpressionParser
         return ParseMemberAccess(type, null);
     }
 
-    private bool TryGenerateConversion(Expression sourceExpression, Type type, out Expression? expression)
+    private bool TryGenerateConversion(Expression sourceExpression, Type destinationType, [NotNullWhen(true) ]out Expression? expression)
     {
         Type exprType = sourceExpression.Type;
-        if (exprType == type)
+        if (exprType == destinationType)
         {
             expression = sourceExpression;
             return true;
         }
 
-        if (exprType.GetTypeInfo().IsValueType && type.GetTypeInfo().IsValueType)
+        if (exprType.GetTypeInfo().IsValueType && destinationType.GetTypeInfo().IsValueType)
         {
-            if ((TypeHelper.IsNullableType(exprType) || TypeHelper.IsNullableType(type)) && TypeHelper.GetNonNullableType(exprType) == TypeHelper.GetNonNullableType(type))
+            if ((TypeHelper.IsNullableType(exprType) || TypeHelper.IsNullableType(destinationType)) && TypeHelper.GetNonNullableType(exprType) == TypeHelper.GetNonNullableType(destinationType))
             {
-                expression = Expression.Convert(sourceExpression, type);
+                expression = Expression.Convert(sourceExpression, destinationType);
                 return true;
             }
 
-            if ((TypeHelper.IsNumericType(exprType) || TypeHelper.IsEnumType(exprType)) && TypeHelper.IsNumericType(type) || TypeHelper.IsEnumType(type))
+            if ((TypeHelper.IsNumericType(exprType) || TypeHelper.IsEnumType(exprType)) && TypeHelper.IsNumericType(destinationType) || TypeHelper.IsEnumType(destinationType))
             {
-                expression = Expression.ConvertChecked(sourceExpression, type);
+                expression = Expression.ConvertChecked(sourceExpression, destinationType);
                 return true;
             }
         }
 
-        if (exprType.IsAssignableFrom(type) || type.IsAssignableFrom(exprType) || exprType.GetTypeInfo().IsInterface || type.GetTypeInfo().IsInterface)
+        if (exprType.IsAssignableFrom(destinationType) || destinationType.IsAssignableFrom(exprType) || exprType.GetTypeInfo().IsInterface || destinationType.GetTypeInfo().IsInterface)
         {
-            expression = Expression.Convert(sourceExpression, type);
+            expression = Expression.Convert(sourceExpression, destinationType);
             return true;
         }
 
         // Try to Parse the string rather than just generate the convert statement
-        if (sourceExpression.NodeType == ExpressionType.Constant && exprType == typeof(string))
+        if (sourceExpression is ConstantExpression { Value: string constantStringValue })
         {
-            string text = (string)((ConstantExpression)sourceExpression).Value;
-
-            var typeConvertor = _typeConverterFactory.GetConverter(type);
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-            if (typeConvertor != null && typeConvertor.CanConvertFrom(typeof(string)))
+            var typeConvertor = _typeConverterFactory.GetConverter(destinationType);
+            if (typeConvertor.CanConvertFrom(typeof(string)))
             {
-                var value = typeConvertor.ConvertFromInvariantString(text);
-                expression = Expression.Constant(value, type);
+                var value = typeConvertor.ConvertFromInvariantString(constantStringValue);
+                expression = Expression.Constant(value, destinationType);
                 return true;
             }
         }
 
         // Check if there are any explicit conversion operators on the source type which fit the requirement (cast to the return type).
-        bool explicitOperatorAvailable = exprType.GetTypeInfo().GetDeclaredMethods("op_Explicit").Any(m => m.ReturnType == type);
+        bool explicitOperatorAvailable = exprType.GetTypeInfo().GetDeclaredMethods("op_Explicit").Any(m => m.ReturnType == destinationType);
         if (explicitOperatorAvailable)
         {
-            expression = Expression.Convert(sourceExpression, type);
+            expression = Expression.Convert(sourceExpression, destinationType);
+            return true;
+        }
+
+        // Try to find a destinationType.Parse(...) method for the specific sourceExpression Type.
+        var parseMethod = destinationType.GetMethod("Parse", new Type[] { sourceExpression.Type });
+        if (parseMethod != null)
+        {
+            expression = Expression.Call(parseMethod, sourceExpression);
             return true;
         }
 
@@ -1788,7 +1801,7 @@ public class ExpressionParser
         if (type == typeof(object))
         {
             // The member is a dynamic or ExpandoObject, so convert this
-            return _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(expression, type, id);
+            return _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(expression!, type, id);
         }
 #endif
         // Parse as Lambda
@@ -1798,7 +1811,7 @@ public class ExpressionParser
         }
 
         // This could be enum like "A.B.C.MyEnum.Value1" or "A.B.C+MyEnum.Value1"
-        if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+        if (_textParser.CurrentToken.Id is TokenId.Dot or TokenId.Plus)
         {
             return ParseAsEnum(id);
         }
