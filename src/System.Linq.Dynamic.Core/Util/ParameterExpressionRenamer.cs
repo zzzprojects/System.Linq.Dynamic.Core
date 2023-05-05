@@ -29,11 +29,8 @@ internal class ParameterExpressionRenamer : ExpressionVisitor
     /// <param name="newName">The new name.</param>
     public ParameterExpressionRenamer(string oldName, string newName)
     {
-        Check.NotNull(oldName);
-        Check.NotEmpty(newName);
-
-        _oldName = oldName;
-        _newName = newName;
+        _oldName = Check.NotNull(oldName);
+        _newName = Check.NotEmpty(newName);
     }
 
     /// <summary>
