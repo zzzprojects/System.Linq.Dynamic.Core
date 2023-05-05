@@ -1974,7 +1974,9 @@ public class ExpressionParser
             }
         }
 
-        return Expression.Call(callType, methodName, typeArgs, args);
+        var ee = Expression.Call(callType, methodName, typeArgs, args);
+
+        return ee;
     }
 
     private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression, int? arguments = null)
