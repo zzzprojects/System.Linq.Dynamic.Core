@@ -98,10 +98,6 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
             {
                 definedTypes = assembly.GetExportedTypes();
             }
-            catch (ReflectionTypeLoadException reflectionTypeLoadException)
-            {
-                definedTypes = reflectionTypeLoadException.Types.WhereNotNull().ToArray();
-            }
             catch
             {
                 // Ignore all other exceptions
