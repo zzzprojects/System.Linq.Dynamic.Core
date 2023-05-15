@@ -83,76 +83,34 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
     /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
     /// </summary>
     /// <param name="assemblies">The assemblies to process.</param>
-    /// <returns><see cref="IEnumerable{Type}" /></returns>
-    protected IEnumerable<Type> GetAssemblyTypesWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
+    /// <returns>Array of <see cref="Type" /></returns>
+    protected Type[] GetAssemblyTypesWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
     {
         Check.NotNull(assemblies);
 
+        var dynamicLinqTypes = new List<Type>();
+
         foreach (var assembly in assemblies)
         {
-            var definedTypes = Type.EmptyTypes;
+            Type[] definedTypes;
 
             try
             {
-                definedTypes = assembly.ExportedTypes.ToArray();
-            }
-            catch (ReflectionTypeLoadException reflectionTypeLoadException)
-            {
-                definedTypes = reflectionTypeLoadException.Types.WhereNotNull().ToArray();
+                definedTypes = assembly.GetExportedTypes();
             }
             catch
             {
                 // Ignore all other exceptions
+                definedTypes = Type.EmptyTypes;
             }
 
-            var filteredAndDistinct = definedTypes
-                .Where(t => t.GetTypeInfo().IsDefined(typeof(DynamicLinqTypeAttribute), false))
-                .Distinct();
-
-            foreach (var definedType in filteredAndDistinct)
-            {
-                yield return definedType;
-            }
-        }
-    }
-#else                
-    /// <summary>
-    /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
-    /// </summary>
-    /// <param name="assemblies">The assemblies to process.</param>
-    /// <returns><see cref="IEnumerable{Type}" /></returns>
-    protected IEnumerable<Type> GetAssemblyTypesWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
-    {
-        Check.NotNull(assemblies);
-
-#if !NET5_0_OR_GREATER
-        assemblies = assemblies.Where(a => !a.GlobalAssemblyCache).ToArray(); // Skip System DLL's
-#endif
-        foreach (var assembly in assemblies)
-        {
-            var definedTypes = Type.EmptyTypes;
-
-            try
-            {
-                definedTypes = assembly.GetExportedTypes().ToArray();
-            }
-            catch (ReflectionTypeLoadException reflectionTypeLoadException)
-            {
-                definedTypes = reflectionTypeLoadException.Types.WhereNotNull().ToArray();
-            }
-            catch
-            {
-                // Ignore all other exceptions
-            }
-
-            var filtered = new List<Type>();
             foreach (var definedType in definedTypes)
             {
                 try
                 {
-                    if (definedType.IsDefined(typeof(DynamicLinqTypeAttribute), false))
+                    if (definedType.GetTypeInfo().IsDefined(typeof(DynamicLinqTypeAttribute), false))
                     {
-                        filtered.Add(definedType);
+                        dynamicLinqTypes.Add(definedType);
                     }
                 }
                 catch
@@ -160,12 +118,60 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
                     // Ignore
                 }
             }
+        }
 
-            foreach (var definedType in filtered.Distinct().ToArray())
+        return dynamicLinqTypes.Distinct().ToArray();
+    }
+#else                
+    /// <summary>
+    /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
+    /// </summary>
+    /// <param name="assemblies">The assemblies to process.</param>
+    /// <returns>Array of <see cref="Type" /></returns>
+    protected Type[] GetAssemblyTypesWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
+    {
+        Check.NotNull(assemblies);
+
+        var dynamicLinqTypes = new List<Type>();
+
+#if !NET5_0_OR_GREATER
+        assemblies = assemblies.Where(a => !a.GlobalAssemblyCache).ToArray(); // Skip System DLL's
+#endif
+        foreach (var assembly in assemblies)
+        {
+            Type[] definedTypes;
+
+            try
             {
-                yield return definedType;
+                definedTypes = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException reflectionTypeLoadException)
+            {
+                definedTypes = reflectionTypeLoadException.Types.WhereNotNull().ToArray();
+            }
+            catch
+            {
+                // Ignore all other exceptions
+                definedTypes = Type.EmptyTypes;
+            }
+
+            foreach (var definedType in definedTypes)
+            {
+                try
+                {
+                    if (definedType.IsDefined(typeof(DynamicLinqTypeAttribute), false))
+                    {
+                        dynamicLinqTypes.Add(definedType);
+                    }
+                }
+                catch
+                {
+                    // Ignore
+                }
             }
         }
+
+        return dynamicLinqTypes.Distinct().ToArray();
     }
 #endif
 }
