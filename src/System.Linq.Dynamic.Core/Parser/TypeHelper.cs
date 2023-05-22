@@ -417,6 +417,12 @@ namespace System.Linq.Dynamic.Core.Parser
             return name;
         }
 
+        public static Type GetNullableType(Type type)
+        {
+            type = Nullable.GetUnderlyingType(type) ?? type;
+            return type.GetTypeInfo().IsValueType ? typeof(Nullable<>).MakeGenericType(type) : type;
+        }
+
         public static Type GetNonNullableType(Type type)
         {
             Check.NotNull(type, nameof(type));

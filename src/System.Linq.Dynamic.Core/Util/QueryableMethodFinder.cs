@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Util;
@@ -13,8 +15,16 @@ internal static class QueryableMethodFinder
     public static MethodInfo GetMethod(string name, Type argumentType, Type returnType, int parameterCount = 0, Func<MethodInfo, bool>? predicate = null) =>
         GetMethod(name, returnType, parameterCount, mi => mi.ToString().Contains(argumentType.ToString()) && ((predicate == null) || predicate(mi)));
 
-    public static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool>? predicate = null) =>
-        GetMethod(name, parameterCount, mi => (mi.ReturnType == returnType) && ((predicate == null) || predicate(mi)));
+    public static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool>? predicate = null)
+    {
+        var returnTypes = new List<Type> { returnType };
+        if (!TypeHelper.IsNullableType(returnType))
+        {
+            returnTypes.Add(TypeHelper.GetNullableType(returnType));
+        }
+
+        return GetMethod(name, parameterCount, mi => returnTypes.Contains(mi.ReturnType) && (predicate == null || predicate(mi)));
+    }
 
     public static MethodInfo GetMethodWithExpressionParameter(string name) =>
         GetMethod(name, 1, mi =>
@@ -35,7 +45,7 @@ internal static class QueryableMethodFinder
     {
         try
         {
-            return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi =>
+            return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).First(mi =>
                 mi.GetParameters().Length == parameterCount + 1 && (predicate == null || predicate(mi)));
         }
         catch (Exception ex)
