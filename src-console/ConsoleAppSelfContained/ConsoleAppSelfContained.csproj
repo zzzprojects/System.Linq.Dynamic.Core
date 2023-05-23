@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework> <!-- net6.0 -->
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained> <!-- false -->
+       
+        <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+        <PublishTrimmed>true</PublishTrimmed>
+
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <ILLinkTreatWarningsAsErrors>false</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+
+        <TrimMode>partial</TrimMode>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <TrimmableAssembly Remove="System.ComponentModel.TypeConverter" />
+        <!--<TrimmerRootAssembly Include="System.ComponentModel.TypeConverter" />-->
+    </ItemGroup>
+
+
+    <!--<ItemGroup>
+      <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+    </ItemGroup>-->
+
+    <ItemGroup>
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.2" />
+    </ItemGroup>
+
+</Project>

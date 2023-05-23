@@ -86,4 +86,9 @@
         <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.1.0" />
     </ItemGroup>
+
+    <!-- System.IO.FileNotFoundException: Could not load file or assembly 'System.ComponentModel.TypeConverter, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. -->
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
+        <!--<PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />-->
+    </ItemGroup>
 </Project>
