@@ -4,7 +4,7 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser;
 
-internal class PredefinedTypesHelperTests
+public class PredefinedTypesHelperTests
 {
     [Fact]
     public void IsPredefinedType_ShouldReturnFalse_ForNonPredefinedTypes()
