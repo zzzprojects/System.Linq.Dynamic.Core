@@ -2,7 +2,6 @@
 using FluentAssertions;
 using NFluent;
 using Xunit;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
 {
@@ -191,7 +190,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             // Act
             var status = Status.Active;
-            var result = queryable.Where("@0.HasFlag(it)", status).ToDynamicArray<Status>(); // I believe Enum.HasFlag() is triggering the error.
+            var result = queryable.Where("@0.HasFlag(it)", status).ToDynamicArray<Status>();
 
             // Assert
             result.Should().HaveCount(2);
