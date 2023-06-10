@@ -23,7 +23,8 @@ internal static class PredefinedTypesHelper
         { "float", typeof(float) }
     };
 
-    public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> {
+    public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> 
+    {
         { typeof(object), 0 },
         { typeof(bool), 0 },
         { typeof(char), 0 },
@@ -46,6 +47,7 @@ internal static class PredefinedTypesHelper
         { typeof(Math), 0 },
         { typeof(Convert), 0 },
         { typeof(Uri), 0 },
+        { typeof(Enum), 0 },
 #if NET6_0_OR_GREATER
         { typeof(DateOnly), 0 },
         { typeof(TimeOnly), 0 }
