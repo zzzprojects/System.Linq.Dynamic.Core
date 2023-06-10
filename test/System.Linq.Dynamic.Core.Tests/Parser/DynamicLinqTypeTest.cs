@@ -1,4 +1,5 @@
 ﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
+using FluentAssertions;
 using NFluent;
 using Xunit;
 
@@ -49,6 +50,18 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         {
             public string[] Values { get; set; }
             public int ValueInt { get; set; }
+        }
+
+        [Flags]
+        public enum Status
+        {
+            Inactive = 0,
+
+            Active = 1,
+
+            Other = 2,
+
+            ActiveOther = 3
         }
 
 
@@ -167,6 +180,20 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             Check.That(result.Count).Equals(2);
             Check.That(result[0]).Equals(6);
             Check.That(result[1]).Equals(7);
+        }
+
+        [Fact]
+        public void CallMethodOnEnum()
+        {
+            // Arrange
+            var queryable = new[] { Status.Active, Status.ActiveOther, Status.Inactive }.AsQueryable();
+
+            // Act
+            var status = Status.Active;
+            var result = queryable.Where("@0.HasFlag(it)", status).ToDynamicArray<Status>();
+
+            // Assert
+            result.Should().HaveCount(2);
         }
     }
 }
