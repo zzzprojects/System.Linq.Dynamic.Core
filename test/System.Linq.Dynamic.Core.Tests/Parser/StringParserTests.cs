@@ -48,13 +48,17 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void StringParser_With_UnexpectedUnrecognizedEscapeSequence_ThrowsException()
         {
             // Arrange
-            string input = new string(new[] { '"', '\\', 'u', '?', '"' });
+            var input = new string(new[] { '"', '\\', 'u', '?', '"' });
 
             // Act
             Action action = () => StringParser.ParseString(input);
 
             // Assert
-            action.Should().Throw<ParseException>();
+            var parseException = action.Should().Throw<ParseException>();
+
+            parseException.Which.InnerException!.Message.Should().Contain("Insufficient hexadecimal digits");
+
+            parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseString(String s) in ").And.Contain("System.Linq.Dynamic.Core\\Parser\\StringParser.cs:line ");
         }
 
         [Theory]
@@ -65,7 +69,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void StringParser_Parse_SingleQuotedString(string input, string expectedResult)
         {
             // Act
-            string result = StringParser.ParseString(input);
+            var result = StringParser.ParseString(input);
 
             // Assert
             result.Should().Be(expectedResult);
@@ -92,7 +96,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void StringParser_Parse_DoubleQuotedString(string input, string expectedResult)
         {
             // Act
-            string result = StringParser.ParseString(input);
+            var result = StringParser.ParseString(input);
 
             // Assert
             result.Should().Be(expectedResult);

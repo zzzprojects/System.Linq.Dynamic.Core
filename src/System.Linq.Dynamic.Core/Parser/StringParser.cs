@@ -34,7 +34,7 @@ namespace System.Linq.Dynamic.Core.Parser
             }
             catch (Exception ex)
             {
-                throw new ParseException(ex.Message, 0);
+                throw new ParseException(ex.Message, 0, ex);
             }
         }
     }
