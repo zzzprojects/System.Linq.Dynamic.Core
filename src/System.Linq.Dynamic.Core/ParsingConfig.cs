@@ -220,4 +220,11 @@ public class ParsingConfig
     /// Default value is <c>true</c>.
     /// </summary>
     public bool PrioritizePropertyOrFieldOverTheType { get; set; } = true;
+
+    /// <summary>
+    /// Support a "." in a property-name. Used in the 'new (a.b as a.b)' syntax.
+    /// 
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool SupportDotInPropertyNames { get; set; } = false;
 }

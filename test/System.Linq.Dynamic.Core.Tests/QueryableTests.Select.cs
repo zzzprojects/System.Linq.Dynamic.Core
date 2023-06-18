@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using FluentAssertions;
 using Linq.PropertyTranslator.Core;
 using QueryInterceptor.Core;
 using Xunit;
@@ -84,6 +85,23 @@ namespace System.Linq.Dynamic.Core.Tests
             var dynamic = queryable.Select<string>("Id");
 
             Assert.Equal(expected.ToArray(), dynamic.ToArray());
+        }
+
+        [Fact]
+        public void Select_Dynamic_As_WithDot()
+        {
+            // Assign
+            var qry = User.GenerateSampleModels(1).AsQueryable();
+            var config = new ParsingConfig
+            {
+                SupportDotInPropertyNames = true
+            };
+
+            // Act
+            var result = qry.Select(config, "new (Profile.FirstName as P.FirstName)").ToDynamicArray();
+
+            // Assert
+            result.Should().HaveCount(1);
         }
 
         [Fact]

@@ -83,6 +83,25 @@ public class DynamicClassFactoryTests
         int lessThan = instance.Compare(b, a);
         lessThan.Should().Be(-1);
     }
+
+    [Fact]
+    public void CreateType_With_PropertyWithDot()
+    {
+        // Arrange
+        var properties = new List<DynamicProperty>
+        {
+            new("x.y", typeof(string))
+        };
+
+        // Act
+        var type = DynamicClassFactory.CreateType(properties);
+
+        // Assert
+        type.GetProperty("x.y").Should().NotBeNull();
+
+        var instance = Activator.CreateInstance(type);
+        instance.Should().NotBeNull();
+    }
 }
 
 public class CustomCaseInsensitiveComparer : IComparer
