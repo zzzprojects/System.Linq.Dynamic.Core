@@ -1357,8 +1357,7 @@ public class ExpressionParser
                 if (TokenIdentifierIs("as"))
                 {
                     _textParser.NextToken();
-                    propName = GetIdentifier();
-                    _textParser.NextToken();
+                    propName = GetIdentifierAs();
                 }
                 else
                 {
@@ -1648,7 +1647,7 @@ public class ExpressionParser
         return ParseMemberAccess(type, null);
     }
 
-    private bool TryGenerateConversion(Expression sourceExpression, Type destinationType, [NotNullWhen(true) ]out Expression? expression)
+    private bool TryGenerateConversion(Expression sourceExpression, Type destinationType, [NotNullWhen(true)] out Expression? expression)
     {
         Type exprType = sourceExpression.Type;
         if (exprType == destinationType)
@@ -2261,7 +2260,33 @@ public class ExpressionParser
     private string GetIdentifier()
     {
         _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
-        string id = _textParser.CurrentToken.Text;
+
+        return SanitizeId(_textParser.CurrentToken.Text);
+    }
+
+    private string GetIdentifierAs()
+    {
+        _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
+
+        if (!_parsingConfig.SupportDotInPropertyNames)
+        {
+            var id = SanitizeId(_textParser.CurrentToken.Text);
+            _textParser.NextToken();
+            return id;
+        }
+
+        var parts = new List<string>();
+        while (_textParser.CurrentToken.Id is TokenId.Dot or TokenId.Identifier)
+        {
+            parts.Add(_textParser.CurrentToken.Text);
+            _textParser.NextToken();
+        }
+
+        return SanitizeId(string.Concat(parts));
+    }
+
+    private static string SanitizeId(string id)
+    {
         if (id.Length > 1 && id[0] == '@')
         {
             id = id.Substring(1);
