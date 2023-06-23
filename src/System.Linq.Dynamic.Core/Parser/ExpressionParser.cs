@@ -386,7 +386,12 @@ public class ExpressionParser
     private Expression ParseLogicalAndOrOperator()
     {
         Expression left = ParseComparisonOperator();
-        while (_textParser.CurrentToken.Id == TokenId.Ampersand || _textParser.CurrentToken.Id == TokenId.Bar)
+
+        var leftType = left.Type;
+        var typesAreSame = true;
+        var numberOfArguments = 0;
+
+        while (_textParser.CurrentToken.Id is TokenId.Ampersand or TokenId.Bar)
         {
             Token op = _textParser.CurrentToken;
             _textParser.NextToken();
@@ -422,17 +427,26 @@ public class ExpressionParser
                     }
                     else
                     {
-                        _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
+                        typesAreSame &= _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                         left = Expression.And(left, right);
                     }
                     break;
 
                 case TokenId.Bar:
-                    _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
+                    typesAreSame &= _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                     left = Expression.Or(left, right);
                     break;
             }
+
+            numberOfArguments++;
         }
+
+        // #695
+        if (numberOfArguments > 0 && typesAreSame && leftType.GetTypeInfo().IsEnum)
+        {
+            return Expression.Convert(left, leftType);
+        }
+
         return left;
     }
 

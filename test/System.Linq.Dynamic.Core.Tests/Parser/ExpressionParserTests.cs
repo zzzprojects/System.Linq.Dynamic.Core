@@ -17,6 +17,17 @@ public partial class ExpressionParserTests
 
     private readonly ParsingConfig _parsingConfig;
 
+    [Flags]
+    public enum ExampleFlags
+    {
+        None = 0,
+        A = 1,
+        B = 2,
+        C = 4,
+        D = 8,
+    };
+
+
     public ExpressionParserTests()
     {
         _dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
@@ -30,6 +41,126 @@ public partial class ExpressionParserTests
         {
             CustomTypeProvider = _dynamicTypeProviderMock.Object
         };
+    }
+
+    [Fact]
+    public void Parse_BitwiseOperatorOr_On_2EnumFlags()
+    {
+        // Arrange
+        var expression = "@0 | @1";
+#if NET452
+        var expected = "Convert((Convert(A) | Convert(B)))";
+#else
+        var expected = "Convert((Convert(A, Int32) | Convert(B, Int32)), ExampleFlags)";
+#endif
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B }, null);
+
+        // Act
+        var parsedExpression = sut.Parse(null).ToString();
+
+        // Assert
+        parsedExpression.Should().Be(expected);
+
+        // Arrange
+        var query = new[] { 0 }.AsQueryable();
+
+        // Act
+        var result = query.Select(expression, ExampleFlags.A, ExampleFlags.B).First();
+
+        // Assert
+        Assert.IsType<ExampleFlags>(result);
+        Assert.Equal(ExampleFlags.A | ExampleFlags.B, result);
+    }
+
+    [Fact]
+    public void Parse_BitwiseOperatorAnd_On_2EnumFlags()
+    {
+        // Arrange
+        var expression = "@0 & @1";
+#if NET452
+        var expected = "Convert((Convert(A) & Convert(B)))";
+#else
+        var expected = "Convert((Convert(A, Int32) & Convert(B, Int32)), ExampleFlags)";
+#endif
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B }, null);
+
+        // Act
+        var parsedExpression = sut.Parse(null).ToString();
+
+        // Assert
+        parsedExpression.Should().Be(expected);
+
+        // Arrange
+        var query = new[] { 0 }.AsQueryable();
+
+        // Act
+        var result = query.Select(expression, ExampleFlags.A, ExampleFlags.B).First();
+
+        // Assert
+        Assert.IsType<ExampleFlags>(result);
+        Assert.Equal(ExampleFlags.A & ExampleFlags.B, result);
+    }
+
+    [Fact]
+    public void Parse_BitwiseOperatorOr_On_3EnumFlags()
+    {
+        // Arrange
+        var expression = "@0 | @1 | @2";
+#if NET452
+        var expected = "Convert(((Convert(A) | Convert(B)) | Convert(C)))";
+#else
+        var expected = "Convert(((Convert(A, Int32) | Convert(B, Int32)) | Convert(C, Int32)), ExampleFlags)";
+#endif
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B, ExampleFlags.C }, null);
+
+        // Act
+        var parsedExpression = sut.Parse(null).ToString();
+
+        // Assert
+        parsedExpression.Should().Be(expected);
+
+        // Arrange
+        var query = new[] { 0 }.AsQueryable();
+
+        // Act
+        var result = query.Select(expression, ExampleFlags.A, ExampleFlags.B, ExampleFlags.C).First();
+
+        // Assert
+        Assert.IsType<ExampleFlags>(result);
+        Assert.Equal(ExampleFlags.A | ExampleFlags.B | ExampleFlags.C, result);
+    }
+
+    [Fact]
+    public void Parse_BitwiseOperatorAnd_On_3EnumFlags()
+    {
+        // Arrange
+        var expression = "@0 & @1 & @2";
+#if NET452
+        var expected = "Convert(((Convert(A) & Convert(B)) & Convert(C)))";
+#else
+        var expected = "Convert(((Convert(A, Int32) & Convert(B, Int32)) & Convert(C, Int32)), ExampleFlags)";
+#endif
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B, ExampleFlags.C }, null);
+
+        // Act
+        var parsedExpression = sut.Parse(null).ToString();
+
+        // Assert
+        parsedExpression.Should().Be(expected);
+
+        // Arrange
+        var query = new[] { 0 }.AsQueryable();
+
+        // Act
+        var result = query.Select(expression, ExampleFlags.A, ExampleFlags.B, ExampleFlags.C).First();
+
+        // Assert
+        Assert.IsType<ExampleFlags>(result);
+        Assert.Equal(ExampleFlags.A & ExampleFlags.B & ExampleFlags.C, result);
     }
 
     [Fact]

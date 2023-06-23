@@ -71,11 +71,11 @@ internal class ExpressionHelper : IExpressionHelper
         return false;
     }
 
-    public void ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right)
+    public bool ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right)
     {
         if (left.Type == right.Type)
         {
-            return;
+            return true;
         }
 
         if (left.Type == typeof(ulong) || right.Type == typeof(ulong))
@@ -113,6 +113,8 @@ internal class ExpressionHelper : IExpressionHelper
             right = right.Type != typeof(byte) ? Expression.Convert(right, typeof(byte)) : right;
             left = left.Type != typeof(byte) ? Expression.Convert(left, typeof(byte)) : left;
         }
+
+        return false;
     }
 
     public Expression GenerateAdd(Expression left, Expression right)
