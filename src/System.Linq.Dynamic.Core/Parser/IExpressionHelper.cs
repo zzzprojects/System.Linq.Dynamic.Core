@@ -5,7 +5,7 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal interface IExpressionHelper
 {
-    void ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right);
+    bool ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref Expression left, ref Expression right);
 
     Expression GenerateAdd(Expression left, Expression right);
 
