@@ -48,6 +48,11 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "@0 | @1";
+#if NET452
+        var expected = "Convert((Convert(A) | Convert(B)))";
+#else
+        var expected = "Convert((Convert(A, Int32) | Convert(B, Int32)), ExampleFlags)";
+#endif
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
         var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B }, null);
 
@@ -55,7 +60,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        parsedExpression.Should().Be("Convert((Convert(A, Int32) | Convert(B, Int32)), ExampleFlags)");
+        parsedExpression.Should().Be(expected);
 
         // Arrange
         var query = new[] { 0 }.AsQueryable();
@@ -73,6 +78,11 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "@0 & @1";
+#if NET452
+        var expected = "Convert((Convert(A) & Convert(B)))";
+#else
+        var expected = "Convert((Convert(A, Int32) & Convert(B, Int32)), ExampleFlags)";
+#endif
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
         var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B }, null);
 
@@ -80,7 +90,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        parsedExpression.Should().Be("Convert((Convert(A, Int32) & Convert(B, Int32)), ExampleFlags)");
+        parsedExpression.Should().Be(expected);
 
         // Arrange
         var query = new[] { 0 }.AsQueryable();
@@ -98,6 +108,11 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "@0 | @1 | @2";
+#if NET452
+        var expected = "Convert(((Convert(A) | Convert(B)) | Convert(C)))";
+#else
+        var expected = "Convert(((Convert(A, Int32) | Convert(B, Int32)) | Convert(C, Int32)), ExampleFlags)";
+#endif
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
         var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B, ExampleFlags.C }, null);
 
@@ -105,7 +120,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        parsedExpression.Should().Be("Convert(((Convert(A, Int32) | Convert(B, Int32)) | Convert(C, Int32)), ExampleFlags)");
+        parsedExpression.Should().Be(expected);
 
         // Arrange
         var query = new[] { 0 }.AsQueryable();
@@ -123,6 +138,11 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "@0 & @1 & @2";
+#if NET452
+        var expected = "Convert(((Convert(A) & Convert(B)) & Convert(C)))";
+#else
+        var expected = "Convert(((Convert(A, Int32) & Convert(B, Int32)) & Convert(C, Int32)), ExampleFlags)";
+#endif
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
         var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B, ExampleFlags.C }, null);
 
@@ -130,7 +150,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        parsedExpression.Should().Be("Convert(((Convert(A, Int32) & Convert(B, Int32)) & Convert(C, Int32)), ExampleFlags)");
+        parsedExpression.Should().Be(expected);
 
         // Arrange
         var query = new[] { 0 }.AsQueryable();
