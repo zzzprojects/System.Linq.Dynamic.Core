@@ -387,12 +387,9 @@ public class ExpressionParser
     {
         Expression left = ParseComparisonOperator();
 
-        //var numberOf
-        //var numberOfSameEnums = 0;
-        
-        //var enumDictionary = new Dictionary<Type, bool>();
-
-        Type leftEnumType = typeof(object);
+        var leftType = left.Type;
+        var typesAreSame = true;
+        var numberOfArguments = 0;
 
         while (_textParser.CurrentToken.Id is TokenId.Ampersand or TokenId.Bar)
         {
@@ -400,20 +397,15 @@ public class ExpressionParser
             _textParser.NextToken();
             Expression right = ParseComparisonOperator();
 
-            bool leftIsEnum = left.Type.GetTypeInfo().IsEnum;
-            if (leftIsEnum)
+            if (left.Type.GetTypeInfo().IsEnum)
             {
-                leftEnumType = left.Type;
                 left = Expression.Convert(left, Enum.GetUnderlyingType(left.Type));
             }
 
-            bool rightIsEnum = right.Type.GetTypeInfo().IsEnum;
-            if (rightIsEnum)
+            if (right.Type.GetTypeInfo().IsEnum)
             {
                 right = Expression.Convert(right, Enum.GetUnderlyingType(right.Type));
             }
-
-            bool typesAreSame = false;
 
             switch (op.Id)
             {
@@ -435,21 +427,24 @@ public class ExpressionParser
                     }
                     else
                     {
-                        typesAreSame = _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
+                        typesAreSame &= _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                         left = Expression.And(left, right);
                     }
                     break;
 
                 case TokenId.Bar:
-                    typesAreSame = _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
+                    typesAreSame &= _expressionHelper.ConvertNumericTypeToBiggestCommonTypeForBinaryOperator(ref left, ref right);
                     left = Expression.Or(left, right);
                     break;
             }
 
-            if (leftIsEnum && rightIsEnum && typesAreSame)
-            {
-                left = Expression.Convert(left, leftEnumType);
-            }
+            numberOfArguments++;
+        }
+
+        // #695
+        if (numberOfArguments > 0 && typesAreSame && leftType.GetTypeInfo().IsEnum)
+        {
+            return Expression.Convert(left, leftType);
         }
 
         return left;

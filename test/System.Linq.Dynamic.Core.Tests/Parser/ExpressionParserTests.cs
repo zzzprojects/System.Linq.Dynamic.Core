@@ -44,7 +44,7 @@ public partial class ExpressionParserTests
     }
 
     [Fact]
-    public void Parse_BitwiseOperator_On_2EnumFlags()
+    public void Parse_BitwiseOperatorOr_On_2EnumFlags()
     {
         // Arrange
         var expression = "@0 | @1";
@@ -69,7 +69,32 @@ public partial class ExpressionParserTests
     }
 
     [Fact]
-    public void Parse_BitwiseOperator_On_3EnumFlags()
+    public void Parse_BitwiseOperatorAnd_On_2EnumFlags()
+    {
+        // Arrange
+        var expression = "@0 & @1";
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B }, null);
+
+        // Act
+        var parsedExpression = sut.Parse(null).ToString();
+
+        // Assert
+        parsedExpression.Should().Be("Convert((Convert(A, Int32) & Convert(B, Int32)), ExampleFlags)");
+
+        // Arrange
+        var query = new[] { 0 }.AsQueryable();
+
+        // Act
+        var result = query.Select(expression, ExampleFlags.A, ExampleFlags.B).First();
+
+        // Assert
+        Assert.IsType<ExampleFlags>(result);
+        Assert.Equal(ExampleFlags.A & ExampleFlags.B, result);
+    }
+
+    [Fact]
+    public void Parse_BitwiseOperatorOr_On_3EnumFlags()
     {
         // Arrange
         var expression = "@0 | @1 | @2";
@@ -80,7 +105,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        parsedExpression.Should().Be("Convert((Convert(Convert((Convert(A, Int32) | Convert(B, Int32)), ExampleFlags), Int32) | Convert(C, Int32)), ExampleFlags)");
+        parsedExpression.Should().Be("Convert(((Convert(A, Int32) | Convert(B, Int32)) | Convert(C, Int32)), ExampleFlags)");
 
         // Arrange
         var query = new[] { 0 }.AsQueryable();
@@ -91,6 +116,31 @@ public partial class ExpressionParserTests
         // Assert
         Assert.IsType<ExampleFlags>(result);
         Assert.Equal(ExampleFlags.A | ExampleFlags.B | ExampleFlags.C, result);
+    }
+
+    [Fact]
+    public void Parse_BitwiseOperatorAnd_On_3EnumFlags()
+    {
+        // Arrange
+        var expression = "@0 & @1 & @2";
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B, ExampleFlags.C }, null);
+
+        // Act
+        var parsedExpression = sut.Parse(null).ToString();
+
+        // Assert
+        parsedExpression.Should().Be("Convert(((Convert(A, Int32) & Convert(B, Int32)) & Convert(C, Int32)), ExampleFlags)");
+
+        // Arrange
+        var query = new[] { 0 }.AsQueryable();
+
+        // Act
+        var result = query.Select(expression, ExampleFlags.A, ExampleFlags.B, ExampleFlags.C).First();
+
+        // Assert
+        Assert.IsType<ExampleFlags>(result);
+        Assert.Equal(ExampleFlags.A & ExampleFlags.B & ExampleFlags.C, result);
     }
 
     [Fact]
