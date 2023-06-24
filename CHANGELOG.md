@@ -1,3 +1,16 @@
+# v1.3.3 (24 June 2023)
+- [#686](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/686) - Add support for casting a string to another type (e.g. int) for Linq2Objects [feature] contributed by [StefH](https://github.com/StefH)
+- [#703](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/703) -  Update logic for AbstractDynamicLinqCustomTypeProvider.GetAssemblyTypesWithDynamicLinqTypeAttribute [feature] contributed by [StefH](https://github.com/StefH)
+- [#704](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/704) - Fix Average to support nullable types [bug] contributed by [StefH](https://github.com/StefH)
+- [#714](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/714) - Add support for methods on Enum [feature] contributed by [StefH](https://github.com/StefH)
+- [#717](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/717) - Extend ParseException with InnerException and StackTrace [feature] contributed by [StefH](https://github.com/StefH)
+- [#719](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/719) - SupportDotInPropertyNames [feature] contributed by [StefH](https://github.com/StefH)
+- [#720](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/720) - Fixed result value for bitwise operators when using enums [bug] contributed by [StefH](https://github.com/StefH)
+- [#695](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/695) - Flags enum with bitwise operator returns as int; should be the enum type [bug]
+- [#696](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/696) - Methods on type 'Enum' are not accessible. [bug]
+- [#700](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/700) - Dynamic Average does not support nullable types [bug]
+- [#716](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/716) - ParseException ToString() does not contain stack trace [feature]
+
 # v1.3.2 (01 April 2023)
 - [#679](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/679) - Add some tests for DynamicClass with System.Text.Json [test] contributed by [StefH](https://github.com/StefH)
 - [#685](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/685) - Add test for DynamicExpressionParser string with a dot [test] contributed by [StefH](https://github.com/StefH)
