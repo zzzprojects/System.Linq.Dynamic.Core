@@ -2013,16 +2013,20 @@ public class ExpressionParser
                 return ResolveTypeFromExpressionValue(functionName, constantExpression, argument);
 
             case MemberExpression memberExpression:
-                _expressionHelper.TryUnwrapAsConstantExpression(memberExpression, out var unwrappedConstantExpression);
-                return ResolveTypeFromExpressionValue(functionName, unwrappedConstantExpression, argument);
-            default:
-                throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresNotNullArgOfType, functionName, argument, "ConstantExpression");
+                if (_expressionHelper.TryUnwrapAsConstantExpression(memberExpression, out var unwrappedConstantExpression))
+                {
+                    return ResolveTypeFromExpressionValue(functionName, unwrappedConstantExpression, argument);
+                }
+
+                break;
         }
+
+        throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresNotNullArgOfType, functionName, argument, "ConstantExpression");
     }
 
-    private Type ResolveTypeFromExpressionValue(string functionName, ConstantExpression? constantExpression, string argument)
+    private Type ResolveTypeFromExpressionValue(string functionName, ConstantExpression constantExpression, string argument)
     {
-        switch (constantExpression?.Value)
+        switch (constantExpression.Value)
         {
             case string typeName:
                 return ResolveTypeStringFromArgument(typeName);
