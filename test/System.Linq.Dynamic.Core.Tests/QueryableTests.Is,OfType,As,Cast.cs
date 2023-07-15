@@ -66,6 +66,36 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(oftypeDynamic.Length).Equals(oftype.Length);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void OfType_Dynamic_WithFullName_UseParameterizedNamesInDynamicQuery(bool useParameterizedNamesInDynamicQuery)
+        {
+            // Assign
+            var qry = new[]
+            {
+                new CompanyWithBaseEmployees
+                {
+                    Employees = new BaseEmployee[]
+                    {
+                        new Worker { Name = "e" }, new Boss { Name = "e" }
+                    }
+                }
+            }.AsQueryable();
+
+            var parsingConfig = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = useParameterizedNamesInDynamicQuery
+            };
+
+            // Act
+            var oftype = qry.Select(c => c.Employees.OfType<Worker>().Where(e => e.Name == "e")).ToArray();
+            var oftypeDynamic = qry.Select(parsingConfig, "Employees.OfType(\"System.Linq.Dynamic.Core.Tests.Entities.Worker\").Where(Name == \"e\")").ToDynamicArray();
+
+            // Assert
+            Check.That(oftypeDynamic.Length).Equals(oftype.Length);
+        }
+
         internal class Base { }
 
         internal class DerivedA : Base { }
