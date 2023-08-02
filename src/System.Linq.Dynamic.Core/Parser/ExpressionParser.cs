@@ -934,8 +934,10 @@ public class ExpressionParser
         var extraCondition = !_parsingConfig.PrioritizePropertyOrFieldOverTheType ||
                              (_parsingConfig.PrioritizePropertyOrFieldOverTheType 
                                 && !(value is Type 
-                                    && (_it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null)
-                                        || _symbols.ContainsKey(_textParser.CurrentToken.Text))
+                                    && ((_it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null)
+                                        || _symbols.ContainsKey(_textParser.CurrentToken.Text)
+                                        
+                                        ))
 
                                 );
 
