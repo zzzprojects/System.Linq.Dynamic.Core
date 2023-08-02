@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core.Parser
         public const string FUNCTION_AS = "as";
         public const string FUNCTION_CAST = "cast";
 
-        private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+        private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(131, StringComparer.OrdinalIgnoreCase)
         {
             { "true", Expression.Constant(true) },
             { "false", Expression.Constant(false) },
