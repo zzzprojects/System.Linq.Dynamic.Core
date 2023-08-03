@@ -1,3 +1,7 @@
+# v1.3.4 (03 August 2023)
+- [#723](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/723) - Handle UseParameterizedNamesInDynamicQuery when parsing dynamic OfType function contributed by [yonguelink](https://github.com/yonguelink)
+- [#722](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/722) - UseParameterizedNamesInDynamicQuery set to true breaks `OfType` method call
+
 # v1.3.3 (24 June 2023)
 - [#686](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/686) - Add support for casting a string to another type (e.g. int) for Linq2Objects [feature] contributed by [StefH](https://github.com/StefH)
 - [#703](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/703) -  Update logic for AbstractDynamicLinqCustomTypeProvider.GetAssemblyTypesWithDynamicLinqTypeAttribute [feature] contributed by [StefH](https://github.com/StefH)
