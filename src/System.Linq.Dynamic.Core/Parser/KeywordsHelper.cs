@@ -21,15 +21,23 @@ namespace System.Linq.Dynamic.Core.Parser
         public const string FUNCTION_AS = "as";
         public const string FUNCTION_CAST = "cast";
 
-        private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(131, StringComparer.OrdinalIgnoreCase)
-        {
-            { "true", Expression.Constant(true) },
-            { "false", Expression.Constant(false) },
-            { "null", Expression.Constant(null) }
-        };
+        private int _keywordsSize = 74;
+
+        private readonly IDictionary<string, object> _keywords;
 
         public KeywordsHelper(ParsingConfig config)
         {
+            IDictionary<string, Type> predefinedEnumerationTypes = EnumerationsFromMscorlib.PredefinedEnumerationTypes;
+            HashSet<Type> customTypes = config.CustomTypeProvider.GetCustomTypes();
+
+            _keywordsSize += predefinedEnumerationTypes.Count + (2 * customTypes.Count);
+
+            _keywords = new Dictionary<string, object>(_keywordsSize, StringComparer.OrdinalIgnoreCase);
+
+            _keywords.Add("true", Expression.Constant(true));
+            _keywords.Add("false", Expression.Constant(false));
+            _keywords.Add("null", Expression.Constant(null));
+
             if (config.AreContextKeywordsEnabled)
             {
                 _keywords.Add(KEYWORD_IT, KEYWORD_IT);
@@ -65,7 +73,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (config.SupportEnumerationsFromSystemNamespace)
             {
-                foreach (var pair in EnumerationsFromMscorlib.PredefinedEnumerationTypes)
+                foreach (var pair in predefinedEnumerationTypes)
                 {
                     _keywords.Add(pair.Key, pair.Value);
                 }
@@ -73,7 +81,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
             if (config.CustomTypeProvider != null)
             {
-                foreach (Type type in config.CustomTypeProvider.GetCustomTypes())
+                foreach (Type type in customTypes)
                 {
                     _keywords[type.FullName] = type;
                     _keywords[type.Name] = type;
