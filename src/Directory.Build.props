@@ -10,6 +10,7 @@
         <LangVersion>11</LangVersion>
         <Nullable>enable</Nullable>
         <PackageIcon>logo.png</PackageIcon>
+        <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageProjectUrl>https://dynamic-linq.net/</PackageProjectUrl>
         <PackageReleaseNotes>Bugfixes and new Features. For details see CHANGELOG.md</PackageReleaseNotes>
@@ -22,5 +23,6 @@
 
     <ItemGroup>
         <None Include="../../resources/logo.png" Pack="true" PackagePath="" />
+        <None Include="../../PackageReadme.md" Pack="true" PackagePath=""/>
     </ItemGroup>
 </Project>
