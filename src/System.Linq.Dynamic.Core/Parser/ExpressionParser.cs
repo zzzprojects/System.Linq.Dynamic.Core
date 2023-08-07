@@ -74,8 +74,8 @@ public class ExpressionParser
         _keywordsHelper = new KeywordsHelper(_parsingConfig);
         _textParser = new TextParser(_parsingConfig, expression);
         _numberParser = new NumberParser(parsingConfig);
-        _methodFinder = new MethodFinder(_parsingConfig);
         _expressionHelper = new ExpressionHelper(_parsingConfig);
+        _methodFinder = new MethodFinder(_parsingConfig, _expressionHelper);
         _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
         _typeConverterFactory = new TypeConverterFactory(_parsingConfig);
 
@@ -1725,9 +1725,14 @@ public class ExpressionParser
 
     private Expression ParseMemberAccess(Type? type, Expression? expression)
     {
+        var isStaticAccess = false;
         if (expression != null)
         {
             type = expression.Type;
+        }
+        else
+        {
+            isStaticAccess = true;
         }
 
         int errorPos = _textParser.CurrentToken.Pos;
@@ -1736,18 +1741,18 @@ public class ExpressionParser
 
         if (_textParser.CurrentToken.Id == TokenId.OpenParen)
         {
-            if (expression != null && type != typeof(string))
+            if (!isStaticAccess && type != typeof(string))
             {
                 var enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
                 if (enumerableType != null)
                 {
                     Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                    return ParseEnumerable(expression, elementType, id, errorPos, type);
+                    return ParseEnumerable(expression!, elementType, id, errorPos, type);
                 }
             }
 
             Expression[] args = ParseArgumentList();
-            switch (_methodFinder.FindMethod(type, id, expression == null, ref expression, ref args, out var methodBase))
+            switch (_methodFinder.FindMethod(type, id, isStaticAccess, ref expression, ref args, out var methodBase))
             {
                 case 0:
                     throw ParseError(errorPos, Res.NoApplicableMethod, id, TypeHelper.GetTypeName(type));
@@ -1764,9 +1769,10 @@ public class ExpressionParser
                         var genericParameters = method.GetParameters().Where(p => p.ParameterType.IsGenericParameter);
                         var typeArguments = genericParameters.Select(a => args[a.Position].Type);
                         var constructedMethod = method.MakeGenericMethod(typeArguments.ToArray());
+
                         return Expression.Call(expression, constructedMethod, args);
                     }
-
+                    
                     return Expression.Call(expression, method, args);
 
                 default:
