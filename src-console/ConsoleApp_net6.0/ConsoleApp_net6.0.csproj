@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -8,7 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+      <PackageReference Include="CsvHelper" Version="30.0.1" />
+      <PackageReference Include="EPPlus" Version="6.2.7" />
+      <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.10" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.1.8" />
     </ItemGroup>
+
+    <!--<ItemGroup>
+        <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+    </ItemGroup>-->
 
 </Project>

@@ -19,6 +19,9 @@ namespace ConsoleApp_net6._0
     {
         static void Main(string[] args)
         {
+            new TestClass().TestIt();
+            return;
+
             var q = new[]
             {
                 new X { Key = "x" },
