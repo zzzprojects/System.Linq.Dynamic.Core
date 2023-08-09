@@ -1,6 +1,4 @@
-﻿using System.Linq.Dynamic.Core.Parser;
-using System.Linq.Expressions;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser
@@ -11,7 +9,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void ParseMemberAccess_DictionaryIndex_On_Dynamic()
         {
             // Arrange
-            var products = (new ProductDynamic[0]).AsQueryable();
+            var products = new ProductDynamic[0].AsQueryable();
 
             // Act
             var expression = products.Where("Properties.Name == @0", "First Product").Expression;

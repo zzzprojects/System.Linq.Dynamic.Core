@@ -14,12 +14,12 @@ public class ParsingConfig
     /// <summary>
     /// Default ParsingConfig
     /// </summary>
-    public static ParsingConfig Default { get; } = new ParsingConfig();
+    public static ParsingConfig Default { get; } = new();
 
     /// <summary>
     /// Default ParsingConfig for EntityFramework Core 2.1 and higher
     /// </summary>
-    public static ParsingConfig DefaultEFCore21 { get; } = new ParsingConfig
+    public static ParsingConfig DefaultEFCore21 { get; } = new()
     {
         EvaluateGroupByAtDatabase = true
     };
@@ -30,7 +30,7 @@ public class ParsingConfig
     /// <summary>
     /// Default ParsingConfig for CosmosDb
     /// </summary>
-    public static ParsingConfig DefaultCosmosDb { get; } = new ParsingConfig
+    public static ParsingConfig DefaultCosmosDb { get; } = new()
     {
         RenameEmptyParameterExpressionNames = true
     };
@@ -227,4 +227,11 @@ public class ParsingConfig
     /// Default value is <c>false</c>.
     /// </summary>
     public bool SupportDotInPropertyNames { get; set; } = false;
+
+    /// <summary>
+    /// Disallows the New() keyword to be used to construct a class.
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool DisallowNewKeyword { get; set; } = false;
 }
