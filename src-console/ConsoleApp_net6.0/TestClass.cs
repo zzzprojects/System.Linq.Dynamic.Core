@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
-using System.Text.Json.Nodes;
-using CsvHelper.Configuration.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
-using OfficeOpenXml.Attributes;
 
 namespace ConsoleApp_net6._0;
 
@@ -24,37 +21,20 @@ internal class TestClass
             }
         };
 
-        var results = exploits.Select(c => string.Join("\r\n",
-            c.GetType().Assembly.ExportedTypes
-                .SelectMany(type => type.CustomAttributes)
-                .Select(attr => attr.AttributeType.Assembly)
-                .Select(assembly => assembly.FullName))
-        );
-        foreach (var result in results)
-        {
-            Console.WriteLine(result);
-        }
-
-        return;
-
         string userSuppliedColumn = @"
-    c => string.Join(""\r\n"",
-            c.GetType().Assembly.ExportedTypes
-                .SelectMany(type => type.CustomAttributes)
-                .Select(attr => attr.AttributeType.Assembly)
-                .Select(assembly => assembly.FullName))
-    ";
+			c => string.Join(""\r\n"",
+					c.GetType().Assembly.ExportedTypes
+						.SelectMany(type => type.CustomAttributes)
+						.Select(attr => attr.AttributeType.Assembly)
+						.Select(assembly => assembly.FullName))
+			";
 
-        foreach (var e in exploits.AsQueryable().Select(userSuppliedColumn))
+        foreach (var e in exploits.AsQueryable().Select<string>(userSuppliedColumn))
         {
             Console.WriteLine(e);
         }
     }
 
-    [Authorize]
-    [JsonObject]
-    [EpplusTable]
-    [Delimiter(";")]
     public class Customer
     {
         public int Id { get; set; }
@@ -63,8 +43,6 @@ internal class TestClass
 
     [Authorize]
     [JsonObject]
-    [EpplusTable]
-    [Delimiter(";")]
     public class SomethOtherType1
     {
     }
