@@ -46,4 +46,6 @@ internal interface IExpressionHelper
     Expression ConvertToExpandoObjectAndCreateDynamicExpression(Expression expression, Type type, string propertyName);
 
     Expression GenerateDefaultExpression(Type type);
+
+    Expression ConvertAnyArrayToObjectArray(Expression arrayExpression);
 }
