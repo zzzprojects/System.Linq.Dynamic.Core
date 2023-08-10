@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace ConsoleApp_net6._0;
 
-internal class TestClass
+public class TestClass
 {
     public void TestIt()
     {
