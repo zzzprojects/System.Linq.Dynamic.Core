@@ -17,7 +17,7 @@ public class TestClass
             new()
             {
                 Id = 1,
-                Name = "Mariusz"
+                Name = "abc"
             }
         };
 
@@ -29,7 +29,12 @@ public class TestClass
 						.Select(assembly => assembly.FullName))
 			";
 
-        foreach (var e in exploits.AsQueryable().Select<string>(userSuppliedColumn))
+        var config = new ParsingConfig
+        {
+            
+        };
+
+        foreach (var e in exploits.AsQueryable().Select<string>(config, userSuppliedColumn))
         {
             Console.WriteLine(e);
         }
