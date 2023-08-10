@@ -12,9 +12,9 @@ public class TestClass
 {
     public void TestIt()
     {
-        var exploits = new List<Customer>()
+        var exploits = new List<Customer>
         {
-            new Customer()
+            new()
             {
                 Id = 1,
                 Name = "Mariusz"
@@ -43,12 +43,12 @@ public class TestClass
 
     [Authorize]
     [JsonObject]
-    public class SomethOtherType1
+    public class SomeOtherType1
     {
     }
 
     [DynamicLinqType]
-    public class SomethOtherType2
+    public class SomeOtherType2
     {
     }
 }
