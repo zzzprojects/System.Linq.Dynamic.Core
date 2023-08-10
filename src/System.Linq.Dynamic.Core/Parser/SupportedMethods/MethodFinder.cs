@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -7,14 +8,12 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
     internal class MethodFinder
     {
         private readonly ParsingConfig _parsingConfig;
+        private readonly IExpressionHelper _expressionHelper;
 
-        /// <summary>
-        /// Get an instance
-        /// </summary>
-        /// <param name="parsingConfig"></param>
-        public MethodFinder(ParsingConfig parsingConfig)
+        public MethodFinder(ParsingConfig parsingConfig, IExpressionHelper expressionHelper)
         {
-            _parsingConfig = parsingConfig;
+            _parsingConfig = Check.NotNull(parsingConfig);
+            _expressionHelper = Check.NotNull(expressionHelper);
         }
 
         public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression? instance, ref Expression[] args)
@@ -116,7 +115,26 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                     method = methodData.MethodBase;
                 }
 
-                args = methodData.Args;
+                if (args.Length == 0 || args.Length != methodData.Args.Length)
+                {
+                    args = methodData.Args;
+                }
+                else
+                {
+                    for (var i = 0; i < args.Length; i++)
+                    {
+                        if (args[i].Type != methodData.Args[i].Type &&
+                            args[i].Type.IsArray && methodData.Args[i].Type.IsArray &&
+                            args[i].Type != typeof(string) && methodData.Args[i].Type == typeof(object[]))
+                        {
+                            args[i] = _expressionHelper.ConvertAnyArrayToObjectArray(args[i]);
+                        }
+                        else
+                        {
+                            args[i] = methodData.Args[i];
+                        }
+                    }
+                }
             }
             else
             {
@@ -134,7 +152,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 if (members.Length != 0)
                 {
                     IEnumerable<MethodBase> methods = members.OfType<PropertyInfo>().
-#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
+#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
                         Select(p => (MethodBase)p.GetGetMethod()).
                         Where(m => m != null);
 #else

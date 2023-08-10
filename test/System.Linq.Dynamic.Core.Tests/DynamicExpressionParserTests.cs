@@ -1696,6 +1696,69 @@ public class DynamicExpressionParserTests
         isValid.Should().BeTrue();
     }
 
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_HandleStringArray_For_StringJoin()
+    {
+        // Arrange
+        var strArray = new[] { "a", "b", "c" };
+        var parameterExpressions = new List<ParameterExpression>
+        {
+            Expression.Parameter(strArray.GetType(), "strArray")
+        };
+
+        var expression = "string.Join(\",\", strArray)";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(parameterExpressions.ToArray(), null, expression);
+        var @delegate = lambdaExpression.Compile();
+        var result = (string)@delegate.DynamicInvoke(new object[] { strArray });
+
+        // Assert
+        result.Should().Be("a,b,c");
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_HandleObjectArray_For_StringJoin()
+    {
+        // Arrange
+        var objectArray = new object[] { 1, 2, 3 };
+        var parameterExpressions = new List<ParameterExpression>
+        {
+            Expression.Parameter(objectArray.GetType(), "objectArray")
+        };
+
+        var expression = "string.Join(\",\", objectArray)";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(parameterExpressions.ToArray(), null, expression);
+        var @delegate = lambdaExpression.Compile();
+        var result = (string)@delegate.DynamicInvoke(new object[] { objectArray });
+
+        // Assert
+        result.Should().Be("1,2,3");
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_HandleIntArray_For_StringJoin()
+    {
+        // Arrange
+        var intArray = new[] { 1, 2, 3 };
+        var parameterExpressions = new List<ParameterExpression>
+        {
+            Expression.Parameter(intArray.GetType(), "intArray")
+        };
+
+        var expression = "string.Join(\",\", intArray)";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(parameterExpressions.ToArray(), null, expression);
+        var @delegate = lambdaExpression.Compile();
+        var result = (string)@delegate.DynamicInvoke(intArray);
+
+        // Assert
+        result.Should().Be("1,2,3");
+    }
+
     public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
     {
         public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Validation;
@@ -302,11 +303,6 @@ internal class ExpressionHelper : IExpressionHelper
 #endif
     }
 
-    private Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
-    {
-        return Expression.Call(null, GetStaticMethod(methodName, left, right), new[] { left, right });
-    }
-
     private void WrapConstantExpressions(ref Expression left, ref Expression right)
     {
         if (_parsingConfig.UseParameterizedNamesInDynamicQuery)
@@ -357,6 +353,17 @@ internal class ExpressionHelper : IExpressionHelper
 #else
         return Expression.Default(type);
 #endif
+    }
+
+    public Expression ConvertAnyArrayToObjectArray(Expression arrayExpression)
+    {
+        Check.NotNull(arrayExpression);
+
+        return Expression.Call(
+            null,
+            typeof(ExpressionHelper).GetMethod(nameof(ConvertIfIEnumerableHasValues), BindingFlags.Static | BindingFlags.NonPublic)!,
+            arrayExpression
+        );
     }
 
     private Expression? GetMemberExpression(Expression? expression)
@@ -436,6 +443,11 @@ internal class ExpressionHelper : IExpressionHelper
         return list;
     }
 
+    private static Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
+    {
+        return Expression.Call(null, GetStaticMethod(methodName, left, right), new[] { left, right });
+    }
+
     private static MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
     {
         var methodInfo = left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
@@ -462,5 +474,17 @@ internal class ExpressionHelper : IExpressionHelper
     private static Expression? GetUnaryExpression(UnaryExpression? unaryExpression)
     {
         return unaryExpression?.Operand;
+    }
+
+    private static object[] ConvertIfIEnumerableHasValues(IEnumerable? input)
+    {
+        // ReSharper disable once PossibleMultipleEnumeration
+        if (input != null && input.Cast<object>().Any())
+        {
+            // ReSharper disable once PossibleMultipleEnumeration
+            return input.Cast<object>().ToArray();
+        }
+
+        return new object[0];
     }
 }
