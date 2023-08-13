@@ -931,10 +931,20 @@ public class ExpressionParser
 
         var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var value);
 
-        var extraCondition = !_parsingConfig.PrioritizePropertyOrFieldOverTheType ||
-                             (_parsingConfig.PrioritizePropertyOrFieldOverTheType && !(value is Type && _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null));
+        
+        bool shouldPrioritizeType = true;
+        
+        if (_parsingConfig.PrioritizePropertyOrFieldOverTheType && value is Type)
+        {
+            bool isPropertyOrField = _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null;
+            bool hasSymbol = _symbols.ContainsKey(_textParser.CurrentToken.Text);
+            if (isPropertyOrField || hasSymbol)
+            {
+                shouldPrioritizeType = false;
+            }
+        }
 
-        if (isValidKeyWord && extraCondition)
+        if (isValidKeyWord && shouldPrioritizeType)
         {
             if (value is Type typeValue)
             {

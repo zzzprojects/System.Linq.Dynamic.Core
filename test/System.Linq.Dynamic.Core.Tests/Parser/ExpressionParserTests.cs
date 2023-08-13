@@ -331,12 +331,14 @@ public partial class ExpressionParserTests
     [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
     [InlineData("Name", "company.Name")]
+    [InlineData("company.Name","company.Name")]
     [InlineData("DateTime", "company.DateTime")]
     public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsTrue(string expression, string result)
     {
         // Arrange
         var config = new ParsingConfig
         {
+            IsCaseSensitive = true,
             CustomTypeProvider = _dynamicTypeProviderMock.Object
         };
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
