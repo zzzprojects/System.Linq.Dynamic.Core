@@ -37,9 +37,12 @@ namespace System.Linq.Dynamic.Core.Parser
                 _keywords.Add(KEYWORD_ROOT, KEYWORD_ROOT);
             }
 
-            _keywords.Add(SYMBOL_IT, SYMBOL_IT);
-            _keywords.Add(SYMBOL_PARENT, SYMBOL_PARENT);
-            _keywords.Add(SYMBOL_ROOT, SYMBOL_ROOT);
+            if (config.AreContextSymbolsEnabled)
+            {
+                _keywords.Add(SYMBOL_IT, SYMBOL_IT);
+                _keywords.Add(SYMBOL_PARENT, SYMBOL_PARENT);
+                _keywords.Add(SYMBOL_ROOT, SYMBOL_ROOT);
+            }
 
             _keywords.Add(FUNCTION_IIF, FUNCTION_IIF);
             _keywords.Add(FUNCTION_ISNULL, FUNCTION_ISNULL);

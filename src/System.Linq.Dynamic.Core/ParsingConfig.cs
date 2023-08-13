@@ -107,9 +107,17 @@ public class ParsingConfig
     /// Determines if the context keywords (it, parent, and root) are valid and usable inside a Dynamic Linq string expression.  
     /// Does not affect the usability of the equivalent context symbols ($, ^ and ~).
     /// 
-    /// Default value is <c>false</c>.
+    /// Default value is <c>true</c>.
     /// </summary>
     public bool AreContextKeywordsEnabled { get; set; } = true;
+
+    /// <summary>
+    /// Determines if the context symbols ($, ^ and ~) are valid and usable inside a Dynamic Linq string expression.  
+    /// Does not affect the usability of the equivalent context keywords (it, parent, and root).
+    /// 
+    /// Default value is <c>true</c>.
+    /// </summary>
+    public bool AreContextSymbolsEnabled { get; set; } = true;
 
     /// <summary>
     /// Gets or sets a value indicating whether the EntityFramework version supports evaluating GroupBy at database level.

@@ -391,4 +391,44 @@ public partial class ExpressionParserTests
         // Assert
         parsedExpression.Should().StartWith(result);
     }
+
+    [Theory]
+    [InlineData("it != null")]
+    [InlineData("parent != null")]
+    [InlineData("root != null")]
+    public void Parse_When_AreContextKeywordsEnabled_IsFalse_Should_Not_SupportKeywords(string expression)
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AreContextKeywordsEnabled = false
+        };
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
+
+        // Act
+        Action a = () => new ExpressionParser(parameters, expression, null, config).Parse(null);
+
+        // Assert
+        a.Should().Throw<ParseException>().And.Message.Should().NotBeEmpty();
+    }
+
+    [Theory]
+    [InlineData("$ != null")]
+    [InlineData("^ != null")]
+    [InlineData("~ != null")]
+    public void Parse_When_AreContextSymbolsEnabled_IsFalse_Should_Not_SupportKeywords(string expression)
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AreContextSymbolsEnabled = false
+        };
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
+
+        // Act
+        Action a = () => new ExpressionParser(parameters, expression, null, config).Parse(null);
+
+        // Assert
+        a.Should().Throw<ParseException>().And.Message.Should().NotBeEmpty();
+    }
 }
