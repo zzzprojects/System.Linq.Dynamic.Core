@@ -331,7 +331,7 @@ public partial class ExpressionParserTests
     [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
     [InlineData("Name", "company.Name")]
-    [InlineData("company.Name","company.Name")]
+    [InlineData("company.Name", "company.Name")]
     [InlineData("DateTime", "company.DateTime")]
     public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsTrue(string expression, string result)
     {
@@ -416,7 +416,7 @@ public partial class ExpressionParserTests
     [InlineData("$ != null")]
     [InlineData("^ != null")]
     [InlineData("~ != null")]
-    public void Parse_When_AreContextSymbolsEnabled_IsFalse_Should_Not_SupportKeywords(string expression)
+    public void Parse_When_AreContextSymbolsEnabled_IsSetToFalse_Should_Not_SupportSymbols(string expression)
     {
         // Arrange
         var config = new ParsingConfig
@@ -430,5 +430,21 @@ public partial class ExpressionParserTests
 
         // Assert
         a.Should().Throw<ParseException>().And.Message.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void Parse_When_AreContextSymbolsEnabled_IsSetToFalse_Should_SupportStringInterpolation()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AreContextSymbolsEnabled = false
+        };
+
+        // Act
+        var result = new ExpressionParser(null, "$\"{1+1}\"+string.Empty", null, config).Parse(null).ToString();
+
+        // Assert
+        result.Should().Be("s");
     }
 }
