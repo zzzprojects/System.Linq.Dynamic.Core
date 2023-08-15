@@ -21,15 +21,16 @@ namespace System.Linq.Dynamic.Core.Parser
         public const string FUNCTION_AS = "as";
         public const string FUNCTION_CAST = "cast";
 
-        private readonly IDictionary<string, object> _keywords = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
-        {
-            { "true", Expression.Constant(true) },
-            { "false", Expression.Constant(false) },
-            { "null", Expression.Constant(null) }
-        };
+        private readonly IDictionary<string, object> _keywords;
 
         public KeywordsHelper(ParsingConfig config)
         {
+            _keywords = new Dictionary<string, object>(config is { IsCaseSensitive: true } ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
+            {
+                { "true", Expression.Constant(true) },
+                { "false", Expression.Constant(false) },
+                { "null", Expression.Constant(null) }
+            };
             if (config.AreContextKeywordsEnabled)
             {
                 _keywords.Add(KEYWORD_IT, KEYWORD_IT);
