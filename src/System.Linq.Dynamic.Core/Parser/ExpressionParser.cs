@@ -689,13 +689,13 @@ public class ExpressionParser
     // +, - operators
     private Expression ParseAdditive()
     {
-        Expression left = ParseMultiplicative();
+        Expression left = ParseArithmetic();
         while (_textParser.CurrentToken.Id is TokenId.Plus or TokenId.Minus)
         {
             Token op = _textParser.CurrentToken;
             _textParser.NextToken();
 
-            Expression right = ParseMultiplicative();
+            Expression right = ParseArithmetic();
             switch (op.Id)
             {
                 case TokenId.Plus:
@@ -705,13 +705,13 @@ public class ExpressionParser
                     }
                     else
                     {
-                        CheckAndPromoteOperands(typeof(IAddAndSubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(IAddSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                         left = _expressionHelper.GenerateAdd(left, right);
                     }
                     break;
 
                 case TokenId.Minus:
-                    CheckAndPromoteOperands(typeof(IAddAndSubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
+                    CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                     left = _expressionHelper.GenerateSubtract(left, right);
                     break;
             }
@@ -720,7 +720,7 @@ public class ExpressionParser
     }
 
     // *, /, %, mod operators
-    private Expression ParseMultiplicative()
+    private Expression ParseArithmetic()
     {
         Expression left = ParseUnary();
         while (_textParser.CurrentToken.Id is TokenId.Asterisk or TokenId.Slash or TokenId.Percent || TokenIdentifierIs("mod"))
