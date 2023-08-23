@@ -47,7 +47,7 @@ public partial class ExpressionTests
         }.AsQueryable();
 
         // Act
-        var result = values.Select<DateTime>("Value1 - Value2");
+        var result = values.Select<TimeSpan>("Value1 - Value2");
         var expected = values.Select(x => x.Value1 - x.Value2);
 
         // Assert
@@ -110,7 +110,7 @@ public partial class ExpressionTests
         }.AsQueryable();
 
         // Act
-        var result = values.Select<DateTime>("Value1 + Value2");
+        var result = values.Select<TimeSpan>("Value1 + Value2");
         var expected = values.Select(x => x.Value1 + x.Value2);
 
         // Assert
@@ -131,7 +131,7 @@ public partial class ExpressionTests
         }.AsQueryable();
 
         // Act
-        var result = values.Select<DateTime>("Value1 - Value2");
+        var result = values.Select<TimeSpan>("Value1 - Value2");
         var expected = values.Select(x => x.Value1 - x.Value2);
 
         // Assert
