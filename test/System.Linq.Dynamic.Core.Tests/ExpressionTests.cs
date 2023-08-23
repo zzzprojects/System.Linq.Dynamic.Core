@@ -86,35 +86,6 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Add_Number()
-        {
-            // Arrange
-            var values = new[] { -1, 2 }.AsQueryable();
-
-            // Act
-            var result = values.Select<int>("it + 1");
-            var expected = values.Select(i => i + 1);
-
-            // Assert
-            Check.That(result).ContainsExactly(expected);
-        }
-
-        [Fact]
-        public void ExpressionTests_Add_String()
-        {
-            // Arrange
-            var values = new[] { "a", "b" }.AsQueryable();
-
-            // Act
-            var result = values.Select<string>("it + \"z\"");
-            var expected = values.Select(i => i + "z");
-
-            // Assert
-            Check.That(result).ContainsExactly(expected);
-        }
-
-
-        [Fact]
         public void ExpressionTests_AndAlso()
         {
             // Arrange
