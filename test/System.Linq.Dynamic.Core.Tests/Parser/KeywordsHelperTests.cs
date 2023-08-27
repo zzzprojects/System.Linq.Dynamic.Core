@@ -34,7 +34,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void TryGetValue_WithCaseSensitive_ReturnsResultAsExpected(string name, bool expected)
         {
             // Arrange
-            var keywordsHelper = this.CreateKeywordsHelper( new ParsingConfig { KeywordsAreCaseSensitive = true});
+            var keywordsHelper = this.CreateKeywordsHelper( new ParsingConfig { AreKeywordsCaseSensitive = true});
             object type = null;
 
             // Act
@@ -55,7 +55,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void TryGetValue_WithCaseInSensitive_ReturnsResultAsExpected(string name, bool expected)
         {
             // Arrange
-            var keywordsHelper = this.CreateKeywordsHelper(new ParsingConfig { KeywordsAreCaseSensitive = false });
+            var keywordsHelper = this.CreateKeywordsHelper(new ParsingConfig { AreKeywordsCaseSensitive = false });
             object type = null;
 
             // Act

@@ -25,7 +25,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public KeywordsHelper(ParsingConfig config)
         {
-            _keywords = new Dictionary<string, object>(config is { KeywordsAreCaseSensitive : true } ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
+            _keywords = new Dictionary<string, object>(config is { AreKeywordsCaseSensitive : true } ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
             {
                 { "true", Expression.Constant(true) },
                 { "false", Expression.Constant(false) },
