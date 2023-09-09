@@ -1807,6 +1807,8 @@ namespace System.Linq.Dynamic.Core
                 new[] { source.ElementType, typeof(TResult) },
                 source.Expression, Expression.Quote(lambda)));
 
+
+
             return source.Provider.CreateQuery<TResult>(optimized);
         }
 
