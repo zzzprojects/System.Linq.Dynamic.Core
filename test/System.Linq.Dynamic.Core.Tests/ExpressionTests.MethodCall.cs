@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
-using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -35,7 +34,7 @@ public partial class ExpressionTests
     }
 
     [Fact]
-    public void ExpressionTests_MethodCall_Out()
+    public void ExpressionTests_MethodCall_WithArgument_And_OutArgument()
     {
         // Arrange
         var config = CreateParsingConfigForMethodCallTests();
@@ -45,6 +44,22 @@ public partial class ExpressionTests
         string un = "";
         var expected = users.Select(u => u.TryParseWithArgument(u.UserName, out un));
         var result = users.AsQueryable().Select<bool>(config, "TryParseWithArgument(it.UserName, $out _)");
+
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void ExpressionTests_MethodCall_WithoutArgument_And_OutArgument()
+    {
+        // Arrange
+        var config = CreateParsingConfigForMethodCallTests();
+        var users = User.GenerateSampleModels(5);
+
+        // Act
+        string un = "";
+        var expected = users.Select(u => u.TryParseWithoutArgument(out un));
+        var result = users.AsQueryable().Select<bool>(config, "TryParseWithoutArgument(out _)");
 
         // Assert
         result.Should().BeEquivalentTo(expected);

@@ -35,6 +35,11 @@ public class User
         return Id == other.Id;
     }
 
+    public bool TryParseWithoutArgument(out string xxx)
+    {
+        return TryParseWithArgument(UserName, out xxx);
+    }
+
     public bool TryParseWithArgument(string s, out string xxx)
     {
         if (s.EndsWith("1") || s.EndsWith("2"))
