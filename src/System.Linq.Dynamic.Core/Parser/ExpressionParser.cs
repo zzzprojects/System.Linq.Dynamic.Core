@@ -153,7 +153,7 @@ public class ExpressionParser
         _createParameterCtor = createParameterCtor;
 
         int exprPos = _textParser.CurrentToken.Pos;
-        Expression? expr = ParseFirstAsConditionalOperator();
+        Expression? expr = ParseConditionalOperator();
 
         if (resultType != null)
         {
@@ -179,7 +179,7 @@ public class ExpressionParser
             var variableName = _textParser.CurrentToken.Text;
             if (variableName != DiscardVariable)
             {
-                throw ParseError(_textParser.CurrentToken.Pos, Res.OutVariableRequireDiscard);
+                throw ParseError(_textParser.CurrentToken.Pos, Res.OutKeywordRequiresDiscard);
             }
 
             // Advance to next token
@@ -190,7 +190,7 @@ public class ExpressionParser
             return Expression.Parameter(typeof(object).MakeByRefType(), variableName);
         }
 
-        return ParseFirstAsConditionalOperator();
+        return ParseConditionalOperator();
     }
 
 #pragma warning disable 0219
@@ -199,7 +199,7 @@ public class ExpressionParser
         var orderings = new List<DynamicOrdering>();
         while (true)
         {
-            Expression expr = ParseFirstAsConditionalOperator();
+            Expression expr = ParseConditionalOperator();
             bool ascending = true;
             if (TokenIdentifierIs("asc") || TokenIdentifierIs("ascending"))
             {
@@ -237,17 +237,17 @@ public class ExpressionParser
 #pragma warning restore 0219
 
     // ?: operator
-    private Expression ParseFirstAsConditionalOperator()
+    private Expression ParseConditionalOperator()
     {
         int errorPos = _textParser.CurrentToken.Pos;
         Expression expr = ParseNullCoalescingOperator();
         if (_textParser.CurrentToken.Id == TokenId.Question)
         {
             _textParser.NextToken();
-            Expression expr1 = ParseFirstAsConditionalOperator();
+            Expression expr1 = ParseConditionalOperator();
             _textParser.ValidateToken(TokenId.Colon, Res.ColonExpected);
             _textParser.NextToken();
-            Expression expr2 = ParseFirstAsConditionalOperator();
+            Expression expr2 = ParseConditionalOperator();
             expr = GenerateConditional(expr, expr1, expr2, false, errorPos);
         }
         return expr;
@@ -260,7 +260,7 @@ public class ExpressionParser
         if (_textParser.CurrentToken.Id == TokenId.NullCoalescing)
         {
             _textParser.NextToken();
-            Expression right = ParseFirstAsConditionalOperator();
+            Expression right = ParseConditionalOperator();
             expr = Expression.Coalesce(expr, right);
         }
         return expr;
@@ -275,7 +275,7 @@ public class ExpressionParser
             _textParser.NextToken();
             if (_textParser.CurrentToken.Id == TokenId.Identifier || _textParser.CurrentToken.Id == TokenId.OpenParen)
             {
-                var right = ParseFirstAsConditionalOperator();
+                var right = ParseConditionalOperator();
                 return Expression.Lambda(right, new[] { (ParameterExpression)expr });
             }
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
@@ -947,7 +947,7 @@ public class ExpressionParser
     {
         _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
         _textParser.NextToken();
-        Expression e = ParseFirstAsConditionalOperator();
+        Expression e = ParseConditionalOperator();
         _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrOperatorExpected);
         _textParser.NextToken();
         return e;
@@ -1402,7 +1402,7 @@ public class ExpressionParser
         while (_textParser.CurrentToken.Id != TokenId.CloseParen && _textParser.CurrentToken.Id != TokenId.CloseCurlyParen)
         {
             int exprPos = _textParser.CurrentToken.Pos;
-            Expression expr = ParseFirstAsConditionalOperator();
+            Expression expr = ParseConditionalOperator();
             if (!arrayInitializer)
             {
                 string? propName;
@@ -1818,7 +1818,7 @@ public class ExpressionParser
                     return Expression.Call(expression, methodToCall, args);
 #else
                     var outParameters = args.OfType<ParameterExpression>().Where(p => p.IsByRef).ToArray();
-                    if (outParameters.Length == 1)
+                    if (outParameters.Any())
                     {
                         // A list which is used to store all method arguments.
                         var newList = new List<Expression>();
@@ -1858,7 +1858,7 @@ public class ExpressionParser
                             returnValue
                         );
 
-                        // Create the lambda expression (note that expression must be a ParameterExpression !)
+                        // Create the lambda expression (note that expression must be a ParameterExpression).
                         return Expression.Lambda(block, (ParameterExpression)expression!);
                     }
 
@@ -1944,7 +1944,7 @@ public class ExpressionParser
         _textParser.NextToken();
 
         LastLambdaItName = ItName;
-        var exp = ParseFirstAsConditionalOperator();
+        var exp = ParseConditionalOperator();
 
         // Restore previous context and clear internals
         _internals.Remove(id);
@@ -2182,10 +2182,10 @@ public class ExpressionParser
             _textParser.NextToken();
         }
 
-        if (argList.OfType<ParameterExpression>().Count() > 1)
-        {
-            throw ParseError(_textParser.CurrentToken.Pos, Res.OutVariableSingleRequired);
-        }
+        //if (argList.OfType<ParameterExpression>().Count() > 1)
+        //{
+        //    throw ParseError(_textParser.CurrentToken.Pos, Res.OutVariableSingleRequired);
+        //}
 
         return argList.ToArray();
     }

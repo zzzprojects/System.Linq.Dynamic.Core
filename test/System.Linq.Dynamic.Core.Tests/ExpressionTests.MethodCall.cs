@@ -35,16 +35,33 @@ public partial class ExpressionTests
     }
 
     [Fact]
-    public void ExpressionTests_MethodCall_WithArgument_And_OutArgument()
+    public void ExpressionTests_MethodCall_WithArgument_And_1_OutArgument()
     {
         // Arrange
         var config = CreateParsingConfigForMethodCallTests();
         var users = User.GenerateSampleModels(5);
 
         // Act
-        string un = "";
-        var expected = users.Select(u => u.TryParseWithArgument(u.UserName, out un));
+        string s = "";
+        var expected = users.Select(u => u.TryParseWithArgument(u.UserName, out s));
         var result = users.AsQueryable().Select<bool>(config, "TryParseWithArgument(it.UserName, $out _)");
+
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void ExpressionTests_MethodCall_WithArgument_And_2_OutArguments()
+    {
+        // Arrange
+        var config = CreateParsingConfigForMethodCallTests();
+        var users = User.GenerateSampleModels(5);
+
+        // Act
+        string s = "?";
+        int i = -1;
+        var expected = users.Select(u => u.TryParseWithArgumentAndTwoOut(u.UserName, out s, out i));
+        var result = users.AsQueryable().Select<bool>(config, "TryParseWithArgumentAndTwoOut(UserName, out _, out _)");
 
         // Assert
         result.Should().BeEquivalentTo(expected);
@@ -58,8 +75,8 @@ public partial class ExpressionTests
         var users = User.GenerateSampleModels(5);
 
         // Act
-        string un = "";
-        var expected = users.Select(u => u.TryParseWithoutArgument(out un));
+        string s = "";
+        var expected = users.Select(u => u.TryParseWithoutArgument(out s));
         var result = users.AsQueryable().Select<bool>(config, "TryParseWithoutArgument(out _)");
 
         // Assert
@@ -78,20 +95,6 @@ public partial class ExpressionTests
 
         // Assert
         action.Should().Throw<ParseException>().WithMessage("When using an out variable, a discard '_' is required.");
-    }
-
-    [Fact]
-    public void ExpressionTests_MethodCall_WithArgument_And_MultipleOutArgument_ThrowsException()
-    {
-        // Arrange
-        var config = CreateParsingConfigForMethodCallTests();
-        var users = User.GenerateSampleModels(5);
-
-        // Act
-        Action action = () => users.AsQueryable().Select<bool>(config, "TryParseWithArgumentAndTwoOut(it.UserName, $out _, $out _)");
-
-        // Assert
-        action.Should().Throw<ParseException>().WithMessage("Only a single out variable is supported.");
     }
 
     [Fact]
