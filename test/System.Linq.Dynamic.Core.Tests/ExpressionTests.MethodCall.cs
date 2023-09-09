@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using FluentAssertions;
 using Moq;
@@ -63,6 +64,34 @@ public partial class ExpressionTests
 
         // Assert
         result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void ExpressionTests_MethodCall_WithArgument_And_NoDiscardForOutArgument_ThrowsException()
+    {
+        // Arrange
+        var config = CreateParsingConfigForMethodCallTests();
+        var users = User.GenerateSampleModels(5);
+
+        // Act
+        Action action = () => users.AsQueryable().Select<bool>(config, "TryParseWithArgument(it.UserName, $out x)");
+
+        // Assert
+        action.Should().Throw<ParseException>().WithMessage("When using an out variable, a discard '_' is required.");
+    }
+
+    [Fact]
+    public void ExpressionTests_MethodCall_WithArgument_And_MultipleOutArgument_ThrowsException()
+    {
+        // Arrange
+        var config = CreateParsingConfigForMethodCallTests();
+        var users = User.GenerateSampleModels(5);
+
+        // Act
+        Action action = () => users.AsQueryable().Select<bool>(config, "TryParseWithArgumentAndTwoOut(it.UserName, $out _, $out _)");
+
+        // Assert
+        action.Should().Throw<ParseException>().WithMessage("Only a single out variable is supported.");
     }
 
     [Fact]

@@ -52,6 +52,12 @@ public class User
         return false;
     }
 
+    public bool TryParseWithArgumentAndTwoOut(string s, out string xxx, out int x)
+    {
+        x = 0;
+        return TryParseWithArgument(s, out xxx) && int.TryParse(s, out x);
+    }
+
     public static IList<User> GenerateSampleModels(int total, bool allowNullableProfiles = false)
     {
         var list = new List<User>();
