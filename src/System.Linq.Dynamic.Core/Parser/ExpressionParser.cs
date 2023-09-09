@@ -1813,30 +1813,70 @@ public class ExpressionParser
                         methodToCall = method.MakeGenericMethod(typeArguments.ToArray());
                     }
 
-                    return Expression.Call(expression, methodToCall, args);
+                    //return Expression.Call(expression, methodToCall, args);
                     // stef
-//#if NET35
-//                    return Expression.Call(expression, methodToCall, args);
-//#else
-//                    var outParameters = args.OfType<ParameterExpression>().Where(p => p.IsByRef).ToArray();
-//                    if (outParameters.Any())
-//                    {
-//                        var variablesInScope = outParameters.Select(p => Expression.Variable(p.Type, p.Name)).ToArray();
+#if NET35
+                    return Expression.Call(expression, methodToCall, args);
+#else
+                    var outParameters = args.OfType<ParameterExpression>().Where(p => p.IsByRef).ToArray();
+                    if (outParameters.Any())
+                    {
+                        //var a = new List<Expression>();
+                        var outVars = new List<Expression>();
+                        var inP = new List<Expression>();
+
+                        foreach (var a in args)
+                        {
+                            if (a is ParameterExpression parameterExpression && parameterExpression.IsByRef)
+                            {
+                                var outputVar = Expression.Variable(parameterExpression.Type, parameterExpression.Name);
+                               // a.Add(outputVar);
+                                outVars.Add(outputVar);
+                            }
+                            else
+                            {
+                               // a.Add(parameterExpression);
+                                inP.Add(a);
+                            }
+                        }
+
+                        // Create a method call expression
+                        //var methodCall = Expression.Call(expression, methodToCall, args);
+
+                        // Create a variable expression to hold the 'out' parameter.
+                        var outVar = Expression.Variable(typeof(string), "xxx");
+
+                        // Create a method call expression to call User.TryParse.
+                        var methodCall = Expression.Call(
+                            expression,
+                            methodToCall,
+                            new Expression[] { args[0], outVar }
+                        );
+
+
+                        // Create a variable to hold the return value
+                        var returnValue = Expression.Variable(methodToCall.ReturnType, "returnValue");
+
+                        var userParam = (ParameterExpression) expression;//Expression.Parameter(expression!.Type, "user");
                         
-//                        var block = Expression.Block(
-//                            variablesInScope,  // Declare variables used inside the block
-//                            Expression.Call(expression, methodToCall, args) // Expression body
-//                            // Expression.Variable(methodToCall.ReturnType)
-//                            //inScope[0]
-//                            //variablesInScope[0]
-//                        // 
-//                        );
+                        // Create the block to return the boolean value.
+                        var block = Expression.Block(
+                            new[] { outVar, returnValue },
+                            Expression.Assign(returnValue, methodCall),
+                            returnValue
+                        );
 
-//                        return Expression.Lambda(block);
-//                    }
+                        // Create the lambda expression
+                        var lambda = Expression.Lambda(
+                            block,
+                            userParam
+                        );
 
-//                    return Expression.Call(expression, methodToCall, args);
-//#endif
+                        return lambda;
+                    }
+
+                    return Expression.Call(expression, methodToCall, args);
+#endif
 
                 default:
                     throw ParseError(errorPos, Res.AmbiguousMethodInvocation, id, TypeHelper.GetTypeName(type));

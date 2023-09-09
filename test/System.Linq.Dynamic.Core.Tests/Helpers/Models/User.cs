@@ -35,15 +35,15 @@ public class User
         return Id == other.Id;
     }
 
-    public bool TryGetUserName(out string? username)
+    public bool TryParseWithArgument(string s, out string xxx)
     {
-        if (UserName.EndsWith("1") || UserName.EndsWith("2"))
+        if (s.EndsWith("1") || s.EndsWith("2"))
         {
-            username = UserName;
+            xxx = UserName;
             return true;
         }
 
-        username = null;
+        xxx = "";
         return false;
     }
 

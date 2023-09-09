@@ -42,9 +42,9 @@ public partial class ExpressionTests
         var users = User.GenerateSampleModels(5);
 
         // Act
-        string? un = null;
-        var expected = users.Select(u => u.TryGetUserName(out un));
-        var result = users.AsQueryable().Select<bool>(config, "TryGetUserName($out _)");
+        string un = "";
+        var expected = users.Select(u => u.TryParseWithArgument(u.UserName, out un));
+        var result = users.AsQueryable().Select<bool>(config, "TryParseWithArgument(it.UserName, $out _)");
 
         // Assert
         result.Should().BeEquivalentTo(expected);
