@@ -170,7 +170,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return 0;
         }
 
-        bool IsApplicable(MethodData method, Expression[] args)
+        private bool IsApplicable(MethodData method, Expression[] args)
         {
             bool isParamArray = method.Parameters.Length > 0 && method.Parameters.Last().IsDefined(typeof(ParamArrayAttribute), false);
 
@@ -221,7 +221,6 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 }
                 else
                 {
-                    // stef
                     var methodParameter = method.Parameters[i];
                     if (methodParameter.IsOut && args[i] is ParameterExpression parameterExpression)
                     {
@@ -233,7 +232,6 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                             return false;
                         }
 
-                        //promotedArgs[i] = Expression.Parameter(parameterExpression.Type.MakeByRefType(), methodParameter.Name);
                         promotedArgs[i] = Expression.Parameter(methodParameter.ParameterType, methodParameter.Name);
 #endif
                     }

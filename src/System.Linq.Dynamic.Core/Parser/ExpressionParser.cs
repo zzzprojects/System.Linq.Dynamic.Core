@@ -179,14 +179,15 @@ public class ExpressionParser
             var variableName = _textParser.CurrentToken.Text;
             if (variableName != DiscardVariable)
             {
-                throw ParseError(_textParser.CurrentToken.Pos, "out !!!");
+                throw ParseError(_textParser.CurrentToken.Pos, "stef todo");
             }
 
             // Advance to next token
             _textParser.NextToken();
 
-            // Use MakeByRefType() to indicate that it's a by-reference type. C# uses this for both 'ref' and 'out' parameters.
-            return Expression.Parameter(typeof(string).MakeByRefType(), variableName);
+            // Use MakeByRefType() to indicate that it's a by-reference type because C# uses this for both 'ref' and 'out' parameters.
+            // The "typeof(object).MakeByRefType()" is used, this will be changed later in the flow to the real type.
+            return Expression.Parameter(typeof(object).MakeByRefType(), variableName);
         }
 
         return ParseFirstAsConditionalOperator();
@@ -1813,64 +1814,51 @@ public class ExpressionParser
                         methodToCall = method.MakeGenericMethod(typeArguments.ToArray());
                     }
 
-                    //return Expression.Call(expression, methodToCall, args);
                     // stef
 #if NET35
                     return Expression.Call(expression, methodToCall, args);
 #else
                     var outParameters = args.OfType<ParameterExpression>().Where(p => p.IsByRef).ToArray();
-                    if (outParameters.Any())
-                    {
-                        //var a = new List<Expression>();
-                        var outVars = new List<Expression>();
-                        var inP = new List<Expression>();
 
-                        foreach (var a in args)
+                    if (outParameters.Length == 1)
+                    {
+                        // Create a new list which is used to store all method arguments.
+                        var newList = new List<Expression>();
+                        var blockList = new List<ParameterExpression>();
+
+                        foreach (var arg in args)
                         {
-                            if (a is ParameterExpression parameterExpression && parameterExpression.IsByRef)
+                            if (arg is ParameterExpression { IsByRef: true } parameterExpression)
                             {
-                                var outputVar = Expression.Variable(parameterExpression.Type, parameterExpression.Name);
-                               // a.Add(outputVar);
-                                outVars.Add(outputVar);
+                                // Create a variable expression to hold the 'out' parameter.
+                                var variable = Expression.Variable(parameterExpression.Type, parameterExpression.Name);
+                                newList.Add(variable);
+                                blockList.Add(variable);
                             }
                             else
                             {
-                               // a.Add(parameterExpression);
-                                inP.Add(a);
+                                newList.Add(arg);
                             }
                         }
 
-                        // Create a method call expression
-                        //var methodCall = Expression.Call(expression, methodToCall, args);
-
-                        // Create a variable expression to hold the 'out' parameter.
-                        var outVar = Expression.Variable(typeof(string), "xxx");
-
-                        // Create a method call expression to call User.TryParse.
-                        var methodCall = Expression.Call(
-                            expression,
-                            methodToCall,
-                            new Expression[] { args[0], outVar }
-                        );
-
+                        // Create a method call expression to call the method
+                        var methodCall = Expression.Call(expression, methodToCall, newList);
 
                         // Create a variable to hold the return value
-                        var returnValue = Expression.Variable(methodToCall.ReturnType, "returnValue");
+                        var returnValue = Expression.Variable(methodToCall.ReturnType);
 
-                        var userParam = (ParameterExpression) expression;//Expression.Parameter(expression!.Type, "user");
-                        
+                        // Define a parameter list which contains the variable expression for the 'out' parameter, and contains the returnValue variable.
+                        blockList.Add(returnValue);
+
                         // Create the block to return the boolean value.
                         var block = Expression.Block(
-                            new[] { outVar, returnValue },
+                            blockList.ToArray(),
                             Expression.Assign(returnValue, methodCall),
                             returnValue
                         );
 
                         // Create the lambda expression
-                        var lambda = Expression.Lambda(
-                            block,
-                            userParam
-                        );
+                        var lambda = Expression.Lambda(block, (ParameterExpression)expression!);
 
                         return lambda;
                     }
@@ -2182,7 +2170,6 @@ public class ExpressionParser
         while (true)
         {
             var argumentExpression = ParseOutKeyword();
-            // var argumentExpression = ParseFirstAsConditionalOperator();
 
             _expressionHelper.WrapConstantExpression(ref argumentExpression);
 
@@ -2194,6 +2181,11 @@ public class ExpressionParser
             }
 
             _textParser.NextToken();
+        }
+
+        if (argList.OfType<ParameterExpression>().Count() > 1)
+        {
+            throw new ParseException("stef todo", _textParser.CurrentToken.Pos);
         }
 
         return argList.ToArray();
