@@ -179,7 +179,7 @@ public class ExpressionParser
             var variableName = _textParser.CurrentToken.Text;
             if (variableName != DiscardVariable)
             {
-                throw ParseError(_textParser.CurrentToken.Pos, "stef todo");
+                throw ParseError(_textParser.CurrentToken.Pos, Res.OutVariableRequireDiscard);
             }
 
             // Advance to next token
@@ -1814,16 +1814,16 @@ public class ExpressionParser
                         methodToCall = method.MakeGenericMethod(typeArguments.ToArray());
                     }
 
-                    // stef
 #if NET35
                     return Expression.Call(expression, methodToCall, args);
 #else
                     var outParameters = args.OfType<ParameterExpression>().Where(p => p.IsByRef).ToArray();
-
                     if (outParameters.Length == 1)
                     {
-                        // Create a new list which is used to store all method arguments.
+                        // A list which is used to store all method arguments.
                         var newList = new List<Expression>();
+
+                        // A list which contains the variable expression for the 'out' parameter, and also contains the returnValue variable.
                         var blockList = new List<ParameterExpression>();
 
                         foreach (var arg in args)
@@ -1832,6 +1832,7 @@ public class ExpressionParser
                             {
                                 // Create a variable expression to hold the 'out' parameter.
                                 var variable = Expression.Variable(parameterExpression.Type, parameterExpression.Name);
+
                                 newList.Add(variable);
                                 blockList.Add(variable);
                             }
@@ -1847,7 +1848,7 @@ public class ExpressionParser
                         // Create a variable to hold the return value
                         var returnValue = Expression.Variable(methodToCall.ReturnType);
 
-                        // Define a parameter list which contains the variable expression for the 'out' parameter, and contains the returnValue variable.
+                        // Add this return variable to the blockList
                         blockList.Add(returnValue);
 
                         // Create the block to return the boolean value.
@@ -1857,10 +1858,8 @@ public class ExpressionParser
                             returnValue
                         );
 
-                        // Create the lambda expression
-                        var lambda = Expression.Lambda(block, (ParameterExpression)expression!);
-
-                        return lambda;
+                        // Create the lambda expression (note that expression must be a ParameterExpression !)
+                        return Expression.Lambda(block, (ParameterExpression)expression!);
                     }
 
                     return Expression.Call(expression, methodToCall, args);
@@ -2185,7 +2184,7 @@ public class ExpressionParser
 
         if (argList.OfType<ParameterExpression>().Count() > 1)
         {
-            throw new ParseException("stef todo", _textParser.CurrentToken.Pos);
+            throw ParseError(_textParser.CurrentToken.Pos, Res.OutVariableSingleRequired);
         }
 
         return argList.ToArray();

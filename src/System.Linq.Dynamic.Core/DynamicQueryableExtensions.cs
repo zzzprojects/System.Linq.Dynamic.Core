@@ -1802,7 +1802,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(TResult), selector, args);
 
-            var e = Expression.Call(
+            var methodCallExpression = Expression.Call(
                 typeof(Queryable), 
                 nameof(Queryable.Select),
                 new[] { source.ElementType, typeof(TResult) },
@@ -1810,9 +1810,7 @@ namespace System.Linq.Dynamic.Core
                 Expression.Quote(lambda)
             );
 
-            var optimized = OptimizeExpression(e);
-
-
+            var optimized = OptimizeExpression(methodCallExpression);
 
             return source.Provider.CreateQuery<TResult>(optimized);
         }
