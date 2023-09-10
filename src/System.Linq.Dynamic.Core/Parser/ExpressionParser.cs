@@ -998,6 +998,10 @@ public class ExpressionParser
                     return ParseFunctionIsNull();
 
                 case KeywordsHelper.FUNCTION_NEW:
+                    if (_parsingConfig.DisallowNewKeyword)
+                    {
+                        throw ParseError(Res.NewOperatorIsNotAllowed);
+                    }
                     return ParseNew();
 
                 case KeywordsHelper.FUNCTION_NULLPROPAGATION:
@@ -1354,9 +1358,10 @@ public class ExpressionParser
         if (_textParser.CurrentToken.Id == TokenId.Identifier)
         {
             var newTypeName = _textParser.CurrentToken.Text;
+
             _textParser.NextToken();
 
-            while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+            while (_textParser.CurrentToken.Id is TokenId.Dot or TokenId.Plus)
             {
                 var sep = _textParser.CurrentToken.Text;
                 _textParser.NextToken();
