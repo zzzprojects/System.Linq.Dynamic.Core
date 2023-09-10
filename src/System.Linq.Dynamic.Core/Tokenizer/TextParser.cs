@@ -495,7 +495,7 @@ public class TextParser
     {
         if (!IsZeroOrOne(_ch))
         {
-            throw ParseError(_textPos, Res.BinraryCharExpected);
+            throw ParseError(_textPos, Res.BinaryCharExpected);
         }
     }
 

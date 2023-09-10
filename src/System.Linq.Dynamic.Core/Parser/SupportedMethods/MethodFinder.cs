@@ -170,7 +170,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return 0;
         }
 
-        bool IsApplicable(MethodData method, Expression[] args)
+        private bool IsApplicable(MethodData method, Expression[] args)
         {
             bool isParamArray = method.Parameters.Length > 0 && method.Parameters.Last().IsDefined(typeof(ParamArrayAttribute), false);
 
@@ -221,18 +221,30 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
                 }
                 else
                 {
-                    ParameterInfo pi = method.Parameters[i];
-                    if (pi.IsOut)
+                    var methodParameter = method.Parameters[i];
+                    if (methodParameter.IsOut && args[i] is ParameterExpression parameterExpression)
                     {
+#if NET35
                         return false;
-                    }
+#else
+                        if (!parameterExpression.IsByRef)
+                        {
+                            return false;
+                        }
 
-                    var promotedExpression = _parsingConfig.ExpressionPromoter.Promote(args[i], pi.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
-                    if (promotedExpression == null)
-                    {
-                        return false;
+                        promotedArgs[i] = Expression.Parameter(methodParameter.ParameterType, methodParameter.Name);
+#endif
                     }
-                    promotedArgs[i] = promotedExpression;
+                    else
+                    {
+                        var promotedExpression = _parsingConfig.ExpressionPromoter.Promote(args[i], methodParameter.ParameterType, false, method.MethodBase.DeclaringType != typeof(IEnumerableSignatures));
+                        if (promotedExpression == null)
+                        {
+                            return false;
+                        }
+
+                        promotedArgs[i] = promotedExpression;
+                    }
                 }
             }
 

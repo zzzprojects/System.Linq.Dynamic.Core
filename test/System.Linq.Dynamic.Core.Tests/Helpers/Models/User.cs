@@ -1,70 +1,92 @@
 ﻿using System.Collections.Generic;
 
-namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
+namespace System.Linq.Dynamic.Core.Tests.Helpers.Models;
+
+public class User
 {
-    public class User
+    public Guid Id { get; set; }
+
+    public SnowflakeId SnowflakeId { get; set; }
+
+    public string UserName { get; set; }
+
+    public int? NullableInt { get; set; }
+
+    public int Income { get; set; }
+
+    public UserProfile Profile { get; set; }
+
+    public UserState State { get; set; }
+
+    public List<Role> Roles { get; set; }
+
+    public bool TestMethod1()
     {
-        public Guid Id { get; set; }
+        return true;
+    }
 
-        public SnowflakeId SnowflakeId { get; set; }
+    public bool TestMethod2(User other)
+    {
+        return true;
+    }
 
-        public string UserName { get; set; }
+    public bool TestMethod3(User other)
+    {
+        return Id == other.Id;
+    }
 
-        public int? NullableInt { get; set; }
+    public bool TryParseWithoutArgument(out string xxx)
+    {
+        return TryParseWithArgument(UserName, out xxx);
+    }
 
-        public int Income { get; set; }
-
-        public UserProfile Profile { get; set; }
-
-        public UserState State { get; set; }
-
-        public List<Role> Roles { get; set; }
-
-        public bool TestMethod1()
+    public bool TryParseWithArgument(string s, out string xxx)
+    {
+        if (s.EndsWith("1") || s.EndsWith("2"))
         {
+            xxx = UserName;
             return true;
         }
 
-        public bool TestMethod2(User other)
-        {
-            return true;
-        }
+        xxx = "";
+        return false;
+    }
 
-        public bool TestMethod3(User other)
-        {
-            return Id == other.Id;
-        }
+    public bool TryParseWithArgumentAndTwoOut(string s, out string xxx, out int x)
+    {
+        x = 0;
+        return TryParseWithArgument(s, out xxx) && int.TryParse(s, out x);
+    }
 
-        public static IList<User> GenerateSampleModels(int total, bool allowNullableProfiles = false)
-        {
-            var list = new List<User>();
+    public static IList<User> GenerateSampleModels(int total, bool allowNullableProfiles = false)
+    {
+        var list = new List<User>();
 
-            for (int i = 0; i < total; i++)
+        for (int i = 0; i < total; i++)
+        {
+            var user = new User
             {
-                var user = new User
+                Id = Guid.NewGuid(),
+                SnowflakeId = new SnowflakeId(((ulong)long.MaxValue + (ulong)i + 2UL)),
+                UserName = "User" + i,
+                Income = 1 + (i % 15) * 100
+            };
+
+            if (!allowNullableProfiles || (i % 8) != 5)
+            {
+                user.Profile = new UserProfile
                 {
-                    Id = Guid.NewGuid(),
-                    SnowflakeId = new SnowflakeId(((ulong)long.MaxValue + (ulong)i + 2UL)),
-                    UserName = "User" + i,
-                    Income = 1 + (i % 15) * 100
+                    FirstName = "FirstName" + i,
+                    LastName = "LastName" + i,
+                    Age = (i % 50) + 18
                 };
-
-                if (!allowNullableProfiles || (i % 8) != 5)
-                {
-                    user.Profile = new UserProfile
-                    {
-                        FirstName = "FirstName" + i,
-                        LastName = "LastName" + i,
-                        Age = (i % 50) + 18
-                    };
-                }
-
-                user.Roles = new List<Role>(Role.StandardRoles);
-
-                list.Add(user);
             }
 
-            return list.ToArray();
+            user.Roles = new List<Role>(Role.StandardRoles);
+
+            list.Add(user);
         }
+
+        return list.ToArray();
     }
 }

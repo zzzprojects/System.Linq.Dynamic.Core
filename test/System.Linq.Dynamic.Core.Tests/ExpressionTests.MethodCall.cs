@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using FluentAssertions;
 using Moq;
@@ -31,6 +32,69 @@ public partial class ExpressionTests
             CustomTypeProvider = new DefaultDynamicLinqCustomTypeProviderForStaticTesting(),
             PrioritizePropertyOrFieldOverTheType = true
         };
+    }
+
+    [Fact]
+    public void ExpressionTests_MethodCall_WithArgument_And_1_OutArgument()
+    {
+        // Arrange
+        var config = CreateParsingConfigForMethodCallTests();
+        var users = User.GenerateSampleModels(5);
+
+        // Act
+        string s = "";
+        var expected = users.Select(u => u.TryParseWithArgument(u.UserName, out s));
+        var result = users.AsQueryable().Select<bool>(config, "TryParseWithArgument(it.UserName, $out _)");
+
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void ExpressionTests_MethodCall_WithArgument_And_2_OutArguments()
+    {
+        // Arrange
+        var config = CreateParsingConfigForMethodCallTests();
+        var users = User.GenerateSampleModels(5);
+
+        // Act
+        string s = "?";
+        int i = -1;
+        var expected = users.Select(u => u.TryParseWithArgumentAndTwoOut(u.UserName, out s, out i));
+        var result = users.AsQueryable().Select<bool>(config, "TryParseWithArgumentAndTwoOut(UserName, out _, out _)");
+
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void ExpressionTests_MethodCall_WithoutArgument_And_OutArgument()
+    {
+        // Arrange
+        var config = CreateParsingConfigForMethodCallTests();
+        var users = User.GenerateSampleModels(5);
+
+        // Act
+        string s = "";
+        var expected = users.Select(u => u.TryParseWithoutArgument(out s));
+        var result = users.AsQueryable().Select<bool>(config, "TryParseWithoutArgument(out _)");
+
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void ExpressionTests_MethodCall_WithArgument_And_NoDiscardForOutArgument_ThrowsException()
+    {
+        // Arrange
+        var config = CreateParsingConfigForMethodCallTests();
+        var users = User.GenerateSampleModels(5);
+
+        // Act
+        Action action = () => users.AsQueryable().Select<bool>(config, "TryParseWithArgument(it.UserName, $out x)");
+
+        // Assert
+        action.Should().Throw<ParseException>().WithMessage("When using an out variable, a discard '_' is required.");
     }
 
     [Fact]
