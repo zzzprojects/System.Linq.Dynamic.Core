@@ -193,7 +193,6 @@ public class ExpressionParser
         return ParseConditionalOperator();
     }
 
-#pragma warning disable 0219
     internal IList<DynamicOrdering> ParseOrdering(bool forceThenBy = false)
     {
         var orderings = new List<DynamicOrdering>();
@@ -234,7 +233,6 @@ public class ExpressionParser
         _textParser.ValidateToken(TokenId.End, Res.SyntaxError);
         return orderings;
     }
-#pragma warning restore 0219
 
     // ?: operator
     private Expression ParseConditionalOperator()
@@ -1814,56 +1812,7 @@ public class ExpressionParser
                         methodToCall = method.MakeGenericMethod(typeArguments.ToArray());
                     }
 
-#if NET35
-                    return Expression.Call(expression, methodToCall, args);
-#else
-                    var outParameters = args.OfType<ParameterExpression>().Where(p => p.IsByRef).ToArray();
-                    if (outParameters.Any())
-                    {
-                        // A list which is used to store all method arguments.
-                        var newList = new List<Expression>();
-
-                        // A list which contains the variable expression for the 'out' parameter, and also contains the returnValue variable.
-                        var blockList = new List<ParameterExpression>();
-
-                        foreach (var arg in args)
-                        {
-                            if (arg is ParameterExpression { IsByRef: true } parameterExpression)
-                            {
-                                // Create a variable expression to hold the 'out' parameter.
-                                var variable = Expression.Variable(parameterExpression.Type, parameterExpression.Name);
-
-                                newList.Add(variable);
-                                blockList.Add(variable);
-                            }
-                            else
-                            {
-                                newList.Add(arg);
-                            }
-                        }
-
-                        // Create a method call expression to call the method
-                        var methodCall = Expression.Call(expression, methodToCall, newList);
-
-                        // Create a variable to hold the return value
-                        var returnValue = Expression.Variable(methodToCall.ReturnType);
-
-                        // Add this return variable to the blockList
-                        blockList.Add(returnValue);
-
-                        // Create the block to return the boolean value.
-                        var block = Expression.Block(
-                            blockList.ToArray(),
-                            Expression.Assign(returnValue, methodCall),
-                            returnValue
-                        );
-
-                        // Create the lambda expression (note that expression must be a ParameterExpression).
-                        return Expression.Lambda(block, (ParameterExpression)expression!);
-                    }
-
-                    return Expression.Call(expression, methodToCall, args);
-#endif
+                    return CallMethod(expression, methodToCall, args);
 
                 default:
                     throw ParseError(errorPos, Res.AmbiguousMethodInvocation, id, TypeHelper.GetTypeName(type));
@@ -1926,6 +1875,59 @@ public class ExpressionParser
         }
 
         throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
+    }
+
+    private static Expression CallMethod(Expression? expression, MethodInfo methodToCall, Expression[] args)
+    {
+#if NET35
+        return Expression.Call(expression, methodToCall, args);
+#else
+        if (!args.OfType<ParameterExpression>().Any(p => p.IsByRef))
+        {
+            return Expression.Call(expression, methodToCall, args);
+        }
+
+        // A list which is used to store all method arguments.
+        var newList = new List<Expression>();
+
+        // A list which contains the variable expression for the 'out' parameter, and also contains the returnValue variable.
+        var blockList = new List<ParameterExpression>();
+
+        foreach (var arg in args)
+        {
+            if (arg is ParameterExpression { IsByRef: true } parameterExpression)
+            {
+                // Create a variable expression to hold the 'out' parameter.
+                var variable = Expression.Variable(parameterExpression.Type, parameterExpression.Name);
+
+                newList.Add(variable);
+                blockList.Add(variable);
+            }
+            else
+            {
+                newList.Add(arg);
+            }
+        }
+
+        // Create a method call expression to call the method
+        var methodCall = Expression.Call(expression, methodToCall, newList);
+
+        // Create a variable to hold the return value
+        var returnValue = Expression.Variable(methodToCall.ReturnType);
+
+        // Add this return variable to the blockList
+        blockList.Add(returnValue);
+
+        // Create the block to return the boolean value.
+        var block = Expression.Block(
+            blockList.ToArray(),
+            Expression.Assign(returnValue, methodCall),
+            returnValue
+        );
+
+        // Create the lambda expression (note that expression must be a ParameterExpression).
+        return Expression.Lambda(block, (ParameterExpression)expression!);
+#endif
     }
 
     private Expression ParseAsLambda(string id)
@@ -2101,7 +2103,7 @@ public class ExpressionParser
 
     private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression, int? arguments = null)
     {
-        string argument = arguments == null ? string.Empty : arguments == 1 ? "first " : "second ";
+        var argument = arguments == null ? string.Empty : arguments == 1 ? "first " : "second ";
 
         switch (argumentExpression)
         {
