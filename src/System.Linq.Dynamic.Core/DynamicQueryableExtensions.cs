@@ -1802,10 +1802,15 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(TResult), selector, args);
 
-            var optimized = OptimizeExpression(Expression.Call(
-                typeof(Queryable), nameof(Queryable.Select),
+            var methodCallExpression = Expression.Call(
+                typeof(Queryable), 
+                nameof(Queryable.Select),
                 new[] { source.ElementType, typeof(TResult) },
-                source.Expression, Expression.Quote(lambda)));
+                source.Expression, 
+                Expression.Quote(lambda)
+            );
+
+            var optimized = OptimizeExpression(methodCallExpression);
 
             return source.Provider.CreateQuery<TResult>(optimized);
         }

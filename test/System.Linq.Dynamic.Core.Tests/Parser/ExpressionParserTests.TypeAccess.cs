@@ -232,7 +232,7 @@ partial class ExpressionParserTests
     }
 
     [Fact]
-    public void Parse_NewOperator()
+    public void Parse_NewOperator_When_DisallowNewKeyword_Is_True_Should_Throw_Exception()
     {
         // Arrange
         var parameter = Expression.Parameter(typeof(int));

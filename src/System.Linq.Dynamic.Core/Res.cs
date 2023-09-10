@@ -68,6 +68,7 @@ internal static class Res
     public const string OpenCurlyParenExpected = "'{' expected";
     public const string OpenParenExpected = "'(' expected";
     public const string OpenParenOrIdentifierExpected = "'(' or Identifier expected";
+    public const string OutKeywordRequiresDiscard = "When using an out variable, a discard '_' is required.";
     public const string ParseExceptionFormat = "{0} (at index {1})";
     public const string SyntaxError = "Syntax error";
     public const string TokenExpected = "{0} expected";
