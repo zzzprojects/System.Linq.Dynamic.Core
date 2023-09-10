@@ -10,6 +10,10 @@ public class User
 
     public string UserName { get; set; }
 
+    public DateTime BirthDate { get; set; }
+
+    public DateTime? EndDate { get; set; }
+
     public int? NullableInt { get; set; }
 
     public int Income { get; set; }
@@ -69,10 +73,12 @@ public class User
                 Id = Guid.NewGuid(),
                 SnowflakeId = new SnowflakeId(((ulong)long.MaxValue + (ulong)i + 2UL)),
                 UserName = "User" + i,
-                Income = 1 + (i % 15) * 100
+                Income = 1 + (i % 15) * 100,
+                BirthDate = DateTime.UtcNow.AddYears(-50),
+                EndDate = i % 2 == 0 ? DateTime.UtcNow.AddYears(99) : null
             };
 
-            if (!allowNullableProfiles || (i % 8) != 5)
+            if (!allowNullableProfiles || i % 8 != 5)
             {
                 user.Profile = new UserProfile
                 {
