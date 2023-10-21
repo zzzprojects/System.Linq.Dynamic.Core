@@ -331,7 +331,7 @@ public partial class ExpressionParserTests
     [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
     [InlineData("Name", "company.Name")]
-    [InlineData("company.Name","company.Name")]
+    [InlineData("company.Name", "company.Name")]
     [InlineData("DateTime", "company.DateTime")]
     public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsTrue(string expression, string result)
     {
@@ -390,5 +390,61 @@ public partial class ExpressionParserTests
 
         // Assert
         parsedExpression.Should().StartWith(result);
+    }
+
+    [Theory]
+    [InlineData("it != null")]
+    [InlineData("parent != null")]
+    [InlineData("root != null")]
+    public void Parse_When_AreContextKeywordsEnabled_IsFalse_Should_Not_SupportKeywords(string expression)
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AreContextKeywordsEnabled = false
+        };
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
+
+        // Act
+        Action a = () => new ExpressionParser(parameters, expression, null, config).Parse(null);
+
+        // Assert
+        a.Should().Throw<ParseException>().And.Message.Should().NotBeEmpty();
+    }
+
+    [Theory]
+    [InlineData("$ != null")]
+    [InlineData("^ != null")]
+    [InlineData("~ != null")]
+    public void Parse_When_AreContextSymbolsEnabled_IsSetToFalse_Should_Not_SupportSymbols(string expression)
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AreContextSymbolsEnabled = false
+        };
+        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
+
+        // Act
+        Action a = () => new ExpressionParser(parameters, expression, null, config).Parse(null);
+
+        // Assert
+        a.Should().Throw<ParseException>().And.Message.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void Parse_When_AreContextSymbolsEnabled_IsSetToFalse_Should_SupportStringInterpolation()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AreContextSymbolsEnabled = false
+        };
+
+        // Act
+        var result = new ExpressionParser(null, "$\"{1+1}\"+string.Empty", null, config).Parse(null).ToString();
+
+        // Assert
+        result.Should().Be("s");
     }
 }
