@@ -13,14 +13,21 @@ internal static class PredefinedTypesHelper
     // These shorthands have different name than actual type and therefore not recognized by default from the PredefinedTypes.
     public static readonly IDictionary<string, Type> PredefinedTypesShorthands = new Dictionary<string, Type>
     {
-        { "int", typeof(int) },
-        { "uint", typeof(uint) },
-        { "short", typeof(short) },
-        { "ushort", typeof(ushort) },
-        { "long", typeof(long) },
-        { "ulong", typeof(ulong) },
         { "bool", typeof(bool) },
-        { "float", typeof(float) }
+        { "byte", typeof(byte) },
+        { "char", typeof(char) },
+        { "decimal", typeof(decimal) },
+        { "double", typeof(double) },
+        { "float", typeof(float) },
+        { "int", typeof(int) },
+        { "long", typeof(long) },
+        { "object", typeof(object) },
+        { "sbyte", typeof(sbyte) },
+        { "short", typeof(short) },
+        { "string", typeof(string) },
+        { "uint", typeof(uint) },
+        { "ulong", typeof(ulong) },
+        { "ushort", typeof(ushort) },
     };
 
     public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> 

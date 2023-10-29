@@ -957,7 +957,6 @@ public class ExpressionParser
 
         var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var value);
 
-
         bool shouldPrioritizeType = true;
 
         if (_parsingConfig.PrioritizePropertyOrFieldOverTheType && value is Type)
