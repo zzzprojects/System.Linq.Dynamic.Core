@@ -16,6 +16,11 @@ namespace System.Linq.Dynamic.Core.Tests;
 
 public class DynamicExpressionParserTests
 {
+    [DynamicLinqType]
+    public class Z
+    {
+    }
+
     public class Foo
     {
         public Foo FooValue { get; set; }
@@ -1784,6 +1789,13 @@ public class DynamicExpressionParserTests
 
         // Assert
         result.Should().Be("1,2,3");
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_LambdaParameter_SameNameAsDynamicType()
+    {
+        // Act
+        DynamicExpressionParser.ParseLambda<bool>(new ParsingConfig(), false, "new[]{1,2,3}.Any(z => z > 0)");
     }
 
     public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
