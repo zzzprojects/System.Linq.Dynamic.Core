@@ -1,3 +1,9 @@
+# v1.3.6 (29 October 2023)
+- [#750](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/750) - DynamicLinqTypeAttribute can now also be defined on an interface [feature] contributed by [StefH](https://github.com/StefH)
+- [#755](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/755) - Fix KeywordsHelper [bug] contributed by [StefH](https://github.com/StefH)
+- [#745](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/745) - The `DynamicLinqType` attribute can not be added to interfaces.  [refactor]
+- [#754](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/754) - Parameters of lambdas in the supplied expression have lower priority than defined types, even when casing differs [bug]
+
 # v1.3.5 (21 September 2023)
 - [#728](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/728) - added symbol check when checking for identifier [feature] contributed by [abbasc52](https://github.com/abbasc52)
 - [#730](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/730) - Add PackageReadme to NuGet [feature] contributed by [StefH](https://github.com/StefH)
