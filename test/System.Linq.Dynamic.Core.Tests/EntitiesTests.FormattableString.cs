@@ -139,6 +139,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(expected, result);
         }
 
+        [Fact(Skip = "not supported")]
         public void Entities_TakeWhile_FS()
         {
             //Arrange
