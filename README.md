@@ -76,7 +76,7 @@ If it's not possible to add that attribute, you need to implement a custom [Cust
 The following frameworks are supported:
 - net35, net40, net45, net46 and up
 - netstandard1.3, netstandard2.0 and netstandard2.1
-- netcoreapp3.1, net5.0, net6.0 and net7.0
+- netcoreapp3.1, net5.0, net6.0, net7.0 and net8.0
 - uap10.0
 
 ### Fork details
