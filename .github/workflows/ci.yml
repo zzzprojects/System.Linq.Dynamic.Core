@@ -25,8 +25,8 @@ jobs:
 
     - name: Run Tests net8.0
       run: |
-        dotnet build ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci --no-build
+        dotnet build ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci --no-build
 
     - name: Run Tests net7.0
       run: |
