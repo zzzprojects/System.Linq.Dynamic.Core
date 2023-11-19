@@ -1,4 +1,4 @@
-# v1.3.6 (29 October 2023)
+# v1.3.6 (19 November 2023)
 - [#750](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/750) - DynamicLinqTypeAttribute can now also be defined on an interface [feature] contributed by [StefH](https://github.com/StefH)
 - [#755](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/755) - Fix KeywordsHelper [bug] contributed by [StefH](https://github.com/StefH)
 - [#745](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/745) - The `DynamicLinqType` attribute can not be added to interfaces.  [refactor]
