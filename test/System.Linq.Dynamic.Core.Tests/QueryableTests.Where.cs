@@ -150,7 +150,7 @@ public partial class QueryableTests
         Assert.Throws<ParseException>(() => qry.Where("Id=123"));
 
         Assert.Throws<ArgumentNullException>(() => DynamicQueryableExtensions.Where(null, "Id=1"));
-        Assert.Throws<ArgumentNullException>(() => qry.Where((string)null));
+        Assert.Throws<ArgumentNullException>(() => qry.Where((string?)null));
         Assert.Throws<ArgumentException>(() => qry.Where(""));
         Assert.Throws<ArgumentException>(() => qry.Where(" "));
     }

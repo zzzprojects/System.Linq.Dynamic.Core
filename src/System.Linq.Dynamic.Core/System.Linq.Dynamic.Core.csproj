@@ -9,7 +9,7 @@
         <Description>This is a .NETStandard / .NET Core port of the the Microsoft assembly for the .Net 4.0 Dynamic language functionality.</Description>
         <PackageTags>system;linq;dynamic;core;dotnet;NETCoreApp;NETStandard</PackageTags>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510002}</ProjectGuid>
-        <TargetFrameworks>net35;net40;net45;net452;net46;netstandard1.3;netstandard2.0;netstandard2.1;uap10.0;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
+        <TargetFrameworks>net35;net40;net45;net452;net46;netstandard1.3;netstandard2.0;netstandard2.1;uap10.0;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
         <Version>1.3.$(PatchVersion)</Version>
     </PropertyGroup>
 
@@ -26,14 +26,14 @@
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>net40;net45;net46;netstandard1.3;netstandard2.0;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
+        <TargetFrameworks>net40;net45;net46;netstandard1.3;netstandard2.0;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
         <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' ">
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' ">
         <DefineConstants>$(DefineConstants);ASYNCENUMERABLE</DefineConstants>
     </PropertyGroup>
 

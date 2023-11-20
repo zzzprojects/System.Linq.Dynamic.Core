@@ -6,6 +6,7 @@ namespace System.Linq.Dynamic.Core.Tests
     public partial class EntitiesTests
     {
         // Not supported : https://msdn.microsoft.com/en-in/library/bb738474%28en-us%29.aspx
+        [Fact(Skip = "not supported")]
         public void Entities_TakeWhile()
         {
             //Arrange
