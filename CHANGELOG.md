@@ -1,3 +1,6 @@
+# v1.3.7 (20 November 2023)
+- [#756](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/756) - Add support for .NET 8 + Microsoft.EntityFrameworkCore 8 [feature] contributed by [StefH](https://github.com/StefH)
+
 # v1.3.6 (19 November 2023)
 - [#750](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/750) - DynamicLinqTypeAttribute can now also be defined on an interface [feature] contributed by [StefH](https://github.com/StefH)
 - [#755](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/755) - Fix KeywordsHelper [bug] contributed by [StefH](https://github.com/StefH)
