@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+    <Import Project="../../version.xml" />
+
+    <PropertyGroup>
+        <AssemblyName>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyName>
+        <AssemblyOriginatorKeyFile>../Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2/Microsoft.EntityFrameworkCore.DynamicLinq.snk</AssemblyOriginatorKeyFile>
+        <AssemblyTitle>Microsoft.EntityFrameworkCore.DynamicLinq</AssemblyTitle>
+        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;EFDYNAMICFUNCTIONS;ASYNCENUMERABLE</DefineConstants>
+        <Description>Dynamic Linq extensions for Microsoft.EntityFrameworkCore which adds Async support</Description>
+        <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
+        <ProjectGuid>{9000129D-322D-4FE6-9C47-75464577C374}</ProjectGuid>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <Version>8.3.$(PatchVersion)</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <!--<IncludeSource>True</IncludeSource>
+        <IncludeSymbols>True</IncludeSymbols>
+        <PathMap>$(MSBuildProjectDirectory)=/</PathMap>-->
+        <DebugType>portable</DebugType>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
+        <TargetFrameworks>net8.0</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="..\System.Linq.Dynamic.Core\Res.cs" />
+        <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\*.cs" />
+        <Compile Include="..\System.Linq.Dynamic.Core\Extensions\*.cs" />
+        <Compile Include="..\System.Linq.Dynamic.Core\Validation\*.cs" />
+        <Compile Include="..\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    </ItemGroup>
+</Project>

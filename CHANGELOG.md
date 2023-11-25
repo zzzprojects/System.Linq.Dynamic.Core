@@ -1,3 +1,25 @@
+# v1.3.7 (20 November 2023)
+- [#756](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/756) - Add support for .NET 8 + Microsoft.EntityFrameworkCore 8 [feature] contributed by [StefH](https://github.com/StefH)
+
+# v1.3.6 (19 November 2023)
+- [#750](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/750) - DynamicLinqTypeAttribute can now also be defined on an interface [feature] contributed by [StefH](https://github.com/StefH)
+- [#755](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/755) - Fix KeywordsHelper [bug] contributed by [StefH](https://github.com/StefH)
+- [#745](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/745) - The `DynamicLinqType` attribute can not be added to interfaces.  [refactor]
+- [#754](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/754) - Parameters of lambdas in the supplied expression have lower priority than defined types, even when casing differs [bug]
+
+# v1.3.5 (21 September 2023)
+- [#728](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/728) - added symbol check when checking for identifier [feature] contributed by [abbasc52](https://github.com/abbasc52)
+- [#730](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/730) - Add PackageReadme to NuGet [feature] contributed by [StefH](https://github.com/StefH)
+- [#731](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/731) - Add logic to convert any array to object array. [feature] contributed by [StefH](https://github.com/StefH)
+- [#732](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/732) - Add config setting: DisallowNewKeyword [feature] contributed by [StefH](https://github.com/StefH)
+- [#739](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/739) - Fix AddSignatures and SubtractSignatures [bug] contributed by [StefH](https://github.com/StefH)
+- [#743](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/743) - Add support for out keyword [feature] contributed by [StefH](https://github.com/StefH)
+- [#744](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/744) - Add some more tests for Max [test] contributed by [StefH](https://github.com/StefH)
+- [#389](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/389) -  ExpressionPromoter.Promote Limitations to Detect plausible method matches [feature]
+- [#727](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/727) - Type from registered type has higher preference than input parameter expression with same name [feature]
+- [#737](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/737) - Exception when trying to add/subtract types 'DateTime' and 'TimeSpan' [bug]
+- [#741](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/741) - out keyword is not working with dynamic linq [feature]
+
 # v1.3.4 (03 August 2023)
 - [#723](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/723) - Handle UseParameterizedNamesInDynamicQuery when parsing dynamic OfType function contributed by [yonguelink](https://github.com/yonguelink)
 - [#722](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/722) - UseParameterizedNamesInDynamicQuery set to true breaks `OfType` method call

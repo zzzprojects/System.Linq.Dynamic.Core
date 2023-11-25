@@ -56,7 +56,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             // Assert
             var parseException = action.Should().Throw<ParseException>();
 
-            parseException.Which.InnerException!.Message.Should().Contain("Insufficient hexadecimal digits");
+            parseException.Which.InnerException!.Message.Should().Contain("hexadecimal digits");
 
             parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseString(String s) in ").And.Contain("System.Linq.Dynamic.Core\\Parser\\StringParser.cs:line ");
         }

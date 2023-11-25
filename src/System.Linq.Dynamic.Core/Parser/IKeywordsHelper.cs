@@ -1,7 +1,8 @@
-﻿namespace System.Linq.Dynamic.Core.Parser
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace System.Linq.Dynamic.Core.Parser;
+
+interface IKeywordsHelper
 {
-    interface IKeywordsHelper
-    {
-        bool TryGetValue(string name, out object type);
-    }
+    bool TryGetValue(string name, [NotNullWhen(true)] out object? keyWordOrType);
 }

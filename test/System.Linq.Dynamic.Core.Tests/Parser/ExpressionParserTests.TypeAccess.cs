@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 using FluentAssertions;
@@ -216,9 +217,10 @@ partial class ExpressionParserTests
         // Arrange
         var parameter = Expression.Parameter(typeof(int));
         var parameter2 = Expression.Parameter(typeof(int));
-        var returnType = DynamicClassFactory.CreateType(new List<DynamicProperty> {
-            new DynamicProperty("a", typeof(int)),
-            new DynamicProperty("b", typeof(int))
+        var returnType = DynamicClassFactory.CreateType(new List<DynamicProperty>
+        {
+            new("a", typeof(int)),
+            new("b", typeof(int))
         });
 
         // Act
@@ -227,5 +229,28 @@ partial class ExpressionParserTests
         var expression = parser.Parse(returnType);
         // Assert
         expression.ToString().Should().Match(newExpression2);
+    }
+
+    [Fact]
+    public void Parse_NewOperator_When_DisallowNewKeyword_Is_True_Should_Throw_Exception()
+    {
+        // Arrange
+        var parameter = Expression.Parameter(typeof(int));
+        var returnType = DynamicClassFactory.CreateType(new List<DynamicProperty>
+        {
+            new("a", typeof(int))
+        });
+        var config = new ParsingConfig
+        {
+            DisallowNewKeyword = true
+        };
+
+        // Act
+        var parser = new ExpressionParser(new[] { parameter }, "new(1 as a)", new object[] { }, config);
+
+        Action action = () => parser.Parse(returnType);
+
+        // Assert
+        action.Should().Throw<ParseException>().Which.Message.Should().Be(Res.NewOperatorIsNotAllowed);
     }
 }

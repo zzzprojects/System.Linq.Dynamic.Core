@@ -20,6 +20,9 @@ namespace System.Linq.Dynamic.Core.Parser;
 /// </summary>
 public class ExpressionParser
 {
+    private static readonly string[] OutKeywords = { "out", "$out" };
+    private const string DiscardVariable = "_";
+
     private const string MethodOrderBy = nameof(Queryable.OrderBy);
     private const string MethodOrderByDescending = nameof(Queryable.OrderByDescending);
     private const string MethodThenBy = nameof(Queryable.ThenBy);
@@ -165,7 +168,31 @@ public class ExpressionParser
         return expr;
     }
 
-#pragma warning disable 0219
+    // out keyword
+    private Expression ParseOutKeyword()
+    {
+        if (_textParser.CurrentToken.Id == TokenId.Identifier && OutKeywords.Contains(_textParser.CurrentToken.Text))
+        {
+            // Go to next token (which should be a '_')
+            _textParser.NextToken();
+
+            var variableName = _textParser.CurrentToken.Text;
+            if (variableName != DiscardVariable)
+            {
+                throw ParseError(_textParser.CurrentToken.Pos, Res.OutKeywordRequiresDiscard);
+            }
+
+            // Advance to next token
+            _textParser.NextToken();
+
+            // Use MakeByRefType() to indicate that it's a by-reference type because C# uses this for both 'ref' and 'out' parameters.
+            // The "typeof(object).MakeByRefType()" is used, this will be changed later in the flow to the real type.
+            return Expression.Parameter(typeof(object).MakeByRefType(), variableName);
+        }
+
+        return ParseConditionalOperator();
+    }
+
     internal IList<DynamicOrdering> ParseOrdering(bool forceThenBy = false)
     {
         var orderings = new List<DynamicOrdering>();
@@ -206,7 +233,6 @@ public class ExpressionParser
         _textParser.ValidateToken(TokenId.End, Res.SyntaxError);
         return orderings;
     }
-#pragma warning restore 0219
 
     // ?: operator
     private Expression ParseConditionalOperator()
@@ -689,13 +715,13 @@ public class ExpressionParser
     // +, - operators
     private Expression ParseAdditive()
     {
-        Expression left = ParseMultiplicative();
+        Expression left = ParseArithmetic();
         while (_textParser.CurrentToken.Id is TokenId.Plus or TokenId.Minus)
         {
             Token op = _textParser.CurrentToken;
             _textParser.NextToken();
 
-            Expression right = ParseMultiplicative();
+            Expression right = ParseArithmetic();
             switch (op.Id)
             {
                 case TokenId.Plus:
@@ -705,13 +731,13 @@ public class ExpressionParser
                     }
                     else
                     {
-                        CheckAndPromoteOperands(typeof(IAddAndSubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(IAddSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                         left = _expressionHelper.GenerateAdd(left, right);
                     }
                     break;
 
                 case TokenId.Minus:
-                    CheckAndPromoteOperands(typeof(IAddAndSubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
+                    CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                     left = _expressionHelper.GenerateSubtract(left, right);
                     break;
             }
@@ -720,7 +746,7 @@ public class ExpressionParser
     }
 
     // *, /, %, mod operators
-    private Expression ParseMultiplicative()
+    private Expression ParseArithmetic()
     {
         Expression left = ParseUnary();
         while (_textParser.CurrentToken.Id is TokenId.Asterisk or TokenId.Slash or TokenId.Percent || TokenIdentifierIs("mod"))
@@ -931,9 +957,8 @@ public class ExpressionParser
 
         var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var value);
 
-        
         bool shouldPrioritizeType = true;
-        
+
         if (_parsingConfig.PrioritizePropertyOrFieldOverTheType && value is Type)
         {
             bool isPropertyOrField = _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null;
@@ -972,6 +997,10 @@ public class ExpressionParser
                     return ParseFunctionIsNull();
 
                 case KeywordsHelper.FUNCTION_NEW:
+                    if (_parsingConfig.DisallowNewKeyword)
+                    {
+                        throw ParseError(Res.NewOperatorIsNotAllowed);
+                    }
                     return ParseNew();
 
                 case KeywordsHelper.FUNCTION_NULLPROPAGATION:
@@ -1328,9 +1357,10 @@ public class ExpressionParser
         if (_textParser.CurrentToken.Id == TokenId.Identifier)
         {
             var newTypeName = _textParser.CurrentToken.Text;
+
             _textParser.NextToken();
 
-            while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+            while (_textParser.CurrentToken.Id is TokenId.Dot or TokenId.Plus)
             {
                 var sep = _textParser.CurrentToken.Text;
                 _textParser.NextToken();
@@ -1774,16 +1804,19 @@ public class ExpressionParser
                         throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType!));
                     }
 
-                    if (method.IsGenericMethod)
+                    MethodInfo methodToCall;
+                    if (!method.IsGenericMethod)
+                    {
+                        methodToCall = method;
+                    }
+                    else
                     {
                         var genericParameters = method.GetParameters().Where(p => p.ParameterType.IsGenericParameter);
                         var typeArguments = genericParameters.Select(a => args[a.Position].Type);
-                        var constructedMethod = method.MakeGenericMethod(typeArguments.ToArray());
-
-                        return Expression.Call(expression, constructedMethod, args);
+                        methodToCall = method.MakeGenericMethod(typeArguments.ToArray());
                     }
-                    
-                    return Expression.Call(expression, method, args);
+
+                    return CallMethod(expression, methodToCall, args);
 
                 default:
                     throw ParseError(errorPos, Res.AmbiguousMethodInvocation, id, TypeHelper.GetTypeName(type));
@@ -1846,6 +1879,59 @@ public class ExpressionParser
         }
 
         throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
+    }
+
+    private static Expression CallMethod(Expression? expression, MethodInfo methodToCall, Expression[] args)
+    {
+#if NET35
+        return Expression.Call(expression, methodToCall, args);
+#else
+        if (!args.OfType<ParameterExpression>().Any(p => p.IsByRef))
+        {
+            return Expression.Call(expression, methodToCall, args);
+        }
+
+        // A list which is used to store all method arguments.
+        var newList = new List<Expression>();
+
+        // A list which contains the variable expression for the 'out' parameter, and also contains the returnValue variable.
+        var blockList = new List<ParameterExpression>();
+
+        foreach (var arg in args)
+        {
+            if (arg is ParameterExpression { IsByRef: true } parameterExpression)
+            {
+                // Create a variable expression to hold the 'out' parameter.
+                var variable = Expression.Variable(parameterExpression.Type, parameterExpression.Name);
+
+                newList.Add(variable);
+                blockList.Add(variable);
+            }
+            else
+            {
+                newList.Add(arg);
+            }
+        }
+
+        // Create a method call expression to call the method
+        var methodCall = Expression.Call(expression, methodToCall, newList);
+
+        // Create a variable to hold the return value
+        var returnValue = Expression.Variable(methodToCall.ReturnType);
+
+        // Add this return variable to the blockList
+        blockList.Add(returnValue);
+
+        // Create the block to return the boolean value.
+        var block = Expression.Block(
+            blockList.ToArray(),
+            Expression.Assign(returnValue, methodCall),
+            returnValue
+        );
+
+        // Create the lambda expression (note that expression must be a ParameterExpression).
+        return Expression.Lambda(block, (ParameterExpression)expression!);
+#endif
     }
 
     private Expression ParseAsLambda(string id)
@@ -2021,7 +2107,7 @@ public class ExpressionParser
 
     private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression, int? arguments = null)
     {
-        string argument = arguments == null ? string.Empty : arguments == 1 ? "first " : "second ";
+        var argument = arguments == null ? string.Empty : arguments == 1 ? "first " : "second ";
 
         switch (argumentExpression)
         {
@@ -2088,7 +2174,7 @@ public class ExpressionParser
         var argList = new List<Expression>();
         while (true)
         {
-            var argumentExpression = ParseConditionalOperator();
+            var argumentExpression = ParseOutKeyword();
 
             _expressionHelper.WrapConstantExpression(ref argumentExpression);
 
@@ -2101,6 +2187,11 @@ public class ExpressionParser
 
             _textParser.NextToken();
         }
+
+        //if (argList.OfType<ParameterExpression>().Count() > 1)
+        //{
+        //    throw ParseError(_textParser.CurrentToken.Pos, Res.OutVariableSingleRequired);
+        //}
 
         return argList.ToArray();
     }

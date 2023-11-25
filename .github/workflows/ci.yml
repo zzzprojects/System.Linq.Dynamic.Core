@@ -12,17 +12,21 @@ jobs:
     steps:  
     - uses: actions/checkout@v2
 
-    - uses: actions/setup-dotnet@v1
+    - uses: actions/setup-dotnet@v3
       with:
-       dotnet-version: '6.0.x'
-
-    - uses: actions/setup-dotnet@v1
-      with:
-       dotnet-version: '7.0.x'
-      
+       dotnet-version: | 
+         6.0.x
+         7.0.x
+         8.0.x
+              
     - name: Build Projects
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+
+    - name: Run Tests net8.0
+      run: |
+        dotnet build ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci --no-build
 
     - name: Run Tests net7.0
       run: |
