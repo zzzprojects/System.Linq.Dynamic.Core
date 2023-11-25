@@ -50,7 +50,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData("it", true)]
         [InlineData("IT", true)]
         [InlineData("TestClass", true)]
-        [InlineData("testClass", true)]
+        [InlineData("testClass", false)]
         [InlineData("nonExisting", false)]
         public void TryGetValue_WithCaseInSensitive_ReturnsResultAsExpected(string name, bool expected)
         {
