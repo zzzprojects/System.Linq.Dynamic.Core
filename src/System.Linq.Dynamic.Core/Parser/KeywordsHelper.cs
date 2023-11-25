@@ -26,24 +26,7 @@ internal class KeywordsHelper : IKeywordsHelper
     private readonly ParsingConfig _config;
 
     // Keywords are IgnoreCase
-    private readonly Dictionary<string, object> _keywordMapping = new(StringComparer.OrdinalIgnoreCase)
-    {
-        { "true", Expression.Constant(true) },
-        { "false", Expression.Constant(false) },
-        { "null", Expression.Constant(null) },
-
-        { SYMBOL_IT, SYMBOL_IT },
-        { SYMBOL_PARENT, SYMBOL_PARENT },
-        { SYMBOL_ROOT, SYMBOL_ROOT },
-
-        { FUNCTION_IIF, FUNCTION_IIF },
-        { FUNCTION_ISNULL, FUNCTION_ISNULL },
-        { FUNCTION_NEW, FUNCTION_NEW },
-        { FUNCTION_NULLPROPAGATION, FUNCTION_NULLPROPAGATION },
-        { FUNCTION_IS, FUNCTION_IS },
-        { FUNCTION_AS, FUNCTION_AS },
-        { FUNCTION_CAST, FUNCTION_CAST }
-    };
+    private readonly Dictionary<string, object> _keywordMapping;
 
     // PreDefined Types are not IgnoreCase
     private static readonly Dictionary<string, object> _preDefinedTypeMapping = new();
@@ -63,6 +46,25 @@ internal class KeywordsHelper : IKeywordsHelper
     public KeywordsHelper(ParsingConfig config)
     {
         _config = Check.NotNull(config);
+
+        _keywordMapping = new(config is { AreKeywordsCaseSensitive: true } ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
+        {
+            { "true", Expression.Constant(true) },
+            { "false", Expression.Constant(false) },
+            { "null", Expression.Constant(null) },
+
+            { SYMBOL_IT, SYMBOL_IT },
+            { SYMBOL_PARENT, SYMBOL_PARENT },
+            { SYMBOL_ROOT, SYMBOL_ROOT },
+
+            { FUNCTION_IIF, FUNCTION_IIF },
+            { FUNCTION_ISNULL, FUNCTION_ISNULL },
+            { FUNCTION_NEW, FUNCTION_NEW },
+            { FUNCTION_NULLPROPAGATION, FUNCTION_NULLPROPAGATION },
+            { FUNCTION_IS, FUNCTION_IS },
+            { FUNCTION_AS, FUNCTION_AS },
+            { FUNCTION_CAST, FUNCTION_CAST }
+        };
 
         if (config.AreContextKeywordsEnabled)
         {
