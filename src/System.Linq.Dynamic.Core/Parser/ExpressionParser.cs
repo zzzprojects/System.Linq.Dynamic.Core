@@ -889,25 +889,26 @@ public class ExpressionParser
     {
         _textParser.ValidateToken(TokenId.StringLiteral);
 
-        var stringValue = StringParser.ParseString(_textParser.CurrentToken.Text);
+        var text = _textParser.CurrentToken.Text;
+        var parsedStringValue = StringParser.ParseString(_textParser.CurrentToken.Text);
 
         if (_textParser.CurrentToken.Text[0] == '\'')
         {
-            if (stringValue.Length > 1)
+            if (parsedStringValue.Length > 1)
             {
                 throw ParseError(Res.InvalidCharacterLiteral);
             }
 
             _textParser.NextToken();
-            return ConstantExpressionHelper.CreateLiteral(stringValue[0], stringValue);
+            return ConstantExpressionHelper.CreateLiteral(parsedStringValue[0], parsedStringValue);
         }
 
         _textParser.NextToken();
 
-        if (_parsingConfig.SupportCastingToFullyQualifiedTypeAsString && !forceParseAsString && stringValue.Length > 2 && stringValue.Contains('.'))
+        if (_parsingConfig.SupportCastingToFullyQualifiedTypeAsString && !forceParseAsString && parsedStringValue.Length > 2 && parsedStringValue.Contains('.'))
         {
             // Try to resolve this string as a type
-            var type = _typeFinder.FindTypeByName(stringValue, null, false);
+            var type = _typeFinder.FindTypeByName(parsedStringValue, null, false);
             if (type is { })
             {
                 return type;
@@ -917,11 +918,13 @@ public class ExpressionParser
         // While the next token is also a string, keep concatenating these strings and get next token
         while (_textParser.CurrentToken.Id == TokenId.StringLiteral)
         {
-            stringValue += StringParser.ParseString(_textParser.CurrentToken.Text);
+            text += _textParser.CurrentToken.Text;
             _textParser.NextToken();
         }
-        
-        return ConstantExpressionHelper.CreateLiteral(stringValue, stringValue);
+
+        parsedStringValue = StringParser.ParseString(text);
+
+        return ConstantExpressionHelper.CreateLiteral(parsedStringValue, parsedStringValue);
     }
 
     private Expression ParseIntegerLiteral()

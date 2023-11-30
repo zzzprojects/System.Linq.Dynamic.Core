@@ -1464,7 +1464,7 @@ public class DynamicExpressionParserTests
         var user = new User();
 
         // Act : char
-        var expressionTextChar = "StaticHelper.Filter(\"C == 'x'\")";
+        var expressionTextChar = "StaticHelper.Filter(\"C == 'c'\")";
         var lambdaChar = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionTextChar, user);
         var funcChar = (Expression<Func<User, string>>)lambdaChar;
 
@@ -1472,7 +1472,7 @@ public class DynamicExpressionParserTests
         var resultChar = (string?)delegateChar.DynamicInvoke(user);
 
         // Assert : int
-        resultChar.Should().Be("C == 'x'");
+        resultChar.Should().Be("C == 'c'");
 
         // Act : int
         var expressionTextIncome = "StaticHelper.Filter(\"Income == 5\")";
@@ -1494,7 +1494,7 @@ public class DynamicExpressionParserTests
         var resultUserName = (string?)delegateUserName.DynamicInvoke(user);
 
         // Assert : string
-        resultUserName.Should().Be(@"UserName == ""x""""""");
+        resultUserName.Should().Be(@"UserName == """"x""""");
     }
 
     [Fact]
