@@ -256,6 +256,11 @@ public class DynamicExpressionParserTests
         }
     }
 
+    public class SqlExpression
+    {
+        public Expression<Func<User, bool>>? Filter { get; set; }
+    }
+
     public static class StaticHelper
     {
         public static Guid? GetGuid(string name)
@@ -267,11 +272,65 @@ public class DynamicExpressionParserTests
         {
             return filter;
         }
+
+        public static SqlExpression SubSelect(string columnName, string objectClassName, string? filter, string order)
+        {
+            Expression<Func<User, bool>>? expFilter = null;
+
+            if (filter != null)
+            {
+                var config = new ParsingConfig
+                {
+                    CustomTypeProvider = new TestCustomTypeProvider()
+                };
+
+                expFilter = DynamicExpressionParser.ParseLambda<User, bool>(config, true, filter); // Failed Here!
+            }
+
+            return new SqlExpression
+            {
+                Filter = expFilter
+            };
+        }
+
+        public static bool In(Guid value, SqlExpression expression)
+        {
+            return value != Guid.Empty;
+        }
+
+        public static Guid First(SqlExpression sqlExpression)
+        {
+            return Guid.NewGuid();
+        }
+
+        public static string ToExpressionString(Guid? value, int subQueryLevel)
+        {
+            if (value == null)
+            {
+                return "NULL";
+            }
+
+            var quote = GetQuote(subQueryLevel);
+            return $"Guid.Parse({quote}{value}{quote})";
+        }
+
+        public static Guid Get(string settingName)
+        {
+            return Guid.NewGuid();
+        }
+
+        private static string GetQuote(int subQueryLevel)
+        {
+            var quoteCount = (int)Math.Pow(2, subQueryLevel - 1);
+
+            var quote = string.Concat(Enumerable.Repeat("\"", quoteCount));
+            return quote;
+        }
     }
 
     public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
     {
-        private HashSet<Type> _customTypes;
+        private HashSet<Type>? _customTypes;
 
         public virtual HashSet<Type> GetCustomTypes()
         {
@@ -1436,6 +1495,29 @@ public class DynamicExpressionParserTests
 
         // Assert : string
         resultUserName.Should().Be(@"UserName == ""x""""""");
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomType_Method_With_ComplexExpressionString()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = new TestCustomTypeProvider()
+        };
+
+        var user = new User();
+
+        // Act
+        var expressionText = @"StaticHelper.In(Id, StaticHelper.SubSelect(""Identity"", ""LegalPerson"", ""StaticHelper.In(ParentId, StaticHelper.SubSelect(""""LegalPersonId"""", """"PointSiteTD"""", """"Identity = "" + StaticHelper.ToExpressionString(StaticHelper.Get(""CurrentPlace""), 2) + """""", """"""""))"", """"))";
+        var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
+        var func = (Expression<Func<User, bool>>)lambda;
+
+        var compile = func.Compile();
+        // var result = (bool?)compile.DynamicInvoke(user);
+
+        // Assert
+        // result.Should().Be(@"UserName == ""x""""""");
     }
 
     [Theory]

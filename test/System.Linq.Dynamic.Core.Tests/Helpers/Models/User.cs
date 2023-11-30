@@ -6,6 +6,12 @@ public class User
 {
     public Guid Id { get; set; }
 
+    public Guid? ParentId { get; set; }
+
+    public Guid? LegalPersonId { get; set; }
+
+    public Guid? PointSiteTD { get; set; }
+
     public SnowflakeId SnowflakeId { get; set; }
 
     public string UserName { get; set; }

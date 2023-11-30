@@ -917,7 +917,7 @@ public class ExpressionParser
         // While the next token is also a string, keep concatenating these strings and get next token
         while (_textParser.CurrentToken.Id == TokenId.StringLiteral)
         {
-            stringValue += _textParser.CurrentToken.Text;
+            stringValue += StringParser.ParseString(_textParser.CurrentToken.Text);
             _textParser.NextToken();
         }
         
