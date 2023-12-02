@@ -6,7 +6,6 @@ using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Dynamic.Core.Tests.TestHelpers;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using FluentAssertions;
 using Moq;
 using NFluent;
@@ -77,11 +76,6 @@ public class DynamicExpressionParserTests
         public int TotalIncome { get; set; }
     }
 
-    public class CustomClassWithStaticMethod
-    {
-        public static int GetAge(int x) => x;
-    }
-
     public class CustomClassWithMethod
     {
         public int GetAge(int x) => x;
@@ -121,7 +115,7 @@ public class DynamicExpressionParserTests
 
         public static implicit operator string(CustomTextClass customTextValue)
         {
-            return customTextValue?.Origin;
+            return customTextValue.Origin;
         }
 
         public static implicit operator CustomTextClass(string origin)
@@ -253,126 +247,6 @@ public class DynamicExpressionParserTests
         public override string ToString()
         {
             return Name + " (" + Note + ")";
-        }
-    }
-
-    public class SqlExpression
-    {
-        public Expression<Func<User, bool>>? Filter { get; set; }
-    }
-
-    public static class StaticHelper
-    {
-        public static Guid? GetGuid(string name)
-        {
-            return Guid.NewGuid();
-        }
-
-        public static string Filter(string filter)
-        {
-            return filter;
-        }
-
-        public static SqlExpression SubSelect(string columnName, string objectClassName, string? filter, string order)
-        {
-            Expression<Func<User, bool>>? expFilter = null;
-
-            if (filter != null)
-            {
-                var config = new ParsingConfig
-                {
-                    CustomTypeProvider = new TestCustomTypeProvider()
-                };
-
-                expFilter = DynamicExpressionParser.ParseLambda<User, bool>(config, true, filter); // Failed Here!
-            }
-
-            return new SqlExpression
-            {
-                Filter = expFilter
-            };
-        }
-
-        public static bool In(Guid value, SqlExpression expression)
-        {
-            return value != Guid.Empty;
-        }
-
-        public static Guid First(SqlExpression sqlExpression)
-        {
-            return Guid.NewGuid();
-        }
-
-        public static string ToExpressionString(Guid? value, int subQueryLevel)
-        {
-            if (value == null)
-            {
-                return "NULL";
-            }
-
-            var quote = GetQuote(subQueryLevel);
-            return $"Guid.Parse({quote}{value}{quote})";
-        }
-
-        public static Guid Get(string settingName)
-        {
-            return Guid.NewGuid();
-        }
-
-        private static string GetQuote(int subQueryLevel)
-        {
-            var quoteCount = (int)Math.Pow(2, subQueryLevel - 1);
-
-            var quote = string.Concat(Enumerable.Repeat("\"", quoteCount));
-            return quote;
-        }
-    }
-
-    public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
-    {
-        private HashSet<Type>? _customTypes;
-
-        public virtual HashSet<Type> GetCustomTypes()
-        {
-            if (_customTypes != null)
-            {
-                return _customTypes;
-            }
-
-            _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }))
-            {
-                typeof(CustomClassWithStaticMethod),
-                typeof(StaticHelper)
-            };
-            return _customTypes;
-        }
-
-        public Dictionary<Type, List<MethodInfo>> GetExtensionMethods()
-        {
-            var types = GetCustomTypes();
-
-            var list = new List<Tuple<Type, MethodInfo>>();
-
-            foreach (var type in types)
-            {
-                var extensionMethods = type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Where(x => x.IsDefined(typeof(ExtensionAttribute), false)).ToList();
-
-                extensionMethods.ForEach(x => list.Add(new Tuple<Type, MethodInfo>(x.GetParameters()[0].ParameterType, x)));
-            }
-
-            return list.GroupBy(x => x.Item1, tuple => tuple.Item2).ToDictionary(key => key.Key, methods => methods.ToList());
-        }
-
-        public Type ResolveType(string typeName)
-        {
-            return Type.GetType(typeName);
-        }
-
-        public Type ResolveTypeBySimpleName(string typeName)
-        {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            return ResolveTypeBySimpleName(assemblies, typeName);
         }
     }
 
@@ -1498,7 +1372,30 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
-    public void DynamicExpressionParser_ParseLambda_CustomType_Method_With_ComplexExpressionString()
+    public void DynamicExpressionParser_ParseLambda_CustomType_Method_With_ComplexExpression1String()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = new TestCustomTypeProvider()
+        };
+
+        var user = new User();
+
+        // Act
+        var expressionText = @"StaticHelper.In(Id, StaticHelper.SubSelect(""Identity"", ""LegalPerson"", ""StaticHelper.In(ParentId, StaticHelper.SubSelect(""""LegalPersonId"""", """"PointSiteTD"""", """"Identity = 5"""", """"""""))"", """"))";
+        var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
+        var func = (Expression<Func<User, bool>>)lambda;
+
+        var compile = func.Compile();
+        var result = (bool?)compile.DynamicInvoke(user);
+
+        // Assert
+        result.Should().Be(false);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomType_Method_With_ComplexExpression2String()
     {
         // Arrange
         var config = new ParsingConfig
@@ -1514,10 +1411,10 @@ public class DynamicExpressionParserTests
         var func = (Expression<Func<User, bool>>)lambda;
 
         var compile = func.Compile();
-        // var result = (bool?)compile.DynamicInvoke(user);
+        var result = (bool?)compile.DynamicInvoke(user);
 
         // Assert
-        // result.Should().Be(@"UserName == ""x""""""");
+        result.Should().Be(false);
     }
 
     [Theory]
