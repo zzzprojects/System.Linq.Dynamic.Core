@@ -2173,15 +2173,23 @@ public class ExpressionParser
     {
         _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
         _textParser.NextToken();
-        Expression[] args = _textParser.CurrentToken.Id != TokenId.CloseParen ? ParseArguments() : new Expression[0];
+
+        var args = _textParser.CurrentToken.Id != TokenId.CloseParen ? ParseArguments() : new Expression[0];
+
         _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
         _textParser.NextToken();
+
         return args;
     }
+
+    private bool _IsParsingArguments;
 
     private Expression[] ParseArguments()
     {
         var argList = new List<Expression>();
+
+        _IsParsingArguments = true;
+
         while (true)
         {
             var argumentExpression = ParseOutKeyword();
@@ -2197,6 +2205,8 @@ public class ExpressionParser
 
             _textParser.NextToken();
         }
+
+        _IsParsingArguments = false;
 
         return argList.ToArray();
     }
