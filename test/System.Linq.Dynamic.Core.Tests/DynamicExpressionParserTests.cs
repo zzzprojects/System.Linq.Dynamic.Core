@@ -1368,7 +1368,7 @@ public class DynamicExpressionParserTests
         var resultUserName = (string?)delegateUserName.DynamicInvoke(user);
 
         // Assert : string
-        resultUserName.Should().Be(@"UserName == """"x""""");
+        resultUserName.Should().Be(@"UserName == ""x""");
     }
 
     [Fact]

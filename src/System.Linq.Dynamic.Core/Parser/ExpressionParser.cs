@@ -922,7 +922,7 @@ public class ExpressionParser
             _textParser.NextToken();
         }
 
-        parsedStringValue = StringParser.ParseString(text);
+        parsedStringValue = StringParser.ParseStringAndReplaceDoubleQuotes(text, _textParser.CurrentToken.Pos);
 
         return ConstantExpressionHelper.CreateLiteral(parsedStringValue, parsedStringValue);
     }
@@ -2182,13 +2182,9 @@ public class ExpressionParser
         return args;
     }
 
-    private bool _IsParsingArguments;
-
     private Expression[] ParseArguments()
     {
         var argList = new List<Expression>();
-
-        _IsParsingArguments = true;
 
         while (true)
         {
@@ -2205,8 +2201,6 @@ public class ExpressionParser
 
             _textParser.NextToken();
         }
-
-        _IsParsingArguments = false;
 
         return argList.ToArray();
     }

@@ -58,7 +58,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
 
             parseException.Which.InnerException!.Message.Should().Contain("hexadecimal digits");
 
-            parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseString(String s) in ").And.Contain("System.Linq.Dynamic.Core\\Parser\\StringParser.cs:line ");
+            parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseString(String s, Int32 pos) in ").And.Contain("System.Linq.Dynamic.Core\\Parser\\StringParser.cs:line ");
         }
 
         [Theory]

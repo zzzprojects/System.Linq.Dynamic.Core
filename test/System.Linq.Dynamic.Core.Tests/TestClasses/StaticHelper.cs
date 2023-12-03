@@ -65,8 +65,9 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             var quoteCount = (int)Math.Pow(2, subQueryLevel - 1);
 
-            var quote = string.Concat(Enumerable.Repeat("\"", quoteCount));
-            return quote;
+            //var quote = string.Concat(Enumerable.Repeat("\"", quoteCount));
+            //return quote;
+            return new string('"', quoteCount);
         }
     }
 }
