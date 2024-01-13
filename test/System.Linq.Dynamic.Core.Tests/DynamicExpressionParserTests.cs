@@ -262,6 +262,11 @@ public class DynamicExpressionParserTests
         {
             return Guid.NewGuid();
         }
+
+        public static string Filter(string filter)
+        {
+            return filter;
+        }
     }
 
     public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
@@ -1379,14 +1384,58 @@ public class DynamicExpressionParserTests
 
         // Act
         var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
-        var guidLambda = lambda as Expression<Func<User, Guid>>;
-        Assert.NotNull(guidLambda);
+        var guidLambda = (Expression<Func<User, Guid>>)lambda;
 
-        var del = lambda.Compile();
-        var result = (Guid)del.DynamicInvoke(user);
+        var del = guidLambda.Compile();
+        var result = (Guid?)del.DynamicInvoke(user);
 
         // Assert
-        Assert.Equal(anotherId, result);
+        result.Should().Be(anotherId);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_CustomType_Method_With_ExpressionString()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = new TestCustomTypeProvider()
+        };
+
+        var user = new User();
+
+        // Act : char
+        var expressionTextChar = "StaticHelper.Filter(\"C == 'x'\")";
+        var lambdaChar = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionTextChar, user);
+        var funcChar = (Expression<Func<User, string>>)lambdaChar;
+
+        var delegateChar = funcChar.Compile();
+        var resultChar = (string?)delegateChar.DynamicInvoke(user);
+
+        // Assert : int
+        resultChar.Should().Be("C == 'x'");
+
+        // Act : int
+        var expressionTextIncome = "StaticHelper.Filter(\"Income == 5\")";
+        var lambdaIncome = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionTextIncome, user);
+        var funcIncome = (Expression<Func<User, string>>)lambdaIncome;
+
+        var delegateIncome = funcIncome.Compile();
+        var resultIncome = (string?)delegateIncome.DynamicInvoke(user);
+
+        // Assert : int
+        resultIncome.Should().Be("Income == 5");
+
+        // Act : string
+        var expressionTextUserName = "StaticHelper.Filter(\"UserName == \"\"x\"\"\")";
+        var lambdaUserName = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionTextUserName, user);
+        var funcUserName = (Expression<Func<User, string>>)lambdaUserName;
+
+        var delegateUserName = funcUserName.Compile();
+        var resultUserName = (string?)delegateUserName.DynamicInvoke(user);
+
+        // Assert : string
+        resultUserName.Should().Be(@"UserName == ""x""""""");
     }
 
     [Theory]

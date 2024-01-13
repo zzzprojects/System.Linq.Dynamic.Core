@@ -18,6 +18,8 @@ public class User
 
     public int Income { get; set; }
 
+    public char C { get; set; }
+
     public UserProfile Profile { get; set; }
 
     public UserState State { get; set; }
