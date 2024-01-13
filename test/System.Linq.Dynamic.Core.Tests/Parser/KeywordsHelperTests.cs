@@ -12,12 +12,11 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
     {
         public string Hello { get; set; }
     }
+
     public class KeywordsHelperTests
     {
-
         public KeywordsHelperTests()
         {
-          
         }
 
         private KeywordsHelper CreateKeywordsHelper(ParsingConfig config)
@@ -56,12 +55,10 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         {
             // Arrange
             var keywordsHelper = this.CreateKeywordsHelper(new ParsingConfig { AreKeywordsCaseSensitive = false });
-            object type = null;
+            object type;
 
             // Act
-            var result = keywordsHelper.TryGetValue(
-                name,
-                out type);
+            var result = keywordsHelper.TryGetValue(name,out type);
 
             // Assert
             Assert.Equal(expected, result);

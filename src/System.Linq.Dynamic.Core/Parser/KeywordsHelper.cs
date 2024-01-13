@@ -47,7 +47,7 @@ internal class KeywordsHelper : IKeywordsHelper
     {
         _config = Check.NotNull(config);
 
-        _keywordMapping = new(config is { AreKeywordsCaseSensitive: true } ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
+        _keywordMapping = new(config.AreKeywordsCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
         {
             { "true", Expression.Constant(true) },
             { "false", Expression.Constant(false) },
