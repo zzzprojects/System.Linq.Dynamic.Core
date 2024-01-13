@@ -25,36 +25,20 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Theory]
-        [InlineData("it",true)]
-        [InlineData("IT", false)]
-        [InlineData("TestClass",true)]
-        [InlineData("testClass", false)]
-        [InlineData("nonExisting", false)]
-        public void TryGetValue_WithCaseSensitive_ReturnsResultAsExpected(string name, bool expected)
+        [InlineData("it", false, true)]
+        [InlineData("IT", false, true)]
+        [InlineData("TestClass", false, true)]
+        [InlineData("testClass", false, false)]
+        [InlineData("nonExisting", false, false)]
+        [InlineData("it", true, true)]
+        [InlineData("IT", true, false)]
+        [InlineData("TestClass", true, true)]
+        [InlineData("testClass", true, false)]
+        [InlineData("nonExisting", true ,false)]
+        public void TryGetValue_WithCaseSensitiveSettings_ReturnsResultAsExpected(string name, bool areKeywordsCaseSensitive,bool expected)
         {
             // Arrange
-            var keywordsHelper = this.CreateKeywordsHelper( new ParsingConfig { AreKeywordsCaseSensitive = true});
-            object type = null;
-
-            // Act
-            var result = keywordsHelper.TryGetValue(
-                name,
-                out type);
-
-            // Assert
-            Assert.Equal(expected,result);
-        }
-
-        [Theory]
-        [InlineData("it", true)]
-        [InlineData("IT", true)]
-        [InlineData("TestClass", true)]
-        [InlineData("testClass", false)]
-        [InlineData("nonExisting", false)]
-        public void TryGetValue_WithCaseInSensitive_ReturnsResultAsExpected(string name, bool expected)
-        {
-            // Arrange
-            var keywordsHelper = this.CreateKeywordsHelper(new ParsingConfig { AreKeywordsCaseSensitive = false });
+            var keywordsHelper = this.CreateKeywordsHelper(new ParsingConfig { AreKeywordsCaseSensitive = areKeywordsCaseSensitive });
             object type;
 
             // Act
