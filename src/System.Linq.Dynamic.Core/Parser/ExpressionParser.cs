@@ -914,6 +914,13 @@ public class ExpressionParser
             }
         }
 
+        // While the next token is also a string, keep concatenating these strings and get next token
+        while (_textParser.CurrentToken.Id == TokenId.StringLiteral)
+        {
+            stringValue += _textParser.CurrentToken.Text;
+            _textParser.NextToken();
+        }
+        
         return ConstantExpressionHelper.CreateLiteral(stringValue, stringValue);
     }
 
@@ -2187,11 +2194,6 @@ public class ExpressionParser
 
             _textParser.NextToken();
         }
-
-        //if (argList.OfType<ParameterExpression>().Count() > 1)
-        //{
-        //    throw ParseError(_textParser.CurrentToken.Pos, Res.OutVariableSingleRequired);
-        //}
 
         return argList.ToArray();
     }
