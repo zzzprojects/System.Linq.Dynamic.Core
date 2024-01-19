@@ -40,6 +40,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 if (DateTime.UtcNow <= valueAndExpiration.ExpirationTime)
                 {
                     value = valueAndExpiration.Value;
+                    _cache[key] = (value, DateTime.UtcNow.Add(_timeToLive));
                     return true;
                 }
                 else
