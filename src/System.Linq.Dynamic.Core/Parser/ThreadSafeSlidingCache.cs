@@ -66,6 +66,9 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             if (DateTime.UtcNow - _lastCleanupTime > _cleanupFrequency)
             {
+                // Set here, so we don't have re-entry due to large collection enumeration.
+                _lastCleanupTime = DateTime.UtcNow;
+
                 foreach (var key in _cache.Keys)
                 {
                     if (DateTime.UtcNow > _cache[key].ExpirationTime)
@@ -73,7 +76,7 @@ namespace System.Linq.Dynamic.Core.Parser
                         _cache.TryRemove(key, out _);
                     }
                 }
-                _lastCleanupTime = DateTime.UtcNow;
+                
             }
         }
     }
