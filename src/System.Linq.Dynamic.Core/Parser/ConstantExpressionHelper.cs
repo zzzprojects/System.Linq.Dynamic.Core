@@ -1,12 +1,18 @@
-﻿using System.Collections.Concurrent;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
     internal static class ConstantExpressionHelper
     {
-        private static readonly ConcurrentDictionary<object, Expression> Expressions = new();
-        private static readonly ConcurrentDictionary<Expression, string> Literals = new();
+#if DEBUG
+        private static readonly TimeSpan TimeToLivePeriod = TimeSpan.FromSeconds(10);
+#else
+        private static readonly TimeSpan TimeToLivePeriod = TimeSpan.FromMinutes(10);
+#endif
+
+        public static readonly ThreadSafeSlidingCache<object, Expression> Expressions = new(TimeToLivePeriod);
+        private static readonly ThreadSafeSlidingCache<Expression, string> Literals = new(TimeToLivePeriod);
+
 
         public static bool TryGetText(Expression expression, out string? text)
         {
@@ -15,15 +21,17 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public static Expression CreateLiteral(object value, string text)
         {
-            if (!Expressions.ContainsKey(value))
+            if (Expressions.TryGetValue(value, out var outputValue))
             {
-                ConstantExpression constantExpression = Expression.Constant(value);
-
-                Expressions.TryAdd(value, constantExpression);
-                Literals.TryAdd(constantExpression, text);
+                return outputValue;
             }
 
-            return Expressions[value];
+            ConstantExpression constantExpression = Expression.Constant(value);
+
+            Expressions.AddOrUpdate(value, constantExpression);
+            Literals.AddOrUpdate(constantExpression, text);
+
+            return constantExpression;
         }
     }
 }
