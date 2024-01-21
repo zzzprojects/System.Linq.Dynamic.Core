@@ -4,10 +4,14 @@ using System.Threading.Tasks;
 
 namespace System.Linq.Dynamic.Core.Util
 {
+    internal static class ThreadSafeSlidingCacheConstants
+    {
+        // Default cleanup frequency
+        public static readonly TimeSpan DefaultCleanupFrequency = TimeSpan.FromMinutes(10);
+    }
+
     internal class ThreadSafeSlidingCache<TKey, TValue> where TKey : notnull where TValue : notnull
     {
-        // ReSharper disable once StaticMemberInGenericType
-        private static readonly TimeSpan _defaultCleanupFrequency = TimeSpan.FromMinutes(10);
         private readonly ConcurrentDictionary<TKey, (TValue Value, DateTime ExpirationTime)> _cache;
         private readonly TimeSpan _cleanupFrequency;
         private readonly IDateTimeUtils _dateTimeProvider;
@@ -37,7 +41,7 @@ namespace System.Linq.Dynamic.Core.Util
             _cache = new ConcurrentDictionary<TKey, (TValue, DateTime)>();
             TimeToLive = timeToLive;
             _minCacheItemsBeforeCleanup = minCacheItemsBeforeCleanup;
-            _cleanupFrequency = cleanupFrequency ?? _defaultCleanupFrequency;
+            _cleanupFrequency = cleanupFrequency ?? ThreadSafeSlidingCacheConstants.DefaultCleanupFrequency;
             _deleteExpiredCachedItemsDelegate = Cleanup;
             _dateTimeProvider = dateTimeProvider ?? new DateTimeUtils();
         }
