@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Linq.Dynamic.Core.Util;
+using System.Linq.Expressions;
 
 namespace System.Linq.Dynamic.Core.Parser
 {
