@@ -1,0 +1,16 @@
+﻿namespace System.Linq.Dynamic.Core.Util;
+
+internal static class TaskUtils
+{
+    public static void Run(Action action)
+    {
+#if NET35 || NET40
+        System.Threading.ThreadPool.QueueUserWorkItem(_ => {
+            action?.Invoke();
+        });
+#else
+        System.Threading.Tasks.Task.Run(action);
+#endif
+    }
+}
+

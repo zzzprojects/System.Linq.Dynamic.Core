@@ -1,34 +1,60 @@
-﻿using System.Linq.Dynamic.Core.Util;
+﻿using System.Linq.Dynamic.Core.Util.Cache;
 using System.Linq.Expressions;
 
-namespace System.Linq.Dynamic.Core.Parser
+namespace System.Linq.Dynamic.Core.Parser;
+
+internal class ConstantExpressionHelper
 {
-    internal static class ConstantExpressionHelper
+    private readonly ParsingConfig _config;
+
+    // Static shared instance to prevent duplications of the same objects
+    private static ThreadSafeSlidingCache<object, Expression>? _expressions;
+    private static ThreadSafeSlidingCache<Expression, string>? _literals;
+
+    public ConstantExpressionHelper(ParsingConfig config)
     {
-        private static readonly TimeSpan TimeToLivePeriod = TimeSpan.FromMinutes(10);
+        _config = config;
+        
+    }
 
-        public static readonly ThreadSafeSlidingCache<object, Expression> Expressions = new(TimeToLivePeriod);
-        private static readonly ThreadSafeSlidingCache<Expression, string> Literals = new(TimeToLivePeriod);
+    private ThreadSafeSlidingCache<Expression, string> GetLiterals()
+    {
+        _literals ??= new ThreadSafeSlidingCache<Expression, string>(
+            _config.ConstantExpressionSlidingCacheTimeToLive,
+            _config.ConstantExpressionSlidingCacheCleanupFrequency,
+            _config.ConstantExpressionSlidingCacheMinItemsTrigger
+        );
+        return _literals;
+    }
+
+    private ThreadSafeSlidingCache<object, Expression> GetExpression()
+    {
+        _expressions ??= new ThreadSafeSlidingCache<object, Expression>(
+            _config.ConstantExpressionSlidingCacheTimeToLive,
+            _config.ConstantExpressionSlidingCacheCleanupFrequency,
+            _config.ConstantExpressionSlidingCacheMinItemsTrigger
+        );
+        return _expressions;
+    }
 
 
-        public static bool TryGetText(Expression expression, out string? text)
+    public bool TryGetText(Expression expression, out string? text)
+    {
+        return GetLiterals().TryGetValue(expression, out text);
+    }
+
+    public Expression CreateLiteral(object value, string text)
+    {
+        if (GetExpression().TryGetValue(value, out var outputValue))
         {
-            return Literals.TryGetValue(expression, out text);
+            return outputValue;
         }
 
-        public static Expression CreateLiteral(object value, string text)
-        {
-            if (Expressions.TryGetValue(value, out var outputValue))
-            {
-                return outputValue;
-            }
+        var constantExpression = Expression.Constant(value);
 
-            ConstantExpression constantExpression = Expression.Constant(value);
+        GetExpression().AddOrUpdate(value, constantExpression);
+        GetLiterals().AddOrUpdate(constantExpression, text);
 
-            Expressions.AddOrUpdate(value, constantExpression);
-            Literals.AddOrUpdate(constantExpression, text);
-
-            return constantExpression;
-        }
+        return constantExpression;
     }
 }
