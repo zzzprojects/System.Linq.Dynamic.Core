@@ -14,4 +14,3 @@ internal static class TaskUtils
 #endif
     }
 }
-

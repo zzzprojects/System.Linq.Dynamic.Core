@@ -10,7 +10,7 @@ public class CacheConfig
     /// Items not accessed within this TTL will be expired, allowing garbage collection to reclaim the memory.
     /// Default is 10 minutes.
     /// </summary>
-    public TimeSpan TimeToLive { get; set; } = TimeSpan.FromMinutes(10);
+    public TimeSpan TimeToLive { get; set; } = SlidingCacheConstants.DefaultTimeToLive;
 
     /// <summary>
     /// Configures the minimum number of items required in the constant expression cache before triggering cleanup. 
@@ -23,5 +23,5 @@ public class CacheConfig
     /// Sets the frequency for running the cleanup process in the Constant Expression cache. 
     /// By default, cleanup occurs every 10 minutes.
     /// </summary>
-    public TimeSpan CleanupFrequency { get; set; } = TimeSpan.FromMinutes(10);
+    public TimeSpan CleanupFrequency { get; set; } = SlidingCacheConstants.DefaultCleanupFrequency;
 }

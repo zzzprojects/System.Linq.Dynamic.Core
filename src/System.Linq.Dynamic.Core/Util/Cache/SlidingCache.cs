@@ -45,16 +45,19 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
     /// <summary>
     /// Sliding Thread Safe Cache
     /// </summary>
-    /// <param name="cashConfig"></param>
-    /// <param name="dateTimeProvider"></param>
-    public SlidingCache(
-        CacheConfig cashConfig,
-        IDateTimeUtils? dateTimeProvider = null)
+    /// <param name="cacheConfig">The <see cref="CacheConfig"/> to use.</param>
+    /// <param name="dateTimeProvider">
+    ///     Provides the Time for the Caching object. Default will be created if not supplied. Used
+    ///     for Testing classes
+    /// </param>
+    public SlidingCache(CacheConfig cacheConfig, IDateTimeUtils? dateTimeProvider = null)
     {
+        Check.NotNull(cacheConfig);
+
         _cache = new ConcurrentDictionary<TKey, CacheEntry<TValue>>();
-        TimeToLive = cashConfig.TimeToLive;
-        _minCacheItemsBeforeCleanup = cashConfig.MinItemsTrigger;
-        _cleanupFrequency = cashConfig.CleanupFrequency;
+        TimeToLive = cacheConfig.TimeToLive;
+        _minCacheItemsBeforeCleanup = cacheConfig.MinItemsTrigger;
+        _cleanupFrequency = cacheConfig.CleanupFrequency;
         _deleteExpiredCachedItemsDelegate = Cleanup;
         _dateTimeProvider = dateTimeProvider ?? new DateTimeUtils();
         // To prevent a scan on first call, set the last Cleanup to the current Provider time

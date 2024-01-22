@@ -12,7 +12,7 @@ public class SlidingCacheTests
     private static readonly DateTime UtcNow = new(2024, 1, 1, 0, 0, 0);
 
     [Fact]
-    public void ThreadSafeSlidingCache_CacheOperations()
+    public void SlidingCache_CacheOperations()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
@@ -43,7 +43,7 @@ public class SlidingCacheTests
     }
 
     [Fact]
-    public void ThreadSafeSlidingCache_TestExpire()
+    public void SlidingCache_TestExpire()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
@@ -64,7 +64,7 @@ public class SlidingCacheTests
     }
 
     [Fact]
-    public void ThreadSafeSlidingCache_TestAutoExpire()
+    public void SlidingCache_TestAutoExpire()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
@@ -85,28 +85,28 @@ public class SlidingCacheTests
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         // Trigger the cleanup, asking for non-existing key
-        cache.TryGetValue(10, out var _);
+        cache.TryGetValue(10, out _);
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        System.Threading.Thread.Sleep(10);
+        Threading.Thread.Sleep(10);
 
         // Ensure one item is in the cache
         cache.Count.Should().Be(0, $"Expected 0 items in the cache, only had {cache.Count}");
     }
 
     [Fact]
-    public void ThreadSafeSlidingCache_TestNull()
+    public void SlidingCache_TestNull()
     {
         // Arrange
         var cache = new SlidingCache<Expression, string>(TimeSpan.FromMinutes(10));
 
         // Expect an ArgumentNullException
-        var exception = Assert.Throws<ArgumentNullException>(() => { cache.AddOrUpdate(null, "one"); });
+        Assert.Throws<ArgumentNullException>(() => { cache.AddOrUpdate(null, "one"); });
     }
 
     [Fact]
-    public void ThreadSafeSlidingCache_TestMinNumberBeforeTests()
+    public void SlidingCache_TestMinNumberBeforeTests()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
@@ -128,11 +128,11 @@ public class SlidingCacheTests
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         // Trigger the cleanup, asking for non-existing key
-        cache.TryGetValue(10, out var _);
+        cache.TryGetValue(10, out _);
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        System.Threading.Thread.Sleep(10);
+        Threading.Thread.Sleep(10);
 
         // Ensure one item is in the cache
         cache.Count.Should().Be(1, $"Expected 1 items in the cache, only had {cache.Count}");
@@ -142,7 +142,7 @@ public class SlidingCacheTests
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        System.Threading.Thread.Sleep(10);
+        Threading.Thread.Sleep(10);
 
         // Ensure one item is in the cache
         cache.Count.Should().Be(1, $"Expected 1 items in the cache, had {cache.Count}");

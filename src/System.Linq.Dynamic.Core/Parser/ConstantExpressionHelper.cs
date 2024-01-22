@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core.Util.Cache;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Dynamic.Core.Util.Cache;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 
@@ -12,13 +13,13 @@ internal class ConstantExpressionHelper
     public ConstantExpressionHelper(ParsingConfig config)
     {
         var parsingConfig = Check.NotNull(config);
-        var useConfig = parsingConfig.ConstantExpressionCacheConfig ?? new CacheConfig();
+        var cacheConfig = parsingConfig.ConstantExpressionCacheConfig ?? new CacheConfig();
 
-        _literals = new SlidingCache<Expression, string>(useConfig);
-        _expressions = new SlidingCache<object, Expression>(useConfig);
+        _literals = new SlidingCache<Expression, string>(cacheConfig);
+        _expressions = new SlidingCache<object, Expression>(cacheConfig);
     }
 
-    public bool TryGetText(Expression expression, out string? text)
+    public bool TryGetText(Expression expression, [NotNullWhen(true)] out string? text)
     {
         return _literals.TryGetValue(expression, out text);
     }
