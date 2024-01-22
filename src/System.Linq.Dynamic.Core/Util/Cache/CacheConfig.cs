@@ -12,14 +12,12 @@ public class CacheConfig
     /// </summary>
     public TimeSpan TimeToLive { get; set; } = TimeSpan.FromMinutes(10);
 
-
     /// <summary>
     /// Configures the minimum number of items required in the constant expression cache before triggering cleanup. 
     /// This prevents frequent cleanups, especially in caches with few items. 
     /// A default value of null implies that cleanup is always allowed to run, helping in timely removal of unused cache items.
     /// </summary>
-    public int? MinItemsTrigger { get; set; } = null;
-
+    public int? MinItemsTrigger { get; set; }
 
     /// <summary>
     /// Sets the frequency for running the cleanup process in the Constant Expression cache. 

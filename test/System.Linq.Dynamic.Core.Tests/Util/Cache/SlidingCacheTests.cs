@@ -147,5 +147,4 @@ public class SlidingCacheTests
         // Ensure one item is in the cache
         cache.Count.Should().Be(1, $"Expected 1 items in the cache, had {cache.Count}");
     }
-
 }

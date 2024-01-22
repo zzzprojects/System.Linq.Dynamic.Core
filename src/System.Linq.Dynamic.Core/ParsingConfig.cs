@@ -239,5 +239,5 @@ public class ParsingConfig
     /// <summary>
     /// Caches constant expressions to enhance performance. Periodic cleanup is performed to manage cache size, governed by this configuration.
     /// </summary>
-    public CacheConfig ConstantExpressionCacheConfig { get; set; } = new CacheConfig();
+    public CacheConfig? ConstantExpressionCacheConfig { get; set; }
 }

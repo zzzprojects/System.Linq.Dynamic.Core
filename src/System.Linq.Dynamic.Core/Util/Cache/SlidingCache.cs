@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.Util.Cache;
 
 internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : notnull
 {
-    private readonly ConcurrentDictionary<TKey, CacheContainer<TValue>> _cache;
+    private readonly ConcurrentDictionary<TKey, CacheEntry<TValue>> _cache;
     private readonly TimeSpan _cleanupFrequency;
     private readonly IDateTimeUtils _dateTimeProvider;
     private readonly Action _deleteExpiredCachedItemsDelegate;
@@ -32,7 +32,7 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
         long? minCacheItemsBeforeCleanup = null,
         IDateTimeUtils? dateTimeProvider = null)
     {
-        _cache = new ConcurrentDictionary<TKey, CacheContainer<TValue>>();
+        _cache = new ConcurrentDictionary<TKey, CacheEntry<TValue>>();
         TimeToLive = timeToLive;
         _minCacheItemsBeforeCleanup = minCacheItemsBeforeCleanup;
         _cleanupFrequency = cleanupFrequency ?? SlidingCacheConstants.DefaultCleanupFrequency;
@@ -51,7 +51,7 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
         CacheConfig cashConfig,
         IDateTimeUtils? dateTimeProvider = null)
     {
-        _cache = new ConcurrentDictionary<TKey, CacheContainer<TValue>>();
+        _cache = new ConcurrentDictionary<TKey, CacheEntry<TValue>>();
         TimeToLive = cashConfig.TimeToLive;
         _minCacheItemsBeforeCleanup = cashConfig.MinItemsTrigger;
         _cleanupFrequency = cashConfig.CleanupFrequency;
@@ -82,7 +82,7 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
         Check.NotNull(value);
 
         var expirationTime = _dateTimeProvider.UtcNow.Add(TimeToLive);
-        _cache[key] = new CacheContainer<TValue>(value, expirationTime);
+        _cache[key] = new CacheEntry<TValue>(value, expirationTime);
 
         CleanupIfNeeded();
     }
@@ -105,7 +105,7 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
             {
                 value = valueAndExpiration.Value;
                 var newExpire = _dateTimeProvider.UtcNow.Add(TimeToLive);
-                _cache[key] = new CacheContainer<TValue>(value, newExpire);
+                _cache[key] = new CacheEntry<TValue>(value, newExpire);
                 return true;
             }
 

@@ -6,17 +6,16 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal class ConstantExpressionHelper
 {
-    // Static shared instance to prevent duplications of the same objects
     private readonly SlidingCache<object, Expression> _expressions;
     private readonly SlidingCache<Expression, string> _literals;
 
     public ConstantExpressionHelper(ParsingConfig config)
     {
         var parsingConfig = Check.NotNull(config);
-        var cacheConfig = Check.NotNull(parsingConfig.ConstantExpressionCacheConfig);
+        var useConfig = parsingConfig.ConstantExpressionCacheConfig ?? new CacheConfig();
 
-        _literals = new SlidingCache<Expression, string>(cacheConfig);
-        _expressions = new SlidingCache<object, Expression>(cacheConfig);
+        _literals = new SlidingCache<Expression, string>(useConfig);
+        _expressions = new SlidingCache<object, Expression>(useConfig);
     }
 
     public bool TryGetText(Expression expression, out string? text)
