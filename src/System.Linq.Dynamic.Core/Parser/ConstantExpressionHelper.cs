@@ -1,29 +1,40 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Linq.Dynamic.Core.Util.Cache;
+using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 
-namespace System.Linq.Dynamic.Core.Parser
+namespace System.Linq.Dynamic.Core.Parser;
+
+internal class ConstantExpressionHelper
 {
-    internal static class ConstantExpressionHelper
+    private readonly SlidingCache<object, Expression> _expressions;
+    private readonly SlidingCache<Expression, string> _literals;
+
+    public ConstantExpressionHelper(ParsingConfig config)
     {
-        private static readonly ConcurrentDictionary<object, Expression> Expressions = new();
-        private static readonly ConcurrentDictionary<Expression, string> Literals = new();
+        var parsingConfig = Check.NotNull(config);
+        var useConfig = parsingConfig.ConstantExpressionCacheConfig ?? new CacheConfig();
 
-        public static bool TryGetText(Expression expression, out string? text)
+        _literals = new SlidingCache<Expression, string>(useConfig);
+        _expressions = new SlidingCache<object, Expression>(useConfig);
+    }
+
+    public bool TryGetText(Expression expression, out string? text)
+    {
+        return _literals.TryGetValue(expression, out text);
+    }
+
+    public Expression CreateLiteral(object value, string text)
+    {
+        if (_expressions.TryGetValue(value, out var outputValue))
         {
-            return Literals.TryGetValue(expression, out text);
+            return outputValue;
         }
 
-        public static Expression CreateLiteral(object value, string text)
-        {
-            if (!Expressions.ContainsKey(value))
-            {
-                ConstantExpression constantExpression = Expression.Constant(value);
+        var constantExpression = Expression.Constant(value);
 
-                Expressions.TryAdd(value, constantExpression);
-                Literals.TryAdd(constantExpression, text);
-            }
+        _expressions.AddOrUpdate(value, constantExpression);
+        _literals.AddOrUpdate(constantExpression, text);
 
-            return Expressions[value];
-        }
+        return constantExpression;
     }
 }

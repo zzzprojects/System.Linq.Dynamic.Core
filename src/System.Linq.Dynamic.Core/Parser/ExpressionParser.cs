@@ -45,6 +45,7 @@ public class ExpressionParser
     private ParameterExpression? _root;
     private Type? _resultType;
     private bool _createParameterCtor;
+    private ConstantExpressionHelper _constantExpressionHelper;
 
     /// <summary>
     /// Gets name for the `it` field. By default this is set to the KeyWord value "it".
@@ -81,6 +82,7 @@ public class ExpressionParser
         _methodFinder = new MethodFinder(_parsingConfig, _expressionHelper);
         _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
         _typeConverterFactory = new TypeConverterFactory(_parsingConfig);
+        _constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(_parsingConfig);
 
         if (parameters != null)
         {
@@ -900,7 +902,7 @@ public class ExpressionParser
             }
 
             _textParser.NextToken();
-            return ConstantExpressionHelper.CreateLiteral(parsedStringValue[0], parsedStringValue);
+            return _constantExpressionHelper.CreateLiteral(parsedStringValue[0], parsedStringValue);
         }
 
         _textParser.NextToken();
@@ -924,7 +926,7 @@ public class ExpressionParser
 
         parsedStringValue = StringParser.ParseStringAndReplaceDoubleQuotes(text, _textParser.CurrentToken.Pos);
 
-        return ConstantExpressionHelper.CreateLiteral(parsedStringValue, parsedStringValue);
+        return _constantExpressionHelper.CreateLiteral(parsedStringValue, parsedStringValue);
     }
 
     private Expression ParseIntegerLiteral()

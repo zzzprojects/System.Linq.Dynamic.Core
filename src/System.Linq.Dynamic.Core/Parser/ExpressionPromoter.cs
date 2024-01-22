@@ -9,6 +9,7 @@ namespace System.Linq.Dynamic.Core.Parser
     public class ExpressionPromoter : IExpressionPromoter
     {
         private readonly NumberParser _numberParser;
+        private readonly ConstantExpressionHelper _constantExpressionHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionPromoter"/> class.
@@ -17,6 +18,7 @@ namespace System.Linq.Dynamic.Core.Parser
         public ExpressionPromoter(ParsingConfig config)
         {
             _numberParser = new NumberParser(config);
+            _constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(config);
         }
 
         /// <inheritdoc />
@@ -48,7 +50,7 @@ namespace System.Linq.Dynamic.Core.Parser
                 }
                 else
                 {
-                    if (ConstantExpressionHelper.TryGetText(ce, out var text))
+                    if (_constantExpressionHelper.TryGetText(ce, out var text))
                     {
                         Type target = TypeHelper.GetNonNullableType(type);
                         object? value = null;

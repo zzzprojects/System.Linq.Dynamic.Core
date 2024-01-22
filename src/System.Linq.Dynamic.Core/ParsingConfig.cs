@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Dynamic.Core.Util.Cache;
 
 namespace System.Linq.Dynamic.Core;
 
@@ -234,4 +235,9 @@ public class ParsingConfig
     /// Default value is <c>false</c>.
     /// </summary>
     public bool DisallowNewKeyword { get; set; } = false;
+
+    /// <summary>
+    /// Caches constant expressions to enhance performance. Periodic cleanup is performed to manage cache size, governed by this configuration.
+    /// </summary>
+    public CacheConfig? ConstantExpressionCacheConfig { get; set; }
 }
