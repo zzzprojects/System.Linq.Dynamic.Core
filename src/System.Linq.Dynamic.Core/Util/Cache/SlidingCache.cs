@@ -4,7 +4,7 @@ using System.Linq.Dynamic.Core.Validation;
 
 namespace System.Linq.Dynamic.Core.Util.Cache;
 
-internal class ThreadSafeSlidingCache<TKey, TValue> where TKey : notnull where TValue : notnull
+internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : notnull
 {
     private readonly ConcurrentDictionary<TKey, CacheContainer<TValue>> _cache;
     private readonly TimeSpan _cleanupFrequency;
@@ -26,7 +26,7 @@ internal class ThreadSafeSlidingCache<TKey, TValue> where TKey : notnull where T
     ///     Provides the Time for the Caching object. Default will be created if not supplied. Used
     ///     for Testing classes
     /// </param>
-    public ThreadSafeSlidingCache(
+    public SlidingCache(
         TimeSpan timeToLive,
         TimeSpan? cleanupFrequency = null,
         long? minCacheItemsBeforeCleanup = null,
@@ -35,7 +35,26 @@ internal class ThreadSafeSlidingCache<TKey, TValue> where TKey : notnull where T
         _cache = new ConcurrentDictionary<TKey, CacheContainer<TValue>>();
         TimeToLive = timeToLive;
         _minCacheItemsBeforeCleanup = minCacheItemsBeforeCleanup;
-        _cleanupFrequency = cleanupFrequency ?? ThreadSafeSlidingCacheConstants.DefaultCleanupFrequency;
+        _cleanupFrequency = cleanupFrequency ?? SlidingCacheConstants.DefaultCleanupFrequency;
+        _deleteExpiredCachedItemsDelegate = Cleanup;
+        _dateTimeProvider = dateTimeProvider ?? new DateTimeUtils();
+        // To prevent a scan on first call, set the last Cleanup to the current Provider time
+        _lastCleanupTime = _dateTimeProvider.UtcNow;
+    }
+
+    /// <summary>
+    /// Sliding Thread Safe Cache
+    /// </summary>
+    /// <param name="cashConfig"></param>
+    /// <param name="dateTimeProvider"></param>
+    public SlidingCache(
+        CacheConfig cashConfig,
+        IDateTimeUtils? dateTimeProvider = null)
+    {
+        _cache = new ConcurrentDictionary<TKey, CacheContainer<TValue>>();
+        TimeToLive = cashConfig.TimeToLive;
+        _minCacheItemsBeforeCleanup = cashConfig.MinItemsTrigger;
+        _cleanupFrequency = cashConfig.CleanupFrequency;
         _deleteExpiredCachedItemsDelegate = Cleanup;
         _dateTimeProvider = dateTimeProvider ?? new DateTimeUtils();
         // To prevent a scan on first call, set the last Cleanup to the current Provider time

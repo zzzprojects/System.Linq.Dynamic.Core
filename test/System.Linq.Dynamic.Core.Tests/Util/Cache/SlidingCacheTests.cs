@@ -7,7 +7,7 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Util.Cache;
 
-public class ThreadSafeSlidingCacheTests
+public class SlidingCacheTests
 {
     private static readonly DateTime UtcNow = new(2024, 1, 1, 0, 0, 0);
 
@@ -18,7 +18,7 @@ public class ThreadSafeSlidingCacheTests
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
         // Arrange
-        var cache = new ThreadSafeSlidingCache<int, string>(
+        var cache = new SlidingCache<int, string>(
             TimeSpan.FromSeconds(1),
             dateTimeProvider: dateTimeUtilsMock.Object);
 
@@ -48,7 +48,7 @@ public class ThreadSafeSlidingCacheTests
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
-        var cache = new ThreadSafeSlidingCache<int, string>(TimeSpan.FromMinutes(10),
+        var cache = new SlidingCache<int, string>(TimeSpan.FromMinutes(10),
             dateTimeProvider: dateTimeUtilsMock.Object);
 
         // Act
@@ -70,7 +70,7 @@ public class ThreadSafeSlidingCacheTests
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
         // Arrange
-        var cache = new ThreadSafeSlidingCache<int, string>(
+        var cache = new SlidingCache<int, string>(
             TimeSpan.FromMinutes(10),
             dateTimeProvider: dateTimeUtilsMock.Object);
 
@@ -99,7 +99,7 @@ public class ThreadSafeSlidingCacheTests
     public void ThreadSafeSlidingCache_TestNull()
     {
         // Arrange
-        var cache = new ThreadSafeSlidingCache<Expression, string>(TimeSpan.FromMinutes(10));
+        var cache = new SlidingCache<Expression, string>(TimeSpan.FromMinutes(10));
 
         // Expect an ArgumentNullException
         var exception = Assert.Throws<ArgumentNullException>(() => { cache.AddOrUpdate(null, "one"); });
@@ -112,7 +112,7 @@ public class ThreadSafeSlidingCacheTests
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
         // Arrange
-        var cache = new ThreadSafeSlidingCache<int, string>(
+        var cache = new SlidingCache<int, string>(
             TimeSpan.FromMinutes(10),
             minCacheItemsBeforeCleanup: 2,
             dateTimeProvider: dateTimeUtilsMock.Object);
