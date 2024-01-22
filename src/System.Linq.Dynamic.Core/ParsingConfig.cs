@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Dynamic.Core.Util.Cache;
 
 namespace System.Linq.Dynamic.Core;
 
@@ -236,25 +237,7 @@ public class ParsingConfig
     public bool DisallowNewKeyword { get; set; } = false;
 
     /// <summary>
-    /// Sets a Time-To-Live (TTL) for items in the constant expression cache to prevent uncontrolled growth. 
-    /// Items not accessed within this TTL will be expired, allowing garbage collection to reclaim the memory.
-    /// Default is 10 minutes.
+    /// Caches constant expressions to enhance performance. Periodic cleanup is performed to manage cache size, governed by this configuration.
     /// </summary>
-    public TimeSpan ConstantExpressionSlidingCacheTimeToLive { get; set; } = TimeSpan.FromMinutes(10);
-
-
-    /// <summary>
-    /// Configures the minimum number of items required in the constant expression cache before triggering cleanup. 
-    /// This prevents frequent cleanups, especially in caches with few items. 
-    /// A default value of null implies that cleanup is always allowed to run, helping in timely removal of unused cache items.
-    /// </summary>
-    public int? ConstantExpressionSlidingCacheMinItemsTrigger { get; set; } = null;
-
-
-    /// <summary>
-    /// Sets the frequency for running the cleanup process in the Constant Expression cache. 
-    /// By default, cleanup occurs every 10 minutes.
-    /// </summary>
-    public TimeSpan ConstantExpressionSlidingCacheCleanupFrequency { get; set; } = TimeSpan.FromMinutes(10);
-
+    public CacheConfig ConstantExpressionCacheConfig { get; set; } = new CacheConfig();
 }

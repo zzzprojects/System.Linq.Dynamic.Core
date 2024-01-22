@@ -82,7 +82,7 @@ public class ExpressionParser
         _methodFinder = new MethodFinder(_parsingConfig, _expressionHelper);
         _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
         _typeConverterFactory = new TypeConverterFactory(_parsingConfig);
-        _constantExpressionHelper = new ConstantExpressionHelper(_parsingConfig);
+        _constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(_parsingConfig);
 
         if (parameters != null)
         {

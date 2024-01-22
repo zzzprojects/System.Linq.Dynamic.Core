@@ -16,7 +16,7 @@ namespace System.Linq.Dynamic.Core.Parser
         private static readonly char[] Qualifiers = { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
         private static readonly char[] QualifiersHex = { 'U', 'u', 'L', 'l' };
         private static readonly string[] QualifiersReal = { "F", "f", "D", "d", "M", "m" };
-        private ConstantExpressionHelper _constantExpressionHelper;
+        private readonly ConstantExpressionHelper _constantExpressionHelper;
 
         private readonly CultureInfo _culture;
 
@@ -27,7 +27,7 @@ namespace System.Linq.Dynamic.Core.Parser
         public NumberParser(ParsingConfig? config)
         {
             _culture = config?.NumberParseCulture ?? CultureInfo.InvariantCulture;
-            _constantExpressionHelper = new ConstantExpressionHelper(config ?? ParsingConfig.Default);
+            _constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(config ?? ParsingConfig.Default);
         }
 
         /// <summary>

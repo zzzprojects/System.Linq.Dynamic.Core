@@ -18,7 +18,7 @@ namespace System.Linq.Dynamic.Core.Parser
         public ExpressionPromoter(ParsingConfig config)
         {
             _numberParser = new NumberParser(config);
-            _constantExpressionHelper = new ConstantExpressionHelper(config);
+            _constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(config);
         }
 
         /// <inheritdoc />

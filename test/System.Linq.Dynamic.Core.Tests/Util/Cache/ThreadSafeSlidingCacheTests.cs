@@ -54,8 +54,8 @@ public class ThreadSafeSlidingCacheTests
         // Act
         cache.AddOrUpdate(1, "one");
 
-        var r = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
-        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(r);
+        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         if (cache.TryGetValue(1, out var value))
         {
@@ -81,8 +81,8 @@ public class ThreadSafeSlidingCacheTests
         cache.Count.Should().Be(1, $"Expected 1 items in the cache, only had {cache.Count}");
 
         // move the time forward
-        var r = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
-        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(r);
+        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         // Trigger the cleanup, asking for non-existing key
         cache.TryGetValue(10, out var _);
@@ -124,8 +124,8 @@ public class ThreadSafeSlidingCacheTests
         cache.Count.Should().Be(1, $"Expected 1 items in the cache, only had {cache.Count}");
 
         // move the time forward
-        var r = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
-        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(r);
+        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         // Trigger the cleanup, asking for non-existing key
         cache.TryGetValue(10, out var _);
