@@ -1,3 +1,7 @@
+# v1.3.9-preview-01 (23 January 2024)
+- [#761](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/761) - Add unit tests for Any [test] contributed by [StefH](https://github.com/StefH)
+- [#765](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/765) - #764 - Introduce Sliding Cache to Constant Expression Helper [feature] contributed by [TWhidden](https://github.com/TWhidden)
+
 # v1.3.8 (20 January 2024)
 - [#758](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/758) - Update function argument parsing for strings [bug] contributed by [StefH](https://github.com/StefH)
 - [#760](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/760) - Update function argument parsing for strings (part 2) [bug] contributed by [StefH](https://github.com/StefH)
