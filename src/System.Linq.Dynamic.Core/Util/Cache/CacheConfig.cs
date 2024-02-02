@@ -24,4 +24,13 @@ public class CacheConfig
     /// By default, cleanup occurs every 10 minutes.
     /// </summary>
     public TimeSpan CleanupFrequency { get; set; } = SlidingCacheConstants.DefaultCleanupFrequency;
+
+    /// <summary>
+    /// Enables returning expired cache items in scenarios where cleanup, running on a separate thread, 
+    /// has not yet removed them. This allows for the retrieval of an expired object without needing to 
+    /// clear and recreate it if a request is made concurrently with cleanup. Particularly useful 
+    /// when cached items are deterministic, ensuring consistent results even from expired entries.
+    /// Default true;
+    /// </summary>
+    public bool PermitExpiredReturns { get; set; } = true;
 }

@@ -64,6 +64,27 @@ public class SlidingCacheTests
     }
 
     [Fact]
+    public void SlidingCache_TestExpiredReturn()
+    {
+        var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
+        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
+
+        var cache = new SlidingCache<int, string>(TimeSpan.FromMinutes(10),
+            dateTimeProvider: dateTimeUtilsMock.Object, permitExpiredReturns: true);
+
+        // Act
+        cache.AddOrUpdate(1, "one");
+
+        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
+
+        if (!cache.TryGetValue(1, out var value))
+        {
+            Assert.True(false, $"Expected to not find the value, but found {value}");
+        }
+    }
+
+    [Fact]
     public void SlidingCache_TestAutoExpire()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
