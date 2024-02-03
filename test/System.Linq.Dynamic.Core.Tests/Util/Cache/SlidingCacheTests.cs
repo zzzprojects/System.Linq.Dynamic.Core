@@ -15,6 +15,7 @@ public class SlidingCacheTests
     public void SlidingCache_CacheOperations()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
+        // Configure Mock with SetupGet since SlidingCache can be non-deterministic; don't use SetupSequence
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
         // Arrange
@@ -46,27 +47,51 @@ public class SlidingCacheTests
     public void SlidingCache_TestExpire()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
+        // Configure Mock with SetupGet since SlidingCache can be non-deterministic; don't use SetupSequence
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
+        // Arrange
         var cache = new SlidingCache<int, string>(TimeSpan.FromMinutes(10),
             dateTimeProvider: dateTimeUtilsMock.Object);
 
         // Act
         cache.AddOrUpdate(1, "one");
 
+        // move the time forward 
         var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
-        if (cache.TryGetValue(1, out var value))
-        {
-            Assert.True(false, $"Expected to not find the value, but found {value}");
-        }
+        // Ensure that the element has expired
+        cache.TryGetValue(1, out var value).Should().BeFalse($"Expected to not find the value, but found {value}");
+    }
+
+    [Fact]
+    public void SlidingCache_TestReturnExpiredItems()
+    {
+        var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
+        // Configure Mock with SetupGet since SlidingCache can be non-deterministic; don't use SetupSequence
+        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
+
+        // Arrange
+        var cache = new SlidingCache<int, string>(TimeSpan.FromMinutes(10),
+            dateTimeProvider: dateTimeUtilsMock.Object, returnExpiredItems: true);
+
+        // Act
+        cache.AddOrUpdate(1, "one");
+
+        // move the time forward 
+        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
+
+        // Ensure the expired item is returned from the cache
+        cache.TryGetValue(1, out _).Should().BeTrue($"Expected to return expired item");
     }
 
     [Fact]
     public void SlidingCache_TestAutoExpire()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
+        // Configure Mock with SetupGet since SlidingCache can be non-deterministic; don't use SetupSequence
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
         // Arrange
@@ -109,6 +134,7 @@ public class SlidingCacheTests
     public void SlidingCache_TestMinNumberBeforeTests()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
+        // Configure Mock with SetupGet since SlidingCache can be non-deterministic; don't use SetupSequence
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
         // Arrange
