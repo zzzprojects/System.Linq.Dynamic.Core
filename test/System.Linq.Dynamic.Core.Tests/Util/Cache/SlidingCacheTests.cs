@@ -48,6 +48,7 @@ public class SlidingCacheTests
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
+        // Arrange
         var cache = new SlidingCache<int, string>(TimeSpan.FromMinutes(10),
             dateTimeProvider: dateTimeUtilsMock.Object);
 
@@ -64,24 +65,24 @@ public class SlidingCacheTests
     }
 
     [Fact]
-    public void SlidingCache_TestExpiredReturn()
+    public void SlidingCache_TestReturnExpiredItems()
     {
         var dateTimeUtilsMock = new Mock<IDateTimeUtils>();
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(UtcNow);
 
+        // Arrange
         var cache = new SlidingCache<int, string>(TimeSpan.FromMinutes(10),
-            dateTimeProvider: dateTimeUtilsMock.Object, permitExpiredReturns: true);
+            dateTimeProvider: dateTimeUtilsMock.Object, returnExpiredItems: true);
 
         // Act
         cache.AddOrUpdate(1, "one");
 
+        // move the time forward
         var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
-        if (!cache.TryGetValue(1, out var value))
-        {
-            Assert.True(false, $"Expected to not find the value, but found {value}");
-        }
+        // Ensure the expired item is returned from the cache
+        cache.TryGetValue(1, out _).Should().BeTrue($"Expected to return expired item");
     }
 
     [Fact]

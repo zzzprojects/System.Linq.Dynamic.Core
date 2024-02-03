@@ -32,5 +32,5 @@ public class CacheConfig
     /// when cached items are deterministic, ensuring consistent results even from expired entries.
     /// Default true;
     /// </summary>
-    public bool PermitExpiredReturns { get; set; } = true;
+    public bool ReturnExpiredItems { get; set; } = true;
 }

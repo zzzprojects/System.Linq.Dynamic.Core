@@ -12,7 +12,7 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
     private readonly IDateTimeUtils _dateTimeProvider;
     private readonly Action _deleteExpiredCachedItemsDelegate;
     private readonly long? _minCacheItemsBeforeCleanup;
-    private readonly bool _permitExpiredReturns;
+    private readonly bool _returnExpiredItems;
     private DateTime _lastCleanupTime;
     private int _cleanupLocked = 0;
 
@@ -29,19 +29,19 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
     ///     Provides the Time for the Caching object. Default will be created if not supplied. Used
     ///     for Testing classes
     /// </param>
-    /// <param name="permitExpiredReturns">If a request for an item happens to be expired, but is still
+    /// <param name="returnExpiredItems">If a request for an item happens to be expired, but is still
     /// in known, don't expire it and return it instead.</param>
     public SlidingCache(
         TimeSpan timeToLive,
         TimeSpan? cleanupFrequency = null,
         long? minCacheItemsBeforeCleanup = null,
         IDateTimeUtils? dateTimeProvider = null,
-        bool permitExpiredReturns = false)
+        bool returnExpiredItems = false)
     {
         _cache = new ConcurrentDictionary<TKey, CacheEntry<TValue>>();
         TimeToLive = timeToLive;
         _minCacheItemsBeforeCleanup = minCacheItemsBeforeCleanup;
-        _permitExpiredReturns = permitExpiredReturns;
+        _returnExpiredItems = returnExpiredItems;
         _cleanupFrequency = cleanupFrequency ?? SlidingCacheConstants.DefaultCleanupFrequency;
         _deleteExpiredCachedItemsDelegate = Cleanup;
         _dateTimeProvider = dateTimeProvider ?? new DateTimeUtils();
@@ -65,7 +65,7 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
         TimeToLive = cacheConfig.TimeToLive;
         _minCacheItemsBeforeCleanup = cacheConfig.MinItemsTrigger;
         _cleanupFrequency = cacheConfig.CleanupFrequency;
-        _permitExpiredReturns = cacheConfig.PermitExpiredReturns;
+        _returnExpiredItems = cacheConfig.ReturnExpiredItems;
         _deleteExpiredCachedItemsDelegate = Cleanup;
         _dateTimeProvider = dateTimeProvider ?? new DateTimeUtils();
         // To prevent a scan on first call, set the last Cleanup to the current Provider time
@@ -114,7 +114,7 @@ internal class SlidingCache<TKey, TValue> where TKey : notnull where TValue : no
             {
                 // Permit expired returns will return the object even if was expired
                 // this will prevent the need to re-create the object for the caller
-                if (_permitExpiredReturns || _dateTimeProvider.UtcNow <= valueAndExpiration.ExpirationTime)
+                if (_returnExpiredItems || _dateTimeProvider.UtcNow <= valueAndExpiration.ExpirationTime)
                 {
                     value = valueAndExpiration.Value;
                     var newExpire = _dateTimeProvider.UtcNow.Add(TimeToLive);
