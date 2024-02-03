@@ -34,9 +34,9 @@ public class SlidingCacheTests
         cache.Count.Should().Be(3, $"Expected 3 items in the cache, only had {cache.Count}");
 
         // Test retrieval
-        Assert.True(cache.TryGetValue(1, out var value1), "Expected to find the value, but did not");
-        Assert.True(cache.TryGetValue(2, out var value2), "Expected to find the value, but did not");
-        Assert.True(cache.TryGetValue(3, out var value3), "Expected to find the value, but did not");
+        Assert.True(cache.TryGetValue(1, out _), "Expected to find the value, but did not");
+        Assert.True(cache.TryGetValue(2, out _), "Expected to find the value, but did not");
+        Assert.True(cache.TryGetValue(3, out _), "Expected to find the value, but did not");
 
         // Test Removal
         cache.Remove(1);
@@ -58,7 +58,7 @@ public class SlidingCacheTests
         cache.AddOrUpdate(1, "one");
 
         // move the time forward 
-        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        var newDateTime = UtcNow.AddMinutes(11);
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         // Ensure that the element has expired
@@ -79,12 +79,12 @@ public class SlidingCacheTests
         // Act
         cache.AddOrUpdate(1, "one");
 
-        // move the time forward 
-        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        // move the time forward
+        var newDateTime = UtcNow.AddMinutes(11);
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         // Ensure the expired item is returned from the cache
-        cache.TryGetValue(1, out _).Should().BeTrue($"Expected to return expired item");
+        cache.TryGetValue(1, out _).Should().BeTrue("Expected to return expired item");
     }
 
     [Fact]
@@ -103,10 +103,10 @@ public class SlidingCacheTests
         cache.AddOrUpdate(1, "one");
 
         // Ensure one item is in the cache
-        cache.Count.Should().Be(1, $"Expected 1 items in the cache, only had {cache.Count}");
+        cache.Count.Should().Be(1, $"Expected 1 items in the cache, had {cache.Count}");
 
         // move the time forward
-        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        var newDateTime = UtcNow.AddMinutes(11);
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         // Trigger the cleanup, asking for non-existing key
@@ -117,7 +117,7 @@ public class SlidingCacheTests
         Threading.Thread.Sleep(10);
 
         // Ensure one item is in the cache
-        cache.Count.Should().Be(0, $"Expected 0 items in the cache, only had {cache.Count}");
+        cache.Count.Should().Be(0, $"Expected 0 items in the cache, had {cache.Count}");
     }
 
     [Fact]
@@ -150,7 +150,7 @@ public class SlidingCacheTests
         cache.Count.Should().Be(1, $"Expected 1 items in the cache, only had {cache.Count}");
 
         // move the time forward
-        var newDateTime = dateTimeUtilsMock.Object.UtcNow.AddMinutes(11);
+        var newDateTime = UtcNow.AddMinutes(11);
         dateTimeUtilsMock.SetupGet(d => d.UtcNow).Returns(newDateTime);
 
         // Trigger the cleanup, asking for non-existing key
