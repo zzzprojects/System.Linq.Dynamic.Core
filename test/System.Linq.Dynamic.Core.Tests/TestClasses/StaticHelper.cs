@@ -5,6 +5,8 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public static class StaticHelper
     {
+        public static Guid NewStaticGuid => new("43b17e59-2b66-4697-a3ab-7b45baedee72");
+
         public static Guid? GetGuid(string name)
         {
             return Guid.NewGuid();
@@ -64,9 +66,6 @@ namespace System.Linq.Dynamic.Core.Tests
         private static string GetQuote(int subQueryLevel)
         {
             var quoteCount = (int)Math.Pow(2, subQueryLevel - 1);
-
-            //var quote = string.Concat(Enumerable.Repeat("\"", quoteCount));
-            //return quote;
             return new string('"', quoteCount);
         }
     }

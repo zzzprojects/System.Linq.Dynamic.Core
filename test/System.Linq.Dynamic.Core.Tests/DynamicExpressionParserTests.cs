@@ -1298,6 +1298,33 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
+    public void DynamicExpressionParser_ParseLambda_StaticClassWithStaticExpressionBody()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = new TestCustomTypeProvider()
+        };
+        
+        var user = new User
+        {
+            Id = new Guid("854f6ac8-71f9-4f79-8cd7-3ca46eaa02e6")
+        };
+
+        var expressionText = "Id == StaticHelper.NewStaticGuid";
+
+        // Act
+        var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText);
+        var guidLambda = (Expression<Func<User, bool>>)lambda;
+
+        var del = guidLambda.Compile();
+        var result = (bool?)del.DynamicInvoke(user);
+
+        // Assert
+        result.Should().Be(false);
+    }
+
+    [Fact]
     public void DynamicExpressionParser_ParseLambda_Operator_Less_Greater_With_Guids()
     {
         var config = new ParsingConfig

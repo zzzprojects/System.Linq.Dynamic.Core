@@ -17,10 +17,10 @@ namespace System.Linq.Dynamic.Core.Tests
             }
 
             _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }))
-                {
-                    typeof(CustomClassWithStaticMethod),
-                    typeof(StaticHelper)
-                };
+            {
+                typeof(CustomClassWithStaticMethod),
+                typeof(StaticHelper)
+            };
             return _customTypes;
         }
 
