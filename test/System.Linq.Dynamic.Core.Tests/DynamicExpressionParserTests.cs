@@ -1298,14 +1298,41 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
-    public void DynamicExpressionParser_ParseLambda_StaticClassWithStaticExpressionBody()
+    public void DynamicExpressionParser_ParseLambda_StaticClassWithStaticPropertyWithSameNameAsNormalProperty()
     {
         // Arrange
         var config = new ParsingConfig
         {
             CustomTypeProvider = new TestCustomTypeProvider()
         };
-        
+
+        var user = new User
+        {
+            Id = new Guid("854f6ac8-71f9-4f79-8cd7-3ca46eaa02e6")
+        };
+
+        var expressionText = "Id == System.Linq.Dynamic.Core.Tests.Helpers.Models.UserInfo.Key";
+
+        // Act
+        var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText);
+        var guidLambda = (Expression<Func<User, bool>>)lambda;
+
+        var del = guidLambda.Compile();
+        var result = (bool?)del.DynamicInvoke(user);
+
+        // Assert
+        result.Should().Be(false);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_StaticClassWithStaticProperty()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = new TestCustomTypeProvider()
+        };
+
         var user = new User
         {
             Id = new Guid("854f6ac8-71f9-4f79-8cd7-3ca46eaa02e6")
@@ -1318,6 +1345,60 @@ public class DynamicExpressionParserTests
         var guidLambda = (Expression<Func<User, bool>>)lambda;
 
         var del = guidLambda.Compile();
+        var result = (bool?)del.DynamicInvoke(user);
+
+        // Assert
+        result.Should().Be(false);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_NestedStaticClassWithStaticProperty()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = new TestCustomTypeProvider()
+        };
+
+        var user = new User
+        {
+            Id = new Guid("854f6ac8-71f9-4f79-8cd7-3ca46eaa02e6")
+        };
+
+        var expressionText = "Id == StaticHelper.Nested.NewNestedStaticProperty";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText);
+        var boolExpression = (Expression<Func<User, bool>>)lambdaExpression;
+
+        var del = boolExpression.Compile();
+        var result = (bool?)del.DynamicInvoke(user);
+
+        // Assert
+        result.Should().Be(false);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_NestedStaticClassWithStaticMethod()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = new TestCustomTypeProvider()
+        };
+
+        var user = new User
+        {
+            Id = new Guid("854f6ac8-71f9-4f79-8cd7-3ca46eaa02e6")
+        };
+
+        var expressionText = "Id == StaticHelper.Nested.NewNestedStaticMethod()";
+
+        // Act
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText);
+        var boolExpression = (Expression<Func<User, bool>>)lambdaExpression;
+
+        var del = boolExpression.Compile();
         var result = (bool?)del.DynamicInvoke(user);
 
         // Assert

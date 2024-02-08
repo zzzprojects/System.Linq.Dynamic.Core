@@ -904,7 +904,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
-            string enumType = typeof(TestEnumPublic).FullName;
+            string enumType = typeof(TestEnumPublic).FullName!;
 
             // Act
             var resultEqualEnumParamLeft = qry.Where($"{enumType}.Var2 == it.E").ToDynamicArray();
@@ -920,7 +920,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
-            string enumType = typeof(TestEnum2).FullName;
+            string enumType = typeof(TestEnum2).FullName!;
 
             // Act
             var resultEqualEnumParamLeft = qry.Where($"{enumType}.Var2 == it.B").ToDynamicArray();
@@ -936,7 +936,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
-            string enumType = typeof(TestEnumPublic).FullName;
+            string enumType = typeof(TestEnumPublic).FullName!;
 
             // Act
             var resultEqualEnumParamLeft = qry.Where($"{enumType}.Var2 == it.E").ToDynamicArray();
@@ -956,7 +956,7 @@ namespace System.Linq.Dynamic.Core.Tests
                 ResolveTypesBySimpleName = true
             };
             var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
-            string enumType = typeof(TestEnum2).Name;
+            string enumType = typeof(TestEnum2).Name!;
 
             // Act
             Action a = () => qry.Where(config, $"{enumType}.Var2 == it.B").ToDynamicArray();
@@ -976,7 +976,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Action a = () => qry.Where($"{enumType}.Var2 == it.E").ToDynamicArray();
 
             // Assert
-            a.Should().Throw<ParseException>().WithMessage("Enum type 'b.c' not found");
+            a.Should().Throw<ParseException>().WithMessage("Type 'b.c' not found");
         }
 
         [Fact]
@@ -984,7 +984,7 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
-            string enumType = typeof(TestEnumPublic).FullName;
+            string enumType = typeof(TestEnumPublic).FullName!;
 
             // Act
             Action a = () => qry.Where($"{enumType}.VarInvalid == it.E").ToDynamicArray();
@@ -998,13 +998,13 @@ namespace System.Linq.Dynamic.Core.Tests
         {
             // Arrange
             var qry = new List<TestEnumClass> { new TestEnumClass { E = TestEnumPublic.Var2 } }.AsQueryable();
-            string enumType = typeof(TestEnumPublic).FullName;
+            string enumType = typeof(TestEnumPublic).FullName!;
 
             // Act
             Action a = () => qry.Where($"{enumType}. == it.E").ToDynamicArray();
 
             // Assert
-            a.Should().Throw<ParseException>().WithMessage("Enum type 'System.Linq.Dynamic.Core.Tests.' not found");
+            a.Should().Throw<ParseException>().WithMessage("Type 'System.Linq.Dynamic.Core.Tests.' not found");
         }
 
         [Fact]

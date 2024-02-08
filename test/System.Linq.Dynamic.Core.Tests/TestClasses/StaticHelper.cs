@@ -7,6 +7,15 @@ namespace System.Linq.Dynamic.Core.Tests
     {
         public static Guid NewStaticGuid => new("43b17e59-2b66-4697-a3ab-7b45baedee72");
 
+        public static class Nested
+        {
+            public static Guid NewNestedStaticProperty => new("954692b3-6a37-4c9c-ad55-07fbb593f046");
+
+            public static Guid NewNestedStaticMethod() => new ("954692b3-6a37-4c9c-ad55-07fbb593f046");
+
+            public static bool IsNull(object? value) => value != null;
+        }
+
         public static Guid? GetGuid(string name)
         {
             return Guid.NewGuid();

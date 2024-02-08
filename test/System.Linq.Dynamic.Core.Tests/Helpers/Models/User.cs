@@ -4,6 +4,8 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models;
 
 public class User
 {
+    public bool UserInfo { get; set; }
+
     public Guid Id { get; set; }
 
     public Guid? ParentId { get; set; }
