@@ -1314,10 +1314,10 @@ public class DynamicExpressionParserTests
         var expressionText = "Id == System.Linq.Dynamic.Core.Tests.Helpers.Models.UserInfo.Key";
 
         // Act
-        var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText);
-        var guidLambda = (Expression<Func<User, bool>>)lambda;
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText);
+        var boolExpression = (Expression<Func<User, bool>>)lambdaExpression;
 
-        var del = guidLambda.Compile();
+        var del = boolExpression.Compile();
         var result = (bool?)del.DynamicInvoke(user);
 
         // Assert
@@ -1341,10 +1341,10 @@ public class DynamicExpressionParserTests
         var expressionText = "Id == StaticHelper.NewStaticGuid";
 
         // Act
-        var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText);
-        var guidLambda = (Expression<Func<User, bool>>)lambda;
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText);
+        var boolExpression = (Expression<Func<User, bool>>)lambdaExpression;
 
-        var del = guidLambda.Compile();
+        var del = boolExpression.Compile();
         var result = (bool?)del.DynamicInvoke(user);
 
         // Assert

@@ -1779,25 +1779,23 @@ public class ExpressionParser
     {
         var errorPos = _textParser.CurrentToken.Pos;
 
-        var isStaticAccess = false;
+        // In case the expression is not null and the type is null, get the type from the expression.
         if (expression != null)
         {
             type ??= expression.Type;
         }
-        else
-        {
-            isStaticAccess = true;
-        }
 
+        // In case the id is not defined, get it and move the TextParser forward.
         if (id == null)
         {
-            // In case the id is defined, use that one and move the TextParser forward.
             id = GetIdentifier();
             _textParser.NextToken();
         }
 
         if (_textParser.CurrentToken.Id == TokenId.OpenParen)
         {
+            var isStaticAccess = expression == null;
+
             if (!isStaticAccess && type != typeof(string))
             {
                 var enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
@@ -1840,10 +1838,9 @@ public class ExpressionParser
             }
         }
 
-        var @enum = TypeHelper.ParseEnum(id, type);
-        if (@enum != null)
+        if (TypeHelper.TryParseEnum(id, type, out var enumValue))
         {
-            return Expression.Constant(@enum);
+            return Expression.Constant(enumValue);
         }
 
 #if UAP10_0 || NETSTANDARD1_3
@@ -2034,8 +2031,7 @@ public class ExpressionParser
 
         if (isEnum)
         {
-            var enumValue = TypeHelper.ParseEnum(identifier, type);
-            if (enumValue != null)
+            if (TypeHelper.TryParseEnum(identifier, type, out var enumValue))
             {
                 return Expression.Constant(enumValue);
             }

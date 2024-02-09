@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
 
@@ -480,14 +481,16 @@ namespace System.Linq.Dynamic.Core.Parser
             }
         }
 
-        public static object? ParseEnum(string value, Type? type)
+        public static bool TryParseEnum(string value, Type? type, [NotNullWhen(true)] out object? enumValue)
         {
             if (type is { } && type.GetTypeInfo().IsEnum && Enum.IsDefined(type, value))
             {
-                return Enum.Parse(type, value, true);
+                enumValue = Enum.Parse(type, value, true);
+                return true;
             }
 
-            return null;
+            enumValue = null;
+            return false;
         }
 
         public static bool IsDictionary(Type? type)
