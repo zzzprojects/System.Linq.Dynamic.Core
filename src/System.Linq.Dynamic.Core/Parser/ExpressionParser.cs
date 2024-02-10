@@ -34,6 +34,7 @@ public class ExpressionParser
     private readonly TextParser _textParser;
     private readonly NumberParser _numberParser;
     private readonly IExpressionHelper _expressionHelper;
+    private readonly ConstantExpressionHelper _constantExpressionHelper;
     private readonly ITypeFinder _typeFinder;
     private readonly ITypeConverterFactory _typeConverterFactory;
     private readonly Dictionary<string, object> _internals = new();
@@ -45,7 +46,6 @@ public class ExpressionParser
     private ParameterExpression? _root;
     private Type? _resultType;
     private bool _createParameterCtor;
-    private readonly ConstantExpressionHelper _constantExpressionHelper;
 
     /// <summary>
     /// Gets name for the `it` field. By default this is set to the KeyWord value "it".
