@@ -45,7 +45,7 @@ public class ExpressionParser
     private ParameterExpression? _root;
     private Type? _resultType;
     private bool _createParameterCtor;
-    private ConstantExpressionHelper _constantExpressionHelper;
+    private readonly ConstantExpressionHelper _constantExpressionHelper;
 
     /// <summary>
     /// Gets name for the `it` field. By default this is set to the KeyWord value "it".
@@ -2034,33 +2034,11 @@ public class ExpressionParser
             return Expression.Call(instance, dictionaryMethod, args);
         }
 
-        //if (type != null && !_methodFinder.ContainsMethod(type, methodName, false, null, ref args))
-        //{
-        //    throw ParseError(errorPos, Res.NoApplicableMethodWithParameters, methodName, string.Join(",", args.Select(a => a.Type.Name).ToArray()));
-        //}
-
-        //if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, null, ref args))
-        //{
-        //    throw ParseError(errorPos, Res.NoApplicableAggregate, methodName, string.Join(",", args.Select(a => a.Type.Name).ToArray()));
-        //}
-
-        //Type callType = typeof(Enumerable);
-        //if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, null, ref args))
-        //{
-        //    callType = typeof(Queryable);
-        //}
-
         var callType = typeof(Enumerable);
-        if (type != null && TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null && _methodFinder.TypeContainsMethod(type, methodName))
+        if (type != null && TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null && _methodFinder.ContainsMethod(type, methodName))
         {
             callType = typeof(Queryable);
         }
-
-        //var callType = TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null ? typeof(Queryable) : typeof(Enumerable);
-        //if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, null, ref args))
-        //{
-        //    callType = typeof(Queryable);
-        //}
 
         Type[] typeArgs;
         if (new[] { "OfType", "Cast" }.Contains(methodName))
