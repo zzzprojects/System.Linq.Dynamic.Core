@@ -57,7 +57,6 @@ internal static class Res
     public const string NewOperatorIsNotAllowed = "Using the new operator is not allowed via the ParsingConfig.";
     public const string NoApplicableIndexer = "No applicable indexer exists in type '{0}'";
     public const string NoApplicableMethod = "No applicable method '{0}' exists in type '{1}'";
-    public const string NoApplicableMethodWithParameters = "No applicable method '{0}({1})' exists";
     public const string NoItInScope = "No 'it' is in scope";
     public const string NoMatchingConstructor = "No matching constructor in type '{0}'";
     public const string NoParentInScope = "No 'parent' is in scope";

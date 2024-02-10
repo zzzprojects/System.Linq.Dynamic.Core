@@ -2057,9 +2057,13 @@ public class ExpressionParser
             {
                 typeArgs = new[] { elementType, args[0].Type, args[1].Type };
             }
-            else
+            else if (args.Length == 1)
             {
                 typeArgs = new[] { elementType, args[0].Type };
+            }
+            else
+            {
+                typeArgs = new[] { elementType };
             }
         }
         else if (methodName == "SelectMany")

@@ -7,7 +7,21 @@ namespace System.Linq.Dynamic.Core.Tests;
 public partial class QueryableTests
 {
     [Fact]
-    public void Issue775()
+    public void Issue775a()
+    {
+        // Arrange
+        var users = User.GenerateSampleModels(10);
+
+        // Act
+        var realResult = users.Where(x => x.Income == users.Select(p => p.Income).Min()).Select(x => x.Id).ToArray();
+        var result = users.AsQueryable().Where("Income == @0.Select(Income).Min()", users).Select("Id");
+
+        // Assert
+        Check.That(result.ToDynamicArray().Cast<Guid>()).ContainsExactly(realResult);
+    }
+
+    [Fact]
+    public void Issue775b()
     {
         // Arrange
         var users = User.GenerateSampleModels(10);
