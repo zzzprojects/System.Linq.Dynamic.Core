@@ -387,19 +387,11 @@ public class ExpressionParser
                     throw ParseError(_textParser.CurrentToken.Pos, Res.IdentifierImplementingInterfaceExpected, typeof(IEnumerable));
                 }
 
-                var args = new[] { left };
-
-                Expression? nullExpressionReference = null;
-                if (_methodFinder.FindMethod(typeof(IEnumerableSignatures), nameof(IEnumerableSignatures.Contains), false, ref nullExpressionReference, ref args, out var containsSignature) != 1)
-                {
-                    throw ParseError(op.Pos, Res.NoApplicableAggregate, nameof(IEnumerableSignatures.Contains), string.Join(",", args.Select(a => a.Type.Name).ToArray()));
-                }
-
                 var typeArgs = new[] { left.Type };
 
-                args = new[] { right, left };
+                var args = new[] { right, left };
 
-                accumulate = Expression.Call(typeof(Enumerable), containsSignature!.Name, typeArgs, args);
+                accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
             }
             else
             {
@@ -2014,9 +2006,6 @@ public class ExpressionParser
 
     private Expression ParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type? type)
     {
-        bool isQueryable = TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null;
-        bool isDictionary = TypeHelper.IsDictionary(type);
-
         var oldParent = _parent;
 
         ParameterExpression? outerIt = _it;
@@ -2024,7 +2013,7 @@ public class ExpressionParser
 
         _parent = _it;
 
-        if (methodName == "Contains" || methodName == "ContainsKey" || methodName == "Skip" || methodName == "Take")
+        if (new[] { "Contains", "ContainsKey", "Skip", "Take" }.Contains(methodName))
         {
             // for any method that acts on the parent element type, we need to specify the outerIt as scope.
             _it = outerIt;
@@ -2039,22 +2028,39 @@ public class ExpressionParser
         _it = outerIt;
         _parent = oldParent;
 
-        if (isDictionary && _methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, null, ref args))
+        if (TypeHelper.IsDictionary(type) && _methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, null, ref args))
         {
-            var method = type!.GetMethod(methodName)!;
-            return Expression.Call(instance, method, args);
+            var dictionaryMethod = type!.GetMethod(methodName)!;
+            return Expression.Call(instance, dictionaryMethod, args);
         }
 
-        if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, null, ref args))
-        {
-            throw ParseError(errorPos, Res.NoApplicableAggregate, methodName, string.Join(",", args.Select(a => a.Type.Name).ToArray()));
-        }
+        //if (type != null && !_methodFinder.ContainsMethod(type, methodName, false, null, ref args))
+        //{
+        //    throw ParseError(errorPos, Res.NoApplicableMethodWithParameters, methodName, string.Join(",", args.Select(a => a.Type.Name).ToArray()));
+        //}
 
-        Type callType = typeof(Enumerable);
-        if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, null, ref args))
+        //if (!_methodFinder.ContainsMethod(typeof(IEnumerableSignatures), methodName, false, null, ref args))
+        //{
+        //    throw ParseError(errorPos, Res.NoApplicableAggregate, methodName, string.Join(",", args.Select(a => a.Type.Name).ToArray()));
+        //}
+
+        //Type callType = typeof(Enumerable);
+        //if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, null, ref args))
+        //{
+        //    callType = typeof(Queryable);
+        //}
+
+        var callType = typeof(Enumerable);
+        if (type != null && TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null && _methodFinder.TypeContainsMethod(type, methodName))
         {
             callType = typeof(Queryable);
         }
+
+        //var callType = TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null ? typeof(Queryable) : typeof(Enumerable);
+        //if (isQueryable && _methodFinder.ContainsMethod(typeof(IQueryableSignatures), methodName, false, null, ref args))
+        //{
+        //    callType = typeof(Queryable);
+        //}
 
         Type[] typeArgs;
         if (new[] { "OfType", "Cast" }.Contains(methodName))

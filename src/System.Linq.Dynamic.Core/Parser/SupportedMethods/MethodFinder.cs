@@ -16,8 +16,22 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             _expressionHelper = Check.NotNull(expressionHelper);
         }
 
+        public bool TypeContainsMethod(Type type, string methodName, bool staticAccess = true)
+        {
+            Check.NotNull(type);
+
+#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+            var flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
+            return type.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName).Any();
+#else
+            return type.GetTypeInfo().DeclaredMethods.Any(m => (m.IsStatic || !staticAccess) && m.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase));
+#endif
+        }
+
         public bool ContainsMethod(Type type, string methodName, bool staticAccess, Expression? instance, ref Expression[] args)
         {
+            Check.NotNull(type);
+
             // NOTE: `instance` is not passed by ref in the method signature by design. The ContainsMethod should not change the instance.
             // However, args by reference is required for backward compatibility (removing "ref" will break some tests)
 
@@ -252,7 +266,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return true;
         }
 
-        bool FirstIsBetterThanSecond(Expression[] args, MethodData first, MethodData second)
+        private static bool FirstIsBetterThanSecond(Expression[] args, MethodData first, MethodData second)
         {
             // If args count is 0 -> parameterless method is better than method method with parameters
             if (args.Length == 0)
@@ -290,7 +304,7 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
         // Return "First" if s -> t1 is a better conversion than s -> t2
         // Return "Second" if s -> t2 is a better conversion than s -> t1
         // Return "Both" if neither conversion is better
-        CompareConversionType CompareConversions(Type source, Type first, Type second)
+        private static CompareConversionType CompareConversions(Type source, Type first, Type second)
         {
             if (first == second)
             {
@@ -329,18 +343,19 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             return CompareConversionType.Both;
         }
 
-        IEnumerable<Type> SelfAndBaseTypes(Type? type)
+        private static IEnumerable<Type> SelfAndBaseTypes(Type? type)
         {
             if (type?.GetTypeInfo().IsInterface == true)
             {
                 var types = new List<Type>();
-                AddInterface(types, type);
+                AddInterfaces(types, type);
                 return types;
             }
+
             return SelfAndBaseClasses(type);
         }
 
-        IEnumerable<Type> SelfAndBaseClasses(Type? type)
+        private static IEnumerable<Type> SelfAndBaseClasses(Type? type)
         {
             while (type != null)
             {
@@ -349,14 +364,14 @@ namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
             }
         }
 
-        void AddInterface(List<Type> types, Type type)
+        private static void AddInterfaces(ICollection<Type> types, Type type)
         {
             if (!types.Contains(type))
             {
                 types.Add(type);
-                foreach (Type t in type.GetInterfaces())
+                foreach (var interfaceType in type.GetInterfaces())
                 {
-                    AddInterface(types, t);
+                    AddInterfaces(types, interfaceType);
                 }
             }
         }

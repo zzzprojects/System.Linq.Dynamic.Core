@@ -446,7 +446,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         public static IList<Type> GetSelfAndBaseTypes(Type type, bool excludeObject = false)
         {
-            Check.NotNull(type, nameof(type));
+            Check.NotNull(type);
 
             if (type.GetTypeInfo().IsInterface)
             {
@@ -458,7 +458,7 @@ namespace System.Linq.Dynamic.Core.Parser
             return GetSelfAndBaseClasses(type).Where(t => !excludeObject || t != typeof(object)).ToList();
         }
 
-        private static IEnumerable<Type> GetSelfAndBaseClasses(Type type)
+        private static IEnumerable<Type> GetSelfAndBaseClasses(Type? type)
         {
             while (type != null)
             {
