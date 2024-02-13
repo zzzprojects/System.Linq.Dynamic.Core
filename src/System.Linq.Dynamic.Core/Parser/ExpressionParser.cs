@@ -2028,9 +2028,9 @@ public class ExpressionParser
         _it = outerIt;
         _parent = oldParent;
 
-        if (TypeHelper.IsDictionary(type) && _methodFinder.ContainsMethod(typeof(IDictionarySignatures), methodName, false, null, ref args))
+        if (type != null && TypeHelper.IsDictionary(type) && _methodFinder.ContainsMethod(type, methodName, false))
         {
-            var dictionaryMethod = type!.GetMethod(methodName)!;
+            var dictionaryMethod = type.GetMethod(methodName)!;
             return Expression.Call(instance, dictionaryMethod, args);
         }
 
