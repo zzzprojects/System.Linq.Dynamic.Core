@@ -1,5 +1,6 @@
 ﻿using BlazorApp1.Entities;
 using Microsoft.EntityFrameworkCore;
+
 namespace BlazorApp1;
 
 public class MyDbContext : DbContext
@@ -8,10 +9,10 @@ public class MyDbContext : DbContext
     {
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseInMemoryDatabase("MyInMemoryDb");
-    }
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //{
+    //    //optionsBuilder.UseInMemoryDatabase("MyInMemoryDb");
+    //}
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

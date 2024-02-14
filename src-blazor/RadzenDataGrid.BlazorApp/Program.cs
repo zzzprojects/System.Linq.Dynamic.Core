@@ -1,4 +1,5 @@
 using BlazorApp1.Components;
+using Microsoft.EntityFrameworkCore;
 using Radzen;
 
 namespace BlazorApp1;
@@ -15,7 +16,11 @@ public class Program
 
         builder.Services.AddRadzenComponents();
 
-        builder.Services.AddDbContext<MyDbContext>();
+        string? connection = builder.Configuration.GetConnectionString("Andrey");
+        if (connection != null)
+        {
+            builder.Services.AddDbContextFactory<MyDbContext>(opt => opt.UseSqlServer(connection));
+        }
 
         var app = builder.Build();
 

@@ -11,7 +11,6 @@
 
 @if (DataFromDb != null)
 {
-
     <table>
         <thead>
             <tr>
@@ -27,19 +26,20 @@
                 <tr>
                     <td>@item.Id</td>
                     <td>@item.ServiceBase.Index</td>
-                    <td>@item.ServiceBase.Code></td>
+                    <td>@item.ServiceBase.Code</td>
                     <td>@item.ServiceBase.ServiceName</td>
                 </tr>
             }
         </tbody>
     </table>
 }
+
 <br />
 <br />
 
 <RadzenDataGrid AllowSorting="true"
                 AllowFiltering="true"
-                PageSize=4
+                PageSize=7
                 AllowPaging="true"
                 ShowPagingSummary="true"
                 Data=@Entities
@@ -91,15 +91,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (!MyDbContext.PriceListServices.Any())
+        if (!MyDbContext.PriceListServices.Any(pls => pls.ServiceBase.Code != null && pls.ServiceBase.Code.Contains("stef")))
         {
             var data = new List<PriceListService>
             {
-                new() { ServiceBase = new() { Index = 10, Code = "b-001", ServiceName = "Message" } },
-                new() { ServiceBase = new() { Index = 11, Code = "a-002", ServiceName = "Info" } },
-                new() { ServiceBase = new() { Index = 12, Code = "w-003", ServiceName = "Word" } },
-                new() { ServiceBase = new() { Index = 13, Code = "f-004", ServiceName = "Hi" } },
-                new() { ServiceBase = new() { Index = 14, Code = "z-005", ServiceName = "Zoom" } }
+                new() { ServiceBase = new() { Index = 10, Code = "xb-001-stef", ServiceName = "Message" } },
+                new() { ServiceBase = new() { Index = 11, Code = "xa-002-stef", ServiceName = "Info" } },
+                new() { ServiceBase = new() { Index = 12, Code = "xw-003-stef", ServiceName = "Word" } },
+                new() { ServiceBase = new() { Index = 13, Code = "xf-004-stef", ServiceName = "Hi" } },
+                new() { ServiceBase = new() { Index = 14, Code = "xz-005-stef", ServiceName = "Zoom" } }
             };
             MyDbContext.PriceListServices.AddRange(data);
             await MyDbContext.SaveChangesAsync();
