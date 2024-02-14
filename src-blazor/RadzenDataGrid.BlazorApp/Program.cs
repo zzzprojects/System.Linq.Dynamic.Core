@@ -1,6 +1,7 @@
 using BlazorApp1.Components;
 using Microsoft.EntityFrameworkCore;
 using Radzen;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BlazorApp1;
 
@@ -11,16 +12,12 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddRazorComponents()
+        builder.Services
+            .AddRazorComponents()
             .AddInteractiveServerComponents();
-
         builder.Services.AddRadzenComponents();
 
-        string? connection = builder.Configuration.GetConnectionString("Andrey");
-        if (connection != null)
-        {
-            builder.Services.AddDbContextFactory<MyDbContext>(opt => opt.UseSqlServer(connection));
-        }
+        builder.Services.AddDbContextFactory<MyDbContext>(opt => opt.UseInMemoryDatabase("RadzenDataGrid.BlazorApp"));
 
         var app = builder.Build();
 
@@ -28,6 +25,7 @@ public class Program
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
+
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
@@ -40,5 +38,6 @@ public class Program
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
 
-        app.Run();}
+        app.Run();
+    }
 }

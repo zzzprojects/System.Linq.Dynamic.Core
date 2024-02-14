@@ -9,11 +9,6 @@ public class MyDbContext : DbContext
     {
     }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //    //optionsBuilder.UseInMemoryDatabase("MyInMemoryDb");
-    //}
-    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
