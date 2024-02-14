@@ -1,0 +1,21 @@
+﻿
+table {
+    border: 1px solid grey;
+    width: 40%;
+}
+
+th {
+    border: 1px solid grey;
+}
+
+td {
+    border: 1px solid grey;
+}
+
+thead {
+    background-color: lightskyblue;
+}
+
+ tfoot {
+    background-color: lightskyblue;
+}
