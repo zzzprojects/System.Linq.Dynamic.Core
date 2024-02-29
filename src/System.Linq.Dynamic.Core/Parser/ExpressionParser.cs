@@ -1767,24 +1767,27 @@ public class ExpressionParser
         return false;
     }
 
-    private Expression ParseMemberAccess(Type? type, Expression? expression)
+    private Expression ParseMemberAccess(Type? type, Expression? expression, string? id = null)
     {
-        var isStaticAccess = false;
+        var errorPos = _textParser.CurrentToken.Pos;
+
+        // In case the expression is not null and the type is null, get the type from the expression.
         if (expression != null)
         {
-            type = expression.Type;
-        }
-        else
-        {
-            isStaticAccess = true;
+            type ??= expression.Type;
         }
 
-        int errorPos = _textParser.CurrentToken.Pos;
-        string id = GetIdentifier();
-        _textParser.NextToken();
+        // In case the id is not defined, get it and move the TextParser forward.
+        if (id == null)
+        {
+            id = GetIdentifier();
+            _textParser.NextToken();
+        }
 
         if (_textParser.CurrentToken.Id == TokenId.OpenParen)
         {
+            var isStaticAccess = expression == null;
+
             if (!isStaticAccess && type != typeof(string))
             {
                 var enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
@@ -1827,10 +1830,9 @@ public class ExpressionParser
             }
         }
 
-        var @enum = TypeHelper.ParseEnum(id, type);
-        if (@enum != null)
+        if (TypeHelper.TryParseEnum(id, type, out var enumValue))
         {
-            return Expression.Constant(@enum);
+            return Expression.Constant(enumValue);
         }
 
 #if UAP10_0 || NETSTANDARD1_3
@@ -1839,15 +1841,9 @@ public class ExpressionParser
             return Expression.MakeIndex(expression, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
         }
 #endif
-        MemberInfo? member = FindPropertyOrField(type!, id, expression == null);
-        if (member is PropertyInfo property)
+        if (TryFindPropertyOrField(type!, id, expression, out var propertyOrFieldExpression))
         {
-            return Expression.Property(expression, property);
-        }
-
-        if (member is FieldInfo field)
-        {
-            return Expression.Field(expression, field);
+            return propertyOrFieldExpression;
         }
 
         // #357 #662
@@ -1876,13 +1872,36 @@ public class ExpressionParser
             return ParseAsLambda(id);
         }
 
-        // This could be enum like "A.B.C.MyEnum.Value1" or "A.B.C+MyEnum.Value1"
+        // This could be enum like "A.B.C.MyEnum.Value1" or "A.B.C+MyEnum.Value1".
+        //
+        // Or it's a nested (static) class with a
+        // - static property like "NestedClass.MyProperty"
+        // - static method like "NestedClass.MyMethod"
         if (_textParser.CurrentToken.Id is TokenId.Dot or TokenId.Plus)
         {
-            return ParseAsEnum(id);
+            return ParseAsEnumOrNestedClass(id);
         }
 
         throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
+    }
+
+    private bool TryFindPropertyOrField(Type type, string id, Expression? expression, [NotNullWhen(true)] out Expression? propertyOrFieldExpression)
+    {
+        var member = FindPropertyOrField(type, id, expression == null);
+        switch (member)
+        {
+            case PropertyInfo property:
+                propertyOrFieldExpression = Expression.Property(expression, property);
+                return true;
+
+            case FieldInfo field:
+                propertyOrFieldExpression = Expression.Field(expression, field);
+                return true;
+
+            default:
+                propertyOrFieldExpression = null;
+                return false;
+        }
     }
 
     private static Expression CallMethod(Expression? expression, MethodInfo methodToCall, Expression[] args)
@@ -1963,13 +1982,13 @@ public class ExpressionParser
         return exp;
     }
 
-    private Expression ParseAsEnum(string id)
+    private Expression ParseAsEnumOrNestedClass(string id)
     {
         var parts = new List<string> { id };
 
-        while (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+        while (_textParser.CurrentToken.Id is TokenId.Dot or TokenId.Plus)
         {
-            if (_textParser.CurrentToken.Id == TokenId.Dot || _textParser.CurrentToken.Id == TokenId.Plus)
+            if (_textParser.CurrentToken.Id is TokenId.Dot or TokenId.Plus)
             {
                 parts.Add(_textParser.CurrentToken.Text);
                 _textParser.NextToken();
@@ -1982,26 +2001,37 @@ public class ExpressionParser
             }
         }
 
-        var enumTypeAsString = string.Concat(parts.Take(parts.Count - 2).ToArray());
-        var enumType = _typeFinder.FindTypeByName(enumTypeAsString, null, true);
-        if (enumType == null)
+        var typeAsString = string.Concat(parts.Take(parts.Count - 2).ToArray());
+        var type = _typeFinder.FindTypeByName(typeAsString, null, true);
+        if (type == null)
         {
-            throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, enumTypeAsString);
+            throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeAsString);
         }
 
-        var enumValueAsString = parts.LastOrDefault();
-        if (enumValueAsString == null)
+        var isEnum = TypeHelper.IsEnumType(type);
+
+        var identifier = parts.LastOrDefault();
+        if (identifier == null)
         {
-            throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueExpected);
+            if (isEnum)
+            {
+                throw ParseError(_textParser.CurrentToken.Pos, Res.EnumTypeNotFound, typeAsString);
+            }
+
+            throw ParseError(_textParser.CurrentToken.Pos, Res.UnknownIdentifier, typeAsString);
         }
 
-        var enumValue = TypeHelper.ParseEnum(enumValueAsString, enumType);
-        if (enumValue == null)
+        if (isEnum)
         {
-            throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, enumValueAsString, enumTypeAsString);
+            if (TypeHelper.TryParseEnum(identifier, type, out var enumValue))
+            {
+                return Expression.Constant(enumValue);
+            }
+
+            throw ParseError(_textParser.CurrentToken.Pos, Res.EnumValueNotDefined, identifier, typeAsString);
         }
 
-        return Expression.Constant(enumValue);
+        return ParseMemberAccess(type, null, identifier);
     }
 
     private Expression ParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type? type)
@@ -2301,8 +2331,10 @@ public class ExpressionParser
             case TokenId.DoubleEqual:
             case TokenId.Equal:
                 return "op_Equality";
+
             case TokenId.ExclamationEqual:
                 return "op_Inequality";
+
             default:
                 return null;
         }

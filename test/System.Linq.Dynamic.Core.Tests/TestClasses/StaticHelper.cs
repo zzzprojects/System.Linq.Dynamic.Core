@@ -5,6 +5,17 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public static class StaticHelper
     {
+        public static Guid NewStaticGuid => new("43b17e59-2b66-4697-a3ab-7b45baedee72");
+
+        public static class Nested
+        {
+            public static Guid NewNestedStaticProperty => new("954692b3-6a37-4c9c-ad55-07fbb593f046");
+
+            public static Guid NewNestedStaticMethod() => new ("954692b3-6a37-4c9c-ad55-07fbb593f046");
+
+            public static bool IsNull(object? value) => value != null;
+        }
+
         public static Guid? GetGuid(string name)
         {
             return Guid.NewGuid();
@@ -64,9 +75,6 @@ namespace System.Linq.Dynamic.Core.Tests
         private static string GetQuote(int subQueryLevel)
         {
             var quoteCount = (int)Math.Pow(2, subQueryLevel - 1);
-
-            //var quote = string.Concat(Enumerable.Repeat("\"", quoteCount));
-            //return quote;
             return new string('"', quoteCount);
         }
     }

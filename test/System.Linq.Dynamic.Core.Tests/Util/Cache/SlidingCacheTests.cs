@@ -117,7 +117,7 @@ public class SlidingCacheTests
         // give it a moment for the cleanup to happen
         Sleep();
 
-        // Ensure one item is in the cache
+        // Ensure no item is in the cache
         cache.Count.Should().Be(0, $"Expected 0 items in the cache, had {cache.Count}");
     }
 

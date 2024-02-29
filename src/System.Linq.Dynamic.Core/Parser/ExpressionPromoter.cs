@@ -62,7 +62,7 @@ namespace System.Linq.Dynamic.Core.Parser
                             case TypeCode.UInt32:
                             case TypeCode.Int64:
                             case TypeCode.UInt64:
-                                value = _numberParser.ParseNumber(text!, target);
+                                value = _numberParser.ParseNumber(text, target);
 
                                 // Make sure an enum value stays an enum value
                                 if (target.IsEnum)
@@ -74,12 +74,12 @@ namespace System.Linq.Dynamic.Core.Parser
                             case TypeCode.Double:
                                 if (target == typeof(decimal) || target == typeof(double))
                                 {
-                                    value = _numberParser.ParseNumber(text!, target);
+                                    value = _numberParser.ParseNumber(text, target);
                                 }
                                 break;
 
                             case TypeCode.String:
-                                value = TypeHelper.ParseEnum(text!, target);
+                                TypeHelper.TryParseEnum(text, target, out value);
                                 break;
                         }
 #else
@@ -99,12 +99,12 @@ namespace System.Linq.Dynamic.Core.Parser
                         {
                             if (target == typeof(decimal) || target == typeof(double))
                             {
-                                value = _numberParser.ParseNumber(text!, target);
+                                value = _numberParser.ParseNumber(text, target);
                             }
                         }
-                        else if (ce.Type == typeof(string))
+                        else if (ce.Type == typeof(string) && TypeHelper.TryParseEnum(text, target, out value))
                         {
-                            value = TypeHelper.ParseEnum(text!, target);
+                            // Empty if
                         }
 #endif
                         if (value != null)
