@@ -2,6 +2,7 @@
 using System.Linq.Dynamic.Core.Util;
 using System.Linq.Dynamic.Core.Util.Cache;
 using System.Linq.Expressions;
+using System.Threading;
 using FluentAssertions;
 using Xunit;
 
@@ -114,7 +115,7 @@ public class SlidingCacheTests
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        Threading.Thread.Sleep(10);
+        Sleep();
 
         // Ensure no item is in the cache
         cache.Count.Should().Be(0, $"Expected 0 items in the cache, had {cache.Count}");
@@ -158,7 +159,7 @@ public class SlidingCacheTests
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        Threading.Thread.Sleep(10);
+        Sleep();
 
         // Ensure one item is in the cache
         cache.Count.Should().Be(1, $"Expected 1 items in the cache, only had {cache.Count}");
@@ -168,9 +169,14 @@ public class SlidingCacheTests
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        Threading.Thread.Sleep(10);
+        Sleep();
 
         // Ensure one item is in the cache
         cache.Count.Should().Be(1, $"Expected 1 items in the cache, had {cache.Count}");
+    }
+
+    private static void Sleep()
+    {
+        Thread.Sleep(1000);
     }
 }
