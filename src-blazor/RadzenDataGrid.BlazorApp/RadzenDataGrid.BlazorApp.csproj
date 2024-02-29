@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <AssemblyName>BlazorApp1</AssemblyName>
+        <RootNamespace>BlazorApp1</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="8.3.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
+        <PackageReference Include="Radzen.Blazor" Version="4.24.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!--<ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore8\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore8.csproj" />-->
+    </ItemGroup>
+
+</Project>

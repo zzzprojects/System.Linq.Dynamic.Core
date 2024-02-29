@@ -1,0 +1,162 @@
+﻿@page "/"
+@using Microsoft.EntityFrameworkCore
+@using Radzen
+@using System.Linq.Dynamic.Core;
+@using BlazorApp1.Entities
+<PageTitle>Home</PageTitle>
+
+<div style="margin:5px;">
+    <RadzenButton Click="OnLoadAllDataFromDb">Second step -> Load data from Db with OrderBy(x=>x.ServiceBase.Code)</RadzenButton>
+</div>
+
+@if (DataFromDb != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Index</th>
+                <th>Code</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in DataFromDb)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.ServiceBase.Index</td>
+                    <td>@item.ServiceBase.Code</td>
+                    <td>@item.ServiceBase.ServiceName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br />
+<br />
+
+<RadzenDataGrid AllowSorting="true"
+                AllowFiltering="true"
+                PageSize=7
+                AllowPaging="true"
+                ShowPagingSummary="true"
+                Data=@Entities
+                TItem=@PriceListService
+                LoadData=@OnLoadDataAsync
+                Count=@count
+                IsLoading=@isLoading>
+    <Columns>
+        <RadzenDataGridColumn TItem=@PriceListService
+                              Property=@(nameof(PriceListService.Id))
+                              Title="Id"
+                              Filterable="true" Sortable="true" />
+
+        <RadzenDataGridColumn TItem=@PriceListService
+                              Property=@(nameof(PriceListService.ServiceBase) + "." + nameof(PriceListService.ServiceBase.Index))
+                              Title="Index"
+                              Filterable="true" Sortable="true" />
+
+        <RadzenDataGridColumn TItem=@PriceListService
+                              Property=@(nameof(PriceListService.ServiceBase) + "." + nameof(PriceListService.ServiceBase.Code))
+                              Title="Code"
+                              Filterable="true" Sortable="true" />
+
+        <RadzenDataGridColumn TItem=@PriceListService
+                              Property=@(nameof(PriceListService.ServiceBase) + "." + nameof(PriceListService.ServiceBase.ServiceName))
+                              Title="Name"
+                              Filterable="true" Sortable="true" />
+    </Columns>
+</RadzenDataGrid>
+
+@if (ErrorMessages.Count > 0)
+{
+    @foreach (var item in ErrorMessages)
+    {
+        <div style="color:red;">@item</div>
+    }
+}
+
+
+@code {
+    [Inject]
+    MyDbContext MyDbContext { get; set; }
+
+    protected bool isLoading;
+    protected int count;
+    protected IEnumerable<PriceListService>? Entities { get; set; }
+    protected IEnumerable<PriceListService>? DataFromDb { get; set; }
+    protected List<string> ErrorMessages { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!MyDbContext.PriceListServices.Any(pls => pls.ServiceBase.Code != null && pls.ServiceBase.Code.Contains("stef")))
+        {
+            var data = new List<PriceListService>
+            {
+                new() { ServiceBase = new() { Index = 10, Code = "xb-001-stef", ServiceName = "Message" } },
+                new() { ServiceBase = new() { Index = 11, Code = "xa-002-stef", ServiceName = "Info" } },
+                new() { ServiceBase = new() { Index = 12, Code = "xw-003-stef", ServiceName = "Word" } },
+                new() { ServiceBase = new() { Index = 13, Code = "xf-004-stef", ServiceName = "Hi" } },
+                new() { ServiceBase = new() { Index = 14, Code = "xz-005-stef", ServiceName = "Zoom" } }
+            };
+            MyDbContext.PriceListServices.AddRange(data);
+            await MyDbContext.SaveChangesAsync();
+        }
+    }
+
+    protected async Task OnLoadAllDataFromDb()
+    {
+        try
+        {
+            DataFromDb = await MyDbContext.PriceListServices.OrderBy(x => x.ServiceBase.Code).ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessages.Add(DateTime.Now + "? Exception: " + ex.Message + (ex.InnerException == null ? "" : ", InnerException: " + ex.InnerException.Message));
+        }
+    }
+
+    protected async Task OnLoadDataAsync(LoadDataArgs args)
+    {
+        isLoading = true;
+
+        try
+        {
+            var query = MyDbContext.PriceListServices.AsQueryable();
+
+            if (!string.IsNullOrEmpty(args.Filter))
+            {
+                query = query.Where(args.Filter);
+            }
+
+            if (!string.IsNullOrEmpty(args.OrderBy))
+            {
+                query = query.OrderBy(args.OrderBy);
+            }
+
+            count = query.Count();
+
+            if (args.Skip.HasValue)
+            {
+                query = query.Skip(args.Skip.Value);
+            }
+
+            if (args.Top.HasValue)
+            {
+                query = query.Take(args.Top.Value);
+            }
+
+            Entities = await query.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessages.Add(DateTime.Now + ", Exception: " + ex.Message + (ex.InnerException == null ? "" : ", InnerException: " + ex.InnerException.Message));
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

@@ -1,7 +1,8 @@
-# v1.3.9-preview-02 (03 February 2024)
+# v1.3.9 (29 February 2024)
 - [#761](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/761) - Add unit tests for Any [test] contributed by [StefH](https://github.com/StefH)
-- [#765](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/765) - #764 - Introduce Sliding Cache to Constant Expression Helper [feature] contributed by [TWhidden](https://github.com/TWhidden)
+- [#765](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/765) - Introduce Sliding Cache to Constant Expression Helper [feature] contributed by [TWhidden](https://github.com/TWhidden)
 - [#770](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/770) - Enhancements to SlidingCache&lt;&gt; for Improved Thread Safety and Performance [feature] contributed by [TWhidden](https://github.com/TWhidden)
+- [#780](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/780) - Add RadzenDataGrid.BlazorApp example [test] contributed by [StefH](https://github.com/StefH)
 - [#764](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/764) - Possible Memory Leak with ConstantExpressionHelper [bug]
 - [#769](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/769) - Enhancements to SlidingCache&lt;&gt; for Improved Thread Safety and Performance [bug]
 
