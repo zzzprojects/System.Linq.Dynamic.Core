@@ -1,10 +1,8 @@
-﻿
-namespace System.Linq.Dynamic.Core.Parser.SupportedMethods
+﻿namespace System.Linq.Dynamic.Core.Parser.SupportedMethods;
+
+internal enum CompareConversionType
 {
-    internal enum CompareConversionType
-    {
-        Both = 0,
-        First = 1,
-        Second = -1
-    }
+    Both = 0,
+    First = 1,
+    Second = -1
 }
