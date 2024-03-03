@@ -1,3 +1,10 @@
+# v1.3.10 (03 March 2024)
+- [#774](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/774) - Fixed calling property on nested static class [bug] contributed by [StefH](https://github.com/StefH)
+- [#777](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/777) - Keep original type from subquery [bug] contributed by [StefH](https://github.com/StefH)
+- [#772](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/772) - Static helper class with name as property doesn't work after updating from v.1.0.8.18 to 1.3.8 [bug]
+- [#775](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/775) - Value typed property from subquery are casted as `object` [bug]
+- [#779](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/779) - try to call function inside select [bug]
+
 # v1.3.9 (29 February 2024)
 - [#761](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/761) - Add unit tests for Any [test] contributed by [StefH](https://github.com/StefH)
 - [#765](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/765) - Introduce Sliding Cache to Constant Expression Helper [feature] contributed by [TWhidden](https://github.com/TWhidden)
