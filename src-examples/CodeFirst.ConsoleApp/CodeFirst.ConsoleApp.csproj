@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6.csproj" />
+      <ProjectReference Include="..\CodeFirst.DataAccess\CodeFirst.DataAccess.csproj" />
+    </ItemGroup>
+
+</Project>
