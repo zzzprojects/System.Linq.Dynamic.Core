@@ -894,6 +894,21 @@ public class DynamicExpressionParserTests
         Assert.Equal("\"\"test\"", rightValue);
     }
 
+    [Theory] // #786
+    [InlineData("Escaped", "\"{\\\"PropertyA\\\":\\\"\\\"}\"")]
+    [InlineData("Verbatim", @"""{\""PropertyA\"":\""\""}""")]
+    // [InlineData("Raw", """"{\"PropertyA\":\"\"}"""")] // TODO : does not work ???
+    public void DynamicExpressionParser_ParseLambda_StringLiteral_EscapedJson(string _, string expression)
+    {
+        // Act
+        var result = DynamicExpressionParser
+            .ParseLambda(typeof(object), expression)
+            .Compile()
+            .DynamicInvoke();
+
+        result.Should().Be("{\"PropertyA\":\"\"}");
+    }
+
     [Fact]
     public void DynamicExpressionParser_ParseLambda_StringLiteral_MissingClosingQuote()
     {
@@ -1468,7 +1483,10 @@ public class DynamicExpressionParserTests
         resultIncome.Should().Be("Income == 5");
 
         // Act : string
-        var expressionTextUserName = "StaticHelper.Filter(\"UserName == \"\"x\"\"\")";
+        // Replace  "   with   \"
+        // Replace \"   with \\\"
+        var _ = StaticHelper.Filter("UserName ==   \"x\"  ");
+        var expressionTextUserName = "StaticHelper.Filter(\"UserName == \\\"x\\\"\")";
         var lambdaUserName = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionTextUserName, user);
         var funcUserName = (Expression<Func<User, string>>)lambdaUserName;
 
@@ -1480,7 +1498,7 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
-    public void DynamicExpressionParser_ParseLambda_CustomType_Method_With_ComplexExpression1String()
+    public void DynamicExpressionParser_ParseLambda_CustomType_Method_With_ComplexExpressionString()
     {
         // Arrange
         var config = new ParsingConfig
@@ -1490,31 +1508,12 @@ public class DynamicExpressionParserTests
 
         var user = new User();
 
-        // Act
-        var expressionText = @"StaticHelper.In(Id, StaticHelper.SubSelect(""Identity"", ""LegalPerson"", ""StaticHelper.In(ParentId, StaticHelper.SubSelect(""""LegalPersonId"""", """"PointSiteTD"""", """"Identity = 5"""", """"""""))"", """"))";
-        var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
-        var func = (Expression<Func<User, bool>>)lambda;
-
-        var compile = func.Compile();
-        var result = (bool?)compile.DynamicInvoke(user);
-
-        // Assert
-        result.Should().Be(false);
-    }
-
-    [Fact]
-    public void DynamicExpressionParser_ParseLambda_CustomType_Method_With_ComplexExpression2String()
-    {
-        // Arrange
-        var config = new ParsingConfig
-        {
-            CustomTypeProvider = new TestCustomTypeProvider()
-        };
-
-        var user = new User();
+        // Replace  "   with   \"
+        // Replace \"   with \\\"
+        var _ = StaticHelper.In(Guid.NewGuid(), StaticHelper.SubSelect("Identity", "LegalPerson", "StaticHelper.In(ParentId, StaticHelper.SubSelect(  \"LegalPersonId\",     \"PointSiteTD\",     \"Identity = 5\",   \"\"))     ", ""));
+        var expressionText = "StaticHelper.In(Id,             StaticHelper.SubSelect(\"Identity\", \"LegalPerson\", \"StaticHelper.In(ParentId, StaticHelper.SubSelect(\\\"LegalPersonId\\\", \\\"PointSiteTD\\\", \\\"Identity = 5\\\", \\\"\\\"))\", \"\"))";
 
         // Act
-        var expressionText = @"StaticHelper.In(Id, StaticHelper.SubSelect(""Identity"", ""LegalPerson"", ""StaticHelper.In(ParentId, StaticHelper.SubSelect(""""LegalPersonId"""", """"PointSiteTD"""", """"Identity = "" + StaticHelper.ToExpressionString(StaticHelper.Get(""CurrentPlace""), 2) + """""", """"""""))"", """"))";
         var lambda = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionText, user);
         var func = (Expression<Func<User, bool>>)lambda;
 

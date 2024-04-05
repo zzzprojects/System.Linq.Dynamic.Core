@@ -240,4 +240,10 @@ public class ParsingConfig
     /// Caches constant expressions to enhance performance. Periodic cleanup is performed to manage cache size, governed by this configuration.
     /// </summary>
     public CacheConfig? ConstantExpressionCacheConfig { get; set; }
+
+    /// <summary>
+    /// Defines the type of string literal parsing that will be performed.
+    /// Default value is <c>StringLiteralParsingType.Default</c>.
+    /// </summary>
+    public StringLiteralParsingType StringLiteralParsing { get; set; } = StringLiteralParsingType.Default;
 }

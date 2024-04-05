@@ -93,6 +93,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData("\"\\\"\\\"\"", "\"\"")]
         [InlineData("\"AB YZ 19 \uD800\udc05 \u00e4\"", "AB YZ 19 \uD800\udc05 \u00e4")]
         [InlineData("\"\\\\\\\\192.168.1.1\\\\audio\\\\new\"", "\\\\192.168.1.1\\audio\\new")]
+        [InlineData("\"{\\\"PropertyA\\\":\\\"\\\"}\"", @"{""PropertyA"":""""}")] // #786
         public void StringParser_Parse_DoubleQuotedString(string input, string expectedResult)
         {
             // Act

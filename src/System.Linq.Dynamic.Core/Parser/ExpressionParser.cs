@@ -884,7 +884,7 @@ public class ExpressionParser
         _textParser.ValidateToken(TokenId.StringLiteral);
 
         var text = _textParser.CurrentToken.Text;
-        var parsedStringValue = StringParser.ParseString(_textParser.CurrentToken.Text);
+        var parsedStringValue = StringParser.ParseString(_textParser.CurrentToken.Text, _textParser.CurrentToken.Pos);
 
         if (_textParser.CurrentToken.Text[0] == '\'')
         {
@@ -916,7 +916,9 @@ public class ExpressionParser
             _textParser.NextToken();
         }
 
-        parsedStringValue = StringParser.ParseStringAndReplaceDoubleQuotes(text, _textParser.CurrentToken.Pos);
+        parsedStringValue = _parsingConfig.StringLiteralParsing == StringLiteralParsingType.ReplaceTwoDoubleQuotesByASingleDoubleQuote ? 
+            StringParser.ParseStringAndReplaceTwoDoubleQuotesByASingleDoubleQuote(text, _textParser.CurrentToken.Pos) : 
+            StringParser.ParseString(text, _textParser.CurrentToken.Pos);
 
         return _constantExpressionHelper.CreateLiteral(parsedStringValue, parsedStringValue);
     }
