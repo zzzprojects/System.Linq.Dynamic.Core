@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using ConsoleAppEF2.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConsoleApp_net5_0_EF6_InMemory;
+namespace ConsoleApp_net6_0_EF6_Sqlite;
 
 static class Program
 {
@@ -17,6 +17,9 @@ static class Program
     {
         await using (var context = new TestContextEF6())
         {
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
+
             context.Products.Add(new ProductDynamic { NullableInt = 1, Key = 123, Dict = new Dictionary<string, object> { { "Name", "test" } } });
             context.Products.Add(new ProductDynamic { NullableInt = 2, Key = 456, Dict = new Dictionary<string, object> { { "Name1", "test1" } } });
             await context.SaveChangesAsync();
@@ -25,9 +28,16 @@ static class Program
         // #784
         await using (var context = new TestContextEF6())
         {
-            var result784 = context.Products.Where("NullableInt = @0", 1).ToDynamicArray<ProductDynamic>();
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = true
+            };
+
+            var result784 = context.Products.Where(config, "NullableInt = @0", 1).ToDynamicArray<ProductDynamic>();
             Console.WriteLine("a1 {0}", string.Join(",", result784.Select(r => r.Key)));
         }
+
+        return;
 
         await using (var context = new TestContextEF6())
         {
