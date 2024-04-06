@@ -3,7 +3,7 @@ using ConsoleAppEF2.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ConsoleApp_net5_0_EF6_InMemory
+namespace ConsoleApp_net6_0_EF6_Sqlite
 {
     public class TestContextEF6 : DbContext
     {
@@ -23,8 +23,9 @@ namespace ConsoleApp_net5_0_EF6_InMemory
             optionsBuilder.UseLoggerFactory(MyLoggerFactory); // Warning: Do not create a new ILoggerFactory instance each time
             optionsBuilder.EnableSensitiveDataLogging();
 
-            optionsBuilder.UseInMemoryDatabase("TestContextEF6");
+            optionsBuilder.UseSqlite("Data Source=TestContextEF6.db");
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

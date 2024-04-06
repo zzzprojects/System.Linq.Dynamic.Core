@@ -138,6 +138,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.Linq.Dynamic.Core.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RadzenDataGrid.BlazorApp", "src-blazor\RadzenDataGrid.BlazorApp\RadzenDataGrid.BlazorApp.csproj", "{51074A4C-15C2-4E72-81F2-2FC53903553B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_net6.0_EF6_Sqlite", "src-console\ConsoleAppEF6_Sqlite\ConsoleApp_net6.0_EF6_Sqlite.csproj", "{CA03FD55-9DAB-4827-9A35-A96D3804B311}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -856,6 +858,22 @@ Global
 		{51074A4C-15C2-4E72-81F2-2FC53903553B}.Release|x64.Build.0 = Release|Any CPU
 		{51074A4C-15C2-4E72-81F2-2FC53903553B}.Release|x86.ActiveCfg = Release|Any CPU
 		{51074A4C-15C2-4E72-81F2-2FC53903553B}.Release|x86.Build.0 = Release|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Debug|x64.Build.0 = Debug|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Debug|x86.Build.0 = Debug|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Release|ARM.Build.0 = Release|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Release|x64.Build.0 = Release|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -905,6 +923,7 @@ Global
 		{9000129D-322D-4FE6-9C47-75464577C374} = {DBD7D9B6-FCC7-4650-91AF-E6457573A68F}
 		{ABB1BF71-8927-49BB-99F3-70BCB2CD161E} = {8463ED7E-69FB-49AE-85CF-0791AFD98E38}
 		{51074A4C-15C2-4E72-81F2-2FC53903553B} = {122BC4FA-7563-4E35-9D17-077F16F1629F}
+		{CA03FD55-9DAB-4827-9A35-A96D3804B311} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94C56722-194E-4B8B-BC23-B3F754E89A20}
