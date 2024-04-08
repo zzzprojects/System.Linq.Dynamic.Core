@@ -47,6 +47,12 @@ class Program
             Console.WriteLine(result);
         }
 
+        var whereWithSelect = array.Where("City == @0", "Paris").Select("first");
+        foreach (var result in whereWithSelect)
+        {
+            Console.WriteLine(result);
+        }
+
         return;
 
         Issue389DoesNotWork();
