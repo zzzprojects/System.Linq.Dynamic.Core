@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="../../version.xml" />
+
+    <PropertyGroup>
+        <!--<AssemblyName>System.Linq.Dynamic.Core</AssemblyName>-->
+        <AssemblyOriginatorKeyFile>../System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
+        <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
+        <Authors>Stef Heyenrath</Authors>
+        <Description>TODO</Description>
+        <PackageTags>system;linq;dynamic;core;dotnet;json</PackageTags>
+        <ProjectGuid>{8C5851B8-5C47-4229-AB55-D4252703598E}</ProjectGuid>
+        <TargetFrameworks>net35;net40;net45;net452;net46;netstandard1.3;netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
+        <Version>1.3.$(PatchVersion)</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DebugType>portable</DebugType>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="JsonConverter.Abstractions" Version="0.5.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+      <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core.Newtonsoft.Json\System.Linq.Dynamic.Core.Newtonsoft.Json.csproj" />
     </ItemGroup>
 
 </Project>

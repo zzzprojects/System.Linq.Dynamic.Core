@@ -2,111 +2,132 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Dynamic.Core.Newtonsoft.Json;
 using System.Linq.Expressions;
+using Newtonsoft.Json.Linq;
 
-namespace ConsoleApp_net6._0
+namespace ConsoleApp_net6._0;
+
+public class X
 {
-    public class X
-    {
-        public string Key { get; set; } = null!;
+    public string Key { get; set; } = null!;
 
-        public List<Y>? Contestants { get; set; }
+    public List<Y>? Contestants { get; set; }
+}
+
+public class Y
+{
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        var array = JArray.Parse(@"[
+        {
+            ""first"": 1,
+            ""City"": ""Paris"",
+            ""third"": ""test""
+        },
+        {
+            ""first"": 2,
+            ""City"": ""New York"",
+            ""third"": ""abc""
+        }]");
+
+        var results = array.Where("City == @0", "Paris").ToDynamicArray();
+        foreach (var result in results)
+        {
+            Console.WriteLine(result.first);
+        }
+
+        return;
+
+        Issue389DoesNotWork();
+        return;
+        Issue389_Works();
+        return;
+
+        var q = new[]
+        {
+            new X { Key = "x" },
+            new X { Key = "a" },
+            new X { Key = "a", Contestants = new List<Y> { new Y() } }
+        }.AsQueryable();
+        var groupByKey = q.GroupBy("Key");
+        var selectQry = groupByKey.Select("new (Key, Sum(np(Contestants.Count, 0)) As TotalCount)").ToDynamicList();
+
+        Normal();
+        Dynamic();
     }
 
-    public class Y
+    private static void Issue389_Works()
     {
+        var strArray = new[] { "1", "2", "3", "4" };
+        var x = new List<ParameterExpression>();
+        x.Add(Expression.Parameter(strArray.GetType(), "strArray"));
+
+        string query = "string.Join(\",\", strArray)";
+
+        var e = DynamicExpressionParser.ParseLambda(x.ToArray(), null, query);
+        Delegate del = e.Compile();
+        var result1 = del.DynamicInvoke(new object?[] { strArray });
+        Console.WriteLine(result1);
     }
 
-    class Program
+    private static void Issue389WorksWithInts()
     {
-        static void Main(string[] args)
-        {
-            Issue389DoesNotWork();
-            return;
-            Issue389_Works();
-            return;
+        var intArray = new object[] { 1, 2, 3, 4 };
+        var x = new List<ParameterExpression>();
+        x.Add(Expression.Parameter(intArray.GetType(), "intArray"));
 
-            var q = new[]
-            {
-                new X { Key = "x" },
-                new X { Key = "a" },
-                new X { Key = "a", Contestants = new List<Y> { new Y() } }
-            }.AsQueryable();
-            var groupByKey = q.GroupBy("Key");
-            var selectQry = groupByKey.Select("new (Key, Sum(np(Contestants.Count, 0)) As TotalCount)").ToDynamicList();
+        string query = "string.Join(\",\", intArray)";
 
-            Normal();
-            Dynamic();
-        }
+        var e = DynamicExpressionParser.ParseLambda(x.ToArray(), null, query);
+        Delegate del = e.Compile();
+        var result = del.DynamicInvoke(new object?[] { intArray });
 
-        private static void Issue389_Works()
-        {
-            var strArray = new[] { "1", "2", "3", "4" };
-            var x = new List<ParameterExpression>();
-            x.Add(Expression.Parameter(strArray.GetType(), "strArray"));
+        Console.WriteLine(result);
+    }
 
-            string query = "string.Join(\",\", strArray)";
+    private static void Issue389DoesNotWork()
+    {
+        var intArray = new[] { 1, 2, 3, 4 };
+        var x = new List<ParameterExpression>();
+        x.Add(Expression.Parameter(intArray.GetType(), "intArray"));
 
-            var e = DynamicExpressionParser.ParseLambda(x.ToArray(), null, query);
-            Delegate del = e.Compile();
-            var result1 = del.DynamicInvoke(new object?[] { strArray });
-            Console.WriteLine(result1);
-        }
+        string query = "string.Join(\",\", intArray)";
 
-        private static void Issue389WorksWithInts()
-        {
-            var intArray = new object[] { 1, 2, 3, 4 };
-            var x = new List<ParameterExpression>();
-            x.Add(Expression.Parameter(intArray.GetType(), "intArray"));
+        var e = DynamicExpressionParser.ParseLambda(x.ToArray(), null, query);
+        Delegate del = e.Compile();
+        var result = del.DynamicInvoke(new object?[] { intArray });
 
-            string query = "string.Join(\",\", intArray)";
+        Console.WriteLine(result);
+    }
 
-            var e = DynamicExpressionParser.ParseLambda(x.ToArray(), null, query);
-            Delegate del = e.Compile();
-            var result = del.DynamicInvoke(new object?[] { intArray });
+    private static void Normal()
+    {
+        var e = new int[0].AsQueryable();
+        var q = new[] { 1 }.AsQueryable();
 
-            Console.WriteLine(result);
-        }
+        var a = q.FirstOrDefault();
+        var b = e.FirstOrDefault(44);
 
-        private static void Issue389DoesNotWork()
-        {
-            var intArray = new [] { 1, 2, 3, 4 };
-            var x = new List<ParameterExpression>();
-            x.Add(Expression.Parameter(intArray.GetType(), "intArray"));
+        var c = q.FirstOrDefault(i => i == 0);
+        var d = q.FirstOrDefault(i => i == 0, 42);
 
-            string query = "string.Join(\",\", intArray)";
+        var t = q.Take(1);
+    }
 
-            var e = DynamicExpressionParser.ParseLambda(x.ToArray(), null, query);
-            Delegate del = e.Compile();
-            var result = del.DynamicInvoke(new object?[] { intArray });
+    private static void Dynamic()
+    {
+        var e = new int[0].AsQueryable() as IQueryable;
+        var q = new[] { 1 }.AsQueryable() as IQueryable;
 
-            Console.WriteLine(result);
-        }
+        var a = q.FirstOrDefault();
+        //var b = e.FirstOrDefault(44);
 
-        private static void Normal()
-        {
-            var e = new int[0].AsQueryable();
-            var q = new[] { 1 }.AsQueryable();
-
-            var a = q.FirstOrDefault();
-            var b = e.FirstOrDefault(44);
-
-            var c = q.FirstOrDefault(i => i == 0);
-            var d = q.FirstOrDefault(i => i == 0, 42);
-
-            var t = q.Take(1);
-        }
-
-        private static void Dynamic()
-        {
-            var e = new int[0].AsQueryable() as IQueryable;
-            var q = new[] { 1 }.AsQueryable() as IQueryable;
-
-            var a = q.FirstOrDefault();
-            //var b = e.FirstOrDefault(44);
-
-            var c = q.FirstOrDefault("it == 0");
-            //var d = q.FirstOrDefault(i => i == 0, 42);
-        }
+        var c = q.FirstOrDefault("it == 0");
+        //var d = q.FirstOrDefault(i => i == 0, 42);
     }
 }
