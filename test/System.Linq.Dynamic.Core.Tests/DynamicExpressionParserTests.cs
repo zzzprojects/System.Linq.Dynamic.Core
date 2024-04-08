@@ -1485,13 +1485,30 @@ public class DynamicExpressionParserTests
         // Act : string
         // Replace  "   with   \"
         // Replace \"   with \\\"
-        var _ = StaticHelper.Filter("UserName ==   \"x\"  ");
+        var _ = StaticHelper.Filter("UserName == \"x\"");
         var expressionTextUserName = "StaticHelper.Filter(\"UserName == \\\"x\\\"\")";
         var lambdaUserName = DynamicExpressionParser.ParseLambda(config, typeof(User), null, expressionTextUserName, user);
         var funcUserName = (Expression<Func<User, string>>)lambdaUserName;
 
         var delegateUserName = funcUserName.Compile();
         var resultUserName = (string?)delegateUserName.DynamicInvoke(user);
+
+        // Assert : string
+        resultUserName.Should().Be(@"UserName == ""x""");
+
+        // Act : string
+        // Replace  "   with   ""
+        var configReplaceTwoDoubleQuotesByASingleDoubleQuote = new ParsingConfig
+        {
+            CustomTypeProvider = new TestCustomTypeProvider(),
+            StringLiteralParsing = StringLiteralParsingType.ReplaceTwoDoubleQuotesByASingleDoubleQuote
+        };
+        expressionTextUserName = "StaticHelper.Filter(\"UserName == \"\"x\"\"\")";
+        lambdaUserName = DynamicExpressionParser.ParseLambda(configReplaceTwoDoubleQuotesByASingleDoubleQuote, typeof(User), null, expressionTextUserName, user);
+        funcUserName = (Expression<Func<User, string>>)lambdaUserName;
+
+        delegateUserName = funcUserName.Compile();
+        resultUserName = (string?)delegateUserName.DynamicInvoke(user);
 
         // Assert : string
         resultUserName.Should().Be(@"UserName == ""x""");
