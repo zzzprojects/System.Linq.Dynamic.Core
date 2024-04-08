@@ -1,6 +1,6 @@
 ﻿using JsonConverter.Abstractions.Models;
 
-namespace System.Linq.Dynamic.Core.Newtonsoft.Json;
+namespace System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 
 public class JsonParsingConfig : ParsingConfig
 {

@@ -1,7 +1,9 @@
-﻿using System.Linq.Dynamic.Core.Validation;
+﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+using System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
+using System.Linq.Dynamic.Core.Validation;
 using Newtonsoft.Json.Linq;
 
-namespace System.Linq.Dynamic.Core.Newtonsoft.Json;
+namespace System.Linq.Dynamic.Core.NewtonsoftJson;
 
 /// <summary>
 /// 

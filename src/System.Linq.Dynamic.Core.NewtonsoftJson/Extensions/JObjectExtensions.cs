@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Dynamic.Core.Newtonsoft.Json.Models;
+using System.Linq.Dynamic.Core.NewtonsoftJson.Models;
 using System.Reflection;
 using JsonConverter.Abstractions.Models;
 using Newtonsoft.Json.Linq;
 
-namespace System.Linq.Dynamic.Core.Newtonsoft.Json;
+namespace System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
 
 /// <summary>
 /// Based on https://github.com/StefH/JsonConverter/blob/main/src/JsonConverter.Newtonsoft.Json/Extensions/JObjectExtensions.cs

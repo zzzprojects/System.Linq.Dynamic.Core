@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Linq.Dynamic.Core.Newtonsoft.Json;
+using System.Linq.Dynamic.Core.NewtonsoftJson;
 using System.Linq.Expressions;
 using Newtonsoft.Json.Linq;
 

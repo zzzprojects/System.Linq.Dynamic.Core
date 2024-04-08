@@ -1,4 +1,4 @@
-﻿namespace System.Linq.Dynamic.Core.Newtonsoft.Json.Models;
+﻿namespace System.Linq.Dynamic.Core.NewtonsoftJson.Models;
 
 internal class DynamicPropertyWithValue : DynamicProperty
 {
