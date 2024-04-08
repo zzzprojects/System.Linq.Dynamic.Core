@@ -916,8 +916,8 @@ public class ExpressionParser
             _textParser.NextToken();
         }
 
-        parsedStringValue = _parsingConfig.StringLiteralParsing == StringLiteralParsingType.ReplaceTwoDoubleQuotesByASingleDoubleQuote ? 
-            StringParser.ParseStringAndReplaceTwoDoubleQuotesByASingleDoubleQuote(text, _textParser.CurrentToken.Pos) : 
+        parsedStringValue = _parsingConfig.StringLiteralParsing == StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes ?
+            StringParser.ParseStringAndEscapeTwoDoubleQuotesByASingleDoubleQuote(text, _textParser.CurrentToken.Pos) :
             StringParser.ParseString(text, _textParser.CurrentToken.Pos);
 
         return _constantExpressionHelper.CreateLiteral(parsedStringValue, parsedStringValue);
