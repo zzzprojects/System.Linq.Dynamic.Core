@@ -884,7 +884,9 @@ public class ExpressionParser
         _textParser.ValidateToken(TokenId.StringLiteral);
 
         var text = _textParser.CurrentToken.Text;
-        var parsedStringValue = StringParser.ParseString(_textParser.CurrentToken.Text, _textParser.CurrentToken.Pos);
+        var parsedStringValue = _parsingConfig.StringLiteralParsing == StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes ?
+            StringParser.ParseStringAndEscapeTwoDoubleQuotesByASingleDoubleQuote(text, _textParser.CurrentToken.Pos) :
+            StringParser.ParseString(text, _textParser.CurrentToken.Pos);
 
         if (_textParser.CurrentToken.Text[0] == '\'')
         {
