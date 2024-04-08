@@ -118,9 +118,10 @@ public static class JsonExtensions
     private static JArray ToJArray(Func<IQueryable> func)
     {
         var array = new JArray();
-        foreach (var element in func())
+        foreach (var dynamicElement in func())
         {
-            array.Add(JObject.FromObject(element));
+            var element = dynamicElement is DynamicClass dynamicClass ? JObject.FromObject(dynamicClass) : dynamicElement;
+            array.Add(element);
         }
         return array;
     }

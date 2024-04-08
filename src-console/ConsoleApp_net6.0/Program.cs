@@ -35,10 +35,16 @@ class Program
             ""third"": ""abc""
         }]");
 
-        var results = array.Where("City == @0", "Paris").ToDynamicArray();
-        foreach (var result in results)
+        var where = array.Where("City == @0", "Paris");
+        foreach (var result in where)
         {
-            Console.WriteLine(result.first);
+            Console.WriteLine(result["first"]);
+        }
+
+        var select = array.Select("City");
+        foreach (var result in select)
+        {
+            Console.WriteLine(result);
         }
 
         return;
