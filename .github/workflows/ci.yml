@@ -22,6 +22,7 @@ jobs:
     - name: Build Projects
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet build ./src/System.Linq.Dynamic.Core.NewtonsoftJson/System.Linq.Dynamic.Core.NewtonsoftJson.csproj -c Release -p:buildType=azure-pipelines-ci
 
     - name: Run Tests net8.0
       run: |
@@ -42,3 +43,8 @@ jobs:
       run: |
         dotnet build ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f net452 -p:buildType=azure-pipelines-ci
         dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -f net452 -p:buildType=azure-pipelines-ci --no-build
+
+    - name: Run Json Tests .NET 8
+      run: |
+        dotnet build ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj -c Release -f net8 -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj -c Release -f net8 -p:buildType=azure-pipelines-ci --no-build
