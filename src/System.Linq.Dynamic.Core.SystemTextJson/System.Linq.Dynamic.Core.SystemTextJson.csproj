@@ -23,6 +23,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Extensions\JsonDocumentExtensionsOld.cs" />
+      <Compile Remove="Extensions\JsonElementExtensions.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="JsonConverter.System.Text.Json" Version="0.5.0" />
     </ItemGroup>
 

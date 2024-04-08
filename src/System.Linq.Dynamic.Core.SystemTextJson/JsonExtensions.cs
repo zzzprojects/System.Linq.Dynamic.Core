@@ -1,6 +1,8 @@
 ﻿using System.Linq.Dynamic.Core.SystemTextJson.Config;
+using System.Linq.Dynamic.Core.SystemTextJson.Extensions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson;
 
@@ -63,12 +65,7 @@ public static class JsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
         Check.NotNullOrEmpty(selector);
-
-        if (source.Count == 0)
-        {
-            return new JArray();
-        }
-
+        
         var queryable = ConvertToQueryable(source, config);
         return ToJArray(() => queryable.Select(config, selector, args));
     }
@@ -101,11 +98,6 @@ public static class JsonExtensions
         Check.NotNull(config);
         Check.NotNullOrEmpty(predicate);
 
-        if (source.Count == 0)
-        {
-            return new JArray();
-        }
-
         var queryable = ConvertToQueryable(source, config);
         return ToJArray(() => queryable.Where(config, predicate, args));
     }
@@ -116,19 +108,55 @@ public static class JsonExtensions
     /// </summary>
     /// <param name="func">The callback which returns a <see cref="IQueryable"/>.</param>
     /// <returns><see cref="JArray"/></returns>
-    private static JsonDocument ToJArray(Func<IQueryable> func)
+    private static JsonElement ToJArray(Func<IQueryable> func)
     {
-        var array = new JsonDocument();
+        var array = new JsonElement();
         foreach (var dynamicElement in func())
         {
-            var element = dynamicElement is DynamicClass dynamicClass ? JObject.FromObject(dynamicClass) : dynamicElement;
-            array.Add(element);
+
+            var element = dynamicElement is DynamicClass dynamicClass ? JsonDocument..FromObject(dynamicClass) : dynamicElement;
+            //array.Add(element);
+            TryAddPropertyToArrayElements(array, "element", dynamicElement);
         }
         return array;
     }
 
-    private static IQueryable ConvertToQueryable(JsonDocument source, JsonParsingConfig config)
+    private static IQueryable ConvertToQueryable(JsonElement source, JsonParsingConfig config)
     {
+        if (source.ValueKind != JsonValueKind.Array)
+        {
+            throw new NotSupportedException("The source is not a JSON array.");
+        }
+
         return source.ToDynamicJsonClassArray(config.DynamicJsonClassOptions).AsQueryable();
     }
+
+    private static JsonNode TryAddPropertyToArrayElements<TProperty>(this JsonNode node, string name, TProperty value)
+    {
+        if (node is JsonArray array)
+        {
+            foreach (var obj in array.OfType<JsonObject>())
+            {
+                obj[name] = JsonSerializer.SerializeToNode(value);
+            }
+        }
+
+        return node;
+    }
+
+    private static JsonElement TryAddPropertyToArrayElements<TProperty>(this JsonElement element, string name, TProperty value)
+    {
+        return element.ValueKind == JsonValueKind.Array
+            ? JsonSerializer.SerializeToElement(element.Deserialize<JsonNode>()!.TryAddPropertyToArrayElements(name, value))
+            : element;
+    }
+
+    private static object? TryAddPropertyToArrayElements<TProperty>(this object? obj, string name, TProperty value) =>
+        obj switch
+        {
+            JsonElement e => e.TryAddPropertyToArrayElements(name, value),
+            JsonNode n => n.TryAddPropertyToArrayElements(name, value),
+            null => null, // JSON values that are null are deserialized to the c# null value, not some element or node of type null
+            _ => throw new ArgumentException("Unexpected type ${obj}"),
+        };
 }

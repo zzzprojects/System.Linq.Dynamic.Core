@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.NewtonsoftJson;
 using System.Linq.Expressions;
+using System.Text.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ConsoleApp_net6._0;
@@ -22,6 +23,30 @@ public class Y
 class Program
 {
     static void Main(string[] args)
+    {
+        NewtonsoftJson();
+
+        return;
+
+        Issue389DoesNotWork();
+        return;
+        Issue389_Works();
+        return;
+
+        var q = new[]
+        {
+            new X { Key = "x" },
+            new X { Key = "a" },
+            new X { Key = "a", Contestants = new List<Y> { new Y() } }
+        }.AsQueryable();
+        var groupByKey = q.GroupBy("Key");
+        var selectQry = groupByKey.Select("new (Key, Sum(np(Contestants.Count, 0)) As TotalCount)").ToDynamicList();
+
+        Normal();
+        Dynamic();
+    }
+
+    private static void NewtonsoftJson()
     {
         var array = JArray.Parse(@"[
         {
@@ -52,25 +77,39 @@ class Program
         {
             Console.WriteLine(result);
         }
+    }
 
-        return;
-
-        Issue389DoesNotWork();
-        return;
-        Issue389_Works();
-        return;
-
-        var q = new[]
+    private static void Json()
+    {
+        var doc = JsonDocument.Parse(@"[
         {
-            new X { Key = "x" },
-            new X { Key = "a" },
-            new X { Key = "a", Contestants = new List<Y> { new Y() } }
-        }.AsQueryable();
-        var groupByKey = q.GroupBy("Key");
-        var selectQry = groupByKey.Select("new (Key, Sum(np(Contestants.Count, 0)) As TotalCount)").ToDynamicList();
+            ""first"": 1,
+            ""City"": ""Paris"",
+            ""third"": ""test""
+        },
+        {
+            ""first"": 2,
+            ""City"": ""New York"",
+            ""third"": ""abc""
+        }]");
 
-        Normal();
-        Dynamic();
+        var where = doc.Where("City == @0", "Paris");
+        foreach (var result in where)
+        {
+            Console.WriteLine(result["first"]);
+        }
+
+        var select = doc.Select("City");
+        foreach (var result in select)
+        {
+            Console.WriteLine(result);
+        }
+
+        var whereWithSelect = doc.Where("City == @0", "Paris").Select("first");
+        foreach (var result in whereWithSelect)
+        {
+            Console.WriteLine(result);
+        }
     }
 
     private static void Issue389_Works()

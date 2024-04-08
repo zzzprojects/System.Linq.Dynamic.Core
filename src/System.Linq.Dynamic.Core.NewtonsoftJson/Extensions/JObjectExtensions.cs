@@ -35,10 +35,10 @@ internal static class JObjectExtensions
         { JTokenType.Uri, (o, _) => o.Value<Uri>() },
     };
 
-    internal static object? ToDynamicClass(this JValue src)
-    {
-        return src.Value;
-    }
+    //internal static object? ToDynamicClass(this JValue src)
+    //{
+    //    return src.Value;
+    //}
 
     internal static DynamicClass? ToDynamicClass(this JObject? src, DynamicJsonClassOptions? options = null)
     {
@@ -47,18 +47,18 @@ internal static class JObjectExtensions
             return null;
         }
 
-        var dynamicPropertyWithValues = new List<DynamicPropertyWithValue>();
+        var dynamicPropertiesWithValue = new List<DynamicPropertyWithValue>();
 
         foreach (var prop in src.Properties())
         {
             var value = Resolvers[prop.Type](prop.Value, options);
             if (value != null)
             {
-                dynamicPropertyWithValues.Add(new DynamicPropertyWithValue(prop.Name, value));
+                dynamicPropertiesWithValue.Add(new DynamicPropertyWithValue(prop.Name, value));
             }
         }
 
-        return CreateInstance(dynamicPropertyWithValues);
+        return CreateInstance(dynamicPropertiesWithValue);
     }
 
     internal static IEnumerable ToDynamicJsonClassArray(this JArray? src, DynamicJsonClassOptions? options = null)
