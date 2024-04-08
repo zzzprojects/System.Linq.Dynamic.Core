@@ -1,8 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.Linq;
+using System.Linq.Dynamic.Core.NewtonsoftJson;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.NewtonsoftJson.Tests;
+namespace System.Linq.Dynamic.Core.Tests.Json;
 
 public class NewtonsoftJsonTests
 {

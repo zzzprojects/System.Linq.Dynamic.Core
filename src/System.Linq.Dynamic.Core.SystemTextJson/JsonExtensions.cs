@@ -1,10 +1,12 @@
-﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
-using System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
+﻿using System.Linq.Dynamic.Core.SystemTextJson.Config;
 using System.Linq.Dynamic.Core.Validation;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
-namespace System.Linq.Dynamic.Core.NewtonsoftJson;
+namespace System.Linq.Dynamic.Core.SystemTextJson;
 
+/// <summary>
+/// 
+/// </summary>
 public static class JsonExtensions
 {
     #region All
@@ -13,7 +15,7 @@ public static class JsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
-    public static bool All(this JArray source, string predicate, params object?[] args)
+    public static bool All(this JsonDocument source, string predicate, params object?[] args)
     {
         return All(source, JsonParsingConfig.Default, predicate, args);
     }
@@ -24,7 +26,7 @@ public static class JsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
-    public static bool All(this JArray source, JsonParsingConfig config, string predicate, params object?[] args)
+    public static bool All(this JsonDocument source, JsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
@@ -42,8 +44,8 @@ public static class JsonExtensions
     /// <param name="source">A sequence of values to project.</param>
     /// <param name="selector">A projection string expression to apply to each element.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
-    /// <returns>An <see cref="JArray"/> whose elements are the result of invoking a projection string on each element of source.</returns>
-    public static JArray Select(this JArray source, string selector, params object?[] args)
+    /// <returns>An <see cref="JsonDocument"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+    public static JsonDocument Select(this JsonDocument source, string selector, params object?[] args)
     {
         return Select(source, JsonParsingConfig.Default, selector, args);
     }
@@ -56,7 +58,7 @@ public static class JsonExtensions
     /// <param name="selector">A projection string expression to apply to each element.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
     /// <returns>An <see cref="JArray"/> whose elements are the result of invoking a projection string on each element of source.</returns>
-    public static JArray Select(this JArray source, JsonParsingConfig config, string selector, params object?[] args)
+    public static JsonDocument Select(this JsonDocument source, JsonParsingConfig config, string selector, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
@@ -80,7 +82,7 @@ public static class JsonExtensions
     /// <param name="predicate">An expression string to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>A <see cref="JArray"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
-    public static JArray Where(this JArray source, string predicate, params object?[] args)
+    public static JsonDocument Where(this JsonDocument source, string predicate, params object?[] args)
     {
         return Where(source, JsonParsingConfig.Default, predicate, args);
     }
@@ -93,7 +95,7 @@ public static class JsonExtensions
     /// <param name="predicate">An expression string to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>A <see cref="JArray"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
-    public static JArray Where(this JArray source, JsonParsingConfig config, string predicate, params object?[] args)
+    public static JsonDocument Where(this JsonDocument source, JsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
@@ -114,9 +116,9 @@ public static class JsonExtensions
     /// </summary>
     /// <param name="func">The callback which returns a <see cref="IQueryable"/>.</param>
     /// <returns><see cref="JArray"/></returns>
-    private static JArray ToJArray(Func<IQueryable> func)
+    private static JsonDocument ToJArray(Func<IQueryable> func)
     {
-        var array = new JArray();
+        var array = new JsonDocument();
         foreach (var dynamicElement in func())
         {
             var element = dynamicElement is DynamicClass dynamicClass ? JObject.FromObject(dynamicClass) : dynamicElement;
@@ -125,7 +127,7 @@ public static class JsonExtensions
         return array;
     }
 
-    private static IQueryable ConvertToQueryable(JArray source, JsonParsingConfig config)
+    private static IQueryable ConvertToQueryable(JsonDocument source, JsonParsingConfig config)
     {
         return source.ToDynamicJsonClassArray(config.DynamicJsonClassOptions).AsQueryable();
     }
