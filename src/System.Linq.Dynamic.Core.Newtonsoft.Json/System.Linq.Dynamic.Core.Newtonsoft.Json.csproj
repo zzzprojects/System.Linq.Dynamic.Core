@@ -2,7 +2,6 @@
     <Import Project="../../version.xml" />
 
     <PropertyGroup>
-        <!--<AssemblyName>System.Linq.Dynamic.Core</AssemblyName>-->
         <AssemblyOriginatorKeyFile>../System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
         <Authors>Stef Heyenrath</Authors>
