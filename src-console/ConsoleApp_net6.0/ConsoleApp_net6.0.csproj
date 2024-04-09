@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core.NewtonsoftJson\System.Linq.Dynamic.Core.NewtonsoftJson.csproj" />
-      <ProjectReference Include="..\..\test\System.Linq.Dynamic.Core.NewtonsoftJson.Tests\System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj" />
+      <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core.SystemTextJson\System.Linq.Dynamic.Core.SystemTextJson.csproj" />
     </ItemGroup>
 
 </Project>

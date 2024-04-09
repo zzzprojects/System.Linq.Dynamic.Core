@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.NewtonsoftJson;
+using System.Linq.Dynamic.Core.SystemTextJson;
 using System.Linq.Expressions;
 using System.Text.Json;
 using Newtonsoft.Json.Linq;
@@ -24,7 +25,8 @@ class Program
 {
     static void Main(string[] args)
     {
-        NewtonsoftJson();
+        Json();
+        // NewtonsoftJson();
 
         return;
 
@@ -94,19 +96,19 @@ class Program
         }]");
 
         var where = doc.Where("City == @0", "Paris");
-        foreach (var result in where)
+        foreach (var result in where.RootElement.EnumerateArray())
         {
-            Console.WriteLine(result["first"]);
+            Console.WriteLine(result.GetProperty("first"));
         }
 
         var select = doc.Select("City");
-        foreach (var result in select)
+        foreach (var result in select.EnumerateArray())
         {
             Console.WriteLine(result);
         }
 
         var whereWithSelect = doc.Where("City == @0", "Paris").Select("first");
-        foreach (var result in whereWithSelect)
+        foreach (var result in whereWithSelect.EnumerateArray())
         {
             Console.WriteLine(result);
         }

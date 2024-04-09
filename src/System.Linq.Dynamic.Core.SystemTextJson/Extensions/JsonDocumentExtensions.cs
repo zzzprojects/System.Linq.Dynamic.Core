@@ -15,30 +15,17 @@ internal static class JsonDocumentExtensions
 
     private static readonly JTokenResolvers Resolvers = new()
     {
-        { JsonValueKind.Array, ConvertJTokenArray },
+        { JsonValueKind.Array, ConvertJsonElementToEnumerable },
         { JsonValueKind.False, (_, _) => false },
         { JsonValueKind.True, (_, _) => true },
-        // { JsonValueKind.Bytes, (jToken, _) => jToken.Value<byte[]>() },
-        // { JsonValueKind.Date, (jToken, _) => jToken.Value<DateTime>() },
-        // { JsonValueKind.Float, ConvertJTokenFloat },
-        // { JsonValueKind.Guid, (jToken, _) => jToken.Value<Guid>() },
         { JsonValueKind.Number, ConvertNumber },
-        // { JsonValueKind.None, (_, _) => null },
         { JsonValueKind.Null, (_, _) => null },
-        { JsonValueKind.Object, ConvertJObject },
-        // { JsonValueKind.Property, ConvertJTokenProperty },
+        { JsonValueKind.Object, ConvertJsonElement },
         { JsonValueKind.String, ConvertString },
-        // { JsonValueKind.TimeSpan, (jToken, _) => jToken.Value<TimeSpan>() },
-        { JsonValueKind.Undefined, (_, _) => null },
-        // { JsonValueKind.Uri, (o, _) => o.Value<Uri>() },
+        { JsonValueKind.Undefined, (_, _) => null }
     };
 
-    //internal static object? ToDynamicClass(this JValue src)
-    //{
-    //    return src.Value;
-    //}
-
-    internal static DynamicClass? ToDynamicClass(this JsonDocument? src, DynamicJsonClassOptions? options = null)
+    internal static DynamicClass? ToDynamicClass(this JsonElement? src, DynamicJsonClassOptions? options = null)
     {
         if (src == null)
         {
@@ -47,7 +34,7 @@ internal static class JsonDocumentExtensions
 
         var dynamicPropertiesWithValue = new List<DynamicPropertyWithValue>();
 
-        foreach (var prop in src.RootElement.EnumerateObject())
+        foreach (var prop in src.Value.EnumerateObject())
         {
             var value = Resolvers[prop.Value.ValueKind](prop.Value, options);
             if (value != null)
@@ -59,24 +46,14 @@ internal static class JsonDocumentExtensions
         return CreateInstance(dynamicPropertiesWithValue);
     }
 
-    internal static IEnumerable ToDynamicJsonClassArray(this JsonElement? src, DynamicJsonClassOptions? options = null)
+    public static IEnumerable ToDynamicJsonClassArray(this JsonElement? src, DynamicJsonClassOptions? options = null)
     {
-        return src == null ? new object?[0] : ConvertJTokenArray(src.Value, options);
+        return src == null ? Array.Empty<object?>() : ConvertJsonElementToEnumerable(src.Value, options);
     }
 
-    internal static object? ToDynamicClass(this JsonElement? src, DynamicJsonClassOptions? options = null)
+    private static object? ConvertJsonElement(JsonElement arg, DynamicJsonClassOptions? options = null)
     {
-        return src == null ? null : GetResolverFor(src.Value)(src.Value, options);
-    }
-
-    private static object? ConvertJObject(JsonElement arg, DynamicJsonClassOptions? options = null)
-    {
-        //if (arg is JObject asJObject)
-        //{
-        //    return asJObject.ToDynamicClass(options);
-        //}
-
-        return GetResolverFor(arg)(arg, options);
+        return arg.ValueKind == JsonValueKind.Object ? ToDynamicClass(arg, options) : GetResolverFor(arg)(arg, options);
     }
 
     private static object PassThrough(JsonElement arg, DynamicJsonClassOptions? options)
@@ -101,26 +78,11 @@ internal static class JsonDocumentExtensions
             return dt;
         }
 
-        if (arg.TryGetByte(out var @byte))
-        {
-            return @byte;
-        }
-
-        if (arg.TryGetBytesFromBase64(out var base64))
-        {
-            return base64;
-        }
-
         return arg.GetString();
     }
 
     private static object ConvertNumber(JsonElement arg, DynamicJsonClassOptions? options = null)
     {
-        //if (arg.ValueKind != JsonValueKind.Number)
-        //{
-        //    throw new InvalidOperationException($"Unable to convert {nameof(JsonElement)} of type: {arg.ValueKind} to Number.");
-        //}
-
         if (arg.TryGetInt32(out var int32))
         {
             return int32;
@@ -141,31 +103,20 @@ internal static class JsonDocumentExtensions
             return @decimal;
         }
 
+        if (arg.TryGetByte(out var @byte))
+        {
+            return @byte;
+        }
+
         throw new InvalidOperationException($"Unable to convert {nameof(JsonElement)} of type: {arg.ValueKind} to int, long, double or decimal.");
     }
 
-    //private static object? ConvertJTokenProperty(JToken arg, DynamicJsonClassOptions? options = null)
-    //{
-    //    var resolver = GetResolverFor(arg);
-    //    if (resolver is null)
-    //    {
-    //        throw new InvalidOperationException($"Unable to handle {nameof(JToken)} of type: {arg.Type}.");
-    //    }
-
-    //    return resolver(arg, options);
-    //}
-
-    private static IEnumerable ConvertJTokenArray(JsonElement arg, DynamicJsonClassOptions? options = null)
+    private static IEnumerable ConvertJsonElementToEnumerable(JsonElement arg, DynamicJsonClassOptions? options = null)
     {
-        //if (arg is not JArray array)
-        //{
-        //    throw new InvalidOperationException($"Unable to convert {nameof(JToken)} of type: {arg.Type} to {nameof(JArray)}.");
-        //}
-
         var result = new List<object?>();
         foreach (var item in arg.EnumerateArray())
         {
-            result.Add(ConvertJObject(item));
+            result.Add(ConvertJsonElement(item));
         }
 
         var distinctType = FindSameTypeOf(result);

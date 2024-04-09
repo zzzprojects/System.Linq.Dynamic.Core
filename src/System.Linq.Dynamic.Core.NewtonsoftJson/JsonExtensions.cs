@@ -30,7 +30,7 @@ public static class JsonExtensions
         Check.NotNull(config);
         Check.NotEmpty(predicate);
 
-        var queryable = ConvertToQueryable(source, config);
+        var queryable = ToQueryable(source, config);
         return queryable.All(config, predicate, args);
     }
     #endregion All
@@ -67,7 +67,7 @@ public static class JsonExtensions
             return new JArray();
         }
 
-        var queryable = ConvertToQueryable(source, config);
+        var queryable = ToQueryable(source, config);
         return ToJArray(() => queryable.Select(config, selector, args));
     }
     #endregion Select
@@ -104,16 +104,11 @@ public static class JsonExtensions
             return new JArray();
         }
 
-        var queryable = ConvertToQueryable(source, config);
+        var queryable = ToQueryable(source, config);
         return ToJArray(() => queryable.Where(config, predicate, args));
     }
     #endregion Where
 
-    /// <summary>
-    /// Convert the dynamic results to a JArray.
-    /// </summary>
-    /// <param name="func">The callback which returns a <see cref="IQueryable"/>.</param>
-    /// <returns><see cref="JArray"/></returns>
     private static JArray ToJArray(Func<IQueryable> func)
     {
         var array = new JArray();
@@ -122,10 +117,11 @@ public static class JsonExtensions
             var element = dynamicElement is DynamicClass dynamicClass ? JObject.FromObject(dynamicClass) : dynamicElement;
             array.Add(element);
         }
+
         return array;
     }
 
-    private static IQueryable ConvertToQueryable(JArray source, JsonParsingConfig config)
+    private static IQueryable ToQueryable(JArray source, JsonParsingConfig config)
     {
         return source.ToDynamicJsonClassArray(config.DynamicJsonClassOptions).AsQueryable();
     }
