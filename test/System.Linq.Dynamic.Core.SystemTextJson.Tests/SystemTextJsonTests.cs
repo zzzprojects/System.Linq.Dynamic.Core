@@ -150,6 +150,19 @@ public class SystemTextJsonTests
     }
 
     [Fact]
+    public void LastOrDefault()
+    {
+        // Act + Assert 1
+        _source.LastOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+
+        // Act + Assert 2
+        _source.LastOrDefault("Age > 0")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+
+        // Act + Assert 3
+        _source.LastOrDefault("Age > 999").Should().BeNull();
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

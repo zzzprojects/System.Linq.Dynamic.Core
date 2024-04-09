@@ -141,6 +141,16 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void LastOrDefault()
+    {
+        // Act + Assert 1
+        ((string?)_source.LastOrDefault("Age > 0")!["Name"]).Should().Be("Doe");
+
+        // Act + Assert 2
+        _source.LastOrDefault("Age > 999").Should().BeNull();
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

@@ -419,6 +419,51 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion Last
 
+    #region LastOrDefault
+    /// <summary>
+    /// Returns the last element of a sequence that satisfies a specified condition, or a default value if the sequence contains no elements.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken? LastOrDefault(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJToken(queryable.LastOrDefault(predicate, args));
+    }
+
+    /// <summary>
+    /// Returns the last element of a sequence that satisfies a specified condition, or a default value if the sequence contains no elements.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken? LastOrDefault(this JArray source, string predicate, params object?[] args)
+    {
+        return LastOrDefault(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the last element of a sequence that satisfies a specified condition, or a default value if the sequence contains no elements.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken? LastOrDefault(this JArray source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJToken(queryable.LastOrDefault(lambda));
+    }
+    #endregion LastOrDefault
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.
