@@ -117,6 +117,15 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void First()
+    {
+        // Act + Assert 1
+        _source.First().Should().NotBeNull();
+
+        ((string?)_source.First("Age > 30")["Name"]).Should().Be("Doe");
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

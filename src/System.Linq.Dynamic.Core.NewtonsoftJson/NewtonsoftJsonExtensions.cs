@@ -228,19 +228,6 @@ public static class NewtonsoftJsonExtensions
     /// Returns the number of elements in a sequence.
     /// </summary>
     /// <param name="source">The <see cref="JArray"/> that contains the elements to be counted.</param>
-    /// <returns>The number of elements in the input sequence.</returns>
-    public static int Count(this JArray source)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Count();
-    }
-
-    /// <summary>
-    /// Returns the number of elements in a sequence.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> that contains the elements to be counted.</param>
     /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
@@ -286,19 +273,6 @@ public static class NewtonsoftJsonExtensions
     /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
     /// </summary>
     /// <param name="source">The <see cref="JArray"/> to return a default value for if empty.</param>
-    /// <returns>An <see cref="JArray"/> that contains default if source is empty; otherwise, source.</returns>
-    public static JArray DefaultIfEmpty(this JArray source)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJArray(queryable.DefaultIfEmpty);
-    }
-
-    /// <summary>
-    /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> to return a default value for if empty.</param>
     /// <param name="defaultValue">The value to return if the sequence is empty.</param>
     /// <returns>An <see cref="JArray"/> that contains defaultValue if source is empty; otherwise, source.</returns>
     public static JArray DefaultIfEmpty(this JArray source, object? defaultValue)
@@ -310,20 +284,50 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion
 
-    #region Distinct
+    #region First
     /// <summary>
-    /// Returns distinct elements from a sequence by using the default equality comparer to compare values.
+    /// Returns the first element of a sequence that satisfies a specified condition.
     /// </summary>
-    /// <param name="source">The sequence to remove duplicate elements from.</param>
-    /// <returns>An <see cref="JArray"/> that contains distinct elements from the source sequence.</returns>
-    public static JArray Distinct(this JArray source)
+    /// <param name="source">The <see cref="JArray"/> to return the first element of.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken First(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return ToJToken(queryable.First(config, predicate, args));
+    }
+
+    /// <summary>
+    /// Returns the first element of a sequence that satisfies a specified condition.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken First(this JArray source, string predicate, params object?[] args)
+    {
+        return First(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the first element of a sequence that satisfies a specified condition.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the first element of.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken First(this JArray source, LambdaExpression lambda)
     {
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJArray(queryable.Distinct);
+        return ToJToken(queryable.First(lambda));
     }
-    #endregion Distinct
+    #endregion First
 
     #region Select
     /// <summary>
@@ -399,6 +403,16 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion Where
 
+    #region Private Methods
+    private static JToken ToJToken(object value)
+    {
+        if (value is JToken jToken)
+        {
+            return jToken;
+        }
+
+        return JToken.FromObject(value);
+    }
     private static JArray ToJArray(Func<IQueryable> func)
     {
         var array = new JArray();
@@ -415,4 +429,5 @@ public static class NewtonsoftJsonExtensions
     {
         return source.ToDynamicJsonClassArray(config?.DynamicJsonClassOptions).AsQueryable();
     }
+    #endregion
 }
