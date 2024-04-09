@@ -282,6 +282,50 @@ public static class SystemTextJsonExtensions
     }
     #endregion Count
 
+    #region DefaultIfEmpty
+    /// <summary>
+    /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> to return a default value for if empty.</param>
+    /// <returns>An <see cref="JsonDocument"/> that contains default if source is empty; otherwise, source.</returns>
+    public static JsonDocument DefaultIfEmpty(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(queryable.DefaultIfEmpty);
+    }
+
+    /// <summary>
+    /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> to return a default value for if empty.</param>
+    /// <param name="defaultValue">The value to return if the sequence is empty.</param>
+    /// <returns>An <see cref="JsonDocument"/> that contains defaultValue if source is empty; otherwise, source.</returns>
+    public static JsonDocument DefaultIfEmpty(this JsonDocument source, object? defaultValue)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(() => queryable.DefaultIfEmpty(defaultValue));
+    }
+    #endregion
+
+    #region Distinct
+    /// <summary>
+    /// Returns distinct elements from a sequence by using the default equality comparer to compare values.
+    /// </summary>
+    /// <param name="source">The sequence to remove duplicate elements from.</param>
+    /// <returns>An <see cref="JsonDocument"/> that contains distinct elements from the source sequence.</returns>
+    public static JsonDocument Distinct(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(queryable.Distinct);
+    }
+    #endregion Distinct
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.
@@ -352,17 +396,7 @@ public static class SystemTextJsonExtensions
         var array = new List<object>();
         foreach (var dynamicElement in func())
         {
-            object element;
-            if (dynamicElement is DynamicClass dynamicClass)
-            {
-                element = JsonElementUtils.FromObject(dynamicClass);
-            }
-            else
-            {
-                element = dynamicElement;
-            }
-
-            //var element = dynamicElement is DynamicClass dynamicClass ? JsonElementUtils.FromObject(dynamicClass) : dynamicElement;
+            var element = dynamicElement is DynamicClass dynamicClass ? JsonElementUtils.FromObject(dynamicClass) : dynamicElement;
             array.Add(element);
         }
 

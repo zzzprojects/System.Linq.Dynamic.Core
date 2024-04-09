@@ -94,6 +94,29 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void Distinct()
+    {
+        var json = @"[
+            {
+                ""Name"": ""John""
+            },
+            {
+                ""Name"": ""Doe""
+            },
+            {
+                ""Name"": ""John""
+            }
+        ]";
+        var source = JArray.Parse(json);
+
+        // Act
+        var result = source.Select("Name").Distinct();
+
+        // Assert
+        result.Should().HaveCount(2);
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

@@ -94,6 +94,29 @@ public class SystemTextJsonTests
     }
 
     [Fact]
+    public void Distinct()
+    {
+        var json = @"[
+            {
+                ""Name"": ""John""
+            },
+            {
+                ""Name"": ""Doe""
+            },
+            {
+                ""Name"": ""John""
+            }
+        ]";
+        var source = JsonDocument.Parse(json);
+
+        // Act
+        var result = source.Select("Name").Distinct();
+
+        // Assert
+        result.RootElement.EnumerateArray().Should().HaveCount(2);
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

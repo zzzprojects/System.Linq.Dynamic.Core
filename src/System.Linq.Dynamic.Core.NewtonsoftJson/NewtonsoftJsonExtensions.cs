@@ -281,6 +281,50 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion Count
 
+    #region DefaultIfEmpty
+    /// <summary>
+    /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return a default value for if empty.</param>
+    /// <returns>An <see cref="JArray"/> that contains default if source is empty; otherwise, source.</returns>
+    public static JArray DefaultIfEmpty(this JArray source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJArray(queryable.DefaultIfEmpty);
+    }
+
+    /// <summary>
+    /// Returns the elements of the specified sequence or the type parameter's default value in a singleton collection if the sequence is empty.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return a default value for if empty.</param>
+    /// <param name="defaultValue">The value to return if the sequence is empty.</param>
+    /// <returns>An <see cref="JArray"/> that contains defaultValue if source is empty; otherwise, source.</returns>
+    public static JArray DefaultIfEmpty(this JArray source, object? defaultValue)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJArray(() => queryable.DefaultIfEmpty(defaultValue));
+    }
+    #endregion
+
+    #region Distinct
+    /// <summary>
+    /// Returns distinct elements from a sequence by using the default equality comparer to compare values.
+    /// </summary>
+    /// <param name="source">The sequence to remove duplicate elements from.</param>
+    /// <returns>An <see cref="JArray"/> that contains distinct elements from the source sequence.</returns>
+    public static JArray Distinct(this JArray source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJArray(queryable.Distinct);
+    }
+    #endregion Distinct
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.
