@@ -8,8 +8,29 @@ namespace System.Linq.Dynamic.Core.NewtonsoftJson;
 
 public static class NewtonsoftJsonExtensions
 {
+    #region Aggregate
+    /// <summary>
+    /// Dynamically runs an aggregate function on the <see cref="JArray"/>>.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/>> data source.</param>
+    /// <param name="function">The name of the function to run. Can be Sum, Average, Min or Max.</param>
+    /// <param name="member">The name of the property to aggregate over.</param>
+    /// <returns>The value of the aggregate function run over the specified property.</returns>
+    public static object Aggregate(this JArray source, string function, string member)
+    {
+        Check.NotNull(source);
+        Check.NotEmpty(function);
+        Check.NotEmpty(member);
+
+        var queryable = ToQueryable(source);
+        return queryable.Aggregate(function, member);
+    }
+    #endregion Aggregate
+
     #region All
-    /// <summary>Determines whether all the elements of a sequence satisfy a condition.</summary>
+    /// <summary>
+    /// Determines whether all the elements of a sequence satisfy a condition.
+    /// </summary>
     /// <param name="source">A sequence whose elements to test for a condition.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
@@ -19,7 +40,9 @@ public static class NewtonsoftJsonExtensions
         return All(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
 
-    /// <summary>Determines whether all the elements of a sequence satisfy a condition.</summary>
+    /// <summary>
+    /// Determines whether all the elements of a sequence satisfy a condition.
+    /// </summary>
     /// <param name="source">A sequence whose elements to test for a condition.</param>
     /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>

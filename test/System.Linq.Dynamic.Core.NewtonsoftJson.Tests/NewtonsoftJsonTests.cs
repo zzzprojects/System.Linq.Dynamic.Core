@@ -7,6 +7,30 @@ namespace System.Linq.Dynamic.Core.NewtonsoftJson.Tests;
 public class NewtonsoftJsonTests
 {
     [Fact]
+    public void Aggregate()
+    {
+        // Arrange
+        var json = @"[
+            {
+                ""Name"": ""John"",
+                ""Age"": 30
+            },
+            {
+                ""Name"": ""Doe"",
+                ""Age"": 25
+            }
+        ]";
+
+        var jArray = JArray.Parse(json);
+
+        // Act
+        var result = jArray.Aggregate("Sum", "Age");
+
+        // Assert
+        result.Should().Be(55);
+    }
+
+    [Fact]
     public void All()
     {
         // Arrange
