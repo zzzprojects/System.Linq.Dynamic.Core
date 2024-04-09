@@ -140,7 +140,7 @@ public static class SystemTextJsonExtensions
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
     /// <param name="selector">A projection string expression to apply to each element.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>An <see cref="JsonElement"/> whose elements are the result of invoking a projection string on each element of source.</returns>
     public static JsonDocument Select(this JsonDocument source, SystemTextJsonParsingConfig config, string selector, params object?[] args)
     {
@@ -191,7 +191,17 @@ public static class SystemTextJsonExtensions
         var array = new List<object>();
         foreach (var dynamicElement in func())
         {
-            var element = dynamicElement is DynamicClass dynamicClass ? JsonElementUtils.FromObject(dynamicClass) : dynamicElement;
+            object element;
+            if (dynamicElement is DynamicClass dynamicClass)
+            {
+                element = JsonElementUtils.FromObject(dynamicClass);
+            }
+            else
+            {
+                element = dynamicElement;
+            }
+
+            //var element = dynamicElement is DynamicClass dynamicClass ? JsonElementUtils.FromObject(dynamicClass) : dynamicElement;
             array.Add(element);
         }
 

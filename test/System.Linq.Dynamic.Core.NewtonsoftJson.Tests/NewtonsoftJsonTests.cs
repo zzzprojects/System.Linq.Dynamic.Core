@@ -77,4 +77,55 @@ public class NewtonsoftJsonTests
         // Assert
         result.Should().BeTrue();
     }
+
+    [Fact]
+    public void Select()
+    {
+        // Arrange
+        var json = @"[
+            {
+                ""Name"": ""John"",
+                ""Age"": 30
+            },
+            {
+                ""Name"": ""Doe"",
+                ""Age"": 25
+            }
+        ]";
+
+        var doc = JArray.Parse(json);
+
+        // Act
+        var result = doc.Select("Name");
+
+        // Assert
+        var array = result.Select(x => x.Value<string>());
+        array.Should().BeEquivalentTo("John", "Doe");
+    }
+
+    [Fact]
+    public void Where_Select()
+    {
+        // Arrange
+        var json = @"[
+            {
+                ""Name"": ""John"",
+                ""Age"": 30
+            },
+            {
+                ""Name"": ""Doe"",
+                ""Age"": 25
+            }
+        ]";
+
+        var doc = JArray.Parse(json);
+
+        // Act
+        var result = doc.Where("Age > 25").Select("Name");
+
+        // Assert
+        result.Should().HaveCount(1);
+        var first = result.First();
+        first.Value<string>().Should().Be("John");
+    }
 }

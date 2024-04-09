@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using FluentAssertions;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
@@ -77,5 +76,56 @@ public class NewtonsoftJsonTests
 
         // Assert
         result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Select()
+    {
+        // Arrange
+        var json = @"[
+            {
+                ""Name"": ""John"",
+                ""Age"": 30
+            },
+            {
+                ""Name"": ""Doe"",
+                ""Age"": 25
+            }
+        ]";
+
+        var doc = JsonDocument.Parse(json);
+
+        // Act
+        var result = doc.Select("Name");
+
+        // Assert
+        var array = result.RootElement.EnumerateArray().Select(x => x.GetString());
+        array.Should().BeEquivalentTo("John", "Doe");
+    }
+
+    [Fact]
+    public void Where_Select()
+    {
+        // Arrange
+        var json = @"[
+            {
+                ""Name"": ""John"",
+                ""Age"": 30
+            },
+            {
+                ""Name"": ""Doe"",
+                ""Age"": 25
+            }
+        ]";
+
+        var doc = JsonDocument.Parse(json);
+
+        // Act
+        var result = doc.Where("Age > 25").Select("Name");
+
+        // Assert
+        var array = result.RootElement.EnumerateArray();
+        array.Should().HaveCount(1);
+        array.First().GetString().Should().Be("John");
     }
 }
