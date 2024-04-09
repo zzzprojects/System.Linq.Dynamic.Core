@@ -38,7 +38,7 @@ public static class SystemTextJsonExtensions
     /// </summary>
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="predicate">A function to test each element for a condition.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
     /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
     public static bool All(this JsonDocument source, string predicate, params object?[] args)
     {
@@ -51,7 +51,7 @@ public static class SystemTextJsonExtensions
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
     /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
     public static bool All(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
     {
@@ -83,7 +83,7 @@ public static class SystemTextJsonExtensions
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="config">The <see cref="ParsingConfig"/>.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
     /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
     public static bool Any(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
     {
@@ -99,7 +99,7 @@ public static class SystemTextJsonExtensions
     /// </summary>
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="predicate">A function to test each element for a condition.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
     /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
     public static bool Any(this JsonDocument source, string predicate, params object?[] args)
     {
@@ -121,13 +121,73 @@ public static class SystemTextJsonExtensions
     }
     #endregion Any
 
+    #region Average
+    /// <summary>
+    /// Computes the average of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <returns>The average of the values in the sequence.</returns>
+    public static double Average(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Average();
+    }
+
+    /// <summary>
+    /// Computes the average of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>The average of the values in the sequence.</returns>
+    public static double Average(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+        Check.NotEmpty(predicate);
+
+        var queryable = ToQueryable(source);
+        return queryable.Average(config, predicate, args);
+    }
+
+    /// <summary>
+    /// Computes the average of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>The average of the values in the sequence.</returns>
+    public static double Average(this JsonDocument source, string predicate, params object?[] args)
+    {
+        return Average(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Computes the average of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="lambda">A Lambda Expression.</param>
+    /// <returns>The average of the values in the sequence.</returns>
+    public static double Average(this JsonDocument source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+        Check.NotNull(lambda);
+
+        var queryable = ToQueryable(source);
+        return queryable.Average(lambda);
+    }
+    #endregion Average
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.
     /// </summary>
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="selector">A projection string expression to apply to each element.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. </param>
     /// <returns>An <see cref="JsonDocument"/> whose elements are the result of invoking a projection string on each element of source.</returns>
     public static JsonDocument Select(this JsonDocument source, string selector, params object?[] args)
     {
@@ -140,7 +200,7 @@ public static class SystemTextJsonExtensions
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
     /// <param name="selector">A projection string expression to apply to each element.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
     /// <returns>An <see cref="JsonElement"/> whose elements are the result of invoking a projection string on each element of source.</returns>
     public static JsonDocument Select(this JsonDocument source, SystemTextJsonParsingConfig config, string selector, params object?[] args)
     {
@@ -159,7 +219,7 @@ public static class SystemTextJsonExtensions
     /// </summary>
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="predicate">An expression string to test each element for a condition.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
     /// <returns>A <see cref="JsonDocument"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
     public static JsonDocument Where(this JsonDocument source, string predicate, params object?[] args)
     {
@@ -172,7 +232,7 @@ public static class SystemTextJsonExtensions
     /// <param name="source">The source <see cref="JsonDocument"/></param>
     /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
     /// <param name="predicate">An expression string to test each element for a condition.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
     /// <returns>A <see cref="JsonDocument"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
     public static JsonDocument Where(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
     {

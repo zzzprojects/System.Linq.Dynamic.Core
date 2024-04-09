@@ -117,6 +117,66 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion Any
 
+    #region Average
+    /// <summary>
+    /// Computes the average of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <returns>The average of the values in the sequence.</returns>
+    public static double Average(this JArray source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Average();
+    }
+
+    /// <summary>
+    /// Computes the average of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>The average of the values in the sequence.</returns>
+    public static double Average(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+        Check.NotEmpty(predicate);
+
+        var queryable = ToQueryable(source);
+        return queryable.Average(config, predicate, args);
+    }
+
+    /// <summary>
+    /// Computes the average of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>The average of the values in the sequence.</returns>
+    public static double Average(this JArray source, string predicate, params object?[] args)
+    {
+        return Average(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Computes the average of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="lambda">A Lambda Expression.</param>
+    /// <returns>The average of the values in the sequence.</returns>
+    public static double Average(this JArray source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+        Check.NotNull(lambda);
+
+        var queryable = ToQueryable(source);
+        return queryable.Average(lambda);
+    }
+    #endregion Average
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.
