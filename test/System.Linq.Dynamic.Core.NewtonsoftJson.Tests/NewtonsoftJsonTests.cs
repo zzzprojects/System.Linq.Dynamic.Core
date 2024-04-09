@@ -151,6 +151,20 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void Max()
+    {
+        // Act + Assert 
+        ((string?)_source.Max("Age")).Should().Be("40");
+    }
+
+    [Fact]
+    public void Min()
+    {
+        // Act + Assert 
+        ((string?)_source.Min("Age")).Should().Be("30");
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

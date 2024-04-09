@@ -528,7 +528,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(config);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.LastOrDefault(predicate, args));
+        return ToJsonElement(queryable.LastOrDefault(config, predicate, args));
     }
 
     /// <summary>
@@ -557,6 +557,122 @@ public static class SystemTextJsonExtensions
         return ToJsonElement(queryable.LastOrDefault(lambda));
     }
     #endregion LastOrDefault
+
+    #region Max
+    /// <summary>
+    /// Computes the max element of a sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to calculate find the max for.</param>
+    /// <returns>The max element in the sequence.</returns>
+    public static JsonElement Max(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Max()) ?? default;
+    }
+
+    /// <summary>
+    /// Computes the max element of a sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to calculate find the max for.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The max element in the sequence.</returns>
+    public static JsonElement Max(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Max(config, predicate, args)) ?? default;
+    }
+
+    /// <summary>
+    /// Computes the max element of a sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to calculate find the max for.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The max element in the sequence.</returns>
+    public static JsonElement Max(this JsonDocument source, string predicate, params object?[] args)
+    {
+        return Max(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Computes the max element of a sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to calculate find the max for.</param>
+    /// <param name="lambda">A Lambda Expression.</param>
+    /// <returns>The max element in the sequence.</returns>
+    public static JsonElement Max(this JsonDocument source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Max(lambda)) ?? default;
+    }
+    #endregion Max
+
+    #region Min
+    /// <summary>
+    /// Computes the min element of a sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to calculate find the min for.</param>
+    /// <returns>The min element in the sequence.</returns>
+    public static JsonElement Min(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Min()) ?? default;
+    }
+
+    /// <summary>
+    /// Computes the min element of a sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to calculate find the min for.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The min element in the sequence.</returns>
+    public static JsonElement Min(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Min(config, predicate, args)) ?? default;
+    }
+
+    /// <summary>
+    /// Computes the min element of a sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to calculate find the min for.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The min element in the sequence.</returns>
+    public static JsonElement Min(this JsonDocument source, string predicate, params object?[] args)
+    {
+        return Min(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Computes the min element of a sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to calculate find the min for.</param>
+    /// <param name="lambda">A Lambda Expression.</param>
+    /// <returns>The min element in the sequence.</returns>
+    public static JsonElement Min(this JsonDocument source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Min(lambda)) ?? default;
+    }
+    #endregion Min
 
     #region Select
     /// <summary>

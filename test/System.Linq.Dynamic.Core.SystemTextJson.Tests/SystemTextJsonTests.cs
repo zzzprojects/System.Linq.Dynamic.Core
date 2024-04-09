@@ -163,6 +163,20 @@ public class SystemTextJsonTests
     }
 
     [Fact]
+    public void Max()
+    {
+        // Act + Assert
+        _source.Max("Age").GetRawText().Should().BeEquivalentTo("40");
+    }
+
+    [Fact]
+    public void Min()
+    {
+        // Act + Assert
+        _source.Min("Age").GetRawText().Should().BeEquivalentTo("30");
+    }
+
+    [Fact]
     public void Select()
     {
         // Act
