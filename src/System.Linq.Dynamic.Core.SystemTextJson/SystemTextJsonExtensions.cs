@@ -9,7 +9,7 @@ using System.Text.Json;
 namespace System.Linq.Dynamic.Core.SystemTextJson;
 
 /// <summary>
-/// 
+/// Extension methods for <see cref="JsonDocument"/>.
 /// </summary>
 public static class SystemTextJsonExtensions
 {
@@ -180,6 +180,49 @@ public static class SystemTextJsonExtensions
         return queryable.Average(lambda);
     }
     #endregion Average
+
+    #region Cast
+    /// <summary>
+    /// Converts the elements of an <see cref="JsonDocument"/> to the specified type.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> that contains the elements to be converted.</param>
+    /// <param name="type">The type to convert the elements of source to.</param>
+    /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+    public static IQueryable Cast(this JsonDocument source, Type type)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Cast(type);
+    }
+
+    /// <summary>
+    /// Converts the elements of an <see cref="JsonDocument"/> to the specified type.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> that contains the elements to be converted.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="typeName">The type to convert the elements of source to.</param>
+    /// <returns>An <see cref="JsonDocument"/> that contains each element of the source sequence converted to the specified type.</returns>
+    public static IQueryable Cast(this JsonDocument source, SystemTextJsonParsingConfig config, string typeName)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return queryable.Cast(typeName);
+    }
+
+    /// <summary>
+    /// Converts the elements of an <see cref="JsonDocument"/> to the specified type.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> that contains the elements to be converted.</param>
+    /// <param name="typeName">The type to convert the elements of source to.</param>
+    /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+    public static IQueryable Cast(this JsonDocument source, string typeName)
+    {
+        return Cast(source, SystemTextJsonParsingConfig.Default, typeName);
+    }
+    #endregion Cast
 
     #region Select
     /// <summary>

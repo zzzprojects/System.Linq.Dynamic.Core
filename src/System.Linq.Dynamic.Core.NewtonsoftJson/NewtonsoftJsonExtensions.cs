@@ -6,6 +6,9 @@ using Newtonsoft.Json.Linq;
 
 namespace System.Linq.Dynamic.Core.NewtonsoftJson;
 
+/// <summary>
+/// Extension methods for <see cref="JArray"/>.
+/// </summary>
 public static class NewtonsoftJsonExtensions
 {
     #region Aggregate
@@ -176,6 +179,49 @@ public static class NewtonsoftJsonExtensions
         return queryable.Average(lambda);
     }
     #endregion Average
+
+    #region Cast
+    /// <summary>
+    /// Converts the elements of an <see cref="JArray"/> to the specified type.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> that contains the elements to be converted.</param>
+    /// <param name="type">The type to convert the elements of source to.</param>
+    /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+    public static IQueryable Cast(this JArray source, Type type)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Cast(type);
+    }
+
+    /// <summary>
+    /// Converts the elements of an <see cref="JArray"/> to the specified type.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> that contains the elements to be converted.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="typeName">The type to convert the elements of source to.</param>
+    /// <returns>An <see cref="JArray"/> that contains each element of the source sequence converted to the specified type.</returns>
+    public static IQueryable Cast(this JArray source, NewtonsoftJsonParsingConfig config, string typeName)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return queryable.Cast(typeName);
+    }
+
+    /// <summary>
+    /// Converts the elements of an <see cref="JArray"/> to the specified type.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> that contains the elements to be converted.</param>
+    /// <param name="typeName">The type to convert the elements of source to.</param>
+    /// <returns>An <see cref="IQueryable"/> that contains each element of the source sequence converted to the specified type.</returns>
+    public static IQueryable Cast(this JArray source, string typeName)
+    {
+        return Cast(source, NewtonsoftJsonParsingConfig.Default, typeName);
+    }
+    #endregion Cast
 
     #region Select
     /// <summary>

@@ -4,85 +4,9 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 
-public class NewtonsoftJsonTests
+public class SystemTextJsonTests
 {
-    [Fact]
-    public void Aggregate()
-    {
-        // Arrange
-        var json = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 25
-            }
-        ]";
-
-        var doc = JsonDocument.Parse(json);
-
-        // Act
-        var result = doc.Aggregate("Sum", "Age");
-
-        // Assert
-        result.Should().Be(55);
-    }
-
-    [Fact]
-    public void All()
-    {
-        // Arrange
-        var json = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 25
-            }
-        ]";
-
-        var doc = JsonDocument.Parse(json);
-
-        // Act
-        var result = doc.All("Age > 20");
-
-        // Assert
-        result.Should().BeTrue();
-    }
-
-    [Fact]
-    public void Any()
-    {
-        // Arrange
-        var json = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 25
-            }
-        ]";
-
-        var doc = JsonDocument.Parse(json);
-
-        // Act
-        var result = doc.Any("Age > 20");
-
-        // Assert
-        result.Should().BeTrue();
-    }
-
-    [Fact]
-    public void Average()
-    {
-        // Arrange
-        var json = @"[
+    private const string ExampleJson = @"[
             {
                 ""Name"": ""John"",
                 ""Age"": 30
@@ -92,35 +16,72 @@ public class NewtonsoftJsonTests
                 ""Age"": 40
             }
         ]";
+    private readonly JsonDocument _source = JsonDocument.Parse(ExampleJson);
 
-        var doc = JsonDocument.Parse(json);
-
+    [Fact]
+    public void Aggregate()
+    {
         // Act
-        var result = doc.Average("Age");
+        var result = _source.Aggregate("Sum", "Age");
+
+        // Assert
+        result.Should().Be(70);
+    }
+
+    [Fact]
+    public void All()
+    {
+        // Act
+        var result = _source.All("Age > 20");
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Any()
+    {
+        // Act
+        var result = _source.Any("Age > 20");
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Average()
+    {
+        // Act
+        var result = _source.Average("Age");
 
         // Assert
         result.Should().BeApproximately(35, 0.00001);
     }
 
     [Fact]
-    public void Select()
+    public void Cast()
     {
         // Arrange
-        var json = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 25
-            }
-        ]";
+        var expected = new[] { "John", "Doe" };
 
-        var doc = JsonDocument.Parse(json);
+        // Act 1
+        var resultType = _source.Select("Name").Cast(typeof(string)).ToDynamicArray<string>();
 
+        // Assert 1
+        resultType.Should().Contain(expected);
+
+        // Act 2
+        var resultTypeName = _source.Select("Name").Cast("string").ToDynamicArray<string>();
+
+        // Assert 2
+        resultTypeName.Should().Contain(expected);
+    }
+
+    [Fact]
+    public void Select()
+    {
         // Act
-        var result = doc.Select("Name");
+        var result = _source.Select("Name");
 
         // Assert
         var array = result.RootElement.EnumerateArray().Select(x => x.GetString());
@@ -130,26 +91,12 @@ public class NewtonsoftJsonTests
     [Fact]
     public void Where_Select()
     {
-        // Arrange
-        var json = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 25
-            }
-        ]";
-
-        var doc = JsonDocument.Parse(json);
-
         // Act
-        var result = doc.Where("Age > 25").Select("Name");
+        var result = _source.Where("Age > 30").Select("Name");
 
         // Assert
         var array = result.RootElement.EnumerateArray();
         array.Should().HaveCount(1);
-        array.First().GetString().Should().Be("John");
+        array.First().GetString().Should().Be("Doe");
     }
 }
