@@ -442,6 +442,64 @@ public static class SystemTextJsonExtensions
     }
     #endregion FirstOrDefault
 
+    #region Last
+    /// <summary>
+    /// Returns the last element of a sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="IQueryable"/> to return the last element of.</param>
+    /// <returns>The last element in source.</returns>
+    public static JsonElement Last(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Last());
+    }
+
+    /// <summary>
+    /// Returns the last element of a sequence that satisfies a specified condition.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> to return the last element of.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JsonElement Last(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Last(predicate, args));
+    }
+
+    /// <summary>
+    /// Returns the last element of a sequence that satisfies a specified condition.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JsonElement Last(this JsonDocument source, string predicate, params object?[] args)
+    {
+        return Last(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the last element of a sequence that satisfies a specified condition.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> to return the last element of.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JsonElement Last(this JsonDocument source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.Last(lambda));
+    }
+    #endregion Last
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.

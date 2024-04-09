@@ -140,6 +140,16 @@ public class SystemTextJsonTests
     }
 
     [Fact]
+    public void Last()
+    {
+        // Act + Assert 1
+        _source.Last().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+
+        // Act + Assert 2
+        _source.Last("Age > 0").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

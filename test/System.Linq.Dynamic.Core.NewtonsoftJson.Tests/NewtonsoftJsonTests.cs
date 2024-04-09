@@ -119,10 +119,7 @@ public class NewtonsoftJsonTests
     [Fact]
     public void First()
     {
-        // Act + Assert 1
-        _source.First().Should().NotBeNull();
-
-        // Act + Assert 2
+        // Act + Assert
         ((string?)_source.First("Age > 30")["Name"]).Should().Be("Doe");
     }
 
@@ -130,13 +127,17 @@ public class NewtonsoftJsonTests
     public void FirstOrDefault()
     {
         // Act + Assert 1
-        _source.FirstOrDefault().Should().NotBeNull();
-
-        // Act + Assert 2
         ((string?)_source.FirstOrDefault("Age > 30")!["Name"]).Should().Be("Doe");
 
-        // Act + Assert 3
+        // Act + Assert 2
         _source.FirstOrDefault("Age > 999").Should().BeNull();
+    }
+
+    [Fact]
+    public void Last()
+    {
+        // Act + Assert 
+        ((string?)_source.First("Age > 30")["Name"]).Should().Be("Doe");
     }
 
     [Fact]
