@@ -122,7 +122,21 @@ public class SystemTextJsonTests
         // Act + Assert 1
         _source.First().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30}").RootElement.GetRawText());
 
+        // Act + Assert 2
         _source.First("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+    }
+
+    [Fact]
+    public void FirstOrDefault()
+    {
+        // Act + Assert 1
+        _source.FirstOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30}").RootElement.GetRawText());
+
+        // Act + Assert 2
+        _source.FirstOrDefault("Age > 30")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+
+        // Act + Assert 3
+        _source.FirstOrDefault("Age > 999").Should().BeNull();
     }
 
     [Fact]

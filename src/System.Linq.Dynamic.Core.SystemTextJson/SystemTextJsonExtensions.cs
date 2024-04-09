@@ -384,6 +384,64 @@ public static class SystemTextJsonExtensions
     }
     #endregion First
 
+    #region FirstOrDefault
+    /// <summary>
+    /// Returns the first element of a sequence, or a default value if the sequence contains no elements.
+    /// </summary>
+    /// <param name="source">The <see cref="IQueryable"/> to return the first element of.</param>
+    /// <returns>default if source is empty; otherwise, the first element in source.</returns>
+    public static JsonElement? FirstOrDefault(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.FirstOrDefault());
+    }
+
+    /// <summary>
+    /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> to return the first element of.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
+    public static JsonElement? FirstOrDefault(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.FirstOrDefault(predicate, args));
+    }
+
+    /// <summary>
+    /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
+    public static JsonElement? FirstOrDefault(this JsonDocument source, string predicate, params object?[] args)
+    {
+        return FirstOrDefault(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> to return the first element of.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
+    public static JsonElement? FirstOrDefault(this JsonDocument source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonElement(queryable.FirstOrDefault(lambda));
+    }
+    #endregion FirstOrDefault
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.
@@ -449,8 +507,13 @@ public static class SystemTextJsonExtensions
     #endregion Where
 
     #region Private Methods
-    private static JsonElement ToJsonElement(object value)
+    private static JsonElement? ToJsonElement(object? value)
     {
+        if (value == null)
+        {
+            return null;
+        }
+
         if (value is JsonElement jsonElement)
         {
             return jsonElement;
@@ -461,7 +524,7 @@ public static class SystemTextJsonExtensions
 
     private static JsonDocument ToJsonDocumentArray(Func<IQueryable> func)
     {
-        var array = new List<object>();
+        var array = new List<object?>();
         foreach (var dynamicElement in func())
         {
             array.Add(ToJsonElement(dynamicElement));

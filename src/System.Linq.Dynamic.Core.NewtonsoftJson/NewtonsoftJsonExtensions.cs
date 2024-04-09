@@ -329,6 +329,51 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion First
 
+    #region FirstOrDefault
+    /// <summary>
+    /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the first element of.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
+    public static JToken? FirstOrDefault(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJToken(queryable.FirstOrDefault(predicate, args));
+    }
+
+    /// <summary>
+    /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
+    public static JToken? FirstOrDefault(this JArray source, string predicate, params object?[] args)
+    {
+        return FirstOrDefault(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the first element of.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
+    public static JToken? FirstOrDefault(this JArray source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJToken(queryable.FirstOrDefault(lambda));
+    }
+    #endregion FirstOrDefault
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.
@@ -404,8 +449,13 @@ public static class NewtonsoftJsonExtensions
     #endregion Where
 
     #region Private Methods
-    private static JToken ToJToken(object value)
+    private static JToken? ToJToken(object? value)
     {
+        if (value == null)
+        {
+            return null;
+        }
+
         if (value is JToken jToken)
         {
             return jToken;
