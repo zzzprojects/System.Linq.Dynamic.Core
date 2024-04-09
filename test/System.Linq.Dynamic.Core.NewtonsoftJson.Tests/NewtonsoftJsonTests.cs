@@ -29,4 +29,28 @@ public class NewtonsoftJsonTests
         // Assert
         result.Should().BeTrue();
     }
+
+    [Fact]
+    public void Any()
+    {
+        // Arrange
+        var json = @"[
+            {
+                ""Name"": ""John"",
+                ""Age"": 30
+            },
+            {
+                ""Name"": ""Doe"",
+                ""Age"": 25
+            }
+        ]";
+
+        var jArray = JArray.Parse(json);
+
+        // Act
+        var result = jArray.Any("Age > 20");
+
+        // Assert
+        result.Should().BeTrue();
+    }
 }

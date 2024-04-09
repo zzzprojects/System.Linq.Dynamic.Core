@@ -26,7 +26,7 @@ class Program
     static void Main(string[] args)
     {
         Json();
-        // NewtonsoftJson();
+        NewtonsoftJson();
 
         return;
 
@@ -102,13 +102,13 @@ class Program
         }
 
         var select = doc.Select("City");
-        foreach (var result in select.EnumerateArray())
+        foreach (var result in select.RootElement.EnumerateArray())
         {
             Console.WriteLine(result);
         }
 
         var whereWithSelect = doc.Where("City == @0", "Paris").Select("first");
-        foreach (var result in whereWithSelect.EnumerateArray())
+        foreach (var result in whereWithSelect.RootElement.EnumerateArray())
         {
             Console.WriteLine(result);
         }

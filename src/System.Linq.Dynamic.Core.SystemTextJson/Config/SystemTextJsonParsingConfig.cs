@@ -2,9 +2,9 @@
 
 namespace System.Linq.Dynamic.Core.SystemTextJson.Config;
 
-public class JsonParsingConfig : ParsingConfig
+public class SystemTextJsonParsingConfig : ParsingConfig
 {
-    public static JsonParsingConfig Default { get; } = new();
+    public static SystemTextJsonParsingConfig Default { get; } = new();
 
     public DynamicJsonClassOptions? DynamicJsonClassOptions { get; set; } 
 }

@@ -2,9 +2,9 @@
 
 namespace System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 
-public class JsonParsingConfig : ParsingConfig
+public class NewtonsoftJsonParsingConfig : ParsingConfig
 {
-    public static JsonParsingConfig Default { get; } = new();
+    public static NewtonsoftJsonParsingConfig Default { get; } = new();
 
     public DynamicJsonClassOptions? DynamicJsonClassOptions { get; set; } 
 }

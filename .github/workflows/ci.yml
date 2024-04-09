@@ -33,6 +33,8 @@ jobs:
       run: |
         dotnet build ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj -c Release -f net8 -p:buildType=azure-pipelines-ci
         dotnet test ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj -c Release -f net8 -p:buildType=azure-pipelines-ci --no-build
+        dotnet build ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj -c Release -f net8 -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj -c Release -f net8 -p:buildType=azure-pipelines-ci --no-build
 
     - name: Run Tests net7.0
       run: |

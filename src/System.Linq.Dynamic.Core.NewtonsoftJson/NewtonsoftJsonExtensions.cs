@@ -1,11 +1,12 @@
 ﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
 using System.Linq.Dynamic.Core.Validation;
+using System.Linq.Expressions;
 using Newtonsoft.Json.Linq;
 
 namespace System.Linq.Dynamic.Core.NewtonsoftJson;
 
-public static class JsonExtensions
+public static class NewtonsoftJsonExtensions
 {
     #region All
     /// <summary>Determines whether all the elements of a sequence satisfy a condition.</summary>
@@ -15,16 +16,16 @@ public static class JsonExtensions
     /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
     public static bool All(this JArray source, string predicate, params object?[] args)
     {
-        return All(source, JsonParsingConfig.Default, predicate, args);
+        return All(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
 
     /// <summary>Determines whether all the elements of a sequence satisfy a condition.</summary>
     /// <param name="source">A sequence whose elements to test for a condition.</param>
-    /// <param name="config">The <see cref="JsonParsingConfig"/>.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>true if every element of the source sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.</returns>
-    public static bool All(this JArray source, JsonParsingConfig config, string predicate, params object?[] args)
+    public static bool All(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
@@ -34,6 +35,64 @@ public static class JsonExtensions
         return queryable.All(config, predicate, args);
     }
     #endregion All
+
+    #region Any
+    /// <summary>
+    /// Determines whether a sequence contains any elements.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
+    public static bool Any(this JArray source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Any();
+    }
+
+    /// <summary>
+    /// Determines whether a sequence contains any elements.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
+    public static bool Any(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return queryable.Any(config, predicate, args);
+    }
+
+    /// <summary>
+    /// Determines whether a sequence contains any elements.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
+    public static bool Any(this JArray source, string predicate, params object?[] args)
+    {
+        return Any(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Determines whether a sequence contains any elements.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="lambda">A Lambda Expression.</param>
+    /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
+    public static bool Any(this JArray source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Any(lambda);
+    }
+    #endregion Any
 
     #region Select
     /// <summary>
@@ -45,18 +104,18 @@ public static class JsonExtensions
     /// <returns>An <see cref="JArray"/> whose elements are the result of invoking a projection string on each element of source.</returns>
     public static JArray Select(this JArray source, string selector, params object?[] args)
     {
-        return Select(source, JsonParsingConfig.Default, selector, args);
+        return Select(source, NewtonsoftJsonParsingConfig.Default, selector, args);
     }
 
     /// <summary>
     /// Projects each element of a sequence into a new form.
     /// </summary>
     /// <param name="source">A sequence of values to project.</param>
-    /// <param name="config">The <see cref="JsonParsingConfig"/>.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
     /// <param name="selector">A projection string expression to apply to each element.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
     /// <returns>An <see cref="JArray"/> whose elements are the result of invoking a projection string on each element of source.</returns>
-    public static JArray Select(this JArray source, JsonParsingConfig config, string selector, params object?[] args)
+    public static JArray Select(this JArray source, NewtonsoftJsonParsingConfig config, string selector, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
@@ -82,18 +141,18 @@ public static class JsonExtensions
     /// <returns>A <see cref="JArray"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
     public static JArray Where(this JArray source, string predicate, params object?[] args)
     {
-        return Where(source, JsonParsingConfig.Default, predicate, args);
+        return Where(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
 
     /// <summary>
     /// Filters a sequence of values based on a predicate.
     /// </summary>
     /// <param name="source">A <see cref="JArray"/> to filter.</param>
-    /// <param name="config">The <see cref="JsonParsingConfig"/>.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
     /// <param name="predicate">An expression string to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>A <see cref="JArray"/> that contains elements from the input sequence that satisfy the condition specified by predicate.</returns>
-    public static JArray Where(this JArray source, JsonParsingConfig config, string predicate, params object?[] args)
+    public static JArray Where(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
@@ -121,8 +180,8 @@ public static class JsonExtensions
         return array;
     }
 
-    private static IQueryable ToQueryable(JArray source, JsonParsingConfig config)
+    private static IQueryable ToQueryable(JArray source, NewtonsoftJsonParsingConfig? config = null)
     {
-        return source.ToDynamicJsonClassArray(config.DynamicJsonClassOptions).AsQueryable();
+        return source.ToDynamicJsonClassArray(config?.DynamicJsonClassOptions).AsQueryable();
     }
 }

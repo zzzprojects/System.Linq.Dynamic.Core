@@ -2,7 +2,6 @@
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
         <TargetFrameworks>net452;netcoreapp3.1;net8.0</TargetFrameworks>
-        
         <DebugType>full</DebugType>
         <SignAssembly>True</SignAssembly>
         <LangVersion>latest</LangVersion>
@@ -22,11 +21,10 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
         <PackageReference Include="Mono.Reflection" Version="2.0.0" />
         <PackageReference Include="OpenCover" Version="4.7.1221" />
         <PackageReference Include="ReportGenerator" Version="4.8.13" />
-        <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
         <PackageReference Include="xunit.runner.console" Version="2.4.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -35,11 +33,6 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.5" />
-        <PackageReference Include="QueryInterceptor.Core" Version="1.0.7" />
         <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="NFluent" Version="2.8.0" />
-        <PackageReference Include="Moq" Version="4.13.1" />
-        <!--<PackageReference Include="ExpressionTreeToString" Version="3.1.47" />-->
     </ItemGroup>
 </Project>

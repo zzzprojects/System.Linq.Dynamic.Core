@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using System.Linq.Dynamic.Core.NewtonsoftJson;
+﻿using System.Text.Json;
 using FluentAssertions;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests.Json;
+namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 
 public class NewtonsoftJsonTests
 {
@@ -23,10 +21,34 @@ public class NewtonsoftJsonTests
             }
         ]";
 
-        var jArray = JArray.Parse(json);
+        var doc = JsonDocument.Parse(json);
 
         // Act
-        var result = jArray.All("Age > 20");
+        var result = doc.All("Age > 20");
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Any()
+    {
+        // Arrange
+        var json = @"[
+            {
+                ""Name"": ""John"",
+                ""Age"": 30
+            },
+            {
+                ""Name"": ""Doe"",
+                ""Age"": 25
+            }
+        ]";
+
+        var doc = JsonDocument.Parse(json);
+
+        // Act
+        var result = doc.Any("Age > 20");
 
         // Assert
         result.Should().BeTrue();
