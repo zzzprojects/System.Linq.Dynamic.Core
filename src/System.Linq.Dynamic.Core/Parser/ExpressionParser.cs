@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq.Dynamic.Core.Config;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser.SupportedMethods;
 using System.Linq.Dynamic.Core.Parser.SupportedOperands;
@@ -884,9 +885,7 @@ public class ExpressionParser
         _textParser.ValidateToken(TokenId.StringLiteral);
 
         var text = _textParser.CurrentToken.Text;
-        var parsedStringValue = _parsingConfig.StringLiteralParsing == StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes ?
-            StringParser.ParseStringAndEscapeTwoDoubleQuotesByASingleDoubleQuote(text, _textParser.CurrentToken.Pos) :
-            StringParser.ParseString(text, _textParser.CurrentToken.Pos);
+        var parsedStringValue = ParseStringAndEscape(text);
 
         if (_textParser.CurrentToken.Text[0] == '\'')
         {
@@ -918,11 +917,16 @@ public class ExpressionParser
             _textParser.NextToken();
         }
 
-        parsedStringValue = _parsingConfig.StringLiteralParsing == StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes ?
-            StringParser.ParseStringAndEscapeTwoDoubleQuotesByASingleDoubleQuote(text, _textParser.CurrentToken.Pos) :
-            StringParser.ParseString(text, _textParser.CurrentToken.Pos);
+        parsedStringValue = ParseStringAndEscape(text);
 
         return _constantExpressionHelper.CreateLiteral(parsedStringValue, parsedStringValue);
+    }
+
+    private string ParseStringAndEscape(string text)
+    {
+        return _parsingConfig.StringLiteralParsing == StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes ?
+            StringParser.ParseStringAndUnescapeTwoDoubleQuotesByASingleDoubleQuote(text, _textParser.CurrentToken.Pos) :
+            StringParser.ParseStringAndUnescape(text, _textParser.CurrentToken.Pos);
     }
 
     private Expression ParseIntegerLiteral()

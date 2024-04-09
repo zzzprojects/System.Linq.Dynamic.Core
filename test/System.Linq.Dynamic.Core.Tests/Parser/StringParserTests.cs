@@ -13,7 +13,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void StringParser_With_UnexpectedUnclosedString_ThrowsException(string input)
         {
             // Act
-            var exception = Assert.Throws<ParseException>(() => StringParser.ParseString(input));
+            var exception = Assert.Throws<ParseException>(() => StringParser.ParseStringAndUnescape(input));
 
             // Assert
             Assert.Equal($"Unexpected end of string with unclosed string at position 2 near '{input}'.", exception.Message);
@@ -26,7 +26,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void StringParser_With_InvalidStringLength_ThrowsException(string input)
         {
             // Act
-            Action action = () => StringParser.ParseString(input);
+            Action action = () => StringParser.ParseStringAndUnescape(input);
 
             // Assert
             action.Should().Throw<ParseException>().WithMessage($"String '{input}' should have at least 2 characters.");
@@ -38,7 +38,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void StringParser_With_InvalidStringQuoteCharacter_ThrowsException(string input)
         {
             // Act
-            Action action = () => StringParser.ParseString(input);
+            Action action = () => StringParser.ParseStringAndUnescape(input);
 
             // Assert
             action.Should().Throw<ParseException>().WithMessage("An escaped string should start with a double (\") or a single (') quote.");
@@ -51,14 +51,14 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var input = new string(new[] { '"', '\\', 'u', '?', '"' });
 
             // Act
-            Action action = () => StringParser.ParseString(input);
+            Action action = () => StringParser.ParseStringAndUnescape(input);
 
             // Assert
             var parseException = action.Should().Throw<ParseException>();
 
             parseException.Which.InnerException!.Message.Should().Contain("hexadecimal digits");
 
-            parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseString(String s, Int32 pos) in ").And.Contain("System.Linq.Dynamic.Core\\Parser\\StringParser.cs:line ");
+            parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseStringAndUnescape(String s, Int32 pos) in ").And.Contain("System.Linq.Dynamic.Core\\Parser\\StringParser.cs:line ");
         }
 
         [Theory]
@@ -69,7 +69,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void StringParser_Parse_SingleQuotedString(string input, string expectedResult)
         {
             // Act
-            var result = StringParser.ParseString(input);
+            var result = StringParser.ParseStringAndUnescape(input);
 
             // Assert
             result.Should().Be(expectedResult);
@@ -97,7 +97,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public void StringParser_Parse_DoubleQuotedString(string input, string expectedResult)
         {
             // Act
-            var result = StringParser.ParseString(input);
+            var result = StringParser.ParseStringAndUnescape(input);
 
             // Assert
             result.Should().Be(expectedResult);

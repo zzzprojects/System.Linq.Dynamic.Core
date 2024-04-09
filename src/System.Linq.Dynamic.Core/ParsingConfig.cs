@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq.Dynamic.Core.Config;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Util.Cache;

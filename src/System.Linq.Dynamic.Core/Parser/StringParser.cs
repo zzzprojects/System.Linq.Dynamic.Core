@@ -13,7 +13,7 @@ internal static class StringParser
     private const string TwoDoubleQuotes = "\"\"";
     private const string SingleDoubleQuote = "\"";
 
-    internal static string ParseString(string s, int pos = default)
+    internal static string ParseStringAndUnescape(string s, int pos = default)
     {
         if (s == null || s.Length < 2)
         {
@@ -41,9 +41,9 @@ internal static class StringParser
         }
     }
 
-    internal static string ParseStringAndEscapeTwoDoubleQuotesByASingleDoubleQuote(string input, int position)
+    internal static string ParseStringAndUnescapeTwoDoubleQuotesByASingleDoubleQuote(string input, int position)
     {
-        return ReplaceTwoDoubleQuotesByASingleDoubleQuote(ParseString(input, position), position);
+        return ReplaceTwoDoubleQuotesByASingleDoubleQuote(ParseStringAndUnescape(input, position), position);
     }
 
     private static string ReplaceTwoDoubleQuotesByASingleDoubleQuote(string input, int position)
