@@ -78,6 +78,22 @@ public class SystemTextJsonTests
     }
 
     [Fact]
+    public void Count()
+    {
+        // Act 1
+        var result1 = _source.Count();
+
+        // Assert 1
+        result1.Should().Be(2);
+
+        // Act 2
+        var result2 = _source.Count("Age > 30");
+
+        // Assert 2
+        result2.Should().Be(1);
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

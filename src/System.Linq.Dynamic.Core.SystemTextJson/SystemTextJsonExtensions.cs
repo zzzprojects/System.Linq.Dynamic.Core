@@ -224,6 +224,64 @@ public static class SystemTextJsonExtensions
     }
     #endregion Cast
 
+    #region Count
+    /// <summary>
+    /// Returns the number of elements in a sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> that contains the elements to be counted.</param>
+    /// <returns>The number of elements in the input sequence.</returns>
+    public static int Count(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Count();
+    }
+
+    /// <summary>
+    /// Returns the number of elements in a sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> that contains the elements to be counted.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
+    public static int Count(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return queryable.Count(config, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the number of elements in a sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> that contains the elements to be counted.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
+    public static int Count(this JsonDocument source, string predicate, params object?[] args)
+    {
+        return Count(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the number of elements in a sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JsonDocument"/> that contains the elements to be counted.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
+    public static int Count(this JsonDocument source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Count(lambda);
+    }
+    #endregion Count
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.
