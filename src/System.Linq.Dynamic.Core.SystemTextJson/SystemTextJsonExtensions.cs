@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core.SystemTextJson.Config;
 using System.Linq.Dynamic.Core.SystemTextJson.Extensions;
 using System.Linq.Dynamic.Core.SystemTextJson.Utils;
@@ -149,7 +150,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(config);
         Check.NotEmpty(predicate);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return queryable.Average(config, predicate, args);
     }
 
@@ -251,7 +252,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return queryable.Count(config, predicate, args);
     }
 
@@ -411,7 +412,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJsonElement(queryable.FirstOrDefault(predicate, args));
     }
 
@@ -469,7 +470,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJsonElement(queryable.Last(predicate, args));
     }
 
@@ -527,7 +528,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJsonElement(queryable.LastOrDefault(config, predicate, args));
     }
 
@@ -585,7 +586,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJsonElement(queryable.Max(config, predicate, args)) ?? default;
     }
 
@@ -643,7 +644,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJsonElement(queryable.Min(config, predicate, args)) ?? default;
     }
 
@@ -673,6 +674,66 @@ public static class SystemTextJsonExtensions
         return ToJsonElement(queryable.Min(lambda)) ?? default;
     }
     #endregion Min
+
+    #region OrderBy
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending or descending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JsonDocument OrderBy(this JsonDocument source, SystemTextJsonParsingConfig config, string ordering, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(source);
+        Check.NotNullOrEmpty(ordering);
+
+        var queryable = ToQueryable(source, config);
+        return ToJsonDocumentArray(() => queryable.OrderBy(config, ordering, args));
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending or descending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JsonDocument OrderBy(this JsonDocument source, string ordering, params object?[] args)
+    {
+        return OrderBy(source, SystemTextJsonParsingConfig.Default, ordering, args);
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending or descending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="comparer">The comparer to use.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JsonDocument OrderBy(this JsonDocument source, SystemTextJsonParsingConfig config, string ordering, IComparer comparer, params object?[] args)
+    {
+        var queryable = ToQueryable(source, config);
+        return ToJsonDocumentArray(() => queryable.OrderBy(config, ordering, comparer, args));
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending or descending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="comparer">The comparer to use.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JsonDocument OrderBy(this JsonDocument source, string ordering, IComparer comparer, params object?[] args)
+    {
+        return OrderBy(source, SystemTextJsonParsingConfig.Default, ordering, comparer, args);
+    }
+    #endregion OrderBy
 
     #region Select
     /// <summary>
@@ -765,6 +826,7 @@ public static class SystemTextJsonExtensions
         return JsonDocumentUtils.FromObject(array);
     }
 
+    // ReSharper disable once UnusedParameter.Local
     private static IQueryable ToQueryable(JsonDocument source, SystemTextJsonParsingConfig? config = null)
     {
         var array = source.RootElement;
@@ -773,7 +835,7 @@ public static class SystemTextJsonExtensions
             throw new NotSupportedException("The source is not a JSON array.");
         }
 
-        return JsonDocumentExtensions.ToDynamicJsonClassArray(array, config?.DynamicJsonClassOptions).AsQueryable();
+        return JsonDocumentExtensions.ToDynamicJsonClassArray(array).AsQueryable();
     }
     #endregion
 }

@@ -6,5 +6,5 @@ public class SystemTextJsonParsingConfig : ParsingConfig
 {
     public static SystemTextJsonParsingConfig Default { get; } = new();
 
-    public DynamicJsonClassOptions? DynamicJsonClassOptions { get; set; } 
+    // public DynamicJsonClassOptions? DynamicJsonClassOptions { get; set; } 
 }

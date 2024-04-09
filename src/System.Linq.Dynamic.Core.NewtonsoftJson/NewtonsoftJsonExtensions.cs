@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+﻿using System.Collections;
+using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
@@ -237,7 +238,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return queryable.Count(config, predicate, args);
     }
 
@@ -343,7 +344,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJToken(queryable.FirstOrDefault(predicate, args));
     }
 
@@ -388,7 +389,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJToken(queryable.Last(predicate, args));
     }
 
@@ -433,7 +434,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJToken(queryable.LastOrDefault(predicate, args));
     }
 
@@ -478,7 +479,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJToken(queryable.Max(config, predicate, args))!;
     }
 
@@ -523,7 +524,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(source);
         Check.NotNull(config);
 
-        var queryable = ToQueryable(source);
+        var queryable = ToQueryable(source, config);
         return ToJToken(queryable.Min(config, predicate, args))!;
     }
 
@@ -553,6 +554,66 @@ public static class NewtonsoftJsonExtensions
         return ToJToken(queryable.Min(lambda))!;
     }
     #endregion Min
+
+    #region OrderBy
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending or descending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JArray OrderBy(this JArray source, NewtonsoftJsonParsingConfig config, string ordering, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(source);
+        Check.NotNullOrEmpty(ordering);
+
+        var queryable = ToQueryable(source, config);
+        return ToJArray(() => queryable.OrderBy(config, ordering, args));
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending or descending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JArray OrderBy(this JArray source, string ordering, params object?[] args)
+    {
+        return OrderBy(source, NewtonsoftJsonParsingConfig.Default, ordering, args);
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending or descending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="comparer">The comparer to use.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JArray OrderBy(this JArray source, NewtonsoftJsonParsingConfig config, string ordering, IComparer comparer, params object?[] args)
+    {
+        var queryable = ToQueryable(source, config);
+        return ToJArray(() => queryable.OrderBy(config, ordering, comparer, args));
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence in ascending or descending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="comparer">The comparer to use.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JArray OrderBy(this JArray source, string ordering, IComparer comparer, params object?[] args)
+    {
+        return OrderBy(source, NewtonsoftJsonParsingConfig.Default, ordering, comparer, args);
+    }
+    #endregion OrderBy
 
     #region Select
     /// <summary>

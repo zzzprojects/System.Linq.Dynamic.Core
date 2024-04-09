@@ -165,6 +165,24 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void OrderBy()
+    {
+        // Act 1
+        var result = _source.OrderBy("Age").Select("Name");
+
+        // Assert 1
+        var array = result.Select(x => x.Value<string>());
+        array.Should().BeEquivalentTo("John", "Doe");
+
+        // Act 1
+        var resultAsc = _source.OrderBy("Age", "Asc").Select("Name");
+
+        // Assert 1
+        var arrayAsc = resultAsc.Select(x => x.Value<string>());
+        arrayAsc.Should().BeEquivalentTo("Doe", "John");
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

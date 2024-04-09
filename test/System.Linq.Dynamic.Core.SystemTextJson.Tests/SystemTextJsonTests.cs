@@ -177,6 +177,24 @@ public class SystemTextJsonTests
     }
 
     [Fact]
+    public void OrderBy()
+    {
+        // Act 1
+        var result = _source.OrderBy("Age").Select("Name");
+
+        // Assert 1
+        var array = result.RootElement.EnumerateArray().Select(x => x.GetString());
+        array.Should().BeEquivalentTo("John", "Doe");
+
+        // Act 1
+        var resultAsc = _source.OrderBy("Age", "Asc").Select("Name");
+
+        // Assert 1
+        var arrayAsc = resultAsc.RootElement.EnumerateArray().Select(x => x.GetString());
+        arrayAsc.Should().BeEquivalentTo("Doe", "John");
+    }
+
+    [Fact]
     public void Select()
     {
         // Act
