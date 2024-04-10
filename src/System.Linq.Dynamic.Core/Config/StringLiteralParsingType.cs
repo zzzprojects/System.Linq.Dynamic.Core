@@ -6,7 +6,7 @@
 public enum StringLiteralParsingType : byte
 {
     /// <summary>
-    /// Represents the default string literal parsing type. Double quotes should be escaped using the default escaping.
+    /// Double quotes should be escaped using the default escape character: Backslash. 
     /// E.G. var expression = "StaticHelper.Filter(\"UserName == \\\"x\\\"\")";
     /// 
     /// [Default]
@@ -14,8 +14,8 @@ public enum StringLiteralParsingType : byte
     Default = 0,
 
     /// <summary>
-    /// Represents a string literal parsing type where a double quotes should be escaped by two double quotes.
-    /// E.G. var expression = "StaticHelper.Filter(\"UserName == "\"\"x\"\"\")";
+    /// Double quotes should be escaped by a double quote.
+    /// E.G. var expression = "StaticHelper.Filter(\"UserName == \"\"x\"\"\")";
     /// </summary>
     EscapeDoubleQuoteByTwoDoubleQuotes = 1
 }
