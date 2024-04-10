@@ -1211,10 +1211,24 @@ public static class SystemTextJsonExtensions
     {
         Check.NotNull(source);
         Check.NotNull(config);
-        Check.NotNullOrEmpty(predicate);
 
         var queryable = ToQueryable(source, config);
         return ToJsonDocumentArray(() => queryable.Where(config, predicate, args));
+    }
+
+    /// <summary>
+    /// Filters a sequence of values based on a predicate.
+    /// </summary>
+    /// <param name="source">A <see cref="JsonDocument"/> to filter.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>A <see cref="JsonDocument"/> that contains elements from the input sequence that satisfy the condition specified by LambdaExpression.</returns>
+    public static JsonDocument Where(this JsonDocument source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+        Check.NotNull(lambda);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(() => queryable.Where(lambda));
     }
     #endregion Where
 

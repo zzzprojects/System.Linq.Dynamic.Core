@@ -971,6 +971,21 @@ public static class NewtonsoftJsonExtensions
         var queryable = ToQueryable(source, config);
         return ToJArray(() => queryable.Where(config, predicate, args));
     }
+
+    /// <summary>
+    /// Filters a sequence of values based on a predicate.
+    /// </summary>
+    /// <param name="source">A <see cref="JArray"/> to filter.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>A <see cref="JArray"/> that contains elements from the input sequence that satisfy the condition specified by LambdaExpression.</returns>
+    public static JArray Where(this JArray source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+        Check.NotNull(lambda);
+
+        var queryable = ToQueryable(source);
+        return ToJArray(() => queryable.Where(lambda));
+    }
     #endregion Where
 
     #region Private Methods
