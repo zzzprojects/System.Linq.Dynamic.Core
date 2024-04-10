@@ -7,15 +7,15 @@ namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 public class SystemTextJsonTests
 {
     private const string ExampleJson = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 40
-            }
-        ]";
+        {
+            ""Name"": ""John"",
+            ""Age"": 30
+        },
+        {
+            ""Name"": ""Doe"",
+            ""Age"": 40
+        }
+    ]";
     private readonly JsonDocument _source = JsonDocument.Parse(ExampleJson);
 
     [Fact]

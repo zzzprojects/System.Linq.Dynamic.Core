@@ -7,15 +7,15 @@ namespace System.Linq.Dynamic.Core.NewtonsoftJson.Tests;
 public class NewtonsoftJsonTests
 {
     private const string ExampleJson = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 40
-            }
-        ]";
+        {
+            ""Name"": ""John"",
+            ""Age"": 30
+        },
+        {
+            ""Name"": ""Doe"",
+            ""Age"": 40
+        }
+    ]";
     private readonly JArray _source = JArray.Parse(ExampleJson);
 
     [Fact]
