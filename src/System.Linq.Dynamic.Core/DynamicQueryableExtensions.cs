@@ -2314,7 +2314,7 @@ namespace System.Linq.Dynamic.Core
             return CreateQuery(_skipWhilePredicate, source, lambda);
         }
 
-        /// <inheritdoc cref="SkipWhile(IQueryable, ParsingConfig, string, object[])"/>
+        /// <inheritdoc cref="SkipWhile(IQueryable, ParsingConfig, string, object?[])"/>
         public static IQueryable SkipWhile(this IQueryable source, string predicate, params object?[] args)
         {
             return SkipWhile(source, ParsingConfig.Default, predicate, args);

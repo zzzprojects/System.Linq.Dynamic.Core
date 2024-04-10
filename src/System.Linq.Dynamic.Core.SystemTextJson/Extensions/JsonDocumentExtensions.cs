@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Dynamic.Core.SystemTextJson.Models;
 using System.Reflection;
 using System.Text.Json;
 using JsonConverter.Abstractions.Models;
@@ -43,7 +42,7 @@ internal static class JsonDocumentExtensions
             }
         }
 
-        return CreateInstance(dynamicPropertiesWithValue);
+        return DynamicClassFactory.CreateInstance(dynamicPropertiesWithValue);
     }
 
     public static IEnumerable ToDynamicJsonClassArray(this JsonElement? src, DynamicJsonClassOptions? options = null)
@@ -140,17 +139,5 @@ internal static class JsonDocumentExtensions
     private static T[] ConvertToTypedArrayGeneric<T>(IEnumerable<object> src)
     {
         return src.Cast<T>().ToArray();
-    }
-
-    private static DynamicClass CreateInstance(IList<DynamicPropertyWithValue> dynamicPropertiesWithValue)
-    {
-        var type = DynamicClassFactory.CreateType(dynamicPropertiesWithValue.Cast<DynamicProperty>().ToArray());
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
-        foreach (var dynamicPropertyWithValue in dynamicPropertiesWithValue.Where(p => p.Value != null))
-        {
-            dynamicClass.SetDynamicPropertyValue(dynamicPropertyWithValue.Name, dynamicPropertyWithValue.Value!);
-        }
-
-        return dynamicClass;
     }
 }

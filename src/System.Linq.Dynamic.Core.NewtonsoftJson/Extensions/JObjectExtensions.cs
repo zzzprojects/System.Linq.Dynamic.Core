@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Dynamic.Core.NewtonsoftJson.Models;
 using System.Reflection;
 using JsonConverter.Abstractions.Models;
 using Newtonsoft.Json.Linq;
@@ -35,11 +34,6 @@ internal static class JObjectExtensions
         { JTokenType.Uri, (o, _) => o.Value<Uri>() },
     };
 
-    //internal static object? ToDynamicClass(this JValue src)
-    //{
-    //    return src.Value;
-    //}
-
     internal static DynamicClass? ToDynamicClass(this JObject? src, DynamicJsonClassOptions? options = null)
     {
         if (src == null)
@@ -58,7 +52,7 @@ internal static class JObjectExtensions
             }
         }
 
-        return CreateInstance(dynamicPropertiesWithValue);
+        return DynamicClassFactory.CreateInstance(dynamicPropertiesWithValue);
     }
 
     internal static IEnumerable ToDynamicJsonClassArray(this JArray? src, DynamicJsonClassOptions? options = null)
@@ -191,17 +185,5 @@ internal static class JObjectExtensions
     private static T[] ConvertToTypedArrayGeneric<T>(IEnumerable<object> src)
     {
         return src.Cast<T>().ToArray();
-    }
-
-    private static DynamicClass CreateInstance(IList<DynamicPropertyWithValue> dynamicPropertiesWithValue)
-    {
-        var type = DynamicClassFactory.CreateType(dynamicPropertiesWithValue.Cast<DynamicProperty>().ToArray());
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
-        foreach (var dynamicPropertyWithValue in dynamicPropertiesWithValue.Where(p => p.Value != null))
-        {
-            dynamicClass.SetDynamicPropertyValue(dynamicPropertyWithValue.Name, dynamicPropertyWithValue.Value!);
-        }
-
-        return dynamicClass;
     }
 }

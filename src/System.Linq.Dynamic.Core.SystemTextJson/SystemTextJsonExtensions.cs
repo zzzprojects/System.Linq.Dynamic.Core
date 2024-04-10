@@ -996,7 +996,7 @@ public static class SystemTextJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>An <see cref="JsonDocument"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
-    public static JsonDocument SkipWhile(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object[]? args)
+    public static JsonDocument SkipWhile(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
@@ -1012,7 +1012,7 @@ public static class SystemTextJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>An <see cref="JsonDocument"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
-    public static JsonDocument SkipWhile(this JsonDocument source, string predicate, params object[]? args)
+    public static JsonDocument SkipWhile(this JsonDocument source, string predicate, params object?[] args)
     {
         return SkipWhile(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
