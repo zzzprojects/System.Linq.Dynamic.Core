@@ -241,6 +241,20 @@ public class SystemTextJsonTests
     }
 
     [Fact]
+    public void Single()
+    {
+        // Act + Assert
+        _source.Single("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+    }
+
+    [Fact]
+    public void SingleOrDefault()
+    {
+        // Act + Assert
+        _source.SingleOrDefault("Age > 999").Should().BeNull();
+    }
+
+    [Fact]
     public void Select_ResultType()
     {
         // Arrange

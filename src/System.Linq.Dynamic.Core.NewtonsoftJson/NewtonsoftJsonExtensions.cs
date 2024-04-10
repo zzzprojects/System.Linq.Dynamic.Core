@@ -718,6 +718,115 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion Select
 
+    #region Single
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if there
+    /// is not exactly one element in the sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken Single(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return ToJToken(queryable.Single(predicate, args))!;
+    }
+
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if there
+    /// is not exactly one element in the sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken Single(this JArray source, string predicate, params object?[] args)
+    {
+        return Single(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if there
+    /// is not exactly one element in the sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken Single(this JArray source, LambdaExpression lambda)
+    {
+        var queryable = ToQueryable(source);
+        return ToJToken(queryable.Single(lambda))!;
+    }
+    #endregion Single
+
+    #region SingleOrDefault
+    /// <summary>
+    /// Returns the only element of a sequence, or a default value if the sequence
+    /// is empty; this method throws an exception if there is more than one element
+    /// in the sequence.
+    /// </summary>
+    /// <param name="source">A <see cref="JArray"/> to return the single element of.</param>
+    /// <returns>The single element of the input sequence, or default if the sequence contains no elements.</returns>
+    public static JToken? SingleOrDefault(this JArray source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJToken(queryable.SingleOrDefault());
+    }
+
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
+    /// is empty; and throws an exception if there is not exactly one element in the sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken? SingleOrDefault(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return ToJToken(queryable.SingleOrDefault(predicate, args));
+    }
+
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
+    /// is empty; and throws an exception if there is not exactly one element in the sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken? SingleOrDefault(this JArray source, string predicate, params object?[] args)
+    {
+        return SingleOrDefault(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
+    /// is empty; and throws an exception if there is not exactly one element in the sequence.
+    /// </summary>
+    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
+    /// <param name="lambda">A cached Lambda Expression.</param>
+    /// <returns>The first element in source that passes the test in predicate.</returns>
+    public static JToken? SingleOrDefault(this JArray source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJToken(queryable.SingleOrDefault(lambda));
+    }
+    #endregion SingleOrDefault
+
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.

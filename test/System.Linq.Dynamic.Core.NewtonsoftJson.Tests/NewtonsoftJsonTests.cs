@@ -243,6 +243,23 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void Single()
+    {
+        // Act + Assert 
+        ((string?)_source.First("Age > 30")["Name"]).Should().Be("Doe");
+    }
+
+    [Fact]
+    public void SingleOrDefault()
+    {
+        // Act + Assert 1
+        ((string?)_source.LastOrDefault("Age > 30")!["Name"]).Should().Be("Doe");
+
+        // Act + Assert 2
+        _source.LastOrDefault("Age > 999").Should().BeNull();
+    }
+
+    [Fact]
     public void Where_Select()
     {
         // Act
