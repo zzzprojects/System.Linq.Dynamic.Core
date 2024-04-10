@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.IO;
+using System.Text.Json;
 using FluentAssertions;
 using Xunit;
 
@@ -237,6 +238,21 @@ public class SystemTextJsonTests
         // Assert
         var array = result.RootElement.EnumerateArray().Select(x => x.GetString());
         array.Should().BeEquivalentTo("John", "Doe");
+    }
+
+    [Fact]
+    public void Select_ResultType()
+    {
+        // Arrange
+        var json = @"[1, 2, 3]";
+        var source = JsonDocument.Parse(json);
+
+        // Act
+        var result = source.Select(typeof(int), "it * it");
+
+        // Assert
+        var array = result.RootElement.EnumerateArray().Select(x => x.GetInt32());
+        array.Should().ContainInOrder(1, 4, 9);
     }
 
     [Fact]

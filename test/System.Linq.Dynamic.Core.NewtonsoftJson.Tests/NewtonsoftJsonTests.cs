@@ -228,6 +228,21 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void Select_ResultType()
+    {
+        // Arrange
+        var json = @"[1, 2, 3]";
+        var source = JArray.Parse(json);
+
+        // Act
+        var result = source.Select(typeof(int), "it * it");
+
+        // Assert
+        var array = result.Select(x => x.Value<int>());
+        array.Should().ContainInOrder(1, 4, 9);
+    }
+
+    [Fact]
     public void Where_Select()
     {
         // Act

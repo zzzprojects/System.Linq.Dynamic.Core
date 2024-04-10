@@ -1755,7 +1755,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotEmpty(selector, nameof(selector));
+            Check.NotEmpty(selector);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, selector, args);
@@ -1796,7 +1796,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotEmpty(selector, nameof(selector));
+            Check.NotEmpty(selector);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(TResult), selector, args);
@@ -1840,7 +1840,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotNull(resultType, nameof(resultType));
-            Check.NotEmpty(selector, nameof(selector));
+            Check.NotEmpty(selector);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, resultType, selector, args);
@@ -1858,7 +1858,6 @@ namespace System.Linq.Dynamic.Core
         {
             return Select(source, ParsingConfig.Default, resultType, selector, args);
         }
-
         #endregion Select
 
         #region SelectMany
@@ -1905,7 +1904,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotNull(resultType, nameof(resultType));
-            Check.NotEmpty(selector, nameof(selector));
+            Check.NotEmpty(selector);
 
             return SelectManyInternal(source, config, resultType, selector, args);
         }
@@ -1976,7 +1975,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotEmpty(selector, nameof(selector));
+            Check.NotEmpty(selector);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);

@@ -683,6 +683,39 @@ public static class NewtonsoftJsonExtensions
         var queryable = ToQueryable(source, config);
         return ToJArray(() => queryable.Select(config, selector, args));
     }
+
+    /// <summary>
+    /// Projects each element of a sequence into a new class of type TResult.
+    /// Details see http://solutionizing.net/category/linq/ 
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+    /// <param name="resultType">The result type.</param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>An <see cref="JArray"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+    public static JArray Select(this JArray source, NewtonsoftJsonParsingConfig config, Type resultType, string selector, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return ToJArray(() => queryable.Select(config, resultType, selector, args));
+    }
+
+    /// <summary>
+    /// Projects each element of a sequence into a new class of type TResult.
+    /// Details see http://solutionizing.net/category/linq/ 
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="resultType">The result type.</param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>An <see cref="JArray"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+    public static JArray Select(this JArray source, Type resultType, string selector, params object?[] args)
+    {
+        return Select(source, NewtonsoftJsonParsingConfig.Default, resultType, selector, args);
+    }
     #endregion Select
 
     #region Where

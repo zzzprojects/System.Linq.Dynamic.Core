@@ -735,38 +735,6 @@ public static class SystemTextJsonExtensions
     }
     #endregion OrderBy
 
-    #region Select
-    /// <summary>
-    /// Projects each element of a sequence into a new form.
-    /// </summary>
-    /// <param name="source">The source <see cref="JsonDocument"/></param>
-    /// <param name="selector">A projection string expression to apply to each element.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. </param>
-    /// <returns>An <see cref="JsonDocument"/> whose elements are the result of invoking a projection string on each element of source.</returns>
-    public static JsonDocument Select(this JsonDocument source, string selector, params object?[] args)
-    {
-        return Select(source, SystemTextJsonParsingConfig.Default, selector, args);
-    }
-
-    /// <summary>
-    /// Projects each element of a sequence into a new form.
-    /// </summary>
-    /// <param name="source">The source <see cref="JsonDocument"/></param>
-    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
-    /// <param name="selector">A projection string expression to apply to each element.</param>
-    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
-    /// <returns>An <see cref="JsonElement"/> whose elements are the result of invoking a projection string on each element of source.</returns>
-    public static JsonDocument Select(this JsonDocument source, SystemTextJsonParsingConfig config, string selector, params object?[] args)
-    {
-        Check.NotNull(source);
-        Check.NotNull(config);
-        Check.NotNullOrEmpty(selector);
-
-        var queryable = ToQueryable(source, config);
-        return ToJsonDocumentArray(() => queryable.Select(config, selector, args));
-    }
-    #endregion Select
-
     #region Page/PageResult
     /// <summary>
     /// Returns the elements as paged.
@@ -814,6 +782,71 @@ public static class SystemTextJsonExtensions
         return ToJsonDocumentArray(() => queryable.Reverse());
     }
     #endregion Reverse
+
+    #region Select
+    /// <summary>
+    /// Projects each element of a sequence into a new form.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. </param>
+    /// <returns>An <see cref="JsonDocument"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+    public static JsonDocument Select(this JsonDocument source, string selector, params object?[] args)
+    {
+        return Select(source, SystemTextJsonParsingConfig.Default, selector, args);
+    }
+
+    /// <summary>
+    /// Projects each element of a sequence into a new form.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>An <see cref="JsonElement"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+    public static JsonDocument Select(this JsonDocument source, SystemTextJsonParsingConfig config, string selector, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+        Check.NotNullOrEmpty(selector);
+
+        var queryable = ToQueryable(source, config);
+        return ToJsonDocumentArray(() => queryable.Select(config, selector, args));
+    }
+
+    /// <summary>
+    /// Projects each element of a sequence into a new class of type TResult.
+    /// Details see http://solutionizing.net/category/linq/ 
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+    /// <param name="resultType">The result type.</param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>An <see cref="JsonDocument"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+    public static JsonDocument Select(this JsonDocument source, SystemTextJsonParsingConfig config, Type resultType, string selector, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return ToJsonDocumentArray(() => queryable.Select(config, resultType, selector, args));
+    }
+
+    /// <summary>
+    /// Projects each element of a sequence into a new class of type TResult.
+    /// Details see http://solutionizing.net/category/linq/ 
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="resultType">The result type.</param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>An <see cref="JsonDocument"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+    public static JsonDocument Select(this JsonDocument source, Type resultType, string selector, params object?[] args)
+    {
+        return Select(source, SystemTextJsonParsingConfig.Default, resultType, selector, args);
+    }
+    #endregion Select
 
     #region Where
     /// <summary>
