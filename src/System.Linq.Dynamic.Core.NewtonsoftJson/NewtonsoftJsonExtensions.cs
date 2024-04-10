@@ -615,6 +615,39 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion OrderBy
 
+    #region Page/PageResult
+    /// <summary>
+    /// Returns the elements as paged.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="page">The page to return.</param>
+    /// <param name="pageSize">The number of elements per page.</param>
+    /// <returns>A <see cref="JArray"/> that contains the paged elements.</returns>
+    public static JArray Page(this JArray source, int page, int pageSize)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJArray(() => queryable.Page(page, pageSize));
+    }
+
+    /// <summary>
+    /// Returns the elements as paged and include the CurrentPage, PageCount, PageSize and RowCount.
+    /// </summary>
+    /// <param name="source">The source <see cref="JArray"/></param>
+    /// <param name="page">The page to return.</param>
+    /// <param name="pageSize">The number of elements per page.</param>
+    /// <param name="rowCount">If this optional parameter has been defined, this value is used as the RowCount instead of executing a Linq `Count()`.</param>
+    /// <returns>PagedResult</returns>
+    public static PagedResult PageResult(this JArray source, int page, int pageSize, int? rowCount = null)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.PageResult(page, pageSize, rowCount);
+    }
+    #endregion Page/PageResult
+
     #region Select
     /// <summary>
     /// Projects each element of a sequence into a new form.

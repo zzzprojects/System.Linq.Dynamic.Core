@@ -183,6 +183,40 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void Page()
+    {
+        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var source = JArray.Parse(json);
+
+        // Act
+        var result = source.Page(2, 3);
+
+        // Assert
+        var array = result.Select(x => x.Value<int>());
+        array.Should().ContainInOrder(4, 5, 6);
+    }
+
+    [Fact]
+    public void PageResult()
+    {
+        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var source = JArray.Parse(json);
+
+        // Act
+        var pagedResult = source.PageResult(2, 3);
+
+        // Assert
+        pagedResult.Should().BeEquivalentTo(new PagedResult
+        {
+            CurrentPage = 2,
+            PageCount = 4,
+            PageSize = 3,
+            RowCount = 10,
+            Queryable = new[] { 4, 5, 6 }.AsQueryable()
+        });
+    }
+
+    [Fact]
     public void Select()
     {
         // Act

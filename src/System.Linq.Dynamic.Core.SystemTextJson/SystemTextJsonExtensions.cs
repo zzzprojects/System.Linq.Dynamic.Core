@@ -767,6 +767,54 @@ public static class SystemTextJsonExtensions
     }
     #endregion Select
 
+    #region Page/PageResult
+    /// <summary>
+    /// Returns the elements as paged.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="page">The page to return.</param>
+    /// <param name="pageSize">The number of elements per page.</param>
+    /// <returns>A <see cref="JsonDocument"/> that contains the paged elements.</returns>
+    public static JsonDocument Page(this JsonDocument source, int page, int pageSize)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(() => queryable.Page(page, pageSize));
+    }
+
+    /// <summary>
+    /// Returns the elements as paged and include the CurrentPage, PageCount, PageSize and RowCount.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="page">The page to return.</param>
+    /// <param name="pageSize">The number of elements per page.</param>
+    /// <param name="rowCount">If this optional parameter has been defined, this value is used as the RowCount instead of executing a Linq `Count()`.</param>
+    /// <returns>PagedResult</returns>
+    public static PagedResult PageResult(this JsonDocument source, int page, int pageSize, int? rowCount = null)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.PageResult(page, pageSize, rowCount);
+    }
+    #endregion Page/PageResult
+
+    #region Reverse
+    /// <summary>
+    /// Inverts the order of the elements in a sequence.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements correspond to those of the input sequence in reverse order.</returns>
+    public static JsonDocument Reverse(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(() => queryable.Reverse());
+    }
+    #endregion Reverse
+
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.
