@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 using FluentAssertions;
 using Xunit;
 
@@ -270,7 +269,35 @@ public class SystemTextJsonTests
     }
 
     [Fact]
-    public void Where_Select()
+    public void Skip()
+    {
+        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var source = JsonDocument.Parse(json);
+
+        // Act
+        var result = source.Skip(3);
+
+        // Assert
+        var array = result.RootElement.EnumerateArray().Select(x => x.GetInt32());
+        array.Should().ContainInOrder(4, 5, 6, 7, 8, 9, 0);
+    }
+
+    [Fact]
+    public void SkipWhile()
+    {
+        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var source = JsonDocument.Parse(json);
+
+        // Act
+        var result = source.SkipWhile("it > 5");
+
+        // Assert
+        var array = result.RootElement.EnumerateArray().Select(x => x.GetInt32());
+        array.Should().ContainInOrder(6, 7, 8, 9, 0);
+    }
+
+    [Fact]
+    public void Where_With_Select()
     {
         // Act
         var result = _source.Where("Age > 30").Select("Name");

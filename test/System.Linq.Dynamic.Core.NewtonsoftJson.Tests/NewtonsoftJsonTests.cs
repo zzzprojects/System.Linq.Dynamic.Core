@@ -260,7 +260,21 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
-    public void Where_Select()
+    public void SkipWhile()
+    {
+        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var source = JArray.Parse(json);
+
+        // Act
+        var result = source.SkipWhile("it > 5");
+
+        // Assert
+        var array = result.Select(x => x.Value<int>());
+        array.Should().ContainInOrder(6, 7, 8, 9, 0);
+    }
+
+    [Fact]
+    public void Where_With_Select()
     {
         // Act
         var result = _source.Where("Age > 30").Select("Name");

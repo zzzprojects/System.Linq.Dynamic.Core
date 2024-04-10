@@ -971,6 +971,53 @@ public static class SystemTextJsonExtensions
     }
     #endregion SingleOrDefault
 
+    #region Skip
+    /// <summary>
+    /// Bypasses a specified number of elements in a sequence and then returns the remaining elements.
+    /// </summary>
+    /// <param name="source">A <see cref="JsonDocument"/> to return elements from.</param>
+    /// <param name="count">The number of elements to skip before returning the remaining elements.</param>
+    /// <returns>A <see cref="JsonDocument"/> that contains elements that occur after the specified index in the input sequence.</returns>
+    public static JsonDocument Skip(this JsonDocument source, int count)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(() => queryable.Skip(count));
+    }
+    #endregion Skip
+
+    #region SkipWhile
+    /// <summary>
+    /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
+    /// </summary>
+    /// <param name="source">A <see cref="JsonDocument"/> to return elements from.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>An <see cref="JsonDocument"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
+    public static JsonDocument SkipWhile(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object[]? args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(() => queryable.SkipWhile(predicate, args));
+    }
+
+    /// <summary>
+    /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
+    /// </summary>
+    /// <param name="source">A <see cref="JsonDocument"/> to return elements from.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>An <see cref="JsonDocument"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
+    public static JsonDocument SkipWhile(this JsonDocument source, string predicate, params object[]? args)
+    {
+        return SkipWhile(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+    #endregion SkipWhile
+
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.

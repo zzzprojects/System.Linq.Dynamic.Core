@@ -766,21 +766,6 @@ public static class NewtonsoftJsonExtensions
 
     #region SingleOrDefault
     /// <summary>
-    /// Returns the only element of a sequence, or a default value if the sequence
-    /// is empty; this method throws an exception if there is more than one element
-    /// in the sequence.
-    /// </summary>
-    /// <param name="source">A <see cref="JArray"/> to return the single element of.</param>
-    /// <returns>The single element of the input sequence, or default if the sequence contains no elements.</returns>
-    public static JToken? SingleOrDefault(this JArray source)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJToken(queryable.SingleOrDefault());
-    }
-
-    /// <summary>
     /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
     /// is empty; and throws an exception if there is not exactly one element in the sequence.
     /// </summary>
@@ -826,6 +811,37 @@ public static class NewtonsoftJsonExtensions
         return ToJToken(queryable.SingleOrDefault(lambda));
     }
     #endregion SingleOrDefault
+
+    #region SkipWhile
+    /// <summary>
+    /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
+    /// </summary>
+    /// <param name="source">A <see cref="JArray"/> to return elements from.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>An <see cref="JArray"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
+    public static JArray SkipWhile(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object[]? args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJArray(() => queryable.SkipWhile(predicate, args));
+    }
+
+    /// <summary>
+    /// Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
+    /// </summary>
+    /// <param name="source">A <see cref="JArray"/> to return elements from.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>An <see cref="JArray"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
+    public static JArray SkipWhile(this JArray source, string predicate, params object[]? args)
+    {
+        return SkipWhile(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+    #endregion SkipWhile
 
     #region Where
     /// <summary>
