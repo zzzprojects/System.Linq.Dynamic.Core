@@ -183,6 +183,33 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void OrderBy_ThenBy()
+    {
+        var json = @"[
+            {
+                ""Name"": ""John"",
+                ""Age"": 30
+            },
+            {
+                ""Name"": ""Doe"",
+                ""Age"": 40
+            },
+            {
+                ""Name"": ""Stef"",
+                ""Age"": 18
+            }
+        ]";
+        var source = JArray.Parse(json);
+
+        // Act
+        var result = source.OrderBy("Age").ThenBy("Name").Select("Name");
+
+        // Assert
+        var array = result.Select(x => x.Value<string>());
+        array.Should().BeEquivalentTo("Doe", "John", "Stef");
+    }
+
+    [Fact]
     public void Page()
     {
         var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";

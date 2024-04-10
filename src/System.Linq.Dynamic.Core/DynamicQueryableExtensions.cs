@@ -2550,7 +2550,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotEmpty(ordering, nameof(ordering));
+            Check.NotEmpty(ordering);
 
             ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args, config);
@@ -2593,8 +2593,7 @@ namespace System.Linq.Dynamic.Core
         {
             return ThenBy(source, ParsingConfig.Default, ordering, comparer, args);
         }
-
-        #endregion OrderBy
+        #endregion ThenBy
 
         #region Where
         /// <summary>

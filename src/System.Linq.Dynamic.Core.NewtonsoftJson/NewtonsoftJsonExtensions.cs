@@ -874,6 +874,68 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion TakeWhile
 
+    #region ThenBy
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JArray ThenBy(this JArray source, NewtonsoftJsonParsingConfig config, string ordering, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+         
+        var queryable = ToQueryable(source, config).OrderBy("0"); // Workaround to get IOrderedQueryable
+        return ToJArray(() => queryable.ThenBy(ordering, args));
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="comparer">The comparer to use.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JArray ThenBy(this JArray source, NewtonsoftJsonParsingConfig config, string ordering, IComparer comparer, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config).OrderBy("0"); // Workaround to get IOrderedQueryable
+        return ToJArray(() => queryable.ThenBy(ordering, comparer, args));
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JArray ThenBy(this JArray source, string ordering, params object?[] args)
+    {
+        return ThenBy(source, NewtonsoftJsonParsingConfig.Default, ordering, args);
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="comparer">The comparer to use.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JArray ThenBy(this JArray source, string ordering, IComparer comparer, params object?[] args)
+    {
+        return ThenBy(source, NewtonsoftJsonParsingConfig.Default, ordering, comparer, args);
+    }
+    #endregion ThenBy
+
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.

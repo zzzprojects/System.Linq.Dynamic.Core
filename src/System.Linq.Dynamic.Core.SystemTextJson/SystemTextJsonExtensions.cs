@@ -1124,6 +1124,68 @@ public static class SystemTextJsonExtensions
     }
     #endregion TakeWhile
 
+    #region ThenBy
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JsonDocument ThenBy(this JsonDocument source, SystemTextJsonParsingConfig config, string ordering, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config).OrderBy("0"); // Workaround to get IOrderedQueryable
+        return ToJsonDocumentArray(() => queryable.ThenBy(ordering, args));
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="config">The <see cref="ParsingConfig"/>.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="comparer">The comparer to use.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JsonDocument ThenBy(this JsonDocument source, SystemTextJsonParsingConfig config, string ordering, IComparer comparer, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config).OrderBy("0"); // Workaround to get IOrderedQueryable;
+        return ToJsonDocumentArray(() => queryable.ThenBy(ordering, comparer, args));
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JsonDocument ThenBy(this JsonDocument source, string ordering, params object?[] args)
+    {
+        return ThenBy(source, SystemTextJsonParsingConfig.Default, ordering, args);
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
+    /// </summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="ordering">An expression string to indicate values to order by.</param>
+    /// <param name="comparer">The comparer to use.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.  Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
+    public static JsonDocument ThenBy(this JsonDocument source, string ordering, IComparer comparer, params object?[] args)
+    {
+        return ThenBy(source, SystemTextJsonParsingConfig.Default, ordering, comparer, args);
+    }
+    #endregion ThenBy
+
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.
