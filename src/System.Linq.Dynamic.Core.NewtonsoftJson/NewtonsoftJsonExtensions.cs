@@ -474,13 +474,13 @@ public static class NewtonsoftJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>The max element in the sequence.</returns>
-    public static JToken Max(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    public static object Max(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJToken(queryable.Max(config, predicate, args))!;
+        return queryable.Max(config, predicate, args);
     }
 
     /// <summary>
@@ -490,7 +490,7 @@ public static class NewtonsoftJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>The max element in the sequence.</returns>
-    public static JToken Max(this JArray source, string predicate, params object?[] args)
+    public static object Max(this JArray source, string predicate, params object?[] args)
     {
         return Max(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
@@ -501,12 +501,12 @@ public static class NewtonsoftJsonExtensions
     /// <param name="source">A sequence of values to calculate find the max for.</param>
     /// <param name="lambda">A Lambda Expression.</param>
     /// <returns>The max element in the sequence.</returns>
-    public static JToken Max(this JArray source, LambdaExpression lambda)
+    public static object Max(this JArray source, LambdaExpression lambda)
     {
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJToken(queryable.Max(lambda))!;
+        return queryable.Max(lambda);
     }
     #endregion Max
 
@@ -519,13 +519,13 @@ public static class NewtonsoftJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>The min element in the sequence.</returns>
-    public static JToken Min(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    public static object Min(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJToken(queryable.Min(config, predicate, args))!;
+        return queryable.Min(config, predicate, args);
     }
 
     /// <summary>
@@ -535,7 +535,7 @@ public static class NewtonsoftJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>The min element in the sequence.</returns>
-    public static JToken Min(this JArray source, string predicate, params object?[] args)
+    public static object Min(this JArray source, string predicate, params object?[] args)
     {
         return Min(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
@@ -546,12 +546,12 @@ public static class NewtonsoftJsonExtensions
     /// <param name="source">A sequence of values to calculate find the min for.</param>
     /// <param name="lambda">A Lambda Expression.</param>
     /// <returns>The min element in the sequence.</returns>
-    public static JToken Min(this JArray source, LambdaExpression lambda)
+    public static object Min(this JArray source, LambdaExpression lambda)
     {
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJToken(queryable.Min(lambda))!;
+        return queryable.Min(lambda);
     }
     #endregion Min
 

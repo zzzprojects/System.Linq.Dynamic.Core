@@ -565,12 +565,12 @@ public static class SystemTextJsonExtensions
     /// </summary>
     /// <param name="source">A sequence of values to calculate find the max for.</param>
     /// <returns>The max element in the sequence.</returns>
-    public static JsonElement Max(this JsonDocument source)
+    public static object Max(this JsonDocument source)
     {
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Max()) ?? default;
+        return queryable.Max();
     }
 
     /// <summary>
@@ -581,13 +581,13 @@ public static class SystemTextJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>The max element in the sequence.</returns>
-    public static JsonElement Max(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    public static object Max(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJsonElement(queryable.Max(config, predicate, args)) ?? default;
+        return queryable.Max(config, predicate, args);
     }
 
     /// <summary>
@@ -597,7 +597,7 @@ public static class SystemTextJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>The max element in the sequence.</returns>
-    public static JsonElement Max(this JsonDocument source, string predicate, params object?[] args)
+    public static object Max(this JsonDocument source, string predicate, params object?[] args)
     {
         return Max(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
@@ -608,12 +608,12 @@ public static class SystemTextJsonExtensions
     /// <param name="source">A sequence of values to calculate find the max for.</param>
     /// <param name="lambda">A Lambda Expression.</param>
     /// <returns>The max element in the sequence.</returns>
-    public static JsonElement Max(this JsonDocument source, LambdaExpression lambda)
+    public static object Max(this JsonDocument source, LambdaExpression lambda)
     {
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Max(lambda)) ?? default;
+        return queryable.Max(lambda);
     }
     #endregion Max
 
@@ -623,12 +623,12 @@ public static class SystemTextJsonExtensions
     /// </summary>
     /// <param name="source">A sequence of values to calculate find the min for.</param>
     /// <returns>The min element in the sequence.</returns>
-    public static JsonElement Min(this JsonDocument source)
+    public static object Min(this JsonDocument source)
     {
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Min()) ?? default;
+        return queryable.Min();
     }
 
     /// <summary>
@@ -639,13 +639,13 @@ public static class SystemTextJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>The min element in the sequence.</returns>
-    public static JsonElement Min(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    public static object Min(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
     {
         Check.NotNull(source);
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJsonElement(queryable.Min(config, predicate, args)) ?? default;
+        return queryable.Min(config, predicate, args);
     }
 
     /// <summary>
@@ -655,7 +655,7 @@ public static class SystemTextJsonExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
     /// <returns>The min element in the sequence.</returns>
-    public static JsonElement Min(this JsonDocument source, string predicate, params object?[] args)
+    public static object Min(this JsonDocument source, string predicate, params object?[] args)
     {
         return Min(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
@@ -666,12 +666,12 @@ public static class SystemTextJsonExtensions
     /// <param name="source">A sequence of values to calculate find the min for.</param>
     /// <param name="lambda">A Lambda Expression.</param>
     /// <returns>The min element in the sequence.</returns>
-    public static JsonElement Min(this JsonDocument source, LambdaExpression lambda)
+    public static object Min(this JsonDocument source, LambdaExpression lambda)
     {
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Min(lambda)) ?? default;
+        return queryable.Min(lambda);
     }
     #endregion Min
 
@@ -1017,6 +1017,65 @@ public static class SystemTextJsonExtensions
         return SkipWhile(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
     #endregion SkipWhile
+
+    #region Sum
+    /// <summary>
+    /// Computes the sum of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+    /// <returns>The sum of the values in the sequence.</returns>
+    public static object Sum(this JsonDocument source)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return queryable.Sum();
+    }
+
+    /// <summary>
+    /// Computes the sum of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The sum of the values in the sequence.</returns>
+    public static object Sum(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source, config);
+        return queryable.Sum(predicate, args);
+    }
+
+    /// <summary>
+    /// Computes the sum of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>The sum of the values in the sequence.</returns>
+    public static object Sum(this JsonDocument source, string predicate, params object?[] args)
+    {
+        return Sum(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+
+    /// <summary>
+    /// Computes the sum of a sequence of numeric values.
+    /// </summary>
+    /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
+    /// <param name="lambda">A Lambda Expression.</param>
+    /// <returns>The sum of the values in the sequence.</returns>
+    public static object Sum(this JsonDocument source, LambdaExpression lambda)
+    {
+        Check.NotNull(source);
+        Check.NotNull(lambda);
+
+        var queryable = ToQueryable(source);
+        return queryable.Sum(lambda);
+    }
+    #endregion Sum
 
     #region Where
     /// <summary>

@@ -154,14 +154,14 @@ public class NewtonsoftJsonTests
     public void Max()
     {
         // Act + Assert 
-        ((string?)_source.Max("Age")).Should().Be("40");
+        ((int?)_source.Max("Age")).Should().Be(40);
     }
 
     [Fact]
     public void Min()
     {
         // Act + Assert 
-        ((string?)_source.Min("Age")).Should().Be("30");
+        ((int?)_source.Min("Age")).Should().Be(30);
     }
 
     [Fact]
