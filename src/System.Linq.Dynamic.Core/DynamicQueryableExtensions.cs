@@ -2025,7 +2025,7 @@ namespace System.Linq.Dynamic.Core
         /// ]]>
         /// </code>
         /// </example>
-        public static IQueryable SelectMany(this IQueryable source, ParsingConfig config, string collectionSelector, string resultSelector, object[]? collectionSelectorArgs = null, params object[]? resultSelectorArgs)
+        public static IQueryable SelectMany(this IQueryable source, ParsingConfig config, string collectionSelector, string resultSelector, object?[]? collectionSelectorArgs = null, params object?[]? resultSelectorArgs)
         {
             return SelectMany(source, collectionSelector, resultSelector, "x", "y", collectionSelectorArgs, resultSelectorArgs);
         }
@@ -2107,7 +2107,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="SelectMany(IQueryable, ParsingConfig, string, string, string, string, object[], object[])"/>
-        public static IQueryable SelectMany(this IQueryable source, string collectionSelector, string resultSelector, string collectionParameterName, string resultParameterName, object[]? collectionSelectorArgs = null, params object[]? resultSelectorArgs)
+        public static IQueryable SelectMany(this IQueryable source, string collectionSelector, string resultSelector, string collectionParameterName, string resultParameterName, object?[]? collectionSelectorArgs = null, params object?[]? resultSelectorArgs)
         {
             return SelectMany(source, ParsingConfig.Default, collectionSelector, resultSelector, collectionParameterName, resultParameterName, collectionSelectorArgs, resultSelectorArgs);
         }
@@ -2302,7 +2302,7 @@ namespace System.Linq.Dynamic.Core
         /// </code>
         /// </example>
         /// <returns>An <see cref="IQueryable"/> that contains elements from source starting at the first element in the linear series that does not pass the test specified by predicate.</returns>
-        public static IQueryable SkipWhile(this IQueryable source, ParsingConfig config, string predicate, params object[]? args)
+        public static IQueryable SkipWhile(this IQueryable source, ParsingConfig config, string predicate, params object?[] args)
         {
             Check.NotNull(source);
             Check.NotNull(config);
@@ -2315,7 +2315,7 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <inheritdoc cref="SkipWhile(IQueryable, ParsingConfig, string, object[])"/>
-        public static IQueryable SkipWhile(this IQueryable source, string predicate, params object[]? args)
+        public static IQueryable SkipWhile(this IQueryable source, string predicate, params object?[] args)
         {
             return SkipWhile(source, ParsingConfig.Default, predicate, args);
         }
@@ -2803,8 +2803,6 @@ namespace System.Linq.Dynamic.Core
 
             return (TResult)Convert.ChangeType(result, typeof(TResult));
         }
-
-
         #endregion Private Helpers
     }
 }
