@@ -1077,6 +1077,53 @@ public static class SystemTextJsonExtensions
     }
     #endregion Sum
 
+    #region Take
+    /// <summary>
+    /// Returns a specified number of contiguous elements from the start of a sequence.
+    /// </summary>
+    /// <param name="source">The sequence to return elements from.</param>
+    /// <param name="count">The number of elements to return.</param>
+    /// <returns>A <see cref="IQueryable"/> that contains the specified number of elements from the start of source.</returns>
+    public static JsonDocument Take(this JsonDocument source, int count)
+    {
+        Check.NotNull(source);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(() => queryable.Take(count));
+    }
+    #endregion Take
+
+    #region TakeWhile
+    /// <summary>
+    /// Returns elements from a sequence as long as a specified condition is true.
+    /// </summary>
+    /// <param name="source">The sequence to return elements from.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>An <see cref="JsonDocument"/> that contains elements from the input sequence occurring before the element at which the test specified by predicate no longer passes.</returns>
+    public static JsonDocument TakeWhile(this JsonDocument source, SystemTextJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJsonDocumentArray(() => queryable.TakeWhile(predicate, args));
+    }
+
+    /// <summary>
+    /// Returns elements from a sequence as long as a specified condition is true.
+    /// </summary>
+    /// <param name="source">The sequence to return elements from.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>An <see cref="JsonDocument"/> that contains elements from the input sequence occurring before the element at which the test specified by predicate no longer passes.</returns>
+    public static JsonDocument TakeWhile(this JsonDocument source, string predicate, params object?[] args)
+    {
+        return TakeWhile(source, SystemTextJsonParsingConfig.Default, predicate, args);
+    }
+    #endregion TakeWhile
+
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.

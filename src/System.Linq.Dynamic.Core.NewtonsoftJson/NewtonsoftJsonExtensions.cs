@@ -843,6 +843,37 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion SkipWhile
 
+    #region TakeWhile
+    /// <summary>
+    /// Returns elements from a sequence as long as a specified condition is true.
+    /// </summary>
+    /// <param name="source">The sequence to return elements from.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>An <see cref="JArray"/> that contains elements from the input sequence occurring before the element at which the test specified by predicate no longer passes.</returns>
+    public static JArray TakeWhile(this JArray source, NewtonsoftJsonParsingConfig config, string predicate, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+
+        var queryable = ToQueryable(source);
+        return ToJArray(() => queryable.TakeWhile(predicate, args));
+    }
+
+    /// <summary>
+    /// Returns elements from a sequence as long as a specified condition is true.
+    /// </summary>
+    /// <param name="source">The sequence to return elements from.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>An <see cref="JArray"/> that contains elements from the input sequence occurring before the element at which the test specified by predicate no longer passes.</returns>
+    public static JArray TakeWhile(this JArray source, string predicate, params object?[] args)
+    {
+        return TakeWhile(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+    }
+    #endregion TakeWhile
+
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.

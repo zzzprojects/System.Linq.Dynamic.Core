@@ -274,6 +274,34 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void Take()
+    {
+        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var source = JArray.Parse(json);
+
+        // Act
+        var result = source.Take(3);
+
+        // Assert
+        var array = result.Select(x => x.Value<int>());
+        array.Should().ContainInOrder(1, 2, 3);
+    }
+
+    [Fact]
+    public void TakeWhile()
+    {
+        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var source = JArray.Parse(json);
+
+        // Act
+        var result = source.TakeWhile("it < 5");
+
+        // Assert
+        var array = result.Select(x => x.Value<int>());
+        array.Should().ContainInOrder(1, 2, 3, 4);
+    }
+
+    [Fact]
     public void Where_With_Select()
     {
         // Act

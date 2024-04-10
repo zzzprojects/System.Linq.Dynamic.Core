@@ -2306,7 +2306,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotNull(predicate, nameof(predicate));
+            Check.NotNull(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2436,7 +2436,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotNull(predicate, nameof(predicate));
+            Check.NotNull(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2449,7 +2449,6 @@ namespace System.Linq.Dynamic.Core
         {
             return TakeWhile(source, ParsingConfig.Default, predicate, args);
         }
-
         #endregion TakeWhile
 
         #region ThenBy
