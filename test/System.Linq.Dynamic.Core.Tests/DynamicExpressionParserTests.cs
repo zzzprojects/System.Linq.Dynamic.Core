@@ -269,10 +269,10 @@ public class DynamicExpressionParserTests
         {
             var expression = $"{operation}({propertyInfo.Name})"; // e.g., "Sum(ByteValue)"
 
-            // Act IEnumerable
+            // Act on IEnumerable
             DynamicExpressionParser.ParseLambda(itType: typeof(IEnumerable<TestClass794>), resultType: typeof(double?), expression: expression);
 
-            // Act IEnumerable
+            // Act on IQueryable
             DynamicExpressionParser.ParseLambda(itType: typeof(IQueryable<TestClass794>), resultType: typeof(double?), expression: expression);
         }
     }
