@@ -251,6 +251,33 @@ public class DynamicExpressionParserTests
         }
     }
 
+    internal class TestClass794
+    {
+        public byte ByteValue { get; set; }
+        public byte? NullableByteValue { get; set; }
+        public int IntValue { get; set; }
+        public int? NullableIntValue { get; set; }
+    }
+
+    [Theory]
+    [InlineData("Average")]
+    [InlineData("Max")]
+    [InlineData("Min")]
+    [InlineData("Sum")]
+    public void DynamicExpressionParser_ParseLambda_Aggregate(string operation)
+    {
+        foreach (var propertyInfo in typeof(TestClass794).GetProperties())
+        {
+            var expression = $"{operation}({propertyInfo.Name})"; // e.g., "Sum(ByteValue)"
+
+            // Act on IEnumerable
+            DynamicExpressionParser.ParseLambda(itType: typeof(IEnumerable<TestClass794>), resultType: typeof(double?), expression: expression);
+
+            // Act on IQueryable
+            DynamicExpressionParser.ParseLambda(itType: typeof(IQueryable<TestClass794>), resultType: typeof(double?), expression: expression);
+        }
+    }
+
     [Fact]
     public void DynamicExpressionParser_ParseLambda_UseParameterizedNamesInDynamicQuery_false_String()
     {

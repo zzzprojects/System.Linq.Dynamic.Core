@@ -2072,6 +2072,9 @@ public class ExpressionParser
             return Expression.Call(instance, dictionaryMethod, args);
         }
 
+        // #794 - Check if the method is an aggregate (Average or Sum) method and try to update the arguments to match the method arguments
+        _methodFinder.CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(methodName, ref args);
+
         var callType = typeof(Enumerable);
         if (type != null && TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null && _methodFinder.ContainsMethod(type, methodName))
         {
@@ -2089,7 +2092,7 @@ public class ExpressionParser
             typeArgs = new[] { ResolveTypeFromArgumentExpression(methodName, args[0]) };
             args = new Expression[0];
         }
-        else if (new[] { "Min", "Max", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
+        else if (new[] { "Max", "Min", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
         {
             if (args.Length == 2)
             {

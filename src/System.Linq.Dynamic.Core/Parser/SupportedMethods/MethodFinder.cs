@@ -10,10 +10,46 @@ internal class MethodFinder
     private readonly ParsingConfig _parsingConfig;
     private readonly IExpressionHelper _expressionHelper;
 
+    /// <summary>
+    /// #794
+    /// </summary>
+    private interface IAggregateSignatures
+    {
+        void Average(decimal? selector);
+        void Average(decimal selector);
+        void Average(double? selector);
+        void Average(double selector);
+        void Average(float? selector);
+        void Average(float selector);
+        void Average(int? selector);
+        void Average(int selector);
+        void Average(long? selector);
+        void Average(long selector);
+
+        void Sum(decimal? selector);
+        void Sum(decimal selector);
+        void Sum(double? selector);
+        void Sum(double selector);
+        void Sum(float? selector);
+        void Sum(float selector);
+        void Sum(int? selector);
+        void Sum(int selector);
+        void Sum(long? selector);
+        void Sum(long selector);
+    }
+
     public MethodFinder(ParsingConfig parsingConfig, IExpressionHelper expressionHelper)
     {
         _parsingConfig = Check.NotNull(parsingConfig);
         _expressionHelper = Check.NotNull(expressionHelper);
+    }
+
+    public void CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(string methodName, ref Expression[] args)
+    {
+        if (methodName is nameof(IAggregateSignatures.Average) or nameof(IAggregateSignatures.Sum))
+        {
+            ContainsMethod(typeof(IAggregateSignatures), methodName, false, null, ref args);
+        }
     }
 
     public bool ContainsMethod(Type type, string methodName, bool staticAccess = true)
@@ -21,8 +57,8 @@ internal class MethodFinder
         Check.NotNull(type);
 
 #if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
-            var flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
-            return type.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName).Any();
+        var flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
+        return type.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName).Any();
 #else
         return type.GetTypeInfo().DeclaredMethods.Any(m => (m.IsStatic || !staticAccess) && m.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase));
 #endif
@@ -40,17 +76,17 @@ internal class MethodFinder
 
     public int FindMethod(Type? type, string methodName, bool staticAccess, ref Expression? instance, ref Expression[] args, out MethodBase? method)
     {
-#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
-            BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
-            foreach (Type t in SelfAndBaseTypes(type))
+#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+        BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
+        foreach (Type t in SelfAndBaseTypes(type))
+        {
+            MemberInfo[] members = t.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName);
+            int count = FindBestMethodBasedOnArguments(members.Cast<MethodBase>(), ref args, out method);
+            if (count != 0)
             {
-                MemberInfo[] members = t.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName);
-                int count = FindBestMethodBasedOnArguments(members.Cast<MethodBase>(), ref args, out method);
-                if (count != 0)
-                {
-                    return count;
-                }
+                return count;
             }
+        }
 #else
         foreach (Type t in SelfAndBaseTypes(type))
         {
