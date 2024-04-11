@@ -265,12 +265,15 @@ public class DynamicExpressionParserTests
     [InlineData("Sum")]
     public void DynamicExpressionParser_ParseLambda_Aggregate(string operation)
     {
-        foreach (var propertyInfo in typeof(TestClass794).GetProperties().Where(p => p.Name == "ByteValue"))
+        foreach (var propertyInfo in typeof(TestClass794).GetProperties())
         {
             var expression = $"{operation}({propertyInfo.Name})"; // e.g., "Sum(ByteValue)"
 
-            // Act
+            // Act IEnumerable
             DynamicExpressionParser.ParseLambda(itType: typeof(IEnumerable<TestClass794>), resultType: typeof(double?), expression: expression);
+
+            // Act IEnumerable
+            DynamicExpressionParser.ParseLambda(itType: typeof(IQueryable<TestClass794>), resultType: typeof(double?), expression: expression);
         }
     }
 
