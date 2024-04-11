@@ -41,7 +41,7 @@ internal static class StringParser
         }
     }
 
-    internal static string ParseStringAndUnescapeTwoDoubleQuotesByASingleDoubleQuote(string input, int position)
+    internal static string ParseStringAndUnescapeTwoDoubleQuotesByASingleDoubleQuote(string input, int position = default)
     {
         return ReplaceTwoDoubleQuotesByASingleDoubleQuote(ParseStringAndUnescape(input, position), position);
     }
