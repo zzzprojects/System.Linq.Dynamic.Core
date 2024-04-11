@@ -107,7 +107,7 @@ internal static class JsonDocumentExtensions
             return @byte;
         }
 
-        throw new InvalidOperationException($"Unable to convert {nameof(JsonElement)} of type: {arg.ValueKind} to int, long, double or decimal.");
+        throw new InvalidOperationException($"Unable to convert {nameof(JsonElement)} of type: {arg.ValueKind} to int, long, double, decimal or byte.");
     }
 
     private static IEnumerable ConvertJsonElementToEnumerable(JsonElement arg, DynamicJsonClassOptions? options = null)
