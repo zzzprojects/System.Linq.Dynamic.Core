@@ -2054,7 +2054,7 @@ public class ExpressionParser
         }
         else
         {
-            STEFif (methodName == "ContainsKey" && TypeHelper.IsDictionary(elementType) && TypeHelper.TryGetFirstGenericArgument(elementType, out var keyType))
+            if (methodName == "Any" && TypeHelper.IsDictionary(elementType) && TypeHelper.TryGetFirstGenericArgument(elementType, out var keyType))
             {
                 _it = ParameterExpressionHelper.CreateParameterExpression(keyType!, $"{elementType}_{keyType}_Key", _parsingConfig.RenameEmptyParameterExpressionNames);
             }
