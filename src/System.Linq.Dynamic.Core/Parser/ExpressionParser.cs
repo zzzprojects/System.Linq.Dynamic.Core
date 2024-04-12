@@ -269,17 +269,19 @@ public class ExpressionParser
     // => operator - Added Support for projection operator
     private Expression ParseLambdaOperator()
     {
-        Expression expr = ParseOrOperator();
+        var expr = ParseOrOperator();
+        
         if (_textParser.CurrentToken.Id == TokenId.Lambda && _it?.Type == expr.Type)
         {
             _textParser.NextToken();
-            if (_textParser.CurrentToken.Id == TokenId.Identifier || _textParser.CurrentToken.Id == TokenId.OpenParen)
+            if (_textParser.CurrentToken.Id is TokenId.Identifier or TokenId.OpenParen)
             {
                 var right = ParseConditionalOperator();
                 return Expression.Lambda(right, new[] { (ParameterExpression)expr });
             }
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
         }
+
         return expr;
     }
 
@@ -1061,7 +1063,9 @@ public class ExpressionParser
         {
             throw ParseError(Res.NoItInScope);
         }
+
         _textParser.NextToken();
+
         return _it;
     }
 
@@ -2043,16 +2047,23 @@ public class ExpressionParser
 
         _parent = _it;
 
-        if (new[] { "Contains", "ContainsKey", "Skip", "Take" }.Contains(methodName))
+        if (new[] { "Contains", "Skip", "Take" }.Contains(methodName))
         {
             // for any method that acts on the parent element type, we need to specify the outerIt as scope.
             _it = outerIt;
         }
         else
         {
-            _it = innerIt;
+            STEFif (methodName == "ContainsKey" && TypeHelper.IsDictionary(elementType) && TypeHelper.TryGetFirstGenericArgument(elementType, out var keyType))
+            {
+                _it = ParameterExpressionHelper.CreateParameterExpression(keyType!, $"{elementType}_{keyType}_Key", _parsingConfig.RenameEmptyParameterExpressionNames);
+            }
+            else
+            {
+                _it = innerIt;
+            }
         }
-
+        
         Expression[] args = ParseArgumentList();
 
         _it = outerIt;
@@ -2118,7 +2129,7 @@ public class ExpressionParser
         }
         else
         {
-            if (new[] { "Concat", "Contains", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union" }.Contains(methodName))
+            if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union" }.Contains(methodName))
             {
                 args = new[] { instance, args[0] };
             }
