@@ -269,7 +269,7 @@ public class ExpressionParser
     private Expression ParseLambdaOperator()
     {
         var expr = ParseOrOperator();
-        
+
         if (_textParser.CurrentToken.Id == TokenId.Lambda && _it?.Type == expr.Type)
         {
             _textParser.NextToken();
@@ -2056,7 +2056,7 @@ public class ExpressionParser
         {
             _it = innerIt;
         }
-        
+
         Expression[] args = ParseArgumentList();
 
         _it = outerIt;
