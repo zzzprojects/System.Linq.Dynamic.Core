@@ -20,6 +20,7 @@ public partial class QueryableTests
         }
     }
 
+    // #793
     [Theory]
     [InlineData("FirstDict.ContainsKey(\"test\")")]
     [InlineData("ListOfKeys.Any(x => x.Contains(\"test\"))")]
