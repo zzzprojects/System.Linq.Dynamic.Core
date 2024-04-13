@@ -7,7 +7,7 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal static class TypeHelper
 {
-    public static bool TryGetFirstGenericArgument(Type type, out Type? genericType)
+    public static bool TryGetFirstGenericArgument(Type type, [NotNullWhen(true)] out Type? genericType)
     {
         var genericArguments = type.GetTypeInfo().GetGenericTypeArguments();
         if (genericArguments.Length == 0)

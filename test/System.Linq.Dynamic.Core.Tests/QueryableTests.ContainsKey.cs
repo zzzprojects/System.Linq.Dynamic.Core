@@ -17,10 +17,6 @@ public partial class QueryableTests
             ListOfDictionaries = listOfDictionaries;
             FirstDict = firstDict;
             ListOfKeys = listOfKeys;
-
-            var x = listOfDictionaries.Any(x => x.ContainsKey("test"));
-
-            FirstDict.Any(x => x.Key == "d");
         }
     }
 
@@ -30,6 +26,7 @@ public partial class QueryableTests
     [InlineData("ListOfDictionaries.Any(it.ContainsKey(\"test\"))")]
     [InlineData("ListOfDictionaries.Any(ContainsKey(\"test\"))")]
     [InlineData("ListOfDictionaries.Any(x => x.ContainsKey(\"test\"))")]
+    [InlineData("ListOfDictionaries.Any(x => x.ContainsKey(\"te\" + \"st\"))")]
     public void ContainsKey_Dynamic(string expression)
     {
         // Arrange

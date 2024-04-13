@@ -53,9 +53,8 @@ public class ExpressionParser
     public string ItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
 
     /// <summary>
-    /// There was a problem when an expression contained multiple lambdas where
-    /// the ItName was not cleared and freed for the next lambda. This variable
-    /// stores the ItName of the last parsed lambda.
+    /// There was a problem when an expression contained multiple lambdas where the ItName was not cleared and freed for the next lambda.
+    /// This variable stores the ItName of the last parsed lambda.
     /// Not used internally by ExpressionParser, but used to preserve compatibility of parsingConfig.RenameParameterExpression
     /// which was designed to only work with mono-lambda expressions.
     /// </summary>
@@ -1788,6 +1787,12 @@ public class ExpressionParser
             _textParser.NextToken();
         }
 
+        // Parse as Lambda
+        if (_textParser.CurrentToken.Id == TokenId.Lambda && _it?.Type == type)
+        {
+            return ParseAsLambda(id);
+        }
+
         if (_textParser.CurrentToken.Id == TokenId.OpenParen)
         {
             var isStaticAccess = expression == null;
@@ -1870,11 +1875,6 @@ public class ExpressionParser
             return _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(expression!, type, id);
         }
 #endif
-        // Parse as Lambda
-        if (_textParser.CurrentToken.Id == TokenId.Lambda && _it?.Type == type)
-        {
-            return ParseAsLambda(id);
-        }
 
         // This could be enum like "A.B.C.MyEnum.Value1" or "A.B.C+MyEnum.Value1".
         //
@@ -2047,21 +2047,14 @@ public class ExpressionParser
 
         _parent = _it;
 
-        if (new[] { "Contains", "Skip", "Take" }.Contains(methodName))
+        if (new[] { "Contains", "ContainsKey", "Skip", "Take" }.Contains(methodName))
         {
             // for any method that acts on the parent element type, we need to specify the outerIt as scope.
             _it = outerIt;
         }
         else
         {
-            if (methodName == "Any" && TypeHelper.IsDictionary(elementType) && TypeHelper.TryGetFirstGenericArgument(elementType, out var keyType))
-            {
-                _it = ParameterExpressionHelper.CreateParameterExpression(keyType!, $"{elementType}_{keyType}_Key", _parsingConfig.RenameEmptyParameterExpressionNames);
-            }
-            else
-            {
-                _it = innerIt;
-            }
+            _it = innerIt;
         }
         
         Expression[] args = ParseArgumentList();
