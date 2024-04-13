@@ -53,9 +53,8 @@ public class ExpressionParser
     public string ItName { get; private set; } = KeywordsHelper.KEYWORD_IT;
 
     /// <summary>
-    /// There was a problem when an expression contained multiple lambdas where
-    /// the ItName was not cleared and freed for the next lambda. This variable
-    /// stores the ItName of the last parsed lambda.
+    /// There was a problem when an expression contained multiple lambdas where the ItName was not cleared and freed for the next lambda.
+    /// This variable stores the ItName of the last parsed lambda.
     /// Not used internally by ExpressionParser, but used to preserve compatibility of parsingConfig.RenameParameterExpression
     /// which was designed to only work with mono-lambda expressions.
     /// </summary>
@@ -269,17 +268,19 @@ public class ExpressionParser
     // => operator - Added Support for projection operator
     private Expression ParseLambdaOperator()
     {
-        Expression expr = ParseOrOperator();
+        var expr = ParseOrOperator();
+
         if (_textParser.CurrentToken.Id == TokenId.Lambda && _it?.Type == expr.Type)
         {
             _textParser.NextToken();
-            if (_textParser.CurrentToken.Id == TokenId.Identifier || _textParser.CurrentToken.Id == TokenId.OpenParen)
+            if (_textParser.CurrentToken.Id is TokenId.Identifier or TokenId.OpenParen)
             {
                 var right = ParseConditionalOperator();
                 return Expression.Lambda(right, new[] { (ParameterExpression)expr });
             }
             _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
         }
+
         return expr;
     }
 
@@ -1061,7 +1062,9 @@ public class ExpressionParser
         {
             throw ParseError(Res.NoItInScope);
         }
+
         _textParser.NextToken();
+
         return _it;
     }
 
@@ -1784,6 +1787,12 @@ public class ExpressionParser
             _textParser.NextToken();
         }
 
+        // Parse as Lambda
+        if (_textParser.CurrentToken.Id == TokenId.Lambda && _it?.Type == type)
+        {
+            return ParseAsLambda(id);
+        }
+
         if (_textParser.CurrentToken.Id == TokenId.OpenParen)
         {
             var isStaticAccess = expression == null;
@@ -1866,11 +1875,6 @@ public class ExpressionParser
             return _expressionHelper.ConvertToExpandoObjectAndCreateDynamicExpression(expression!, type, id);
         }
 #endif
-        // Parse as Lambda
-        if (_textParser.CurrentToken.Id == TokenId.Lambda && _it?.Type == type)
-        {
-            return ParseAsLambda(id);
-        }
 
         // This could be enum like "A.B.C.MyEnum.Value1" or "A.B.C+MyEnum.Value1".
         //
@@ -2118,7 +2122,7 @@ public class ExpressionParser
         }
         else
         {
-            if (new[] { "Concat", "Contains", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union" }.Contains(methodName))
+            if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union" }.Contains(methodName))
             {
                 args = new[] { instance, args[0] };
             }
