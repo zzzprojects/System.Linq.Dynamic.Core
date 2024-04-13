@@ -488,6 +488,32 @@ namespace System.Linq.Dynamic.Core.Tests
             castDynamic.Should().BeEquivalentTo(new[] { 1, 2 });
         }
 
+        // #440
+        [Fact]
+        public void CastToIntUsingParentheses()
+        {
+            // Assign
+            var qry = new[]
+            {
+                new User
+                {
+                    Id = 1,
+                    DisplayName = "" + (char) 109
+                },
+                new User
+                {
+                    Id = 2,
+                    DisplayName = "abc"
+                }
+            }.AsQueryable();
+
+            // Act
+            var result = qry.Where("DisplayName.Any(int(it) >= 109").ToDynamicArray<User>();
+
+            // Assert
+            result.Should().HaveCount(1).And.Subject.First().Id.Should().Be(1);
+        }
+
         [Fact]
         public void CastToType_Dynamic_ActingOnIt()
         {
