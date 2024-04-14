@@ -508,7 +508,7 @@ namespace System.Linq.Dynamic.Core.Tests
             }.AsQueryable();
 
             // Act
-            var result = qry.Where("DisplayName.Any(int(it) >= 109").ToDynamicArray<User>();
+            var result = qry.Where("DisplayName.Any(int(it) >= 109)").ToDynamicArray<User>();
 
             // Assert
             result.Should().HaveCount(1).And.Subject.First().Id.Should().Be(1);

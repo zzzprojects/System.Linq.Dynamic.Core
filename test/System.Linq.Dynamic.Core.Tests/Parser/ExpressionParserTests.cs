@@ -289,7 +289,7 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var parameters = new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(User), "u") };
-        var sut = new ExpressionParser(parameters, "DisplayName.Any(int(it) > 109", null, null);
+        var sut = new ExpressionParser(parameters, "DisplayName.Any(int(it) > 109)", null, null);
 
         // Act
         var result = sut.Parse(null);
