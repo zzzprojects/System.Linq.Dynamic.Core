@@ -14,7 +14,6 @@ namespace System.Linq.Dynamic.Core.SystemTextJson;
 /// </summary>
 public static class SystemTextJsonExtensions
 {
-    private const string sequenceEmpty = "Sequence contains no elements";
     #region Aggregate
     /// <summary>
     /// Dynamically runs an aggregate function on the <see cref="JsonDocument"/>>.
@@ -339,7 +338,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.First()) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.First()) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -356,7 +355,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJsonElement(queryable.First(config, predicate, args)) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.First(config, predicate, args)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -382,7 +381,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.First(lambda)) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.First(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
     #endregion First
 
@@ -455,7 +454,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Last()) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.Last()) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -472,7 +471,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJsonElement(queryable.Last(predicate, args)) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.Last(predicate, args)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -498,7 +497,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Last(lambda)) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.Last(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
     #endregion Last
 
@@ -861,7 +860,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Single()) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.Single()) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -879,7 +878,7 @@ public static class SystemTextJsonExtensions
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJsonElement(queryable.Single(predicate, args)) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.Single(predicate, args)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -905,7 +904,7 @@ public static class SystemTextJsonExtensions
     public static JsonElement Single(this JsonDocument source, LambdaExpression lambda)
     {
         var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Single(lambda)) ?? throw new InvalidOperationException(sequenceEmpty);
+        return ToJsonElement(queryable.Single(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
     #endregion Single
 

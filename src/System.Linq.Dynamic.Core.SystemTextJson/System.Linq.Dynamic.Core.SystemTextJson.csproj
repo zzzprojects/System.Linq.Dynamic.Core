@@ -5,12 +5,11 @@
         <AssemblyOriginatorKeyFile>../System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
         <Authors>Stef Heyenrath</Authors>
-        <Description>TODO</Description>
+        <Description>Contains some extensions for System.Linq.Dynamic.Core to dynamically query a System.Text.Json.JsonDocument</Description>
         <PackageTags>system;linq;dynamic;core;dotnet;json</PackageTags>
         <ProjectGuid>{FA01CE15-315A-499E-AFC2-955CA7EB45FF}</ProjectGuid>
         <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
         <Version>1.3.$(PatchVersion)</Version>
-        <UserSecretsId>fa8622ae-b712-4c03-8963-0d24e0dba084</UserSecretsId>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

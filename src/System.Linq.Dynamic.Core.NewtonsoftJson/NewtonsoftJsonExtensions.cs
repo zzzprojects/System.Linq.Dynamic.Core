@@ -300,7 +300,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJToken(queryable.First(config, predicate, args));
+        return ToJToken(queryable.First(config, predicate, args)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -312,7 +312,7 @@ public static class NewtonsoftJsonExtensions
     /// <returns>The first element in source that passes the test in predicate.</returns>
     public static JToken First(this JArray source, string predicate, params object?[] args)
     {
-        return First(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
+        return First(source, NewtonsoftJsonParsingConfig.Default, predicate, args) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -326,7 +326,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJToken(queryable.First(lambda));
+        return ToJToken(queryable.First(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
     #endregion First
 
@@ -390,7 +390,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJToken(queryable.Last(predicate, args));
+        return ToJToken(queryable.Last(predicate, args)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -416,7 +416,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(source);
 
         var queryable = ToQueryable(source);
-        return ToJToken(queryable.Last(lambda));
+        return ToJToken(queryable.Last(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
     #endregion Last
 
@@ -734,7 +734,7 @@ public static class NewtonsoftJsonExtensions
         Check.NotNull(config);
 
         var queryable = ToQueryable(source, config);
-        return ToJToken(queryable.Single(predicate, args))!;
+        return ToJToken(queryable.Single(predicate, args)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
 
     /// <summary>
@@ -760,7 +760,7 @@ public static class NewtonsoftJsonExtensions
     public static JToken Single(this JArray source, LambdaExpression lambda)
     {
         var queryable = ToQueryable(source);
-        return ToJToken(queryable.Single(lambda))!;
+        return ToJToken(queryable.Single(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
     #endregion Single
 
@@ -1003,6 +1003,7 @@ public static class NewtonsoftJsonExtensions
 
         return JToken.FromObject(value);
     }
+
     private static JArray ToJArray(Func<IQueryable> func)
     {
         var array = new JArray();
