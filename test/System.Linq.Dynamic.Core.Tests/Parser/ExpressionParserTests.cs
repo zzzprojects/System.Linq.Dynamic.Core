@@ -284,6 +284,20 @@ public partial class ExpressionParserTests
         Check.That(parsedExpression).Equals("value(System.Nullable`1[System.Int64][]).Contains(x.MainCompanyId)");
     }
 
+    [Fact]
+    public void Parse_CastActingOnIt()
+    {
+        // Arrange
+        var parameters = new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(User), "u") };
+        var sut = new ExpressionParser(parameters, "DisplayName.Any(int(it) > 109)", null, null);
+
+        // Act
+        var result = sut.Parse(null);
+
+        // Assert
+        result.Should().NotBeNull();
+    }
+
     [Theory]
     [InlineData("string(\"\")", "")]
     [InlineData("string(\"a\")", "a")]
@@ -331,7 +345,7 @@ public partial class ExpressionParserTests
     [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
     [InlineData("Name", "company.Name")]
-    [InlineData("company.Name","company.Name")]
+    [InlineData("company.Name", "company.Name")]
     [InlineData("DateTime", "company.DateTime")]
     public void Parse_When_PrioritizePropertyOrFieldOverTheType_IsTrue(string expression, string result)
     {
