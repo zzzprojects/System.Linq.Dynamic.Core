@@ -1803,19 +1803,25 @@ public class ExpressionParser
 
         if (_textParser.CurrentToken.Id == TokenId.OpenParen)
         {
+            Expression[]? args = null;
+
             var isStaticAccess = expression == null;
 
-            if (!isStaticAccess && type != typeof(string))
+            if (!isStaticAccess)
             {
                 var enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
                 if (enumerableType != null)
                 {
-                    Type elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                    return ParseEnumerable(expression!, elementType, id, errorPos, type);
+                    var elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
+                    if (TryParseEnumerable(expression!, elementType, id, errorPos, type, out args, out var enumerableExpression))
+                    {
+                        return enumerableExpression;
+                    }
                 }
             }
 
-            Expression[] args = ParseArgumentList();
+            // If args is not set by TryParseEnumerable (in case when the expression is not an Enumerable), do parse the argument list here.
+            args ??= ParseArgumentList();
             switch (_methodFinder.FindMethod(type, id, isStaticAccess, ref expression, ref args, out var methodBase))
             {
                 case 0:
@@ -2046,7 +2052,7 @@ public class ExpressionParser
         return ParseMemberAccess(type, null, identifier);
     }
 
-    private Expression ParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type? type)
+    private bool TryParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type? type, out Expression[]? args, [NotNullWhen(true)] out Expression? expression)
     {
         var oldParent = _parent;
 
@@ -2065,7 +2071,15 @@ public class ExpressionParser
             _it = innerIt;
         }
 
-        Expression[] args = ParseArgumentList();
+        args = ParseArgumentList();
+
+        var t = type ?? instance.Type;
+        if (t == typeof(string) && _methodFinder.ContainsMethod(t, methodName, false, instance, ref args))
+        {
+            // In case the type is a string, and does contain the methodName (like "IndexOf"), then return false to indicate that the methodName is not an Enumerable method.
+            expression = null;
+            return false;
+        }
 
         _it = outerIt;
         _parent = oldParent;
@@ -2073,7 +2087,8 @@ public class ExpressionParser
         if (type != null && TypeHelper.IsDictionary(type) && _methodFinder.ContainsMethod(type, methodName, false))
         {
             var dictionaryMethod = type.GetMethod(methodName)!;
-            return Expression.Call(instance, dictionaryMethod, args);
+            expression = Expression.Call(instance, dictionaryMethod, args);
+            return true;
         }
 
         // #794 - Check if the method is an aggregate (Average or Sum) method and try to update the arguments to match the method arguments
@@ -2147,7 +2162,8 @@ public class ExpressionParser
             }
         }
 
-        return Expression.Call(callType, methodName, typeArgs, args);
+        expression = Expression.Call(callType, methodName, typeArgs, args);
+        return true;
     }
 
     private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression, int? arguments = null)
