@@ -1,3 +1,13 @@
+# v1.3.11 (17 April 2024)
+- [#785](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/785) - Add CodeFirst examples for .NET 6 and 8 [test] contributed by [StefH](https://github.com/StefH)
+- [#795](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/795) - Fix Aggregate methods Average and Sum [bug] contributed by [StefH](https://github.com/StefH)
+- [#796](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/796) - Fixed ParseArgumentList when using lambda filter on list of dictionaries [bug] contributed by [StefH](https://github.com/StefH)
+- [#798](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/798) - Fix when using LINQ methods like &quot;Any&quot; on a string [bug] contributed by [StefH](https://github.com/StefH)
+- [#415](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/415) - Problem with Query over JObject, Filter with SubProperty not returning the correct value [bug]
+- [#440](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/440) - `it` isn't interpreted as the inner parameter when using `All` or `Any` [bug]
+- [#793](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/793) - Failure in ParseArgumentList when using lambda filter on list of dictionaries [bug]
+- [#794](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/794) - DynamicExpressionParser.ParseLambda regressions in v1.3.10 [bug]
+
 # v1.3.10 (03 March 2024)
 - [#774](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/774) - Fixed calling property on nested static class [bug] contributed by [StefH](https://github.com/StefH)
 - [#777](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/777) - Keep original type from subquery [bug] contributed by [StefH](https://github.com/StefH)
