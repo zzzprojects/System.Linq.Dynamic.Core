@@ -2065,17 +2065,17 @@ public class ExpressionParser
 
         args = ParseArgumentList();
 
-        var t = type ?? instance.Type;
-        if (t == typeof(string) && _methodFinder.ContainsMethod(t, methodName, false, instance, ref args))
+        _it = outerIt;
+        _parent = oldParent;
+
+        var typeToCheckForTypeOfString = type ?? instance.Type;
+        if (typeToCheckForTypeOfString == typeof(string) && _methodFinder.ContainsMethod(typeToCheckForTypeOfString, methodName, false, instance, ref args))
         {
             // In case the type is a string, and does contain the methodName (like "IndexOf"), then return false to indicate that the methodName is not an Enumerable method.
             expression = null;
             return false;
         }
-
-        _it = outerIt;
-        _parent = oldParent;
-
+        
         if (type != null && TypeHelper.IsDictionary(type) && _methodFinder.ContainsMethod(type, methodName, false))
         {
             var dictionaryMethod = type.GetMethod(methodName)!;
