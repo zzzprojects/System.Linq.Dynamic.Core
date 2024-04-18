@@ -1595,7 +1595,7 @@ public class DynamicExpressionParserTests
     [Theory]
     [InlineData(@"p0.Equals(""Testing"", 3)", "testinG", true)]
     [InlineData(@"p0.Equals(""Testing"", StringComparison.InvariantCultureIgnoreCase)", "testinG", true)]
-    public void DynamicExpressionParser_ParseLambda_SupportEnumerationStringComparison(string expressionAsString, string testValue, bool expectedResult)
+    public void DynamicExpressionParser_ParseLambda_StringEquals(string expressionAsString, string testValue, bool expectedResult)
     {
         // Arrange
         var p0 = Expression.Parameter(typeof(string), "p0");
@@ -1607,6 +1607,26 @@ public class DynamicExpressionParserTests
 
         // Assert
         Check.That(result).IsEqualTo(expectedResult);
+    }
+
+    // #799
+    [Theory]
+    [InlineData(@"UserName.Equals(""Testing"", 3) and Income > 0")]
+    [InlineData(@"UserName.Equals(""Testing"", StringComparison.InvariantCultureIgnoreCase) and Income > 0")]
+    [InlineData(@"Income > 0 && UserName.Equals(""Testing"", 3)")]
+    [InlineData(@"Income > 0 && UserName.Equals(""Testing"", StringComparison.InvariantCultureIgnoreCase)")]
+    public void DynamicExpressionParser_ParseLambda_StringEquals_WithCombinedCondition(string expressionAsString)
+    {
+        // Arrange
+        var u = Expression.Parameter(typeof(User), "u");
+
+        // Act
+        var expression = DynamicExpressionParser.ParseLambda(new[] { u }, typeof(bool), expressionAsString);
+        var del = expression.Compile();
+        var result = del.DynamicInvoke(new User { UserName = "testinG", Income = 10 }) as bool?;
+
+        // Assert
+        Check.That(result).IsEqualTo(true);
     }
 
     [Fact]

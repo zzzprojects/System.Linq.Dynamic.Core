@@ -1,3 +1,7 @@
+# v1.3.12 (18 April 2024)
+- [#800](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/800) - Fix String.Equals together with other condition [bug] contributed by [StefH](https://github.com/StefH)
+- [#799](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/799) - Error with 'Equals' together with other parameters [bug]
+
 # v1.3.11 (17 April 2024)
 - [#785](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/785) - Add CodeFirst examples for .NET 6 and 8 [test] contributed by [StefH](https://github.com/StefH)
 - [#795](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/795) - Fix Aggregate methods Average and Sum [bug] contributed by [StefH](https://github.com/StefH)
