@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Dynamic.Core.Tests.TestHelpers;
 using System.Linq.Expressions;
@@ -575,6 +576,27 @@ public class DynamicExpressionParserTests
 
         // Assert
         Assert.NotNull(result);
+    }
+
+    // #801
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_IQueryable()
+    {
+        // Assign
+        var qry = new[]
+        {
+            new
+            {
+                MessageClassName = "mc"
+            }
+        }.AsQueryable();
+
+        // Act
+        var expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, "it.GroupBy(MessageClassName).Select(it.Key).Where(it != null).Distinct().OrderBy(it).Take(1000)");
+
+        // Assert
+        expression.ToDebugView().Should().Contain(".Call System.Linq.Queryable");
+        expression.ToDebugView().Should().NotContain(".Call System.Linq.Enumerable");
     }
 
     // https://github.com/StefH/System.Linq.Dynamic.Core/issues/58
