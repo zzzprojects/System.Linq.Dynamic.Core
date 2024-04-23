@@ -20,23 +20,23 @@ internal static class TypeHelper
         return true;
     }
 
-    public static Type? FindGenericType(Type generic, Type? type)
+    public static bool TryFindGenericType(Type generic, Type? type, [NotNullWhen(true)] out Type? foundType)
     {
         while (type != null && type != typeof(object))
         {
             if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == generic)
             {
-                return type;
+                foundType = type;
+                return true;
             }
 
             if (generic.GetTypeInfo().IsInterface)
             {
-                foreach (Type interfaceType in type.GetInterfaces())
+                foreach (var interfaceType in type.GetInterfaces())
                 {
-                    var foundType = FindGenericType(generic, interfaceType);
-                    if (foundType != null)
+                    if (TryFindGenericType(generic, interfaceType, out foundType))
                     {
-                        return foundType;
+                        return true;
                     }
                 }
             }
@@ -44,7 +44,8 @@ internal static class TypeHelper
             type = type.GetTypeInfo().BaseType;
         }
 
-        return null;
+        foundType = null;
+        return false;
     }
 
     public static bool IsCompatibleWith(Type source, Type target)
@@ -509,12 +510,12 @@ internal static class TypeHelper
     public static bool IsDictionary(Type? type)
     {
         return
-            FindGenericType(typeof(IDictionary<,>), type) != null ||
+            TryFindGenericType(typeof(IDictionary<,>), type, out _) ||
 #if NET35 || NET40
                 // ReSharper disable once RedundantLogicalConditionalExpressionOperand
                 false;
 #else
-            FindGenericType(typeof(IReadOnlyDictionary<,>), type) != null;
+            TryFindGenericType(typeof(IReadOnlyDictionary<,>), type, out _);
 #endif
     }
 }
