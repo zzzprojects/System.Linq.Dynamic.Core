@@ -1799,16 +1799,12 @@ public class ExpressionParser
 
             var isStaticAccess = expression == null;
 
-            if (!isStaticAccess)
+            if (!isStaticAccess && TypeHelper.TryFindGenericType(typeof(IEnumerable<>), type, out var enumerableType))
             {
-                var enumerableType = TypeHelper.FindGenericType(typeof(IEnumerable<>), type);
-                if (enumerableType != null)
+                var elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
+                if (TryParseEnumerable(expression!, elementType, id, errorPos, type, out args, out var enumerableExpression))
                 {
-                    var elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                    if (TryParseEnumerable(expression!, elementType, id, errorPos, type, out args, out var enumerableExpression))
-                    {
-                        return enumerableExpression;
-                    }
+                    return enumerableExpression;
                 }
             }
 
@@ -2075,7 +2071,7 @@ public class ExpressionParser
             expression = null;
             return false;
         }
-        
+
         if (type != null && TypeHelper.IsDictionary(type) && _methodFinder.ContainsMethod(type, methodName, false))
         {
             var dictionaryMethod = type.GetMethod(methodName)!;
@@ -2087,7 +2083,7 @@ public class ExpressionParser
         _methodFinder.CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(methodName, ref args);
 
         var callType = typeof(Enumerable);
-        if (type != null && TypeHelper.FindGenericType(typeof(IQueryable<>), type) != null && _methodFinder.ContainsMethod(type, methodName))
+        if (TypeHelper.TryFindGenericType(typeof(IQueryable<>), type, out _) && _methodFinder.ContainsMethod(typeof(Queryable), methodName))
         {
             callType = typeof(Queryable);
         }
