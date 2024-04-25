@@ -22,7 +22,7 @@ public partial class QueryableTests
         var userById = qry.Where("Id=@0", testList[10].Id);
         var userByUserName = qry.Where("UserName=\"User5\"");
         var nullProfileCount = qry.Where("Profile=null");
-        var userByFirstName = qry.Where("Profile!=null && Profile.FirstName=@0", testList[1].Profile.FirstName);
+        var userByFirstName = qry.Where("Profile!=null && Profile.FirstName=@0", testList[1].Profile!.FirstName);
 
         // Assert
         Assert.Equal(testList[10], userById.Single());
@@ -40,10 +40,10 @@ public partial class QueryableTests
 
         // Act
         string dynamicExpression = qry.Where("Profile == null").Expression.ToDebugView();
-        string expresion = qry.Where(var1 => var1.Profile == null).Expression.ToDebugView();
+        string expression = qry.Where(var1 => var1.Profile == null).Expression.ToDebugView();
 
         // Assert
-        NFluent.Check.That(dynamicExpression).Equals(expresion);
+        NFluent.Check.That(dynamicExpression).Equals(expression);
     }
 
     [Theory]
@@ -52,7 +52,8 @@ public partial class QueryableTests
     public void Where_Dynamic_DateTimeIsParsedAsUTC(string time, int hours)
     {
         // Arrange
-        var queryable = new List<Example> {
+        var queryable = new[]
+        {
             new Example
             {
                 TimeNull = new DateTime(2019, 5, 10, hours, 3, 17, DateTimeKind.Utc)
@@ -76,15 +77,15 @@ public partial class QueryableTests
     [Fact]
     public void Where_Dynamic_DateTime_NotEquals_Null()
     {
-        //Arrange
+        // Arrange
         IQueryable<Post> queryable = new[] { new Post() }.AsQueryable();
 
-        //Act
+        // Act
         var expected = queryable.Where(p => p.PostDate != null).ToArray();
         var result1 = queryable.Where("PostDate != null").ToArray();
         var result2 = queryable.Where("null != PostDate").ToArray();
 
-        //Assert
+        // Assert
         Assert.Equal(expected, result1);
         Assert.Equal(expected, result2);
     }
@@ -92,15 +93,15 @@ public partial class QueryableTests
     [Fact]
     public void Where_Dynamic_DateTime_Equals_Null()
     {
-        //Arrange
+        // Arrange
         IQueryable<Post> queryable = new[] { new Post() }.AsQueryable();
 
-        //Act
+        // Act
         var expected = queryable.Where(p => p.PostDate == null).ToArray();
         var result1 = queryable.Where("PostDate == null").ToArray();
         var result2 = queryable.Where("null == PostDate").ToArray();
 
-        //Assert
+        // Assert
         Assert.Equal(expected, result1);
         Assert.Equal(expected, result2);
     }
@@ -140,11 +141,11 @@ public partial class QueryableTests
     [Fact]
     public void Where_Dynamic_Exceptions()
     {
-        //Arrange
+        // Arrange
         var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
         var qry = testList.AsQueryable();
 
-        //Act
+        // Act
         Assert.Throws<InvalidOperationException>(() => qry.Where("Id"));
         Assert.Throws<ParseException>(() => qry.Where("Bad=3"));
         Assert.Throws<ParseException>(() => qry.Where("Id=123"));
@@ -200,11 +201,11 @@ public partial class QueryableTests
     [Fact]
     public void Where_Dynamic_SelectNewObjects()
     {
-        //Arrange
+        // Arrange
         var testList = User.GenerateSampleModels(100, allowNullableProfiles: true);
         var qry = testList.AsQueryable();
 
-        //Act
+        // Act
         var expectedResult = testList.Where(x => x.Income > 4000).Select(x => new { Id = x.Id, Income = x.Income + 1111 });
         var dynamicList = qry.Where("Income > @0", 4000).ToDynamicList();
 
@@ -304,6 +305,32 @@ public partial class QueryableTests
         // Assert 2
         result2.Should().HaveCount(1);
     }
+
+    // #451
+    [Fact]
+    public void Where_Dynamic_CompareObjectToInt()
+    {
+        // Arrange
+        var queryable = new []
+        {
+            new PersonWithObject { Name = "Francois", DateOfBirth = DateTime.UtcNow.AddYears(-31) },
+            new PersonWithObject { Name = "Test", DateOfBirth = DateTime.UtcNow.AddYears(-1) }
+        }.AsQueryable();
+
+        // Act
+        queryable.Where("Age == 99").ToList().Should().BeEmpty();
+        queryable.Where("Age != 99").ToList().Should().HaveCount(2);
+    }
+
+    private class PersonWithObject
+    {
+        // Deliberately typing these as `object` to illustrate the issue
+        public object Id { get; set; } = Guid.NewGuid();
+        public object Name { get; set; }
+        public object Age => Convert.ToInt32(Math.Floor((DateTime.Today.Month - DateOfBirth.Month + 12 * DateTime.Today.Year - 12 * DateOfBirth.Year) / 12d));
+        public DateTime DateOfBirth { get; set; }
+    }
+
 
     public class ProductDynamic
     {

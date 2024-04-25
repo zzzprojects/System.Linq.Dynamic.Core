@@ -139,6 +139,8 @@ internal class ExpressionHelper : IExpressionHelper
 
         WrapConstantExpressions(ref left, ref right);
 
+        TryConvertTypes(ref left, ref right);
+
         return Expression.Equal(left, right);
     }
 
@@ -147,6 +149,8 @@ internal class ExpressionHelper : IExpressionHelper
         OptimizeForEqualityIfPossible(ref left, ref right);
 
         WrapConstantExpressions(ref left, ref right);
+
+        TryConvertTypes(ref left, ref right);
 
         return Expression.NotEqual(left, right);
     }
@@ -486,5 +490,30 @@ internal class ExpressionHelper : IExpressionHelper
         }
 
         return new object[0];
+    }
+
+    /// <summary>
+    /// If the types are different (and not null), try to convert the object type to other type.
+    /// </summary>
+    private static void TryConvertTypes(ref Expression left, ref Expression right)
+    {
+        if (left.Type == right.Type || IsConstantNullExpression(left) || IsConstantNullExpression(right))
+        {
+            return;
+        }
+
+        if (left.Type == typeof(object))
+        {
+            left = Expression.Convert(left, right.Type);
+        }
+        else if (right.Type == typeof(object))
+        {
+            right = Expression.Convert(right, left.Type);
+        }
+    }
+
+    private static bool IsConstantNullExpression(Expression expr)
+    {
+        return expr is ConstantExpression { Value: null };
     }
 }
