@@ -1,3 +1,7 @@
+# v1.3.13 (25 April 2024)
+- [#802](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/802) - Fix DynamicExpressionParser for IQueryable [bug] contributed by [StefH](https://github.com/StefH)
+- [#801](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/801) - ExpressionParser finds Types from IEnumerable instead of IQueryable (breaks Code) (worked in 1.3.9) [bug]
+
 # v1.3.12 (18 April 2024)
 - [#800](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/800) - Fix String.Equals together with other condition [bug] contributed by [StefH](https://github.com/StefH)
 - [#799](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/799) - Error with 'Equals' together with other parameters [bug]
