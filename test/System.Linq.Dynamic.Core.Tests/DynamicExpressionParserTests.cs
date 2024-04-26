@@ -1677,6 +1677,30 @@ public class DynamicExpressionParserTests
     }
 
     [Fact]
+    public void DynamicExpressionParser_ParseLambda_StringEquals_WithMemberString()
+    {
+        // Arrange
+        var parameters = new[]
+        {
+            Expression.Parameter(typeof(MyClass), "myClass")
+        };
+
+        var invokerArguments = new List<object>
+        {
+            new MyClass { Name = "Foo" }
+        };
+
+        // Act
+        var expression = "Name == \"test\" || Name.Equals(\"foo\", StringComparison.OrdinalIgnoreCase)";
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(parameters, null, expression);
+        var del = lambdaExpression.Compile();
+        var result = del.DynamicInvoke(invokerArguments.ToArray());
+
+        // Assert
+        result.Should().Be(true);
+    }
+
+    [Fact]
     public void DynamicExpressionParser_ParseLambda_NullPropagation_InstanceMethod_0_Arguments()
     {
         // Arrange
