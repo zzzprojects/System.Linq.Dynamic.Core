@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
@@ -371,24 +372,26 @@ public partial class QueryableTests
         act.Should().Throw<InvalidOperationException>().And.Message.Should().MatchRegex("The binary operator .* is not defined for the types");
     }
 
+    [ExcludeFromCodeCoverage]
     private class PersonWithObject
     {
         // Deliberately typing these as `object` to illustrate the issue
-        public object Id { get; set; } = Guid.NewGuid();
-        public object Name { get; set; }
+        public object? Name { get; set; }
         public object Age => Convert.ToInt32(Math.Floor((DateTime.Today.Month - DateOfBirth.Month + 12 * DateTime.Today.Year - 12 * DateOfBirth.Year) / 12d));
         public DateTime DateOfBirth { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class ProductDynamic
     {
         public int ProductId { get; set; }
 
-        public dynamic Properties { get; set; }
+        public dynamic? Properties { get; set; }
 
-        public object PropertiesAsObject { get; set; }
+        public object? PropertiesAsObject { get; set; }
     }
 
+    [ExcludeFromCodeCoverage]
     public class Foo
     {
         public DateTime DT { get; set; }
