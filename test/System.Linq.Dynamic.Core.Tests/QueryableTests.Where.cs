@@ -307,19 +307,68 @@ public partial class QueryableTests
     }
 
     // #451
-    [Fact]
-    public void Where_Dynamic_CompareObjectToInt()
+    [Theory]
+    [InlineData("Age == 99", 0)]
+    [InlineData("Age != 99", 2)]
+    [InlineData("Age <> 99", 2)]
+    [InlineData("Age > 99", 0)]
+    [InlineData("Age >= 99", 0)]
+    [InlineData("Age < 99", 2)]
+    [InlineData("Age <= 99", 2)]
+    [InlineData("99 == Age", 0)]
+    [InlineData("99 != Age", 2)]
+    [InlineData("99 <> Age", 2)]
+    [InlineData("99 > Age", 2)]
+    [InlineData("99 >= Age", 2)]
+    [InlineData("99 < Age", 0)]
+    [InlineData("99 <= Age", 0)]
+    public void Where_Dynamic_CompareObjectToInt_ConvertObjectToSupportComparisonIsTrue(string expression, int expectedCount)
     {
         // Arrange
-        var queryable = new []
+        var config = new ParsingConfig
         {
-            new PersonWithObject { Name = "Francois", DateOfBirth = DateTime.UtcNow.AddYears(-31) },
-            new PersonWithObject { Name = "Test", DateOfBirth = DateTime.UtcNow.AddYears(-1) }
+            ConvertObjectToSupportComparison = true
+        };
+        var queryable = new[]
+        {
+            new PersonWithObject { Name = "Foo", DateOfBirth = DateTime.UtcNow.AddYears(-31) },
+            new PersonWithObject { Name = "Bar", DateOfBirth = DateTime.UtcNow.AddYears(-1) }
         }.AsQueryable();
 
         // Act
-        queryable.Where("Age == 99").ToList().Should().BeEmpty();
-        queryable.Where("Age != 99").ToList().Should().HaveCount(2);
+        queryable.Where(config, expression).ToList().Should().HaveCount(expectedCount);
+    }
+
+    // #451
+    [Theory]
+    [InlineData("Age == 99")]
+    [InlineData("Age != 99")]
+    [InlineData("Age <> 99")]
+    [InlineData("Age > 99")]
+    [InlineData("Age >= 99")]
+    [InlineData("Age < 99")]
+    [InlineData("Age <= 99")]
+    [InlineData("99 == Age")]
+    [InlineData("99 != Age")]
+    [InlineData("99 <> Age")]
+    [InlineData("99 > Age")]
+    [InlineData("99 >= Age")]
+    [InlineData("99 < Age")]
+    [InlineData("99 <= Age")]
+    public void Where_Dynamic_CompareObjectToInt_ConvertObjectToSupportComparisonIsFalse_ThrowsException(string expression)
+    {
+        // Arrange
+        var queryable = new[]
+        {
+            new PersonWithObject { Name = "Foo", DateOfBirth = DateTime.UtcNow.AddYears(-31) },
+            new PersonWithObject { Name = "Bar", DateOfBirth = DateTime.UtcNow.AddYears(-1) }
+        }.AsQueryable();
+
+        // Act
+        Action act = () => queryable.Where(expression);
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>().And.Message.Should().MatchRegex("The binary operator .* is not defined for the types");
     }
 
     private class PersonWithObject
@@ -330,7 +379,6 @@ public partial class QueryableTests
         public object Age => Convert.ToInt32(Math.Floor((DateTime.Today.Month - DateOfBirth.Month + 12 * DateTime.Today.Year - 12 * DateOfBirth.Year) / 12d));
         public DateTime DateOfBirth { get; set; }
     }
-
 
     public class ProductDynamic
     {
