@@ -1798,8 +1798,9 @@ public class ExpressionParser
             Expression[]? args = null;
 
             var isStaticAccess = expression == null;
+            var isConstantString = expression is ConstantExpression { Value: string };
 
-            if (!isStaticAccess && TypeHelper.TryFindGenericType(typeof(IEnumerable<>), type, out var enumerableType))
+            if (!isStaticAccess && !isConstantString && TypeHelper.TryFindGenericType(typeof(IEnumerable<>), type, out var enumerableType))
             {
                 var elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
                 if (TryParseEnumerable(expression!, elementType, id, errorPos, type, out args, out var enumerableExpression))
@@ -2042,25 +2043,32 @@ public class ExpressionParser
 
     private bool TryParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type? type, out Expression[]? args, [NotNullWhen(true)] out Expression? expression)
     {
+        // Keep the current _parent.
         var oldParent = _parent;
 
-        ParameterExpression? outerIt = _it;
-        ParameterExpression innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty, _parsingConfig.RenameEmptyParameterExpressionNames);
-
+        // Set the _parent to the current _it.
         _parent = _it;
+
+        // Set the outerIt to the current _it.
+        var outerIt = _it;
+
+        // Create a new innerIt based on the elementType.
+        var innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty, _parsingConfig.RenameEmptyParameterExpressionNames);
 
         if (new[] { "Contains", "ContainsKey", "Skip", "Take" }.Contains(methodName))
         {
-            // for any method that acts on the parent element type, we need to specify the outerIt as scope.
+            // For any method that acts on the parent element type, we need to specify the outerIt as scope.
             _it = outerIt;
         }
         else
         {
+            // Else we need to specify the innerIt as scope.
             _it = innerIt;
         }
 
         args = ParseArgumentList();
 
+        // Revert the _it and _parent to the old values.
         _it = outerIt;
         _parent = oldParent;
 
