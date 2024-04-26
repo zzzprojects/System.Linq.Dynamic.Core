@@ -264,7 +264,7 @@ public class ParsingConfig
     ///
     /// var config = new ParsingConfig
     /// {
-    ///     ConvertObjectToCorrectTypeToAllowComparison = true
+    ///     ConvertObjectToSupportComparison = true
     /// };
     /// 
     /// var results = persons.Where(config, "Age > 50").ToList();
