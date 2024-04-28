@@ -2350,47 +2350,82 @@ public class ExpressionParser
         expr = args[0];
     }
 
-    private static string? GetOverloadedOperationName(TokenId tokenId)
+    private bool TryGetOverloadedEqualityOperator(TokenId tokenId, ref Expression left, ref Expression right, ref Expression[] args)
     {
-        switch (tokenId)
+        if (tokenId is TokenId.DoubleEqual or TokenId.Equal)
         {
-            case TokenId.DoubleEqual:
-            case TokenId.Equal:
-                return "op_Equality";
-
-            case TokenId.ExclamationEqual:
-                return "op_Inequality";
-
-            default:
-                return null;
+            const string method = "op_Equality";
+            return _methodFinder.ContainsMethod(left.Type, method, true, null, ref args) ||
+                   _methodFinder.ContainsMethod(right.Type, method, true, null, ref args);
         }
+
+        if (tokenId is TokenId.ExclamationEqual or TokenId.LessGreater)
+        {
+            const string method = "op_Inequality";
+            return _methodFinder.ContainsMethod(left.Type, method, true, null, ref args) ||
+                   _methodFinder.ContainsMethod(right.Type, method, true, null, ref args);
+        }
+
+        return false;
+    }
+
+    private bool TryGetOverloadedImplicitOperator(TokenId tokenId, ref Expression left, ref Expression right)
+    {
+        const string methodName = "op_Implicit";
+        if (tokenId is not (TokenId.Ampersand or TokenId.DoubleAmpersand or TokenId.Bar or TokenId.DoubleBar))
+        {
+            return false;
+        }
+
+        Expression? expression = null;
+        var overloadedImplicitOperatorFound = false;
+
+        // If the left is not a boolean, try to find the "op_Implicit" method on the left which takes the left as parameter and returns a boolean.
+        if (left.Type != typeof(bool))
+        {
+            var args = new[] { left };
+            if (_methodFinder.FindMethod(left.Type, methodName, true, ref expression, ref args, out var methodBase) > 0 && methodBase is MethodInfo methodInfo && methodInfo.ReturnType == typeof(bool))
+            {
+                left = Expression.Call(methodInfo, left);
+                overloadedImplicitOperatorFound = true;
+            }
+        }
+
+        // If the right is not a boolean, try to find the "op_Implicit" method on the right which takes the right as parameter and returns a boolean.
+        if (right.Type != typeof(bool))
+        {
+            var args = new[] { right };
+            if (_methodFinder.FindMethod(right.Type, methodName, true, ref expression, ref args, out var methodBase) > 0 && methodBase is MethodInfo methodInfo && methodInfo.ReturnType == typeof(bool))
+            {
+                right = Expression.Call(methodInfo, right);
+                overloadedImplicitOperatorFound = true;
+            }
+        }
+
+        return overloadedImplicitOperatorFound;
     }
 
     private void CheckAndPromoteOperands(Type signatures, TokenId opId, string opName, ref Expression left, ref Expression right, int errorPos)
     {
         Expression[] args = { left, right };
 
-        // support operator overloading
-        var nativeOperation = GetOverloadedOperationName(opId);
-        bool found = false;
-
-        if (nativeOperation != null)
+        // 1. Try to find the Equality/Inequality operator
+        // 2. Try to find the method with the given signature
+        if (TryGetOverloadedEqualityOperator(opId, ref left, ref right, ref args) || _methodFinder.ContainsMethod(signatures, "F", false, null, ref args))
         {
-            // first try left operand's equality operators
-            found = _methodFinder.ContainsMethod(left.Type, nativeOperation, true, null, ref args);
-            if (!found)
-            {
-                found = _methodFinder.ContainsMethod(right.Type, nativeOperation, true, null, ref args);
-            }
+            left = args[0];
+            right = args[1];
+
+            return;
         }
 
-        if (!found && !_methodFinder.ContainsMethod(signatures, "F", false, null, ref args))
+        // 3. Try to find the Implicit operator
+        if (TryGetOverloadedImplicitOperator(opId, ref left, ref right))
         {
-            throw IncompatibleOperandsError(opName, left, right, errorPos);
+            return;
         }
 
-        left = args[0];
-        right = args[1];
+        throw IncompatibleOperandsError(opName, left, right, errorPos);
     }
 
     private static Exception IncompatibleOperandError(string opName, Expression expr, int errorPos)

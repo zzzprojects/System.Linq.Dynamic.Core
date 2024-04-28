@@ -423,6 +423,36 @@ public class DynamicExpressionParserTests
         Check.That(result.ToArray()[0]).Equals(expected[0]);
     }
 
+    // #626
+    [Theory]
+    [InlineData("BooleanVariable1 && Bool2", true)]
+    [InlineData("BooleanVariable1 || Bool2", true)]
+    [InlineData("BooleanVariable1 && Bool3", false)]
+    [InlineData("BooleanVariable1 || Bool3", true)]
+    [InlineData("BooleanVariable1 && BooleanVariable4", false)]
+    [InlineData("BooleanVariable1 || BooleanVariable4", true)]
+    public void DynamicExpressionParser_ParseLambda_WithStruct_UsingOperators(string query, bool expectedResult)
+    {
+        var x = new BooleanVariable(true) && new BooleanVariable(false);
+
+        // Assign
+        var model = new
+        {
+            BooleanVariable1 = new BooleanVariable(true),
+            Bool2 = true,
+            Bool3 = false,
+            BooleanVariable4 = new BooleanVariable(false)
+        };
+
+        // Act
+        var expr = DynamicExpressionParser.ParseLambda(model.GetType(), null, query);
+        var compiled = expr.Compile();
+        var result = compiled.DynamicInvoke(model);
+
+        // Assert
+        result.Should().Be(expectedResult);
+    }
+
     [Fact]
     public void DynamicExpressionParser_ParseLambda_ToList()
     {
