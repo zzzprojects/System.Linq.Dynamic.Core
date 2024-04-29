@@ -63,7 +63,7 @@ internal static class PredefinedTypesHelper
 
     static PredefinedTypesHelper()
     {
-        if (Type.GetType("System.Linq.Dynamic.Core.EFType, EntityFramework.DynamicLinq") != null)
+        if (Type.GetType("EntityFramework.DynamicLinq.EFType, EntityFramework.DynamicLinq") != null)
         {
             TryAdd("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
             TryAdd("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
