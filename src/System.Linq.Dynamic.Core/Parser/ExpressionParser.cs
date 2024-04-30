@@ -2096,6 +2096,23 @@ public class ExpressionParser
             callType = typeof(Queryable);
         }
 
+        // #633 - For Average without any arguments, try to find the non-generic Average method for the supplied 'type'.
+        if (methodName == nameof(Enumerable.Average) && args.Length == 0)
+        {
+            var averageMethod = callType
+                .GetMethods()
+                .Where(m => m is { Name: nameof(Enumerable.Average), IsGenericMethodDefinition: false })
+                .SelectMany(m => m.GetParameters(), (m, p) => new { Method = m, Parameter = p })
+                .Where(x => x.Parameter.ParameterType == type)
+                .Select(x => x.Method)
+                .FirstOrDefault();
+            if (averageMethod != null)
+            {
+                expression = Expression.Call(null, averageMethod, new[] { instance });
+                return true;
+            }
+        }
+
         Type[] typeArgs;
         if (new[] { "OfType", "Cast" }.Contains(methodName))
         {
