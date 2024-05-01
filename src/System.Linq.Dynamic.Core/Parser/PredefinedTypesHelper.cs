@@ -6,9 +6,8 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal static class PredefinedTypesHelper
 {
-#if NETSTANDARD2_0
+    private const string PublicKeyToken = "974e7e1b462f3693";
     private static readonly string Version = Text.RegularExpressions.Regex.Match(typeof(PredefinedTypesHelper).AssemblyQualifiedName!, @"\d+\.\d+\.\d+\.\d+").ToString();
-#endif
 
     // These shorthands have different name than actual type and therefore not recognized by default from the PredefinedTypes.
     public static readonly IDictionary<string, Type> PredefinedTypesShorthands = new Dictionary<string, Type>
@@ -75,24 +74,25 @@ internal static class PredefinedTypesHelper
             TryAdd("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
         }
 
-#if NETSTANDARD2_0
-        TryAdd($"Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version={Version}, Culture=neutral, PublicKeyToken=974e7e1b462f3693", 3);
-#endif
+        if (Type.GetType($"Microsoft.EntityFrameworkCore.DynamicLinq.EFType, Microsoft.EntityFrameworkCore.DynamicLinq, Version={Version}, Culture=neutral, PublicKeyToken={PublicKeyToken}") != null)
+        {
+            TryAdd($"Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version={Version}, Culture=neutral, PublicKeyToken={PublicKeyToken}", 3);
+        }
     }
 
     private static void TryAdd(string typeName, int x)
     {
         try
         {
-            var efType = Type.GetType(typeName);
-            if (efType != null)
+            var type = Type.GetType(typeName);
+            if (type != null)
             {
-                PredefinedTypes.Add(efType, x);
+                PredefinedTypes.Add(type, x);
             }
         }
         catch
         {
-            // in case of exception, do not add
+            // In case of exception, do not add
         }
     }
 
