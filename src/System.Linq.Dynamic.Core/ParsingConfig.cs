@@ -12,6 +12,12 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public class ParsingConfig
 {
+    private IDynamicLinkCustomTypeProvider? _customTypeProvider;
+
+    private IExpressionPromoter? _expressionPromoter;
+
+    private IQueryableAnalyzer? _queryableAnalyzer;
+
     /// <summary>
     /// Default ParsingConfig
     /// </summary>
@@ -25,9 +31,6 @@ public class ParsingConfig
         EvaluateGroupByAtDatabase = true
     };
 
-    /// <summary>Gets or sets if parameter, method, and properties resolution should be case sensitive or not (false by default).</summary>
-    public bool IsCaseSensitive { get; set; }
-
     /// <summary>
     /// Default ParsingConfig for CosmosDb
     /// </summary>
@@ -36,11 +39,12 @@ public class ParsingConfig
         RenameEmptyParameterExpressionNames = true
     };
 
-    private IDynamicLinkCustomTypeProvider? _customTypeProvider;
-
-    private IExpressionPromoter? _expressionPromoter;
-
-    private IQueryableAnalyzer? _queryableAnalyzer;
+    /// <summary>
+    /// Gets or sets if parameter, method, and properties resolution should be case-sensitive or not.
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool IsCaseSensitive { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
@@ -49,9 +53,9 @@ public class ParsingConfig
     {
         get
         {
-#if !( WINDOWS_APP || UAP10_0 || NETSTANDARD)
-            // only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and NET Core App 2.x
-            return _customTypeProvider ??= new DefaultDynamicLinqCustomTypeProvider();
+#if !(WINDOWS_APP || UAP10_0 || NETSTANDARD)
+            // Only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and .NET Core App 2.x and higher.
+            return _customTypeProvider ??= new DefaultDynamicLinqCustomTypeProvider(this);
 #else
             return _customTypeProvider;
 #endif
@@ -66,6 +70,15 @@ public class ParsingConfig
             }
         }
     }
+
+    /// <summary>
+    /// Load additional assemblies from the current domain base directory.
+    ///
+    /// Note: only used when full .NET Framework and .NET Core App 2.x and higher.
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool LoadAdditionalAssembliesFromCurrentDomainBaseDirectory { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="IExpressionPromoter"/>.
@@ -152,7 +165,7 @@ public class ParsingConfig
     public bool RenameEmptyParameterExpressionNames { get; set; }
 
     /// <summary>
-    /// By default when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor. Use
+    /// By default, when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor. Use
     /// this flag to disable this behaviour and have parsing fail when parsing an expression
     /// where a member access on a non existing member happens.
     ///
@@ -161,7 +174,7 @@ public class ParsingConfig
     public bool DisableMemberAccessToIndexAccessorFallback { get; set; } = false;
 
     /// <summary>
-    /// By default finding types by a simple name is not supported.
+    /// By default, finding types by a simple name is not supported.
     /// Use this flag to use the CustomTypeProvider to resolve types by a simple name like "Employee" instead of "MyDatabase.Entities.Employee".
     /// Note that a first matching type is returned and this functionality needs to scan all types from all assemblies, so use with caution.
     /// 
@@ -177,7 +190,7 @@ public class ParsingConfig
     public bool SupportEnumerationsFromSystemNamespace { get; set; } = true;
 
     /// <summary>
-    /// By default DateTime (like 'Fri, 10 May 2019 11:03:17 GMT') is parsed as local time.
+    /// By default, a DateTime (like 'Fri, 10 May 2019 11:03:17 GMT') is parsed as local time.
     /// Use this flag to parse all DateTime strings as UTC.
     ///
     /// Default value is <c>false</c>.
@@ -204,7 +217,7 @@ public class ParsingConfig
     public bool NullPropagatingUseDefaultValueForNonNullableValueTypes { get; set; } = false;
 
     /// <summary>
-    /// Support casting to a full qualified type using a string (double quoted value).
+    /// Support casting to a full qualified type using a string (double-quoted value).
     /// <code>
     /// var result = queryable.Select($"\"System.DateTime\"(LastUpdate)");
     /// </code>
