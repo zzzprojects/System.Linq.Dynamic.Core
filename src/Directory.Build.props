@@ -7,7 +7,7 @@
         <Copyright>Copyright © ZZZ Projects</Copyright>
         <DefaultLanguage>en-us</DefaultLanguage>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <LangVersion>latest</LangVersion>
+        <LangVersion>12</LangVersion>
         <Nullable>enable</Nullable>
         <PackageIcon>logo.png</PackageIcon>
         <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
