@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -42,6 +43,19 @@ internal class MethodFinder
     {
         _parsingConfig = Check.NotNull(parsingConfig);
         _expressionHelper = Check.NotNull(expressionHelper);
+    }
+
+    public bool TryFindAverageMethod(Type callType, Type parameterType, [NotNullWhen(true)] out MethodInfo? averageMethod)
+    {
+        averageMethod = callType
+            .GetMethods()
+            .Where(m => m is { Name: nameof(Enumerable.Average), IsGenericMethodDefinition: false })
+            .SelectMany(m => m.GetParameters(), (m, p) => new { Method = m, Parameter = p })
+            .Where(x => x.Parameter.ParameterType == parameterType)
+            .Select(x => x.Method)
+            .FirstOrDefault();
+
+        return averageMethod != null;
     }
 
     public void CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(string methodName, ref Expression[] args)
