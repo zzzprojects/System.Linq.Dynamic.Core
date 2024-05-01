@@ -6,4 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <Target Name="CopyDllAfterBuild" AfterTargets="PostBuildEvent">
+        <Copy
+            SourceFiles="$(OutputPath)Demo.Plugin.dll"
+            DestinationFolder="../Demo.Host/bin/Debug/net8.0" />
+    </Target>
+
 </Project>

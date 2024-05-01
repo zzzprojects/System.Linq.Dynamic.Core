@@ -41,7 +41,9 @@ internal class DefaultAssemblyHelper : IAssemblyHelper
             referencedPaths = new string[0];
         }
 
-        var pathsToLoad = referencedPaths.Where(referencedPath => !loadedPaths.Contains(referencedPath, StringComparer.InvariantCultureIgnoreCase));
+        var pathsToLoad = referencedPaths
+            .Where(referencedPath => !loadedPaths.Contains(referencedPath, StringComparer.InvariantCultureIgnoreCase))
+            .ToArray();
         foreach (var path in pathsToLoad)
         {
             try
