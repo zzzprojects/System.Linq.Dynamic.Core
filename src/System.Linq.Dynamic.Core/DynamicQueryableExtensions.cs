@@ -2772,10 +2772,11 @@ namespace System.Linq.Dynamic.Core
             }
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression));
-            var result = source.Provider.Execute(optimized);
+            var result = source.Provider.Execute(optimized)!;
 
-            return (TResult)Convert.ChangeType(result, typeof(TResult));
+            return ConvertResultIfNeeded<TResult>(result);
         }
+
         private static object Execute(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression) =>
             Execute(operatorMethodInfo, source, Expression.Quote(expression));
 
@@ -2799,9 +2800,19 @@ namespace System.Linq.Dynamic.Core
                     : operatorMethodInfo.MakeGenericMethod(source.ElementType);
 
             var optimized = OptimizeExpression(Expression.Call(null, operatorMethodInfo, source.Expression, expression));
-            var result = source.Provider.Execute(optimized);
+            var result = source.Provider.Execute(optimized)!;
 
-            return (TResult)Convert.ChangeType(result, typeof(TResult));
+            return ConvertResultIfNeeded<TResult>(result);
+        }
+
+        private static TResult ConvertResultIfNeeded<TResult>(object result)
+        {
+            if (result.GetType() == typeof(TResult))
+            {
+                return (TResult)result;
+            }
+
+            return (TResult?)Convert.ChangeType(result, typeof(TResult))!;
         }
         #endregion Private Helpers
     }
