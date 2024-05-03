@@ -180,6 +180,23 @@ public partial class QueryableTests
     }
 
     [Fact]
+    public void Where_Dynamic_ConcatString()
+    {
+        // Arrange
+        var qry = User.GenerateSampleModels(2).AsQueryable();
+
+        // Act
+        var expected = qry.Where(u => (u.UserName + u.UserName).Length > 10).ToArray();
+
+        var result1 = qry.Where("(UserName + UserName).Length > 10").ToArray();
+        var result2 = qry.Where("u => (u.UserName + u.UserName).Length > 10").ToArray();
+
+        // Assert
+        result1.Should().BeEquivalentTo(expected);
+        result2.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public void Where_Dynamic_EmptyString()
     {
         // Arrange

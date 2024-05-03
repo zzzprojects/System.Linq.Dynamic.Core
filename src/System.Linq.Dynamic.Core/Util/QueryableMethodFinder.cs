@@ -11,9 +11,9 @@ internal static class QueryableMethodFinder
     {
         return typeof(Queryable).GetTypeInfo().GetDeclaredMethods(name).Single(mi => mi.IsGenericMethod);
     }
-
+    
     public static MethodInfo GetMethod(string name, Type argumentType, Type returnType, int parameterCount = 0, Func<MethodInfo, bool>? predicate = null) =>
-        GetMethod(name, returnType, parameterCount, mi => mi.ToString().Contains(argumentType.ToString()) && ((predicate == null) || predicate(mi)));
+        GetMethod(name, returnType, parameterCount, mi => mi.ToString().Contains(argumentType.ToString()) && (predicate == null || predicate(mi)));
 
     public static MethodInfo GetMethod(string name, Type returnType, int parameterCount = 0, Func<MethodInfo, bool>? predicate = null)
     {
