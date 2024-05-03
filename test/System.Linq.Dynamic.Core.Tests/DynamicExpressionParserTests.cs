@@ -48,7 +48,9 @@ public class DynamicExpressionParserTests
             Name = nameof(Foo);
         }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
+
+        public string? Description { get; set; }
 
         public MyClass Child { get; set; }
     }
@@ -1683,7 +1685,7 @@ public class DynamicExpressionParserTests
 
     // #803
     [Fact]
-    public void DynamicExpressionParser_ParseLambda_StringEquals_WithConstantString()
+    public void DynamicExpressionParser_ParseLambda_Calling_Equals_On_ConstantString()
     {
         // Arrange
         var parameters = new[]
@@ -1691,16 +1693,45 @@ public class DynamicExpressionParserTests
             Expression.Parameter(typeof(MyClass), "myClass")
         };
 
-        var invokerArguments = new List<object>
+        var invokerArguments = new object[]
         {
             new MyClass { Name = "Foo" }
         };
 
         // Act
-        var expression = "Name == \"test\" || \"foo\".Equals(it.Name, StringComparison.OrdinalIgnoreCase)";
+        var expression = "Name == \"test\" || Name.ToLower() == \"abc\" or \"foo\".Equals(it.Name, StringComparison.OrdinalIgnoreCase)";
         var lambdaExpression = DynamicExpressionParser.ParseLambda(parameters, null, expression);
         var del = lambdaExpression.Compile();
-        var result = del.DynamicInvoke(invokerArguments.ToArray());
+        var result = del.DynamicInvoke(invokerArguments);
+
+        // Assert
+        result.Should().Be(true);
+    }
+
+    // #810
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_Calling_ToLower_On_String()
+    {
+        // Arrange
+        var parameters = new[]
+        {
+            Expression.Parameter(typeof(MyClass), "myClass")
+        };
+
+        var invokerArguments = new object[]
+        {
+            new MyClass
+            {
+                Name = "Foo",
+                Description = "Bar"
+            }
+        };
+
+        // Act
+        var expression = "(Name != null && Convert.ToString(Name).ToLower().Contains(\"foo\")) or (Description != null && Convert.ToString(Description).ToLower().Contains(\"bar\"))";
+        var lambdaExpression = DynamicExpressionParser.ParseLambda(parameters, null, expression);
+        var del = lambdaExpression.Compile();
+        var result = del.DynamicInvoke(invokerArguments);
 
         // Assert
         result.Should().Be(true);
