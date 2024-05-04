@@ -26,13 +26,27 @@ var customers = new List<Customer>
     ])
 };
 
+Log.Information("--- LoadAdditionalAssembliesFromCurrentDomainBaseDirectory = {load} ---", false);
 var result = customers
     .AsQueryable()
     .Where("Orders.Count >= @0", 3)
     .OrderBy("Orders.Count")
     .ToList();
+Log.Information("Found {Count} customers: {Customers}", result.Count, result);
 
-Log.Information("Found {Count} customers: {@Customers}", result.Count, result);
+Log.Information(new string('*', 80));
+
+Log.Information("--- LoadAdditionalAssembliesFromCurrentDomainBaseDirectory = {load} ---", true);
+var config = new ParsingConfig
+{
+    LoadAdditionalAssembliesFromCurrentDomainBaseDirectory = true
+};
+var result2 = customers
+    .AsQueryable()
+    .Where(config, "Orders.Count >= @0", 3)
+    .OrderBy("Orders.Count")
+    .ToList();
+Log.Information("Found {Count} customers: {Customers}", result2.Count, result2);
 
 return;
 

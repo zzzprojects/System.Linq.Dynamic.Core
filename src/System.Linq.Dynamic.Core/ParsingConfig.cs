@@ -63,11 +63,7 @@ namespace System.Linq.Dynamic.Core
 
             set
             {
-                // ReSharper disable once RedundantCheckBeforeAssignment
-                if (_customTypeProvider != value)
-                {
-                    _customTypeProvider = value;
-                }
+                _customTypeProvider = value;
             }
         }
 
