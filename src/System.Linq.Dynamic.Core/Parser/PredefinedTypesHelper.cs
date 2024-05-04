@@ -6,9 +6,6 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal static class PredefinedTypesHelper
 {
-    private const string PublicKeyToken = "974e7e1b462f3693";
-    private static readonly string Version = Text.RegularExpressions.Regex.Match(typeof(PredefinedTypesHelper).AssemblyQualifiedName!, @"\d+\.\d+\.\d+\.\d+").ToString();
-
     // These shorthands have different name than actual type and therefore not recognized by default from the PredefinedTypes.
     public static readonly IDictionary<string, Type> PredefinedTypesShorthands = new Dictionary<string, Type>
     {
@@ -29,7 +26,7 @@ internal static class PredefinedTypesHelper
         { "ushort", typeof(ushort) }
     };
 
-    public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> 
+    public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int>
     {
         { typeof(object), 0 },
         { typeof(bool), 0 },
@@ -62,6 +59,9 @@ internal static class PredefinedTypesHelper
 
     static PredefinedTypesHelper()
     {
+        // Only add these types for full .NET Framework and .NETStandard 2.1
+        // And only if the EntityFramework.DynamicLinq is available.
+#if NET452_OR_GREATER || NETSTANDARD2_1
         if (Type.GetType("EntityFramework.DynamicLinq.EFType, EntityFramework.DynamicLinq") != null)
         {
             TryAdd("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
@@ -73,11 +73,16 @@ internal static class PredefinedTypesHelper
             TryAdd("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
             TryAdd("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
         }
+#endif
 
-        if (Type.GetType($"Microsoft.EntityFrameworkCore.DynamicLinq.EFType, Microsoft.EntityFrameworkCore.DynamicLinq, Version={Version}, Culture=neutral, PublicKeyToken={PublicKeyToken}") != null)
+#if NETSTANDARD2_0_OR_GREATER || NET5_0_OR_GREATER
+        const string publicKeyToken = "974e7e1b462f3693";
+        var version = Text.RegularExpressions.Regex.Match(typeof(PredefinedTypesHelper).AssemblyQualifiedName!, @"\d+\.\d+\.\d+\.\d+").ToString();
+        if (Type.GetType($"Microsoft.EntityFrameworkCore.DynamicLinq.EFType, Microsoft.EntityFrameworkCore.DynamicLinq, Version={version}, Culture=neutral, PublicKeyToken={publicKeyToken}") != null)
         {
-            TryAdd($"Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version={Version}, Culture=neutral, PublicKeyToken={PublicKeyToken}", 3);
+            TryAdd($"Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version={version}, Culture=neutral, PublicKeyToken={publicKeyToken}", 3);
         }
+#endif
     }
 
     private static void TryAdd(string typeName, int x)
@@ -107,7 +112,6 @@ internal static class PredefinedTypesHelper
             return true;
         }
 
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         return config.CustomTypeProvider != null &&
                (config.CustomTypeProvider.GetCustomTypes().Contains(type) || config.CustomTypeProvider.GetCustomTypes().Contains(nonNullableType));
     }

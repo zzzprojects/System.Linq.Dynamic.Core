@@ -49,7 +49,7 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
         /// </summary>
-        public IDynamicLinkCustomTypeProvider CustomTypeProvider
+        public IDynamicLinkCustomTypeProvider? CustomTypeProvider
         {
             get
             {
@@ -57,7 +57,7 @@ namespace System.Linq.Dynamic.Core
                 // Only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and .NET Core App 2.x and higher.
                 return _customTypeProvider ??= new DefaultDynamicLinqCustomTypeProvider(this);
 #else
-            return _customTypeProvider;
+                return _customTypeProvider;
 #endif
             }
 
@@ -141,21 +141,21 @@ namespace System.Linq.Dynamic.Core
         ///
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool UseParameterizedNamesInDynamicQuery { get; set; } = false;
+        public bool UseParameterizedNamesInDynamicQuery { get; set; }
 
         /// <summary>
         /// Allows the New() keyword to evaluate any available Type.
         ///
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool AllowNewToEvaluateAnyType { get; set; } = false;
+        public bool AllowNewToEvaluateAnyType { get; set; }
 
         /// <summary>
-        /// Renames the (Typed)ParameterExpression empty Name to a the correct supplied name from `it`.
+        /// Renames the (Typed)ParameterExpression empty Name to the correct supplied name from `it`.
         ///
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool RenameParameterExpression { get; set; } = false;
+        public bool RenameParameterExpression { get; set; }
 
         /// <summary>
         /// Prevents any System.Linq.Expressions.ParameterExpression.Name value from being empty by substituting a random 16 character word.
@@ -165,13 +165,12 @@ namespace System.Linq.Dynamic.Core
         public bool RenameEmptyParameterExpressionNames { get; set; }
 
         /// <summary>
-        /// By default, when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor. Use
-        /// this flag to disable this behaviour and have parsing fail when parsing an expression
-        /// where a member access on a non existing member happens.
+        /// By default, when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor.
+        /// Use this flag to disable this behaviour and have parsing fail when parsing an expression where a member access on a non-existing member happens.
         ///
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool DisableMemberAccessToIndexAccessorFallback { get; set; } = false;
+        public bool DisableMemberAccessToIndexAccessorFallback { get; set; }
 
         /// <summary>
         /// By default, finding types by a simple name is not supported.
@@ -180,7 +179,7 @@ namespace System.Linq.Dynamic.Core
         /// 
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool ResolveTypesBySimpleName { get; set; } = false;
+        public bool ResolveTypesBySimpleName { get; set; }
 
         /// <summary>
         /// Support enumeration-types from the System namespace in mscorlib. An example could be "StringComparison".
@@ -195,7 +194,7 @@ namespace System.Linq.Dynamic.Core
         ///
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool DateTimeIsParsedAsUTC { get; set; } = false;
+        public bool DateTimeIsParsedAsUTC { get; set; }
 
         /// <summary>
         /// The number parsing culture.
@@ -214,7 +213,7 @@ namespace System.Linq.Dynamic.Core
         /// 
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool NullPropagatingUseDefaultValueForNonNullableValueTypes { get; set; } = false;
+        public bool NullPropagatingUseDefaultValueForNonNullableValueTypes { get; set; }
 
         /// <summary>
         /// Support casting to a full qualified type using a string (double-quoted value).
@@ -240,14 +239,14 @@ namespace System.Linq.Dynamic.Core
         /// 
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool SupportDotInPropertyNames { get; set; } = false;
+        public bool SupportDotInPropertyNames { get; set; }
 
         /// <summary>
         /// Disallows the New() keyword to be used to construct a class.
         ///
         /// Default value is <c>false</c>.
         /// </summary>
-        public bool DisallowNewKeyword { get; set; } = false;
+        public bool DisallowNewKeyword { get; set; }
 
         /// <summary>
         /// Caches constant expressions to enhance performance. Periodic cleanup is performed to manage cache size, governed by this configuration.
