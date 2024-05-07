@@ -6,16 +6,19 @@ namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 
 public class SystemTextJsonTests
 {
-    private const string ExampleJson = @"[
-        {
-            ""Name"": ""John"",
-            ""Age"": 30
-        },
-        {
-            ""Name"": ""Doe"",
-            ""Age"": 40
-        }
-    ]";
+    private const string ExampleJson =
+        """
+        [
+            {
+                "Name": "John",
+                "Age": 30
+            },
+            {
+                "Name": "Doe",
+                "Age": 40
+            }
+        ]
+        """;
     private readonly JsonDocument _source = JsonDocument.Parse(ExampleJson);
 
     [Fact]
@@ -96,17 +99,20 @@ public class SystemTextJsonTests
     [Fact]
     public void Distinct()
     {
-        var json = @"[
-            {
-                ""Name"": ""John""
-            },
-            {
-                ""Name"": ""Doe""
-            },
-            {
-                ""Name"": ""John""
-            }
-        ]";
+        var json =
+            """
+            [
+                {
+                    "Name": "John"
+                },
+                {
+                    "Name": "Doe"
+                },
+                {
+                    "Name": "John"
+                }
+            ]
+            """;
         var source = JsonDocument.Parse(json);
 
         // Act
@@ -197,20 +203,23 @@ public class SystemTextJsonTests
     [Fact]
     public void OrderBy_ThenBy()
     {
-        var json = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 40
-            },
-            {
-                ""Name"": ""Stef"",
-                ""Age"": 18
-            }
-        ]";
+        var json =
+            """
+            [
+                {
+                    "Name": "John",
+                    "Age": 30
+                },
+                {
+                    "Name": "Doe",
+                    "Age": 40
+                },
+                {
+                    "Name": "Stef",
+                    "Age": 18
+               }
+            ]
+            """;
         var source = JsonDocument.Parse(json);
 
         // Act

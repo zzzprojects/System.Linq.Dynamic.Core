@@ -6,16 +6,19 @@ namespace System.Linq.Dynamic.Core.NewtonsoftJson.Tests;
 
 public class NewtonsoftJsonTests
 {
-    private const string ExampleJson = @"[
-        {
-            ""Name"": ""John"",
-            ""Age"": 30
-        },
-        {
-            ""Name"": ""Doe"",
-            ""Age"": 40
-        }
-    ]";
+    private const string ExampleJson =
+        """
+        [
+            {
+                "Name": "John",
+                "Age": 30
+            },
+            {
+                "Name": "Doe",
+                "Age": 40
+            }
+        ]
+        """;
     private readonly JArray _source = JArray.Parse(ExampleJson);
 
     [Fact]
@@ -96,17 +99,20 @@ public class NewtonsoftJsonTests
     [Fact]
     public void Distinct()
     {
-        var json = @"[
-            {
-                ""Name"": ""John""
-            },
-            {
-                ""Name"": ""Doe""
-            },
-            {
-                ""Name"": ""John""
-            }
-        ]";
+        var json =
+            """
+            [
+                {
+                    "Name": "John"
+                },
+                {
+                    "Name": "Doe"
+                },
+                {
+                    "Name": "John"
+                }
+            ]
+            """;
         var source = JArray.Parse(json);
 
         // Act
@@ -185,20 +191,23 @@ public class NewtonsoftJsonTests
     [Fact]
     public void OrderBy_ThenBy()
     {
-        var json = @"[
-            {
-                ""Name"": ""John"",
-                ""Age"": 30
-            },
-            {
-                ""Name"": ""Doe"",
-                ""Age"": 40
-            },
-            {
-                ""Name"": ""Stef"",
-                ""Age"": 18
-            }
-        ]";
+        var json =
+            """
+            [
+                {
+                    "Name": "John",
+                    "Age": 30
+                },
+                {
+                    "Name": "Doe",
+                    "Age": 40
+                },
+                {
+                    "Name": "Stef",
+                    "Age": 18
+               }
+            ]
+            """;
         var source = JArray.Parse(json);
 
         // Act
