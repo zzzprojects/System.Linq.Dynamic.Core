@@ -13,9 +13,7 @@ namespace System.Linq.Dynamic.Core;
 public class ParsingConfig
 {
     private IDynamicLinkCustomTypeProvider? _customTypeProvider;
-
     private IExpressionPromoter? _expressionPromoter;
-
     private IQueryableAnalyzer? _queryableAnalyzer;
 
     /// <summary>
@@ -60,7 +58,6 @@ public class ParsingConfig
             return _customTypeProvider;
 #endif
         }
-
         set
         {
             _customTypeProvider = value;
@@ -69,7 +66,6 @@ public class ParsingConfig
 
     /// <summary>
     /// Load additional assemblies from the current domain base directory.
-    ///
     /// Note: only used when full .NET Framework and .NET Core App 2.x and higher.
     ///
     /// Default value is <c>false</c>.
@@ -82,7 +78,6 @@ public class ParsingConfig
     public IExpressionPromoter ExpressionPromoter
     {
         get => _expressionPromoter ??= new ExpressionPromoter(this);
-
         set
         {
             // ReSharper disable once RedundantCheckBeforeAssignment
@@ -102,7 +97,6 @@ public class ParsingConfig
         {
             return _queryableAnalyzer ??= new DefaultQueryableAnalyzer();
         }
-
         set
         {
             // ReSharper disable once RedundantCheckBeforeAssignment
@@ -124,8 +118,7 @@ public class ParsingConfig
     /// <summary>
     /// Gets or sets a value indicating whether the EntityFramework version supports evaluating GroupBy at database level.
     /// See https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.1#linq-groupby-translation
-    /// 
-    /// Remark: when this setting is set to 'true', make sure to supply this ParsingConfig as first parameter on the extension methods.
+    /// Remark: when this setting is set to <c>true</c>, make sure to supply this ParsingConfig as first parameter on the extension methods.
     ///
     /// Default value is <c>false</c>.
     /// </summary>
@@ -180,7 +173,7 @@ public class ParsingConfig
     /// <summary>
     /// Support enumeration-types from the System namespace in mscorlib. An example could be "StringComparison".
     /// 
-    /// Default value is true.
+    /// Default value is <c>true</c>.
     /// </summary>
     public bool SupportEnumerationsFromSystemNamespace { get; set; } = true;
 
@@ -223,7 +216,6 @@ public class ParsingConfig
 
     /// <summary>
     /// When the type and property have the same name the parser takes the property instead of type when this setting is set to <c>true</c>.
-    ///
     /// This setting is also used for calling ExtensionMethods.
     ///
     /// Default value is <c>true</c>.
