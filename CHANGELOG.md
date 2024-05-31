@@ -1,3 +1,20 @@
+# v1.4.0 (31 May 2024)
+- [#807](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/807) - PredefinedTypesHelper: Fix loading types from System.Data.Entity and EntityFramework [bug] contributed by [StefH](https://github.com/StefH)
+- [#790](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/790) - .NET 8 (and possible all non-NETSTANDARD and higher versions) attempt to load EF 6 types [bug]
+- [#812](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/812) - &gt;= 1.3.3 Slow First Dynamic Select
+
+# v1.3.14 (03 May 2024)
+- [#804](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/804) - Fix calling methods on a constant string [bug] contributed by [StefH](https://github.com/StefH)
+- [#806](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/806) - Support implicit boolean operator for logical operations (And, Or) [feature] contributed by [StefH](https://github.com/StefH)
+- [#808](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/808) - Fix calling Average without any arguments [bug] contributed by [StefH](https://github.com/StefH)
+- [#809](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/809) - Add unit test: Where_Dynamic_ConcatString [test] contributed by [StefH](https://github.com/StefH)
+- [#811](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/811) - Add extra unit test for calling methods on a string property [test] contributed by [StefH](https://github.com/StefH)
+- [#626](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/626) - '&amp;&amp;' and '||' operators incompatible between operand type 'bool' and type with implicit conversation to 'bool' [bug]
+- [#633](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/633) - Fail to GroupBy Select Where Average [bug]
+- [#783](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/783) - Performance Issue with EF Core 8.0 and Microsoft.EntityFrameworkCore.DynamicLinq Package [duplicate]
+- [#803](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/803) - Updating to 1.3.13 - No property or field 'XXXXX' exists in type 'Char' [bug]
+- [#810](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/810) - Issue with Where() method when filtering multiple string properties while using ToLower() [bug]
+
 # v1.3.13 (25 April 2024)
 - [#802](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/802) - Fix DynamicExpressionParser for IQueryable [bug] contributed by [StefH](https://github.com/StefH)
 - [#801](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/801) - ExpressionParser finds Types from IEnumerable instead of IQueryable (breaks Code) (worked in 1.3.9) [bug]

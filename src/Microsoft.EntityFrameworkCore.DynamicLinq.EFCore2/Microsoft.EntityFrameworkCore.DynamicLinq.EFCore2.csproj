@@ -10,8 +10,7 @@
         <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510001}</ProjectGuid>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
-        <LangVersion>10</LangVersion>
-        <Version>2.3.$(PatchVersion)</Version>
+        <Version>2.4.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
