@@ -12,6 +12,10 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public class ParsingConfig
 {
+    private IDynamicLinkCustomTypeProvider? _customTypeProvider;
+    private IExpressionPromoter? _expressionPromoter;
+    private IQueryableAnalyzer? _queryableAnalyzer;
+
     /// <summary>
     /// Default ParsingConfig
     /// </summary>
@@ -25,9 +29,6 @@ public class ParsingConfig
         EvaluateGroupByAtDatabase = true
     };
 
-    /// <summary>Gets or sets if parameter, method, and properties resolution should be case sensitive or not (false by default).</summary>
-    public bool IsCaseSensitive { get; set; }
-
     /// <summary>
     /// Default ParsingConfig for CosmosDb
     /// </summary>
@@ -36,36 +37,40 @@ public class ParsingConfig
         RenameEmptyParameterExpressionNames = true
     };
 
-    private IDynamicLinkCustomTypeProvider? _customTypeProvider;
-
-    private IExpressionPromoter? _expressionPromoter;
-
-    private IQueryableAnalyzer? _queryableAnalyzer;
+    /// <summary>
+    /// Gets or sets if parameter, method, and properties resolution should be case-sensitive or not.
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool IsCaseSensitive { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
     /// </summary>
-    public IDynamicLinkCustomTypeProvider CustomTypeProvider
+    public IDynamicLinkCustomTypeProvider? CustomTypeProvider
     {
         get
         {
-#if !( WINDOWS_APP || UAP10_0 || NETSTANDARD)
-            // only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and NET Core App 2.x
-            return _customTypeProvider ??= new DefaultDynamicLinqCustomTypeProvider();
+#if !(WINDOWS_APP || UAP10_0 || NETSTANDARD)
+            // Only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and .NET Core App 2.x and higher.
+            return _customTypeProvider ??= new DefaultDynamicLinqCustomTypeProvider(this);
 #else
             return _customTypeProvider;
 #endif
         }
-
         set
         {
-            // ReSharper disable once RedundantCheckBeforeAssignment
-            if (_customTypeProvider != value)
-            {
-                _customTypeProvider = value;
-            }
+            _customTypeProvider = value;
         }
     }
+
+    /// <summary>
+    /// Load additional assemblies from the current domain base directory.
+    /// Note: only used when full .NET Framework and .NET Core App 2.x and higher.
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool LoadAdditionalAssembliesFromCurrentDomainBaseDirectory { get; set; }
 
     /// <summary>
     /// Gets or sets the <see cref="IExpressionPromoter"/>.
@@ -73,7 +78,6 @@ public class ParsingConfig
     public IExpressionPromoter ExpressionPromoter
     {
         get => _expressionPromoter ??= new ExpressionPromoter(this);
-
         set
         {
             // ReSharper disable once RedundantCheckBeforeAssignment
@@ -93,7 +97,6 @@ public class ParsingConfig
         {
             return _queryableAnalyzer ??= new DefaultQueryableAnalyzer();
         }
-
         set
         {
             // ReSharper disable once RedundantCheckBeforeAssignment
@@ -115,8 +118,7 @@ public class ParsingConfig
     /// <summary>
     /// Gets or sets a value indicating whether the EntityFramework version supports evaluating GroupBy at database level.
     /// See https://docs.microsoft.com/en-us/ef/core/what-is-new/ef-core-2.1#linq-groupby-translation
-    /// 
-    /// Remark: when this setting is set to 'true', make sure to supply this ParsingConfig as first parameter on the extension methods.
+    /// Remark: when this setting is set to <c>true</c>, make sure to supply this ParsingConfig as first parameter on the extension methods.
     ///
     /// Default value is <c>false</c>.
     /// </summary>
@@ -128,21 +130,21 @@ public class ParsingConfig
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool UseParameterizedNamesInDynamicQuery { get; set; } = false;
+    public bool UseParameterizedNamesInDynamicQuery { get; set; }
 
     /// <summary>
     /// Allows the New() keyword to evaluate any available Type.
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool AllowNewToEvaluateAnyType { get; set; } = false;
+    public bool AllowNewToEvaluateAnyType { get; set; }
 
     /// <summary>
-    /// Renames the (Typed)ParameterExpression empty Name to a the correct supplied name from `it`.
+    /// Renames the (Typed)ParameterExpression empty Name to the correct supplied name from `it`.
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool RenameParameterExpression { get; set; } = false;
+    public bool RenameParameterExpression { get; set; }
 
     /// <summary>
     /// Prevents any System.Linq.Expressions.ParameterExpression.Name value from being empty by substituting a random 16 character word.
@@ -152,37 +154,36 @@ public class ParsingConfig
     public bool RenameEmptyParameterExpressionNames { get; set; }
 
     /// <summary>
-    /// By default when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor. Use
-    /// this flag to disable this behaviour and have parsing fail when parsing an expression
-    /// where a member access on a non existing member happens.
+    /// By default, when a member is not found in a type and the type has a string based index accessor it will be parsed as an index accessor.
+    /// Use this flag to disable this behaviour and have parsing fail when parsing an expression where a member access on a non-existing member happens.
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool DisableMemberAccessToIndexAccessorFallback { get; set; } = false;
+    public bool DisableMemberAccessToIndexAccessorFallback { get; set; }
 
     /// <summary>
-    /// By default finding types by a simple name is not supported.
+    /// By default, finding types by a simple name is not supported.
     /// Use this flag to use the CustomTypeProvider to resolve types by a simple name like "Employee" instead of "MyDatabase.Entities.Employee".
     /// Note that a first matching type is returned and this functionality needs to scan all types from all assemblies, so use with caution.
     /// 
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool ResolveTypesBySimpleName { get; set; } = false;
+    public bool ResolveTypesBySimpleName { get; set; }
 
     /// <summary>
     /// Support enumeration-types from the System namespace in mscorlib. An example could be "StringComparison".
     /// 
-    /// Default value is true.
+    /// Default value is <c>true</c>.
     /// </summary>
     public bool SupportEnumerationsFromSystemNamespace { get; set; } = true;
 
     /// <summary>
-    /// By default DateTime (like 'Fri, 10 May 2019 11:03:17 GMT') is parsed as local time.
+    /// By default, a DateTime (like 'Fri, 10 May 2019 11:03:17 GMT') is parsed as local time.
     /// Use this flag to parse all DateTime strings as UTC.
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool DateTimeIsParsedAsUTC { get; set; } = false;
+    public bool DateTimeIsParsedAsUTC { get; set; }
 
     /// <summary>
     /// The number parsing culture.
@@ -201,10 +202,10 @@ public class ParsingConfig
     /// 
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool NullPropagatingUseDefaultValueForNonNullableValueTypes { get; set; } = false;
+    public bool NullPropagatingUseDefaultValueForNonNullableValueTypes { get; set; }
 
     /// <summary>
-    /// Support casting to a full qualified type using a string (double quoted value).
+    /// Support casting to a full qualified type using a string (double-quoted value).
     /// <code>
     /// var result = queryable.Select($"\"System.DateTime\"(LastUpdate)");
     /// </code>
@@ -215,7 +216,6 @@ public class ParsingConfig
 
     /// <summary>
     /// When the type and property have the same name the parser takes the property instead of type when this setting is set to <c>true</c>.
-    ///
     /// This setting is also used for calling ExtensionMethods.
     ///
     /// Default value is <c>true</c>.
@@ -227,14 +227,14 @@ public class ParsingConfig
     /// 
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool SupportDotInPropertyNames { get; set; } = false;
+    public bool SupportDotInPropertyNames { get; set; }
 
     /// <summary>
     /// Disallows the New() keyword to be used to construct a class.
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool DisallowNewKeyword { get; set; } = false;
+    public bool DisallowNewKeyword { get; set; }
 
     /// <summary>
     /// Caches constant expressions to enhance performance. Periodic cleanup is performed to manage cache size, governed by this configuration.

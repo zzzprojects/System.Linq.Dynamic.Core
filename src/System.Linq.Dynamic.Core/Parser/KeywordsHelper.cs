@@ -46,7 +46,7 @@ internal class KeywordsHelper : IKeywordsHelper
     };
 
     // PreDefined Types are not IgnoreCase
-    private static readonly Dictionary<string, object> _preDefinedTypeMapping = new();
+    private static readonly Dictionary<string, object> PreDefinedTypeMapping = new();
 
     // Custom DefinedTypes are not IgnoreCase
     private readonly Dictionary<string, object> _customTypeMapping = new();
@@ -55,8 +55,8 @@ internal class KeywordsHelper : IKeywordsHelper
     {
         foreach (var type in PredefinedTypesHelper.PredefinedTypes.OrderBy(kvp => kvp.Value).Select(kvp => kvp.Key))
         {
-            _preDefinedTypeMapping[type.FullName!] = type;
-            _preDefinedTypeMapping[type.Name] = type;
+            PreDefinedTypeMapping[type.FullName!] = type;
+            PreDefinedTypeMapping[type.Name] = type;
         }
     }
 
@@ -99,7 +99,7 @@ internal class KeywordsHelper : IKeywordsHelper
         }
 
         // 3. Try to get as predefined type ("Boolean", "System.Boolean", ..., "DateTime", "System.DateTime", ...)
-        if (_preDefinedTypeMapping.TryGetValue(name, out var predefinedType))
+        if (PreDefinedTypeMapping.TryGetValue(name, out var predefinedType))
         {
             keyWordOrType = predefinedType;
             return true;
