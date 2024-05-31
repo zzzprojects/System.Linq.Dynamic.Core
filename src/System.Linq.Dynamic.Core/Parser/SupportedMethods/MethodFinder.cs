@@ -113,7 +113,7 @@ internal class MethodFinder
         }
 #endif
 
-        if (instance != null)
+        if (instance != null && _parsingConfig.CustomTypeProvider != null)
         {
             // Try to solve with registered extension methods from this type and all base types
             var methods = new List<MethodInfo>();
