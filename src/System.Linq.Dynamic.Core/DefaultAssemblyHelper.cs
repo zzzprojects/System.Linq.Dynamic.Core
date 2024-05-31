@@ -1,11 +1,14 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Validation;
 
 namespace System.Linq.Dynamic.Core;
 
-internal class DefaultAssemblyHelper : IAssemblyHelper
+internal class DefaultAssemblyHelper(ParsingConfig parsingConfig) : IAssemblyHelper
 {
+    private readonly ParsingConfig _config = Check.NotNull(parsingConfig);
+
     public Assembly[] GetAssemblies()
     {
 #if WINDOWS_APP || UAP10_0 || NETSTANDARD || WPSL
@@ -31,6 +34,11 @@ internal class DefaultAssemblyHelper : IAssemblyHelper
             }
         }
 
+        if (!_config.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory)
+        {
+            return loadedAssemblies.ToArray();
+        }
+
         string[] referencedPaths;
         try
         {
@@ -38,10 +46,12 @@ internal class DefaultAssemblyHelper : IAssemblyHelper
         }
         catch
         {
-            referencedPaths = new string[0];
+            referencedPaths = [];
         }
 
-        var pathsToLoad = referencedPaths.Where(referencedPath => !loadedPaths.Contains(referencedPath, StringComparer.InvariantCultureIgnoreCase));
+        var pathsToLoad = referencedPaths
+            .Where(referencedPath => !loadedPaths.Contains(referencedPath, StringComparer.InvariantCultureIgnoreCase))
+            .ToArray();
         foreach (var path in pathsToLoad)
         {
             try

@@ -55,7 +55,7 @@ public class DynamicExpressionParserTests
         public MyClass Child { get; set; }
     }
 
-    private class MyClassCustomTypeProvider : DefaultDynamicLinqCustomTypeProvider
+    private class MyClassCustomTypeProvider() : DefaultDynamicLinqCustomTypeProvider(ParsingConfig.Default)
     {
         public override HashSet<Type> GetCustomTypes()
         {
@@ -2113,7 +2113,7 @@ public class DynamicExpressionParserTests
         DynamicExpressionParser.ParseLambda<bool>(new ParsingConfig(), false, "new[]{1,2,3}.Any(z => z > 0)");
     }
 
-    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
+    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod() : DefaultDynamicLinqCustomTypeProvider(ParsingConfig.Default)
     {
         public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
     }

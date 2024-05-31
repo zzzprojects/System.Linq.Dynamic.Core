@@ -9,13 +9,16 @@ namespace ConsoleApp_net452_EF6
     {
         static void Main(string[] args)
         {
+            var config = new ParsingConfig
+            {
+                UseParameterizedNamesInDynamicQuery = true
+            };
+
+            var q = new[] { 1, 2, 3 }.AsQueryable();
+            var r = q.Where("it > 1").ToArray();
+
             using (var context = new KendoGridDbContext())
             {
-                var config = new ParsingConfig
-                {
-                    UseParameterizedNamesInDynamicQuery = true
-                };
-
                 var found1 = context.Employees.FirstOrDefault(config, "EmployeeNumber > 1000");
                 Console.WriteLine($"found1 : {found1.Id} - {found1.EmployeeNumber}");
 

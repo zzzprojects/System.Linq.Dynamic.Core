@@ -6,10 +6,6 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal static class PredefinedTypesHelper
 {
-#if NETSTANDARD2_0
-    private static readonly string Version = Text.RegularExpressions.Regex.Match(typeof(PredefinedTypesHelper).AssemblyQualifiedName!, @"\d+\.\d+\.\d+\.\d+").ToString();
-#endif
-
     // These shorthands have different name than actual type and therefore not recognized by default from the PredefinedTypes.
     public static readonly IDictionary<string, Type> PredefinedTypesShorthands = new Dictionary<string, Type>
     {
@@ -27,10 +23,10 @@ internal static class PredefinedTypesHelper
         { "string", typeof(string) },
         { "uint", typeof(uint) },
         { "ulong", typeof(ulong) },
-        { "ushort", typeof(ushort) },
+        { "ushort", typeof(ushort) }
     };
 
-    public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int> 
+    public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int>
     {
         { typeof(object), 0 },
         { typeof(bool), 0 },
@@ -63,24 +59,29 @@ internal static class PredefinedTypesHelper
 
     static PredefinedTypesHelper()
     {
-#if !(NET35 || SILVERLIGHT || NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
-        //System.Data.Entity is always here, so overwrite short name of it with EntityFramework if EntityFramework is found.
-        //EF5(or 4.x??), System.Data.Objects.DataClasses.EdmFunctionAttribute
-        //There is also an System.Data.Entity, Version=3.5.0.0, but no Functions.
-        TryAdd("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
-        TryAdd("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
-        TryAdd("System.Data.Objects.SqlClient.SqlSpatialFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
-
-        //EF6,System.Data.Entity.DbFunctionAttribute
-        TryAdd("System.Data.Entity.Core.Objects.EntityFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-        TryAdd("System.Data.Entity.DbFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-        TryAdd("System.Data.Entity.Spatial.DbGeography, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-        TryAdd("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
-        TryAdd("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+        // Only add these types for full .NET Framework and .NETStandard 2.1
+        // And only if the EntityFramework.DynamicLinq is available.
+#if NET452_OR_GREATER || NETSTANDARD2_1
+        if (Type.GetType("EntityFramework.DynamicLinq.EFType, EntityFramework.DynamicLinq") != null)
+        {
+            TryAdd("System.Data.Objects.EntityFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+            TryAdd("System.Data.Objects.SqlClient.SqlFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+            TryAdd("System.Data.Objects.SqlClient.SqlSpatialFunctions, System.Data.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 1);
+            TryAdd("System.Data.Entity.Core.Objects.EntityFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            TryAdd("System.Data.Entity.DbFunctions, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            TryAdd("System.Data.Entity.Spatial.DbGeography, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            TryAdd("System.Data.Entity.SqlServer.SqlFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+            TryAdd("System.Data.Entity.SqlServer.SqlSpatialFunctions, EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", 2);
+        }
 #endif
 
-#if NETSTANDARD2_0
-        TryAdd($"Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version={Version}, Culture=neutral, PublicKeyToken=974e7e1b462f3693", 3);
+#if NETSTANDARD2_0_OR_GREATER || NET5_0_OR_GREATER
+        const string publicKeyToken = "974e7e1b462f3693";
+        var version = Text.RegularExpressions.Regex.Match(typeof(PredefinedTypesHelper).AssemblyQualifiedName!, @"\d+\.\d+\.\d+\.\d+").ToString();
+        if (Type.GetType($"Microsoft.EntityFrameworkCore.DynamicLinq.EFType, Microsoft.EntityFrameworkCore.DynamicLinq, Version={version}, Culture=neutral, PublicKeyToken={publicKeyToken}") != null)
+        {
+            TryAdd($"Microsoft.EntityFrameworkCore.DynamicLinq.DynamicFunctions, Microsoft.EntityFrameworkCore.DynamicLinq, Version={version}, Culture=neutral, PublicKeyToken={publicKeyToken}", 3);
+        }
 #endif
     }
 
@@ -88,15 +89,15 @@ internal static class PredefinedTypesHelper
     {
         try
         {
-            var efType = Type.GetType(typeName);
-            if (efType != null)
+            var type = Type.GetType(typeName);
+            if (type != null)
             {
-                PredefinedTypes.Add(efType, x);
+                PredefinedTypes.Add(type, x);
             }
         }
         catch
         {
-            // in case of exception, do not add
+            // In case of exception, do not add
         }
     }
 
@@ -111,7 +112,6 @@ internal static class PredefinedTypesHelper
             return true;
         }
 
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         return config.CustomTypeProvider != null &&
                (config.CustomTypeProvider.GetCustomTypes().Contains(type) || config.CustomTypeProvider.GetCustomTypes().Contains(nonNullableType));
     }
