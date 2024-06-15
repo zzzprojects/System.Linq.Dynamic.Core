@@ -12,12 +12,12 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    public partial class EntitiesTests : IDisposable
+    public partial class EntitiesTests
     {
         [Fact]
         public void Entities_Select_SingleColumn_NullCoalescing()
         {
-            //A rrange
+            // Arrange
             var blog1 = new Blog { BlogId = 1000, Name = "Blog1", Created = DateTime.Now, NullableInt = null };
             var blog2 = new Blog { BlogId = 2000, Name = "Blog2", Created = DateTime.Now, NullableInt = 5 };
             _context.Blogs.Add(blog1);

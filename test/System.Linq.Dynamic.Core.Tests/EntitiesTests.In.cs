@@ -8,7 +8,7 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    public partial class EntitiesTests : IDisposable
+    public partial class EntitiesTests
     {
         /// <summary>
         /// Test for https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/524

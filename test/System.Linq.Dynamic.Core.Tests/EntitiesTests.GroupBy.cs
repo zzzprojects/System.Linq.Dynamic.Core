@@ -9,7 +9,7 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    public partial class EntitiesTests : IDisposable
+    public partial class EntitiesTests
     {
         [Fact]
         public void Entities_GroupBy_SingleKey()

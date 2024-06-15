@@ -4,125 +4,111 @@ using NFluent;
 using QueryInterceptor.Core;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using Xunit;
+using MongoDB.Driver.Core.Misc;
+
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
 #else
 using System.Data.Entity;
 #endif
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Tests;
+
+public class DefaultQueryableAnalyzerTests : IClassFixture<EntitiesTestsDatabaseFixture>
 {
-    public class DefaultQueryableAnalyzerTests : IDisposable
+    private readonly IQueryableAnalyzer _queryableAnalyzer;
+
+    private readonly BlogContext _context;
+
+    public DefaultQueryableAnalyzerTests(EntitiesTestsDatabaseFixture fixture)
     {
-        private readonly IQueryableAnalyzer _queryableAnalyzer;
-
-        BlogContext _context;
-
-        // static readonly Random Rnd = new Random(1);
-
-        public DefaultQueryableAnalyzerTests()
-        {
 #if EFCORE
-            var builder = new DbContextOptionsBuilder();
-            // builder.UseSqlite($"Filename=System.Linq.Dynamic.Core.{Guid.NewGuid()}.db");
-            builder.UseInMemoryDatabase($"System.Linq.Dynamic.Core.{Guid.NewGuid()}");
+        var builder = new DbContextOptionsBuilder();
+        builder.UseInMemoryDatabase($"System.Linq.Dynamic.Core.{Guid.NewGuid()}");
 
-            _context = new BlogContext(builder.Options);
-            _context.Database.EnsureCreated();
+        _context = new BlogContext(builder.Options);
+        _context.Database.EnsureCreated();
 #else
-            _context = new BlogContext($"data source=(LocalDB)\\MSSQLLocalDB;attachdbfilename=|DataDirectory|\\System.Linq.Dynamic.Core.{Guid.NewGuid()}.mdf;integrated security=True;connect timeout=30;MultipleActiveResultSets=True;App=EntityFramework");
-            _context.Database.CreateIfNotExists();
+        _context = new BlogContext(fixture.ConnectionString);
 #endif
-            _queryableAnalyzer = new DefaultQueryableAnalyzer();
-        }
+        _queryableAnalyzer = new DefaultQueryableAnalyzer();
+    }
 
-        public void Dispose()
-        {
-#if EFCORE
-            _context.Database.EnsureDeleted();
-#else
-            _context.Database.Delete();
-#endif
-            _context.Dispose();
-            _context = null;
-        }
+    [Fact]
+    public void DefaultQueryableAnalyzer_SupportsLinqToObjects_ObjectQuery()
+    {
+        // Assign
+        var query = new[] { 1, 2 }.AsQueryable().Where(x => x > 0);
 
-        [Fact]
-        public void DefaultQueryableAnalyzer_SupportsLinqToObjects_ObjectQuery()
-        {
-            // Assign
-            var query = new[] { 1, 2 }.AsQueryable().Where(x => x > 0);
+        // Act
+        bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
 
-            // Act
-            bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
+        // Assert
+        Check.That(result).IsTrue();
+    }
 
-            // Assert
-            Check.That(result).IsTrue();
-        }
+    [Fact]
+    public void DefaultQueryableAnalyzer_SupportsLinqToObjects_ObjectQuery_With_QueryInterceptor()
+    {
+        // Assign
+        var query = new[] { 1, 2 }.AsQueryable().Where(x => x > 0).InterceptWith(new PropertyVisitor());
 
-        [Fact]
-        public void DefaultQueryableAnalyzer_SupportsLinqToObjects_ObjectQuery_With_QueryInterceptor()
-        {
-            // Assign
-            var query = new[] { 1, 2 }.AsQueryable().Where(x => x > 0).InterceptWith(new PropertyVisitor());
+        // Act
+        bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
 
-            // Act
-            bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
+        // Assert
+        Check.That(result).IsTrue();
+    }
 
-            // Assert
-            Check.That(result).IsTrue();
-        }
+    [Fact]
+    public void DefaultQueryableAnalyzer_SupportsLinqToObjects_ObjectQuery_With_ExpandableQuery()
+    {
+        // Assign
+        var query = new[] { 1, 2 }.AsQueryable().Where(x => x > 0).AsExpandable();
 
-        [Fact]
-        public void DefaultQueryableAnalyzer_SupportsLinqToObjects_ObjectQuery_With_ExpandableQuery()
-        {
-            // Assign
-            var query = new[] { 1, 2 }.AsQueryable().Where(x => x > 0).AsExpandable();
+        // Act
+        bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
 
-            // Act
-            bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
+        // Assert
+        Check.That(result).IsTrue();
+    }
 
-            // Assert
-            Check.That(result).IsTrue();
-        }
+    [Fact]
+    public void DefaultQueryableAnalyzer_SupportsLinqToObjects_EntitiesQuery()
+    {
+        // Assign
+        var query = _context.Blogs.Where(b => b.BlogId > 0);
 
-        [Fact]
-        public void DefaultQueryableAnalyzer_SupportsLinqToObjects_EntitiesQuery()
-        {
-            // Assign
-            var query = _context.Blogs.Where(b => b.BlogId > 0);
+        // Act
+        bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
 
-            // Act
-            bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
+        // Assert
+        Check.That(result).IsFalse();
+    }
 
-            // Assert
-            Check.That(result).IsFalse();
-        }
+    [Fact]
+    public void DefaultQueryableAnalyzer_SupportsLinqToObjects_EntitiesQuery_With_QueryInterceptor()
+    {
+        // Assign
+        var query = _context.Blogs.Where(b => b.BlogId > 0).InterceptWith(new PropertyVisitor());
 
-        [Fact]
-        public void DefaultQueryableAnalyzer_SupportsLinqToObjects_EntitiesQuery_With_QueryInterceptor()
-        {
-            // Assign
-            var query = _context.Blogs.Where(b => b.BlogId > 0).InterceptWith(new PropertyVisitor());
+        // Act
+        bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
 
-            // Act
-            bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
+        // Assert
+        Check.That(result).IsFalse();
+    }
 
-            // Assert
-            Check.That(result).IsFalse();
-        }
+    [Fact]
+    public void DefaultQueryableAnalyzer_SupportsLinqToObjects_EntitiesQuery_With_ExpandableQuery()
+    {
+        // Assign
+        var query = _context.Blogs.Where(b => b.BlogId > 0).AsExpandable();
 
-        [Fact]
-        public void DefaultQueryableAnalyzer_SupportsLinqToObjects_EntitiesQuery_With_ExpandableQuery()
-        {
-            // Assign
-            var query = _context.Blogs.Where(b => b.BlogId > 0).AsExpandable();
+        // Act
+        bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
 
-            // Act
-            bool result = _queryableAnalyzer.SupportsLinqToObjects(query);
-
-            // Assert
-            Check.That(result).IsFalse();
-        }
+        // Assert
+        Check.That(result).IsFalse();
     }
 }
