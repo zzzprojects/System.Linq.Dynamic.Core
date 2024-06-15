@@ -173,24 +173,40 @@ public class NewtonsoftJsonTests
     [Fact]
     public void OrderBy()
     {
-        // Act 1
+        // Act
         var result = _source.OrderBy("Age").Select("Name");
 
-        // Assert 1
+        // Assert
         var array = result.Select(x => x.Value<string>());
         array.Should().BeEquivalentTo("John", "Doe");
+    }
 
-        // Act 1
-        var resultAsc = _source.OrderBy("Age", "Asc").Select("Name");
+    [Fact]
+    public void OrderBy_Asc()
+    {
+        // Act
+        var resultAsc = _source.OrderBy("Age asc").Select("Name");
 
-        // Assert 1
+        // Assert
         var arrayAsc = resultAsc.Select(x => x.Value<string>());
         arrayAsc.Should().BeEquivalentTo("Doe", "John");
     }
 
     [Fact]
-    public void OrderBy_ThenBy()
+    public void OrderBy_Desc()
     {
+        // Act
+        var resultAsc = _source.OrderBy("Age desc").Select("Name");
+
+        // Assert
+        var arrayAsc = resultAsc.Select(x => x.Value<string>());
+        arrayAsc.Should().BeEquivalentTo("John", "Doe");
+    }
+
+    [Fact]
+    public void OrderBy_Multiple()
+    {
+        // Arrange
         var json =
             """
             [
@@ -200,7 +216,7 @@ public class NewtonsoftJsonTests
                 },
                 {
                     "Name": "Doe",
-                    "Age": 40
+                    "Age": 30
                 },
                 {
                     "Name": "Stef",
@@ -211,11 +227,11 @@ public class NewtonsoftJsonTests
         var source = JArray.Parse(json);
 
         // Act
-        var result = source.OrderBy("Age").ThenBy("Name").Select("Name");
+        var result = source.OrderBy("Age, Name").Select("Name");
 
         // Assert
         var array = result.Select(x => x.Value<string>());
-        array.Should().BeEquivalentTo("Doe", "John", "Stef");
+        array.Should().BeEquivalentTo("Stef", "John", "Doe");
     }
 
     [Fact]
