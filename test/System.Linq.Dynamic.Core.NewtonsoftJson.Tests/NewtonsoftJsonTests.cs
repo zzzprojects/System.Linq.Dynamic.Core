@@ -221,7 +221,7 @@ public class NewtonsoftJsonTests
     [Fact]
     public void Page()
     {
-        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
         var source = JArray.Parse(json);
 
         // Act
@@ -235,7 +235,7 @@ public class NewtonsoftJsonTests
     [Fact]
     public void PageResult()
     {
-        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
         var source = JArray.Parse(json);
 
         // Act
@@ -267,7 +267,7 @@ public class NewtonsoftJsonTests
     public void Select_ResultType()
     {
         // Arrange
-        var json = @"[1, 2, 3]";
+        var json = "[1, 2, 3]";
         var source = JArray.Parse(json);
 
         // Act
@@ -298,7 +298,7 @@ public class NewtonsoftJsonTests
     [Fact]
     public void SkipWhile()
     {
-        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
         var source = JArray.Parse(json);
 
         // Act
@@ -312,7 +312,7 @@ public class NewtonsoftJsonTests
     [Fact]
     public void Take()
     {
-        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
         var source = JArray.Parse(json);
 
         // Act
@@ -326,7 +326,7 @@ public class NewtonsoftJsonTests
     [Fact]
     public void TakeWhile()
     {
-        var json = @"[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
+        var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
         var source = JArray.Parse(json);
 
         // Act
