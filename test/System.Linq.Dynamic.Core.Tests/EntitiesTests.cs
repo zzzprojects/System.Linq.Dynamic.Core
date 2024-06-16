@@ -21,7 +21,7 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
         var builder = new DbContextOptionsBuilder();
         if (fixture.UseInMemory)
         {
-            builder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            builder.UseInMemoryDatabase($"System.Linq.Dynamic.Core.{Guid.NewGuid()}");
         }
         else
         {
