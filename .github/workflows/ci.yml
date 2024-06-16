@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: ubuntu
 
     env:
       IsRunningOnGitHubActions: 'true'
