@@ -50,7 +50,13 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
    
         for (int i = 0; i < 25; i++)
         {
-            var blog = new Blog { X = i.ToString(), Name = "Blog" + (i + 1), BlogId = 1000 + i, Created = DateTime.Now.AddDays(-Rnd.Next(0, 100)) };
+            var blog = new Blog
+            {
+                X = i.ToString(), 
+                Name = "Blog" + (i + 1), 
+                BlogId = 1000 + i, 
+                Created = DateTime.Now.AddDays(-Rnd.Next(0, 100))
+            };
 
             _context.Blogs.Add(blog);
 
@@ -72,17 +78,17 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
 
         var singleBlog = new Blog
         {
-            X = Guid.NewGuid().ToString(),
+            X = "42",
             Name = "SingleBlog",
             BlogId = 12345678,
             Created = DateTime.Now.AddDays(-Rnd.Next(0, 100))
         };
         _context.Blogs.Add(singleBlog);
 
-        _context.Blogs.Add(new Blog { BlogId = 2000, Name = "blog a", Created = DateTime.Now });
-        _context.Blogs.Add(new Blog { BlogId = 2001, Name = "blog b", Created = DateTime.Now });
-        _context.Blogs.Add(new Blog { BlogId = 3000, Name = "Blog1", Created = DateTime.Now, NullableInt = null });
-        _context.Blogs.Add(new Blog { BlogId = 3001, Name = "Blog2", Created = DateTime.Now, NullableInt = 5 });
+        _context.Blogs.Add(new Blog { BlogId = 2000, X = "0", Name = "blog a", Created = DateTime.Now });
+        _context.Blogs.Add(new Blog { BlogId = 2001, X = "0", Name = "blog b", Created = DateTime.Now });
+        _context.Blogs.Add(new Blog { BlogId = 3000, X = "0", Name = "Blog1", Created = DateTime.Now, NullableInt = null });
+        _context.Blogs.Add(new Blog { BlogId = 3001, X = "0", Name = "Blog2", Created = DateTime.Now, NullableInt = 5 });
 
         _context.SaveChanges();
     }

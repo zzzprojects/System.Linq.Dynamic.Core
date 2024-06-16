@@ -8,13 +8,15 @@ public partial class EntitiesTests
     // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/577
 #if NET6_0_OR_GREATER
     [Fact]
-    public void Cast_To_FromStringToInt()
+    public void Entities_Cast_To_FromStringToInt()
     {
-        // Arrange
-        PopulateTestData(2, 0);
-
         // Act
-        var result = _context.Blogs.AsQueryable().Select("X").Select("Cast(\"int\")").ToDynamicArray<int>();
+        var result = _context.Blogs
+            .Where(b => b.BlogId >= 1000 && b.BlogId <= 1001)
+            .AsQueryable()
+            .Select("X")
+            .Select("Cast(\"int\")")
+            .ToDynamicArray<int>();
 
         // Assert
         Assert.Equal(new[] { 0, 1 }, result);
@@ -23,11 +25,8 @@ public partial class EntitiesTests
 
     // https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
     [Fact]
-    public void Cast_To_nullableint()
+    public void Entities_Cast_To_nullableint()
     {
-        // Arrange
-        PopulateTestData(1, 0);
-
         // Act
         var expectedResult = _context.Blogs.Select(b => (int?)b.BlogId).Count();
         var result = _context.Blogs.AsQueryable().Select("int?(BlogId)").Count();
@@ -37,11 +36,8 @@ public partial class EntitiesTests
     }
 
     [Fact]
-    public void Cast_To_nullableint_Automatic()
+    public void Entities_Cast_To_nullableint_Automatic()
     {
-        // Arrange
-        PopulateTestData(5, 0);
-
         // Act
         var expectedResult = _context.Blogs.Select(b => b.BlogId == 2 ? (int?)b.BlogId : null).ToList();
         var result = _context.Blogs.AsQueryable().Select("BlogId == 2 ? BlogId : null").ToDynamicList<int?>();
@@ -51,11 +47,8 @@ public partial class EntitiesTests
     }
 
     [Fact]
-    public void Cast_To_nullablelong()
+    public void Entities_Cast_To_nullablelong()
     {
-        // Arrange
-        PopulateTestData(1, 0);
-
         // Act
         var expectedResult = _context.Blogs.Select(b => (long?)b.BlogId).Count();
         var result = _context.Blogs.AsQueryable().Select("long?(BlogId)").Count();
@@ -66,11 +59,8 @@ public partial class EntitiesTests
 
     // https://github.com/StefH/System.Linq.Dynamic.Core/issues/44
     [Fact]
-    public void Cast_To_newnullableint()
+    public void Entities_Cast_To_newnullableint()
     {
-        // Arrange
-        PopulateTestData(1, 0);
-
         // Act
         var expectedResult = _context.Blogs.Select(x => new { i = (int?)x.BlogId }).Count();
         var result = _context.Blogs.AsQueryable().Select("new (int?(BlogId) as i)").Count();
