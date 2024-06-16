@@ -23,7 +23,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
         }
 
-#if NET452 || NET5_0 || NET6_0_OR_GREATER
+#if NET48 || NET5_0 || NET6_0_OR_GREATER
         [Fact]
         [Trait("Issue", "130")]
         public void Contains_Dynamic_ListWithDynamicObjects()

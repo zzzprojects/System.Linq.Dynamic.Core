@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Testcontainers.MsSql;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests;
@@ -8,7 +9,7 @@ namespace System.Linq.Dynamic.Core.Tests;
 /// </summary>
 public class EntitiesTestsDatabaseFixture : IAsyncLifetime
 {
-    private readonly Testcontainers.MsSql.MsSqlContainer _msSqlContainer = new Testcontainers.MsSql.MsSqlBuilder().Build();
+    private readonly MsSqlContainer _msSqlContainer = new MsSqlBuilder().Build();
 
     public string ConnectionString => _msSqlContainer.GetConnectionString();
 

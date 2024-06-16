@@ -4,7 +4,7 @@
     {
         public static string NullableConversion(string convertedExpr)
         {
-#if NET452 || NET461
+#if NET461 || NET48
             return $"Convert({convertedExpr})";
 #else
             return $"Convert({convertedExpr}, Nullable`1)";

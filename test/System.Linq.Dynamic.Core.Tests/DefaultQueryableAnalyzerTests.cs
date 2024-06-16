@@ -4,7 +4,6 @@ using NFluent;
 using QueryInterceptor.Core;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using Xunit;
-using MongoDB.Driver.Core.Misc;
 
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +23,7 @@ public class DefaultQueryableAnalyzerTests : IClassFixture<EntitiesTestsDatabase
     {
 #if EFCORE
         var builder = new DbContextOptionsBuilder();
-        builder.UseInMemoryDatabase($"System.Linq.Dynamic.Core.{Guid.NewGuid()}");
+        builder.UseSqlServer(fixture.ConnectionString);
 
         _context = new BlogContext(builder.Options);
         _context.Database.EnsureCreated();
