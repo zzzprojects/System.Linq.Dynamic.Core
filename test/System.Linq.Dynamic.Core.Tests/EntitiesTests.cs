@@ -19,8 +19,15 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
     {
 #if EFCORE
         var builder = new DbContextOptionsBuilder();
-        builder.UseSqlServer(fixture.ConnectionString);
-
+        if (fixture.UseInMemory)
+        {
+            builder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+        }
+        else
+        {
+            builder.UseSqlServer(fixture.ConnectionString);
+        }
+        
         _context = new BlogContext(builder.Options);
         _context.Database.EnsureCreated();
 #else

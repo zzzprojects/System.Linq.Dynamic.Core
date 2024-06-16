@@ -15,7 +15,32 @@ public class EntitiesTestsDatabaseFixture : IAsyncLifetime
 
     public string ContainerId => $"{_msSqlContainer.Id}";
 
-    public Task InitializeAsync() => _msSqlContainer.StartAsync();
+    public bool UseInMemory
+    {
+        get
+        {
+            var useInMemory = Environment.GetEnvironmentVariable("UseInMemory");
+            return bool.TryParse(useInMemory, out var value) && value;
+        }
+    }
 
-    public Task DisposeAsync() => _msSqlContainer.DisposeAsync().AsTask();
+    public async Task InitializeAsync()
+    {
+        if (UseInMemory)
+        {
+            return;
+        }
+
+        await _msSqlContainer.StartAsync();
+    }
+
+    public async Task DisposeAsync()
+    {
+        if (UseInMemory)
+        {
+            return;
+        }
+
+        await _msSqlContainer.DisposeAsync();
+    }
 }

@@ -3,7 +3,32 @@ name: Build with Tests
 on: [push]
 
 jobs:
-  build:
+  build_and_test_Windows:
+    runs-on: windows-latest
+
+    env:
+      IsRunningOnGitHubActions: 'true'
+      UseInMemory: 'true'
+
+    steps:  
+    - uses: actions/checkout@v2
+
+    # - uses: actions/setup-dotnet@v3
+    #   with:
+    #    dotnet-version: |
+    #      6.0.x
+    #      7.0.x
+    #      8.0.x
+              
+    - name: Build
+      run: |
+        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+
+    - name: Run Tests EFCore net8.0
+      run: |
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
+
+  build_and_test_Linux:
     runs-on: ubuntu
 
     env:
@@ -14,12 +39,12 @@ jobs:
 
     - uses: actions/setup-dotnet@v3
       with:
-       dotnet-version: | 
+       dotnet-version: |
          6.0.x
          7.0.x
          8.0.x
               
-    - name: Build Projects
+    - name: Build
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
 
