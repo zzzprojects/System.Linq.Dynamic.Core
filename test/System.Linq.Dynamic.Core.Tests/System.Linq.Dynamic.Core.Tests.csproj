@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
-        <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
         <DebugType>full</DebugType>
         <SignAssembly>True</SignAssembly>
@@ -38,19 +38,20 @@
         <PackageReference Include="NFluent" Version="2.8.0" />
         <PackageReference Include="Moq" Version="4.13.1" />
         <PackageReference Include="Testcontainers.MsSql" Version="3.8.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="3.0.0" />
         <PackageReference Include="NodaTime" Version="2.4.7" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+    <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="2.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore2.csproj" />
-    </ItemGroup>
+    </ItemGroup>-->
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="3.0.0" />
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3.csproj" />
     </ItemGroup>
 

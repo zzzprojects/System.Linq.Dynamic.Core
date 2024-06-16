@@ -13,11 +13,7 @@ public partial class EntitiesTests
     /// <summary>
     /// Test for https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/524
     /// </summary>
-//#if EFCORE
-//        [Fact(Skip = "Fails on .NET Core App with EF Core ?")]
-//#else
-//    [Fact]
-//#endif
+    [Fact]
     public void Entities_Where_In_And()
     {
         // Arrange
