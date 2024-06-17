@@ -21,6 +21,10 @@ jobs:
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
 
+    - name: Run Tests EF net461
+      run: |
+        dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj -c Release -f net461 -p:buildType=azure-pipelines-ci
+
   build_and_test_Linux:
     runs-on: ubuntu-latest
 
