@@ -18,7 +18,6 @@ public partial class EntitiesTests
     public void Entities_All_FS()
     {
         //Arrange
-        PopulateTestData(1, 0);
         int value = 2000;
         var expected = _context.Blogs.All(b => b.BlogId > value);
 
@@ -33,7 +32,6 @@ public partial class EntitiesTests
     public async Task Entities_AllAsync_FS()
     {
         //Arrange
-        PopulateTestData(1, 0);
         int value = 2000;
         var expected = await _context.Blogs.AllAsync(b => b.BlogId > value);
 

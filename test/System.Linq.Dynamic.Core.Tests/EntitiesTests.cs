@@ -36,11 +36,6 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
         InternalPopulateTestData();
     }
 
-    private void PopulateTestData(int blogCount = 25, int postCount = 10)
-    {
-        // Dummy method to make the code compile
-    }
-
     private void InternalPopulateTestData()
     {
         if (_context.Blogs.Any())

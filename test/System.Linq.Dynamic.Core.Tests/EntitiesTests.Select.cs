@@ -33,8 +33,6 @@ public partial class EntitiesTests
     public void Entities_Select_SingleColumn()
     {
         //Arrange
-        PopulateTestData(5, 0);
-
         var expected = _context.Blogs.Select(x => x.BlogId).ToArray();
 
         //Act
@@ -47,12 +45,10 @@ public partial class EntitiesTests
     [Fact]
     public void Entities_Select_EmptyObject()
     {
+        // Arrange
         ParsingConfig config = ParsingConfig.Default;
         config.EvaluateGroupByAtDatabase = true;
-
-        // Arrange
-        PopulateTestData(5, 0);
-
+        
         var expected = _context.Blogs.Select(x => new { }).ToList();
 
         // Act
@@ -84,8 +80,6 @@ public partial class EntitiesTests
     public void Entities_Select_MultipleColumn()
     {
         //Arrange
-        PopulateTestData(5, 0);
-
         var expected = _context.Blogs.Select(x => new { X = "x", x.BlogId, x.Name }).ToArray();
 
         //Act
@@ -102,8 +96,6 @@ public partial class EntitiesTests
     public void Entities_Select_BlogPosts()
     {
         //Arrange
-        PopulateTestData(5, 5);
-
         var expected = _context.Blogs.Where(x => x.BlogId == 1).SelectMany(x => x.Posts).Select(x => x.PostId).ToArray();
 
         //Act
@@ -118,8 +110,6 @@ public partial class EntitiesTests
     public void Entities_Select_BlogAndPosts()
     {
         //Arrange
-        PopulateTestData(5, 5);
-
         var expected = _context.Blogs.Select(x => new { x.BlogId, x.Name, x.Posts }).ToArray();
 
         //Act
@@ -143,9 +133,6 @@ public partial class EntitiesTests
     [Fact(Skip = "593 - this does not work")]
     public void Entities_Select_DynamicClass_And_Call_Any()
     {
-        // Arrange
-        PopulateTestData(5, 0);
-
         // Act
         var result = _context.Blogs
             .Select("new (BlogId, Name)")

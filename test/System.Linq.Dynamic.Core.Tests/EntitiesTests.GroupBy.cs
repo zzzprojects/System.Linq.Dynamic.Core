@@ -7,170 +7,158 @@ using System.Data.Entity;
 #endif
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Tests;
+
+public partial class EntitiesTests
 {
-    public partial class EntitiesTests
+    [Fact]
+    public void Entities_GroupBy_SingleKey()
     {
-        [Fact]
-        public void Entities_GroupBy_SingleKey()
-        {
-            // "memory leak" warning exception starting from EF Core 3.x
+        // "memory leak" warning exception starting from EF Core 3.x
 #if !EFCORE_3X
-            //Arrange
-            PopulateTestData(5, 5);
+        // Arrange
+        var expected = _context.Posts.GroupBy(x => x.BlogId).ToArray();
 
-            var expected = _context.Posts.GroupBy(x => x.BlogId).ToArray();
+        // Act
+        var test = _context.Posts.GroupBy("BlogId").ToDynamicArray();
 
-            //Act
-            var test = _context.Posts.GroupBy("BlogId").ToDynamicArray();
-
-            //Assert
-            Assert.Equal(expected.Length, test.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                var expectedRow = expected[i];
-
-                //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
-                var testRow = (IGrouping<int, Post>)test[i];
-
-                Assert.Equal(expectedRow.Key, testRow.Key);
-                Assert.Equal(expectedRow.ToArray(), testRow.ToArray());
-            }
-#endif
-        }
-
-        [Fact]
-        public void Entities_GroupBy_MultiKey()
+        // Assert
+        Assert.Equal(expected.Length, test.Length);
+        for (int i = 0; i < expected.Length; i++)
         {
-            // "memory leak" warning exception starting from EF Core 3.x
+            var expectedRow = expected[i];
+
+            //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
+            var testRow = (IGrouping<int, Post>)test[i];
+
+            Assert.Equal(expectedRow.Key, testRow.Key);
+            Assert.Equal(expectedRow.ToArray(), testRow.ToArray());
+        }
+#endif
+    }
+
+    [Fact]
+    public void Entities_GroupBy_MultiKey()
+    {
+        // "memory leak" warning exception starting from EF Core 3.x
 #if !EFCORE_3X
-            //Arrange
-            PopulateTestData(5, 15);
+        // Arrange
+        var expected = _context.Posts.GroupBy(x => new { x.BlogId, x.PostDate }).OrderBy(x => x.Key.PostDate).ToArray();
 
-            var expected = _context.Posts.GroupBy(x => new { x.BlogId, x.PostDate }).OrderBy(x => x.Key.PostDate).ToArray();
+        // Act
+        var test = _context.Posts.GroupBy("new (BlogId, PostDate)").OrderBy("Key.PostDate").ToDynamicArray();
 
-            //Act
-            var test = _context.Posts.GroupBy("new (BlogId, PostDate)").OrderBy("Key.PostDate").ToDynamicArray();
-
-
-            //Assert
-            Assert.Equal(expected.Length, test.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                var expectedRow = expected[i];
-
-                //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
-                var testRow = (IGrouping<DynamicClass, Post>)test[i];
-
-                Assert.Equal(expectedRow.Key.BlogId, ((dynamic)testRow.Key).BlogId);
-                Assert.Equal(expectedRow.Key.PostDate, ((dynamic)testRow.Key).PostDate);
-                Assert.Equal(expectedRow.ToArray(), testRow.ToArray());
-            }
-#endif
-        }
-
-        [Fact]
-        public void Entities_GroupBy_SingleKey_SingleResult()
+        // Assert
+        Assert.Equal(expected.Length, test.Length);
+        for (int i = 0; i < expected.Length; i++)
         {
-            // "memory leak" warning exception starting from EF Core 3.x
+            var expectedRow = expected[i];
+
+            //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
+            var testRow = (IGrouping<DynamicClass, Post>)test[i];
+
+            Assert.Equal(expectedRow.Key.BlogId, ((dynamic)testRow.Key).BlogId);
+            Assert.Equal(expectedRow.Key.PostDate, ((dynamic)testRow.Key).PostDate);
+            Assert.Equal(expectedRow.ToArray(), testRow.ToArray());
+        }
+#endif
+    }
+
+    [Fact]
+    public void Entities_GroupBy_SingleKey_SingleResult()
+    {
+        // "memory leak" warning exception starting from EF Core 3.x
 #if !EFCORE_3X
-            //Arrange
-            PopulateTestData(5, 5);
+        // Arrange
 
-            var expected = _context.Posts.GroupBy(x => x.PostDate, x => x.Title).ToArray();
+        var expected = _context.Posts.GroupBy(x => x.PostDate, x => x.Title).ToArray();
 
-            //Act
-            var test = _context.Posts.GroupBy("PostDate", "Title").ToDynamicArray();
+        // Act
+        var test = _context.Posts.GroupBy("PostDate", "Title").ToDynamicArray();
 
-            //Assert
-            Assert.Equal(expected.Length, test.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                var expectedRow = expected[i];
-
-                //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
-                var testRow = (IGrouping<DateTime, string>)test[i];
-
-                Assert.Equal(expectedRow.Key, testRow.Key);
-                Assert.Equal(expectedRow.ToArray(), testRow.ToArray());
-            }
-#endif
-        }
-
-        [Fact]
-        public void Entities_GroupBy_SingleKey_MultiResult()
+        // Assert
+        Assert.Equal(expected.Length, test.Length);
+        for (int i = 0; i < expected.Length; i++)
         {
-            // "memory leak" warning exception starting from EF Core 3.x
+            var expectedRow = expected[i];
+
+            //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
+            var testRow = (IGrouping<DateTime, string>)test[i];
+
+            Assert.Equal(expectedRow.Key, testRow.Key);
+            Assert.Equal(expectedRow.ToArray(), testRow.ToArray());
+        }
+#endif
+    }
+
+    [Fact]
+    public void Entities_GroupBy_SingleKey_MultiResult()
+    {
+        // "memory leak" warning exception starting from EF Core 3.x
 #if !EFCORE_3X
-            //Arrange
-            PopulateTestData(5, 5);
+        // Arrange
 
-            var expected = _context.Posts.GroupBy(x => x.PostDate, x => new { x.Title, x.Content }).ToArray();
+        var expected = _context.Posts.GroupBy(x => x.PostDate, x => new { x.Title, x.Content }).ToArray();
 
-            //Act
-            var test = _context.Posts.GroupBy("PostDate", "new (Title, Content)").ToDynamicArray();
+        // Act
+        var test = _context.Posts.GroupBy("PostDate", "new (Title, Content)").ToDynamicArray();
 
-            //Assert
-            Assert.Equal(expected.Length, test.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                var expectedRow = expected[i];
+        // Assert
+        Assert.Equal(expected.Length, test.Length);
+        for (int i = 0; i < expected.Length; i++)
+        {
+            var expectedRow = expected[i];
 
-                //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
-                var testRow = (IGrouping<DateTime, DynamicClass>)test[i];
+            //For some reason, the DynamicBinder doesn't allow us to access values of the Group object, so we have to cast first
+            var testRow = (IGrouping<DateTime, DynamicClass>)test[i];
 
-                Assert.Equal(expectedRow.Key, testRow.Key);
-                Assert.Equal(
-                    expectedRow.ToArray(),
-                    testRow.Cast<dynamic>().Select(x => new { Title = (string)x.Title, Content = (string)x.Content }).ToArray());
-            }
+            Assert.Equal(expectedRow.Key, testRow.Key);
+            Assert.Equal(
+                expectedRow.ToArray(),
+                testRow.Cast<dynamic>().Select(x => new { Title = (string)x.Title, Content = (string)x.Content }).ToArray());
+        }
 #endif
-        }
+    }
 
-        [Fact]
-        public void Entities_GroupBy_SingleKey_Count()
+    [Fact]
+    public void Entities_GroupBy_SingleKey_Count()
+    {
+        // Arrange
+        var expected = _context.Posts.GroupBy(x => x.PostDate).Select(x => new { x.Key, Count = x.Count() }).ToArray();
+
+        // Act
+        var test = _context.Posts.GroupBy("PostDate").Select("new(Key, Count() AS Count)").ToDynamicArray();
+
+        // Assert
+        Assert.Equal(expected.Length, test.Length);
+        for (int i = 0; i < expected.Length; i++)
         {
-            //Arrange
-            PopulateTestData(5, 5);
+            var expectedRow = expected[i];
+            var testRow = test[i];
 
-            var expected = _context.Posts.GroupBy(x => x.PostDate).Select(x => new { x.Key, Count = x.Count() }).ToArray();
-
-            //Act
-            var test = _context.Posts.GroupBy("PostDate").Select("new(Key, Count() AS Count)").ToDynamicArray();
-
-            //Assert
-            Assert.Equal(expected.Length, test.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                var expectedRow = expected[i];
-                var testRow = test[i];
-
-                Assert.Equal(expectedRow.Key, testRow.Key);
-                Assert.Equal(expectedRow.Count, testRow.Count);
-            }
+            Assert.Equal(expectedRow.Key, testRow.Key);
+            Assert.Equal(expectedRow.Count, testRow.Count);
         }
+    }
 
-        [Fact]
-        public void Entities_GroupBy_SingleKey_Sum()
+    [Fact]
+    public void Entities_GroupBy_SingleKey_Sum()
+    {
+        // Arrange
+        var expected = _context.Posts.GroupBy(x => x.PostDate).Select(x => new { x.Key, Reads = x.Sum(y => y.NumberOfReads) }).ToArray();
+
+        // Act
+        var test = _context.Posts.GroupBy("PostDate").Select("new(Key, Sum(NumberOfReads) AS Reads)").ToDynamicArray();
+
+        // Assert
+        Assert.Equal(expected.Length, test.Length);
+        for (int i = 0; i < expected.Length; i++)
         {
-            //Arrange
-            PopulateTestData(5, 5);
+            var expectedRow = expected[i];
+            var testRow = test[i];
 
-            var expected = _context.Posts.GroupBy(x => x.PostDate).Select(x => new { x.Key, Reads = x.Sum(y => y.NumberOfReads) }).ToArray();
-
-            //Act
-            var test = _context.Posts.GroupBy("PostDate").Select("new(Key, Sum(NumberOfReads) AS Reads)").ToDynamicArray();
-
-            //Assert
-            Assert.Equal(expected.Length, test.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                var expectedRow = expected[i];
-                var testRow = test[i];
-
-                Assert.Equal(expectedRow.Key, testRow.Key);
-                Assert.Equal(expectedRow.Reads, testRow.Reads);
-            }
+            Assert.Equal(expectedRow.Key, testRow.Key);
+            Assert.Equal(expectedRow.Reads, testRow.Reads);
         }
     }
 }

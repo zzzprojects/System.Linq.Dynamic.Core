@@ -8,23 +8,20 @@ using EntityFramework.DynamicLinq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Tests;
+
+public partial class EntitiesTests
 {
-    public partial class EntitiesTests
+    [Fact]
+    public void Entities_All()
     {
-        [Fact]
-        public void Entities_All()
-        {
-            //Arrange
-            PopulateTestData(1, 0);
+        // Arrange
+        var expected = _context.Blogs.All(b => b.BlogId > 2000);
 
-            var expected = _context.Blogs.All(b => b.BlogId > 2000);
+        // Act
+        var actual = _context.Blogs.All("BlogId > 2000");
 
-            //Act
-            var actual = _context.Blogs.All("BlogId > 2000");
-
-            //Assert
-            Assert.Equal(expected, actual);
-        }
+        // Assert
+        Assert.Equal(expected, actual);
     }
 }
