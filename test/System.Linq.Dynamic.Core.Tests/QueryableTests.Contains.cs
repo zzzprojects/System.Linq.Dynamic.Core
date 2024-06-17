@@ -32,7 +32,11 @@ namespace System.Linq.Dynamic.Core.Tests
             var baseQuery = User.GenerateSampleModels(100).AsQueryable();
             var list = new List<dynamic> { new { UserName = "User1" } };
 
-            var keyType = DynamicClassFactory.CreateType(new[] { new DynamicProperty("UserName", typeof(string)) });
+            var keyType = DynamicClassFactory.CreateType(new[]
+            {
+                new DynamicProperty($"Test{Guid.NewGuid().ToString().Replace("-", "")}Test", typeof(string)),
+                new DynamicProperty("UserName", typeof(string))
+            });
             var keyVals = (IList)CreateGenericInstance(typeof(List<>), new[] { keyType });
 
             var keyVal = Activator.CreateInstance(keyType);
@@ -47,9 +51,9 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Equal(realQuery.ToArray(), testQuery.Cast<Guid>().ToArray());
         }
 
-        private object CreateGenericInstance(Type type, Type[] types, params dynamic[] ctorParams)
+        private static object CreateGenericInstance(Type type, Type[] typeArguments, params dynamic[] ctorParams)
         {
-            Type genType = type.MakeGenericType(types);
+            var genType = type.MakeGenericType(typeArguments);
 
             var constructor = genType.GetConstructors().First();
             return constructor.Invoke(ctorParams);
