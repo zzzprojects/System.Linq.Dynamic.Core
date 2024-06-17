@@ -8,7 +8,7 @@
         <Nullable>enable</Nullable>
         <AssemblyOriginatorKeyFile>../../src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <ProjectGuid>{912FBF24-3CAE-4A50-B5EA-E525B9FAEC80}</ProjectGuid>
-        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X</DefineConstants>
+        <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;AspNetCoreIdentity</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>

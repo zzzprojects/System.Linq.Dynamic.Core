@@ -9,7 +9,7 @@ using QueryInterceptor.Core;
 using Xunit;
 using NFluent;
 using Newtonsoft.Json.Linq;
-#if EFCORE
+#if AspNetCoreIdentity
 using Microsoft.AspNetCore.Identity;
 #else
 using Microsoft.AspNet.Identity.EntityFramework;

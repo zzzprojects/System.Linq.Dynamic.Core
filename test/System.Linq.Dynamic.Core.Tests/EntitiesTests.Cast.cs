@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.Tests;
 public partial class EntitiesTests
 {
     // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/577
-#if NET6_0_OR_GREATER
+#if EF_CORE
     [Fact]
     public void Entities_Cast_To_FromStringToInt()
     {
