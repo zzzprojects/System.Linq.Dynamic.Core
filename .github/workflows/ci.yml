@@ -11,14 +11,7 @@ jobs:
       UseInMemory: 'true'
 
     steps:  
-    - uses: actions/checkout@v2
-
-    # - uses: actions/setup-dotnet@v3
-    #   with:
-    #    dotnet-version: |
-    #      6.0.x
-    #      7.0.x
-    #      8.0.x
+    - uses: actions/checkout@v4
               
     - name: Build
       run: |
@@ -29,13 +22,13 @@ jobs:
         dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
 
   build_and_test_Linux:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
 
     env:
       IsRunningOnGitHubActions: 'true'
 
     steps:  
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - uses: actions/setup-dotnet@v3
       with:
