@@ -20,7 +20,7 @@ jobs:
 
     - name: Run Tests EFCore net8.0
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -p:buildType=azure-pipelines-ci
 
   build_and_test_Linux:
     name: Build and run Tests on Linux
@@ -49,7 +49,7 @@ jobs:
 
     - name: Run Tests EFCore net8.0
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -p:buildType=azure-pipelines-ci
 
     - name: Run Tests EFCore net7.0
       run: |
