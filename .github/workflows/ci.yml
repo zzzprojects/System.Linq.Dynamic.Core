@@ -8,12 +8,13 @@ jobs:
 
     env:
       IsRunningOnGitHubActions: 'true'
-      UseInMemory: 'true'
 
     steps:  
     - uses: actions/checkout@v4
               
     - name: Build
+      env:
+        UseInMemory: 'true'
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
 
