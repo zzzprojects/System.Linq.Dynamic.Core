@@ -13,12 +13,12 @@ jobs:
     - uses: actions/checkout@v4
               
     - name: Build
-      env:
-        UseInMemory: 'true'
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
 
     - name: Run Tests EFCore net8.0
+      env:
+        UseInMemory: 'true'
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj -c Release -p:buildType=azure-pipelines-ci
 
@@ -35,7 +35,7 @@ jobs:
     steps:  
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v3
+    - uses: actions/setup-dotnet@v4
       with:
        dotnet-version: |
          6.0.x
