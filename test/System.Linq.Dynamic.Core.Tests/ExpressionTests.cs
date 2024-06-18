@@ -1544,7 +1544,7 @@ namespace System.Linq.Dynamic.Core.Tests
         [InlineData("np(nullablenumber)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0.nullablenumber != null)), Param_0.nullablenumber, null))")]
         [InlineData("np(_enumnullable)", "Select(Param_0 => IIF(((Param_0 != null) AndAlso (Param_0._enumnullable != null)), Param_0._enumnullable, null))")]
 
-#if NET452
+#if NET48
         [InlineData("np(dt)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0.dt), null))")]
         [InlineData("np(_enum)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0._enum), null))")]
         [InlineData("np(g)", "Select(Param_0 => IIF((Param_0 != null), Convert(Param_0.g), null))")]

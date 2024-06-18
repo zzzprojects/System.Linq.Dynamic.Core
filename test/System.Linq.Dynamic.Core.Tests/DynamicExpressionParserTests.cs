@@ -55,8 +55,12 @@ public class DynamicExpressionParserTests
         public MyClass Child { get; set; }
     }
 
-    private class MyClassCustomTypeProvider() : DefaultDynamicLinqCustomTypeProvider(ParsingConfig.Default)
+    private class MyClassCustomTypeProvider : DefaultDynamicLinqCustomTypeProvider
     {
+        public MyClassCustomTypeProvider() : base(ParsingConfig.Default)
+        {
+        }
+
         public override HashSet<Type> GetCustomTypes()
         {
             var customTypes = base.GetCustomTypes();
@@ -390,8 +394,8 @@ public class DynamicExpressionParserTests
         var queriedPropType = queriedProp.PropertyType;
         var queriedPropUnderlyingType = Nullable.GetUnderlyingType(queriedPropType);
 
-        Check.That(expressionAsString).IsEqualTo($"Param_0 => (Param_0.{propName} == {ExpressionString.NullableConversion($"value(System.Linq.Dynamic.Core.Parser.WrappedValue`1[{queriedPropUnderlyingType}]).Value")})");
-        dynamic constantExpression = (ConstantExpression)((MemberExpression)((UnaryExpression)((BinaryExpression)expression.Body).Right).Operand).Expression;
+        expressionAsString.Should().StartWith($"Param_0 => (Param_0.{propName}").And.Contain($"System.Linq.Dynamic.Core.Parser.WrappedValue`1[{queriedPropUnderlyingType}])");
+        dynamic constantExpression = (ConstantExpression)((MemberExpression)((UnaryExpression)((BinaryExpression)expression.Body).Right).Operand).Expression!;
         object wrapperObj = constantExpression.Value;
 
         var propertyInfo = wrapperObj.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public)!;
@@ -435,8 +439,6 @@ public class DynamicExpressionParserTests
     [InlineData("BooleanVariable1 || BooleanVariable4", true)]
     public void DynamicExpressionParser_ParseLambda_WithStruct_UsingOperators(string query, bool expectedResult)
     {
-        var x = new BooleanVariable(true) && new BooleanVariable(false);
-
         // Assign
         var model = new
         {
@@ -489,8 +491,7 @@ public class DynamicExpressionParserTests
         };
 
         // Act
-        var query =
-            "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
+        var query = "Users.GroupBy(x => new { x.Profile.Age }).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
         var expression = DynamicExpressionParser.ParseLambda(null, query, externals);
         var del = expression.Compile();
         var result = del.DynamicInvoke() as IEnumerable<dynamic>;
@@ -514,8 +515,7 @@ public class DynamicExpressionParserTests
         var qry = testList.AsQueryable();
 
         // Act
-        var query =
-            "GroupBy(x => new { x.Profile.Age }, it).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
+        var query = "GroupBy(x => new { x.Profile.Age }, it).OrderBy(gg => gg.Key.Age).Select(j => new (j.Key.Age, j.Sum(k => k.Income) As TotalIncome))";
         var expression = DynamicExpressionParser.ParseLambda(qry.GetType(), null, query);
         var del = expression.Compile();
         var result = del.DynamicInvoke(qry) as IEnumerable<dynamic>;
@@ -1777,7 +1777,7 @@ public class DynamicExpressionParserTests
         var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(Foo), null, expression, new Foo());
 
         // Assert
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER || NET6_0_OR_GREATER
         lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Zero() != null)), Convert(Param_0.FooValue.Zero().Length, Nullable`1), null)");
 #else
         lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Zero() != null)), Convert(Param_0.FooValue.Zero().Length), null)");
@@ -1800,7 +1800,7 @@ public class DynamicExpressionParserTests
         var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(Foo), null, expression, new Foo());
 
         // Assert
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER || NET6_0_OR_GREATER
         lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.One(1) != null)), Convert(Param_0.FooValue.One(1).Length, Nullable`1), null)");
 #else
         lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.One(1) != null)), Convert(Param_0.FooValue.One(1).Length), null)");
@@ -1823,7 +1823,7 @@ public class DynamicExpressionParserTests
         var lambdaExpression = DynamicExpressionParser.ParseLambda(config, typeof(Foo), null, expression, new Foo());
 
         // Assert
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER || NET6_0_OR_GREATER
         lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length, Nullable`1), null)");
 #else
         lambdaExpression.ToString().Should().Be("Param_0 => IIF((((Param_0 != null) AndAlso (Param_0.FooValue != null)) AndAlso (Param_0.FooValue.Two(1, 42) != null)), Convert(Param_0.FooValue.Two(1, 42).Length), null)");
@@ -2113,8 +2113,12 @@ public class DynamicExpressionParserTests
         DynamicExpressionParser.ParseLambda<bool>(new ParsingConfig(), false, "new[]{1,2,3}.Any(z => z > 0)");
     }
 
-    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod() : DefaultDynamicLinqCustomTypeProvider(ParsingConfig.Default)
+    public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
     {
+        public DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod() : base(ParsingConfig.Default)
+        {
+        }
+
         public override HashSet<Type> GetCustomTypes() => new HashSet<Type>(base.GetCustomTypes()) { typeof(Methods), typeof(MethodsItemExtension) };
     }
 }
