@@ -48,7 +48,7 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "@0 | @1";
-#if NET452
+#if NET48
         var expected = "Convert((Convert(A) | Convert(B)))";
 #else
         var expected = "Convert((Convert(A, Int32) | Convert(B, Int32)), ExampleFlags)";
@@ -78,7 +78,7 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "@0 & @1";
-#if NET452
+#if NET48
         var expected = "Convert((Convert(A) & Convert(B)))";
 #else
         var expected = "Convert((Convert(A, Int32) & Convert(B, Int32)), ExampleFlags)";
@@ -108,7 +108,7 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "@0 | @1 | @2";
-#if NET452
+#if NET48
         var expected = "Convert(((Convert(A) | Convert(B)) | Convert(C)))";
 #else
         var expected = "Convert(((Convert(A, Int32) | Convert(B, Int32)) | Convert(C, Int32)), ExampleFlags)";
@@ -138,7 +138,7 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "@0 & @1 & @2";
-#if NET452
+#if NET48
         var expected = "Convert(((Convert(A) & Convert(B)) & Convert(C)))";
 #else
         var expected = "Convert(((Convert(A, Int32) & Convert(B, Int32)) & Convert(C, Int32)), ExampleFlags)";
@@ -316,7 +316,7 @@ public partial class ExpressionParserTests
     }
 
     [Theory]
-#if NET452
+#if NET48
     [InlineData("int?(5)", typeof(int?), "Convert(5)")]
     [InlineData("int?(null)", typeof(int?), "Convert(null)")]
     [InlineData("string(null)", typeof(string), "Convert(null)")]

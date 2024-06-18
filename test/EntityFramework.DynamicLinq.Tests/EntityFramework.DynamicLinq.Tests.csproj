@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
-        <TargetFramework>net461</TargetFramework>
+        <TargetFrameworks>net461;net8.0</TargetFrameworks>
         <LangVersion>10</LangVersion>
         <DefineConstants>EF;NET461</DefineConstants>
         <AssemblyName>EntityFramework.DynamicLinq.Tests</AssemblyName>
@@ -13,7 +13,7 @@
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <ProjectGuid>{BF97CB1B-5043-4256-8F42-CF3A4F3863BE}</ProjectGuid>
         <SignAssembly>True</SignAssembly>
-        <AssemblyOriginatorKeyFile>C:\Dev\GitHub\System.Linq.Dynamic.Core\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>../../src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,6 +26,7 @@
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\Helpers\*\*.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core.Tests\D*.cs" />
+        <Compile Include="..\System.Linq.Dynamic.Core.Tests\TestClasses\*.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -39,23 +40,32 @@
         <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="NodaTime" Version="2.4.7" />
+        <PackageReference Include="Testcontainers.MsSql" Version="3.8.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.5" />
         <PackageReference Include="QueryInterceptor.Core" Version="1.0.7" />
-        <PackageReference Include="EntityFramework" Version="6.2.0" />
-        <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.1" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="NFluent" Version="2.8.0" />
         <PackageReference Include="Moq" Version="4.13.1" />
-        <PackageReference Include="LinqKit.EntityFramework" Version="1.1.15" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
+        <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.1" />
+        <PackageReference Include="LinqKit.EntityFramework" Version="1.1.15" />
     </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.5" />
+    </ItemGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
+        <DefineConstants>$(DefineConstants);AspNetCoreIdentity</DefineConstants>
+    </PropertyGroup>
 
 </Project>
