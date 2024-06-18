@@ -58,7 +58,7 @@ public class StringParserTests
 
         parseException.Which.InnerException!.Message.Should().Contain("hexadecimal digits");
 
-        parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseStringAndUnescape(String s, Int32 pos) in ").And.Contain("System.Linq.Dynamic.Core\\Parser\\StringParser.cs:line ");
+        parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseStringAndUnescape(String s, Int32 pos) in ").And.Contain("StringParser.cs:line ");
     }
 
     [Theory]
