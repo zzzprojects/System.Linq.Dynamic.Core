@@ -1,5 +1,4 @@
-﻿using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
-using Xunit;
+﻿using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests;
 

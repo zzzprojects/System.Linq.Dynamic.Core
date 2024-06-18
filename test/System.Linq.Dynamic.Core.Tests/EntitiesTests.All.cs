@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.DynamicLinq;
 using System.Data.Entity;
 using EntityFramework.DynamicLinq;
 #endif
-using System.Threading.Tasks;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests;

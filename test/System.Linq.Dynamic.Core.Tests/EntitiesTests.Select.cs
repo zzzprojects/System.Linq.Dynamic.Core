@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using System.Linq.Dynamic.Core.Exceptions;
-using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
-using FluentAssertions;
 using Newtonsoft.Json;
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
@@ -88,7 +86,7 @@ public partial class EntitiesTests
         //Assert
         Assert.Equal(
             expected,
-            test.Select(x => new { X = "x", BlogId = (int)x.BlogId, Name = (string)x.Name }).ToArray() //convert to same anomymous type used by expected so they can be found equal
+            test.Select(x => new { X = "x", BlogId = (int)x.BlogId, Name = (string)x.Name }).ToArray() // Convert to same anonymous type used by expected, so they can be found equal.
         );
     }
 
@@ -130,13 +128,15 @@ public partial class EntitiesTests
         }
     }
 
-    [Fact(Skip = "593 - this does not work")]
+    /// <summary>
+    /// #593
+    /// </summary>
+    [Fact]
     public void Entities_Select_DynamicClass_And_Call_Any()
     {
         // Act
         var result = _context.Blogs
             .Select("new (BlogId, Name)")
-            .Cast<DynamicClass>()
             .Any("Name == \"Blog2\"");
 
         // Assert
