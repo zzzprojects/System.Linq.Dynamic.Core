@@ -7,7 +7,7 @@
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>../../src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <IsPackable>false</IsPackable>
-        <DefineConstants>$(DefineConstants);NETCOREAPP;EFCORE;EFCORE_3X;NETCOREAPP3_1</DefineConstants>
+        <DefineConstants>$(DefineConstants);NETCOREAPP;EFCORE;EFCORE_3X;NETCOREAPP3_1;AspNetCoreIdentity</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -38,6 +38,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
         <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="6.1.2" />
         <PackageReference Include="NodaTime" Version="3.1.5" />
+        <PackageReference Include="Testcontainers.MsSql" Version="3.8.0" />
 
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore6.csproj" />
     </ItemGroup>

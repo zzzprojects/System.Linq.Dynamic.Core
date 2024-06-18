@@ -9,7 +9,7 @@ using QueryInterceptor.Core;
 using Xunit;
 using NFluent;
 using Newtonsoft.Json.Linq;
-#if EFCORE
+#if AspNetCoreIdentity
 using Microsoft.AspNetCore.Identity;
 #else
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -429,7 +429,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result).Equals("System.Int32[].Select(it => (it * it))");
         }
 
-#if NET452 || NET5_0 || NET6_0 || NET7_0 || NET8_0
+#if NET461 || NET5_0 || NET6_0 || NET7_0 || NET8_0
         [Fact(Skip = "Fails sometimes in GitHub CI build")]
 #else
         [Fact]
