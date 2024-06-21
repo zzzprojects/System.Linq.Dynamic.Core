@@ -1,3 +1,7 @@
+# v1.4.1 (21 June 2024)
+- [#819](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/819) - Update EntityFramework to version 6.5 to fix CVE [feature] contributed by [StefH](https://github.com/StefH)
+- [#820](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/820) - Use Testcontainers.MsSql for unit tests [test] contributed by [StefH](https://github.com/StefH)
+
 # v1.4.0 (31 May 2024)
 - [#807](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/807) - PredefinedTypesHelper: Fix loading types from System.Data.Entity and EntityFramework [bug] contributed by [StefH](https://github.com/StefH)
 - [#790](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/790) - .NET 8 (and possible all non-NETSTANDARD and higher versions) attempt to load EF 6 types [bug]
