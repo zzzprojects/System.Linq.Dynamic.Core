@@ -38,18 +38,31 @@ jobs:
          6.0.x
          7.0.x
          8.0.x
+
+    - name: Install dotnet tools
+      run: |
+        dotnet tool install --global dotnet-sonarscanner
+        dotnet tool install --global dotnet-coverage
+
+    - name: Begin analysis on SonarCloud
+      run: |
+        dotnet sonarscanner begin /k:"???" /o:"zzz" /d:sonar.branch.name=$(Build.SourceBranchName) /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="$(SONAR_TOKEN)" /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
               
     - name: Build
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
 
-    - name: Run Tests EF net8.0
+    - name: Run Tests EF net8.0 (with Coverage)
       run: |
-        dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj -c Release -f net8.0 -p:buildType=azure-pipelines-ci
-
-    - name: Run Tests EFCore net8.0
+        dotnet-coverage collect "dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Release --framework net8.0 -p:buildType=azure-pipelines-ci" -f xml -o "dynamic-coverage-ef.xml"
+        
+    - name: Run Tests EFCore net8.0 (with Coverage)
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet-coverage collect "dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Release -p:buildType=azure-pipelines-ci" -f xml -o "dynamic-coverage-efcore.xml"
+        
+    - name: End analysis on SonarCloud
+      run: |
+        dotnet sonarscanner end /d:sonar.token="$(SONAR_TOKEN)"
 
     - name: Run Tests EFCore net7.0
       run: |
