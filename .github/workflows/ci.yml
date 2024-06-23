@@ -33,12 +33,18 @@ jobs:
     steps:  
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v4
-      with:
-       dotnet-version: |
-         6.0.x
-         7.0.x
-         8.0.x
+    - name: Set JAVA_HOME to JDK 17
+      shell: pwsh
+      run: |
+        $jdkPath = $env:JAVA_HOME_17_X64
+        echo "JAVA_HOME=$jdkPath" >> $GITHUB_ENV
+
+    # - uses: actions/setup-dotnet@v4
+    #   with:
+    #    dotnet-version: |
+    #      6.0.x
+    #      7.0.x
+    #      8.0.x
 
     - name: Install dotnet tools
       run: |
