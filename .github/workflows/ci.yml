@@ -33,6 +33,11 @@ jobs:
     steps:  
     - uses: actions/checkout@v4
 
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '17'
+
     - name: Set JAVA_HOME to JDK 17
       shell: pwsh
       run: |
