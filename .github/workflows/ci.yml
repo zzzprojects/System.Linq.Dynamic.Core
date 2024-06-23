@@ -46,7 +46,7 @@ jobs:
 
     - name: Begin analysis on SonarCloud
       run: |
-        dotnet sonarscanner begin /k:"???" /o:"zzz" /d:sonar.branch.name=$(Build.SourceBranchName) /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="$(SONAR_TOKEN)" /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
+        dotnet sonarscanner begin /k:"zzzprojects_System.Linq.Dynamic.Core" /o:"zzzprojects" /d:sonar.branch.name=$(Build.SourceBranchName) /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="$(SONAR_TOKEN)" /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
               
     - name: Build
       run: |
