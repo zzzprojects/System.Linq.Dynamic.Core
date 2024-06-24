@@ -28,28 +28,48 @@ jobs:
 
     env:
       IsRunningOnGitHubActions: 'true'
+      BranchName: ${{ github.head_ref || github.ref_name }}
 
     steps:  
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-dotnet@v4
+    - uses: actions/setup-java@v4
       with:
-       dotnet-version: |
-         6.0.x
-         7.0.x
-         8.0.x
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '17'
+
+    - name: Set JAVA_HOME to JDK 17
+      shell: pwsh
+      run: |
+        $jdkPath = $env:JAVA_HOME_17_X64
+        echo "JAVA_HOME=$jdkPath" >> $GITHUB_ENV
+
+    - name: Install dotnet tools
+      run: |
+        dotnet tool install --global dotnet-sonarscanner
+        dotnet tool install --global dotnet-coverage
+
+    - name: Begin analysis on SonarCloud
+      if: github.event_name != 'pull_request'
+      run: |
+        dotnet sonarscanner begin /k:"zzzprojects_System.Linq.Dynamic.Core" /o:"zzzprojects" /d:sonar.branch.name=$BranchName /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
               
     - name: Build
       run: |
-        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Debug -p:buildType=azure-pipelines-ci
 
-    - name: Run Tests EF net8.0
+    - name: Run Tests EF net8.0 (with Coverage)
       run: |
-        dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj -c Release -f net8.0 -p:buildType=azure-pipelines-ci
-
-    - name: Run Tests EFCore net8.0
+        dotnet-coverage collect 'dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Debug --framework net8.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-ef.xml
+        
+    - name: Run Tests EFCore net8.0 (with Coverage)
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
+        
+    - name: End analysis on SonarCloud
+      if: github.event_name != 'pull_request'
+      run: |
+        dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
 
     - name: Run Tests EFCore net7.0
       run: |

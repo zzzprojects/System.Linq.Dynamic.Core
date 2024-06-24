@@ -63,6 +63,7 @@ If it's not possible to add that attribute, you need to implement a custom [Cust
 | | |
 | ***Quality*** | &nbsp; |
 | &nbsp;&nbsp;**CI Workflow** | ![CI Workflow](https://github.com/zzzprojects/System.Linq.Dynamic.Core/actions/workflows/ci.yml/badge.svg) |
+| &nbsp;&nbsp;**SonarCloud** | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=zzzprojects_System.Linq.Dynamic.Core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=zzzprojects_System.Linq.Dynamic.Core) |
 | |
 | ***NuGet*** | &nbsp; |
 | &nbsp;&nbsp;**System.Linq.Dynamic.Core** | [![NuGet](https://buildstats.info/nuget/System.Linq.Dynamic.Core)](https://www.nuget.org/packages/System.Linq.Dynamic.Core) |

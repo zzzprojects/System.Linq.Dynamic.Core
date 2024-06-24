@@ -1,5 +1,10 @@
 <Project>
     <PropertyGroup>
         <LangVersion>12</LangVersion>
+
+        <!-- https://github.com/coverlet-coverage/coverlet/issues/1391 -->
+        <CollectCoverage>true</CollectCoverage>
+        <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
+        <CoverletOutputFormat>opencover</CoverletOutputFormat>
     </PropertyGroup>
 </Project>
