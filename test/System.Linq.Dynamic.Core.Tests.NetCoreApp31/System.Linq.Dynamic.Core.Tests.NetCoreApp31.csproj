@@ -12,15 +12,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.msbuild" Version="6.0.2">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
         <PackageReference Include="Mono.Reflection" Version="2.0.0" />
-        <PackageReference Include="OpenCover" Version="4.7.1221" />
-        <PackageReference Include="ReportGenerator" Version="4.8.13" />
         <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
         <PackageReference Include="xunit.runner.console" Version="2.4.1">
             <PrivateAssets>all</PrivateAssets>
@@ -42,6 +35,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
         <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="3.0.0" />
+
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore3.csproj" />
     </ItemGroup>
 

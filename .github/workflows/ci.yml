@@ -68,8 +68,8 @@ jobs:
 
     - name: Run Tests Json .NET 8 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-newtonsoftjson.xml
-        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-systemtextjson.xml
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj --configuration Debug --framework net8.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-newtonsoftjson.xml
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj --configuration Debug --framework net8.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-systemtextjson.xml
         
     - name: End analysis on SonarCloud
       if: github.event_name != 'pull_request'
