@@ -3,7 +3,8 @@
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
         <TargetFrameworks>net461;net8.0</TargetFrameworks>
-        <LangVersion>10</LangVersion>
+        <DebugType>full</DebugType>
+        <LangVersion>latest</LangVersion>
         <DefineConstants>EF;NET461</DefineConstants>
         <AssemblyName>EntityFramework.DynamicLinq.Tests</AssemblyName>
         <PackageId>EntityFramework.DynamicLinq.Tests</PackageId>
@@ -35,6 +36,15 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Codecov" Version="1.13.0" />
+        <PackageReference Include="coverlet.msbuild" Version="3.2.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="3.2.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
