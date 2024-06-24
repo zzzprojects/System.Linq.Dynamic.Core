@@ -16,7 +16,9 @@ public class JObjectExtensionsTests
         {
             { "Name", "John" },
             { "Age", 30 },
+            { "FloatValue", 123.5f },
             { "IsMale", true },
+            { "IsTest", false },
             { "DateOfBirth", new DateTime(1990, 1, 1) },
             { "Guid", guid },
             { "Bytes", new byte[] { 1, 2, 3 } },
@@ -37,7 +39,9 @@ public class JObjectExtensionsTests
         {
             Name = "John",
             Age = 30,
+            FloatValue = 123.5f,
             IsMale = true,
+            IsTest = false,
             DateOfBirth = new DateTime(1990, 1, 1),
             Guid = guid,
             Bytes = new byte[] { 1, 2, 3 },
