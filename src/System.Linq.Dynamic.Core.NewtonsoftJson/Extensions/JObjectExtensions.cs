@@ -53,14 +53,14 @@ internal static class JObjectExtensions
         return DynamicClassFactory.CreateInstance(dynamicPropertiesWithValue);
     }
 
-    internal static IEnumerable ToDynamicJsonClassArray(this JArray? src, DynamicJsonClassOptions? options = null)
-    {
-        return src == null ? new object?[0] : ConvertJTokenArray(src, options);
-    }
-
     internal static object? ToDynamicClass(this JToken? src, DynamicJsonClassOptions? options = null)
     {
         return src == null ? null : GetResolverFor(src)(src, options);
+    }
+
+    internal static IEnumerable ToDynamicJsonClassArray(this JArray? src, DynamicJsonClassOptions? options = null)
+    {
+        return src == null ? new object?[0] : ConvertJTokenArray(src, options);
     }
 
     private static object? ConvertJObject(JToken arg, DynamicJsonClassOptions? options = null)
