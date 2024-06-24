@@ -63,15 +63,15 @@ jobs:
               
     - name: Build
       run: |
-        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Debug -p:buildType=azure-pipelines-ci
 
     - name: Run Tests EF net8.0 (with Coverage)
       run: |
-        dotnet-coverage collect "dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Release --framework net8.0 -p:buildType=azure-pipelines-ci" -f xml -o "dynamic-coverage-ef.xml"
+        dotnet-coverage collect "dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Debug --framework net8.0 -p:buildType=azure-pipelines-ci" -f xml -o "dynamic-coverage-ef.xml"
         
     - name: Run Tests EFCore net8.0 (with Coverage)
       run: |
-        dotnet-coverage collect "dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Release -p:buildType=azure-pipelines-ci" -f xml -o "dynamic-coverage-efcore.xml"
+        dotnet-coverage collect "dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci" -f xml -o "dynamic-coverage-efcore.xml"
         
     - name: End analysis on SonarCloud
       if: github.event_name != 'pull_request'
