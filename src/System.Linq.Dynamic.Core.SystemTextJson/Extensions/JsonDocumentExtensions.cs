@@ -8,9 +8,7 @@ namespace System.Linq.Dynamic.Core.SystemTextJson.Extensions;
 
 internal static class JsonDocumentExtensions
 {
-    private class JTokenResolvers : Dictionary<JsonValueKind, Func<JsonElement, DynamicJsonClassOptions?, object?>>
-    {
-    }
+    private class JTokenResolvers : Dictionary<JsonValueKind, Func<JsonElement, DynamicJsonClassOptions?, object?>>;
 
     private static readonly JTokenResolvers Resolvers = new()
     {

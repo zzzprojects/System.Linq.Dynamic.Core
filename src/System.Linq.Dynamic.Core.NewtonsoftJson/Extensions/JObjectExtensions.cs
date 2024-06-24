@@ -11,9 +11,7 @@ namespace System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
 /// </summary>
 internal static class JObjectExtensions
 {
-    private class JTokenResolvers : Dictionary<JTokenType, Func<JToken, DynamicJsonClassOptions?, object?>>
-    {
-    }
+    private class JTokenResolvers : Dictionary<JTokenType, Func<JToken, DynamicJsonClassOptions?, object?>>;
 
     private static readonly JTokenResolvers Resolvers = new()
     {
