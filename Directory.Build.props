@@ -12,4 +12,11 @@
             </PropertyGroup>
         </When>
     </Choose>
+
+    <!-- https://github.com/coverlet-coverage/coverlet/issues/1391 -->
+    <PropertyGroup Condition="$(MSBuildProjectName.Contains('.Tests'))">
+        <CollectCoverage>true</CollectCoverage>
+        <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
+        <CoverletOutputFormat>opencover</CoverletOutputFormat>
+    </PropertyGroup>
 </Project>
