@@ -17,7 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.deployment = .deployment
 		.editorconfig = .editorconfig
-		azure-pipelines.yml = azure-pipelines.yml
 		CHANGELOG.md = CHANGELOG.md
 		Directory.Build.props = Directory.Build.props
 		Generate-ReleaseNotes.bat = Generate-ReleaseNotes.bat
@@ -132,9 +131,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp_net6.0_EF6_Sqlite", "src-console\ConsoleAppEF6_Sqlite\ConsoleApp_net6.0_EF6_Sqlite.csproj", "{CA03FD55-9DAB-4827-9A35-A96D3804B311}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src-examples", "src-examples", "{BCA2A024-9032-4E56-A6C4-17A15D921728}"
-	ProjectSection(SolutionItems) = preProject
-		src-examples\README.md = src-examples\README.md
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeFirst.DataAccess", "src-examples\CodeFirst.DataAccess\CodeFirst.DataAccess.csproj", "{E36D1A08-F3ED-48C7-9DBF-8F625974A6C4}"
 EndProject
