@@ -1,6 +1,10 @@
 name: Build with Tests
 
-on: [push]
+on: 
+ push:
+ workflow_dispatch:
+ pull_request:
+   types: [opened, edited]
 
 jobs:
   build_and_test_Windows:
@@ -13,6 +17,8 @@ jobs:
 
     steps:  
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
               
     - name: Build
       run: |
@@ -37,12 +43,6 @@ jobs:
       with:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
-
-    - name: Set JAVA_HOME to JDK 17
-      shell: pwsh
-      run: |
-        $jdkPath = $env:JAVA_HOME_17_X64
-        echo "JAVA_HOME=$jdkPath" >> $GITHUB_ENV
 
     - name: Install dotnet tools
       run: |
