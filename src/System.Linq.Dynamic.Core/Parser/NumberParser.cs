@@ -180,15 +180,15 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 case 'f':
                 case 'F':
-                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(float))!, text);
+                    return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(float))!, text);
 
                 case 'm':
                 case 'M':
-                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(decimal))!, text);
+                    return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(decimal))!, text);
 
                 case 'd':
                 case 'D':
-                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, text);
+                    return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, text);
 
                 default:
                     return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, text);
