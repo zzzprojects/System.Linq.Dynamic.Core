@@ -15,15 +15,15 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         {
             return new object[][]
             {
-                new object[] { "de-DE", "1", 1m },
-                new object[] { "de-DE", "-42", -42m },
-                new object[] { "de-DE", "3,215", 3.215m },
-                new object[] { "de-DE", "3.215", 3215m },
+                new object[] {"de-DE", "1", 1m},
+                new object[] {"de-DE", "-42", -42m},
+                new object[] {"de-DE", "3,215", 3.215m},
+                new object[] {"de-DE", "3.215", 3215m},
 
-                new object[] { null, "1", 1m },
-                new object[] { null, "-42", -42m },
-                new object[] { null, "3,215", 3215m },
-                new object[] { null, "3.215", 3.215m }
+                new object[] {null, "1", 1m},
+                new object[] {null, "-42", -42m},
+                new object[] {null, "3,215", 3215m},
+                new object[] {null, "3.215", 3.215m}
             };
         }
 
@@ -48,23 +48,23 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         {
             return new object[][]
             {
-                new object[] { "de-DE", "1", 1f },
-                new object[] { "de-DE", "-42", -42f },
-                new object[] { "de-DE", "3,215", 3.215f },
-                new object[] { "de-DE", "3.215", 3215f },
-                new object[] { "de-DE", "1,2345E-4", 0.00012345f },
-                new object[] { "de-DE", "1,2345e-4", 0.00012345f },
-                new object[] { "de-DE", "1,2345E4", 12345d },
-                new object[] { "de-DE", "1,2345e4", 12345d },
+                new object[] {"de-DE", "1", 1f},
+                new object[] {"de-DE", "-42", -42f},
+                new object[] {"de-DE", "3,215", 3.215f},
+                new object[] {"de-DE", "3.215", 3215f},
+                new object[] {"de-DE", "1,2345E-4", 0.00012345f},
+                new object[] {"de-DE", "1,2345e-4", 0.00012345f},
+                new object[] {"de-DE", "1,2345E4", 12345d},
+                new object[] {"de-DE", "1,2345e4", 12345d},
 
-                new object[] { null, "1", 1f },
-                new object[] { null, "-42", -42f },
-                new object[] { null, "3,215", 3215f },
-                new object[] { null, "3.215", 3.215f },
-                new object[] { null, "1.2345E-4", 0.00012345f },
-                new object[] { null, "1.2345e-4", 0.00012345f },
-                new object[] { null, "1.2345E4", 12345f },
-                new object[] { null, "1.2345e4", 12345f }
+                new object[] {null, "1", 1f},
+                new object[] {null, "-42", -42f},
+                new object[] {null, "3,215", 3215f},
+                new object[] {null, "3.215", 3.215f},
+                new object[] {null, "1.2345E-4", 0.00012345f},
+                new object[] {null, "1.2345e-4", 0.00012345f},
+                new object[] {null, "1.2345E4", 12345f},
+                new object[] {null, "1.2345e4", 12345f}
             };
         }
 
@@ -89,23 +89,23 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         {
             return new object[][]
             {
-                new object[] { "de-DE", "1", 1d },
-                new object[] { "de-DE", "-42", -42d },
-                new object[] { "de-DE", "3,215", 3.215d },
-                new object[] { "de-DE", "3.215", 3215d },
-                new object[] { "de-DE", "1,2345E-4", 0.00012345d },
-                new object[] { "de-DE", "1,2345e-4", 0.00012345d },
-                new object[] { "de-DE", "1,2345E4", 12345d },
-                new object[] { "de-DE", "1,2345e4", 12345d },
+                new object[] {"de-DE", "1", 1d},
+                new object[] {"de-DE", "-42", -42d},
+                new object[] {"de-DE", "3,215", 3.215d},
+                new object[] {"de-DE", "3.215", 3215d},
+                new object[] {"de-DE", "1,2345E-4", 0.00012345d},
+                new object[] {"de-DE", "1,2345e-4", 0.00012345d},
+                new object[] {"de-DE", "1,2345E4", 12345d},
+                new object[] {"de-DE", "1,2345e4", 12345d},
 
-                new object[] { null, "1", 1d },
-                new object[] { null, "-42", -42d },
-                new object[] { null, "3,215", 3215d },
-                new object[] { null, "3.215", 3.215d },
-                new object[] { null, "1.2345E-4", 0.00012345d },
-                new object[] { null, "1.2345e-4", 0.00012345d },
-                new object[] { null, "1.2345E4", 12345d },
-                new object[] { null, "1.2345e4", 12345d }
+                new object[] {null, "1", 1d},
+                new object[] {null, "-42", -42d},
+                new object[] {null, "3,215", 3215d},
+                new object[] {null, "3.215", 3.215d},
+                new object[] {null, "1.2345E-4", 0.00012345d},
+                new object[] {null, "1.2345e-4", 0.00012345d},
+                new object[] {null, "1.2345E4", 12345d},
+                new object[] {null, "1.2345e4", 12345d}
             };
         }
 
@@ -158,17 +158,39 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [InlineData("-42", 'm', -42)]
         [InlineData("42m", 'm', 42)]
         [InlineData("-42m", 'm', -42)]
+        public void NumberParser_ParseDecimalLiteral(string text, char qualifier, decimal expected)
+        {
+            // Arrange
 
+            // Act
+            var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, qualifier, true) as ConstantExpression;
+
+            // Assert
+            result!.Value.Should().Be(expected);
+        }
+
+        [Theory]
         [InlineData("42", 'd', 42)]
         [InlineData("-42", 'd', -42)]
         [InlineData("42d", 'd', 42)]
         [InlineData("-42d", 'd', -42)]
+        public void NumberParser_ParseDoubleLiteral(string text, char qualifier, double expected)
+        {
+            // Arrange
 
+            // Act
+            var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, qualifier, true) as ConstantExpression;
+
+            // Assert
+            result!.Value.Should().Be(expected);
+        }
+
+        [Theory]
         [InlineData("42", 'f', 42)]
         [InlineData("-42", 'f', -42)]
         [InlineData("42f", 'f', 42)]
         [InlineData("-42f", 'f', -42)]
-        public void NumberParser_ParseRealLiteral(string text, char qualifier, double expected)
+        public void NumberParser_ParseFloatLiteral(string text, char qualifier, float expected)
         {
             // Arrange
 
