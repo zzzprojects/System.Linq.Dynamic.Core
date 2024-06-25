@@ -1,3 +1,7 @@
+# v1.4.2 (25 June 2024)
+- [#824](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/824) - Fixed: Incorrect Handling of Qualifiers in ConstantExpressionHelper contributed by [RenanCarlosPereira](https://github.com/RenanCarlosPereira)
+- [#821](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/821) - Incorrect Handling of Qualifiers in ConstantExpressionHelper [bug]
+
 # v1.4.1 (21 June 2024)
 - [#819](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/819) - Update EntityFramework to version 6.5 to fix CVE [feature] contributed by [StefH](https://github.com/StefH)
 - [#820](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/820) - Use Testcontainers.MsSql for unit tests [test] contributed by [StefH](https://github.com/StefH)
