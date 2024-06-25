@@ -5,7 +5,6 @@
         <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
         <DebugType>full</DebugType>
         <SignAssembly>True</SignAssembly>
-        <Nullable>enable</Nullable>
         <AssemblyOriginatorKeyFile>../../src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <ProjectGuid>{7AFC2836-0F6E-4B0D-8BB3-13317A3B6616}</ProjectGuid>
         <DefineConstants>$(DefineConstants);EFCORE;EFCORE_3X;AspNetCoreIdentity</DefineConstants>
