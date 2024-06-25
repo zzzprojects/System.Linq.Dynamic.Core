@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
@@ -161,19 +161,34 @@ namespace System.Linq.Dynamic.Core.Parser
         /// </summary>
         public Expression ParseRealLiteral(string text, char qualifier, bool stripQualifier)
         {
+            if (stripQualifier)
+            {
+                var pos = text.Length - 1;
+                while (pos >= 0 && Qualifiers.Contains(text[pos]))
+                {
+                    pos--;
+                }
+
+                if (pos < text.Length - 1)
+                {
+                    qualifier = text[pos + 1];
+                    text = text.Substring(0, pos + 1);
+                }
+            }
+
             switch (qualifier)
             {
                 case 'f':
                 case 'F':
-                    return _constantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(float))!, text);
+                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(float))!, text);
 
                 case 'm':
                 case 'M':
-                    return _constantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(decimal))!, text);
+                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(decimal))!, text);
 
                 case 'd':
                 case 'D':
-                    return _constantExpressionHelper.CreateLiteral(ParseNumber(stripQualifier ? text.Substring(0, text.Length - 1) : text, typeof(double))!, text);
+                    return ConstantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, text);
 
                 default:
                     return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, text);
