@@ -7,7 +7,6 @@
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>../../src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
         <IsPackable>false</IsPackable>
-        <Nullable>enable</Nullable>
         <DefineConstants>$(DefineConstants);NETCOREAPP;EFCORE;EFCORE_3X;NETCOREAPP3_1;AspNetCoreIdentity</DefineConstants>
     </PropertyGroup>
 

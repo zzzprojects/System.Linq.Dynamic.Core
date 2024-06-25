@@ -1,6 +1,7 @@
 <Project>
     <PropertyGroup>
         <LangVersion>12</LangVersion>
+        <Nullable>enable</Nullable>
 
         <!-- https://github.com/coverlet-coverage/coverlet/issues/1391 -->
         <CollectCoverage>true</CollectCoverage>
