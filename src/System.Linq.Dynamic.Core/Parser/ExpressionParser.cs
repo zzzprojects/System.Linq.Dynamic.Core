@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Parser.SupportedMethods;
 using System.Linq.Dynamic.Core.Parser.SupportedOperands;
 using System.Linq.Dynamic.Core.Tokenizer;
@@ -475,17 +476,15 @@ public class ExpressionParser
     private Expression ParseComparisonOperator()
     {
         Expression left = ParseShiftOperator();
-        while (_textParser.CurrentToken.Id == TokenId.Equal || _textParser.CurrentToken.Id == TokenId.DoubleEqual ||
-               _textParser.CurrentToken.Id == TokenId.ExclamationEqual || _textParser.CurrentToken.Id == TokenId.LessGreater ||
-               _textParser.CurrentToken.Id == TokenId.GreaterThan || _textParser.CurrentToken.Id == TokenId.GreaterThanEqual ||
-               _textParser.CurrentToken.Id == TokenId.LessThan || _textParser.CurrentToken.Id == TokenId.LessThanEqual)
+        while (_textParser.CurrentToken.Id.IsComparisonOperator())
         {
             ConstantExpression? constantExpr;
             TypeConverter typeConverter;
             Token op = _textParser.CurrentToken;
             _textParser.NextToken();
             Expression right = ParseShiftOperator();
-            bool isEquality = op.Id == TokenId.Equal || op.Id == TokenId.DoubleEqual || op.Id == TokenId.ExclamationEqual || op.Id == TokenId.LessGreater;
+
+            var isEquality = op.Id.IsEqualityOperator();
 
             if (isEquality && (!left.Type.GetTypeInfo().IsValueType && !right.Type.GetTypeInfo().IsValueType || left.Type == typeof(Guid) && right.Type == typeof(Guid)))
             {

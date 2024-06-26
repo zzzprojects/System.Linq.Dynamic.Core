@@ -28,7 +28,7 @@ public class User
 
     public char C { get; set; }
 
-    public UserProfile Profile { get; set; }
+    public UserProfile? Profile { get; set; }
 
     public UserState State { get; set; }
 
