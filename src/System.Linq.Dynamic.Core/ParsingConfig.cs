@@ -243,6 +243,39 @@ public class ParsingConfig
     public CacheConfig? ConstantExpressionCacheConfig { get; set; }
 
     /// <summary>
+    /// Converts typeof(object) to the correct type to allow comparison (Equal, NotEqual, GreaterThan, GreaterThanEqual, LessThan and LessThanEqual).
+    ///
+    /// Default value is <c>false</c>.
+    ///
+    /// When set to <c>true</c>, the following code will work correct:
+    /// <example>
+    /// <code>
+    /// <![CDATA[
+    /// class Person
+    /// {
+    ///     public string Name { get; set; }
+    ///     public object Age { get; set; }
+    /// }
+    ///
+    /// var persons = new[]
+    /// {
+    ///     new Person { Name = "Foo", Age = 99 },
+    ///     new Person { Name = "Bar", Age = 33 }
+    /// }.AsQueryable();
+    ///
+    /// var config = new ParsingConfig
+    /// {
+    ///     ConvertObjectToSupportComparison = true
+    /// };
+    /// 
+    /// var results = persons.Where(config, "Age > 50").ToList();
+    /// ]]>
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool ConvertObjectToSupportComparison { get; set; }
+
+    /// <summary>
     /// Defines the type of string literal parsing that will be performed.
     /// Default value is <c>StringLiteralParsingType.Default</c>.
     /// </summary>
