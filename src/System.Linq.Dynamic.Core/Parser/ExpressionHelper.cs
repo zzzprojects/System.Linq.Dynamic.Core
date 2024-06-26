@@ -137,6 +137,8 @@ internal class ExpressionHelper : IExpressionHelper
     {
         OptimizeForEqualityIfPossible(ref left, ref right);
 
+        TryConvertTypes(ref left, ref right);
+
         WrapConstantExpressions(ref left, ref right);
 
         return Expression.Equal(left, right);
@@ -146,6 +148,8 @@ internal class ExpressionHelper : IExpressionHelper
     {
         OptimizeForEqualityIfPossible(ref left, ref right);
 
+        TryConvertTypes(ref left, ref right);
+
         WrapConstantExpressions(ref left, ref right);
 
         return Expression.NotEqual(left, right);
@@ -153,9 +157,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateGreaterThan(Expression left, Expression right)
     {
+        TryConvertTypes(ref left, ref right);
+
         if (left.Type == typeof(string))
         {
-            return Expression.GreaterThan(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
+            return Expression.GreaterThan(GenerateStaticMethodCall(nameof(string.Compare), left, right), Expression.Constant(0));
         }
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
@@ -172,9 +178,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateGreaterThanEqual(Expression left, Expression right)
     {
+        TryConvertTypes(ref left, ref right);
+
         if (left.Type == typeof(string))
         {
-            return Expression.GreaterThanOrEqual(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
+            return Expression.GreaterThanOrEqual(GenerateStaticMethodCall(nameof(string.Compare), left, right), Expression.Constant(0));
         }
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
@@ -192,9 +200,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateLessThan(Expression left, Expression right)
     {
+        TryConvertTypes(ref left, ref right);
+
         if (left.Type == typeof(string))
         {
-            return Expression.LessThan(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
+            return Expression.LessThan(GenerateStaticMethodCall(nameof(string.Compare), left, right), Expression.Constant(0));
         }
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
@@ -212,9 +222,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateLessThanEqual(Expression left, Expression right)
     {
+        TryConvertTypes(ref left, ref right);
+
         if (left.Type == typeof(string))
         {
-            return Expression.LessThanOrEqual(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
+            return Expression.LessThanOrEqual(GenerateStaticMethodCall(nameof(string.Compare), left, right), Expression.Constant(0));
         }
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
@@ -268,14 +280,14 @@ internal class ExpressionHelper : IExpressionHelper
 #endif
 
 #if !NET35
-        if (type == typeof(Guid) && Guid.TryParse(text, out Guid guid))
+        if (type == typeof(Guid) && Guid.TryParse(text, out var guid))
         {
             return Expression.Constant(guid, typeof(Guid));
         }
 #else
         try
         {
-            return Expression.Constant(new Guid(text));
+            return Expression.Constant(new Guid(text!));
         }
         catch
         {
@@ -399,7 +411,7 @@ internal class ExpressionHelper : IExpressionHelper
         {
             switch (expression)
             {
-                case MemberExpression _:
+                case MemberExpression:
                     list.Add(sourceExpression);
                     break;
 
@@ -441,6 +453,26 @@ internal class ExpressionHelper : IExpressionHelper
         } while (expressionRecognized);
 
         return list;
+    }
+
+    /// <summary>
+    /// If the types are different (and not null), try to convert the object type to other type.
+    /// </summary>
+    private void TryConvertTypes(ref Expression left, ref Expression right)
+    {
+        if (!_parsingConfig.ConvertObjectToSupportComparison || left.Type == right.Type || Constants.IsNull(left) || Constants.IsNull(right))
+        {
+            return;
+        }
+
+        if (left.Type == typeof(object))
+        {
+            left = Expression.Convert(left, right.Type);
+        }
+        else if (right.Type == typeof(object))
+        {
+            right = Expression.Convert(right, left.Type);
+        }
     }
 
     private static Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
