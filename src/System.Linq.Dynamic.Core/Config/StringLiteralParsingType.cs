@@ -6,8 +6,8 @@
 public enum StringLiteralParsingType : byte
 {
     /// <summary>
-    /// Represents the default string literal parsing type. Double quotes should be escaped using the default escaping.
-    /// E.G. When a you want to check if a Value equals a double quote, use this code:
+    /// Represents the default string literal parsing type. Double quotes should be escaped using the default escape character (a \).
+    /// To check if a Value equals a double quote, use this c# code:
     /// <code>
     /// var expression = "Value == \"\\\"\"";
     /// </code>
@@ -15,8 +15,8 @@ public enum StringLiteralParsingType : byte
     Default = 0,
 
     /// <summary>
-    /// Represents a string literal parsing type where a double quote should be escaped by an extra double quote.
-    /// E.G. When a you want to check if a Value equals a double quote, use this code:
+    /// Represents a string literal parsing type where a double quote should be escaped by an extra double quote (").
+    /// To check if a Value equals a double quote, use this c# code:
     /// <code>
     /// var expression = "Value == \"\"\"\"";
     /// </code>
