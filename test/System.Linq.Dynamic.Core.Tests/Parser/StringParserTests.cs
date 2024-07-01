@@ -10,10 +10,10 @@ public class StringParserTests
     [Theory]
     [InlineData("'s")]
     [InlineData("\"s")]
-    public void StringParser_With_UnexpectedUnclosedString_ThrowsException(string input)
+    public void StringParser_ParseStringAndUnescape_With_UnexpectedUnclosedString_ThrowsException(string input)
     {
         // Act
-        var exception = Assert.Throws<ParseException>(() => StringParser.ParseString(input));
+        var exception = Assert.Throws<ParseException>(() => StringParser.ParseStringAndUnescape(input));
 
         // Assert
         Assert.Equal($"Unexpected end of string with unclosed string at position 2 near '{input}'.", exception.Message);
@@ -23,10 +23,10 @@ public class StringParserTests
     [InlineData("")]
     [InlineData(null)]
     [InlineData("x")]
-    public void StringParser_With_InvalidStringLength_ThrowsException(string input)
+    public void StringParser_ParseStringAndUnescape_With_InvalidStringLength_ThrowsException(string input)
     {
         // Act
-        Action action = () => StringParser.ParseString(input);
+        Action action = () => StringParser.ParseStringAndUnescape(input);
 
         // Assert
         action.Should().Throw<ParseException>().WithMessage($"String '{input}' should have at least 2 characters.");
@@ -35,30 +35,30 @@ public class StringParserTests
     [Theory]
     [InlineData("xx")]
     [InlineData("  ")]
-    public void StringParser_With_InvalidStringQuoteCharacter_ThrowsException(string input)
+    public void StringParser_ParseStringAndUnescape_With_InvalidStringQuoteCharacter_ThrowsException(string input)
     {
         // Act
-        Action action = () => StringParser.ParseString(input);
+        Action action = () => StringParser.ParseStringAndUnescape(input);
 
         // Assert
         action.Should().Throw<ParseException>().WithMessage("An escaped string should start with a double (\") or a single (') quote.");
     }
 
     [Fact]
-    public void StringParser_With_UnexpectedUnrecognizedEscapeSequence_ThrowsException()
+    public void StringParser_ParseStringAndUnescape_With_UnexpectedUnrecognizedEscapeSequence_ThrowsException()
     {
         // Arrange
         var input = new string(new[] { '"', '\\', 'u', '?', '"' });
 
         // Act
-        Action action = () => StringParser.ParseString(input);
+        Action action = () => StringParser.ParseStringAndUnescape(input);
 
         // Assert
         var parseException = action.Should().Throw<ParseException>();
 
         parseException.Which.InnerException!.Message.Should().Contain("hexadecimal digits");
 
-        parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseString(String s, Int32 pos) in ").And.Contain("StringParser.cs:line ");
+        parseException.Which.StackTrace.Should().Contain("at System.Linq.Dynamic.Core.Parser.StringParser.ParseStringAndUnescape(String s, Int32 pos) in ").And.Contain("StringParser.cs:line ");
     }
 
     [Theory]
@@ -66,10 +66,10 @@ public class StringParserTests
     [InlineData("'s'", "s")]
     [InlineData("'\\\\'", "\\")]
     [InlineData("'\\n'", "\n")]
-    public void StringParser_Parse_SingleQuotedString(string input, string expectedResult)
+    public void StringParser_ParseStringAndUnescape_SingleQuotedString(string input, string expectedResult)
     {
         // Act
-        var result = StringParser.ParseString(input);
+        var result = StringParser.ParseStringAndUnescape(input);
 
         // Assert
         result.Should().Be(expectedResult);
@@ -93,12 +93,39 @@ public class StringParserTests
     [InlineData("\"\\\"\\\"\"", "\"\"")]
     [InlineData("\"AB YZ 19 \uD800\udc05 \u00e4\"", "AB YZ 19 \uD800\udc05 \u00e4")]
     [InlineData("\"\\\\\\\\192.168.1.1\\\\audio\\\\new\"", "\\\\192.168.1.1\\audio\\new")]
-    public void StringParser_Parse_DoubleQuotedString(string input, string expectedResult)
+    [InlineData("\"{\\\"PropertyA\\\":\\\"\\\"}\"", @"{""PropertyA"":""""}")] // #786
+    public void StringParser_ParseStringAndUnescape_DoubleQuotedString(string input, string expectedResult)
     {
         // Act
-        var result = StringParser.ParseString(input);
+        var result = StringParser.ParseStringAndUnescape(input);
 
         // Assert
         result.Should().Be(expectedResult);
+    }
+
+    [Fact]
+    public void StringParser_ParseStringAndUnescape()
+    {
+        // Arrange
+        var test = "\"x\\\"X\"";
+
+        // Act
+        var result = StringParser.ParseStringAndUnescape(test);
+
+        // Assert
+        result.Should().Be("x\"X");
+    }
+
+    [Fact]
+    public void StringParser_ParseStringAndUnescapeTwoDoubleQuotesByASingleDoubleQuote()
+    {
+        // Arrange
+        var test = "\"x\"\"X\"";
+
+        // Act
+        var result = StringParser.ParseStringAndUnescapeTwoDoubleQuotesByASingleDoubleQuote(test);
+
+        // Assert
+        result.Should().Be("x\"X");
     }
 }
