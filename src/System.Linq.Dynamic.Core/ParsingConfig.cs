@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq.Dynamic.Core.Config;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Util.Cache;
@@ -273,4 +274,10 @@ public class ParsingConfig
     /// </example>
     /// </summary>
     public bool ConvertObjectToSupportComparison { get; set; }
+
+    /// <summary>
+    /// Defines the type of string literal parsing that will be performed.
+    /// Default value is <c>StringLiteralParsingType.Default</c>.
+    /// </summary>
+    public StringLiteralParsingType StringLiteralParsing { get; set; } = StringLiteralParsingType.Default;
 }

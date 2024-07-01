@@ -37,7 +37,7 @@ namespace System.Linq.Dynamic.Core.Tests
                     CustomTypeProvider = new TestCustomTypeProvider()
                 };
 
-                expFilter = DynamicExpressionParser.ParseLambda<User, bool>(config, true, filter); // Failed Here!
+                expFilter = DynamicExpressionParser.ParseLambda<User, bool>(config, true, filter);
             }
 
             return new StaticHelperSqlExpression

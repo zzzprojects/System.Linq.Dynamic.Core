@@ -10,10 +10,10 @@ namespace System.Linq.Dynamic.Core.Parser;
 /// </summary>
 internal static class StringParser
 {
-    private const string Pattern = @"""""";
-    private const string Replacement = "\"";
+    private const string TwoDoubleQuotes = "\"\"";
+    private const string SingleDoubleQuote = "\"";
 
-    public static string ParseString(string s, int pos = default)
+    internal static string ParseStringAndUnescape(string s, int pos = default)
     {
         if (s == null || s.Length < 2)
         {
@@ -41,20 +41,20 @@ internal static class StringParser
         }
     }
 
-    public static string ParseStringAndReplaceDoubleQuotes(string s, int pos)
+    internal static string ParseStringAndUnescapeTwoDoubleQuotesByASingleDoubleQuote(string input, int position = default)
     {
-        return ReplaceDoubleQuotes(ParseString(s, pos), pos);
+        return ReplaceTwoDoubleQuotesByASingleDoubleQuote(ParseStringAndUnescape(input, position), position);
     }
 
-    private static string ReplaceDoubleQuotes(string s, int pos)
+    private static string ReplaceTwoDoubleQuotesByASingleDoubleQuote(string input, int position)
     {
         try
         {
-            return Regex.Replace(s, Pattern, Replacement);
+            return Regex.Replace(input, TwoDoubleQuotes, SingleDoubleQuote);
         }
         catch (Exception ex)
         {
-            throw new ParseException(ex.Message, pos, ex);
+            throw new ParseException(ex.Message, position, ex);
         }
     }
 }
