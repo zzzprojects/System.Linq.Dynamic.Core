@@ -1,3 +1,9 @@
+# v1.4.3 (01 July 2024)
+- [#788](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/788) - Fix parsing &quot; [bug] contributed by [StefH](https://github.com/StefH)
+- [#805](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/805) - Update ComparisonOperator logic to support comparing to object [feature] contributed by [StefH](https://github.com/StefH)
+- [#451](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/451) - Cannot compare 'Object' type [feature]
+- [#786](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/786) - Parser interpreting the two consecutive escape sequences \&quot;\&quot; as a single escape sequence [bug]
+
 # v1.4.2 (25 June 2024)
 - [#824](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/824) - Fixed: Incorrect Handling of Qualifiers in ConstantExpressionHelper contributed by [RenanCarlosPereira](https://github.com/RenanCarlosPereira)
 - [#821](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/821) - Incorrect Handling of Qualifiers in ConstantExpressionHelper [bug]
