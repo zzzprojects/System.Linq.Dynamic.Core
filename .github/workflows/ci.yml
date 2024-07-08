@@ -61,7 +61,7 @@ jobs:
         fi
 
     - name: Begin analysis on SonarCloud
-      if: ${{ steps.secret-check.outputs.available == 'true' }}
+      if: ${{ steps.secret-check.outputs.run_analysis == 'true' }}
       run: |
         dotnet sonarscanner begin /k:"zzzprojects_System.Linq.Dynamic.Core" /o:"zzzprojects" /d:sonar.branch.name=$BranchName /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
               
@@ -78,7 +78,7 @@ jobs:
         dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
         
     - name: End analysis on SonarCloud
-      if: ${{ steps.secret-check.outputs.available == 'true' }}
+      if: ${{ steps.secret-check.outputs.run_analysis == 'true' }}
       run: |
         dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
 
