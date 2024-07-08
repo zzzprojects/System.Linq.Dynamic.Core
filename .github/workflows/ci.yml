@@ -49,8 +49,19 @@ jobs:
         dotnet tool install --global dotnet-sonarscanner
         dotnet tool install --global dotnet-coverage
 
+    - name: Check if analysis on SonarCloud is possible
+      id: secret-check
+      # perform secret check & put boolean result as an output
+      shell: bash
+      run: |
+        if [ "${{ secrets.SONAR_TOKEN }}" != '' ]; then
+          echo "run_analysis=true" >> $GITHUB_OUTPUT;
+        else
+          echo "run_analysis=false" >> $GITHUB_OUTPUT;
+        fi
+
     - name: Begin analysis on SonarCloud
-      if: github.event_name != 'pull_request'
+      if: ${{ steps.secret-check.outputs.run_analysis == 'true' }}
       run: |
         dotnet sonarscanner begin /k:"zzzprojects_System.Linq.Dynamic.Core" /o:"zzzprojects" /d:sonar.branch.name=$BranchName /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
               
@@ -67,7 +78,7 @@ jobs:
         dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
         
     - name: End analysis on SonarCloud
-      if: github.event_name != 'pull_request'
+      if: ${{ steps.secret-check.outputs.run_analysis == 'true' }}
       run: |
         dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
 
