@@ -49,8 +49,16 @@ jobs:
         dotnet tool install --global dotnet-sonarscanner
         dotnet tool install --global dotnet-coverage
 
+    - name: Check if user is a team member
+      id: check_membership
+      run: |
+        # Replace 'org_name' with your GitHub organization name and 'team_slug' with your team's slug
+        TEAM_MEMBERS=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/orgs/zzzprojects/teams/team_slug/members")
+        IS_MEMBER=$(echo "$TEAM_MEMBERS" | grep -c "\"login\": \"${{ github.actor }}\"")
+        echo "IS_MEMBER=$IS_MEMBER" >> $GITHUB_ENV
+
     - name: Begin analysis on SonarCloud
-      if: github.event_name != 'pull_request'
+      if: env.IS_MEMBER == '1'
       run: |
         dotnet sonarscanner begin /k:"zzzprojects_System.Linq.Dynamic.Core" /o:"zzzprojects" /d:sonar.branch.name=$BranchName /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
               
@@ -67,7 +75,7 @@ jobs:
         dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
         
     - name: End analysis on SonarCloud
-      if: github.event_name != 'pull_request'
+      if: env.IS_MEMBER == '1'
       run: |
         dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
 
