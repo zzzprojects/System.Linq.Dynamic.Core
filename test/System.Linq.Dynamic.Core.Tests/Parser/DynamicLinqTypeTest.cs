@@ -28,19 +28,19 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             return values.ToArray();
         }
 
-        public static int IncrementMe(this int values)
+        public static int IncrementMe(this int value)
         {
-            return values + 1;
+            return value + 1;
         }
 
-        public static int IncrementMe(this int values, int y)
+        public static int IncrementMe(this int value, int y)
         {
-            return values + y;
+            return value + y;
         }
 
-        public static int IncrementMeAlso(this int values)
+        public static int IncrementMeAlso(this int value)
         {
-            return values + 1;
+            return value + 1;
         }
     }
 
@@ -161,7 +161,16 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Fact]
-        public void ExtensionMethod_NoParameter()
+        public void ExtensionMethod_OnString_NoParameter()
+        {
+            var list = new string?[] { "a", "", null }.AsQueryable();
+            var result = list.Select("it.EmptyIfNull()").ToDynamicList<string?>();
+
+            result.Should().Equal("a", "", "");
+        }
+
+        [Fact]
+        public void ExtensionMethod_OnInt_NoParameter()
         {
             var list = new[] { new EntityValue { ValueInt = 1 }, new EntityValue { ValueInt = 2 } }.AsQueryable();
             var result = list.Select("ValueInt.IncrementMe()").ToDynamicList<int>();
@@ -172,7 +181,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         [Fact]
-        public void ExtensionMethod_SingleParameter()
+        public void ExtensionMethod_OnInt_SingleParameter()
         {
             var list = new[] { new EntityValue { ValueInt = 1 }, new EntityValue { ValueInt = 2 } }.AsQueryable();
             var result = list.Select("ValueInt.IncrementMe(5)").ToDynamicList<int>();
