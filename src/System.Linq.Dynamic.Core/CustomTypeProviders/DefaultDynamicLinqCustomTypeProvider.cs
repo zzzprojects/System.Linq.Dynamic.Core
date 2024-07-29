@@ -24,12 +24,22 @@ public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTyp
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultDynamicLinqCustomTypeProvider"/> class.
+    /// Backwards compatibility for issue https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/830.
     /// </summary>
-    /// <param name="config">The optional parsing configuration.</param>
     /// <param name="cacheCustomTypes">Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to 'true'.</param>
-    public DefaultDynamicLinqCustomTypeProvider(ParsingConfig? config = null, bool cacheCustomTypes = true)
+    [Obsolete("Please use the DefaultDynamicLinqCustomTypeProvider(ParsingConfig config, bool cacheCustomTypes = true) constructor.")]
+    public DefaultDynamicLinqCustomTypeProvider(bool cacheCustomTypes = true) : this(ParsingConfig.Default, cacheCustomTypes)
     {
-        _assemblyHelper = new DefaultAssemblyHelper(config ?? ParsingConfig.Default);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DefaultDynamicLinqCustomTypeProvider"/> class.
+    /// </summary>
+    /// <param name="config">The parsing configuration.</param>
+    /// <param name="cacheCustomTypes">Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to 'true'.</param>
+    public DefaultDynamicLinqCustomTypeProvider(ParsingConfig config, bool cacheCustomTypes = true)
+    {
+        _assemblyHelper = new DefaultAssemblyHelper(Check.NotNull(config));
         _cacheCustomTypes = cacheCustomTypes;
     }
 
