@@ -47,6 +47,11 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         {
             return s ?? string.Empty;
         }
+
+        public static string DefaultIfNull(this string? s, string defaultValue)
+        {
+            return s ?? defaultValue;
+        }
     }
 
     public class DynamicLinqTypeTest
@@ -168,10 +173,19 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [Fact]
         public void ExtensionMethod_OnString_NoParameter()
         {
-            var list = new string?[] { "a", "", null }.AsQueryable();
+            var list = new[] { "a", "", null }.AsQueryable();
             var result = list.Select("it.EmptyIfNull()").ToDynamicList<string?>();
 
             result.Should().Equal("a", "", "");
+        }
+
+        [Fact]
+        public void ExtensionMethod_OnString_OneParameter()
+        {
+            var list = new[] { "a", "", null }.AsQueryable();
+            var result = list.Select("it.DefaultIfNull(\"x\")").ToDynamicList<string?>();
+
+            result.Should().Equal("a", "", "x");
         }
 
         [Fact]
