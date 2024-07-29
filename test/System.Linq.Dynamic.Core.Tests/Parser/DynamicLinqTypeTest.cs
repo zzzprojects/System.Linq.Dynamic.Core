@@ -42,6 +42,11 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         {
             return value + 1;
         }
+
+        public static string EmptyIfNull(this string? s)
+        {
+            return s ?? string.Empty;
+        }
     }
 
     public class DynamicLinqTypeTest
