@@ -1,3 +1,9 @@
+# v1.4.4 (30 July 2024)
+- [#832](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/832) - Fixed Extension methods on a string [bug] contributed by [StefH](https://github.com/StefH)
+- [#833](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/833) - Update DefaultDynamicLinqCustomTypeProvider constructor to be compatible with microsoft/RulesEngine [feature] contributed by [StefH](https://github.com/StefH)
+- [#830](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/830) - DefaultDynamicLinqCustomTypeProvider Issue [bug]
+- [#831](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/831) - Unable to find my string extensions in static class with DynamicLinqType attribute [bug]
+
 # v1.4.3 (01 July 2024)
 - [#788](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/788) - Fix parsing &quot; [bug] contributed by [StefH](https://github.com/StefH)
 - [#805](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/805) - Update ComparisonOperator logic to support comparing to object [feature] contributed by [StefH](https://github.com/StefH)
