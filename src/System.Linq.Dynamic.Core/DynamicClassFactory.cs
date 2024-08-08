@@ -10,7 +10,7 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using JetBrains.Annotations;
+
 #if WINDOWS_APP
 using System.Linq;
 #endif
@@ -150,6 +150,28 @@ namespace System.Linq.Dynamic.Core
         }
 
         /// <summary>
+        /// Create a new instance of a dynamic class with a given set of public properties (with the value).
+        /// In case the value is null, the property is not set.
+        /// </summary>
+        /// <param name="dynamicPropertiesWithValue">A list of DynamicProperties with a value</param>
+        /// <param name="createParameterCtor">Create a constructor with parameters. Default set to true. Note that for Linq-to-Database objects, this needs to be set to false.</param>
+        /// <returns>Instance of <see cref="DynamicClass"/></returns>
+        public static DynamicClass CreateInstance(IList<DynamicPropertyWithValue> dynamicPropertiesWithValue, bool createParameterCtor = true)
+        {
+            Check.HasNoNulls(dynamicPropertiesWithValue);
+
+            var type = CreateType(dynamicPropertiesWithValue.Cast<DynamicProperty>().ToArray(), createParameterCtor);
+            var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
+
+            foreach (var dynamicPropertyWithValue in dynamicPropertiesWithValue.Where(p => p.Value != null))
+            {
+                dynamicClass.SetDynamicPropertyValue(dynamicPropertyWithValue.Name, dynamicPropertyWithValue.Value!);
+            }
+
+            return dynamicClass;
+        }
+
+        /// <summary>
         /// The CreateType method creates a new data class with a given set of public properties and returns the System.Type object for the newly created class. If a data class with an identical sequence of properties has already been created, the System.Type object for this class is returned.        
         /// Data classes implement private instance variables and read/write property accessors for the specified properties.Data classes also override the Equals and GetHashCode members to implement by-value equality.
         /// Data classes are created in an in-memory assembly in the current application domain. All data classes inherit from <see cref="DynamicClass"/> and are given automatically generated names that should be considered private (the names will be unique within the application domain but not across multiple invocations of the application). Note that once created, a data class stays in memory for the lifetime of the current application domain. There is currently no way to unload a dynamically created data class.
@@ -172,7 +194,7 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         public static Type CreateType(IList<DynamicProperty> properties, bool createParameterCtor = true)
         {
-            Check.HasNoNulls(properties, nameof(properties));
+            Check.HasNoNulls(properties);
 
             Type[] types = properties.Select(p => p.Type).ToArray();
             string[] names = properties.Select(p => p.Name).ToArray();
