@@ -36,17 +36,13 @@ public partial class Home
             .Select("new (OrderId as Id, OrderItems.Where(w => true) as Children, null as Empty)")
             .ToDynamicList<DynamicClass>();
 
-        //allOrderItemsDynamic = new List<dynamic>(orders.Select(s => new { Id = s.OrderId, Children = s.OrderItems }));
-
         foreach (var element in allOrderItemsDynamic)
         {
             object elementAsObj = element;
 
-            //works
-            var idReflection = elementAsObj.GetType().GetProperty("Id").GetValue(elementAsObj);
+            var idReflection = elementAsObj.GetType().GetProperty("Id")!.GetValue(elementAsObj);
             Console.WriteLine("idReflection = " + idReflection);
 
-            //fails
             Console.WriteLine("dynamic = " + element["Id"]);
         }
     }
