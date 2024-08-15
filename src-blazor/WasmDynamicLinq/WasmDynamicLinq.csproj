@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
+        <!--<BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>-->
     </PropertyGroup>
 
     <ItemGroup>
