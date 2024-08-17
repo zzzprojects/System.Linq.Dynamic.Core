@@ -15,6 +15,60 @@ public class DynamicClassTest
     }
 
     [Fact]
+    public void DynamicClass_Equals()
+    {
+        // Arrange
+        var props = new[]
+        {
+            new DynamicProperty("Name", typeof(string)),
+            new DynamicProperty("Birthday", typeof(DateTime))
+        };
+        var type = DynamicClassFactory.CreateType(props);
+
+        // Act
+        dynamic dynamicInstance1 = Activator.CreateInstance(type)!;
+        dynamicInstance1.Name = "Albert";
+        dynamicInstance1.Birthday = new DateTime(1879, 3, 14);
+
+        dynamic dynamicInstance2 = Activator.CreateInstance(type)!;
+        dynamicInstance2.Name = "Albert";
+        dynamicInstance2.Birthday = new DateTime(1879, 3, 14);
+
+        bool equal1 = dynamicInstance1.Equals(dynamicInstance2);
+        equal1.Should().BeTrue();
+
+        bool equal2 = dynamicInstance2.Equals(dynamicInstance1);
+        equal2.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DynamicClass_OperatorEquality()
+    {
+        // Arrange
+        var props = new[]
+        {
+            new DynamicProperty("Name", typeof(string)),
+            new DynamicProperty("Birthday", typeof(DateTime))
+        };
+        var type = DynamicClassFactory.CreateType(props);
+
+        // Act
+        dynamic dynamicInstance1 = Activator.CreateInstance(type)!;
+        dynamicInstance1.Name = "Albert";
+        dynamicInstance1.Birthday = new DateTime(1879, 3, 14);
+
+        dynamic dynamicInstance2 = Activator.CreateInstance(type)!;
+        dynamicInstance2.Name = "Albert";
+        dynamicInstance2.Birthday = new DateTime(1879, 3, 14);
+
+        bool equal1 = dynamicInstance1 == dynamicInstance2;
+        equal1.Should().BeTrue();
+
+        bool equal2 = dynamicInstance2 == dynamicInstance1;
+        equal2.Should().BeTrue();
+    }
+
+    [Fact]
     public void DynamicClass_GetProperties_Should_Work()
     {
         // Arrange
@@ -150,11 +204,11 @@ public class DynamicClassTest
 
         // Assert 1
         var getType = dynamicInstance.GetType();
-        getType.ToString().Should().Contain("<>f__AnonymousType");
+        getType.ToString().Should().StartWith("SystemLinqDynamicType_");
 
         // Assert 2
         var typeOf = GetRuntimeType(dynamicInstance);
-        typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass"); // ???
+        typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass");
     }
 
     [SkipIfGitHubActions]

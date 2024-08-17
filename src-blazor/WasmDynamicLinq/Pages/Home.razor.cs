@@ -1,9 +1,6 @@
 ﻿using System.Linq.Dynamic.Core;
-using System.Linq.Dynamic.Core.Util;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 
 namespace WasmDynamicLinq.Pages;
 
@@ -13,113 +10,116 @@ public partial class Home
 
     private void Test()
     {
-        AppDomain myDomain = AppDomain.CurrentDomain;
-        AssemblyName myAsmName = new AssemblyName("GenericEmitExample1");
-        AssemblyBuilder myAssembly = AssemblyBuilder.DefineDynamicAssembly(myAsmName, AssemblyBuilderAccess.RunAndCollect);
+        // Define a dynamic assembly and module
+        AssemblyName assemblyName = new AssemblyName("DynamicAssembly");
+        AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
+        ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule");
 
-        ModuleBuilder myModule = myAssembly.DefineDynamicModule(myAsmName.Name!);
+        // Define a public class named "DynamicType"
+        TypeBuilder typeBuilder = moduleBuilder.DefineType("DynamicType", TypeAttributes.Public);
 
-        Type baseType = typeof(ExampleBase);
+        // Define a public field of type string named "MyField"
+        typeBuilder.DefineField("MyField", typeof(string), FieldAttributes.Public);
 
-        TypeBuilder myType = myModule.DefineType("Sample", TypeAttributes.Public);
+        //typeBuilder.DefineGenericParameters("MyField");
 
-        Console.WriteLine("Type 'Sample' is generic: {0}", myType.IsGenericType);
+        // Create the type
+        Type dynamicType = typeBuilder.CreateType();
+        //if (types.Length > 0)
+        {
+            //dynamicType = dynamicType.MakeGenericType(typeof(string));
+        }
 
-        string[] typeParamNames = { "TFirst", "TSecond" };
-        GenericTypeParameterBuilder[] typeParams = myType.DefineGenericParameters(typeParamNames);
+        // Create an instance of the dynamic type
+        dynamic dynamicObject = Activator.CreateInstance(dynamicType)!;
+        
+        // Set the value of the field using reflection
+        FieldInfo fieldInfo = dynamicType.GetField("MyField", BindingFlags.Public | BindingFlags.Instance)!;
+        fieldInfo.SetValue(dynamicObject, "Hello, World!");
 
-        GenericTypeParameterBuilder TFirst = typeParams[0];
-        GenericTypeParameterBuilder TSecond = typeParams[1];
+        // Output the value
+        Console.WriteLine("Test Field Value: " + (string)fieldInfo.GetValue(dynamicObject));
+        Console.WriteLine("Test Field Value Dynamic: " + dynamicObject.MyField);
+    }
 
-        Console.WriteLine("Type 'Sample' is generic: {0}", myType.IsGenericType);
+    private void TestChatGPT()
+    {
+        // Define a dynamic assembly and module
+        AssemblyName assemblyName = new AssemblyName("DynamicAssembly");
+        AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+        ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule");
 
-        // The following code adds a private field named ExampleField,
-        // of type TFirst.
-        FieldBuilder exField =
-            myType.DefineField("ExampleField", TFirst,
-                FieldAttributes.Private);
+        // Define a public generic class named "DynamicType`1" with one generic type parameter
+        TypeBuilder typeBuilder = moduleBuilder.DefineType("DynamicType`1", TypeAttributes.Public);
 
-        // Define a static method that takes an array of TFirst and
-        // returns a List<TFirst> containing all the elements of
-        // the array. To define this method it is necessary to create
-        // the type List<TFirst> by calling MakeGenericType on the
-        // generic type definition, List<T>. (The T is omitted with
-        // the typeof operator when you get the generic type
-        // definition.) The parameter type is created by using the
-        // MakeArrayType method.
-        //
-        Type listOf = typeof(List<>);
-        Type listOfTFirst = listOf.MakeGenericType(TFirst);
-        Type[] mParamTypes = { TFirst.MakeArrayType() };
+        // Define a generic parameter "T"
+        GenericTypeParameterBuilder genericParameter = typeBuilder.DefineGenericParameters("T")[0];
 
-        MethodBuilder exMethod =
-            myType.DefineMethod("ExampleMethod",
-                MethodAttributes.Public | MethodAttributes.Static,
-                listOfTFirst,
-                mParamTypes);
+        // Define a public field of type T named "MyField"
+        FieldBuilder fieldBuilder = typeBuilder.DefineField("MyField", genericParameter, FieldAttributes.Public);
 
-        // Emit the method body.
-        // The method body consists of just three opcodes, to load
-        // the input array onto the execution stack, to call the
-        // List<TFirst> constructor that takes IEnumerable<TFirst>,
-        // which does all the work of putting the input elements into
-        // the list, and to return, leaving the list on the stack. The
-        // hard work is getting the constructor.
-        //
-        // The GetConstructor method is not supported on a
-        // GenericTypeParameterBuilder, so it is not possible to get
-        // the constructor of List<TFirst> directly. There are two
-        // steps, first getting the constructor of List<T> and then
-        // calling a method that converts it to the corresponding
-        // constructor of List<TFirst>.
-        //
-        // The constructor needed here is the one that takes an
-        // IEnumerable<T>. Note, however, that this is not the
-        // generic type definition of IEnumerable<T>; instead, the
-        // T from List<T> must be substituted for the T of
-        // IEnumerable<T>. (This seems confusing only because both
-        // types have type parameters named T. That is why this example
-        // uses the somewhat silly names TFirst and TSecond.) To get
-        // the type of the constructor argument, take the generic
-        // type definition IEnumerable<T> (expressed as
-        // IEnumerable<> when you use the typeof operator) and
-        // call MakeGenericType with the first generic type parameter
-        // of List<T>. The constructor argument list must be passed
-        // as an array, with just one argument in this case.
-        //
-        // Now it is possible to get the constructor of List<T>,
-        // using GetConstructor on the generic type definition. To get
-        // the constructor of List<TFirst>, pass List<TFirst> and
-        // the constructor from List<T> to the static
-        // TypeBuilder.GetConstructor method.
-        //
-        ILGenerator ilgen = exMethod.GetILGenerator();
+        // Create the generic type
+        Type dynamicType = typeBuilder.CreateType();
 
-        Type ienumOf = typeof(IEnumerable<>);
-        Type TfromListOf = listOf.GetGenericArguments()[0];
-        Type ienumOfT = ienumOf.MakeGenericType(TfromListOf);
-        Type[] ctorArgs = { ienumOfT };
+        // Make a closed generic type of "DynamicType<string>"
+        Type closedGenericType = dynamicType.MakeGenericType(typeof(string));
 
-        ConstructorInfo ctorPrep = listOf.GetConstructor(ctorArgs);
-        ConstructorInfo ctor =
-            TypeBuilder.GetConstructor(listOfTFirst, ctorPrep);
+        // Create an instance of the closed generic type
+        dynamic dynamicObject = Activator.CreateInstance(closedGenericType)!;
 
-        ilgen.Emit(OpCodes.Ldarg_0);
-        ilgen.Emit(OpCodes.Newobj, ctor);
-        ilgen.Emit(OpCodes.Ret);
+        // Set the value of the field directly
+        FieldInfo fieldInfo = closedGenericType.GetField("MyField", BindingFlags.Public | BindingFlags.Instance)!;
+        fieldInfo.SetValue(dynamicObject, "Hello, World!");
 
-        // Create the type and save the assembly.
-        Type finished = myType.CreateType();
-        //myAssembly.Save(myAsmName.Name + ".dll");
+        // Get the value of the field directly
+        string fieldValue = (string)fieldInfo.GetValue(dynamicObject);
 
+        // Output the value
+        Console.WriteLine("Field Value: " + fieldValue);
+        Console.WriteLine("Test Field Value Dynamic: " + dynamicObject.MyField);
+    }
 
+    private void TestFail()
+    {
+        // Define a dynamic assembly and module
+        AssemblyName assemblyName = new AssemblyName("DynamicAssembly");
+        AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
+        ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("DynamicModule");
+
+        // Define a public class named "DynamicType"
+        TypeBuilder typeBuilder = moduleBuilder.DefineType("DynamicType", TypeAttributes.Public);
+
+        // Define a public field of type string named "MyField"
+        typeBuilder.DefineField("MyField", typeof(string), FieldAttributes.Public);
+
+        // Define Generic Parameter
+        typeBuilder.DefineGenericParameters("T0");
+
+        // Create the type
+        Type dynamicType = typeBuilder.CreateType();
+
+        // Make it generic
+        dynamicType = dynamicType.MakeGenericType(typeof(string));
+
+        // Create an instance of the dynamic type
+        dynamic dynamicObject = Activator.CreateInstance(dynamicType)!;
+
+        // Set the value of the field using reflection
+        FieldInfo fieldInfo = dynamicType.GetField("MyField", BindingFlags.Public | BindingFlags.Instance)!;
+        fieldInfo.SetValue(dynamicObject, "Hello, World!"); // this throws exception
+
+        // Output the value
+        Console.WriteLine("Test Field Value: " + (string)fieldInfo.GetValue(dynamicObject));
+        Console.WriteLine("Test Field Value Dynamic: " + dynamicObject.MyField);
     }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        // Test();
+        Test();
+        //TestChatGPT();
+        //TestFail();
 
         var o = new Order();
         dynamic od = o;
@@ -127,19 +127,29 @@ public partial class Home
 
         var props = new DynamicProperty[] { new("Name", typeof(string)), new("Birthday", typeof(DateTime)) };
         var type = DynamicClassFactory.CreateType(props);
-        var dynamicClass = (DynamicClass)Activator.CreateInstance(type, false)!;
-        dynamicClass.SetDynamicPropertyValue("Name", "Albert");
-        dynamicClass.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
+        var dynamicClass1 = (DynamicClass)Activator.CreateInstance(type, false)!;
+        dynamicClass1.SetDynamicPropertyValue("Name", "Albert");
+        dynamicClass1.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
 
-        Console.WriteLine(dynamicClass.GetHashCode());
-        Console.WriteLine(dynamicClass);
+        Console.WriteLine(dynamicClass1.GetHashCode());
+        Console.WriteLine(dynamicClass1);
+
+        var dynamicClass2 = (DynamicClass)Activator.CreateInstance(type, false)!;
+        dynamicClass2.SetDynamicPropertyValue("Name", "Albert");
+        dynamicClass2.SetDynamicPropertyValue("Birthday", new DateTime(1879, 3, 14));
+
+        Console.WriteLine(dynamicClass2.GetHashCode());
+        Console.WriteLine(dynamicClass2);
+
+        Console.WriteLine("EQUALS ??? = " + dynamicClass1.Equals(dynamicClass2));
+        Console.WriteLine("EQUALS == " + (dynamicClass1 == dynamicClass2));
 
         foreach (var f in type.GetFields())
         {
-            f.SetValue(dynamicClass, "Field Reflection Value");
-            var fieldValue = f.GetValue(dynamicClass);
-            Console.WriteLine("Field Reflection = " + fieldValue);
-            Console.WriteLine(((dynamic)dynamicClass).Name__Field);
+            f.SetValue(dynamicClass1, "Field Reflection Value");
+            var fieldValue = f.GetValue(dynamicClass1);
+            Console.WriteLine($"Field {f.Name} Reflection Value = {fieldValue}");
+            Console.WriteLine(((dynamic)dynamicClass1).Name__Field);
             break;
         }
 

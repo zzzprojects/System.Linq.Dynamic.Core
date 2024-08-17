@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Util;
 using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
@@ -47,16 +48,16 @@ namespace System.Linq.Dynamic.Core
 #endif
 
         private static readonly Type EqualityComparer = typeof(EqualityComparer<>);
-        private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
-#if WINDOWS_APP ||  UAP10_0 || NETSTANDARD
-        private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public)!;
-        private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument })!;
-        private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", new[] { EqualityComparerGenericArgument })!;
-#else
-        private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public, null, Type.EmptyTypes, null)!;
-        private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public, null, new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument }, null)!;
-        private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", BindingFlags.Instance | BindingFlags.Public, null, new[] { EqualityComparerGenericArgument }, null)!;
-#endif
+        //        private static readonly Type EqualityComparerGenericArgument = EqualityComparer.GetGenericArguments()[0];
+        //#if WINDOWS_APP ||  UAP10_0 || NETSTANDARD
+        //        private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public)!;
+        //        private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument })!;
+        //        private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", new[] { EqualityComparerGenericArgument })!;
+        //#else
+        //        private static readonly MethodInfo EqualityComparerDefault = EqualityComparer.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public, null, Type.EmptyTypes, null)!;
+        //        private static readonly MethodInfo EqualityComparerEquals = EqualityComparer.GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public, null, new[] { EqualityComparerGenericArgument, EqualityComparerGenericArgument }, null)!;
+        //        private static readonly MethodInfo EqualityComparerGetHashCode = EqualityComparer.GetMethod("GetHashCode", BindingFlags.Instance | BindingFlags.Public, null, new[] { EqualityComparerGenericArgument }, null)!;
+        //#endif
 
         private static int _index = -1;
 
@@ -95,6 +96,7 @@ namespace System.Linq.Dynamic.Core
 
             var key = $"{comparerGenericType.FullName}_{comparerType.FullName}";
 
+            // ReSharper disable once InconsistentlySynchronizedField
             if (!GeneratedTypes.TryGetValue(key, out var type))
             {
                 // We create only a single class at a time, through this lock
@@ -172,278 +174,303 @@ namespace System.Linq.Dynamic.Core
         {
             Check.HasNoNulls(properties);
 
-            var types = properties.Select(p => p.Type).ToArray();
-            var names = properties.Select(p => p.Name).ToArray();
-
             var key = GenerateKey(properties, createParameterCtor);
 
+            // ReSharper disable once InconsistentlySynchronizedField
             if (!GeneratedTypes.TryGetValue(key, out var type))
             {
-                // We create only a single class at a time, through this lock
+                // We create only a single class at a time, through this lock.
                 // Note that this is a variant of the double-checked locking.
                 // It is safe because we are using a thread safe class.
                 lock (GeneratedTypes)
                 {
-                    if (!GeneratedTypes.TryGetValue(key, out type))
-                    {
-                        int anonymousClassIndex = Interlocked.Increment(ref _index);
-
-                        var typeName = names.Length != 0 ? $"<>f__AnonymousType{anonymousClassIndex}`{names.Length}" : $"<>f__AnonymousType{anonymousClassIndex}";
-
-                        TypeBuilder tb = ModuleBuilder.DefineType(typeName, TypeAttributes.AnsiClass | TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoLayout | TypeAttributes.BeforeFieldInit, typeof(DynamicClass));
-                        //tb.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
-
-                        GenericTypeParameterBuilder[] generics;
-
-                        if (names.Length > 0)
-                        {
-                            var genericNames = Enumerable.Range(0, names.Length).Select(i => $"T{i}").ToArray();
-                            generics = tb.DefineGenericParameters(genericNames);
-                            foreach (GenericTypeParameterBuilder genericTypeParameterBuilder in generics)
-                            {
-                                //genericTypeParameterBuilder.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
-                            }
-                        }
-                        else
-                        {
-                            generics = [];
-                        }
-
-                        var fields = new FieldBuilder[names.Length];
-
-                        // There are two for-loops because we want to have all the getter methods before all the other methods
-                        for (int i = 0; i < names.Length; i++)
-                        {
-                            var fieldGenericType = generics[i].AsType();
-
-                            // field
-                            fields[i] = tb.DefineField($"{names[i]}__Field", fieldGenericType, FieldAttributes.Public | FieldAttributes.InitOnly);
-                            //fields[i].SetCustomAttribute(DebuggerBrowsableAttributeBuilder);
-
-                            //PropertyBuilder property = tb.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.HasThis, fieldGenericType, Type.EmptyTypes);
-
-                            // getter
-                            MethodBuilder getter = tb.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, generics[i].AsType(), null);
-                            //getter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
-
-                            ILGenerator ilgeneratorGetter = getter.GetILGenerator();
-                            ilgeneratorGetter.Emit(OpCodes.Ldarg_0);
-                            ilgeneratorGetter.Emit(OpCodes.Ldfld, fields[i]);
-                            ilgeneratorGetter.Emit(OpCodes.Ret);
-                            //property.SetGetMethod(getter);
-
-                            // setter
-                            MethodBuilder setter = tb.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, null, new[] { generics[i].AsType() });
-                            //setter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
-
-                            // workaround for https://github.com/dotnet/corefx/issues/7792
-                            setter.DefineParameter(1, ParameterAttributes.In, generics[i].Name);
-
-                            ILGenerator ilgeneratorSetter = setter.GetILGenerator();
-                            ilgeneratorSetter.Emit(OpCodes.Ldarg_0);
-                            ilgeneratorSetter.Emit(OpCodes.Ldarg_1);
-                            ilgeneratorSetter.Emit(OpCodes.Stfld, fields[i]);
-                            ilgeneratorSetter.Emit(OpCodes.Ret);
-                            //property.SetSetMethod(setter);
-                        }
-
-                        // ToString()
-                        MethodBuilder toString = tb.DefineMethod("ToString", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(string), Type.EmptyTypes);
-                        //toString.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
-                        
-                        ILGenerator ilgeneratorToString = toString.GetILGenerator();
-                        ilgeneratorToString.DeclareLocal(typeof(StringBuilder));
-                        ilgeneratorToString.Emit(OpCodes.Newobj, StringBuilderCtor);
-                        ilgeneratorToString.Emit(OpCodes.Stloc_0);
-
-                        // Equals
-                        MethodBuilder equals = tb.DefineMethod("Equals", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(bool), new[] { typeof(object) });
-                        //equals.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
-                        equals.DefineParameter(1, ParameterAttributes.In, "value");
-
-                        ILGenerator ilgeneratorEquals = equals.GetILGenerator();
-                        ilgeneratorEquals.DeclareLocal(tb.AsType());
-                        ilgeneratorEquals.Emit(OpCodes.Ldarg_1);
-                        ilgeneratorEquals.Emit(OpCodes.Isinst, tb.AsType());
-                        ilgeneratorEquals.Emit(OpCodes.Stloc_0);
-                        ilgeneratorEquals.Emit(OpCodes.Ldloc_0);
-
-                        Label equalsLabel = ilgeneratorEquals.DefineLabel();
-
-                        // GetHashCode()
-                        MethodBuilder getHashCode = tb.DefineMethod("GetHashCode", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(int), Type.EmptyTypes);
-                        //getHashCode.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
-
-                        ILGenerator ilgeneratorGetHashCode = getHashCode.GetILGenerator();
-                        ilgeneratorGetHashCode.DeclareLocal(typeof(int));
-
-                        if (names.Length == 0)
-                        {
-                            ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4_0);
-                        }
-                        else
-                        {
-                            // As done by Roslyn
-                            // Note that initHash can vary, because string.GetHashCode() isn't "stable" for different compilation of the code
-                            int initHash = 0;
-
-                            for (int i = 0; i < names.Length; i++)
-                            {
-                                initHash = unchecked(initHash * (-1521134295) + fields[i].Name.GetHashCode());
-                            }
-
-                            // Note that the CSC seems to generate a different seed for every anonymous class
-                            ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4, initHash);
-                        }
-
-                        for (int i = 0; i < names.Length; i++)
-                        {
-                            var fieldGenericType = generics[i].AsType();
-
-                            // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/516
-                            if (!RuntimeInformationUtils.IsBlazorWASM)
-                            {
-                                Type equalityComparerT = EqualityComparer.MakeGenericType(fieldGenericType);
-
-                                // Equals()
-                                MethodInfo equalityComparerTDefault = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerDefault);
-                                MethodInfo equalityComparerTEquals = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerEquals);
-
-                                // Illegal one-byte branch at position: 9. Requested branch was: 143.
-                                // So replace OpCodes.Brfalse_S to OpCodes.Brfalse
-                                ilgeneratorEquals.Emit(OpCodes.Brfalse, equalsLabel);
-                                ilgeneratorEquals.Emit(OpCodes.Call, equalityComparerTDefault);
-                                ilgeneratorEquals.Emit(OpCodes.Ldarg_0);
-                                ilgeneratorEquals.Emit(OpCodes.Ldfld, fields[i]);
-                                ilgeneratorEquals.Emit(OpCodes.Ldloc_0);
-                                ilgeneratorEquals.Emit(OpCodes.Ldfld, fields[i]);
-                                ilgeneratorEquals.Emit(OpCodes.Callvirt, equalityComparerTEquals);
-
-                                // GetHashCode();
-                                MethodInfo equalityComparerTGetHashCode = TypeBuilder.GetMethod(equalityComparerT, EqualityComparerGetHashCode);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Stloc_0);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4, -1521134295);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Ldloc_0);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Mul);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Call, equalityComparerTDefault);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Ldarg_0);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Ldfld, fields[i]);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Callvirt, equalityComparerTGetHashCode);
-                                ilgeneratorGetHashCode.Emit(OpCodes.Add);
-                            }
-
-                            // ToString();
-                            ilgeneratorToString.Emit(OpCodes.Ldloc_0);
-                            ilgeneratorToString.Emit(OpCodes.Ldstr, i == 0 ? $"{{ {names[i]} = " : $", {names[i]} = ");
-                            ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendString);
-                            ilgeneratorToString.Emit(OpCodes.Pop);
-                            ilgeneratorToString.Emit(OpCodes.Ldloc_0);
-                            ilgeneratorToString.Emit(OpCodes.Ldarg_0);
-                            ilgeneratorToString.Emit(OpCodes.Ldfld, fields[i]);
-                            ilgeneratorToString.Emit(OpCodes.Box, fieldGenericType);
-                            ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendObject);
-                            ilgeneratorToString.Emit(OpCodes.Pop);
-                        }
-
-                        // Only create the default and with params constructor when there are any params.
-                        // Otherwise default constructor is not needed because it matches the default
-                        // one provided by the runtime when no constructor is present
-                        if (createParameterCtor && names.Any())
-                        {
-                            // .ctor default
-                            ConstructorBuilder constructorDef = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, Type.EmptyTypes);
-                            //constructorDef.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
-
-                            ILGenerator ilgeneratorConstructorDef = constructorDef.GetILGenerator();
-                            ilgeneratorConstructorDef.Emit(OpCodes.Ldarg_0);
-                            ilgeneratorConstructorDef.Emit(OpCodes.Call, ObjectCtor);
-                            ilgeneratorConstructorDef.Emit(OpCodes.Ret);
-
-                            // .ctor with params
-                            ConstructorBuilder constructor = tb.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, generics.Select(p => p.AsType()).ToArray());
-                            //constructor.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
-
-                            ILGenerator ilgeneratorConstructor = constructor.GetILGenerator();
-                            ilgeneratorConstructor.Emit(OpCodes.Ldarg_0);
-                            ilgeneratorConstructor.Emit(OpCodes.Call, ObjectCtor);
-
-                            for (int i = 0; i < names.Length; i++)
-                            {
-                                constructor.DefineParameter(i + 1, ParameterAttributes.None, names[i]);
-                                ilgeneratorConstructor.Emit(OpCodes.Ldarg_0);
-
-                                if (i == 0)
-                                {
-                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_1);
-                                }
-                                else if (i == 1)
-                                {
-                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_2);
-                                }
-                                else if (i == 2)
-                                {
-                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_3);
-                                }
-                                else if (i < 255)
-                                {
-                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_S, (byte)(i + 1));
-                                }
-                                else
-                                {
-                                    // Ldarg uses a ushort, but the Emit only accepts short, so we use a unchecked(...), cast to short and let the CLR interpret it as ushort.
-                                    ilgeneratorConstructor.Emit(OpCodes.Ldarg, unchecked((short)(i + 1)));
-                                }
-
-                                ilgeneratorConstructor.Emit(OpCodes.Stfld, fields[i]);
-                            }
-
-                            ilgeneratorConstructor.Emit(OpCodes.Ret);
-                        }
-
-                        // Equals()
-                        if (names.Length == 0)
-                        {
-                            ilgeneratorEquals.Emit(OpCodes.Ldnull);
-                            ilgeneratorEquals.Emit(OpCodes.Ceq);
-                            ilgeneratorEquals.Emit(OpCodes.Ldc_I4_0);
-                            ilgeneratorEquals.Emit(OpCodes.Ceq);
-                        }
-                        else
-                        {
-                            ilgeneratorEquals.Emit(OpCodes.Ret);
-                            ilgeneratorEquals.MarkLabel(equalsLabel);
-                            ilgeneratorEquals.Emit(OpCodes.Ldc_I4_0);
-                        }
-
-                        ilgeneratorEquals.Emit(OpCodes.Ret);
-
-                        // GetHashCode()
-                        ilgeneratorGetHashCode.Emit(OpCodes.Stloc_0);
-                        ilgeneratorGetHashCode.Emit(OpCodes.Ldloc_0);
-                        ilgeneratorGetHashCode.Emit(OpCodes.Ret);
-
-                        // ToString()
-                        ilgeneratorToString.Emit(OpCodes.Ldloc_0);
-                        ilgeneratorToString.Emit(OpCodes.Ldstr, names.Length == 0 ? "{ }" : " }");
-                        ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendString);
-                        ilgeneratorToString.Emit(OpCodes.Pop);
-                        ilgeneratorToString.Emit(OpCodes.Ldloc_0);
-                        ilgeneratorToString.Emit(OpCodes.Callvirt, ObjectToString);
-                        ilgeneratorToString.Emit(OpCodes.Ret);
-
-                        type = tb.CreateType();
-
-                        if (types.Length > 0)
-                        {
-                            type = type.MakeGenericType(types);
-                        }
-
-                        type = GeneratedTypes.GetOrAdd(key, type);
-                    }
+                    return GeneratedTypes.GetOrAdd(key, _ => EmitType(properties, createParameterCtor));
                 }
             }
-            
+
             return type;
+        }
+
+        private static Type EmitType(IList<DynamicProperty> properties, bool createParameterCtor)
+        {
+            var classIndex = Interlocked.Increment(ref _index);
+
+            var types = properties.Select(p => p.Type).ToArray();
+            var names = properties.Select(p => p.Name).ToArray();
+
+            var typeName = $"SystemLinqDynamicType_{classIndex}";
+
+            TypeBuilder typeBuilder = ModuleBuilder.DefineType(typeName, TypeAttributes.AnsiClass | TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.AutoLayout | TypeAttributes.BeforeFieldInit, typeof(DynamicClass));
+            //tb.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+
+            //GenericTypeParameterBuilder[] generics;
+
+            if (names.Length > 0)
+            {
+                var genericNames = Enumerable.Range(0, names.Length).Select(i => $"T{i}").ToArray();
+                //generics = typeBuilder.DefineGenericParameters(genericNames);
+                //foreach (GenericTypeParameterBuilder genericTypeParameterBuilder in generics)
+                //{
+                //    //genericTypeParameterBuilder.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+                //}
+            }
+            else
+            {
+                //generics = [];
+            }
+
+            var fieldBuilders = new FieldBuilder[names.Length];
+
+            // There are two for-loops because we want to have all the getter methods before all the other methods
+            for (int i = 0; i < properties.Count; i++)
+            {
+                var fieldType = properties[i].Type;
+
+                // field
+                fieldBuilders[i] = typeBuilder.DefineField($"<{names[i]}>i__Field", types[i], FieldAttributes.Private | FieldAttributes.InitOnly);
+                //fields[i].SetCustomAttribute(DebuggerBrowsableAttributeBuilder);
+
+                PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(names[i], PropertyAttributes.None, CallingConventions.HasThis, fieldType, Type.EmptyTypes);
+
+                // getter
+                MethodBuilder getter = typeBuilder.DefineMethod($"get_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, fieldType, null);
+                //getter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+
+                ILGenerator ilgeneratorGetter = getter.GetILGenerator();
+                ilgeneratorGetter.Emit(OpCodes.Ldarg_0);
+                ilgeneratorGetter.Emit(OpCodes.Ldfld, fieldBuilders[i]);
+                ilgeneratorGetter.Emit(OpCodes.Ret);
+                propertyBuilder.SetGetMethod(getter);
+
+                // setter
+                MethodBuilder setter = typeBuilder.DefineMethod($"set_{names[i]}", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName, CallingConventions.HasThis, null, [fieldType]);
+                //setter.SetCustomAttribute(CompilerGeneratedAttributeBuilder);
+
+                // workaround for https://github.com/dotnet/corefx/issues/7792
+                setter.DefineParameter(1, ParameterAttributes.In, properties[i].Name);
+
+                ILGenerator ilgeneratorSetter = setter.GetILGenerator();
+                ilgeneratorSetter.Emit(OpCodes.Ldarg_0);
+                ilgeneratorSetter.Emit(OpCodes.Ldarg_1);
+                ilgeneratorSetter.Emit(OpCodes.Stfld, fieldBuilders[i]);
+                ilgeneratorSetter.Emit(OpCodes.Ret);
+                propertyBuilder.SetSetMethod(setter);
+            }
+
+            // ToString()
+            MethodBuilder toString = typeBuilder.DefineMethod("ToString", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(string), Type.EmptyTypes);
+            //toString.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
+
+            ILGenerator ilgeneratorToString = toString.GetILGenerator();
+            ilgeneratorToString.DeclareLocal(typeof(StringBuilder));
+            ilgeneratorToString.Emit(OpCodes.Newobj, StringBuilderCtor);
+            ilgeneratorToString.Emit(OpCodes.Stloc_0);
+
+            // Equals
+            MethodBuilder equals = typeBuilder.DefineMethod("Equals", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(bool), [typeof(object)]);
+            //equals.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
+
+            //equals.DefineParameter(1, ParameterAttributes.In, "value");
+
+            ILGenerator ilgeneratorEquals = equals.GetILGenerator();
+
+            ilgeneratorEquals.DeclareLocal(typeBuilder.AsType());
+            ilgeneratorEquals.Emit(OpCodes.Ldarg_1);
+            ilgeneratorEquals.Emit(OpCodes.Isinst, typeBuilder.AsType());
+            ilgeneratorEquals.Emit(OpCodes.Stloc_0);
+            ilgeneratorEquals.Emit(OpCodes.Ldloc_0);
+
+            // GetHashCode()
+            MethodBuilder getHashCode = typeBuilder.DefineMethod("GetHashCode", MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig, CallingConventions.HasThis, typeof(int), Type.EmptyTypes);
+            //getHashCode.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
+
+            ILGenerator ilgeneratorGetHashCode = getHashCode.GetILGenerator();
+            ilgeneratorGetHashCode.DeclareLocal(typeof(int));
+
+            if (names.Length == 0)
+            {
+                ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4_0);
+            }
+            else
+            {
+                // As done by Roslyn
+                // Note that initHash can vary, because string.GetHashCode() isn't "stable" for different compilation of the code
+                int initHash = 0;
+
+                for (int i = 0; i < names.Length; i++)
+                {
+                    initHash = unchecked(initHash * -1521134295 + fieldBuilders[i].Name.GetHashCode());
+                }
+
+                // Note that the CSC seems to generate a different seed for every anonymous class
+                ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4, initHash);
+            }
+
+            Label equalsLabel = ilgeneratorEquals.DefineLabel();
+
+            for (int i = 0; i < properties.Count; i++)
+            {
+                // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/516
+                //if (!RuntimeInformationUtils.IsBlazorWASM)
+                {
+                    var equalityComparerT = EqualityComparer.MakeGenericType(types[i]);
+
+                    // Equals()
+                    MethodInfo equalityComparerTDefault = equalityComparerT.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public)!;
+                    MethodInfo equalityComparerTEquals = equalityComparerT.GetMethod("Equals", BindingFlags.Instance | BindingFlags.Public, null, new[] { types[i], types[i] }, null)!;
+
+                    // Illegal one-byte branch at position: 9. Requested branch was: 143.
+                    // So replace OpCodes.Brfalse_S to OpCodes.Brfalse
+                    ilgeneratorEquals.Emit(OpCodes.Brfalse, equalsLabel);
+                    ilgeneratorEquals.Emit(OpCodes.Call, equalityComparerTDefault);
+                    ilgeneratorEquals.Emit(OpCodes.Ldarg_0);
+                    ilgeneratorEquals.Emit(OpCodes.Ldfld, fieldBuilders[i]);
+                    ilgeneratorEquals.Emit(OpCodes.Ldloc_0);
+                    ilgeneratorEquals.Emit(OpCodes.Ldfld, fieldBuilders[i]);
+                    ilgeneratorEquals.Emit(OpCodes.Callvirt, equalityComparerTEquals);
+
+                    // GetHashCode();
+                    MethodInfo equalityComparerTGetHashCode = equalityComparerT.GetMethod("GetHashCode", BindingFlags.Instance | BindingFlags.Public, null, new[] { types[i], }, null)!;
+                    ilgeneratorGetHashCode.Emit(OpCodes.Stloc_0);
+                    ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4, -1521134295);
+                    ilgeneratorGetHashCode.Emit(OpCodes.Ldloc_0);
+                    ilgeneratorGetHashCode.Emit(OpCodes.Mul);
+                    ilgeneratorGetHashCode.Emit(OpCodes.Call, equalityComparerTDefault);
+                    ilgeneratorGetHashCode.Emit(OpCodes.Ldarg_0);
+                    ilgeneratorGetHashCode.Emit(OpCodes.Ldfld, fieldBuilders[i]);
+                    ilgeneratorGetHashCode.Emit(OpCodes.Callvirt, equalityComparerTGetHashCode);
+                    ilgeneratorGetHashCode.Emit(OpCodes.Add);
+                }
+
+                // ToString();
+                ilgeneratorToString.Emit(OpCodes.Ldloc_0);
+                ilgeneratorToString.Emit(OpCodes.Ldstr, i == 0 ? $"{{ {names[i]} = " : $", {names[i]} = ");
+                ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendString);
+                ilgeneratorToString.Emit(OpCodes.Pop);
+                ilgeneratorToString.Emit(OpCodes.Ldloc_0);
+                ilgeneratorToString.Emit(OpCodes.Ldarg_0);
+                ilgeneratorToString.Emit(OpCodes.Ldfld, fieldBuilders[i]);
+                ilgeneratorToString.Emit(OpCodes.Box, properties[i].Type);
+                ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendObject);
+                ilgeneratorToString.Emit(OpCodes.Pop);
+            }
+
+            // Only create the default and with params constructor when there are any params.
+            // Otherwise default constructor is not needed because it matches the default
+            // one provided by the runtime when no constructor is present
+            if (createParameterCtor && names.Any())
+            {
+                // .ctor default
+                ConstructorBuilder constructorDef = typeBuilder.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, Type.EmptyTypes);
+                //constructorDef.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
+
+                ILGenerator ilgeneratorConstructorDef = constructorDef.GetILGenerator();
+                ilgeneratorConstructorDef.Emit(OpCodes.Ldarg_0);
+                ilgeneratorConstructorDef.Emit(OpCodes.Call, ObjectCtor);
+                ilgeneratorConstructorDef.Emit(OpCodes.Ret);
+
+                // .ctor with params
+                ConstructorBuilder constructor = typeBuilder.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig, CallingConventions.HasThis, types);
+                //constructor.SetCustomAttribute(DebuggerHiddenAttributeBuilder);
+
+                ILGenerator ilgeneratorConstructor = constructor.GetILGenerator();
+                ilgeneratorConstructor.Emit(OpCodes.Ldarg_0);
+                ilgeneratorConstructor.Emit(OpCodes.Call, ObjectCtor);
+
+                for (int i = 0; i < names.Length; i++)
+                {
+                    constructor.DefineParameter(i + 1, ParameterAttributes.None, names[i]);
+                    ilgeneratorConstructor.Emit(OpCodes.Ldarg_0);
+
+                    if (i == 0)
+                    {
+                        ilgeneratorConstructor.Emit(OpCodes.Ldarg_1);
+                    }
+                    else if (i == 1)
+                    {
+                        ilgeneratorConstructor.Emit(OpCodes.Ldarg_2);
+                    }
+                    else if (i == 2)
+                    {
+                        ilgeneratorConstructor.Emit(OpCodes.Ldarg_3);
+                    }
+                    else if (i < 255)
+                    {
+                        ilgeneratorConstructor.Emit(OpCodes.Ldarg_S, (byte)(i + 1));
+                    }
+                    else
+                    {
+                        // Ldarg uses a ushort, but the Emit only accepts short, so we use a unchecked(...), cast to short and let the CLR interpret it as ushort.
+                        ilgeneratorConstructor.Emit(OpCodes.Ldarg, unchecked((short)(i + 1)));
+                    }
+
+                    ilgeneratorConstructor.Emit(OpCodes.Stfld, fieldBuilders[i]);
+                }
+
+                ilgeneratorConstructor.Emit(OpCodes.Ret);
+            }
+
+            // Equals()
+            if (names.Length == 0)
+            {
+                ilgeneratorEquals.Emit(OpCodes.Ldnull);
+                ilgeneratorEquals.Emit(OpCodes.Ceq);
+                ilgeneratorEquals.Emit(OpCodes.Ldc_I4_0);
+                ilgeneratorEquals.Emit(OpCodes.Ceq);
+            }
+            else
+            {
+                ilgeneratorEquals.Emit(OpCodes.Ret);
+                ilgeneratorEquals.MarkLabel(equalsLabel);
+                ilgeneratorEquals.Emit(OpCodes.Ldc_I4_0);
+            }
+
+            ilgeneratorEquals.Emit(OpCodes.Ret);
+
+            // GetHashCode()
+            ilgeneratorGetHashCode.Emit(OpCodes.Stloc_0);
+            ilgeneratorGetHashCode.Emit(OpCodes.Ldloc_0);
+            ilgeneratorGetHashCode.Emit(OpCodes.Ret);
+
+            // ToString()
+            ilgeneratorToString.Emit(OpCodes.Ldloc_0);
+            ilgeneratorToString.Emit(OpCodes.Ldstr, names.Length == 0 ? "{ }" : " }");
+            ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendString);
+            ilgeneratorToString.Emit(OpCodes.Pop);
+            ilgeneratorToString.Emit(OpCodes.Ldloc_0);
+            ilgeneratorToString.Emit(OpCodes.Callvirt, ObjectToString);
+            ilgeneratorToString.Emit(OpCodes.Ret);
+
+            // Define the '==' operator
+            MethodBuilder equalityOperator = typeBuilder.DefineMethod(
+                "op_Equality",
+                MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
+                typeof(bool),
+                [typeBuilder.AsType(), typeBuilder.AsType()]);
+
+            ILGenerator ilgeneratorEqualityOperator = equalityOperator.GetILGenerator();
+
+            // if (left == null || right == null) return ReferenceEquals(left, right);
+            Label endLabel = ilgeneratorEqualityOperator.DefineLabel();
+            ilgeneratorEqualityOperator.Emit(OpCodes.Ldarg_0);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Brfalse_S, endLabel);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Ldarg_1);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Brfalse_S, endLabel);
+
+            // return left.Equals(right);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Ldarg_0);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Ldarg_1);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Callvirt, equals);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Ret);
+
+            // Return false if one is null
+            ilgeneratorEqualityOperator.MarkLabel(endLabel);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Ldarg_0);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Ldarg_1);
+            ilgeneratorEqualityOperator.Emit(OpCodes.Call, typeof(object).GetMethod("ReferenceEquals"));
+            ilgeneratorEqualityOperator.Emit(OpCodes.Ret);
+
+            return typeBuilder.CreateType();
         }
 
         /// <summary>
@@ -469,7 +496,7 @@ namespace System.Linq.Dynamic.Core
         {
             // We recreate this by creating a fullName composed of all the property names and types, separated by a "|".
             // And append and extra field depending on createParameterCtor.
-            return string.Format("{0}_{1}", string.Join("|", dynamicProperties.Select(p => Escape(p.Name) + "~" + p.Type.FullName).ToArray()), createParameterCtor ? "c" : string.Empty);
+            return $"{string.Join("|", dynamicProperties.Select(p => Escape(p.Name) + "~" + p.Type.FullName).ToArray())}_{(createParameterCtor ? "c" : string.Empty)}";
         }
 
         private static string Escape(string str)
