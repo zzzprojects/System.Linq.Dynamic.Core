@@ -204,7 +204,7 @@ public class DynamicClassTest
 
         // Assert 1
         var getType = dynamicInstance.GetType();
-        getType.ToString().Should().StartWith("SystemLinqDynamicType_");
+        getType.ToString().Should().StartWith("<>f__AnonymousType").And.EndWith("`2");
 
         // Assert 2
         var typeOf = GetRuntimeType(dynamicInstance);
