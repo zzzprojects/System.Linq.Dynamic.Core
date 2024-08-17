@@ -42,7 +42,7 @@ public class DynamicClassTest
     }
 
     [Fact]
-    public void DynamicClass_OperatorEquality()
+    public void DynamicClass_OperatorEqualityAndNotEquality()
     {
         // Arrange
         var props = new[]
@@ -66,6 +66,12 @@ public class DynamicClassTest
 
         bool equal2 = dynamicInstance2 == dynamicInstance1;
         equal2.Should().BeTrue();
+
+        bool notEqual1 = dynamicInstance1 != dynamicInstance2;
+        notEqual1.Should().BeFalse();
+
+        bool notEqual2 = dynamicInstance2 != dynamicInstance1;
+        notEqual2.Should().BeFalse();
     }
 
     [Fact]

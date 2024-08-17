@@ -216,7 +216,7 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             try
             {
-#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
                 switch (Type.GetTypeCode(TypeHelper.GetNonNullableType(type)))
                 {
                     case TypeCode.SByte:

@@ -70,7 +70,7 @@ internal class MethodFinder
     {
         Check.NotNull(type);
 
-#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
         var flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
         return type.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName).Any();
 #else
@@ -90,7 +90,7 @@ internal class MethodFinder
 
     public int FindMethod(Type? type, string methodName, bool staticAccess, ref Expression? instance, ref Expression[] args, out MethodBase? method)
     {
-#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
         BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
         foreach (Type t in SelfAndBaseTypes(type))
         {
@@ -216,7 +216,7 @@ internal class MethodFinder
             if (members.Length != 0)
             {
                 IEnumerable<MethodBase> methods = members.OfType<PropertyInfo>().
-#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
                     Select(p => (MethodBase?)p.GetGetMethod()).
                     OfType<MethodBase>();
 #else
