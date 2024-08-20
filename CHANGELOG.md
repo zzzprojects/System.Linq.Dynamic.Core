@@ -1,3 +1,7 @@
+# v1.4.5 (20 August 2024)
+- [#838](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/838) - Fix Blazor WASM System.InvalidOperationException [bug] contributed by [StefH](https://github.com/StefH)
+- [#836](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/836) - Blazor Wasm Eval: System.InvalidOperationException: Operation is not valid due to the current state of the object. [bug]
+
 # v1.4.4 (30 July 2024)
 - [#832](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/832) - Fixed Extension methods on a string [bug] contributed by [StefH](https://github.com/StefH)
 - [#833](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/833) - Update DefaultDynamicLinqCustomTypeProvider constructor to be compatible with microsoft/RulesEngine [feature] contributed by [StefH](https://github.com/StefH)
