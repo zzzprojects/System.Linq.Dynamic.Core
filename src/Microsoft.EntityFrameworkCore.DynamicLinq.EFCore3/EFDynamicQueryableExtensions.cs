@@ -1102,7 +1102,7 @@ namespace EntityFramework.DynamicLinq
             {
                 var optimized = ExtensibilityPoint.QueryOptimizer(expression);
 
-#if !(WINDOWS_APP45x || SILVERLIGHT)
+#if !(SILVERLIGHT)
                 if (optimized != expression)
                 {
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);

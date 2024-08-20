@@ -2460,7 +2460,7 @@ public class ExpressionParser
 
     private MemberInfo? FindPropertyOrField(Type type, string memberName, bool staticAccess)
     {
-#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
         var extraBindingFlag = _parsingConfig.PrioritizePropertyOrFieldOverTheType && staticAccess ? BindingFlags.Static : BindingFlags.Instance;
         var bindingFlags = BindingFlags.Public | BindingFlags.DeclaredOnly | extraBindingFlag;
         foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
