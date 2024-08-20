@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class ExtensibilityPoint
+    <title>Enum StringLiteralParsingType
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class ExtensibilityPoint
+    <meta name="title" content="Enum StringLiteralParsingType
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -78,83 +78,46 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="System.Linq.Dynamic.Core.ExtensibilityPoint">
+            <article class="content wrap" id="_content" data-uid="System.Linq.Dynamic.Core.Config.StringLiteralParsingType">
   
   
-  <h1 id="System_Linq_Dynamic_Core_ExtensibilityPoint" data-uid="System.Linq.Dynamic.Core.ExtensibilityPoint" class="text-break">Class ExtensibilityPoint
+  <h1 id="System_Linq_Dynamic_Core_Config_StringLiteralParsingType" data-uid="System.Linq.Dynamic.Core.Config.StringLiteralParsingType" class="text-break">Enum StringLiteralParsingType
   </h1>
-  <div class="markdown level0 summary"><p>Extensibility point: If you want to modify expanded queries before executing them
-set your own functionality to override empty QueryOptimizer</p>
+  <div class="markdown level0 summary"><p>Defines the types of string literal parsing that can be performed.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">ExtensibilityPoint</span></div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-  </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="System.Linq.Dynamic.Core.html">System.Linq.Dynamic.Core</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="System.Linq.Dynamic.Core.Config.html">System.Linq.Dynamic.Core.Config</a></h6>
   <h6><strong>Assembly</strong>: System.Linq.Dynamic.Core.dll</h6>
-  <h5 id="System_Linq_Dynamic_Core_ExtensibilityPoint_syntax">Syntax</h5>
+  <h5 id="System_Linq_Dynamic_Core_Config_StringLiteralParsingType_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ExtensibilityPoint</code></pre>
+    <pre><code class="lang-csharp hljs">public enum StringLiteralParsingType : byte</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_ExtensibilityPoint_QueryOptimizer.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.ExtensibilityPoint.QueryOptimizer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/ExtensibilityPoint.cs/#L15">View Source</a>
-  </span>
-  <h4 id="System_Linq_Dynamic_Core_ExtensibilityPoint_QueryOptimizer" data-uid="System.Linq.Dynamic.Core.ExtensibilityPoint.QueryOptimizer">QueryOptimizer</h4>
-  <div class="markdown level1 summary"><p>Place to optimize your queries. Example: Add a reference to Nuget package Linq.Expression.Optimizer
-and in your program initializers set Extensibility.QueryOptimizer = ExpressionOptimizer.visit;</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Func&lt;Expression, Expression&gt; QueryOptimizer</code></pre>
-  </div>
-  <h5 class="fieldValue">Field Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
-        <th>Type</th>
+        <th>Name</th>
         <th>Description</th>
       </tr>
-    </thead>
+    <thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Linq.Expressions.Expression</span>, <span class="xref">System.Linq.Expressions.Expression</span>&gt;</td>
-        <td></td>
+        <td id="System_Linq_Dynamic_Core_Config_StringLiteralParsingType_Default">Default</td>
+        <td><p>Represents the default string literal parsing type. Double quotes should be escaped using the default escape character (a ).
+To check if a Value equals a double quote, use this c# code:</p>
+<pre><code>var expression = &quot;Value == \&quot;\\\&quot;\&quot;&quot;;</code></pre>
+</td>
+      </tr>
+      <tr>
+        <td id="System_Linq_Dynamic_Core_Config_StringLiteralParsingType_EscapeDoubleQuoteByTwoDoubleQuotes">EscapeDoubleQuoteByTwoDoubleQuotes</td>
+        <td><p>Represents a string literal parsing type where a double quote should be escaped by an extra double quote (&quot;).
+To check if a Value equals a double quote, use this c# code:</p>
+<pre><code>var expression = &quot;Value == \&quot;\&quot;\&quot;\&quot;&quot;;</code></pre>
+</td>
       </tr>
     </tbody>
-  </table>
+  </thead></thead></table>
 </article>
           </div>
           
@@ -163,10 +126,10 @@ and in your program initializers set Extensibility.QueryOptimizer = ExpressionOp
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_ExtensibilityPoint.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.ExtensibilityPoint%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_Config_StringLiteralParsingType.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.Config.StringLiteralParsingType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/ExtensibilityPoint.cs/#L9" class="contribution-link">View Source</a>
+                    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/Config/StringLiteralParsingType.cs/#L6" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
