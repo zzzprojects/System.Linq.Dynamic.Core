@@ -223,7 +223,7 @@ public class ExpressionParser
                 methodName = ascending ? MethodOrderBy : MethodOrderByDescending;
             }
 
-            orderings.Add(new DynamicOrdering { Selector = expr, Ascending = ascending, MethodName = methodName });
+            orderings.Add(new DynamicOrdering(expr, ascending, methodName));
 
             if (_textParser.CurrentToken.Id != TokenId.Comma)
             {
