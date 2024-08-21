@@ -3,19 +3,14 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Exceptions;
-#if !(WINDOWS_APP45x || SILVERLIGHT)
-using System.Diagnostics;
-#endif
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Util;
-
-#if WINDOWS_APP
-using System;
-using System.Linq;
+#if !(SILVERLIGHT)
+using System.Diagnostics;
 #endif
 
 namespace System.Linq.Dynamic.Core
@@ -28,7 +23,7 @@ namespace System.Linq.Dynamic.Core
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public static class DynamicQueryableExtensions
     {
-#if !(WINDOWS_APP45x || SILVERLIGHT)
+#if !(SILVERLIGHT)
         private static readonly TraceSource TraceSource = new(nameof(DynamicQueryableExtensions));
 #endif
 
@@ -38,7 +33,7 @@ namespace System.Linq.Dynamic.Core
             {
                 var optimized = ExtensibilityPoint.QueryOptimizer(expression);
 
-#if !(WINDOWS_APP45x || SILVERLIGHT)
+#if !(SILVERLIGHT)
                 if (optimized != expression)
                 {
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);

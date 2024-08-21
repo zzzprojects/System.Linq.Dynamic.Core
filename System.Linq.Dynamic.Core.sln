@@ -24,7 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.txt = NuGet.txt
 		PackageReadme.md = PackageReadme.md
 		README.md = README.md
-		report\run-coverlet-local.cmd = report\run-coverlet-local.cmd
 		version.xml = version.xml
 	EndProjectSection
 EndProject
@@ -151,6 +150,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.Linq.Dynamic.Core.SystemTextJson", "src\System.Linq.Dynamic.Core.SystemTextJson\System.Linq.Dynamic.Core.SystemTextJson.csproj", "{FA01CE15-315A-499E-AFC2-955CA7EB45FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.Linq.Dynamic.Core.SystemTextJson.Tests", "test\System.Linq.Dynamic.Core.SystemTextJson.Tests\System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj", "{D5844AE4-53FA-4C8A-9D52-AD213FD0CA1E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WasmDynamicLinq", "src-blazor\WasmDynamicLinq\WasmDynamicLinq.csproj", "{2DE2052F-0A50-40C7-B6FF-52B52386BF9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1019,10 +1020,7 @@ Global
 		{D8368319-F370-4071-9411-A3DADB234330} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 		{B01B327C-FC68-49B6-BDE3-A13D0C66DF5C} = {7971CAEB-B9F2-416B-966D-2D697C4C1E62}
 		{7AFC2836-0F6E-4B0D-8BB3-13317A3B6616} = {8463ED7E-69FB-49AE-85CF-0791AFD98E38}
-		{8C5851B8-5C47-4229-AB55-D4252703598E} = {DBD7D9B6-FCC7-4650-91AF-E6457573A68F}
-		{912FBF24-3CAE-4A50-B5EA-E525B9FAEC90} = {8463ED7E-69FB-49AE-85CF-0791AFD98E38}
-		{FA01CE15-315A-499E-AFC2-955CA7EB45FF} = {DBD7D9B6-FCC7-4650-91AF-E6457573A68F}
-		{D5844AE4-53FA-4C8A-9D52-AD213FD0CA1E} = {8463ED7E-69FB-49AE-85CF-0791AFD98E38}
+		{2DE2052F-0A50-40C7-B6FF-52B52386BF9A} = {122BC4FA-7563-4E35-9D17-077F16F1629F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {94C56722-194E-4B8B-BC23-B3F754E89A20}

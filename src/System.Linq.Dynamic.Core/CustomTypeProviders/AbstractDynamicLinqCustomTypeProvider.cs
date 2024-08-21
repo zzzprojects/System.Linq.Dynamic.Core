@@ -78,7 +78,7 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
         return null;
     }
 
-#if (WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if (UAP10_0 || NETSTANDARD)
     /// <summary>
     /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
     /// </summary>

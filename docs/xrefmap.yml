@@ -13,6 +13,30 @@ references:
   commentId: N:System.Linq.Dynamic.Core
   fullName: System.Linq.Dynamic.Core
   nameWithType: System.Linq.Dynamic.Core
+- uid: System.Linq.Dynamic.Core.Config
+  name: System.Linq.Dynamic.Core.Config
+  href: api/System.Linq.Dynamic.Core.Config.html
+  commentId: N:System.Linq.Dynamic.Core.Config
+  fullName: System.Linq.Dynamic.Core.Config
+  nameWithType: System.Linq.Dynamic.Core.Config
+- uid: System.Linq.Dynamic.Core.Config.StringLiteralParsingType
+  name: StringLiteralParsingType
+  href: api/System.Linq.Dynamic.Core.Config.StringLiteralParsingType.html
+  commentId: T:System.Linq.Dynamic.Core.Config.StringLiteralParsingType
+  fullName: System.Linq.Dynamic.Core.Config.StringLiteralParsingType
+  nameWithType: StringLiteralParsingType
+- uid: System.Linq.Dynamic.Core.Config.StringLiteralParsingType.Default
+  name: Default
+  href: api/System.Linq.Dynamic.Core.Config.StringLiteralParsingType.html#System_Linq_Dynamic_Core_Config_StringLiteralParsingType_Default
+  commentId: F:System.Linq.Dynamic.Core.Config.StringLiteralParsingType.Default
+  fullName: System.Linq.Dynamic.Core.Config.StringLiteralParsingType.Default
+  nameWithType: StringLiteralParsingType.Default
+- uid: System.Linq.Dynamic.Core.Config.StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes
+  name: EscapeDoubleQuoteByTwoDoubleQuotes
+  href: api/System.Linq.Dynamic.Core.Config.StringLiteralParsingType.html#System_Linq_Dynamic_Core_Config_StringLiteralParsingType_EscapeDoubleQuoteByTwoDoubleQuotes
+  commentId: F:System.Linq.Dynamic.Core.Config.StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes
+  fullName: System.Linq.Dynamic.Core.Config.StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes
+  nameWithType: StringLiteralParsingType.EscapeDoubleQuoteByTwoDoubleQuotes
 - uid: System.Linq.Dynamic.Core.CustomTypeProviders
   name: System.Linq.Dynamic.Core.CustomTypeProviders
   href: api/System.Linq.Dynamic.Core.CustomTypeProviders.html
@@ -101,6 +125,12 @@ references:
   commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.#ctor(System.Boolean)
   fullName: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.DefaultDynamicLinqCustomTypeProvider(System.Boolean)
   nameWithType: DefaultDynamicLinqCustomTypeProvider.DefaultDynamicLinqCustomTypeProvider(Boolean)
+- uid: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.#ctor(System.Linq.Dynamic.Core.ParsingConfig,System.Boolean)
+  name: DefaultDynamicLinqCustomTypeProvider(ParsingConfig, Boolean)
+  href: api/System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider__ctor_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_
+  commentId: M:System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.#ctor(System.Linq.Dynamic.Core.ParsingConfig,System.Boolean)
+  fullName: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.DefaultDynamicLinqCustomTypeProvider(System.Linq.Dynamic.Core.ParsingConfig, System.Boolean)
+  nameWithType: DefaultDynamicLinqCustomTypeProvider.DefaultDynamicLinqCustomTypeProvider(ParsingConfig, Boolean)
 - uid: System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.#ctor*
   name: DefaultDynamicLinqCustomTypeProvider
   href: api/System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider__ctor_
@@ -2017,12 +2047,12 @@ references:
   commentId: T:System.Linq.Dynamic.Core.Exceptions.ParseException
   fullName: System.Linq.Dynamic.Core.Exceptions.ParseException
   nameWithType: ParseException
-- uid: System.Linq.Dynamic.Core.Exceptions.ParseException.#ctor(System.String,System.Int32)
-  name: ParseException(String, Int32)
-  href: api/System.Linq.Dynamic.Core.Exceptions.ParseException.html#System_Linq_Dynamic_Core_Exceptions_ParseException__ctor_System_String_System_Int32_
-  commentId: M:System.Linq.Dynamic.Core.Exceptions.ParseException.#ctor(System.String,System.Int32)
-  fullName: System.Linq.Dynamic.Core.Exceptions.ParseException.ParseException(System.String, System.Int32)
-  nameWithType: ParseException.ParseException(String, Int32)
+- uid: System.Linq.Dynamic.Core.Exceptions.ParseException.#ctor(System.String,System.Int32,System.Exception)
+  name: ParseException(String, Int32, Exception)
+  href: api/System.Linq.Dynamic.Core.Exceptions.ParseException.html#System_Linq_Dynamic_Core_Exceptions_ParseException__ctor_System_String_System_Int32_System_Exception_
+  commentId: M:System.Linq.Dynamic.Core.Exceptions.ParseException.#ctor(System.String,System.Int32,System.Exception)
+  fullName: System.Linq.Dynamic.Core.Exceptions.ParseException.ParseException(System.String, System.Int32, System.Exception)
+  nameWithType: ParseException.ParseException(String, Int32, Exception)
 - uid: System.Linq.Dynamic.Core.Exceptions.ParseException.#ctor*
   name: ParseException
   href: api/System.Linq.Dynamic.Core.Exceptions.ParseException.html#System_Linq_Dynamic_Core_Exceptions_ParseException__ctor_
@@ -2511,6 +2541,32 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.AreContextKeywordsEnabled
   nameWithType: ParsingConfig.AreContextKeywordsEnabled
+- uid: System.Linq.Dynamic.Core.ParsingConfig.ConstantExpressionCacheConfig
+  name: ConstantExpressionCacheConfig
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_ConstantExpressionCacheConfig
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.ConstantExpressionCacheConfig
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.ConstantExpressionCacheConfig
+  nameWithType: ParsingConfig.ConstantExpressionCacheConfig
+- uid: System.Linq.Dynamic.Core.ParsingConfig.ConstantExpressionCacheConfig*
+  name: ConstantExpressionCacheConfig
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_ConstantExpressionCacheConfig_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.ConstantExpressionCacheConfig
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.ConstantExpressionCacheConfig
+  nameWithType: ParsingConfig.ConstantExpressionCacheConfig
+- uid: System.Linq.Dynamic.Core.ParsingConfig.ConvertObjectToSupportComparison
+  name: ConvertObjectToSupportComparison
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_ConvertObjectToSupportComparison
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.ConvertObjectToSupportComparison
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.ConvertObjectToSupportComparison
+  nameWithType: ParsingConfig.ConvertObjectToSupportComparison
+- uid: System.Linq.Dynamic.Core.ParsingConfig.ConvertObjectToSupportComparison*
+  name: ConvertObjectToSupportComparison
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_ConvertObjectToSupportComparison_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.ConvertObjectToSupportComparison
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.ConvertObjectToSupportComparison
+  nameWithType: ParsingConfig.ConvertObjectToSupportComparison
 - uid: System.Linq.Dynamic.Core.ParsingConfig.CustomTypeProvider
   name: CustomTypeProvider
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_CustomTypeProvider
@@ -2589,6 +2645,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.DisableMemberAccessToIndexAccessorFallback
   nameWithType: ParsingConfig.DisableMemberAccessToIndexAccessorFallback
+- uid: System.Linq.Dynamic.Core.ParsingConfig.DisallowNewKeyword
+  name: DisallowNewKeyword
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_DisallowNewKeyword
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.DisallowNewKeyword
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.DisallowNewKeyword
+  nameWithType: ParsingConfig.DisallowNewKeyword
+- uid: System.Linq.Dynamic.Core.ParsingConfig.DisallowNewKeyword*
+  name: DisallowNewKeyword
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_DisallowNewKeyword_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.DisallowNewKeyword
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.DisallowNewKeyword
+  nameWithType: ParsingConfig.DisallowNewKeyword
 - uid: System.Linq.Dynamic.Core.ParsingConfig.EvaluateGroupByAtDatabase
   name: EvaluateGroupByAtDatabase
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_EvaluateGroupByAtDatabase
@@ -2628,6 +2697,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.IsCaseSensitive
   nameWithType: ParsingConfig.IsCaseSensitive
+- uid: System.Linq.Dynamic.Core.ParsingConfig.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+  name: LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+  nameWithType: ParsingConfig.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+- uid: System.Linq.Dynamic.Core.ParsingConfig.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory*
+  name: LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_LoadAdditionalAssembliesFromCurrentDomainBaseDirectory_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
+  nameWithType: ParsingConfig.LoadAdditionalAssembliesFromCurrentDomainBaseDirectory
 - uid: System.Linq.Dynamic.Core.ParsingConfig.NullPropagatingUseDefaultValueForNonNullableValueTypes
   name: NullPropagatingUseDefaultValueForNonNullableValueTypes
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_NullPropagatingUseDefaultValueForNonNullableValueTypes
@@ -2719,6 +2801,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.ResolveTypesBySimpleName
   nameWithType: ParsingConfig.ResolveTypesBySimpleName
+- uid: System.Linq.Dynamic.Core.ParsingConfig.StringLiteralParsing
+  name: StringLiteralParsing
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_StringLiteralParsing
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.StringLiteralParsing
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.StringLiteralParsing
+  nameWithType: ParsingConfig.StringLiteralParsing
+- uid: System.Linq.Dynamic.Core.ParsingConfig.StringLiteralParsing*
+  name: StringLiteralParsing
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_StringLiteralParsing_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.StringLiteralParsing
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.StringLiteralParsing
+  nameWithType: ParsingConfig.StringLiteralParsing
 - uid: System.Linq.Dynamic.Core.ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
   name: SupportCastingToFullyQualifiedTypeAsString
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_SupportCastingToFullyQualifiedTypeAsString
@@ -2732,6 +2827,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
   nameWithType: ParsingConfig.SupportCastingToFullyQualifiedTypeAsString
+- uid: System.Linq.Dynamic.Core.ParsingConfig.SupportDotInPropertyNames
+  name: SupportDotInPropertyNames
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_SupportDotInPropertyNames
+  commentId: P:System.Linq.Dynamic.Core.ParsingConfig.SupportDotInPropertyNames
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.SupportDotInPropertyNames
+  nameWithType: ParsingConfig.SupportDotInPropertyNames
+- uid: System.Linq.Dynamic.Core.ParsingConfig.SupportDotInPropertyNames*
+  name: SupportDotInPropertyNames
+  href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_SupportDotInPropertyNames_
+  commentId: Overload:System.Linq.Dynamic.Core.ParsingConfig.SupportDotInPropertyNames
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.ParsingConfig.SupportDotInPropertyNames
+  nameWithType: ParsingConfig.SupportDotInPropertyNames
 - uid: System.Linq.Dynamic.Core.ParsingConfig.SupportEnumerationsFromSystemNamespace
   name: SupportEnumerationsFromSystemNamespace
   href: api/System.Linq.Dynamic.Core.ParsingConfig.html#System_Linq_Dynamic_Core_ParsingConfig_SupportEnumerationsFromSystemNamespace
@@ -2796,6 +2904,19 @@ references:
   isSpec: "True"
   fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.TextParser
   nameWithType: TextParser.TextParser
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.Clone
+  name: Clone()
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_Clone
+  commentId: M:System.Linq.Dynamic.Core.Tokenizer.TextParser.Clone
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.Clone()
+  nameWithType: TextParser.Clone()
+- uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.Clone*
+  name: Clone
+  href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_Clone_
+  commentId: Overload:System.Linq.Dynamic.Core.Tokenizer.TextParser.Clone
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Tokenizer.TextParser.Clone
+  nameWithType: TextParser.Clone
 - uid: System.Linq.Dynamic.Core.Tokenizer.TextParser.CurrentToken
   name: CurrentToken
   href: api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html#System_Linq_Dynamic_Core_Tokenizer_TextParser_CurrentToken
@@ -3139,6 +3260,70 @@ references:
   commentId: F:System.Linq.Dynamic.Core.Tokenizer.TokenId.Unknown
   fullName: System.Linq.Dynamic.Core.Tokenizer.TokenId.Unknown
   nameWithType: TokenId.Unknown
+- uid: System.Linq.Dynamic.Core.Util.Cache
+  name: System.Linq.Dynamic.Core.Util.Cache
+  href: api/System.Linq.Dynamic.Core.Util.Cache.html
+  commentId: N:System.Linq.Dynamic.Core.Util.Cache
+  fullName: System.Linq.Dynamic.Core.Util.Cache
+  nameWithType: System.Linq.Dynamic.Core.Util.Cache
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig
+  name: CacheConfig
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html
+  commentId: T:System.Linq.Dynamic.Core.Util.Cache.CacheConfig
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig
+  nameWithType: CacheConfig
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.CleanupFrequency
+  name: CleanupFrequency
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html#System_Linq_Dynamic_Core_Util_Cache_CacheConfig_CleanupFrequency
+  commentId: P:System.Linq.Dynamic.Core.Util.Cache.CacheConfig.CleanupFrequency
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.CleanupFrequency
+  nameWithType: CacheConfig.CleanupFrequency
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.CleanupFrequency*
+  name: CleanupFrequency
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html#System_Linq_Dynamic_Core_Util_Cache_CacheConfig_CleanupFrequency_
+  commentId: Overload:System.Linq.Dynamic.Core.Util.Cache.CacheConfig.CleanupFrequency
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.CleanupFrequency
+  nameWithType: CacheConfig.CleanupFrequency
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.MinItemsTrigger
+  name: MinItemsTrigger
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html#System_Linq_Dynamic_Core_Util_Cache_CacheConfig_MinItemsTrigger
+  commentId: P:System.Linq.Dynamic.Core.Util.Cache.CacheConfig.MinItemsTrigger
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.MinItemsTrigger
+  nameWithType: CacheConfig.MinItemsTrigger
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.MinItemsTrigger*
+  name: MinItemsTrigger
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html#System_Linq_Dynamic_Core_Util_Cache_CacheConfig_MinItemsTrigger_
+  commentId: Overload:System.Linq.Dynamic.Core.Util.Cache.CacheConfig.MinItemsTrigger
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.MinItemsTrigger
+  nameWithType: CacheConfig.MinItemsTrigger
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.ReturnExpiredItems
+  name: ReturnExpiredItems
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html#System_Linq_Dynamic_Core_Util_Cache_CacheConfig_ReturnExpiredItems
+  commentId: P:System.Linq.Dynamic.Core.Util.Cache.CacheConfig.ReturnExpiredItems
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.ReturnExpiredItems
+  nameWithType: CacheConfig.ReturnExpiredItems
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.ReturnExpiredItems*
+  name: ReturnExpiredItems
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html#System_Linq_Dynamic_Core_Util_Cache_CacheConfig_ReturnExpiredItems_
+  commentId: Overload:System.Linq.Dynamic.Core.Util.Cache.CacheConfig.ReturnExpiredItems
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.ReturnExpiredItems
+  nameWithType: CacheConfig.ReturnExpiredItems
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.TimeToLive
+  name: TimeToLive
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html#System_Linq_Dynamic_Core_Util_Cache_CacheConfig_TimeToLive
+  commentId: P:System.Linq.Dynamic.Core.Util.Cache.CacheConfig.TimeToLive
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.TimeToLive
+  nameWithType: CacheConfig.TimeToLive
+- uid: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.TimeToLive*
+  name: TimeToLive
+  href: api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html#System_Linq_Dynamic_Core_Util_Cache_CacheConfig_TimeToLive_
+  commentId: Overload:System.Linq.Dynamic.Core.Util.Cache.CacheConfig.TimeToLive
+  isSpec: "True"
+  fullName: System.Linq.Dynamic.Core.Util.Cache.CacheConfig.TimeToLive
+  nameWithType: CacheConfig.TimeToLive
 - uid: System.Tuple`2
   name: Tuple<T1, T2>
   href: api/System.Tuple-2.html

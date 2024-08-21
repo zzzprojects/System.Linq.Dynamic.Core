@@ -29,11 +29,35 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/System.Linq.Dynamic.Core.Config.StringLiteralParsingType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/System.Linq.Dynamic.Core.Config.StringLiteralParsingType.html",
+          "hash": "952dnQSuaC4a0LSojUESYeWrgo2RZRlddYAldO18mzk="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/System.Linq.Dynamic.Core.Config.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/System.Linq.Dynamic.Core.Config.html",
+          "hash": "m+gq37RMOnBhHGP3weudNRdVeVdZUBS96ydZTUt7Vh0="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/System.Linq.Dynamic.Core.CustomTypeProviders.AbstractDynamicLinqCustomTypeProvider.yml",
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.CustomTypeProviders.AbstractDynamicLinqCustomTypeProvider.html",
-          "hash": "Hw4zaHuWpQD3BQ5RFW8FxSPTPZwDwmTIOp829oJVVgA="
+          "hash": "cif6dwbUcegqMceyG8K6dJ34uXcb3hzr8dfh8hZiaj0="
         }
       },
       "is_incremental": false,
@@ -45,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html",
-          "hash": "tOjhiA9SOysNhX9225GNgSgqw7XHztu3/AWcn55tKyI="
+          "hash": "3bDMmTTjwfVaJlFZ9GC80mK2F6b5KjjkfjUI5HhTMzk="
         }
       },
       "is_incremental": false,
@@ -57,7 +81,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.CustomTypeProviders.DynamicLinqTypeAttribute.html",
-          "hash": "krSzJhQDPcuUnnL2dcqHg144x18g7BDQ47mukGi5jiY="
+          "hash": "ry+EgJ6OlR2cAR+qdhQxMuWhHw3M6qy+fOaZLhuIqQM="
         }
       },
       "is_incremental": false,
@@ -81,7 +105,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.CustomTypeProviders.IDynamicLinqCustomTypeProvider.html",
-          "hash": "8NayIEt7xA6QnbgZOunViYnTqd/K1xE5LOV38KhKd00="
+          "hash": "VRNmZD7x6o2gLh/7+qvHlsoqYyb7TTGufGSd3585h48="
         }
       },
       "is_incremental": false,
@@ -93,7 +117,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.CustomTypeProviders.html",
-          "hash": "PzsyUBS7aDF/GhmvAHSKEdIFX1uSUL/Gn+WN6PFuzgo="
+          "hash": "Sc3EZWh8OM8MTafwZEMJlV1h1qKwQ64+kNNwl0LYJAg="
         }
       },
       "is_incremental": false,
@@ -105,7 +129,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.DefaultQueryableAnalyzer.html",
-          "hash": "9SP4P0EhLif7BBemSeTWOlA3eJFW67Mzh7grTGWrhdg="
+          "hash": "QDQs0gLJcM9qnf0Chgq7kUZcWwoA71pTUkRlVrU9h+E="
         }
       },
       "is_incremental": false,
@@ -117,7 +141,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.DynamicClass.html",
-          "hash": "dv7dn53UdvS2xxNnXoqwiKEqcN5Vmp5JrWjoMmfGZwg="
+          "hash": "zYkrABr9x4LoxikzH/qFfqFRj1E9+GnbcfXIk1yvmcA="
         }
       },
       "is_incremental": false,
@@ -129,7 +153,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.DynamicClassFactory.html",
-          "hash": "Cpdy7iQz+xFy/UQiAYW+LJoAKTN1G3naQVDnYB1Fa8E="
+          "hash": "rAcal4EWIiqTyeCAUJoW0jegRtRwC7gaEfNp6JmIwh4="
         }
       },
       "is_incremental": false,
@@ -141,7 +165,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.DynamicEnumerableExtensions.html",
-          "hash": "AFND/nPjfatcn6h4XxbRGj2WxMAM7TsPPVFXSb6nMdo="
+          "hash": "fqfs2JTxs9L7nf2l8RW/fzTQHg+GZ3dz2kPnH9dva5Y="
         }
       },
       "is_incremental": false,
@@ -153,7 +177,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.DynamicExpressionParser.html",
-          "hash": "tsWJlTcTZohalud1TpEGshzVQa6W4znROuaoM/r5vW4="
+          "hash": "Iwypfm6TMFeP84XwtKqZQ3rTiAE/vTQb9sV3VM96c5o="
         }
       },
       "is_incremental": false,
@@ -165,7 +189,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.DynamicProperty.html",
-          "hash": "kRcJfsqYptA+g3He8TIKUTxWr6fu4ThncePPqZhMI3U="
+          "hash": "8jWcSMtvLhpb0MaZ4sPdp8PVxPfoZU8i5/BrbeI1THg="
         }
       },
       "is_incremental": false,
@@ -177,7 +201,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.DynamicQueryableExtensions.html",
-          "hash": "8Scsef33jXhnfUNwgNkLf9pDMpixu4qWOHe3r+SzaDc="
+          "hash": "pP1zwXYlw7No5YzML23k45mTFMNtEp07QTuHfqNi/hs="
         }
       },
       "is_incremental": false,
@@ -189,7 +213,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.Exceptions.ParseException.html",
-          "hash": "JwvstWZuhLt+QjCE3HWqVzd/vZe13sB1aU7gq1tf1YE="
+          "hash": "sUaJ2OsYdfeDcvEB/kRMjKwWv2657SogE8+zYeHRe6Y="
         }
       },
       "is_incremental": false,
@@ -213,7 +237,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.ExtensibilityPoint.html",
-          "hash": "63G/lgWlz6103fZkAyP1LFejWM02Yg4arDEqkfBgCis="
+          "hash": "8rqmaKUbCE6gRFX+sKC9ZWqsQ/O5e1tSD8by194FFKU="
         }
       },
       "is_incremental": false,
@@ -225,7 +249,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.GroupResult.html",
-          "hash": "FyTflxv9BjDM5qFUpGj5ofiCtFnPgVt9NLiscACGNLo="
+          "hash": "2Ep5fQHdCzYJTtzttfCGmoBpbff4pekjgq4OcEKoj+g="
         }
       },
       "is_incremental": false,
@@ -237,7 +261,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.IAssemblyHelper.html",
-          "hash": "0lMGOtbSDLIxq75I0DpK5hVBEmWUrWy33/s2gMh4APE="
+          "hash": "Vg1AL5kqOVlbX8cVqF9ap42a/wn09Md/EvavZM61qBk="
         }
       },
       "is_incremental": false,
@@ -249,7 +273,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.IQueryableAnalyzer.html",
-          "hash": "PVK2ufWtA8znWYt/j/JEQPDWdhOzPXWj7cX6i2yBpz8="
+          "hash": "FA0yTSO4t5X6/HO5oMH6rvQ7MU9LAGm70xWlG4am8IE="
         }
       },
       "is_incremental": false,
@@ -261,7 +285,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.PagedResult-1.html",
-          "hash": "vpwnq+ZSNsWsmRm5JEdiWdg0JiA8gwkCjAdGtSVideA="
+          "hash": "XWYnZh74rEcuWCawnXSt9pvWuolvGvRaC/lODYEgRX0="
         }
       },
       "is_incremental": false,
@@ -273,7 +297,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.PagedResult.html",
-          "hash": "iFARffOWfmiDv6G1QWduT1EdDBVY/AOvIeUBKWnDuiA="
+          "hash": "bsbvFf5FM6PHvQOP+Kh3AMQZacFuf0nkEOxZVIyLBfc="
         }
       },
       "is_incremental": false,
@@ -285,7 +309,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.Parser.ExpressionParser.html",
-          "hash": "E0V6UOejA9k9JpCTVILhcDT3NyJEXW5mPKoNlpIvPqM="
+          "hash": "LGwZDQn7Y3ulJnfo1GKtTQ5Eu0bivzLYjIJ8cCM8fRA="
         }
       },
       "is_incremental": false,
@@ -297,7 +321,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.Parser.ExpressionPromoter.html",
-          "hash": "4M+SGT8CBEEVLMse+NH7XP5SGxOn7bFnyYTUIp7YI1o="
+          "hash": "NSBEhZIm2K+syunC7uVCJpPkb8gIFpyPIM0Zgrq3sT0="
         }
       },
       "is_incremental": false,
@@ -309,7 +333,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.Parser.IExpressionPromoter.html",
-          "hash": "YAr5s5r1GdnKDMDA6eUvLjQQsA/3SWxzdA9KmKGN0ew="
+          "hash": "CfPxqcwmtHKbmA4K67VnwaK10vcWCTgrdk5VMW4rpd8="
         }
       },
       "is_incremental": false,
@@ -321,7 +345,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.Parser.NumberParser.html",
-          "hash": "UCU88Y0WQV7xmdA5pA4fPVNBbD4XNfMpBdSXQ7172Yc="
+          "hash": "FWBbHjgj6k4z01SjlhVat4a3QuY7oVtTDNTkVcdKrqU="
         }
       },
       "is_incremental": false,
@@ -345,7 +369,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.ParsingConfig.html",
-          "hash": "cfAv4clBBdg+P6NKJaZBzjeNeR3SHHeUUlZbgfC02XM="
+          "hash": "8SCuPnkvo6lCYn0Jq9eoEw2P7FF2dyeKaJySoAf8RDU="
         }
       },
       "is_incremental": false,
@@ -357,7 +381,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.Tokenizer.TextParser.html",
-          "hash": "Cxz2FiBBqCS4FYsKBLKiJwZ/Hbpfdiw+jN3fY2ncrkY="
+          "hash": "dKFEyhPuKiOnpLAxQZW2f1ZqNmXlCTOGwmjBEg/uk1U="
         }
       },
       "is_incremental": false,
@@ -369,7 +393,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.Tokenizer.Token.html",
-          "hash": "Ky7+SPEfzi85NZPPzdRelr4g85kdizPOYaGQy/3zucg="
+          "hash": "OSHyjf47XEKFv3yrAZHE9bahMBJgy9LxptJn89KYg8o="
         }
       },
       "is_incremental": false,
@@ -401,11 +425,35 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "obj/api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/System.Linq.Dynamic.Core.Util.Cache.CacheConfig.html",
+          "hash": "kaI9peqGArfVTsyuSyWlWonksD/RuC643NQ1v5NTzm8="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/System.Linq.Dynamic.Core.Util.Cache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/System.Linq.Dynamic.Core.Util.Cache.html",
+          "hash": "xVvp8gYwYJBTa7w1uVq9v37LOD2q+q7LsqFH3WFRRwA="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "obj/api/System.Linq.Dynamic.Core.yml",
       "output": {
         ".html": {
           "relative_path": "api/System.Linq.Dynamic.Core.html",
-          "hash": "BZbu11MilL0q2XoH7x4QiBg0S34mgG3eRGD8YTki218="
+          "hash": "BxNIZq2buDiVgEk63QLEq2Nlbfk8To6yikJySUwlKYU="
         }
       },
       "is_incremental": false,
@@ -417,7 +465,7 @@
       "output": {
         ".html": {
           "relative_path": "api/System.Tuple-2.html",
-          "hash": "/bhh59QFEoVJTihGiRaDZx3kjJpY+ON8nVOAlDeESjM="
+          "hash": "4DDk3mse/t7CzEiujxaMdVPtqO0Ckt4dPJ0TrWVUTOo="
         }
       },
       "is_incremental": false,
@@ -441,7 +489,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "PUzKU9mY6/vUK2w0WoNh7stbaXsjL5stoxCxUUbR56E="
+          "hash": "/DJfJOujhWlEKvxObyQtsx2wXs1i0v1Dp+gPD9dkPgM="
         }
       },
       "is_incremental": false,
@@ -463,23 +511,25 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Cannot build incrementally because last build info is missing.",
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0
+        "skipped_file_count": 0,
+        "full_build_reason_code": "NoAvailableBuildCache"
       },
       "processors": {
         "ConceptualDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 1,
-          "skipped_file_count": 1
+          "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 34,
-          "skipped_file_count": 34
+          "total_file_count": 38,
+          "skipped_file_count": 0
         },
         "TocDocumentProcessor": {
           "can_incremental": false,

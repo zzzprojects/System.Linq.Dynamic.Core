@@ -2074,6 +2074,7 @@ public class ExpressionParser
         }
 
         args = ParseArgumentList();
+        var copyArgs = args.ToArray();
 
         // Revert the _it and _parent to the old values.
         _it = outerIt;
@@ -2082,7 +2083,11 @@ public class ExpressionParser
         var theType = type ?? instance.Type;
         if (theType == typeof(string) && _methodFinder.ContainsMethod(theType, methodName, false, instance, ref args))
         {
-            // In case the type is a string, and does contain the methodName (like "IndexOf"), then return false to indicate that the methodName is not an Enumerable method.
+            // In case the type is a string, and does contain the methodName (like "IndexOf") then:
+            // - restore the args
+            // - set the expression to null
+            // - return false to indicate that the methodName is not an Enumerable method
+            args = copyArgs;
             expression = null;
             return false;
         }
@@ -2235,7 +2240,7 @@ public class ExpressionParser
         _textParser.ValidateToken(TokenId.OpenParen, Res.OpenParenExpected);
         _textParser.NextToken();
 
-        var args = _textParser.CurrentToken.Id != TokenId.CloseParen ? ParseArguments() : new Expression[0];
+        var args = _textParser.CurrentToken.Id != TokenId.CloseParen ? ParseArguments() : [];
 
         _textParser.ValidateToken(TokenId.CloseParen, Res.CloseParenOrCommaExpected);
         _textParser.NextToken();
@@ -2455,7 +2460,7 @@ public class ExpressionParser
 
     private MemberInfo? FindPropertyOrField(Type type, string memberName, bool staticAccess)
     {
-#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
         var extraBindingFlag = _parsingConfig.PrioritizePropertyOrFieldOverTheType && staticAccess ? BindingFlags.Static : BindingFlags.Instance;
         var bindingFlags = BindingFlags.Public | BindingFlags.DeclaredOnly | extraBindingFlag;
         foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
