@@ -61,7 +61,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(type);
 
-            IEnumerable result = (IEnumerable)ToDynamicArrayGenericMethod.MakeGenericMethod(type).Invoke(source, new object[] { source });
+            var result = (IEnumerable)ToDynamicArrayGenericMethod.MakeGenericMethod(type).Invoke(source, [source])!;
 #if NET35
             return CastToArray<object>(result);
 #else
