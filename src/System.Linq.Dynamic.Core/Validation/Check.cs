@@ -10,7 +10,7 @@ internal static class Check
 {
     public static T Condition<T>(T value, Predicate<T> predicate, [CallerArgumentExpression("value")] string? parameterName = null)
     {
-        NotNull(predicate, nameof(predicate));
+        NotNull(predicate);
 
         if (!predicate(value))
         {
@@ -104,7 +104,7 @@ internal static class Check
     {
         if (value is null)
         {
-            NotNullOrEmpty(parameterName, nameof(parameterName));
+            NotNullOrEmpty(parameterName);
 
             throw new ArgumentNullException(parameterName);
         }
@@ -112,7 +112,7 @@ internal static class Check
         // ReSharper disable once PossibleMultipleEnumeration
         if (value.Any(v => v is null))
         {
-            NotNullOrEmpty(parameterName, nameof(parameterName));
+            NotNullOrEmpty(parameterName);
 
             throw new ArgumentException(parameterName);
         }

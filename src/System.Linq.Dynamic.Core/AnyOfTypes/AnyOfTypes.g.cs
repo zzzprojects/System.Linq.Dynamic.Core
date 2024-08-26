@@ -11,6 +11,6 @@ namespace AnyOfTypes
 {
     internal enum AnyOfType
     {
-        Undefined = 0, First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth, Tenth
+        Undefined = 0, First, Second
     }
 }
