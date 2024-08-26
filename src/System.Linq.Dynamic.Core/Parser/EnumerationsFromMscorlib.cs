@@ -13,7 +13,7 @@ namespace System.Linq.Dynamic.Core.Parser
 
         static EnumerationsFromMscorlib()
         {
-            var list = new List<Type>(AddEnumsFromAssembly(typeof(UriFormat).GetTypeInfo().Assembly.FullName));
+            var list = new List<Type>(AddEnumsFromAssembly(typeof(UriFormat).GetTypeInfo().Assembly.FullName!));
 
 #if !(UAP10_0 || NETSTANDARD || NET35 || NETCOREAPP)
             list.AddRange(AddEnumsFromAssembly("mscorlib"));
@@ -45,13 +45,13 @@ namespace System.Linq.Dynamic.Core.Parser
             {
                 var singleType = group.Single();
                 PredefinedEnumerationTypes.Add(group.Key, singleType);
-                PredefinedEnumerationTypes.Add(singleType.FullName, singleType);
+                PredefinedEnumerationTypes.Add(singleType.FullName!, singleType);
             }
             else
             {
                 foreach (var fullType in group)
                 {
-                    PredefinedEnumerationTypes.Add(fullType.FullName, fullType);
+                    PredefinedEnumerationTypes.Add(fullType.FullName!, fullType);
                 }
             }
         }

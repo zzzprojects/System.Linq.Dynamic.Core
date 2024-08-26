@@ -1936,14 +1936,14 @@ namespace System.Linq.Dynamic.Core
             }
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
-            Type enumerableType = typeof(IEnumerable<>).MakeGenericType(resultType);
+            Type enumerableType = typeof(IEnumerable<>).MakeGenericType(resultType!);
             Type inputType = source.Expression.Type.GetTypeInfo().GetGenericTypeArguments()[0];
             Type delegateType = typeof(Func<,>).MakeGenericType(inputType, enumerableType);
             lambda = Expression.Lambda(delegateType, lambda.Body, lambda.Parameters);
 
             var optimized = OptimizeExpression(Expression.Call(
                 typeof(Queryable), nameof(Queryable.SelectMany),
-                new[] { source.ElementType, resultType },
+                [source.ElementType, resultType!],
                 source.Expression, Expression.Quote(lambda))
             );
 
@@ -2128,7 +2128,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
 
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Single), new[] { source.ElementType }, source.Expression));
-            return source.Provider.Execute(optimized);
+            return source.Provider.Execute(optimized)!;
         }
 
         /// <summary>

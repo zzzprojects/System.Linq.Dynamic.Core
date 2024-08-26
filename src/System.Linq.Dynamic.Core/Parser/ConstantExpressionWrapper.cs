@@ -17,7 +17,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
         {
             if (constantExpression.Type == typeof(bool))
             {
-                expression = Wrap((bool)constantExpression.Value);
+                expression = Wrap((bool)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(bool?))
             {
@@ -25,7 +25,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(char))
             {
-                expression = Wrap((char)constantExpression.Value);
+                expression = Wrap((char)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(char?))
             {
@@ -33,7 +33,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(byte))
             {
-                expression = Wrap((byte)constantExpression.Value);
+                expression = Wrap((byte)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(byte?))
             {
@@ -41,15 +41,19 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(sbyte))
             {
-                expression = Wrap((sbyte)constantExpression.Value);
+                expression = Wrap((sbyte)constantExpression.Value!);
+            }
+            else if (constantExpression.Type == typeof(sbyte?))
+            {
+                expression = Wrap((sbyte?)constantExpression.Value);
             }
             else if (constantExpression.Type == typeof(string))
             {
-                expression = Wrap((string)constantExpression.Value);
+                expression = Wrap((string?)constantExpression.Value);
             }
             else if (constantExpression.Type == typeof(float))
             {
-                expression = Wrap((float)constantExpression.Value);
+                expression = Wrap((float)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(float?))
             {
@@ -57,7 +61,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(decimal))
             {
-                expression = Wrap((decimal)constantExpression.Value);
+                expression = Wrap((decimal)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(decimal?))
             {
@@ -65,7 +69,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(double))
             {
-                expression = Wrap((double)constantExpression.Value);
+                expression = Wrap((double)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(double?))
             {
@@ -73,7 +77,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(long))
             {
-                expression = Wrap((long)constantExpression.Value);
+                expression = Wrap((long)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(long?))
             {
@@ -81,7 +85,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(ulong))
             {
-                expression = Wrap((ulong)constantExpression.Value);
+                expression = Wrap((ulong)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(ulong?))
             {
@@ -89,7 +93,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(int))
             {
-                expression = Wrap((int)constantExpression.Value);
+                expression = Wrap((int)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(int?))
             {
@@ -97,7 +101,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(uint))
             {
-                expression = Wrap((uint)constantExpression.Value);
+                expression = Wrap((uint)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(uint?))
             {
@@ -105,7 +109,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(short))
             {
-                expression = Wrap((short)constantExpression.Value);
+                expression = Wrap((short)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(short?))
             {
@@ -113,7 +117,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(ushort))
             {
-                expression = Wrap((ushort)constantExpression.Value);
+                expression = Wrap((ushort)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(ushort?))
             {
@@ -121,7 +125,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(Guid))
             {
-                expression = Wrap((Guid)constantExpression.Value);
+                expression = Wrap((Guid)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(Guid?))
             {
@@ -129,7 +133,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(DateTime))
             {
-                expression = Wrap((DateTime)constantExpression.Value);
+                expression = Wrap((DateTime)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(DateTime?))
             {
@@ -137,7 +141,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(DateTimeOffset))
             {
-                expression = Wrap((DateTimeOffset)constantExpression.Value);
+                expression = Wrap((DateTimeOffset)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(DateTimeOffset?))
             {
@@ -145,7 +149,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(TimeSpan))
             {
-                expression = Wrap((TimeSpan)constantExpression.Value);
+                expression = Wrap((TimeSpan)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(TimeSpan?))
             {
@@ -154,7 +158,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
 #if NET6_0_OR_GREATER
             else if (constantExpression.Type == typeof(DateOnly))
             {
-                expression = Wrap((DateOnly)constantExpression.Value);
+                expression = Wrap((DateOnly)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(DateOnly?))
             {
@@ -162,7 +166,7 @@ internal class ConstantExpressionWrapper : IConstantExpressionWrapper
             }
             else if (constantExpression.Type == typeof(TimeOnly))
             {
-                expression = Wrap((TimeOnly)constantExpression.Value);
+                expression = Wrap((TimeOnly)constantExpression.Value!);
             }
             else if (constantExpression.Type == typeof(TimeOnly?))
             {
