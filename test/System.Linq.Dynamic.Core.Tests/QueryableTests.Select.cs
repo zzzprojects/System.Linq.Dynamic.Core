@@ -489,5 +489,25 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ArgumentException>(() => qry.Select(""));
             Assert.Throws<ArgumentException>(() => qry.Select(" "));
         }
+
+        [Fact]
+        public void Select_Dynamic_Nested_With_SubString()
+        {
+            // Arrange
+            var users = new User[]
+            {
+                new() { Id = Guid.NewGuid(), UserName = "Luke Skywalker"},
+                new() { Id = Guid.NewGuid(), UserName = "Darth Vader"},
+                new() { Id = Guid.NewGuid(), UserName = "Han Solo"}
+            };
+            var queryable = users.AsQueryable();
+
+            // Act
+            var result = queryable.Select(x => x.UserName.Substring(0, x.UserName.IndexOf(" "))).ToArray();
+            var resultDynamic = queryable.Select("UserName.Substring(0, UserName.IndexOf(\" \"))").ToDynamicArray<string>();
+
+            // Assert
+            resultDynamic.Should().BeEquivalentTo(result);
+        }
     }
 }
