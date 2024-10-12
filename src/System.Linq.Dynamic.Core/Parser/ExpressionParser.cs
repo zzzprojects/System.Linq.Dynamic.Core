@@ -1806,14 +1806,7 @@ public class ExpressionParser
 
             var isStaticAccess = expression == null;
             var isConstantString = expression is ConstantExpression { Value: string };
-
-            var isStringWithStringMethod = false;
-            if (type == typeof(string))
-            {
-                args = ParseArgumentList();
-                isStringWithStringMethod = _methodFinder.ContainsMethod(type, id, false, expression, ref args);
-            }
-
+            var isStringWithStringMethod = type == typeof(string) && _methodFinder.ContainsMethod(type, id, isStaticAccess);
             var isApplicableForEnumerable = !isStaticAccess && !isConstantString && !isStringWithStringMethod;
 
             if (isApplicableForEnumerable && TypeHelper.TryFindGenericType(typeof(IEnumerable<>), type, out var enumerableType))
