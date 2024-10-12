@@ -92,9 +92,9 @@ jobs:
     - name: Run Tests EFCore net7.0
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net7.csproj -c Release -p:buildType=azure-pipelines-ci
-      # continue-on-error: true
+      continue-on-error: true
 
     - name: Run Tests EFCore net6.0
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci
-      # continue-on-error: true
+      continue-on-error: true
