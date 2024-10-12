@@ -9,11 +9,9 @@ namespace System.Linq.Dynamic.Core.Tests;
 /// </summary>
 public class EntitiesTestsDatabaseFixture : IAsyncLifetime
 {
-    private readonly MsSqlContainer _msSqlContainer = new MsSqlBuilder().Build();
+    private readonly Lazy<MsSqlContainer> _msSqlContainer = new(new MsSqlBuilder().WithImage("mcr.microsoft.com/mssql/server:2022-latest").Build());
 
-    public string ConnectionString => _msSqlContainer.GetConnectionString();
-
-    public string ContainerId => $"{_msSqlContainer.Id}";
+    public string ConnectionString => _msSqlContainer.Value.GetConnectionString();
 
     public bool UseInMemory
     {
@@ -31,7 +29,7 @@ public class EntitiesTestsDatabaseFixture : IAsyncLifetime
             return;
         }
 
-        await _msSqlContainer.StartAsync();
+        await _msSqlContainer.Value.StartAsync();
     }
 
     public async Task DisposeAsync()
