@@ -44,6 +44,13 @@ jobs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
 
+    - name: Setup dotnet 6 and 7
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: | 
+          6
+          7
+
     - name: Install dotnet tools
       run: |
         dotnet tool install --global dotnet-sonarscanner
@@ -85,9 +92,9 @@ jobs:
     - name: Run Tests EFCore net7.0
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net7.csproj -c Release -p:buildType=azure-pipelines-ci
-      continue-on-error: true
+      # continue-on-error: true
 
     - name: Run Tests EFCore net6.0
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci
-      continue-on-error: true
+      # continue-on-error: true
