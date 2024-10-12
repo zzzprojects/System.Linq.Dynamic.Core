@@ -9,6 +9,7 @@ namespace System.Linq.Dynamic.Core.Tests;
 /// </summary>
 public class EntitiesTestsDatabaseFixture : IAsyncLifetime
 {
+    // https://github.com/microsoft/mssql-docker/issues/892
     private readonly Lazy<MsSqlContainer> _msSqlContainer = new(() => new MsSqlBuilder().WithImage("mcr.microsoft.com/mssql/server:2022-latest").Build());
 
     public string ConnectionString => _msSqlContainer.Value.GetConnectionString();
