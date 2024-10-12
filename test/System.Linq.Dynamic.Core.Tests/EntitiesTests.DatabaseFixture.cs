@@ -9,7 +9,7 @@ namespace System.Linq.Dynamic.Core.Tests;
 /// </summary>
 public class EntitiesTestsDatabaseFixture : IAsyncLifetime
 {
-    private readonly Lazy<MsSqlContainer> _msSqlContainer = new(new MsSqlBuilder().WithImage("mcr.microsoft.com/mssql/server:2022-latest").Build());
+    private readonly Lazy<MsSqlContainer> _msSqlContainer = new(() => new MsSqlBuilder().WithImage("mcr.microsoft.com/mssql/server:2022-latest").Build());
 
     public string ConnectionString => _msSqlContainer.Value.GetConnectionString();
 
@@ -39,6 +39,6 @@ public class EntitiesTestsDatabaseFixture : IAsyncLifetime
             return;
         }
 
-        await _msSqlContainer.DisposeAsync();
+        await _msSqlContainer.Value.DisposeAsync();
     }
 }
