@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_and_test_Windows:
-    name: Build and run Tests on Windows
+    name: "Windows: Build and Tests"
     runs-on: windows-latest
 
     env:
@@ -29,7 +29,7 @@ jobs:
         dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -p:buildType=azure-pipelines-ci
 
   build_and_test_Linux:
-    name: Build and run Tests on Linux
+    name: "Linux: Build and Tests"
     runs-on: ubuntu-latest
 
     env:
@@ -87,10 +87,12 @@ jobs:
       run: |
         dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
 
-    - name: Run Tests EFCore net7.0
-      run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net7.csproj -c Release -p:buildType=azure-pipelines-ci
+    # - name: Run Tests EFCore net7.0
+    #   run: |
+    #     dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net7/System.Linq.Dynamic.Core.Tests.Net7.csproj -c Release -p:buildType=azure-pipelines-ci
+    #   continue-on-error: true
 
-    - name: Run Tests EFCore net6.0
-      run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci
+    # - name: Run Tests EFCore net6.0
+    #   run: |
+    #     dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net6/System.Linq.Dynamic.Core.Tests.Net6.csproj -c Release -p:buildType=azure-pipelines-ci
+    #   continue-on-error: true

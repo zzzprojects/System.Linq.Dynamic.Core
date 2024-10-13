@@ -28,7 +28,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
         <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="5.1.2" />
         <PackageReference Include="NodaTime" Version="3.1.5" />
-        <PackageReference Include="Testcontainers.MsSql" Version="3.9.0" />
+        <PackageReference Include="Testcontainers.MsSql" Version="3.10.0" />
 
         <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore5\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore5.csproj" />
     </ItemGroup>
