@@ -1,3 +1,8 @@
+# v1.4.6 (13 October 2024)
+- [#839](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/839) - Add some [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] annotations [bug] contributed by [StefH](https://github.com/StefH)
+- [#844](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/844) - Fixed calling String methods in a nested expression [bug] contributed by [StefH](https://github.com/StefH)
+- [#843](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/843) - Calling methods on a String in nested expressesion causes Exception [bug]
+
 # v1.4.5 (20 August 2024)
 - [#838](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/838) - Fix Blazor WASM System.InvalidOperationException [bug] contributed by [StefH](https://github.com/StefH)
 - [#836](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/836) - Blazor Wasm Eval: System.InvalidOperationException: Operation is not valid due to the current state of the object. [bug]
