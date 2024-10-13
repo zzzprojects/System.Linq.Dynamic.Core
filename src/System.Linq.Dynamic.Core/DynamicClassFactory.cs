@@ -176,6 +176,24 @@ public static class DynamicClassFactory
         return type;
     }
 
+    /// <summary>
+    /// Create an instance of a <see cref="DynamicClass"/> based on a list of <see cref="DynamicPropertyWithValue"/>.
+    /// </summary>
+    /// <param name="dynamicPropertiesWithValue">The dynamic properties including the value you want to set in the generated instance.</param>
+    /// <param name="createParameterCtor">Create a constructor with parameters. Default set to true. Note that for Linq-to-Database objects, this needs to be set to false.</param>
+    /// <returns>Instance of a <see cref="DynamicClass"/>.</returns>
+    public static DynamicClass CreateInstance(IList<DynamicPropertyWithValue> dynamicPropertiesWithValue, bool createParameterCtor = true)
+    {
+        var type = CreateType(dynamicPropertiesWithValue.Cast<DynamicProperty>().ToArray(), createParameterCtor);
+        var dynamicClass = (DynamicClass)Activator.CreateInstance(type)!;
+        foreach (var dynamicPropertyWithValue in dynamicPropertiesWithValue.Where(p => p.Value != null))
+        {
+            dynamicClass.SetDynamicPropertyValue(dynamicPropertyWithValue.Name, dynamicPropertyWithValue.Value!);
+        }
+
+        return dynamicClass;
+    }
+
     private static Type EmitType(IList<DynamicProperty> properties, bool createParameterCtor)
     {
         var typeIndex = Interlocked.Increment(ref _index);
