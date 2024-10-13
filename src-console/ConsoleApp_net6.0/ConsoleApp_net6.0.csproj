@@ -5,6 +5,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>ConsoleApp_net6._0</RootNamespace>
         <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

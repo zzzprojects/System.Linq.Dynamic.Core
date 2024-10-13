@@ -21,6 +21,9 @@ namespace ConsoleApp_net6._0
     {
         static void Main(string[] args)
         {
+            Issue837.Test();
+            return;
+
             Issue389DoesNotWork();
             return;
             Issue389_Works();
