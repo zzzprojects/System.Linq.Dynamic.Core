@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
 
 namespace ConsoleApp_net6._0
@@ -21,6 +22,10 @@ namespace ConsoleApp_net6._0
     {
         static void Main(string[] args)
         {
+            var parser = new ExpressionParser(new[] { Expression.Parameter(typeof(int), "VarA") }, "\"foo\" & VarA", new object[0], new ParsingConfig { ConvertObjectToSupportComparison = true});
+
+            var expression = parser.Parse(typeof(string));
+
             Issue389DoesNotWork();
             return;
             Issue389_Works();
