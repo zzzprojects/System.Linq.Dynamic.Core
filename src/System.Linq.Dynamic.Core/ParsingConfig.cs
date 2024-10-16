@@ -31,6 +31,11 @@ public class ParsingConfig
     };
 
     /// <summary>
+    /// Gets or sets if keywords are case sensitive (false by default).
+    /// </summary>
+    public bool AreKeywordsCaseSensitive { get; set; }
+
+    /// <summary>
     /// Default ParsingConfig for CosmosDb
     /// </summary>
     public static ParsingConfig DefaultCosmosDb { get; } = new()
