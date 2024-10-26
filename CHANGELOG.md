@@ -1,3 +1,7 @@
+# v1.4.7 (26 October 2024)
+- [#847](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/847) - Fixed String.Concat when types differ [bug] contributed by [StefH](https://github.com/StefH)
+- [#845](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/845) - String concatenations fails with System.ArgumentException during parsing [bug]
+
 # v1.4.6 (13 October 2024)
 - [#839](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/839) - Add some [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] annotations [bug] contributed by [StefH](https://github.com/StefH)
 - [#844](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/844) - Fixed calling String methods in a nested expression [bug] contributed by [StefH](https://github.com/StefH)
