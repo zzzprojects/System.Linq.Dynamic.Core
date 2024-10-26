@@ -509,5 +509,24 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             resultDynamic.Should().BeEquivalentTo(result);
         }
+
+        // 845
+        [Theory]
+        [InlineData("it + \"txt\" & 99", "_a_txt99")]
+        [InlineData("it & \"txt\" + 99", "_a_txt99")]
+        [InlineData("99 + it & \"txt\"", "99_a_txt")]
+        [InlineData("99 & it + \"txt\"", "99_a_txt")]
+        public void Select_Dynamic_StringConcatDifferentTypes(string expression, string expectedResult)
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                ConvertObjectToSupportComparison = true
+            };
+            var queryable = new[] { "_a_" }.AsQueryable();
+
+            // Act
+            queryable.Select(config, expression).ToDynamicArray<string>()[0].Should().Be(expectedResult);
+        }
     }
 }

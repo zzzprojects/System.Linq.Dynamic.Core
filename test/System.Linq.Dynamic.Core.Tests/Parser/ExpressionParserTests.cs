@@ -405,4 +405,24 @@ public partial class ExpressionParserTests
         // Assert
         parsedExpression.Should().StartWith(result);
     }
+
+    [Theory]
+    [InlineData("99 & \"txt\"", "Concat(Convert(99, Object), Convert(\"txt\", Object))")]
+    [InlineData("\"txt\" & 99", "Concat(Convert(\"txt\", Object), Convert(99, Object))")]
+    [InlineData("\"txt\" & \"abc\"", "Concat(\"txt\", \"abc\")")]
+    [InlineData("99 + \"txt\"", "Concat(Convert(99, Object), Convert(\"txt\", Object))")]
+    [InlineData("\"txt\" + 99", "Concat(Convert(\"txt\", Object), Convert(99, Object))")]
+    [InlineData("\"txt\" + \"abc\"", "Concat(\"txt\", \"abc\")")]
+    public void Parse_StringConcat(string expression, string result)
+    {
+        // Arrange
+        var parameters = new[] { Expression.Parameter(typeof(int), "VarA") };
+        var parser = new ExpressionParser(parameters, expression, [], new ParsingConfig { ConvertObjectToSupportComparison = true });
+
+        // Act
+        var parsedExpression = parser.Parse(typeof(string)).ToString();
+        
+        // Assert
+        parsedExpression.Should().Be(result);
+    }
 }
