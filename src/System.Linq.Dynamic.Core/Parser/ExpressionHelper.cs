@@ -477,7 +477,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     private static Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
     {
-        var methodInfo = GetStaticMethod(methodName, left, right);
+        if (!TryGetStaticMethod(methodName, left, right, out var methodInfo))
+        {
+            throw new ArgumentException($"Method '{methodName}' not found on type '{left.Type}' or '{right.Type}'");
+        }
+
         var parameters = methodInfo.GetParameters();
         var parameterTypeLeft = parameters[0].ParameterType;
         var parameterTypeRight = parameters[1].ParameterType;
@@ -495,15 +499,10 @@ internal class ExpressionHelper : IExpressionHelper
         return Expression.Call(null, methodInfo, [left, right]);
     }
 
-    private static MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
+    private static bool TryGetStaticMethod(string methodName, Expression left, Expression right, [NotNullWhen(true)] out MethodInfo? methodInfo)
     {
-        var methodInfo = left.Type.GetMethod(methodName, [left.Type, right.Type]);
-        if (methodInfo == null)
-        {
-            methodInfo = right.Type.GetMethod(methodName, [left.Type, right.Type])!;
-        }
-
-        return methodInfo;
+        methodInfo = left.Type.GetMethod(methodName, [left.Type, right.Type]) ?? right.Type.GetMethod(methodName, [left.Type, right.Type]);
+        return methodInfo != null;
     }
 
     private static Expression? GetMethodCallExpression(MethodCallExpression methodCallExpression)
