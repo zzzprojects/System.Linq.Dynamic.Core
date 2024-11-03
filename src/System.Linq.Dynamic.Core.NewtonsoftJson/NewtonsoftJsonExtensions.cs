@@ -105,20 +105,6 @@ public static class NewtonsoftJsonExtensions
     {
         return Any(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Determines whether a sequence contains any elements.
-    /// </summary>
-    /// <param name="source">The source <see cref="JArray"/></param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
-    public static bool Any(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Any(lambda);
-    }
     #endregion Any
 
     #region Average
@@ -163,21 +149,6 @@ public static class NewtonsoftJsonExtensions
     public static double Average(this JArray source, string predicate, params object?[] args)
     {
         return Average(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Computes the average of a sequence of numeric values.
-    /// </summary>
-    /// <param name="source">The source <see cref="JArray"/></param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>The average of the values in the sequence.</returns>
-    public static double Average(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-        Check.NotNull(lambda);
-
-        var queryable = ToQueryable(source);
-        return queryable.Average(lambda);
     }
     #endregion Average
 
@@ -253,20 +224,6 @@ public static class NewtonsoftJsonExtensions
     {
         return Count(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Returns the number of elements in a sequence.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> that contains the elements to be counted.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
-    public static int Count(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Count(lambda);
-    }
     #endregion Count
 
     #region DefaultIfEmpty
@@ -314,20 +271,6 @@ public static class NewtonsoftJsonExtensions
     {
         return First(source, NewtonsoftJsonParsingConfig.Default, predicate, args) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
     }
-
-    /// <summary>
-    /// Returns the first element of a sequence that satisfies a specified condition.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> to return the first element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JToken First(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJToken(queryable.First(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
-    }
     #endregion First
 
     #region FirstOrDefault
@@ -358,20 +301,6 @@ public static class NewtonsoftJsonExtensions
     public static JToken? FirstOrDefault(this JArray source, string predicate, params object?[] args)
     {
         return FirstOrDefault(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> to return the first element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
-    public static JToken? FirstOrDefault(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJToken(queryable.FirstOrDefault(lambda));
     }
     #endregion FirstOrDefault
 
@@ -404,20 +333,6 @@ public static class NewtonsoftJsonExtensions
     {
         return Last(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Returns the last element of a sequence that satisfies a specified condition.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JToken Last(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJToken(queryable.Last(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
-    }
     #endregion Last
 
     #region LastOrDefault
@@ -448,20 +363,6 @@ public static class NewtonsoftJsonExtensions
     public static JToken? LastOrDefault(this JArray source, string predicate, params object?[] args)
     {
         return LastOrDefault(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Returns the last element of a sequence that satisfies a specified condition, or a default value if the sequence contains no elements.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JToken? LastOrDefault(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJToken(queryable.LastOrDefault(lambda));
     }
     #endregion LastOrDefault
 
@@ -494,20 +395,6 @@ public static class NewtonsoftJsonExtensions
     {
         return Max(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Computes the max element of a sequence.
-    /// </summary>
-    /// <param name="source">A sequence of values to calculate find the max for.</param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>The max element in the sequence.</returns>
-    public static object Max(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Max(lambda);
-    }
     #endregion Max
 
     #region Min
@@ -538,20 +425,6 @@ public static class NewtonsoftJsonExtensions
     public static object Min(this JArray source, string predicate, params object?[] args)
     {
         return Min(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Computes the min element of a sequence.
-    /// </summary>
-    /// <param name="source">A sequence of values to calculate find the min for.</param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>The min element in the sequence.</returns>
-    public static object Min(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Min(lambda);
     }
     #endregion Min
 
@@ -749,19 +622,6 @@ public static class NewtonsoftJsonExtensions
     {
         return Single(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if there
-    /// is not exactly one element in the sequence.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JToken Single(this JArray source, LambdaExpression lambda)
-    {
-        var queryable = ToQueryable(source);
-        return ToJToken(queryable.Single(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
-    }
     #endregion Single
 
     #region SingleOrDefault
@@ -794,21 +654,6 @@ public static class NewtonsoftJsonExtensions
     public static JToken? SingleOrDefault(this JArray source, string predicate, params object?[] args)
     {
         return SingleOrDefault(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
-    /// is empty; and throws an exception if there is not exactly one element in the sequence.
-    /// </summary>
-    /// <param name="source">The <see cref="JArray"/> to return the last element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JToken? SingleOrDefault(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJToken(queryable.SingleOrDefault(lambda));
     }
     #endregion SingleOrDefault
 
@@ -874,68 +719,6 @@ public static class NewtonsoftJsonExtensions
     }
     #endregion TakeWhile
 
-    //#region ThenBy
-    ///// <summary>
-    ///// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-    ///// </summary>
-    ///// <param name="source">A sequence of values to order.</param>
-    ///// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
-    ///// <param name="ordering">An expression string to indicate values to order by.</param>
-    ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-    ///// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-    //public static JArray ThenBy(this JArray source, NewtonsoftJsonParsingConfig config, string ordering, params object?[] args)
-    //{
-    //    Check.NotNull(source);
-    //    Check.NotNull(config);
-
-    //    var queryable = ToQueryable(source, config).OrderBy("0"); // Workaround to get IOrderedQueryable
-    //    return ToJArray(() => queryable.ThenBy(ordering, args));
-    //}
-
-    ///// <summary>
-    ///// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-    ///// </summary>
-    ///// <param name="source">A sequence of values to order.</param>
-    ///// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
-    ///// <param name="ordering">An expression string to indicate values to order by.</param>
-    ///// <param name="comparer">The comparer to use.</param>
-    ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-    ///// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-    //public static JArray ThenBy(this JArray source, NewtonsoftJsonParsingConfig config, string ordering, IComparer comparer, params object?[] args)
-    //{
-    //    Check.NotNull(source);
-    //    Check.NotNull(config);
-
-    //    var queryable = ToQueryable(source, config).OrderBy("0"); // Workaround to get IOrderedQueryable
-    //    return ToJArray(() => queryable.ThenBy(ordering, comparer, args));
-    //}
-
-    ///// <summary>
-    ///// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-    ///// </summary>
-    ///// <param name="source">A sequence of values to order.</param>
-    ///// <param name="ordering">An expression string to indicate values to order by.</param>
-    ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-    ///// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-    //public static JArray ThenBy(this JArray source, string ordering, params object?[] args)
-    //{
-    //    return ThenBy(source, NewtonsoftJsonParsingConfig.Default, ordering, args);
-    //}
-
-    ///// <summary>
-    ///// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-    ///// </summary>
-    ///// <param name="source">A sequence of values to order.</param>
-    ///// <param name="ordering">An expression string to indicate values to order by.</param>
-    ///// <param name="comparer">The comparer to use.</param>
-    ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-    ///// <returns>A <see cref="JArray"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-    //public static JArray ThenBy(this JArray source, string ordering, IComparer comparer, params object?[] args)
-    //{
-    //    return ThenBy(source, NewtonsoftJsonParsingConfig.Default, ordering, comparer, args);
-    //}
-    //#endregion ThenBy
-
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.
@@ -970,21 +753,6 @@ public static class NewtonsoftJsonExtensions
 
         var queryable = ToQueryable(source, config);
         return ToJArray(() => queryable.Where(config, predicate, args));
-    }
-
-    /// <summary>
-    /// Filters a sequence of values based on a predicate.
-    /// </summary>
-    /// <param name="source">A <see cref="JArray"/> to filter.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>A <see cref="JArray"/> that contains elements from the input sequence that satisfy the condition specified by LambdaExpression.</returns>
-    public static JArray Where(this JArray source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-        Check.NotNull(lambda);
-
-        var queryable = ToQueryable(source);
-        return ToJArray(() => queryable.Where(lambda));
     }
     #endregion Where
 

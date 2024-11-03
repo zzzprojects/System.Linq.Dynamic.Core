@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.NewtonsoftJson.Tests;
 
 public class NewtonsoftJsonTests
 {
-    private const string ExampleJson =
+    private const string ExampleJsonObjectArray =
         """
         [
             {
@@ -19,7 +19,16 @@ public class NewtonsoftJsonTests
             }
         ]
         """;
-    private readonly JArray _source = JArray.Parse(ExampleJson);
+    private readonly JArray _source = JArray.Parse(ExampleJsonObjectArray);
+
+    private const string ExampleJsonIntArray =
+        """
+        [
+            30,
+            40
+        ]
+        """;
+    private readonly JArray _sourceIntArray = JArray.Parse(ExampleJsonIntArray);
 
     [Fact]
     public void Aggregate()
@@ -45,6 +54,16 @@ public class NewtonsoftJsonTests
     public void Any()
     {
         // Act
+        var result = _source.Any();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Any_Predicate()
+    {
+        // Act
         var result = _source.Any("Age > 20");
 
         // Assert
@@ -53,6 +72,16 @@ public class NewtonsoftJsonTests
 
     [Fact]
     public void Average()
+    {
+        // Act
+        var result = _sourceIntArray.Average();
+
+        // Assert
+        result.Should().BeApproximately(35, 0.00001);
+    }
+
+    [Fact]
+    public void Average_Predicate()
     {
         // Act
         var result = _source.Average("Age");
@@ -84,7 +113,7 @@ public class NewtonsoftJsonTests
     public void Count()
     {
         // Act 1
-        var result1 = _source.Count();
+        var result1 = _source.Count;
 
         // Assert 1
         result1.Should().Be(2);
@@ -143,7 +172,7 @@ public class NewtonsoftJsonTests
     public void Last()
     {
         // Act + Assert 
-        ((string?)_source.First("Age > 30")["Name"]).Should().Be("Doe");
+        ((string?)_source.Last("Age > 30")["Name"]).Should().Be("Doe");
     }
 
     [Fact]

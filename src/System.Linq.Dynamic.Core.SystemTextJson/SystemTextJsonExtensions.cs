@@ -106,20 +106,6 @@ public static class SystemTextJsonExtensions
     {
         return Any(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Determines whether a sequence contains any elements.
-    /// </summary>
-    /// <param name="source">The source <see cref="JsonDocument"/></param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>true if the source sequence contains any elements; otherwise, false.</returns>
-    public static bool Any(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Any(lambda);
-    }
     #endregion Any
 
     #region Average
@@ -164,21 +150,6 @@ public static class SystemTextJsonExtensions
     public static double Average(this JsonDocument source, string predicate, params object?[] args)
     {
         return Average(source, SystemTextJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Computes the average of a sequence of numeric values.
-    /// </summary>
-    /// <param name="source">The source <see cref="JsonDocument"/></param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>The average of the values in the sequence.</returns>
-    public static double Average(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-        Check.NotNull(lambda);
-
-        var queryable = ToQueryable(source);
-        return queryable.Average(lambda);
     }
     #endregion Average
 
@@ -266,20 +237,6 @@ public static class SystemTextJsonExtensions
     public static int Count(this JsonDocument source, string predicate, params object?[] args)
     {
         return Count(source, SystemTextJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Returns the number of elements in a sequence.
-    /// </summary>
-    /// <param name="source">The <see cref="JsonDocument"/> that contains the elements to be counted.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The number of elements in the specified sequence that satisfies a condition.</returns>
-    public static int Count(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Count(lambda);
     }
     #endregion Count
 
@@ -369,20 +326,6 @@ public static class SystemTextJsonExtensions
     {
         return First(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Returns the first element of a sequence that satisfies a specified condition.
-    /// </summary>
-    /// <param name="source">The <see cref="JsonDocument"/> to return the first element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JsonElement First(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.First(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
-    }
     #endregion First
 
     #region FirstOrDefault
@@ -426,20 +369,6 @@ public static class SystemTextJsonExtensions
     public static JsonElement? FirstOrDefault(this JsonDocument source, string predicate, params object?[] args)
     {
         return FirstOrDefault(source, SystemTextJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
-    /// </summary>
-    /// <param name="source">The <see cref="JsonDocument"/> to return the first element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>default if source is empty or if no element passes the test specified by predicate; otherwise, the first element in source that passes the test specified by predicate.</returns>
-    public static JsonElement? FirstOrDefault(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.FirstOrDefault(lambda));
     }
     #endregion FirstOrDefault
 
@@ -485,20 +414,6 @@ public static class SystemTextJsonExtensions
     {
         return Last(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Returns the last element of a sequence that satisfies a specified condition.
-    /// </summary>
-    /// <param name="source">The <see cref="JsonDocument"/> to return the last element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JsonElement Last(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Last(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
-    }
     #endregion Last
 
     #region LastOrDefault
@@ -542,20 +457,6 @@ public static class SystemTextJsonExtensions
     public static JsonElement? LastOrDefault(this JsonDocument source, string predicate, params object?[] args)
     {
         return LastOrDefault(source, SystemTextJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Returns the last element of a sequence that satisfies a specified condition, or a default value if the sequence contains no elements.
-    /// </summary>
-    /// <param name="source">The <see cref="JsonDocument"/> to return the last element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JsonElement? LastOrDefault(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.LastOrDefault(lambda));
     }
     #endregion LastOrDefault
 
@@ -601,20 +502,6 @@ public static class SystemTextJsonExtensions
     {
         return Max(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Computes the max element of a sequence.
-    /// </summary>
-    /// <param name="source">A sequence of values to calculate find the max for.</param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>The max element in the sequence.</returns>
-    public static object Max(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Max(lambda);
-    }
     #endregion Max
 
     #region Min
@@ -658,20 +545,6 @@ public static class SystemTextJsonExtensions
     public static object Min(this JsonDocument source, string predicate, params object?[] args)
     {
         return Min(source, SystemTextJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Computes the min element of a sequence.
-    /// </summary>
-    /// <param name="source">A sequence of values to calculate find the min for.</param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>The min element in the sequence.</returns>
-    public static object Min(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return queryable.Min(lambda);
     }
     #endregion Min
 
@@ -893,19 +766,6 @@ public static class SystemTextJsonExtensions
     {
         return Single(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Returns the only element of a sequence that satisfies a specified condition, and throws an exception if there
-    /// is not exactly one element in the sequence.
-    /// </summary>
-    /// <param name="source">The <see cref="JsonDocument"/> to return the last element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JsonElement Single(this JsonDocument source, LambdaExpression lambda)
-    {
-        var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.Single(lambda)) ?? throw new InvalidOperationException(Res.SequenceContainsNoElements);
-    }
     #endregion Single
 
     #region SingleOrDefault
@@ -953,21 +813,6 @@ public static class SystemTextJsonExtensions
     public static JsonElement? SingleOrDefault(this JsonDocument source, string predicate, params object?[] args)
     {
         return SingleOrDefault(source, SystemTextJsonParsingConfig.Default, predicate, args);
-    }
-
-    /// <summary>
-    /// Returns the only element of a sequence that satisfies a specified condition or a default value if the sequence
-    /// is empty; and throws an exception if there is not exactly one element in the sequence.
-    /// </summary>
-    /// <param name="source">The <see cref="JsonDocument"/> to return the last element of.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>The first element in source that passes the test in predicate.</returns>
-    public static JsonElement? SingleOrDefault(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-
-        var queryable = ToQueryable(source);
-        return ToJsonElement(queryable.SingleOrDefault(lambda));
     }
     #endregion SingleOrDefault
 
@@ -1060,21 +905,6 @@ public static class SystemTextJsonExtensions
     {
         return Sum(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
-
-    /// <summary>
-    /// Computes the sum of a sequence of numeric values.
-    /// </summary>
-    /// <param name="source">A sequence of numeric values to calculate the sum of.</param>
-    /// <param name="lambda">A Lambda Expression.</param>
-    /// <returns>The sum of the values in the sequence.</returns>
-    public static object Sum(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-        Check.NotNull(lambda);
-
-        var queryable = ToQueryable(source);
-        return queryable.Sum(lambda);
-    }
     #endregion Sum
 
     #region Take
@@ -1124,68 +954,6 @@ public static class SystemTextJsonExtensions
     }
     #endregion TakeWhile
 
-    //#region ThenBy
-    ///// <summary>
-    ///// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-    ///// </summary>
-    ///// <param name="source">A sequence of values to order.</param>
-    ///// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
-    ///// <param name="ordering">An expression string to indicate values to order by.</param>
-    ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-    ///// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-    //public static JsonDocument ThenBy(this JsonDocument source, SystemTextJsonParsingConfig config, string ordering, params object?[] args)
-    //{
-    //    Check.NotNull(source);
-    //    Check.NotNull(config);
-
-    //    var queryable = ToQueryable(source, config).OrderBy("0"); // Workaround to get IOrderedQueryable
-    //    return ToJsonDocumentArray(() => queryable.ThenBy(ordering, args));
-    //}
-
-    ///// <summary>
-    ///// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-    ///// </summary>
-    ///// <param name="source">A sequence of values to order.</param>
-    ///// <param name="config">The <see cref="ParsingConfig"/>.</param>
-    ///// <param name="ordering">An expression string to indicate values to order by.</param>
-    ///// <param name="comparer">The comparer to use.</param>
-    ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-    ///// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-    //public static JsonDocument ThenBy(this JsonDocument source, SystemTextJsonParsingConfig config, string ordering, IComparer comparer, params object?[] args)
-    //{
-    //    Check.NotNull(source);
-    //    Check.NotNull(config);
-
-    //    var queryable = ToQueryable(source, config).OrderBy("0"); // Workaround to get IOrderedQueryable;
-    //    return ToJsonDocumentArray(() => queryable.ThenBy(ordering, comparer, args));
-    //}
-
-    ///// <summary>
-    ///// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-    ///// </summary>
-    ///// <param name="source">A sequence of values to order.</param>
-    ///// <param name="ordering">An expression string to indicate values to order by.</param>
-    ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-    ///// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-    //public static JsonDocument ThenBy(this JsonDocument source, string ordering, params object?[] args)
-    //{
-    //    return ThenBy(source, SystemTextJsonParsingConfig.Default, ordering, args);
-    //}
-
-    ///// <summary>
-    ///// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
-    ///// </summary>
-    ///// <param name="source">A sequence of values to order.</param>
-    ///// <param name="ordering">An expression string to indicate values to order by.</param>
-    ///// <param name="comparer">The comparer to use.</param>
-    ///// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
-    ///// <returns>A <see cref="JsonDocument"/> whose elements are sorted according to the specified <paramref name="ordering"/>.</returns>
-    //public static JsonDocument ThenBy(this JsonDocument source, string ordering, IComparer comparer, params object?[] args)
-    //{
-    //    return ThenBy(source, SystemTextJsonParsingConfig.Default, ordering, comparer, args);
-    //}
-    //#endregion ThenBy
-
     #region Where
     /// <summary>
     /// Filters a sequence of values based on a predicate.
@@ -1214,21 +982,6 @@ public static class SystemTextJsonExtensions
 
         var queryable = ToQueryable(source, config);
         return ToJsonDocumentArray(() => queryable.Where(config, predicate, args));
-    }
-
-    /// <summary>
-    /// Filters a sequence of values based on a predicate.
-    /// </summary>
-    /// <param name="source">A <see cref="JsonDocument"/> to filter.</param>
-    /// <param name="lambda">A cached Lambda Expression.</param>
-    /// <returns>A <see cref="JsonDocument"/> that contains elements from the input sequence that satisfy the condition specified by LambdaExpression.</returns>
-    public static JsonDocument Where(this JsonDocument source, LambdaExpression lambda)
-    {
-        Check.NotNull(source);
-        Check.NotNull(lambda);
-
-        var queryable = ToQueryable(source);
-        return ToJsonDocumentArray(() => queryable.Where(lambda));
     }
     #endregion Where
 

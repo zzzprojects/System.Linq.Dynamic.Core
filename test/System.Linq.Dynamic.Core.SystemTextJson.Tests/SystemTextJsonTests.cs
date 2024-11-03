@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 
 public class SystemTextJsonTests
 {
-    private const string ExampleJson =
+    private const string ExampleJsonObjectArray =
         """
         [
             {
@@ -19,7 +19,16 @@ public class SystemTextJsonTests
             }
         ]
         """;
-    private readonly JsonDocument _source = JsonDocument.Parse(ExampleJson);
+    private readonly JsonDocument _source = JsonDocument.Parse(ExampleJsonObjectArray);
+
+    private const string ExampleJsonIntArray =
+        """
+        [
+            30,
+            40
+        ]
+        """;
+    private readonly JsonDocument _sourceIntArray = JsonDocument.Parse(ExampleJsonIntArray);
 
     [Fact]
     public void Aggregate()
@@ -45,6 +54,16 @@ public class SystemTextJsonTests
     public void Any()
     {
         // Act
+        var result = _source.Any();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Any_Predicate()
+    {
+        // Act
         var result = _source.Any("Age > 20");
 
         // Assert
@@ -53,6 +72,16 @@ public class SystemTextJsonTests
 
     [Fact]
     public void Average()
+    {
+        // Act
+        var result = _sourceIntArray.Average();
+
+        // Assert
+        result.Should().BeApproximately(35, 0.00001);
+    }
+
+    [Fact]
+    public void Average_Predicate()
     {
         // Act
         var result = _source.Average("Age");
