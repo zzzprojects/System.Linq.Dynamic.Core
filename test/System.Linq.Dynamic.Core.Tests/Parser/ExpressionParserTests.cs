@@ -27,6 +27,10 @@ public partial class ExpressionParserTests
         D = 8,
     };
 
+    public class MyView
+    {
+        public Dictionary<string, string>? Properties { get; set; }
+    }
 
     public ExpressionParserTests()
     {
@@ -421,8 +425,18 @@ public partial class ExpressionParserTests
 
         // Act
         var parsedExpression = parser.Parse(typeof(string)).ToString();
-        
+
         // Assert
         parsedExpression.Should().Be(result);
+    }
+
+    [Fact]
+    public void Parse_InvalidExpressionShouldThrowArgumentException()
+    {
+        // Arrange & Act
+        Action act = () => DynamicExpressionParser.ParseLambda<MyView, bool>(ParsingConfig.Default, false, "Properties[\"foo\"] > 2", Array.Empty<object>());
+
+        // Assert
+        act.Should().Throw<ArgumentException>().WithMessage("Method 'Compare' not found on type 'System.String' or 'System.Int32'");
     }
 }
