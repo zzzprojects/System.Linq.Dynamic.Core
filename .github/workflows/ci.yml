@@ -79,7 +79,7 @@ jobs:
 
     - name: Run Tests EF net9.0 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Debug --framework net8.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-ef.xml
+        dotnet-coverage collect 'dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Debug --framework net9.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-ef.xml
         
     - name: Run Tests EFCore net9.0 (with Coverage)
       run: |
