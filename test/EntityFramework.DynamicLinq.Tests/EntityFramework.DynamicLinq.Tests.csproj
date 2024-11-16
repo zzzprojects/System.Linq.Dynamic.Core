@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
-        <TargetFrameworks>net461;net9.0</TargetFrameworks>
+        <TargetFrameworks>net461;net8.0;net9.0</TargetFrameworks>
         <DebugType>full</DebugType>
         <DefineConstants>EF;NET461</DefineConstants>
         <AssemblyName>EntityFramework.DynamicLinq.Tests</AssemblyName>
