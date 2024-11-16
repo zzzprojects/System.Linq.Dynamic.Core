@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
     <PropertyGroup>
-        <TargetFramework>net8.0;net9.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <AssemblyName>System.Linq.Dynamic.Core.Tests</AssemblyName>
         <DebugType>full</DebugType>
         <SignAssembly>True</SignAssembly>
