@@ -25,4 +25,8 @@
         <None Include="../../resources/logo.png" Pack="true" PackagePath="" />
         <None Include="../../PackageReadme.md" Pack="true" PackagePath=""/>
     </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" PrivateAssets="All" />
+    </ItemGroup>
 </Project>
