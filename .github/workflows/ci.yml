@@ -47,6 +47,13 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
+    # No code coverage data available. Profiler was not initialized. Verify that glibc (>=2.27), libxml2 and all .NET dependencies are installed
+    # https://stackoverflow.com/a/76199609/255966
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxml2
+
     - uses: actions/setup-java@v4
       with:
         distribution: 'temurin' # See 'Supported distributions' for available options
