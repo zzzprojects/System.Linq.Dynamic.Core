@@ -83,7 +83,7 @@ jobs:
         
     - name: Run Tests EFCore net8.0 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug --framework net8.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net8/System.Linq.Dynamic.Core.Tests.Net8.csproj --configuration Debug --framework net8.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
         
     - name: End analysis on SonarCloud
       if: ${{ steps.secret-check.outputs.run_analysis == 'true' }}

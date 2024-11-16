@@ -68,10 +68,15 @@
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.5" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.6" />
     </ItemGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="9.0.6" />
+    </ItemGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' ">
         <DefineConstants>$(DefineConstants);AspNetCoreIdentity</DefineConstants>
     </PropertyGroup>
 
