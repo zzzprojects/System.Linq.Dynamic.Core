@@ -34,7 +34,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.5" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="9.0.6" />
         <PackageReference Include="NodaTime" Version="3.1.5" />
         <PackageReference Include="Testcontainers.MsSql" Version="3.10.0" />
 
