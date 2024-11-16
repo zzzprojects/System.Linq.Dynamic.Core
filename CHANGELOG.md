@@ -1,3 +1,6 @@
+# v1.4.9 (16 November 2024)
+- [#853](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/853) - Add .NET 9 contributed by [StefH](https://github.com/StefH)
+
 # v1.4.8 (31 October 2024)
 - [#851](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/851) - Throw ArgumentException when expression has invalid compare (e.g. string with int) [bug] contributed by [StefH](https://github.com/StefH)
 - [#849](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/849) - 1.4.7 Regression -- NullReferenceException from invalid expression instead of ArgumentException [bug]
