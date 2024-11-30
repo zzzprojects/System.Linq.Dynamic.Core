@@ -280,4 +280,6 @@ public class ParsingConfig
     /// Default value is <c>StringLiteralParsingType.Default</c>.
     /// </summary>
     public StringLiteralParsingType StringLiteralParsing { get; set; } = StringLiteralParsingType.Default;
+
+    public bool RestrictOrderBy { get; set; } = false;
 }

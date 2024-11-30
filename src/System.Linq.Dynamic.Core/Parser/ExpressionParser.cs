@@ -201,8 +201,8 @@ public class ExpressionParser
         var orderings = new List<DynamicOrdering>();
         while (true)
         {
-            Expression expr = ParseConditionalOperator();
-            bool ascending = true;
+            var expr = _parsingConfig.RestrictOrderBy ? ParseIdentifier(false) : ParseConditionalOperator();
+            var ascending = true;
             if (TokenIdentifierIs("asc") || TokenIdentifierIs("ascending"))
             {
                 _textParser.NextToken();
@@ -963,13 +963,13 @@ public class ExpressionParser
         return e;
     }
 
-    private Expression ParseIdentifier()
+    private Expression ParseIdentifier(bool supportKeyword = true)
     {
         _textParser.ValidateToken(TokenId.Identifier);
 
         var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var value);
 
-        bool shouldPrioritizeType = true;
+        var shouldPrioritizeType = true;
 
         if (_parsingConfig.PrioritizePropertyOrFieldOverTheType && value is Type)
         {
@@ -981,7 +981,7 @@ public class ExpressionParser
             }
         }
 
-        if (isValidKeyWord && shouldPrioritizeType)
+        if (supportKeyword && isValidKeyWord && shouldPrioritizeType)
         {
             if (value is Type typeValue)
             {
