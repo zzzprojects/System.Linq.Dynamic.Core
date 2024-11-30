@@ -281,5 +281,10 @@ public class ParsingConfig
     /// </summary>
     public StringLiteralParsingType StringLiteralParsing { get; set; } = StringLiteralParsingType.Default;
 
-    public bool RestrictOrderBy { get; set; } = false;
+    /// <summary>
+    /// When set to <c>true</c>, the parser will restrict the OrderBy method to only allow properties or fields.
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool RestrictOrderByToPropertyOrField { get; set; } = false;
 }

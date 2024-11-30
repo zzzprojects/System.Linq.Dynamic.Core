@@ -22,7 +22,7 @@ namespace System.Linq.Dynamic.Core.Parser;
 /// </summary>
 public class ExpressionParser
 {
-    private static readonly string[] OutKeywords = { "out", "$out" };
+    private static readonly string[] OutKeywords = ["out", "$out"];
     private const string DiscardVariable = "_";
 
     private const string MethodOrderBy = nameof(Queryable.OrderBy);
@@ -201,7 +201,7 @@ public class ExpressionParser
         var orderings = new List<DynamicOrdering>();
         while (true)
         {
-            var expr = _parsingConfig.RestrictOrderBy ? ParseIdentifier(false) : ParseConditionalOperator();
+            var expr = _parsingConfig.RestrictOrderByToPropertyOrField ? ParseIdentifierAsPropertyOrField() : ParseConditionalOperator();
             var ascending = true;
             if (TokenIdentifierIs("asc") || TokenIdentifierIs("ascending"))
             {
@@ -963,7 +963,27 @@ public class ExpressionParser
         return e;
     }
 
-    private Expression ParseIdentifier(bool supportKeyword = true)
+    private Expression ParseIdentifierAsPropertyOrField()
+    {
+        _textParser.ValidateToken(TokenId.Identifier);
+
+        if (_it == null)
+        {
+            throw ParseError(Res.NoItInScope);
+        }
+
+        var text = _textParser.CurrentToken.Text;
+        var type = _it.Type;
+
+        if (FindPropertyOrField(type, text, false) != null)
+        {
+            return ParseMemberAccess(null, _it);
+        }
+
+        throw ParseError(Res.UnknownPropertyOrField, text, type);
+    }
+
+    private Expression ParseIdentifier()
     {
         _textParser.ValidateToken(TokenId.Identifier);
 
@@ -973,15 +993,15 @@ public class ExpressionParser
 
         if (_parsingConfig.PrioritizePropertyOrFieldOverTheType && value is Type)
         {
-            bool isPropertyOrField = _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null;
-            bool hasSymbol = _symbols.ContainsKey(_textParser.CurrentToken.Text);
+            var isPropertyOrField = _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null;
+            var hasSymbol = _symbols.ContainsKey(_textParser.CurrentToken.Text);
             if (isPropertyOrField || hasSymbol)
             {
                 shouldPrioritizeType = false;
             }
         }
 
-        if (supportKeyword && isValidKeyWord && shouldPrioritizeType)
+        if (isValidKeyWord && shouldPrioritizeType)
         {
             if (value is Type typeValue)
             {
@@ -1003,7 +1023,7 @@ public class ExpressionParser
                     return ParseRoot();
 
                 case KeywordsHelper.FUNCTION_IIF:
-                    return ParseFunctionIif();
+                    return ParseFunctionIIF();
 
                 case KeywordsHelper.FUNCTION_ISNULL:
                     return ParseFunctionIsNull();
@@ -1110,7 +1130,7 @@ public class ExpressionParser
     }
 
     // iif(test, ifTrue, ifFalse) function
-    private Expression ParseFunctionIif()
+    private Expression ParseFunctionIIF()
     {
         int errorPos = _textParser.CurrentToken.Pos;
         _textParser.NextToken();
@@ -1118,7 +1138,7 @@ public class ExpressionParser
         Expression[] args = ParseArgumentList();
         if (args.Length != 3)
         {
-            throw ParseError(errorPos, Res.IifRequiresThreeArgs);
+            throw ParseError(errorPos, Res.IIFRequiresThreeArgs);
         }
 
         return GenerateConditional(args[0], args[1], args[2], false, errorPos);
