@@ -8,6 +8,17 @@ namespace System.Linq.Dynamic.Core.Tests;
 public partial class EntitiesTests
 {
     [Fact]
+    public void Entities_OrderBy_RestrictOrderByIsFalse()
+    {
+        // Act
+        var resultBlogs = _context.Blogs.OrderBy(b => true).ToArray();
+        var dynamicResultBlogs = _context.Blogs.OrderBy("IIF(1 == 1, 1, 0)").ToDynamicArray<Blog>();
+
+        // Assert
+        Assert.Equal(resultBlogs, dynamicResultBlogs);
+    }
+
+    [Fact]
     public void Entities_OrderBy_RestrictOrderByIsTrue_ValidExpressionShouldNotThrow()
     {
         // Arrange
