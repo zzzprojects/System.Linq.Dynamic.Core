@@ -49,6 +49,6 @@ public partial class EntitiesTests
         Action action = () => _context.Blogs.OrderBy(config, "IIF(1 == 1, 1, 0)");
 
         // Assert
-        action.Should().Throw<ParseException>().WithMessage("No property or field 'IIF' exists in type 'System.Linq.Dynamic.Core.Tests.Helpers.Entities.Blog'");
+        action.Should().Throw<ParseException>().WithMessage("No property or field 'IIF' exists in type 'Blog'");
     }
 }

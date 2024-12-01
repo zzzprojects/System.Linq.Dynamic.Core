@@ -988,7 +988,7 @@ public class ExpressionParser
             var keywordOrFunctionAllowed = !_usedForOrderBy || _usedForOrderBy && !_parsingConfig.RestrictOrderByToPropertyOrField;
             if (!keywordOrFunctionAllowed)
             {
-                throw ParseError(Res.UnknownPropertyOrField, _textParser.CurrentToken.Text, _it?.Type ?? typeof(object));
+                throw ParseError(Res.UnknownPropertyOrField, _textParser.CurrentToken.Text, TypeHelper.GetTypeName(_it?.Type));
             }
 
             switch (keywordOrType.CurrentType)
