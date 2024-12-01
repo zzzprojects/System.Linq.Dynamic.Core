@@ -13,12 +13,19 @@ public partial class EntitiesTests
         // Arrange
         var config = new ParsingConfig { RestrictOrderByToPropertyOrField = true };
 
-        // Act
-        var resultProperty = _context.Blogs.OrderBy(b => b.Name).ToArray();
-        var dynamicResult = _context.Blogs.OrderBy(config, "Name").ToDynamicArray<Blog>();
+        // Act 1
+        var resultBlogs = _context.Blogs.OrderBy(b => b.Name).ToArray();
+        var dynamicResultBlogs = _context.Blogs.OrderBy(config, "Name").ToDynamicArray<Blog>();
 
-        // Assert
-        Assert.Equal(resultProperty, dynamicResult);
+        // Assert 1
+        Assert.Equal(resultBlogs, dynamicResultBlogs);
+
+        // Act 2
+        var resultPosts = _context.Posts.OrderBy(p => p.Blog.Name).ToArray();
+        var dynamicResultPosts = _context.Posts.OrderBy(config, "Blog.Name").ToDynamicArray<Post>();
+
+        // Assert 2
+        Assert.Equal(resultPosts, dynamicResultPosts);
     }
 
     [Fact]

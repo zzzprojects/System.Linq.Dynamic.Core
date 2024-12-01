@@ -41,6 +41,7 @@ public class ExpressionParser
     private readonly ITypeConverterFactory _typeConverterFactory;
     private readonly Dictionary<string, object> _internals = new();
     private readonly Dictionary<string, object?> _symbols;
+    private readonly bool _usedForOrderBy;
 
     private IDictionary<string, object>? _externals;
     private ParameterExpression? _it;
@@ -69,10 +70,12 @@ public class ExpressionParser
     /// <param name="expression">The expression.</param>
     /// <param name="values">The values.</param>
     /// <param name="parsingConfig">The parsing configuration.</param>
-    public ExpressionParser(ParameterExpression[]? parameters, string expression, object?[]? values, ParsingConfig? parsingConfig)
+    /// <param name="usedForOrderBy">Indicate that this instance will be used for parsing orderBy. Default value is <c>false</c>.</param>
+    public ExpressionParser(ParameterExpression[]? parameters, string expression, object?[]? values, ParsingConfig? parsingConfig, bool usedForOrderBy = false)
     {
-        Check.NotEmpty(expression, nameof(expression));
+        Check.NotEmpty(expression);
 
+        _usedForOrderBy = usedForOrderBy;
         _symbols = new Dictionary<string, object?>(parsingConfig is { IsCaseSensitive: true } ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase);
         _parsingConfig = parsingConfig ?? ParsingConfig.Default;
 
@@ -98,7 +101,7 @@ public class ExpressionParser
 
     private void ProcessParameters(ParameterExpression[] parameters)
     {
-        foreach (ParameterExpression pe in parameters.Where(p => !string.IsNullOrEmpty(p.Name)))
+        foreach (var pe in parameters.Where(p => !string.IsNullOrEmpty(p.Name)))
         {
             AddSymbol(pe.Name!, pe);
         }
@@ -201,7 +204,7 @@ public class ExpressionParser
         var orderings = new List<DynamicOrdering>();
         while (true)
         {
-            var expr = _parsingConfig.RestrictOrderByToPropertyOrField ? ParseIdentifierAsPropertyOrField() : ParseConditionalOperator();
+            var expr = ParseConditionalOperator();
             var ascending = true;
             if (TokenIdentifierIs("asc") || TokenIdentifierIs("ascending"))
             {
@@ -963,35 +966,14 @@ public class ExpressionParser
         return e;
     }
 
-    private Expression ParseIdentifierAsPropertyOrField()
-    {
-        _textParser.ValidateToken(TokenId.Identifier);
-
-        if (_it == null)
-        {
-            throw ParseError(Res.NoItInScope);
-        }
-
-        var text = _textParser.CurrentToken.Text;
-        var type = _it.Type;
-
-        if (FindPropertyOrField(type, text, false) != null)
-        {
-            return ParseMemberAccess(null, _it);
-        }
-
-        throw ParseError(Res.UnknownPropertyOrField, text, type);
-    }
-
     private Expression ParseIdentifier()
     {
         _textParser.ValidateToken(TokenId.Identifier);
 
-        var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var value);
-
+        var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var keywordOrType);
         var shouldPrioritizeType = true;
 
-        if (_parsingConfig.PrioritizePropertyOrFieldOverTheType && value is Type)
+        if (_parsingConfig.PrioritizePropertyOrFieldOverTheType && keywordOrType.IsThird)
         {
             var isPropertyOrField = _it != null && FindPropertyOrField(_it.Type, _textParser.CurrentToken.Text, false) != null;
             var hasSymbol = _symbols.ContainsKey(_textParser.CurrentToken.Text);
@@ -1003,57 +985,66 @@ public class ExpressionParser
 
         if (isValidKeyWord && shouldPrioritizeType)
         {
-            if (value is Type typeValue)
+            var keywordOrFunctionAllowed = !_usedForOrderBy || _usedForOrderBy && !_parsingConfig.RestrictOrderByToPropertyOrField;
+            if (!keywordOrFunctionAllowed)
             {
-                return ParseTypeAccess(typeValue, true);
+                throw ParseError(Res.UnknownPropertyOrField, _textParser.CurrentToken.Text, _it?.Type ?? typeof(object));
             }
 
-            switch (value)
+            switch (keywordOrType.CurrentType)
             {
-                case KeywordsHelper.KEYWORD_IT:
-                case KeywordsHelper.SYMBOL_IT:
-                    return ParseIt();
-
-                case KeywordsHelper.KEYWORD_PARENT:
-                case KeywordsHelper.SYMBOL_PARENT:
-                    return ParseParent();
-
-                case KeywordsHelper.KEYWORD_ROOT:
-                case KeywordsHelper.SYMBOL_ROOT:
-                    return ParseRoot();
-
-                case KeywordsHelper.FUNCTION_IIF:
-                    return ParseFunctionIIF();
-
-                case KeywordsHelper.FUNCTION_ISNULL:
-                    return ParseFunctionIsNull();
-
-                case KeywordsHelper.FUNCTION_NEW:
-                    if (_parsingConfig.DisallowNewKeyword)
+                case AnyOfType.First:
+                    switch (keywordOrType.First)
                     {
-                        throw ParseError(Res.NewOperatorIsNotAllowed);
+                        case KeywordsHelper.KEYWORD_IT:
+                        case KeywordsHelper.SYMBOL_IT:
+                            return ParseIt();
+
+                        case KeywordsHelper.KEYWORD_PARENT:
+                        case KeywordsHelper.SYMBOL_PARENT:
+                            return ParseParent();
+
+                        case KeywordsHelper.KEYWORD_ROOT:
+                        case KeywordsHelper.SYMBOL_ROOT:
+                            return ParseRoot();
+
+                        case KeywordsHelper.FUNCTION_IIF:
+                            return ParseFunctionIIF();
+
+                        case KeywordsHelper.FUNCTION_ISNULL:
+                            return ParseFunctionIsNull();
+
+                        case KeywordsHelper.FUNCTION_NEW:
+                            if (_parsingConfig.DisallowNewKeyword)
+                            {
+                                throw ParseError(Res.NewOperatorIsNotAllowed);
+                            }
+                            return ParseNew();
+
+                        case KeywordsHelper.FUNCTION_NULLPROPAGATION:
+                            return ParseFunctionNullPropagation();
+
+                        case KeywordsHelper.FUNCTION_IS:
+                            return ParseFunctionIs();
+
+                        case KeywordsHelper.FUNCTION_AS:
+                            return ParseFunctionAs();
+
+                        case KeywordsHelper.FUNCTION_CAST:
+                            return ParseFunctionCast();
                     }
-                    return ParseNew();
+                    break;
 
-                case KeywordsHelper.FUNCTION_NULLPROPAGATION:
-                    return ParseFunctionNullPropagation();
+                case AnyOfType.Second:
+                    _textParser.NextToken();
+                    return keywordOrType.Second;
 
-                case KeywordsHelper.FUNCTION_IS:
-                    return ParseFunctionIs();
-
-                case KeywordsHelper.FUNCTION_AS:
-                    return ParseFunctionAs();
-
-                case KeywordsHelper.FUNCTION_CAST:
-                    return ParseFunctionCast();
+                case AnyOfType.Third:
+                    return ParseTypeAccess(keywordOrType.Third, true);
             }
-
-            _textParser.NextToken();
-
-            return (Expression)value;
         }
 
-        if (_symbols.TryGetValue(_textParser.CurrentToken.Text, out value) ||
+        if (_symbols.TryGetValue(_textParser.CurrentToken.Text, out var value) ||
             _externals != null && _externals.TryGetValue(_textParser.CurrentToken.Text, out value) ||
             _internals.TryGetValue(_textParser.CurrentToken.Text, out value))
         {
