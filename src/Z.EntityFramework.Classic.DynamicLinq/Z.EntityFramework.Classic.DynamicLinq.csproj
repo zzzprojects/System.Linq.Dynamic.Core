@@ -10,7 +10,7 @@
         <PackageTags>system;linq;dynamic;Z.EntityFramework;core;async;classic</PackageTags>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584Ea20000}</ProjectGuid>
         <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-        <Version>1.4.$(PatchVersion)</Version>
+        <Version>1.5.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

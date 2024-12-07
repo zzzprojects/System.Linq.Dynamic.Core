@@ -1,3 +1,8 @@
+# v1.5.0 (07 December 2024)
+- [#791](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/791) - Add Json support [feature] contributed by [StefH](https://github.com/StefH)
+- [#857](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/857) - RestrictOrderByToPropertyOrField [feature] contributed by [StefH](https://github.com/StefH)
+- [#789](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/789) - Add JSON support [feature]
+
 # v1.4.9 (16 November 2024)
 - [#853](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/853) - Add .NET 9 contributed by [StefH](https://github.com/StefH)
 
