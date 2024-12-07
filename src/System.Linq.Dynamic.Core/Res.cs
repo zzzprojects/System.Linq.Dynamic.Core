@@ -35,7 +35,7 @@ internal static class Res
     public const string IQueryableProviderNotAsync = "The provider for the source IQueryable doesn't implement IAsyncQueryProvider/IDbAsyncQueryProvider. Only providers that implement IAsyncQueryProvider/IDbAsyncQueryProvider can be used for Entity Framework asynchronous operations.";
     public const string IdentifierExpected = "Identifier expected";
     public const string IdentifierImplementingInterfaceExpected = "Identifier implementing interface '{0}' expected";
-    public const string IifRequiresThreeArgs = "The 'iif' function requires three arguments";
+    public const string IIFRequiresThreeArgs = "The 'iif' function requires three arguments";
     public const string IncompatibleOperand = "Operator '{0}' incompatible with operand type '{1}'";
     public const string IncompatibleOperands = "Operator '{0}' incompatible with operand types '{1}' and '{2}'";
     public const string IncompatibleTypes = "Types '{0}' and '{1}' are incompatible";

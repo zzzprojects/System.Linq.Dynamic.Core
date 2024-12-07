@@ -1578,19 +1578,19 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(config);
             Check.NotEmpty(ordering);
 
-            ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
-            ExpressionParser parser = new ExpressionParser(parameters, ordering, args, config);
-            IList<DynamicOrdering> dynamicOrderings = parser.ParseOrdering();
+            ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames)];
+            var parser = new ExpressionParser(parameters, ordering, args, config, true);
+            var dynamicOrderings = parser.ParseOrdering();
 
-            Expression queryExpr = source.Expression;
+            var queryExpr = source.Expression;
 
-            foreach (DynamicOrdering dynamicOrdering in dynamicOrderings)
+            foreach (var dynamicOrdering in dynamicOrderings)
             {
                 if (comparer == null)
                 {
                     queryExpr = Expression.Call(
                         typeof(Queryable), dynamicOrdering.MethodName,
-                        new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                        [source.ElementType, dynamicOrdering.Selector.Type],
                         queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
                 }
                 else
@@ -1614,7 +1614,7 @@ namespace System.Linq.Dynamic.Core
 
                     queryExpr = Expression.Call(
                         typeof(Queryable), dynamicOrdering.MethodName,
-                        new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                        [source.ElementType, dynamicOrdering.Selector.Type],
                         queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)),
                         constant);
                 }

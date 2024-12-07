@@ -21,11 +21,11 @@ namespace System.Linq.Dynamic.Core.Parser
         {
             Check.NotEmpty(name);
 
-            _keywordsHelper.TryGetValue(name, out var type);
+            _keywordsHelper.TryGetValue(name, out var keywordOrType);
 
-            if (type is Type sameType)
+            if (keywordOrType.IsThird)
             {
-                return sameType;
+                return keywordOrType.Third;
             }
 
             if (expressions != null && TryResolveTypeUsingExpressions(name, expressions, out var resolvedType))
