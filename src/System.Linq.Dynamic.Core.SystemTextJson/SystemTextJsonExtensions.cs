@@ -4,7 +4,6 @@ using System.Linq.Dynamic.Core.SystemTextJson.Config;
 using System.Linq.Dynamic.Core.SystemTextJson.Extensions;
 using System.Linq.Dynamic.Core.SystemTextJson.Utils;
 using System.Linq.Dynamic.Core.Validation;
-using System.Linq.Expressions;
 using System.Text.Json;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson;
@@ -676,7 +675,7 @@ public static class SystemTextJsonExtensions
     /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
     /// <param name="selector">A projection string expression to apply to each element.</param>
     /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
-    /// <returns>An <see cref="JsonElement"/> whose elements are the result of invoking a projection string on each element of source.</returns>
+    /// <returns>An <see cref="JsonDocument"/> whose elements are the result of invoking a projection string on each element of source.</returns>
     public static JsonDocument Select(this JsonDocument source, SystemTextJsonParsingConfig config, string selector, params object?[] args)
     {
         Check.NotNull(source);
@@ -720,6 +719,38 @@ public static class SystemTextJsonExtensions
         return Select(source, SystemTextJsonParsingConfig.Default, resultType, selector, args);
     }
     #endregion Select
+
+    #region SelectMany
+    /// <summary>
+    /// Projects each element of a sequence to an <see cref="JsonDocument"/> and combines the resulting sequences into one sequence.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. </param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+    public static JsonDocument SelectMany(this JsonDocument source, string selector, params object?[] args)
+    {
+        return SelectMany(source, SystemTextJsonParsingConfig.Default, selector, args);
+    }
+
+    /// <summary>
+    /// Projects each element of a sequence to an <see cref="JsonDocument"/> and combines the resulting sequences into one sequence.
+    /// </summary>
+    /// <param name="source">The source <see cref="JsonDocument"/></param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters.</param>
+    /// <returns>A <see cref="JsonDocument"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+    public static JsonDocument SelectMany(this JsonDocument source, SystemTextJsonParsingConfig config, string selector, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+        Check.NotNullOrEmpty(selector);
+
+        var queryable = ToQueryable(source, config);
+        return ToJsonDocumentArray(() => queryable.SelectMany(config, selector, args));
+    }
+    #endregion SelectMany
 
     #region Single
     /// <summary>
