@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+    <PropertyGroup>
+        <Authors>Stef Heyenrath</Authors>
+        <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+        <DebugType>full</DebugType>
+        <SignAssembly>True</SignAssembly>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <AssemblyOriginatorKeyFile>../../src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
+        <ProjectGuid>{D5844AE4-53FA-4C8A-9D52-AD213FD0CA1E}</ProjectGuid>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="6.12.0" />
+        <PackageReference Include="Mono.Reflection" Version="2.0.0" />
+        <PackageReference Include="xunit.runner.console" Version="2.7.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="xunit" Version="2.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core.SystemTextJson\System.Linq.Dynamic.Core.SystemTextJson.csproj" />
+    </ItemGroup>
+</Project>
