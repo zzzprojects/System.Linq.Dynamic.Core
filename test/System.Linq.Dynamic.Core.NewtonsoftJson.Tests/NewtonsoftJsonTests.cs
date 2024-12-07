@@ -324,6 +324,37 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void SelectMany()
+    {
+        // Arrange
+        var json =
+        """
+           [{
+               "PhoneNumbers": [
+                   { "Number": "123" },
+                   { "Number": "456" }
+               ]
+           },
+           {
+               "PhoneNumbers": [
+                   { "Number": "789" },
+                   { "Number": "012" }
+               ]
+           }]
+        """;
+        var source = JArray.Parse(json);
+
+        // Act
+        var result = source
+            .SelectMany("PhoneNumbers")
+            .Select("Number");
+
+        // Assert
+        var array = result.Select(x => x.Value<string>());
+        array.Should().BeEquivalentTo("123", "456", "789", "012");
+    }
+
+    [Fact]
     public void Single()
     {
         // Act + Assert 
@@ -392,5 +423,10 @@ public class NewtonsoftJsonTests
         result.Should().HaveCount(1);
         var first = result.First();
         first.Value<string>().Should().Be("Doe");
+    }
+
+    private class PhoneNumber
+    {
+        public int Number { get; set; }
     }
 }

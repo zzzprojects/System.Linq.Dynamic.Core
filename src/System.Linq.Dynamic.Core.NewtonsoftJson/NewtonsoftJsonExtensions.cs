@@ -2,7 +2,6 @@
 using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
 using System.Linq.Dynamic.Core.Validation;
-using System.Linq.Expressions;
 using Newtonsoft.Json.Linq;
 
 namespace System.Linq.Dynamic.Core.NewtonsoftJson;
@@ -550,7 +549,7 @@ public static class NewtonsoftJsonExtensions
 
         if (source.Count == 0)
         {
-            return new JArray();
+            return [];
         }
 
         var queryable = ToQueryable(source, config);
@@ -590,6 +589,43 @@ public static class NewtonsoftJsonExtensions
         return Select(source, NewtonsoftJsonParsingConfig.Default, resultType, selector, args);
     }
     #endregion Select
+
+    #region SelectMany
+    /// <summary>
+    /// Projects each element of a sequence to an <see cref="JArray"/> and combines the resulting sequences into one sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to project.</param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+    public static JArray SelectMany(this JArray source, string selector, params object?[] args)
+    {
+        return SelectMany(source, NewtonsoftJsonParsingConfig.Default, selector, args);
+    }
+
+    /// <summary>
+    /// Projects each element of a sequence to an <see cref="JArray"/> and combines the resulting sequences into one sequence.
+    /// </summary>
+    /// <param name="source">A sequence of values to project.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="selector">A projection string expression to apply to each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> whose elements are the result of invoking a one-to-many projection function on each element of the input sequence.</returns>
+    public static JArray SelectMany(this JArray source, NewtonsoftJsonParsingConfig config, string selector, params object?[] args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+        Check.NotNullOrEmpty(selector);
+
+        if (source.Count == 0)
+        {
+            return [];
+        }
+
+        var queryable = ToQueryable(source, config);
+        return ToJArray(() => queryable.SelectMany(config, selector, args));
+    }
+    #endregion SelectMany
 
     #region Single
     /// <summary>
