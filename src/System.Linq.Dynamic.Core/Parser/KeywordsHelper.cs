@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
+using AnyOfTypes;
 
 namespace System.Linq.Dynamic.Core.Parser;
 
@@ -26,7 +26,7 @@ internal class KeywordsHelper : IKeywordsHelper
     private readonly ParsingConfig _config;
 
     // Keywords are IgnoreCase
-    private readonly Dictionary<string, object> _keywordMapping = new(StringComparer.OrdinalIgnoreCase)
+    private readonly Dictionary<string, AnyOf<string, Expression, Type>> _keywordMapping = new(StringComparer.OrdinalIgnoreCase)
     {
         { "true", Expression.Constant(true) },
         { "false", Expression.Constant(false) },
@@ -46,10 +46,10 @@ internal class KeywordsHelper : IKeywordsHelper
     };
 
     // PreDefined Types are not IgnoreCase
-    private static readonly Dictionary<string, object> PreDefinedTypeMapping = new();
+    private static readonly Dictionary<string, Type> PreDefinedTypeMapping = new();
 
     // Custom DefinedTypes are not IgnoreCase
-    private readonly Dictionary<string, object> _customTypeMapping = new();
+    private readonly Dictionary<string, Type> _customTypeMapping = new();
 
     static KeywordsHelper()
     {
@@ -82,45 +82,45 @@ internal class KeywordsHelper : IKeywordsHelper
         }
     }
 
-    public bool TryGetValue(string name, [NotNullWhen(true)] out object? keyWordOrType)
+    public bool TryGetValue(string name, out AnyOf<string, Expression, Type> keywordOrType)
     {
         // 1. Try to get as keyword
         if (_keywordMapping.TryGetValue(name, out var keyWord))
         {
-            keyWordOrType = keyWord;
+            keywordOrType = keyWord;
             return true;
         }
 
         // 2. Try to get as predefined shorttype ("bool", "char", ...)
         if (PredefinedTypesHelper.PredefinedTypesShorthands.TryGetValue(name, out var predefinedShortHandType))
         {
-            keyWordOrType = predefinedShortHandType;
+            keywordOrType = predefinedShortHandType;
             return true;
         }
 
         // 3. Try to get as predefined type ("Boolean", "System.Boolean", ..., "DateTime", "System.DateTime", ...)
         if (PreDefinedTypeMapping.TryGetValue(name, out var predefinedType))
         {
-            keyWordOrType = predefinedType;
+            keywordOrType = predefinedType;
             return true;
         }
 
         // 4. Try to get as an enum from the system namespace
         if (_config.SupportEnumerationsFromSystemNamespace && EnumerationsFromMscorlib.PredefinedEnumerationTypes.TryGetValue(name, out var predefinedEnumType))
         {
-            keyWordOrType = predefinedEnumType;
+            keywordOrType = predefinedEnumType;
             return true;
         }
 
         // 5. Try to get as custom type
         if (_customTypeMapping.TryGetValue(name, out var customType))
         {
-            keyWordOrType = customType;
+            keywordOrType = customType;
             return true;
         }
 
         // 6. Not found, return false
-        keyWordOrType = null;
+        keywordOrType = default;
         return false;
     }
 }

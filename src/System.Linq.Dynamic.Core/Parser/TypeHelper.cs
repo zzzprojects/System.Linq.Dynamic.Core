@@ -414,9 +414,9 @@ internal static class TypeHelper
             return "null";
         }
 
-        Type baseType = GetNonNullableType(type);
+        var baseType = GetNonNullableType(type);
 
-        string name = baseType.Name;
+        var name = baseType.Name;
         if (type != baseType)
         {
             name += '?';

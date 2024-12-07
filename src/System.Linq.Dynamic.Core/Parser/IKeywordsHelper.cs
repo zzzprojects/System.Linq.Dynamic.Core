@@ -1,8 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Linq.Expressions;
+using AnyOfTypes;
 
 namespace System.Linq.Dynamic.Core.Parser;
 
 interface IKeywordsHelper
 {
-    bool TryGetValue(string name, [NotNullWhen(true)] out object? keyWordOrType);
+    bool TryGetValue(string name, out AnyOf<string, Expression, Type> keywordOrType);
 }
