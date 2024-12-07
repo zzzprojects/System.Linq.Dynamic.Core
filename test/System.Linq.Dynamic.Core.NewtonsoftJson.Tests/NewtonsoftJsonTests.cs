@@ -424,9 +424,4 @@ public class NewtonsoftJsonTests
         var first = result.First();
         first.Value<string>().Should().Be("Doe");
     }
-
-    private class PhoneNumber
-    {
-        public int Number { get; set; }
-    }
 }
