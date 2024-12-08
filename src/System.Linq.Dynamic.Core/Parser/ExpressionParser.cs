@@ -1820,13 +1820,11 @@ public class ExpressionParser
             var isStringWithStringMethod = type == typeof(string) && _methodFinder.ContainsMethod(type, id, isStaticAccess);
             var isApplicableForEnumerable = !isStaticAccess && !isConstantString && !isStringWithStringMethod;
 
-            if (isApplicableForEnumerable && TypeHelper.TryFindGenericType(typeof(IEnumerable<>), type, out var enumerableType))
+            if (isApplicableForEnumerable &&
+                TypeHelper.TryFindGenericType(typeof(IEnumerable<>), type, out var enumerableType) &&
+                TryParseEnumerable(expression!, enumerableType, id, type, out args, out var enumerableExpression))
             {
-                var elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
-                if (TryParseEnumerable(expression!, elementType, id, errorPos, type, out args, out var enumerableExpression))
-                {
-                    return enumerableExpression;
-                }
+                return enumerableExpression;
             }
 
             // If args is not set by TryParseEnumerable (in case when the expression is not an Enumerable), do parse the argument list here.
@@ -2061,8 +2059,10 @@ public class ExpressionParser
         return ParseMemberAccess(type, null, identifier);
     }
 
-    private bool TryParseEnumerable(Expression instance, Type elementType, string methodName, int errorPos, Type? type, out Expression[]? args, [NotNullWhen(true)] out Expression? expression)
+    private bool TryParseEnumerable(Expression instance, Type enumerableType, string methodName, Type? type, out Expression[]? args, [NotNullWhen(true)] out Expression? expression)
     {
+        var elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
+
         // Keep the current _parent.
         var oldParent = _parent;
 
@@ -2124,7 +2124,7 @@ public class ExpressionParser
         // #633 - For Average without any arguments, try to find the non-generic Average method on the callType for the supplied parameter type.
         if (methodName == nameof(Enumerable.Average) && args.Length == 0 && _methodFinder.TryFindAverageMethod(callType, theType, out var averageMethod))
         {
-            expression = Expression.Call(null, averageMethod, new[] { instance });
+            expression = Expression.Call(null, averageMethod, instance);
             return true;
         }
 
@@ -2136,56 +2136,56 @@ public class ExpressionParser
                 throw ParseError(_textParser.CurrentToken.Pos, Res.FunctionRequiresOneArg, methodName);
             }
 
-            typeArgs = new[] { ResolveTypeFromArgumentExpression(methodName, args[0]) };
-            args = new Expression[0];
+            typeArgs = [ResolveTypeFromArgumentExpression(methodName, args[0])];
+            args = [];
         }
         else if (new[] { "Max", "Min", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
         {
             if (args.Length == 2)
             {
-                typeArgs = new[] { elementType, args[0].Type, args[1].Type };
+                typeArgs = [elementType, args[0].Type, args[1].Type];
             }
             else if (args.Length == 1)
             {
-                typeArgs = new[] { elementType, args[0].Type };
+                typeArgs = [elementType, args[0].Type];
             }
             else
             {
-                typeArgs = new[] { elementType };
+                typeArgs = [elementType];
             }
         }
         else if (methodName == "SelectMany")
         {
             var bodyType = Expression.Lambda(args[0], innerIt).Body.Type;
-            var interfaces = bodyType.GetInterfaces().Union(new[] { bodyType });
-            Type interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
-            Type resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
-            typeArgs = new[] { elementType, resultType };
+            var interfaces = bodyType.GetInterfaces().Union([bodyType]);
+            var interfaceType = interfaces.Single(i => i.Name == typeof(IEnumerable<>).Name);
+            var resultType = interfaceType.GetTypeInfo().GetGenericTypeArguments()[0];
+            typeArgs = [elementType, resultType];
         }
         else
         {
-            typeArgs = new[] { elementType };
+            typeArgs = [elementType];
         }
 
         if (args.Length == 0)
         {
-            args = new[] { instance };
+            args = [instance];
         }
         else
         {
-            if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union" }.Contains(methodName))
+            if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union", "SequenceEqual" }.Contains(methodName))
             {
-                args = new[] { instance, args[0] };
+                args = [instance, args[0]];
             }
             else
             {
                 if (args.Length == 2)
                 {
-                    args = new[] { instance, Expression.Lambda(args[0], innerIt), Expression.Lambda(args[1], innerIt) };
+                    args = [instance, Expression.Lambda(args[0], innerIt), Expression.Lambda(args[1], innerIt)];
                 }
                 else
                 {
-                    args = new[] { instance, Expression.Lambda(args[0], innerIt) };
+                    args = [instance, Expression.Lambda(args[0], innerIt)];
                 }
             }
         }
