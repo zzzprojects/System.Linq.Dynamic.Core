@@ -2173,11 +2173,7 @@ public class ExpressionParser
         }
         else
         {
-            if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union" }.Contains(methodName))
-            {
-                args = [instance, args[0]];
-            }
-            else if (methodName == nameof(Enumerable.SequenceEqual))
+            if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union", "SequenceEqual" }.Contains(methodName))
             {
                 args = [instance, args[0]];
             }
