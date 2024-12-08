@@ -2113,7 +2113,7 @@ public class ExpressionParser
         }
 
         // #794 - Check if the method is an aggregate (Average or Sum) method and try to update the arguments to match the method arguments
-        _methodFinder.CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(methodName, ref args);
+        var isAggregateMethod = _methodFinder.CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(methodName, ref args);
 
         var callType = typeof(Enumerable);
         if (TypeHelper.TryFindGenericType(typeof(IQueryable<>), type, out _) && _methodFinder.ContainsMethod(typeof(Queryable), methodName))
@@ -2121,10 +2121,11 @@ public class ExpressionParser
             callType = typeof(Queryable);
         }
 
-        // #633 - For Average without any arguments, try to find the non-generic Average method on the callType for the supplied parameter type.
-        if (methodName == nameof(Enumerable.Average) && args.Length == 0 && _methodFinder.TryFindAverageMethod(callType, theType, out var averageMethod))
+        // #633 / #856
+        // For Average/Sum without any arguments, try to find the non-generic Average/Sum method on the callType for the supplied parameter type.
+        if (isAggregateMethod && args.Length == 0 && _methodFinder.TryFindAggregateMethod(callType, methodName, theType, out var aggregateMethod))
         {
-            expression = Expression.Call(null, averageMethod, instance);
+            expression = Expression.Call(null, aggregateMethod, instance);
             return true;
         }
 

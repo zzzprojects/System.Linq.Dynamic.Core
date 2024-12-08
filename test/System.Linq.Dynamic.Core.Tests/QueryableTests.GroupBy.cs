@@ -275,4 +275,68 @@ public partial class QueryableTests
         // Assert
         resultDynamic.Should().BeEquivalentTo(result);
     }
+
+    [Fact]
+    public void GroupBy_Dynamic_SelectWhereSum()
+    {
+        // Arrange
+        var q = new[]
+            {
+                new DataSetA
+                {
+                    I = 5
+                },
+                new DataSetA
+                {
+                    I = 7
+                }
+            }
+            .AsQueryable();
+
+        // Act
+        var result = q
+            .GroupBy(x => x.Time)
+            .Select(x => new { q = x.Select(d => d.I).Where(d => d != null).Sum() })
+            .ToArray();
+
+        var resultDynamic = q
+            .GroupBy("Time")
+            .Select("new (Select(I).Where(it != null).Sum() as q)")
+            .ToDynamicArray();
+
+        // Assert
+        resultDynamic.Should().BeEquivalentTo(result);
+    }
+
+    [Fact]
+    public void GroupBy_Dynamic_SelectWhereSumWithSelector()
+    {
+        // Arrange
+        var q = new[]
+            {
+                new DataSetA
+                {
+                    I = 5
+                },
+                new DataSetA
+                {
+                    I = 7
+                }
+            }
+            .AsQueryable();
+
+        // Act
+        var result = q
+            .GroupBy(x => x.Time)
+            .Select(x => new { q = x.Select(d => d).Sum(y => y.I) })
+            .ToArray();
+
+        var resultDynamic = q
+            .GroupBy("Time")
+            .Select("new (Select(it).Sum(I) as q)")
+            .ToDynamicArray();
+
+        // Assert
+        resultDynamic.Should().BeEquivalentTo(result);
+    }
 }

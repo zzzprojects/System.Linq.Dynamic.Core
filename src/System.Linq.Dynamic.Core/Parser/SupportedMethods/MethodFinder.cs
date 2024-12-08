@@ -45,25 +45,28 @@ internal class MethodFinder
         _expressionHelper = Check.NotNull(expressionHelper);
     }
 
-    public bool TryFindAverageMethod(Type callType, Type parameterType, [NotNullWhen(true)] out MethodInfo? averageMethod)
+    public bool TryFindAggregateMethod(Type callType, string methodName, Type parameterType, [NotNullWhen(true)] out MethodInfo? aggregateMethod)
     {
-        averageMethod = callType
+        aggregateMethod = callType
             .GetMethods()
-            .Where(m => m is { Name: nameof(Enumerable.Average), IsGenericMethodDefinition: false })
+            .Where(m => m.Name == methodName && !m.IsGenericMethodDefinition)
             .SelectMany(m => m.GetParameters(), (m, p) => new { Method = m, Parameter = p })
             .Where(x => x.Parameter.ParameterType == parameterType)
             .Select(x => x.Method)
             .FirstOrDefault();
 
-        return averageMethod != null;
+        return aggregateMethod != null;
     }
 
-    public void CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(string methodName, ref Expression[] args)
+    public bool CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(string methodName, ref Expression[] args)
     {
         if (methodName is nameof(IAggregateSignatures.Average) or nameof(IAggregateSignatures.Sum))
         {
             ContainsMethod(typeof(IAggregateSignatures), methodName, false, null, ref args);
+            return true;
         }
+
+        return false;
     }
 
     public bool ContainsMethod(Type type, string methodName, bool staticAccess = true)
