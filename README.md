@@ -70,6 +70,8 @@ If it's not possible to add that attribute, you need to implement a custom [Cust
 | &nbsp;&nbsp;**EntityFramework.DynamicLinq** | [![NuGet](https://img.shields.io/nuget/v/EntityFramework.DynamicLinq)](https://www.nuget.org/packages/EntityFramework.DynamicLinq) |
 | &nbsp;&nbsp;**Microsoft.EntityFrameworkCore.DynamicLinq** | [![NuGet](https://img.shields.io/nuget/v/Microsoft.EntityFrameworkCore.DynamicLinq)](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.DynamicLinq) |
 | &nbsp;&nbsp;**Z.EntityFramework.Classic.DynamicLinq** | [![NuGet](https://img.shields.io/nuget/v/Z.EntityFramework.Classic.DynamicLinq)](https://www.nuget.org/packages/Z.EntityFramework.Classic.DynamicLinq) |
+| &nbsp;&nbsp;**Z.DynamicLinq.SystemTextJson** | [![NuGet](https://img.shields.io/nuget/v/Z.DynamicLinq.SystemTextJson)](https://www.nuget.org/packages/Z.DynamicLinq.SystemTextJson) |
+| &nbsp;&nbsp;**Z.DynamicLinq.NewtonsoftJson** | [![NuGet](https://img.shields.io/nuget/v/Z.DynamicLinq.NewtonsoftJson)](https://www.nuget.org/packages/Z.DynamicLinq.NewtonsoftJson) |
 
 ## Development Details
 
