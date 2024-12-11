@@ -3,7 +3,7 @@
 
     <PropertyGroup>
         <AssemblyOriginatorKeyFile>../System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
-        <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
+        <PackageId>Z.DynamicLinq.SystemTextJson</PackageId>
         <Authors>Stef Heyenrath</Authors>
         <Description>Contains some extensions for System.Linq.Dynamic.Core to dynamically query a System.Text.Json.JsonDocument</Description>
         <PackageTags>system;linq;dynamic;core;dotnet;json</PackageTags>

@@ -3,7 +3,7 @@
 
     <PropertyGroup>
         <AssemblyOriginatorKeyFile>../System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
-        <AssemblyTitle>System.Linq.Dynamic.Core</AssemblyTitle>
+        <PackageId>Z.DynamicLinq.NewtonsoftJson</PackageId>
         <Authors>Stef Heyenrath</Authors>
         <Description>Contains some extensions for System.Linq.Dynamic.Core to dynamically query a Newtonsoft.Json.JArray</Description>
         <PackageTags>system;linq;dynamic;core;dotnet;json</PackageTags>
