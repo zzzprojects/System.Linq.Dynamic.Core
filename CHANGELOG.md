@@ -1,3 +1,12 @@
+# v1.5.1 (12 December 2024)
+- [#859](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/859) - Add SelectMany extension method for Json [feature] contributed by [StefH](https://github.com/StefH)
+- [#860](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/860) - Add support for SequenceEqual [feature] contributed by [StefH](https://github.com/StefH)
+- [#861](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/861) - Fix calling Sum without any arguments [bug] contributed by [StefH](https://github.com/StefH)
+- [#862](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/862) - Use different PackageIds for SystemTextJson and NewtonsoftJson projects [feature] contributed by [StefH](https://github.com/StefH)
+- [#855](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/855) - Support for SequenceEqual [feature]
+- [#856](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/856) - Using Sum method without arguments throws exception [bug]
+- [#858](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/858) - SelectMany not work over JSON [bug]
+
 # v1.5.0 (07 December 2024)
 - [#791](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/791) - Add Json support [feature] contributed by [StefH](https://github.com/StefH)
 - [#857](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/857) - RestrictOrderByToPropertyOrField [feature] contributed by [StefH](https://github.com/StefH)
