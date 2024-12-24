@@ -4,11 +4,11 @@ using FluentAssertions;
 using NFluent;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests;
+namespace System.Linq.Dynamic.Core.Tests.CustomTypeProviders;
 
 public class DefaultDynamicLinqCustomTypeProviderTests
 {
-    private readonly IDynamicLinkCustomTypeProvider _sut;
+    private readonly DefaultDynamicLinqCustomTypeProvider _sut;
 
     public DefaultDynamicLinqCustomTypeProviderTests()
     {
@@ -19,7 +19,7 @@ public class DefaultDynamicLinqCustomTypeProviderTests
     public void DefaultDynamicLinqCustomTypeProvider_ResolveSystemType()
     {
         // Act
-        var type = _sut.ResolveType(typeof(DirectoryInfo).FullName);
+        var type = _sut.ResolveType(typeof(DirectoryInfo).FullName!);
 
         // Assert
         type.Should().Be(typeof(DirectoryInfo));
@@ -49,7 +49,7 @@ public class DefaultDynamicLinqCustomTypeProviderTests
     public void DefaultDynamicLinqCustomTypeProvider_ResolveType_DefinedReturnsType()
     {
         // Act
-        var result = _sut.ResolveType(typeof(DefaultDynamicLinqCustomTypeProviderTests).FullName);
+        var result = _sut.ResolveType(typeof(DefaultDynamicLinqCustomTypeProviderTests).FullName!);
 
         // Assert
         Check.That(result).IsNotNull();
