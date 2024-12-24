@@ -51,4 +51,26 @@ public partial class EntitiesTests
         // Assert
         action.Should().Throw<ParseException>().WithMessage("No property or field 'IIF' exists in type 'Blog'");
     }
+
+    [Fact]
+    public void Entities_OrderBy_NullPropagation_Int()
+    {
+        // Arrange
+        var resultBlogs = _context.Blogs.OrderBy(b => b.NullableInt ?? -1).ToArray();
+        var dynamicResultBlogs = _context.Blogs.OrderBy("np(NullableInt, -1)").ToArray();
+
+        // Assert
+        Assert.Equal(resultBlogs, dynamicResultBlogs);
+    }
+
+    [Fact]
+    public void Entities_OrderBy_NullPropagation_String()
+    {
+        // Arrange
+        var resultBlogs = _context.Blogs.OrderBy(b => b.X ?? "_").ToArray();
+        var dynamicResultBlogs = _context.Blogs.OrderBy("np(X, \"_\")").ToArray();
+
+        // Assert
+        Assert.Equal(resultBlogs, dynamicResultBlogs);
+    }
 }
