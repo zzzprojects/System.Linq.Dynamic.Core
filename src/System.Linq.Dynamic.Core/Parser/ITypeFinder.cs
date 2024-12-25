@@ -1,9 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
-namespace System.Linq.Dynamic.Core.Parser
+namespace System.Linq.Dynamic.Core.Parser;
+
+internal interface ITypeFinder
 {
-    interface ITypeFinder
-    {
-        Type? FindTypeByName(string name, ParameterExpression?[]? expressions, bool forceUseCustomTypeProvider);
-    }
+    bool TryFindTypeByName(string name, ParameterExpression?[]? expressions, bool forceUseCustomTypeProvider, [NotNullWhen(true)] out Type? type);
 }

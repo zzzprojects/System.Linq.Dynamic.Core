@@ -15,20 +15,20 @@ internal class KeywordsHelper : IKeywordsHelper
     public const string SYMBOL_PARENT = "^";
     public const string SYMBOL_ROOT = "~";
 
+    public const string FUNCTION_AS = "as";
+    public const string FUNCTION_CAST = "cast";
     public const string FUNCTION_IIF = "iif";
+    public const string FUNCTION_IS = "is";
     public const string FUNCTION_ISNULL = "isnull";
     public const string FUNCTION_NEW = "new";
     public const string FUNCTION_NULLPROPAGATION = "np";
-    public const string FUNCTION_IS = "is";
-    public const string FUNCTION_AS = "as";
-    public const string FUNCTION_CAST = "cast";
 
     private readonly ParsingConfig _config;
 
-    // Keywords compare case depends on the value from ParsingConfig.IsCaseSensitive
-    private readonly Dictionary<string, AnyOf<string, Expression, Type>> _keywordMapping;
+    // Keywords, symbols and functions compare case depends on the value from ParsingConfig.IsCaseSensitive
+    private readonly Dictionary<string, AnyOf<string, Expression, Type>> _mappings;
 
-    // PreDefined Types are not IgnoreCase
+    // Pre-defined Types are not IgnoreCase
     private static readonly Dictionary<string, Type> PreDefinedTypeMapping = new();
 
     // Custom DefinedTypes are not IgnoreCase
@@ -47,7 +47,7 @@ internal class KeywordsHelper : IKeywordsHelper
     {
         _config = Check.NotNull(config);
 
-        _keywordMapping = new(config.IsCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
+        _mappings = new(config.IsCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
         {
             { "true", Expression.Constant(true) },
             { "false", Expression.Constant(false) },
@@ -68,9 +68,9 @@ internal class KeywordsHelper : IKeywordsHelper
 
         if (config.AreContextKeywordsEnabled)
         {
-            _keywordMapping.Add(KEYWORD_IT, KEYWORD_IT);
-            _keywordMapping.Add(KEYWORD_PARENT, KEYWORD_PARENT);
-            _keywordMapping.Add(KEYWORD_ROOT, KEYWORD_ROOT);
+            _mappings.Add(KEYWORD_IT, KEYWORD_IT);
+            _mappings.Add(KEYWORD_PARENT, KEYWORD_PARENT);
+            _mappings.Add(KEYWORD_ROOT, KEYWORD_ROOT);
         }
 
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
@@ -84,45 +84,45 @@ internal class KeywordsHelper : IKeywordsHelper
         }
     }
 
-    public bool TryGetValue(string name, out AnyOf<string, Expression, Type> keywordOrType)
+    public bool TryGetValue(string text, out AnyOf<string, Expression, Type> value)
     {
-        // 1. Try to get as keyword
-        if (_keywordMapping.TryGetValue(name, out var keyWord))
+        // 1. Try to get as constant-expression, keyword, symbol or functions
+        if (_mappings.TryGetValue(text, out var expressionOrKeywordOrSymbolOrFunction))
         {
-            keywordOrType = keyWord;
+            value = expressionOrKeywordOrSymbolOrFunction;
             return true;
         }
 
-        // 2. Try to get as predefined shorttype ("bool", "char", ...)
-        if (PredefinedTypesHelper.PredefinedTypesShorthands.TryGetValue(name, out var predefinedShortHandType))
+        // 2. Try to get as predefined short-type ("bool", "char", ...)
+        if (PredefinedTypesHelper.PredefinedTypesShorthands.TryGetValue(text, out var predefinedShortHandType))
         {
-            keywordOrType = predefinedShortHandType;
+            value = predefinedShortHandType;
             return true;
         }
 
         // 3. Try to get as predefined type ("Boolean", "System.Boolean", ..., "DateTime", "System.DateTime", ...)
-        if (PreDefinedTypeMapping.TryGetValue(name, out var predefinedType))
+        if (PreDefinedTypeMapping.TryGetValue(text, out var predefinedType))
         {
-            keywordOrType = predefinedType;
+            value = predefinedType;
             return true;
         }
 
         // 4. Try to get as an enum from the system namespace
-        if (_config.SupportEnumerationsFromSystemNamespace && EnumerationsFromMscorlib.PredefinedEnumerationTypes.TryGetValue(name, out var predefinedEnumType))
+        if (_config.SupportEnumerationsFromSystemNamespace && EnumerationsFromMscorlib.PredefinedEnumerationTypes.TryGetValue(text, out var predefinedEnumType))
         {
-            keywordOrType = predefinedEnumType;
+            value = predefinedEnumType;
             return true;
         }
 
         // 5. Try to get as custom type
-        if (_customTypeMapping.TryGetValue(name, out var customType))
+        if (_customTypeMapping.TryGetValue(text, out var customType))
         {
-            keywordOrType = customType;
+            value = customType;
             return true;
         }
 
-        // 6. Not found, return false
-        keywordOrType = default;
+        // Not found, return false
+        value = default;
         return false;
     }
 }

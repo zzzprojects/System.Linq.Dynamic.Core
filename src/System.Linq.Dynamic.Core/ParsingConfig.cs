@@ -39,7 +39,13 @@ public class ParsingConfig
     };
 
     /// <summary>
-    /// Gets or sets if parameter, method, and properties resolution should be case-sensitive or not.
+    /// Defines if the resolution should be case-sensitive for:
+    /// - fields and properties
+    /// - (extension) methods
+    /// - constant expressions ("null", "true", "false")
+    /// - keywords ("it", "parent", "root")
+    /// - symbols ("$", "^", "~")
+    /// - functions ("as", "cast", "iif", "is", "isnull", "new", "np")
     ///
     /// Default value is <c>false</c>.
     /// </summary>
