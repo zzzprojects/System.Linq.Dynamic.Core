@@ -44,7 +44,6 @@ public class ParsingConfig
     /// - (extension) methods
     /// - constant expressions ("null", "true", "false")
     /// - keywords ("it", "parent", "root")
-    /// - symbols ("$", "^", "~")
     /// - functions ("as", "cast", "iif", "is", "isnull", "new", "np")
     ///
     /// Default value is <c>false</c>.
