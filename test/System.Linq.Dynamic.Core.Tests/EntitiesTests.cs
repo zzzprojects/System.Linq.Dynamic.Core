@@ -27,7 +27,7 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
         {
             builder.UseSqlServer(fixture.ConnectionString);
         }
-        
+
         _context = new BlogContext(builder.Options);
         _context.Database.EnsureCreated();
 #else
@@ -42,14 +42,14 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
         {
             return;
         }
-   
+
         for (int i = 0; i < 25; i++)
         {
             var blog = new Blog
             {
-                X = i.ToString(), 
-                Name = "Blog" + (i + 1), 
-                BlogId = 1000 + i, 
+                X = i.ToString(),
+                Name = "Blog" + (i + 1),
+                BlogId = 1000 + i,
                 Created = DateTime.Now.AddDays(-Rnd.Next(0, 100))
             };
 
@@ -57,13 +57,15 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
 
             for (int j = 0; j < 10; j++)
             {
+                var postDate = DateTime.Today.AddDays(-Rnd.Next(0, 100)).AddSeconds(Rnd.Next(0, 30000));
                 var post = new Post
                 {
                     PostId = 10000 + i * 10 + j,
                     Blog = blog,
                     Title = $"Blog {i + 1} - Post {j + 1}",
                     Content = "My Content",
-                    PostDate = DateTime.Today.AddDays(-Rnd.Next(0, 100)).AddSeconds(Rnd.Next(0, 30000)),
+                    PostDate = postDate,
+                    CloseDate = Rnd.Next(0, 10) < 5 ? postDate.AddDays(1) : null,
                     NumberOfReads = Rnd.Next(0, 5000)
                 };
 

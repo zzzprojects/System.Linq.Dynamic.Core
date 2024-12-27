@@ -3,7 +3,7 @@ using AnyOfTypes;
 
 namespace System.Linq.Dynamic.Core.Parser;
 
-interface IKeywordsHelper
+internal interface IKeywordsHelper
 {
-    bool TryGetValue(string name, out AnyOf<string, Expression, Type> keywordOrType);
+    bool TryGetValue(string text, out AnyOf<string, Expression, Type> value);
 }

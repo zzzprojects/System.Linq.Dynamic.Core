@@ -906,8 +906,7 @@ public class ExpressionParser
         if (_parsingConfig.SupportCastingToFullyQualifiedTypeAsString && !forceParseAsString && parsedStringValue.Length > 2 && parsedStringValue.Contains('.'))
         {
             // Try to resolve this string as a type
-            var type = _typeFinder.FindTypeByName(parsedStringValue, null, false);
-            if (type is { })
+            if (_typeFinder.TryFindTypeByName(parsedStringValue, null, false, out var type))
             {
                 return type;
             }
@@ -970,7 +969,7 @@ public class ExpressionParser
     {
         _textParser.ValidateToken(TokenId.Identifier);
 
-        var isValidKeyWord = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var keywordOrType);
+        var isValid = _keywordsHelper.TryGetValue(_textParser.CurrentToken.Text, out var keywordOrType);
         var shouldPrioritizeType = true;
 
         if (_parsingConfig.PrioritizePropertyOrFieldOverTheType && keywordOrType.IsThird)
@@ -983,7 +982,7 @@ public class ExpressionParser
             }
         }
 
-        if (isValidKeyWord && shouldPrioritizeType)
+        if (isValid && shouldPrioritizeType)
         {
             var keywordOrFunctionAllowed = !_usedForOrderBy || _usedForOrderBy && !_parsingConfig.RestrictOrderByToPropertyOrField;
             if (!keywordOrFunctionAllowed)
@@ -1397,8 +1396,7 @@ public class ExpressionParser
                 _textParser.NextToken();
             }
 
-            newType = _typeFinder.FindTypeByName(newTypeName, new[] { _it, _parent, _root }, false);
-            if (newType == null)
+            if (!_typeFinder.TryFindTypeByName(newTypeName, [_it, _parent, _root], false, out newType))
             {
                 throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, newTypeName);
             }
@@ -1543,6 +1541,7 @@ public class ExpressionParser
         {
             propertyInfos = propertyInfos.Where(x => x.Name != "Item").ToArray();
         }
+
         var propertyTypes = propertyInfos.Select(p => p.PropertyType).ToArray();
         var ctor = type.GetConstructor(propertyTypes);
         if (ctor != null)
@@ -1550,7 +1549,7 @@ public class ExpressionParser
             var constructorParameters = ctor.GetParameters();
             if (constructorParameters.Length == expressions.Count)
             {
-                bool bindParametersSequentially = !properties.All(p => constructorParameters
+                var bindParametersSequentially = !properties.All(p => constructorParameters
                     .Any(cp => cp.Name == p.Name && (cp.ParameterType == p.Type || p.Type == Nullable.GetUnderlyingType(cp.ParameterType))));
                 var expressionsPromoted = new List<Expression?>();
 
@@ -1564,9 +1563,10 @@ public class ExpressionParser
                     else
                     {
                         Type propertyType = constructorParameters[i].ParameterType;
-                        string cParameterName = constructorParameters[i].Name;
+                        var cParameterName = constructorParameters[i].Name;
                         var propertyAndIndex = properties.Select((p, index) => new { p, index })
                             .First(p => p.p.Name == cParameterName && (p.p.Type == propertyType || p.p.Type == Nullable.GetUnderlyingType(propertyType)));
+                        
                         // Promote from Type to Nullable Type if needed
                         expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[propertyAndIndex.index], propertyType, true, true));
                     }
@@ -2027,8 +2027,7 @@ public class ExpressionParser
         }
 
         var typeAsString = string.Concat(parts.Take(parts.Count - 2).ToArray());
-        var type = _typeFinder.FindTypeByName(typeAsString, null, true);
-        if (type == null)
+        if (!_typeFinder.TryFindTypeByName(typeAsString, null, true, out var type))
         {
             throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeAsString);
         }
@@ -2233,20 +2232,20 @@ public class ExpressionParser
 
     private Type ResolveTypeStringFromArgument(string typeName)
     {
-        bool typeIsNullable = false;
+        var typeIsNullable = false;
+
         if (typeName.EndsWith("?"))
         {
             typeName = typeName.TrimEnd('?');
             typeIsNullable = true;
         }
 
-        var resultType = _typeFinder.FindTypeByName(typeName, new[] { _it, _parent, _root }, true);
-        if (resultType == null)
+        if (!_typeFinder.TryFindTypeByName(typeName, [_it, _parent, _root], true, out var type))
         {
             throw ParseError(_textParser.CurrentToken.Pos, Res.TypeNotFound, typeName);
         }
 
-        return typeIsNullable ? TypeHelper.ToNullableType(resultType) : resultType;
+        return typeIsNullable ? TypeHelper.ToNullableType(type) : type;
     }
 
     private Expression[] ParseArgumentList()

@@ -82,9 +82,9 @@ public partial class QueryableTests
         IQueryable<Post> queryable = new[] { new Post() }.AsQueryable();
 
         // Act
-        var expected = queryable.Where(p => p.PostDate != null).ToArray();
-        var result1 = queryable.Where("PostDate != null").ToArray();
-        var result2 = queryable.Where("null != PostDate").ToArray();
+        var expected = queryable.Where(p => p.CloseDate != null).ToArray();
+        var result1 = queryable.Where("CloseDate != null").ToArray();
+        var result2 = queryable.Where("null != CloseDate").ToArray();
 
         // Assert
         Assert.Equal(expected, result1);
@@ -98,9 +98,9 @@ public partial class QueryableTests
         IQueryable<Post> queryable = new[] { new Post() }.AsQueryable();
 
         // Act
-        var expected = queryable.Where(p => p.PostDate == null).ToArray();
-        var result1 = queryable.Where("PostDate == null").ToArray();
-        var result2 = queryable.Where("null == PostDate").ToArray();
+        var expected = queryable.Where(p => p.CloseDate == null).ToArray();
+        var result1 = queryable.Where("CloseDate == null").ToArray();
+        var result2 = queryable.Where("null == CloseDate").ToArray();
 
         // Assert
         Assert.Equal(expected, result1);
