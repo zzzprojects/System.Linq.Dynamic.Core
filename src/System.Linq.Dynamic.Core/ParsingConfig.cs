@@ -292,5 +292,5 @@ public class ParsingConfig
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool RestrictOrderByToPropertyOrField { get; set; } = false;
+    public bool RestrictOrderByToPropertyOrField { get; set; }
 }
