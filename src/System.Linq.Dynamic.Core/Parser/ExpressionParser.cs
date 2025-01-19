@@ -1494,7 +1494,10 @@ public class ExpressionParser
 
         if (newType != null)
         {
-            return Expression.NewArrayInit(newType, expressions.Select(expression => _parsingConfig.ExpressionPromoter.Promote(expression, newType, true, true)));
+            var promotedExpressions = expressions
+                .Select(expression => _parsingConfig.ExpressionPromoter.Promote(expression, newType, true, true))
+                .OfType<Expression>();
+            return Expression.NewArrayInit(newType, promotedExpressions);
         }
 
         return Expression.NewArrayInit(expressions.All(expression => expression.Type == expressions[0].Type) ? expressions[0].Type : typeof(object), expressions);
@@ -1551,24 +1554,24 @@ public class ExpressionParser
             {
                 var bindParametersSequentially = !properties.All(p => constructorParameters
                     .Any(cp => cp.Name == p.Name && (cp.ParameterType == p.Type || p.Type == Nullable.GetUnderlyingType(cp.ParameterType))));
-                var expressionsPromoted = new List<Expression?>();
+                var expressionsPromoted = new List<Expression>();
 
                 // Loop all expressions and promote if needed
                 for (int i = 0; i < constructorParameters.Length; i++)
                 {
                     if (bindParametersSequentially)
                     {
-                        expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyTypes[i], true, true));
+                        expressionsPromoted.AddIfNotNull(_parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyTypes[i], true, true));
                     }
                     else
                     {
-                        Type propertyType = constructorParameters[i].ParameterType;
+                        var propertyType = constructorParameters[i].ParameterType;
                         var cParameterName = constructorParameters[i].Name;
                         var propertyAndIndex = properties.Select((p, index) => new { p, index })
                             .First(p => p.p.Name == cParameterName && (p.p.Type == propertyType || p.p.Type == Nullable.GetUnderlyingType(propertyType)));
-                        
+
                         // Promote from Type to Nullable Type if needed
-                        expressionsPromoted.Add(_parsingConfig.ExpressionPromoter.Promote(expressions[propertyAndIndex.index], propertyType, true, true));
+                        expressionsPromoted.AddIfNotNull(_parsingConfig.ExpressionPromoter.Promote(expressions[propertyAndIndex.index], propertyType, true, true));
                     }
                 }
 
@@ -1584,6 +1587,7 @@ public class ExpressionParser
             // Promote from Type to Nullable Type if needed
             var expressionsPromoted = exactConstructor.GetParameters()
                 .Select((t, i) => _parsingConfig.ExpressionPromoter.Promote(expressions[i], t.ParameterType, true, true))
+                .OfType<Expression>()
                 .ToArray();
 
             return Expression.New(exactConstructor, expressionsPromoted);
@@ -1661,14 +1665,14 @@ public class ExpressionParser
         }
 
         // This is a shorthand for explicitly converting a string to something
-        bool shorthand = _textParser.CurrentToken.Id == TokenId.StringLiteral;
-        if (_textParser.CurrentToken.Id == TokenId.OpenParen || shorthand)
+        var isShorthand = _textParser.CurrentToken.Id == TokenId.StringLiteral;
+        if (_textParser.CurrentToken.Id == TokenId.OpenParen || isShorthand)
         {
             Expression[] args;
-            if (shorthand)
+            if (isShorthand)
             {
                 var expressionOrType = ParseStringLiteral(true);
-                args = new[] { expressionOrType.First };
+                args = [expressionOrType.First];
             }
             else
             {
@@ -1685,7 +1689,7 @@ public class ExpressionParser
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (args.Length == 1 && (args[0] == null || args[0] is ConstantExpression) && TryGenerateConversion(args[0], type, out var generatedExpression))
             {
-                return generatedExpression!;
+                return generatedExpression;
             }
 
             // If only 1 argument, and if the type is a ValueType and argType is also a ValueType, just Convert
