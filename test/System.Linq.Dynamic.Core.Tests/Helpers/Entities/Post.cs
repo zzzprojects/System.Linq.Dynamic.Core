@@ -20,4 +20,6 @@ public class Post
     public int NumberOfReads { get; set; }
 
     public DateTime PostDate { get; set; }
+
+    public DateTime? CloseDate { get; set; }
 }

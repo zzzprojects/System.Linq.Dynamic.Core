@@ -39,7 +39,13 @@ public class ParsingConfig
     };
 
     /// <summary>
-    /// Gets or sets if parameter, method, and properties resolution should be case-sensitive or not.
+    /// Defines if the resolution should be case-sensitive for:
+    /// - fields and properties
+    /// - (extension) methods
+    /// - constant expressions ("null", "true", "false")
+    /// - keywords ("it", "parent", "root")
+    /// - functions ("as", "cast", "iif", "is", "isnull", "new", "np")
+    /// - operator aliases ("eq", "equal", "ne", "notequal", "neq", "lt", "LessThan", "le", "LessThanEqual", "gt", "GreaterThan", "ge", "GreaterThanEqual", "and", "AndAlso", "or", "OrElse", "not", "mod")
     ///
     /// Default value is <c>false</c>.
     /// </summary>
@@ -286,5 +292,5 @@ public class ParsingConfig
     ///
     /// Default value is <c>false</c>.
     /// </summary>
-    public bool RestrictOrderByToPropertyOrField { get; set; } = false;
+    public bool RestrictOrderByToPropertyOrField { get; set; }
 }

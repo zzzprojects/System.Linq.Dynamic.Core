@@ -9,6 +9,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Util;
+
 #if !(SILVERLIGHT)
 using System.Diagnostics;
 #endif
@@ -314,7 +315,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(type);
 
-            var optimized = OptimizeExpression(Expression.Call(null, _cast.MakeGenericMethod(new[] { type }), new[] { source.Expression }));
+            var optimized = OptimizeExpression(Expression.Call(null, _cast.MakeGenericMethod(type), source.Expression));
 
             return source.Provider.CreateQuery(optimized);
         }
@@ -330,10 +331,13 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotEmpty(typeName, nameof(typeName));
+            Check.NotEmpty(typeName);
 
             var finder = new TypeFinder(config, new KeywordsHelper(config));
-            Type type = finder.FindTypeByName(typeName, null, true)!;
+            if (!finder.TryFindTypeByName(typeName, null, true, out var type))
+            {
+                throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.TypeNotFound, typeName));
+            }
 
             return Cast(source, type);
         }
@@ -1445,7 +1449,10 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(typeName);
 
             var finder = new TypeFinder(config, new KeywordsHelper(config));
-            Type type = finder.FindTypeByName(typeName, null, true)!;
+            if (!finder.TryFindTypeByName(typeName, null, true, out var type))
+            {
+                throw new ParseException(string.Format(CultureInfo.CurrentCulture, Res.TypeNotFound, typeName));
+            }
 
             return OfType(source, type);
         }

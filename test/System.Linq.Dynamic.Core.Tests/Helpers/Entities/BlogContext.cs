@@ -21,7 +21,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
         public void EnableLogging()
         {
             var serviceProvider = this.GetInfrastructure();
-            var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
             loggerFactory.AddProvider(new DbLoggerProvider());
         }
 
