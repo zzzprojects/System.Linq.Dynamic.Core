@@ -324,11 +324,15 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(resultDynamic.Last()).Equals(result.Last());
         }
 
-        [Fact(Skip = "867")]
+        [Fact]
         public void Select_Dynamic_SystemType1()
         {
             // Arrange
-            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+            var config = new ParsingConfig
+            {
+                AllowNewToEvaluateAnyType = true
+            };
+            config.UseDefaultDynamicLinqCustomTypeProvider([typeof(DirectoryInfo)]);
             var queryable = new[] { "test" }.AsQueryable();
 
             // Act
