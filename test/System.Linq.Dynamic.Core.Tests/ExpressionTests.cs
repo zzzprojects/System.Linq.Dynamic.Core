@@ -13,6 +13,7 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
+    [DynamicLinqType]
     public enum TestEnumPublic : sbyte
     {
         Var1 = 0,
@@ -25,6 +26,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
     public partial class ExpressionTests
     {
+        [DynamicLinqType]
         public enum TestEnum2 : sbyte
         {
             Var1 = 0,
@@ -919,6 +921,9 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Enum_Property_Equality_Using_Enum_And_FullName_Inline()
         {
             // Arrange
+            var config = new ParsingConfig();
+            config.UseDefaultDynamicLinqCustomTypeProvider([typeof(TestEnum2)]);
+
             var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
             string enumType = typeof(TestEnum2).FullName!;
 
@@ -948,7 +953,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Enum_Property_Equality_Using_Enum_Name_Inline_Should_Throw_Exception()
+        public void ExpressionTests_Enum_Property_Equality_Using_Enum_Name_Inline_ShouldBeOk()
         {
             // Arrange
             var config = new ParsingConfig
@@ -962,7 +967,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Action a = () => qry.Where(config, $"{enumType}.Var2 == it.B").ToDynamicArray();
 
             // Assert
-            a.Should().Throw<Exception>();
+            a.Should().NotThrow();
         }
 
         [Fact]
@@ -1031,7 +1036,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Enum_MoreTests()
         {
-            var config = new ParsingConfig();
+            var config = new ParsingConfig
+            {
+                ResolveTypesBySimpleName = true
+            };
 
             // Arrange
             var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };

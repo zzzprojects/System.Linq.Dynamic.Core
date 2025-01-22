@@ -9,6 +9,10 @@ namespace System.Linq.Dynamic.Core.Tests
     {
         private HashSet<Type>? _customTypes;
 
+        public TestCustomTypeProvider() : base([])
+        {
+        }
+
         public virtual HashSet<Type> GetCustomTypes()
         {
             if (_customTypes != null)
@@ -16,12 +20,13 @@ namespace System.Linq.Dynamic.Core.Tests
                 return _customTypes;
             }
 
-            _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }))
+            _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute([GetType().GetTypeInfo().Assembly]))
             {
                 typeof(CustomClassWithStaticMethod),
                 typeof(StaticHelper),
                 typeof(StaticHelper.Nested)
             };
+
             return _customTypes;
         }
 

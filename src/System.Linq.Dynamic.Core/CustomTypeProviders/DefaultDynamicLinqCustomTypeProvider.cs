@@ -10,8 +10,6 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders;
 /// 
 /// Scans the current AppDomain for all types marked with <see cref="DynamicLinqTypeAttribute"/>, and adds them as custom Dynamic Link types.
 ///
-/// Also provides functionality to resolve a Type in the current Application Domain.
-///
 /// This class is used as default for full .NET Framework and .NET Core App 2.x and higher.
 /// </summary>
 public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
@@ -24,11 +22,10 @@ public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTyp
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DefaultDynamicLinqCustomTypeProvider"/> class.
-    /// Backwards compatibility for issue https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/830.
     /// </summary>
+    /// <param name="config">The parsing configuration.</param>
     /// <param name="cacheCustomTypes">Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to 'true'.</param>
-    [Obsolete("Please use the DefaultDynamicLinqCustomTypeProvider(ParsingConfig config, bool cacheCustomTypes = true) constructor.")]
-    public DefaultDynamicLinqCustomTypeProvider(bool cacheCustomTypes = true) : this(ParsingConfig.Default, cacheCustomTypes)
+    public DefaultDynamicLinqCustomTypeProvider(ParsingConfig config, bool cacheCustomTypes = true) : this(config, new List<Type>(), cacheCustomTypes)
     {
     }
 
@@ -36,8 +33,9 @@ public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTyp
     /// Initializes a new instance of the <see cref="DefaultDynamicLinqCustomTypeProvider"/> class.
     /// </summary>
     /// <param name="config">The parsing configuration.</param>
+    /// <param name="additionalTypes">A list of additional types (without the DynamicLinqTypeAttribute annotation) which should also be resolved.</param>
     /// <param name="cacheCustomTypes">Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to 'true'.</param>
-    public DefaultDynamicLinqCustomTypeProvider(ParsingConfig config, bool cacheCustomTypes = true)
+    public DefaultDynamicLinqCustomTypeProvider(ParsingConfig config, IList<Type> additionalTypes, bool cacheCustomTypes = true) : base(additionalTypes)
     {
         _assemblyHelper = new DefaultAssemblyHelper(Check.NotNull(config));
         _cacheCustomTypes = cacheCustomTypes;
@@ -96,7 +94,8 @@ public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTyp
     private HashSet<Type> GetCustomTypesInternal()
     {
         IEnumerable<Assembly> assemblies = _assemblyHelper.GetAssemblies();
-        return new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies));
+        var types = FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies).Union(AdditionalTypes);
+        return new HashSet<Type>(types);
     }
 
     private Dictionary<Type, List<MethodInfo>> GetExtensionMethodsInternal()

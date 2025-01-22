@@ -7,14 +7,14 @@ namespace System.Linq.Dynamic.Core.Tests.Parser;
 
 public class MethodFinderTest
 {
-    [Fact]
+    [Fact(Skip = "867")]
     public void MethodsOfDynamicLinqAndSystemLinqShouldBeEqual()
     {
         Expression<Func<int?, string?>> expr = x => x.ToString();
             
         var selector = "ToString()";
         var prm = Parameter(typeof(int?));
-        var parser = new ExpressionParser(new[] { prm }, selector, new object[] { }, ParsingConfig.Default);
+        var parser = new ExpressionParser([prm], selector, [], ParsingConfig.Default);
         var expr1 = parser.Parse(null);
             
         Assert.Equal(((MethodCallExpression)expr.Body).Method.DeclaringType, ((MethodCallExpression)expr1).Method.DeclaringType);

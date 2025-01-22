@@ -72,6 +72,25 @@ public class ParsingConfig
     }
 
     /// <summary>
+    /// Sets the CustomTypeProvider to <see cref="DefaultDynamicLinqCustomTypeProvider"/>.
+    /// </summary>
+    /// <param name="cacheCustomTypes">Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to <c>true</c>.</param>
+    public void UseDefaultDynamicLinqCustomTypeProvider(bool cacheCustomTypes = true)
+    {
+        _customTypeProvider = new DefaultDynamicLinqCustomTypeProvider(this, cacheCustomTypes);
+    }
+
+    /// <summary>
+    /// Sets the CustomTypeProvider to <see cref="DefaultDynamicLinqCustomTypeProvider"/>.
+    /// </summary>
+    /// <param name="cacheCustomTypes">Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to <c>true</c>.</param>
+    /// <param name="additionalTypes">A list of additional types (without the DynamicLinqTypeAttribute annotation) which should also be resolved.</param>
+    public void UseDefaultDynamicLinqCustomTypeProvider(IList<Type> additionalTypes, bool cacheCustomTypes = true)
+    {
+        _customTypeProvider = new DefaultDynamicLinqCustomTypeProvider(this, additionalTypes, cacheCustomTypes);
+    }
+
+    /// <summary>
     /// Load additional assemblies from the current domain base directory.
     /// Note: only used when full .NET Framework and .NET Core App 2.x and higher.
     ///

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using FluentAssertions;
 using NFluent;
@@ -8,11 +9,17 @@ namespace System.Linq.Dynamic.Core.Tests.CustomTypeProviders;
 
 public class DefaultDynamicLinqCustomTypeProviderTests
 {
+    private readonly IList<Type> _additionalTypes = new List<Type>
+    {
+        typeof(DirectoryInfo),
+        typeof(DefaultDynamicLinqCustomTypeProviderTests)
+    };
+
     private readonly DefaultDynamicLinqCustomTypeProvider _sut;
 
     public DefaultDynamicLinqCustomTypeProviderTests()
     {
-        _sut = new DefaultDynamicLinqCustomTypeProvider(ParsingConfig.Default);
+        _sut = new DefaultDynamicLinqCustomTypeProvider(ParsingConfig.Default, _additionalTypes);
     }
 
     [Fact]

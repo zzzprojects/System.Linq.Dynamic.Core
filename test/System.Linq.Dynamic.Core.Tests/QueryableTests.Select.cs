@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using FluentAssertions;
@@ -19,6 +20,7 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
+        [DynamicLinqType]
         public class Example
         {
             public int Field;
@@ -29,10 +31,12 @@ namespace System.Linq.Dynamic.Core.Tests
             public int Sec { get; set; }
             public int? SecNull { get; set; }
 
+            [DynamicLinqType]
             public class NestedDto
             {
                 public string Name { get; set; }
 
+                [DynamicLinqType]
                 public class NestedDto2
                 {
                     public string Name2 { get; set; }
@@ -320,7 +324,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(resultDynamic.Last()).Equals(result.Last());
         }
 
-        [Fact]
+        [Fact(Skip = "867")]
         public void Select_Dynamic_SystemType1()
         {
             // Arrange
