@@ -87,7 +87,7 @@ public class SecurityTests
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
-    public void UsingStaticClass_ThrowsException(string selector)
+    public void UsingStaticClassAsType_ThrowsException(string selector)
     {
         // Arrange
         var queryable = new[]
@@ -103,15 +103,35 @@ public class SecurityTests
     }
 
     [Theory]
+    [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3().SettingsProp[\"jwt\"]")]
+    [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3().SettingsField[\"jwt\"]")]
+    [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3().SettingsProp[\"jwt\"]")]
+    [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3().SettingsField[\"jwt\"]")]
+    public void UsingClassAsType_ThrowsException(string selector)
+    {
+        // Arrange
+        var queryable = new[]
+        {
+            new Message("Alice", "Bob")
+        }.AsQueryable();
+
+        // Act
+        Action action = () => queryable.Select(selector);
+
+        // Assert
+        action.Should().Throw<ParseException>().WithMessage("Type 'System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3' not found");
+    }
+
+    [Theory]
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
-    public void UsingStaticClass_WhenAddedDefaultDynamicLinqCustomTypeProvider_ShouldBeOk(string selector)
+    public void UsingStaticClassAsType_WhenAddedToDefaultDynamicLinqCustomTypeProvider_ShouldBeOk(string selector)
     {
         // Arrange
         var config = new ParsingConfig();
-        config.UseDefaultDynamicLinqCustomTypeProvider([typeof(Helpers.Models.AppSettings)]);
+        config.UseDefaultDynamicLinqCustomTypeProvider([typeof(Helpers.Models.AppSettings), typeof(Helpers.Models.AppSettings3)]);
 
         var queryable = new[]
         {
@@ -120,6 +140,29 @@ public class SecurityTests
 
         // Act
         Action action = () => queryable.Select(config, selector);
+
+        // Assert
+        action.Should().NotThrow();
+    }
+
+    [Theory(Skip = "Bug: Accessing static members on instance class is not supported")]
+    [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsProp[\"jwt\"]")]
+    [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsField[\"jwt\"]")]
+    [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsProp[\"jwt\"]")]
+    [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsField[\"jwt\"]")]
+    public void UsingClassAsType_WhenAddedToDefaultDynamicLinqCustomTypeProvider_ShouldBeOk(string selector1, string selector2)
+    {
+        // Arrange
+        var config = new ParsingConfig();
+        config.UseDefaultDynamicLinqCustomTypeProvider([typeof(Helpers.Models.AppSettings), typeof(Helpers.Models.AppSettings3)]);
+
+        var queryable = new[]
+        {
+            new Message("Alice", "Bob")
+        }.AsQueryable();
+
+        // Act
+        Action action = () => queryable.Select(config, selector1).Select(config, selector2);
 
         // Assert
         action.Should().NotThrow();

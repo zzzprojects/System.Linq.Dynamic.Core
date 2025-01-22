@@ -29,4 +29,17 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
             { "jwt", "test" }
         };
     }
+
+    public class AppSettings3
+    {
+        public static Dictionary<string, string> SettingsProp { get; } = new()
+        {
+            { "jwt", "test" }
+        };
+
+        public static Dictionary<string, string> SettingsField = new()
+        {
+            { "jwt", "test" }
+        };
+    }
 }
