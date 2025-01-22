@@ -1,13 +1,12 @@
 ﻿using System.IO;
 using System.Linq.Dynamic.Core.Exceptions;
-using System.Net;
 using System.Reflection;
 using FluentAssertions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests;
 
-public partial class SecurityTests
+public class SecurityTests
 {
     class Message
     {
@@ -101,6 +100,29 @@ public partial class SecurityTests
 
         // Assert
         action.Should().Throw<ParseException>().WithMessage("Type 'System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings' not found");
+    }
+
+    [Theory]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
+    public void UsingStaticClass_WhenAddedDefaultDynamicLinqCustomTypeProvider_ShouldBeOk(string selector)
+    {
+        // Arrange
+        var config = new ParsingConfig();
+        config.UseDefaultDynamicLinqCustomTypeProvider([typeof(Helpers.Models.AppSettings)]);
+
+        var queryable = new[]
+        {
+            new Message("Alice", "Bob")
+        }.AsQueryable();
+
+        // Act
+        Action action = () => queryable.Select(config, selector);
+
+        // Assert
+        action.Should().NotThrow();
     }
 
     [Theory]
