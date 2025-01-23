@@ -7,7 +7,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser;
 
 public class MethodFinderTest
 {
-    [Fact(Skip = "867")]
+    [Fact]
     public void MethodsOfDynamicLinqAndSystemLinqShouldBeEqual()
     {
         Expression<Func<int?, string?>> expr = x => x.ToString();

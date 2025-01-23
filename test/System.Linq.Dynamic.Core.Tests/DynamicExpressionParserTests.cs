@@ -1058,7 +1058,7 @@ public class DynamicExpressionParserTests
         Assert.Equal(expectedRightValue, rightValue);
     }
 
-    [Fact(Skip = "867")]
+    [Fact]
     public void DynamicExpressionParser_ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
     {
         var expression = DynamicExpressionParser.ParseLambda(

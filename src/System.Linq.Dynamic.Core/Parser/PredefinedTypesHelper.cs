@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
+using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser;
 
@@ -57,6 +58,18 @@ internal static class PredefinedTypesHelper
 #endif
     });
 
+    public static readonly IDictionary<MemberInfo, int> PredefinedMemberInfos = new ConcurrentDictionary<MemberInfo, int>(new Dictionary<MemberInfo, int>
+    {
+        {  GetLookup(typeof(object)).GetMethod(nameof(object.Equals), new []{ typeof(object)})!, 0 },
+        {  GetLookup(typeof(object)).GetMethod(nameof(object.ToString), new Type[0])!, 0 },
+    });
+
+#if NETCOREAPP2_1 || NETSTANDARD1_3  || NETSTANDARD2_0
+    private static TypeInfo GetLookup(Type type) => type.GetTypeInfo();
+#else
+    private static Type GetLookup(Type type) => type;
+#endif
+
     static PredefinedTypesHelper()
     {
         // Only add these types for full .NET Framework and .NETStandard 2.1
@@ -112,7 +125,21 @@ internal static class PredefinedTypesHelper
             return true;
         }
 
-        return config.CustomTypeProvider != null &&
-               (config.CustomTypeProvider.GetCustomTypes().Contains(type) || config.CustomTypeProvider.GetCustomTypes().Contains(nonNullableType));
+        var customLookup = config.CustomTypeProvider?.GetCustomTypes();
+        return customLookup?.Contains(type) == true || customLookup?.Contains(nonNullableType) == true;
+    }
+
+    public static bool IsPredefinedMember(ParsingConfig config, MemberInfo member)
+    {
+        Check.NotNull(config);
+        Check.NotNull(member);
+
+        if (PredefinedMemberInfos.ContainsKey(member))
+        {
+            return true;
+        }
+
+        var customLookup = config.CustomTypeProvider?.GetCustomMemberInfos();
+        return customLookup?.Contains(member) == true;
     }
 }

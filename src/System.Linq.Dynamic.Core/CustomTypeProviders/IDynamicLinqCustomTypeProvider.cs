@@ -9,10 +9,16 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders;
 public interface IDynamicLinqCustomTypeProvider
 {
     /// <summary>
-    /// Returns a list of custom types that System.Linq.Dynamic.Core will understand.
+    /// Returns a list of custom <see cref="Type"/> that System.Linq.Dynamic.Core will understand.
     /// </summary>
     /// <returns>A <see cref="HashSet{Type}" /> list of custom types.</returns>
     HashSet<Type> GetCustomTypes();
+
+    /// <summary>
+    /// Returns a list of custom <see cref="MemberInfo"/> that System.Linq.Dynamic.Core will understand.
+    /// </summary>
+    /// <returns>A <see cref="HashSet{MemberInfo}" /> list of custom <see cref="MemberInfo"/>.</returns>
+    HashSet<MemberInfo> GetCustomMemberInfos();
 
     /// <summary>
     /// Returns a list of custom extension methods that System.Linq.Dynamic.Core will understand.

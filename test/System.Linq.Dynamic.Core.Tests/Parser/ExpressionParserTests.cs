@@ -346,7 +346,7 @@ public partial class ExpressionParserTests
     [Theory]
     [InlineData("it.MainCompany.Name != null", "(company.MainCompany.Name != null)")]
     [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
-    // [InlineData("Company.Equals(null, null)", "Equals(null, null)")] issue 867
+    [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
     [InlineData("Name", "company.Name")]
     [InlineData("company.Name", "company.Name")]

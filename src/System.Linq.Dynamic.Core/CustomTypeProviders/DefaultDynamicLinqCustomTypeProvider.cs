@@ -18,6 +18,7 @@ public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTyp
     private readonly bool _cacheCustomTypes;
 
     private HashSet<Type>? _cachedCustomTypes;
+    private HashSet<MemberInfo>? _cachedCustomMemberInfos;
     private Dictionary<Type, List<MethodInfo>>? _cachedExtensionMethods;
 
      /// <summary>
@@ -65,6 +66,11 @@ public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTyp
         }
 
         return GetCustomTypesInternal();
+    }
+
+    public virtual HashSet<MemberInfo> GetCustomMemberInfos()
+    {
+        return _cachedCustomMemberInfos ??= new HashSet<MemberInfo>();
     }
 
     /// <inheritdoc cref="IDynamicLinqCustomTypeProvider.GetExtensionMethods"/>
