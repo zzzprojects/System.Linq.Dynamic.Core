@@ -1920,11 +1920,12 @@ public class ExpressionParser
         switch (member)
         {
             case PropertyInfo property:
-                propertyOrFieldExpression = Expression.Property(expression, property);
+                var propertyIsStatic = property?.GetGetMethod().IsStatic ?? property?.GetSetMethod().IsStatic ?? false;
+                propertyOrFieldExpression = propertyIsStatic ? Expression.Property(null, property) : Expression.Property(expression, property);
                 return true;
 
             case FieldInfo field:
-                propertyOrFieldExpression = Expression.Field(expression, field);
+                propertyOrFieldExpression = field.IsStatic ? Expression.Field(null, field) : Expression.Field(expression, field);
                 return true;
 
             default:
@@ -2478,7 +2479,7 @@ public class ExpressionParser
     private MemberInfo? FindPropertyOrField(Type type, string memberName, bool staticAccess)
     {
 #if !(UAP10_0 || NETSTANDARD)
-        var extraBindingFlag = _parsingConfig.PrioritizePropertyOrFieldOverTheType && staticAccess ? BindingFlags.Static : BindingFlags.Instance;
+        var extraBindingFlag = _parsingConfig.PrioritizePropertyOrFieldOverTheType && staticAccess ? BindingFlags.Static : BindingFlags.Instance | BindingFlags.Static;
         var bindingFlags = BindingFlags.Public | BindingFlags.DeclaredOnly | extraBindingFlag;
         foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
         {
@@ -2492,11 +2493,12 @@ public class ExpressionParser
         }
         return null;
 #else
-        var isCaseSensitive = _parsingConfig?.IsCaseSensitive == true;
+        var isCaseSensitive = _parsingConfig.IsCaseSensitive == true;
         foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
         {
             // Try to find a property with the specified memberName
-            MemberInfo? member = t.GetTypeInfo().DeclaredProperties.FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && ((x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
+            MemberInfo? member = t.GetTypeInfo().DeclaredProperties
+                .FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && (x.Name == memberName || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
             if (member != null)
             {
                 return member;
