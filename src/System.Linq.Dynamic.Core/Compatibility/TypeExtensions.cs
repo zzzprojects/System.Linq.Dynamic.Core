@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD1_3
+﻿#if NETSTANDARD1_3 || UAP10_0
 using System.Linq;
 
 namespace System.Reflection;

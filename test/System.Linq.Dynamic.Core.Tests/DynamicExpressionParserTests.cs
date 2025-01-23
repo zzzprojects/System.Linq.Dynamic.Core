@@ -1061,10 +1061,20 @@ public class DynamicExpressionParserTests
     [Fact(Skip = "867")]
     public void DynamicExpressionParser_ParseLambda_TupleToStringMethodCall_ReturnsStringLambdaExpression()
     {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AllowEqualsAndToStringMethodsOnObject = true
+        };
+
+        // Act
         var expression = DynamicExpressionParser.ParseLambda(
+            config,
             typeof(Tuple<int>),
             typeof(string),
             "it.ToString()");
+
+        // Assert
         Assert.Equal(typeof(string), expression.ReturnType);
     }
 
@@ -1147,7 +1157,7 @@ public class DynamicExpressionParserTests
         Action action = () => DynamicExpressionParser.ParseLambda(typeof(CustomClassWithMethod), null, expression);
 
         // Assert
-        action.Should().Throw<ParseException>().WithMessage("Methods on type 'CustomClassWithMethod' are not accessible");
+        action.Should().Throw<ParseException>().WithMessage("Method 'GetAge' on type 'CustomClassWithMethod' is not accessible.");
     }
 
     // [Fact]

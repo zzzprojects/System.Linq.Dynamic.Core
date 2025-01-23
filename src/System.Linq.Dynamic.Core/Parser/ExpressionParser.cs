@@ -1840,9 +1840,9 @@ public class ExpressionParser
 
                 case 1:
                     var method = (MethodInfo)methodBase!;
-                    if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType!))
+                    if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType!) && !PredefinedMethodsHelper.IsPredefinedMethod(_parsingConfig, method))
                     {
-                        throw ParseError(errorPos, Res.MethodsAreInaccessible, TypeHelper.GetTypeName(method.DeclaringType!));
+                        throw ParseError(errorPos, Res.MethodIsInaccessible, id, TypeHelper.GetTypeName(method.DeclaringType!));
                     }
 
                     MethodInfo methodToCall;

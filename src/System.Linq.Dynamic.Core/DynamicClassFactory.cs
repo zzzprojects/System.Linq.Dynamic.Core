@@ -1,8 +1,9 @@
-﻿#if !(UAP10_0)
+﻿#if !UAP10_0
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -26,12 +27,6 @@ public static class DynamicClassFactory
     private static readonly CustomAttributeBuilder DebuggerHiddenAttributeBuilder = new(typeof(DebuggerHiddenAttribute).GetConstructor(Type.EmptyTypes)!, []);
 
     private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(Type.EmptyTypes)!;
-
-#if UAP10_0 || NETSTANDARD
-    private static readonly MethodInfo ObjectToString = typeof(object).GetMethod(nameof(ToString), BindingFlags.Instance | BindingFlags.Public)!;
-#else
-    private static readonly MethodInfo ObjectToString = typeof(object).GetMethod(nameof(ToString), BindingFlags.Instance | BindingFlags.Public, null, Type.EmptyTypes, null)!;
-#endif
 
     private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(Type.EmptyTypes)!;
 #if UAP10_0 || NETSTANDARD
@@ -419,7 +414,7 @@ public static class DynamicClassFactory
         ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendString);
         ilgeneratorToString.Emit(OpCodes.Pop);
         ilgeneratorToString.Emit(OpCodes.Ldloc_0);
-        ilgeneratorToString.Emit(OpCodes.Callvirt, ObjectToString);
+        ilgeneratorToString.Emit(OpCodes.Callvirt, PredefinedMethodsHelper.ObjectToString);
         ilgeneratorToString.Emit(OpCodes.Ret);
 
         EmitEqualityOperators(typeBuilder, equals);

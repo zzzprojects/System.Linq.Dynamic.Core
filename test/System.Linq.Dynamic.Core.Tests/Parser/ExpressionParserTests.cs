@@ -346,7 +346,8 @@ public partial class ExpressionParserTests
     [Theory]
     [InlineData("it.MainCompany.Name != null", "(company.MainCompany.Name != null)")]
     [InlineData("@MainCompany.Companies.Count() > 0", "(company.MainCompany.Companies.Count() > 0)")]
-    // [InlineData("Company.Equals(null, null)", "Equals(null, null)")] issue 867
+    [InlineData("Company.Equals(null, null)", "Equals(null, null)")]
+    [InlineData("Equals(null)", "company.Equals(null)")]
     [InlineData("MainCompany.Name", "company.MainCompany.Name")]
     [InlineData("Name", "company.Name")]
     [InlineData("company.Name", "company.Name")]
@@ -357,7 +358,8 @@ public partial class ExpressionParserTests
         var config = new ParsingConfig
         {
             IsCaseSensitive = true,
-            CustomTypeProvider = _dynamicTypeProviderMock.Object
+            CustomTypeProvider = _dynamicTypeProviderMock.Object,
+            AllowEqualsAndToStringMethodsOnObject = true
         };
         ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
         var sut = new ExpressionParser(parameters, expression, null, config);
