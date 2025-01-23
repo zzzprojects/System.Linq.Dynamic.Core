@@ -145,7 +145,7 @@ public class SecurityTests
         action.Should().NotThrow();
     }
 
-    [Theory(Skip = "873")]
+    [Theory]
     [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsProp[\"jwt\"]")]
     [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsField[\"jwt\"]")]
     [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsProp[\"jwt\"]")]
