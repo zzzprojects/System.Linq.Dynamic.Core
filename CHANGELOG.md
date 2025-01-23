@@ -1,4 +1,11 @@
-# v1.5.1 (12 December 2024)
+# v1.6.0-preview-01 (23 January 2025)
+- [#864](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/864) - Use ParsingConfig.IsCaseSensitive setting in TextParser and KeywordsHelper [feature] contributed by [StefH](https://github.com/StefH)
+- [#865](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/865) - Add OrderBy NullPropagation tests [test] contributed by [StefH](https://github.com/StefH)
+- [#866](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/866) - Refactor KeywordsHelper, TypeFinder and update comments on ParsingConfig [refactor] contributed by [StefH](https://github.com/StefH)
+- [#870](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/870) - Fix CVE-2024-51417 [bug] contributed by [StefH](https://github.com/StefH)
+- [#773](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/773) - Parse exceptions with (nested) static classes [bug]
+
+# v1.5.1 (14 December 2024)
 - [#859](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/859) - Add SelectMany extension method for Json [feature] contributed by [StefH](https://github.com/StefH)
 - [#860](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/860) - Add support for SequenceEqual [feature] contributed by [StefH](https://github.com/StefH)
 - [#861](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/861) - Fix calling Sum without any arguments [bug] contributed by [StefH](https://github.com/StefH)
@@ -65,7 +72,6 @@
 - [#811](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/811) - Add extra unit test for calling methods on a string property [test] contributed by [StefH](https://github.com/StefH)
 - [#626](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/626) - '&amp;&amp;' and '||' operators incompatible between operand type 'bool' and type with implicit conversation to 'bool' [bug]
 - [#633](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/633) - Fail to GroupBy Select Where Average [bug]
-- [#783](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/783) - Performance Issue with EF Core 8.0 and Microsoft.EntityFrameworkCore.DynamicLinq Package [duplicate]
 - [#803](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/803) - Updating to 1.3.13 - No property or field 'XXXXX' exists in type 'Char' [bug]
 - [#810](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/810) - Issue with Where() method when filtering multiple string properties while using ToLower() [bug]
 

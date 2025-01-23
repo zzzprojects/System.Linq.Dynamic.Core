@@ -9,7 +9,7 @@
         <PackageTags>system;linq;dynamic;core;dotnet;json</PackageTags>
         <ProjectGuid>{8C5851B8-5C47-4229-AB55-D4252703598E}</ProjectGuid>
         <TargetFrameworks>net45;net452;net46;netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
-        <Version>1.5.$(PatchVersion)</Version>
+        <Version>1.6.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
