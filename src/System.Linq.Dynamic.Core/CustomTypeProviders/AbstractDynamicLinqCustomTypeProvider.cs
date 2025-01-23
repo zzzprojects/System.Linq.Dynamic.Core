@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Dynamic.Core.Extensions;
 using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
 
@@ -13,11 +12,25 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders;
 public abstract class AbstractDynamicLinqCustomTypeProvider
 {
     /// <summary>
-    /// Finds the unique types marked with DynamicLinqTypeAttribute.
+    /// Additional types which should also be resolved.
+    /// </summary>
+    protected readonly IList<Type> AdditionalTypes;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AbstractDynamicLinqCustomTypeProvider"/> class.
+    /// </summary>
+    /// <param name="additionalTypes">A list of additional types (without the DynamicLinqTypeAttribute annotation) which should also be resolved.</param>
+    protected AbstractDynamicLinqCustomTypeProvider(IList<Type> additionalTypes)
+    {
+        AdditionalTypes = Check.NotNull(additionalTypes);
+    }
+
+    /// <summary>
+    /// Finds the unique types annotated with DynamicLinqTypeAttribute.
     /// </summary>
     /// <param name="assemblies">The assemblies to process.</param>
     /// <returns><see cref="IEnumerable{Type}" /></returns>
-    protected IEnumerable<Type> FindTypesMarkedWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
+    protected Type[] FindTypesMarkedWithDynamicLinqTypeAttribute(IEnumerable<Assembly> assemblies)
     {
         Check.NotNull(assemblies);
 #if !NET35
@@ -27,7 +40,7 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
     }
 
     /// <summary>
-    /// Resolve any type which is registered in the current application domain.
+    /// Resolve a type which is annotated with DynamicLinqTypeAttribute or when the type is listed in AdditionalTypes.
     /// </summary>
     /// <param name="assemblies">The assemblies to inspect.</param>
     /// <param name="typeName">The typename to resolve.</param>
@@ -37,20 +50,13 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
         Check.NotNull(assemblies);
         Check.NotEmpty(typeName);
 
-        foreach (var assembly in assemblies)
-        {
-            var resolvedType = assembly.GetType(typeName, false, true);
-            if (resolvedType != null)
-            {
-                return resolvedType;
-            }
-        }
-
-        return null;
+        var types = FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies).Union(AdditionalTypes);
+        return types.FirstOrDefault(t => t.FullName == typeName);
     }
 
     /// <summary>
-    /// Resolve a type by the simple name which is registered in the current application domain.
+    /// Resolve a type which is annotated with DynamicLinqTypeAttribute by the simple (short) name.
+    /// Also when the type is listed in AdditionalTypes.
     /// </summary>
     /// <param name="assemblies">The assemblies to inspect.</param>
     /// <param name="simpleTypeName">The simple typename to resolve.</param>
@@ -60,22 +66,16 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
         Check.NotNull(assemblies);
         Check.NotEmpty(simpleTypeName);
 
-        foreach (var assembly in assemblies)
-        {
-            var fullNames = assembly.GetTypes().Select(t => t.FullName!).Distinct();
-            var firstMatchingFullname = fullNames.FirstOrDefault(fn => fn.EndsWith($".{simpleTypeName}"));
+        var types = FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies);
+        var fullNames = types.Select(t => t.FullName!).Distinct().ToArray();
+        var firstMatchingFullname = fullNames.FirstOrDefault(fn => fn.EndsWith($".{simpleTypeName}"));
 
-            if (firstMatchingFullname != null)
-            {
-                var resolvedType = assembly.GetType(firstMatchingFullname, false, true);
-                if (resolvedType != null)
-                {
-                    return resolvedType;
-                }
-            }
+        if (firstMatchingFullname == null)
+        {
+            return null;
         }
 
-        return null;
+        return types.FirstOrDefault(t => t.FullName == firstMatchingFullname);
     }
 
 #if (UAP10_0 || NETSTANDARD)
@@ -147,7 +147,7 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
             }
             catch (ReflectionTypeLoadException reflectionTypeLoadException)
             {
-                definedTypes = reflectionTypeLoadException.Types.WhereNotNull().ToArray();
+                definedTypes = reflectionTypeLoadException.Types.OfType<Type>().ToArray();
             }
             catch
             {

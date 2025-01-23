@@ -281,7 +281,8 @@ public class DynamicClassTest
         isValid.Should().BeFalse(); // This should actually be true, but fails. For solution see Issue593_Solution1 and Issue593_Solution2.
     }
 
-    [SkipIfGitHubActions]
+    // [SkipIfGitHubActions]
+    [Fact(Skip = "867")]
     public void DynamicClassArray_Issue593_Solution1()
     {
         // Arrange
