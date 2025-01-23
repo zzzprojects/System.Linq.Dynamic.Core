@@ -14,6 +14,8 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
         {
             { "jwt", "test" }
         };
+
+        public const string ConstantField = "test";
     }
 
     [DynamicLinqType]
@@ -28,6 +30,8 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
         {
             { "jwt", "test" }
         };
+
+        public const string ConstantField = "test";
     }
 
     public class AppSettings3
@@ -41,5 +45,7 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Models
         {
             { "jwt", "test" }
         };
+
+        public const string ConstantField = "test";
     }
 }
