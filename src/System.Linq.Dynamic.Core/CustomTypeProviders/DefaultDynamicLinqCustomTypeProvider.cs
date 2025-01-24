@@ -12,7 +12,7 @@ namespace System.Linq.Dynamic.Core.CustomTypeProviders;
 ///
 /// This class is used as default for full .NET Framework and .NET Core App 2.x and higher.
 /// </summary>
-public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+public class DefaultDynamicLinqCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinqCustomTypeProvider
 {
     private readonly IAssemblyHelper _assemblyHelper;
     private readonly bool _cacheCustomTypes;

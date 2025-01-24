@@ -13,7 +13,7 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public class ParsingConfig
 {
-    private IDynamicLinkCustomTypeProvider? _customTypeProvider;
+    private IDynamicLinqCustomTypeProvider? _customTypeProvider;
     private IExpressionPromoter? _expressionPromoter;
     private IQueryableAnalyzer? _queryableAnalyzer;
 
@@ -52,9 +52,9 @@ public class ParsingConfig
     public bool IsCaseSensitive { get; set; }
 
     /// <summary>
-    /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
+    /// Gets or sets the <see cref="IDynamicLinqCustomTypeProvider"/>.
     /// </summary>
-    public IDynamicLinkCustomTypeProvider? CustomTypeProvider
+    public IDynamicLinqCustomTypeProvider? CustomTypeProvider
     {
         get
         {
