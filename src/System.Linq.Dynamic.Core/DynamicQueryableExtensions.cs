@@ -1547,7 +1547,7 @@ namespace System.Linq.Dynamic.Core
         {
             if (args.Length > 0 && args[0] != null && args[0]!.GetType().GetInterfaces().Any(i => i.Name.Contains("IComparer`1")))
             {
-                return InternalOrderBy(source, ParsingConfig.Default, ordering, args[0]!, args);
+                return InternalOrderBy(source, config, ordering, args[0]!, args);
             }
 
             return InternalOrderBy(source, config, ordering, null, args);
@@ -2653,7 +2653,7 @@ namespace System.Linq.Dynamic.Core
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Where), new[] { source.ElementType }, source.Expression, Expression.Quote(lambda)));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Where), [source.ElementType], source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
         }
 
