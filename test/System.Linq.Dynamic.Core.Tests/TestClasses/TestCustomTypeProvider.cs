@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+    public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinqCustomTypeProvider
     {
         private HashSet<Type>? _customTypes;
 

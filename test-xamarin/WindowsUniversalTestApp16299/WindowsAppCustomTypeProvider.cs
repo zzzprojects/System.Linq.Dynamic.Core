@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WindowsUniversalTestApp16299
 {
-    class WindowsAppCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+    class WindowsAppCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinqCustomTypeProvider
     {
         public HashSet<Type> GetCustomTypes()
         {

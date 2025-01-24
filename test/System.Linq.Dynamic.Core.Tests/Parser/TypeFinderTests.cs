@@ -16,7 +16,7 @@ public class TypeFinderTests
 
     public TypeFinderTests()
     {
-        var dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+        var dynamicTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
         dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(BaseEmployee).FullName!)).Returns(typeof(BaseEmployee));
         dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Boss).FullName!)).Returns(typeof(Boss));
         dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Worker).FullName!)).Returns(typeof(Worker));

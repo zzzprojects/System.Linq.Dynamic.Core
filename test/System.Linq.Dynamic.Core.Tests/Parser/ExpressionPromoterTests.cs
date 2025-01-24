@@ -15,11 +15,11 @@ public class ExpressionPromoterTests
     }
 
     private readonly Mock<IExpressionPromoter> _expressionPromoterMock;
-    private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicLinkCustomTypeProviderMock;
+    private readonly Mock<IDynamicLinqCustomTypeProvider> _dynamicLinkCustomTypeProviderMock;
 
     public ExpressionPromoterTests()
     {
-        _dynamicLinkCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+        _dynamicLinkCustomTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
         _dynamicLinkCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type>());
         _dynamicLinkCustomTypeProviderMock.Setup(d => d.ResolveType(It.IsAny<string>())).Returns(typeof(SampleDto));
 

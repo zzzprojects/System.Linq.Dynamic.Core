@@ -637,7 +637,7 @@ public class DynamicExpressionParserTests
     public void DynamicExpressionParser_ParseLambda_Issue58()
     {
         // Arrange
-        var customTypeProvider = new Mock<IDynamicLinkCustomTypeProvider>();
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
         customTypeProvider.Setup(c => c.GetCustomTypes()).Returns([typeof(MyClass)]);
         var config = new ParsingConfig
         {
@@ -1784,7 +1784,7 @@ public class DynamicExpressionParserTests
     public void DynamicExpressionParser_ParseLambda_NullPropagation_InstanceMethod_0_Arguments()
     {
         // Arrange
-        var customTypeProvider = new Mock<IDynamicLinkCustomTypeProvider>();
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
         customTypeProvider.Setup(c => c.GetCustomTypes()).Returns([typeof(Foo)]);
         var config = new ParsingConfig
         {
@@ -1807,7 +1807,7 @@ public class DynamicExpressionParserTests
     public void DynamicExpressionParser_ParseLambda_NullPropagation_InstanceMethod_1_Argument()
     {
         // Arrange
-        var customTypeProvider = new Mock<IDynamicLinkCustomTypeProvider>();
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
         customTypeProvider.Setup(c => c.GetCustomTypes()).Returns([typeof(Foo)]);
         var config = new ParsingConfig
         {
@@ -1830,7 +1830,7 @@ public class DynamicExpressionParserTests
     public void DynamicExpressionParser_ParseLambda_NullPropagation_InstanceMethod_2_Arguments()
     {
         // Arrange
-        var customTypeProvider = new Mock<IDynamicLinkCustomTypeProvider>();
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
         customTypeProvider.Setup(c => c.GetCustomTypes()).Returns([typeof(Foo)]);
         var config = new ParsingConfig
         {
