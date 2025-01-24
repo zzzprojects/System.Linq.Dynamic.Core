@@ -127,7 +127,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(predicate);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, predicate, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
 
             return Execute<bool>(_AllPredicate, source, Expression.Quote(lambda));
         }
@@ -1430,7 +1430,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(type);
 
-            var optimized = OptimizeExpression(Expression.Call(null, _ofType.MakeGenericMethod(type), new[] { source.Expression }));
+            var optimized = OptimizeExpression(Expression.Call(null, _ofType.MakeGenericMethod(type), [source.Expression]));
 
             return source.Provider.CreateQuery(optimized);
         }
@@ -1806,7 +1806,7 @@ namespace System.Linq.Dynamic.Core
             var methodCallExpression = Expression.Call(
                 typeof(Queryable),
                 nameof(Queryable.Select),
-                new[] { source.ElementType, typeof(TResult) },
+                [source.ElementType, typeof(TResult)],
                 source.Expression,
                 Expression.Quote(lambda)
             );
@@ -1849,7 +1849,7 @@ namespace System.Linq.Dynamic.Core
 
             var optimized = OptimizeExpression(Expression.Call(
                 typeof(Queryable), nameof(Queryable.Select),
-                new[] { source.ElementType, resultType },
+                [source.ElementType, resultType],
                 source.Expression, Expression.Quote(lambda)));
 
             return source.Provider.CreateQuery(optimized);
@@ -1905,7 +1905,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotNull(resultType, nameof(resultType));
+            Check.NotNull(resultType);
             Check.NotEmpty(selector);
 
             return SelectManyInternal(source, config, resultType, selector, args);
@@ -1980,7 +1980,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotEmpty(selector);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
-            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(createParameterCtor, source.ElementType, null, selector, args);
+            LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, selector, args);
 
             //we have to adjust to lambda to return an IEnumerable<T> instead of whatever the actual property is.
             Type inputType = source.Expression.Type.GetTypeInfo().GetGenericTypeArguments()[0];
@@ -2096,12 +2096,12 @@ namespace System.Linq.Dynamic.Core
             ParameterExpression xParameter = ParameterExpressionHelper.CreateParameterExpression(source.ElementType, collectionParameterName, config.RenameEmptyParameterExpressionNames);
             ParameterExpression yParameter = ParameterExpressionHelper.CreateParameterExpression(sourceLambdaResultType, resultParameterName, config.RenameEmptyParameterExpressionNames);
 
-            LambdaExpression resultSelectLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, new[] { xParameter, yParameter }, null, resultSelector, resultSelectorArgs);
+            LambdaExpression resultSelectLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, [xParameter, yParameter], null, resultSelector, resultSelectorArgs);
             Type resultLambdaResultType = resultSelectLambda.Body.Type;
 
             var optimized = OptimizeExpression(Expression.Call(
                 typeof(Queryable), nameof(Queryable.SelectMany),
-                new[] { source.ElementType, sourceLambdaResultType, resultLambdaResultType },
+                [source.ElementType, sourceLambdaResultType, resultLambdaResultType],
                 source.Expression, Expression.Quote(sourceSelectLambda), Expression.Quote(resultSelectLambda))
             );
 
@@ -2134,7 +2134,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Single), new[] { source.ElementType }, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Single), [source.ElementType], source.Expression));
             return source.Provider.Execute(optimized)!;
         }
 
@@ -2205,7 +2205,7 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
 
-            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.SingleOrDefault), new[] { source.ElementType }, source.Expression));
+            var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.SingleOrDefault), [source.ElementType], source.Expression));
             return source.Provider.Execute(optimized)!;
         }
 
@@ -2566,7 +2566,7 @@ namespace System.Linq.Dynamic.Core
                 {
                     queryExpr = Expression.Call(
                         typeof(Queryable), dynamicOrdering.MethodName,
-                        new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                        [source.ElementType, dynamicOrdering.Selector.Type],
                         queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)));
                 }
                 else
@@ -2574,7 +2574,7 @@ namespace System.Linq.Dynamic.Core
                     var comparerGenericType = typeof(IComparer<>).MakeGenericType(dynamicOrdering.Selector.Type);
                     queryExpr = Expression.Call(
                         typeof(Queryable), dynamicOrdering.MethodName,
-                        new[] { source.ElementType, dynamicOrdering.Selector.Type },
+                        [source.ElementType, dynamicOrdering.Selector.Type],
                         queryExpr, Expression.Quote(Expression.Lambda(dynamicOrdering.Selector, parameters)),
                         Expression.Constant(comparer, comparerGenericType));
                 }
