@@ -73,4 +73,27 @@ public class MethodFinderTest
         // Assert
         Assert.Equal(((MethodCallExpression)expr.Body).Method.DeclaringType, ((MethodCallExpression)expression).Method.DeclaringType);
     }
+
+    [Fact]
+    public void Method_ReferenceEquals_OnDynamicLinq_And_SystemLinq_ShouldBeEqual()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AllowEqualsAndToStringMethodsOnObject = true
+        };
+
+        // ReSharper disable once RedundantNameQualifier
+        Expression<Func<int?, bool>> expr = x => object.ReferenceEquals("a", "b");
+
+        var selector = "object.ReferenceEquals(\"a\", \"b\")";
+        var prm = Parameter(typeof(int?));
+        var parser = new ExpressionParser([prm], selector, [], config);
+
+        // Act
+        var expression = parser.Parse(null);
+
+        // Assert
+        Assert.Equal(((MethodCallExpression)expr.Body).Method.DeclaringType, ((MethodCallExpression)expression).Method.DeclaringType);
+    }
 }
