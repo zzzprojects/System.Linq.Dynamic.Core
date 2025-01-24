@@ -70,8 +70,20 @@ public class ExpressionParser
     /// <param name="expression">The expression.</param>
     /// <param name="values">The values.</param>
     /// <param name="parsingConfig">The parsing configuration.</param>
+    public ExpressionParser(ParameterExpression[]? parameters, string expression, object?[]? values, ParsingConfig? parsingConfig) :
+        this(parameters, expression, values, parsingConfig, false)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExpressionParser"/> class.
+    /// </summary>
+    /// <param name="parameters">The parameters.</param>
+    /// <param name="expression">The expression.</param>
+    /// <param name="values">The values.</param>
+    /// <param name="parsingConfig">The parsing configuration.</param>
     /// <param name="usedForOrderBy">Indicate that this instance will be used for parsing orderBy. Default value is <c>false</c>.</param>
-    public ExpressionParser(ParameterExpression[]? parameters, string expression, object?[]? values, ParsingConfig? parsingConfig, bool usedForOrderBy = false)
+    public ExpressionParser(ParameterExpression[]? parameters, string expression, object?[]? values, ParsingConfig? parsingConfig, bool usedForOrderBy)
     {
         Check.NotEmpty(expression);
 
