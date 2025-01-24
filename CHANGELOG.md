@@ -1,3 +1,10 @@
+# v1.6.0-preview-02 (24 January 2025)
+- [#874](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/874) - Fix calling static properties or fields in non-static class [bug] contributed by [StefH](https://github.com/StefH)
+- [#875](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/875) - Add option to ParsingConfig to allow the Equals and ToString methods on object [feature] contributed by [StefH](https://github.com/StefH)
+- [#879](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/879) - Change internal usage from obsolete IDynamicLinkCustomTypeProvider to IDynamicLinqCustomTypeProvider [feature] contributed by [StefH](https://github.com/StefH)
+- [#873](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/873) - Accessing static property or field in normal class does not work [bug]
+- [#878](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/878) - ParsingConfig change Type of CustomTypeProvider to IDynamicLinqCustomTypeProvider in Version 1.6.0-preview-01 [feature]
+
 # v1.6.0-preview-01 (23 January 2025)
 - [#864](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/864) - Use ParsingConfig.IsCaseSensitive setting in TextParser and KeywordsHelper [feature] contributed by [StefH](https://github.com/StefH)
 - [#865](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/865) - Add OrderBy NullPropagation tests [test] contributed by [StefH](https://github.com/StefH)
