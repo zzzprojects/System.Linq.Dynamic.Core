@@ -312,4 +312,11 @@ public class ParsingConfig
     /// Default value is <c>false</c>.
     /// </summary>
     public bool RestrictOrderByToPropertyOrField { get; set; }
+
+    /// <summary>
+    /// When set to <c>true</c>, the parser will allow the use of the Equals(object obj), Equals(object objA, object objB), ReferenceEquals(object objA, object objB) and ToString() methods on the <see cref="object"/> type.
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool AllowEqualsAndToStringMethodsOnObject { get; set; }
 }

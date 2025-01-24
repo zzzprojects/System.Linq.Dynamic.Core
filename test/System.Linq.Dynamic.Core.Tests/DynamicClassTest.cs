@@ -281,11 +281,15 @@ public class DynamicClassTest
         isValid.Should().BeFalse(); // This should actually be true, but fails. For solution see Issue593_Solution1 and Issue593_Solution2.
     }
 
-    // [SkipIfGitHubActions]
-    [Fact(Skip = "867")]
+    [SkipIfGitHubActions]
     public void DynamicClassArray_Issue593_Solution1()
     {
         // Arrange
+        var config = new ParsingConfig
+        {
+            AllowEqualsAndToStringMethodsOnObject = true
+        };
+
         var field = new
         {
             Name = "firstName",
@@ -308,7 +312,7 @@ public class DynamicClassTest
         var query = dynamicClasses.AsQueryable();
 
         // Act
-        var isValid = query.Any("firstName.ToString() eq \"firstValue\"");
+        var isValid = query.Any(config, "firstName.ToString() eq \"firstValue\"");
 
         // Assert
         isValid.Should().BeTrue();

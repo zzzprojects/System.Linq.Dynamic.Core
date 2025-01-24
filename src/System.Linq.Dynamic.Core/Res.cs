@@ -50,7 +50,7 @@ internal static class Res
     public const string InvalidStringLength = "String '{0}' should have at least {1} characters.";
     public const string IsNullRequiresTwoArgs = "The 'isnull' function requires two arguments";
     public const string MethodIsVoid = "Method '{0}' in type '{1}' does not return a value";
-    public const string MethodsAreInaccessible = "Methods on type '{0}' are not accessible";
+    public const string MethodIsInaccessible = "Method '{0}' on type '{1}' is not accessible.";
     public const string MinusCannotBeAppliedToUnsignedInteger = "'-' cannot be applied to unsigned integers.";
     public const string MissingAsClause = "Expression is missing an 'as' clause";
     public const string NeitherTypeConvertsToOther = "Neither of the types '{0}' and '{1}' converts to the other";

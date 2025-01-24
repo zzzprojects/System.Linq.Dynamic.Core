@@ -17,9 +17,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
         <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-        <PackageReference Include="Oqtane.Shared" Version="3.1.4" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
-        <!--<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.19" />-->
     </ItemGroup>
 
     <ItemGroup>

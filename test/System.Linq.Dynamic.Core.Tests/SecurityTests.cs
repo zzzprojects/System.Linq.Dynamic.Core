@@ -31,7 +31,7 @@ public class SecurityTests
         Action action = () => baseQuery.OrderBy(predicate);
 
         // Assert
-        action.Should().Throw<ParseException>().WithMessage("Methods on type 'Object' are not accessible");
+        action.Should().Throw<ParseException>().WithMessage("Method 'GetType' on type 'Object' is not accessible.");
     }
 
     [Fact]
@@ -48,19 +48,19 @@ public class SecurityTests
         );
 
         // Assert
-        action.Should().Throw<ParseException>().WithMessage($"Methods on type 'Object' are not accessible");
+        action.Should().Throw<ParseException>().WithMessage("Method 'GetType' on type 'Object' is not accessible.");
     }
 
     [Theory]
-    [InlineData(typeof(FileStream), "Close()", "Stream")]
-    [InlineData(typeof(Assembly), "GetName().Name.ToString()", "Assembly")]
-    public void DynamicExpressionParser_ParseLambda_IllegalMethodCall_ThrowsException(Type itType, string expression, string type)
+    [InlineData(typeof(FileStream), "Close()", "Method 'Close' on type 'Stream' is not accessible.")]
+    [InlineData(typeof(Assembly), "GetName().Name.ToString()", "Method 'GetName' on type 'Assembly' is not accessible.")]
+    public void DynamicExpressionParser_ParseLambda_IllegalMethodCall_ThrowsException(Type itType, string expression, string errorMessage)
     {
         // Act
         Action action = () => DynamicExpressionParser.ParseLambda(itType, null, expression);
 
         // Assert
-        action.Should().Throw<ParseException>().WithMessage($"Methods on type '{type}' are not accessible");
+        action.Should().Throw<ParseException>().WithMessage(errorMessage);
     }
 
     [Theory]
@@ -79,7 +79,7 @@ public class SecurityTests
         Action action = () => queryable.Select(selector);
 
         // Assert
-        action.Should().Throw<ParseException>().WithMessage("Methods on type 'Object' are not accessible");
+        action.Should().Throw<ParseException>().WithMessage("Method 'GetType' on type 'Object' is not accessible.");
     }
 
     [Theory]
