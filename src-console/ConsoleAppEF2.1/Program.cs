@@ -10,7 +10,7 @@ namespace ConsoleAppEF21
 {
     class Program
     {
-        //class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+        //class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinqCustomTypeProvider
         //{
         //    public HashSet<Type> GetCustomTypes()
         //    {

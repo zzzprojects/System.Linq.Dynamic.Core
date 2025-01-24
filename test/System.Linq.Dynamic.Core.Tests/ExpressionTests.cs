@@ -339,7 +339,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Cast_To_Enum_Using_CustomTypeProvider()
         {
             // Arrange
-            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
             dynamicLinqCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type> { typeof(SimpleValuesModelEnum) });
             var config = new ParsingConfig
             {
@@ -380,7 +380,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Cast_To_NullableEnum_Using_CustomTypeProvider()
         {
             // Arrange
-            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
             dynamicLinqCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type>
             {
                 typeof(SimpleValuesModelEnum),

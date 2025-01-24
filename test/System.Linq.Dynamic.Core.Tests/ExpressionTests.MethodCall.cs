@@ -12,7 +12,7 @@ public partial class ExpressionTests
 {
     private static ParsingConfig CreateParsingConfigForMethodCallTests()
     {
-        var customTypeProvider = new Mock<IDynamicLinkCustomTypeProvider>();
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
         customTypeProvider.Setup(c => c.GetCustomTypes()).Returns(new HashSet<Type> { typeof(User), typeof(Methods), typeof(Foo) });
         return new ParsingConfig
         {
