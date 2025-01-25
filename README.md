@@ -30,10 +30,12 @@ int c = 10;
 db.Customers.WhereInterpolated($"City == {cityName} and Orders.Count >= {c}");
 ```
 
+---
+
 ## :exclamation: Breaking changes
 
 ### v1.3.0
-A breaking change is introduced in version 1.3.0 which is related to calling methods on classes.
+A breaking change is introduced in this version which is related to calling methods on classes.
 Due to security reasons, it's now only allowed to call methods on the standard predefined classes like (`bool`, `int`, `string` ...).
 If you want to call a method on an own custom class, annotate that class with the [DynamicLinqType](https://dynamic-linq.net/advanced-extending#dynamiclinqtype-attribute).
 Example:
@@ -44,11 +46,17 @@ public class MyCustomClass
     public int GetAge(int x) => x;
 }
 ```
+If it's not possible to add that attribute, you need to implement a custom [CustomTypeProvider](https://dynamic-linq.net/advanced-configuration#customtypeprovider) and set this to the `ParsingConfig` and provide that config to all dynamic calls.
+Or provide a list of addtional types in the [DefaultDynamicLinqCustomTypeProvider.cs](https://github.com/zzzprojects/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs).
 
-If it's not possible to add that attribute, you need to implement a custom [CustomTypeProvider](https://dynamic-linq.net/advanced-configuration#customtypeprovider) and set this to the `ParsingConfig` and provide that config to the dynamic call.
+### v1.6.0-preview-01, 02, 03
+A breaking change is introduced in this version to solve CVE-2024-51417.
+It's not allowed anymore to call any methods on the `object` type. By default also the `ToString` and `Equals` methods are not allowed.
+To allow these methods set `AllowEqualsAndToStringMethodsOnObject` to `true` in the `ParsingConfig` and provide that config to all dynamic calls.
+
+---
 
 ## Useful links
-
 - [Website](https://dynamic-linq.net)
 - [Documentation](https://dynamic-linq.net/overview)
 - [Online examples](https://dynamic-linq.net/online-examples)
@@ -83,10 +91,10 @@ The following frameworks are supported:
 - uap10.0
 
 ### Fork details
-This fork takes the basic library to a new level. Contains XML Documentation and examples on how to use it. Also adds unit testing to help ensure that it works properly.
+This fork takes the basic library to a new level. Also adds unit tests to help ensure that it works properly.
 
 Some background:
-I forked from https://github.com/NArnott/System.Linq.Dynamic and added some more functionality there.<br>My fork is still visible on github [https://github.com/StefH/System.Linq.Dynamic], however I decided to start a new project + nuget to avoid confusion and create the project according to the new VS2017 + .NET Core rules / standards.
+I forked from https://github.com/NArnott/System.Linq.Dynamic and added some more functionality there.<br>My fork is still visible on github [https://github.com/StefH/System.Linq.Dynamic], however I decided to start a new project + NuGet to avoid confusion and create the project according to the new VS2017 + .NET Core rules / standards.
 
 However, currently there are multiple nuget packages and projects available:
 
