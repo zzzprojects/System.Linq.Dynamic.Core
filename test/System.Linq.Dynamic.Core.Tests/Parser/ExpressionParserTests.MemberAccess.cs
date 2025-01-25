@@ -26,6 +26,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [Theory]
         [InlineData("Prop", "TestProp")]
         [InlineData("Field", "TestField")]
+        [InlineData("Constant", "ConstantField")]
         public void Parse_StaticPropertyOrField_In_StaticClass1(string name, string value)
         {
             // Arrange
@@ -41,6 +42,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [Theory]
         [InlineData("Prop", "TestProp")]
         [InlineData("Field", "TestField")]
+        [InlineData("Constant", "ConstantField")]
         public void Parse_StaticPropertyOrField_In_NonStaticClass1(string name, string value)
         {
             // Arrange
@@ -56,6 +58,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         [Theory]
         [InlineData("Prop", "TestProp")]
         [InlineData("Field", "TestField")]
+        [InlineData("Constant", "ConstantField")]
         public void Parse_StaticPropertyOrField_In_NonStaticClass2(string name, string value)
         {
             // Arrange
@@ -75,6 +78,8 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public static string Prop { get; set; } = "TestProp";
 
         public static string Field = "TestField";
+
+        public const string Constant = "ConstantField";
     }
 
     [DynamicLinqType]
@@ -83,6 +88,8 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         public static string Prop { get; set; } = "TestProp";
 
         public static string Field = "TestField";
+
+        public const string Constant = "ConstantField";
     }
 
     public class ProductDynamic
