@@ -85,8 +85,10 @@ public class SecurityTests
     [Theory]
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.ConstantField")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.ConstantField")]
     public void UsingStaticClassAsType_ThrowsException(string selector)
     {
         // Arrange
@@ -103,10 +105,12 @@ public class SecurityTests
     }
 
     [Theory]
-    [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3().SettingsProp[\"jwt\"]")]
-    [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3().SettingsField[\"jwt\"]")]
-    [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3().SettingsProp[\"jwt\"]")]
-    [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3().SettingsField[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.SettingsProp[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.SettingsField[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.ConstantField")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.SettingsProp[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.SettingsField[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.ConstantField")]
     public void UsingClassAsType_ThrowsException(string selector)
     {
         // Arrange
@@ -125,8 +129,10 @@ public class SecurityTests
     [Theory]
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.ConstantField")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsProp[\"jwt\"]")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.SettingsField[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings.ConstantField")]
     public void UsingStaticClassAsType_WhenAddedToDefaultDynamicLinqCustomTypeProvider_ShouldBeOk(string selector)
     {
         // Arrange
@@ -146,11 +152,13 @@ public class SecurityTests
     }
 
     [Theory]
-    [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsProp[\"jwt\"]")]
-    [InlineData("new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsField[\"jwt\"]")]
-    [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsProp[\"jwt\"]")]
-    [InlineData("c => new System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3()", "SettingsField[\"jwt\"]")]
-    public void UsingClassAsType_WhenAddedToDefaultDynamicLinqCustomTypeProvider_ShouldBeOk(string selector1, string selector2)
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.SettingsProp[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.SettingsField[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.ConstantField")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.SettingsProp[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.SettingsField[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings3.ConstantField")]
+    public void UsingClassAsType_WhenAddedToDefaultDynamicLinqCustomTypeProvider_ShouldBeOk(string selector)
     {
         // Arrange
         var config = new ParsingConfig();
@@ -162,7 +170,7 @@ public class SecurityTests
         }.AsQueryable();
 
         // Act
-        Action action = () => queryable.Select(config, selector1).Select(config, selector2);
+        Action action = () => queryable.Select(config, selector);
 
         // Assert
         action.Should().NotThrow();
@@ -171,8 +179,10 @@ public class SecurityTests
     [Theory]
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings2.SettingsProp[\"jwt\"]")]
     [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings2.SettingsField[\"jwt\"]")]
+    [InlineData("System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings2.ConstantField")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings2.SettingsProp[\"jwt\"]")]
     [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings2.SettingsField[\"jwt\"]")]
+    [InlineData("c => System.Linq.Dynamic.Core.Tests.Helpers.Models.AppSettings2.ConstantField")]
     public void UsingStaticClassWithDynamicTypeAttribute_ShouldBeOk(string selector)
     {
         // Arrange
