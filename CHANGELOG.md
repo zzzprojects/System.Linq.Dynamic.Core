@@ -1,3 +1,9 @@
+# v1.6.0-preview-03 (25 January 2025)
+- [#876](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/876) - Update and Fix SecurityTests [test] contributed by [mariusz96](https://github.com/mariusz96)
+- [#882](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/882) - ExpressionParser: add 2nd ctor with an extra non-optional parameter [feature] contributed by [StefH](https://github.com/StefH)
+- [#883](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/883) - Fix the usage of ParsingConfig in some methods in the DynamicQueryableExtensions class [bug] contributed by [StefH](https://github.com/StefH)
+- [#881](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/881) - ExpressionParser ctor in 1.5.0 not compatible with earlier versions [feature]
+
 # v1.6.0-preview-02 (24 January 2025)
 - [#874](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/874) - Fix calling static properties or fields in non-static class [bug] contributed by [StefH](https://github.com/StefH)
 - [#875](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/875) - Add option to ParsingConfig to allow the Equals and ToString methods on object [feature] contributed by [StefH](https://github.com/StefH)
