@@ -1,3 +1,7 @@
+# v1.6.0 (26 January 2025)
+- [#884](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/884) - By default the RestrictOrderByToPropertyOrField is now set to true in the ParsingConfig [feature] contributed by [StefH](https://github.com/StefH)
+- [#867](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/867) - CVE-2024-51417: System.Linq.Dynamic.Core allows remote access to properties on reflection types and static properties/fields [bug]
+
 # v1.6.0-preview-03 (25 January 2025)
 - [#876](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/876) - Update and Fix SecurityTests [test] contributed by [mariusz96](https://github.com/mariusz96)
 - [#882](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/882) - ExpressionParser: add 2nd ctor with an extra non-optional parameter [feature] contributed by [StefH](https://github.com/StefH)
