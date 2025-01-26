@@ -53,6 +53,7 @@ Or provide a list of addtional types in the [DefaultDynamicLinqCustomTypeProvide
 A breaking change is introduced in this version to solve CVE-2024-51417.
 It's not allowed anymore to call any methods on the `object` type. By default also the `ToString` and `Equals` methods are not allowed.
 To allow these methods set `AllowEqualsAndToStringMethodsOnObject` to `true` in the `ParsingConfig` and provide that config to all dynamic calls.
+Which means that only properties and fields can be used in the `OrderBy` / `ThenBy` clause.
 
 ---
 
