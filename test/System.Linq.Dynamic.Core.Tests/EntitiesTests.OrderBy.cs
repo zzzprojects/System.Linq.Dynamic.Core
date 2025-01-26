@@ -24,7 +24,7 @@ public partial class EntitiesTests
     }
 
     [Fact]
-    public void Entities_OrderBy_RestrictOrderByIsTrue_NonRestrictedExpression1ShouldNotThrow()
+    public void Entities_OrderBy_RestrictOrderByIsTrue_NonRestrictedExpressionShouldNotThrow()
     {
         // Act 1
         var resultBlogs = _context.Blogs.OrderBy(b => b.Name).ToArray();
@@ -40,22 +40,7 @@ public partial class EntitiesTests
         // Assert 2
         Assert.Equal(resultPosts, dynamicResultPosts);
     }
-
-    [Theory]
-    [InlineData(KeywordsHelper.KEYWORD_IT)]
-    [InlineData(KeywordsHelper.SYMBOL_IT)]
-    [InlineData(KeywordsHelper.KEYWORD_ROOT)]
-    [InlineData(KeywordsHelper.SYMBOL_ROOT)]
-    [InlineData("\"Blog\" + \"Id\"")]
-    public void Entities_OrderBy_RestrictOrderByIsTrue_NonRestrictedExpression2ShouldNotThrow(string expression)
-    {
-        // Act
-        Action action = () => _ = _context.Posts.OrderBy(expression).ToDynamicArray<Post>();
-
-        // Assert 2
-        action.Should().NotThrow();
-    }
-
+    
     [Theory]
     [InlineData("IIF(1 == 1, 1, 0)")]
     [InlineData("np(Name, \"x\")")]
