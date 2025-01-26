@@ -1384,6 +1384,8 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Indexer_Issue57()
         {
+            // Arrange
+            var config = new ParsingConfig { RestrictOrderByToPropertyOrField = true };
             var rows = new List<JObject>
             {
                 new JObject {["Column1"] = "B", ["Column2"] = 1},
@@ -1392,9 +1394,11 @@ namespace System.Linq.Dynamic.Core.Tests
                 new JObject {["Column1"] = "A", ["Column2"] = 2}
             };
 
+            // Act
             var expected = rows.OrderBy(x => x["Column1"]).ToList();
-            var result = rows.AsQueryable().OrderBy(@"it[""Column1""]").ToList();
+            var result = rows.AsQueryable().OrderBy(config, @"it[""Column1""]").ToList();
 
+            // Assert
             Assert.Equal(expected, result);
         }
 
@@ -1727,6 +1731,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_NullPropagating_DateTime()
         {
             // Arrange
+            var config = new ParsingConfig { RestrictOrderByToPropertyOrField = false };
             var q = new[]
             {
                 new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1) }
@@ -1734,7 +1739,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var result = q.OrderBy(x => x.date2).Select(x => x.id).ToArray();
-            var resultDynamic = q.OrderBy("np(date1)").Select("id").ToDynamicArray<int>();
+            var resultDynamic = q.OrderBy(config, "np(date1)").Select("id").ToDynamicArray<int>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);
@@ -1744,6 +1749,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_NullPropagation_NullableDateTime()
         {
             // Arrange
+            var config = new ParsingConfig { RestrictOrderByToPropertyOrField = false };
             var q = new[]
             {
                 new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
@@ -1751,7 +1757,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var result = q.OrderBy(x => x.date1.Value.Year).Select(x => x.id).ToArray();
-            var resultDynamic = q.OrderBy("np(date1.Value.Year)").Select("id").ToDynamicArray<int>();
+            var resultDynamic = q.OrderBy(config, "np(date1.Value.Year)").Select("id").ToDynamicArray<int>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);

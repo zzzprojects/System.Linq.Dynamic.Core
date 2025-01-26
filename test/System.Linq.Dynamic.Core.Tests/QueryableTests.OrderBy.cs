@@ -36,12 +36,13 @@ public partial class QueryableTests
     public void OrderBy_Dynamic_NullPropagation_Int()
     {
         // Arrange
+        var config = new ParsingConfig { RestrictOrderByToPropertyOrField = false };
         var testList = User.GenerateSampleModels(2);
         var qry = testList.AsQueryable();
 
         // Act
         var orderBy = testList.OrderBy(x => x.NullableInt ?? -1).ToArray();
-        var orderByDynamic = qry.OrderBy("np(NullableInt, -1)").ToArray();
+        var orderByDynamic = qry.OrderBy(config, "np(NullableInt, -1)").ToArray();
 
         // Assert
         Assert.Equal(orderBy, orderByDynamic);
@@ -51,12 +52,13 @@ public partial class QueryableTests
     public void OrderBy_Dynamic_NullPropagation_String()
     {
         // Arrange
+        var config = new ParsingConfig { RestrictOrderByToPropertyOrField = false };
         var testList = User.GenerateSampleModels(2);
         var qry = testList.AsQueryable();
 
         // Act
         var orderBy = testList.OrderBy(x => x.NullableString ?? "_").ToArray();
-        var orderByDynamic = qry.OrderBy("np(NullableString, \"_\")").ToArray();
+        var orderByDynamic = qry.OrderBy(config, "np(NullableString, \"_\")").ToArray();
 
         // Assert
         Assert.Equal(orderBy, orderByDynamic);
@@ -66,12 +68,13 @@ public partial class QueryableTests
     public void OrderBy_Dynamic_NullPropagation_NestedObject()
     {
         // Arrange
+        var config = new ParsingConfig { RestrictOrderByToPropertyOrField = false };
         var testList = User.GenerateSampleModels(2);
         var qry = testList.AsQueryable();
 
         // Act
         var orderBy = testList.OrderBy(x => x.Profile?.Age ?? -1).ToArray();
-        var orderByDynamic = qry.OrderBy("np(Profile.Age, -1)").ToArray();
+        var orderByDynamic = qry.OrderBy(config, "np(Profile.Age, -1)").ToArray();
 
         // Assert
         Assert.Equal(orderBy, orderByDynamic);
@@ -81,6 +84,7 @@ public partial class QueryableTests
     public void OrderBy_Dynamic_NullPropagation_NestedObject_Query()
     {
         // Arrange
+        var config = new ParsingConfig { RestrictOrderByToPropertyOrField = false };
         var qry = User.GenerateSampleModels(2)
             .Select(u => new
             {
@@ -93,7 +97,7 @@ public partial class QueryableTests
             .AsQueryable();
 
         // Act
-        var orderByDynamic = qry.OrderBy("np(X.Age, -1)").ToArray();
+        var orderByDynamic = qry.OrderBy(config, "np(X.Age, -1)").ToArray();
 
         // Assert
         Assert.NotNull(orderByDynamic);

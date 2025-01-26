@@ -84,6 +84,16 @@ internal class KeywordsHelper : IKeywordsHelper
         }
     }
 
+    public bool IsItOrRootOrParent(AnyOf<string, Expression, Type> value)
+    {
+        if (value.IsFirst)
+        {
+            return value.First is KEYWORD_IT or KEYWORD_ROOT or KEYWORD_PARENT or SYMBOL_IT or SYMBOL_PARENT or SYMBOL_ROOT;
+        }
+
+        return false;
+    }
+
     public bool TryGetValue(string text, out AnyOf<string, Expression, Type> value)
     {
         // 1. Try to get as constant-expression, keyword, symbol or functions
