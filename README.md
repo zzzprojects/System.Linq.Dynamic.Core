@@ -50,9 +50,15 @@ If it's not possible to add that attribute, you need to implement a custom [Cust
 Or provide a list of addtional types in the [DefaultDynamicLinqCustomTypeProvider.cs](https://github.com/zzzprojects/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs).
 
 ### v1.6.0-preview-01, 02, 03
-A breaking change is introduced in this version to solve CVE-2024-51417.
+#### Change 1
 It's not allowed anymore to call any methods on the `object` type. By default also the `ToString` and `Equals` methods are not allowed.
 To allow these methods set `AllowEqualsAndToStringMethodsOnObject` to `true` in the `ParsingConfig` and provide that config to all dynamic calls.
+This is done to mitigate the risk of calling methods on the `object` type which could lead to security issues (CVE-2024-51417).
+
+#### Change 2
+By default the `RestrictOrderByToPropertyOrField` is now set to `true` in the `ParsingConfig`. 
+Which means that only properties and fields can be used in the `OrderBy` / `ThenBy`.
+This is done to mitigate the risk of calling methods or other expressions in the `OrderBy` / `ThenBy` which could lead to security issues.
 
 ---
 

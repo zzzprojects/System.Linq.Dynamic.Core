@@ -307,11 +307,11 @@ public class ParsingConfig
     public StringLiteralParsingType StringLiteralParsing { get; set; } = StringLiteralParsingType.Default;
 
     /// <summary>
-    /// When set to <c>true</c>, the parser will restrict the OrderBy method to only allow properties or fields.
+    /// When set to <c>true</c>, the parser will restrict the OrderBy and ThenBy methods to only allow properties or fields. If set to <c>false</c>, any expression is allowed.
     ///
-    /// Default value is <c>false</c>.
+    /// Default value is <c>true</c>.
     /// </summary>
-    public bool RestrictOrderByToPropertyOrField { get; set; }
+    public bool RestrictOrderByToPropertyOrField { get; set; } = true;
 
     /// <summary>
     /// When set to <c>true</c>, the parser will allow the use of the Equals(object obj), Equals(object objA, object objB), ReferenceEquals(object objA, object objB) and ToString() methods on the <see cref="object"/> type.
