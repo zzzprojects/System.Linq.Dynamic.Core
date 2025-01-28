@@ -1,26 +1,24 @@
+# v1.6.0.1 (28 January 2025)
+- [#887](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/887) - Make TextParser public [feature] contributed by [StefH](https://github.com/StefH)
+- [#885](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/885) - Make the TextParser public again [feature]
+
 # v1.6.0 (26 January 2025)
-- [#884](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/884) - By default the RestrictOrderByToPropertyOrField is now set to true in the ParsingConfig [feature] contributed by [StefH](https://github.com/StefH)
-- [#867](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/867) - CVE-2024-51417: System.Linq.Dynamic.Core allows remote access to properties on reflection types and static properties/fields [bug]
-
-# v1.6.0-preview-03 (25 January 2025)
-- [#876](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/876) - Update and Fix SecurityTests [test] contributed by [mariusz96](https://github.com/mariusz96)
-- [#882](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/882) - ExpressionParser: add 2nd ctor with an extra non-optional parameter [feature] contributed by [StefH](https://github.com/StefH)
-- [#883](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/883) - Fix the usage of ParsingConfig in some methods in the DynamicQueryableExtensions class [bug] contributed by [StefH](https://github.com/StefH)
-- [#881](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/881) - ExpressionParser ctor in 1.5.0 not compatible with earlier versions [feature]
-
-# v1.6.0-preview-02 (24 January 2025)
-- [#874](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/874) - Fix calling static properties or fields in non-static class [bug] contributed by [StefH](https://github.com/StefH)
-- [#875](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/875) - Add option to ParsingConfig to allow the Equals and ToString methods on object [feature] contributed by [StefH](https://github.com/StefH)
-- [#879](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/879) - Change internal usage from obsolete IDynamicLinkCustomTypeProvider to IDynamicLinqCustomTypeProvider [feature] contributed by [StefH](https://github.com/StefH)
-- [#873](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/873) - Accessing static property or field in normal class does not work [bug]
-- [#878](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/878) - ParsingConfig change Type of CustomTypeProvider to IDynamicLinqCustomTypeProvider in Version 1.6.0-preview-01 [feature]
-
-# v1.6.0-preview-01 (23 January 2025)
 - [#864](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/864) - Use ParsingConfig.IsCaseSensitive setting in TextParser and KeywordsHelper [feature] contributed by [StefH](https://github.com/StefH)
 - [#865](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/865) - Add OrderBy NullPropagation tests [test] contributed by [StefH](https://github.com/StefH)
 - [#866](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/866) - Refactor KeywordsHelper, TypeFinder and update comments on ParsingConfig [refactor] contributed by [StefH](https://github.com/StefH)
 - [#870](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/870) - Fix CVE-2024-51417 [bug] contributed by [StefH](https://github.com/StefH)
+- [#874](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/874) - Fix calling static properties or fields in non-static class [bug] contributed by [StefH](https://github.com/StefH)
+- [#875](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/875) - Add option to ParsingConfig to allow the Equals and ToString methods on object [feature] contributed by [StefH](https://github.com/StefH)
+- [#876](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/876) - Update and Fix SecurityTests [test] contributed by [mariusz96](https://github.com/mariusz96)
+- [#879](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/879) - Change internal usage from obsolete IDynamicLinkCustomTypeProvider to IDynamicLinqCustomTypeProvider [feature] contributed by [StefH](https://github.com/StefH)
+- [#882](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/882) - ExpressionParser: add 2nd ctor with an extra non-optional parameter [feature] contributed by [StefH](https://github.com/StefH)
+- [#883](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/883) - Fix the usage of ParsingConfig in some methods in the DynamicQueryableExtensions class [bug] contributed by [StefH](https://github.com/StefH)
+- [#884](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/884) - By default the RestrictOrderByToPropertyOrField is now set to true in the ParsingConfig [feature] contributed by [StefH](https://github.com/StefH)
 - [#773](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/773) - Parse exceptions with (nested) static classes [bug]
+- [#867](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/867) - CVE-2024-51417: System.Linq.Dynamic.Core allows remote access to properties on reflection types and static properties/fields [bug]
+- [#873](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/873) - Accessing static property or field in normal class does not work [bug]
+- [#878](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/878) - ParsingConfig change Type of CustomTypeProvider to IDynamicLinqCustomTypeProvider in Version 1.6.0-preview-01 [feature]
+- [#881](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/881) - ExpressionParser ctor in 1.5.0 not compatible with earlier versions [feature]
 
 # v1.5.1 (14 December 2024)
 - [#859](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/859) - Add SelectMany extension method for Json [feature] contributed by [StefH](https://github.com/StefH)
