@@ -7,7 +7,7 @@ namespace System.Linq.Dynamic.Core.Tokenizer;
 /// <summary>
 /// TextParser which can be used to parse a text into tokens.
 /// </summary>
-internal class TextParser
+public class TextParser
 {
     private const char DefaultNumberDecimalSeparator = '.';
     private static readonly char[] EscapeCharacters = ['\\', 'a', 'b', 'f', 'n', 'r', 't', 'v'];
