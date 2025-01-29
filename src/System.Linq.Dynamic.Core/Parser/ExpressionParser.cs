@@ -39,6 +39,7 @@ public class ExpressionParser
     private readonly ConstantExpressionHelper _constantExpressionHelper;
     private readonly ITypeFinder _typeFinder;
     private readonly ITypeConverterFactory _typeConverterFactory;
+    private readonly PredefinedMethodsHelper _predefinedMethodsHelper;
     private readonly Dictionary<string, object> _internals = new();
     private readonly Dictionary<string, object?> _symbols;
     private readonly bool _usedForOrderBy;
@@ -99,6 +100,7 @@ public class ExpressionParser
         _typeFinder = new TypeFinder(_parsingConfig, _keywordsHelper);
         _typeConverterFactory = new TypeConverterFactory(_parsingConfig);
         _constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(_parsingConfig);
+        _predefinedMethodsHelper = new PredefinedMethodsHelper(_parsingConfig);
 
         if (parameters != null)
         {
@@ -1854,7 +1856,12 @@ public class ExpressionParser
 
                 case 1:
                     var method = (MethodInfo)methodBase!;
-                    if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType!) && !PredefinedMethodsHelper.IsPredefinedMethod(_parsingConfig, method))
+
+                    int y = 0;
+                    y.ToString();
+
+                    if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType!) && 
+                        !_predefinedMethodsHelper.IsPredefinedMethod(type!, method))
                     {
                         throw ParseError(errorPos, Res.MethodIsInaccessible, id, TypeHelper.GetTypeName(method.DeclaringType!));
                     }

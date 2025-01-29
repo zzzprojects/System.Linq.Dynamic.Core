@@ -13,13 +13,13 @@ public class MethodFinderTest
         // Arrange
         var config = new ParsingConfig
         {
-            AllowEqualsAndToStringMethodsOnObject = true
+            // AllowEqualsAndToStringMethodsOnObject = true
         };
 
-        Expression<Func<int?, string?>> expr = x => x.ToString();
+        Expression<Func<int, string>> expr = x => x.ToString();
 
         var selector = "ToString()";
-        var prm = Parameter(typeof(int?));
+        var prm = Parameter(typeof(int));
         var parser = new ExpressionParser([prm], selector, [], config);
 
         // Act
