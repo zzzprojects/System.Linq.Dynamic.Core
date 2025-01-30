@@ -6,12 +6,13 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal class PredefinedMethodsHelper
 {
-    private static readonly BindingFlags _bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+    private static readonly BindingFlags _publicInstance = BindingFlags.Public | BindingFlags.Instance;
+    private static readonly BindingFlags _publicStatic = BindingFlags.Public | BindingFlags.Static;
 
-    internal static readonly MethodInfo ObjectInstanceToString = typeof(object).GetMethod(nameof(ToString), _bindingFlags, null, Type.EmptyTypes, null)!;
-    internal static readonly MethodInfo ObjectInstanceEquals = typeof(object).GetMethod(nameof(Equals), _bindingFlags, null, [typeof(object)], null)!;
-    internal static readonly MethodInfo ObjectStaticEquals = typeof(object).GetMethod(nameof(Equals), BindingFlags.Static | BindingFlags.Public, null, [typeof(object), typeof(object)], null)!;
-    internal static readonly MethodInfo ObjectStaticReferenceEquals = typeof(object).GetMethod(nameof(ReferenceEquals), BindingFlags.Static | BindingFlags.Public, null, [typeof(object), typeof(object)], null)!;
+    internal static readonly MethodInfo ObjectInstanceToString = typeof(object).GetMethod(nameof(ToString), _publicInstance, null, Type.EmptyTypes, null)!;
+    internal static readonly MethodInfo ObjectInstanceEquals = typeof(object).GetMethod(nameof(Equals), _publicInstance, null, [typeof(object)], null)!;
+    internal static readonly MethodInfo ObjectStaticEquals = typeof(object).GetMethod(nameof(Equals), _publicStatic, null, [typeof(object), typeof(object)], null)!;
+    internal static readonly MethodInfo ObjectStaticReferenceEquals = typeof(object).GetMethod(nameof(ReferenceEquals), _publicStatic, null, [typeof(object), typeof(object)], null)!;
 
     private readonly Dictionary<Type, HashSet<MemberInfo>> _supported = new()
     {
@@ -29,15 +30,15 @@ internal class PredefinedMethodsHelper
         { typeof(float), new HashSet<MemberInfo>() },
         { typeof(double), new HashSet<MemberInfo>() },
         { typeof(decimal), new HashSet<MemberInfo>() },
-        // { typeof(DateTime), new HashSet<MemberInfo>() },
-        // { typeof(DateTimeOffset), new HashSet<MemberInfo>() },
-        // { typeof(TimeSpan), new HashSet<MemberInfo>() },
-        // { typeof(Guid), new HashSet<MemberInfo>() },
-        // { typeof(Uri), new HashSet<MemberInfo>() },
-        // { typeof(Enum), new HashSet<MemberInfo>() },
+        { typeof(DateTime), new HashSet<MemberInfo>() },
+        { typeof(DateTimeOffset), new HashSet<MemberInfo>() },
+        { typeof(TimeSpan), new HashSet<MemberInfo>() },
+        { typeof(Guid), new HashSet<MemberInfo>() },
+        { typeof(Uri), new HashSet<MemberInfo>() },
+        { typeof(Enum), new HashSet<MemberInfo>() },
 #if NET6_0_OR_GREATER
-        // { typeof(DateOnly), new HashSet<MemberInfo>() },
-        // { typeof(TimeOnly), new HashSet<MemberInfo>() },
+        { typeof(DateOnly), new HashSet<MemberInfo>() },
+        { typeof(TimeOnly), new HashSet<MemberInfo>() },
 #endif
     };
 
@@ -45,15 +46,15 @@ internal class PredefinedMethodsHelper
     {
         foreach (var kvp in _supported)
         {
-            Add(kvp.Key, ObjectInstanceEquals);
-            Add(kvp.Key, kvp.Key.GetMethod(nameof(Equals), _bindingFlags, null, [kvp.Key], null));
-            Add(kvp.Key, kvp.Key.GetMethod(nameof(Equals), _bindingFlags, null, [typeof(object)], null));
+            TryAdd(kvp.Key, ObjectInstanceEquals);
+            TryAdd(kvp.Key, kvp.Key.GetMethod(nameof(Equals), _publicInstance, null, [kvp.Key], null));
+            TryAdd(kvp.Key, kvp.Key.GetMethod(nameof(Equals), _publicInstance, null, [typeof(object)], null));
 
-            Add(kvp.Key, ObjectInstanceToString);
-            Add(kvp.Key, kvp.Key.GetMethod(nameof(ToString), _bindingFlags, null, Type.EmptyTypes, null));
-            Add(kvp.Key, kvp.Key.GetMethod(nameof(ToString), _bindingFlags, null, [typeof(string)], null));
-            Add(kvp.Key, kvp.Key.GetMethod(nameof(ToString), _bindingFlags, null, [typeof(IFormatProvider)], null));
-            Add(kvp.Key, kvp.Key.GetMethod(nameof(ToString), _bindingFlags, null, [typeof(string), typeof(IFormatProvider)], null));
+            TryAdd(kvp.Key, ObjectInstanceToString);
+            TryAdd(kvp.Key, kvp.Key.GetMethod(nameof(ToString), _publicInstance, null, Type.EmptyTypes, null));
+            TryAdd(kvp.Key, kvp.Key.GetMethod(nameof(ToString), _publicInstance, null, [typeof(string)], null));
+            TryAdd(kvp.Key, kvp.Key.GetMethod(nameof(ToString), _publicInstance, null, [typeof(IFormatProvider)], null));
+            TryAdd(kvp.Key, kvp.Key.GetMethod(nameof(ToString), _publicInstance, null, [typeof(string), typeof(IFormatProvider)], null));
         }
 
         if (config.AllowEqualsAndToStringMethodsOnObject)
@@ -75,7 +76,7 @@ internal class PredefinedMethodsHelper
         return supported.Contains(member);
     }
 
-    private void Add(Type type, MethodInfo? method)
+    private void TryAdd(Type type, MethodInfo? method)
     {
         if (method != null)
         {
