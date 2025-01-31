@@ -150,12 +150,12 @@ internal class MethodFinder
         return 0;
     }
 
-    public int FindBestMethodBasedOnArguments(IEnumerable<MethodBase> methods, ref Expression[] args, out MethodBase? method)
+    public int FindBestMethodBasedOnArguments(IEnumerable<MethodBase> methods, ref Expression[] args, out MethodBase? methodOrConstructor)
     {
         // Passing args by reference is now required with the params array support.
         var inlineArgs = args;
 
-        MethodData[] applicable = methods
+        var applicable = methods
             .Select(m => new MethodData { MethodBase = m, Parameters = m.GetParameters() })
             .Where(m => IsApplicable(m, inlineArgs))
             .ToArray();
@@ -175,11 +175,16 @@ internal class MethodFinder
             var methodData = applicable[0];
             if (methodData.MethodBase is MethodInfo methodInfo)
             {
-                method = methodInfo.GetBaseDefinition();
+                // It's a method
+                var baseMethodInfo = methodInfo.GetBaseDefinition();
+
+                // If the declaring type is an object, do not take the object-MethodInfo but keep the original MethodInfo
+                methodOrConstructor = baseMethodInfo.DeclaringType == typeof(object) ? methodInfo : baseMethodInfo;
             }
             else
             {
-                method = methodData.MethodBase;
+                // It's a constructor
+                methodOrConstructor = methodData.MethodBase;
             }
 
             if (args.Length == 0 || args.Length != methodData.Args.Length)
@@ -205,7 +210,7 @@ internal class MethodFinder
         }
         else
         {
-            method = null;
+            methodOrConstructor = null;
         }
 
         return applicable.Length;

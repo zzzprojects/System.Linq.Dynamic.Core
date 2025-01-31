@@ -1857,11 +1857,8 @@ public class ExpressionParser
                 case 1:
                     var method = (MethodInfo)methodBase!;
 
-                    int y = 0;
-                    y.ToString();
-
                     if (!PredefinedTypesHelper.IsPredefinedType(_parsingConfig, method.DeclaringType!) && 
-                        !_predefinedMethodsHelper.IsPredefinedMethod(type!, method))
+                        !_predefinedMethodsHelper.IsPredefinedMethod(type!, method.DeclaringType!, method))
                     {
                         throw ParseError(errorPos, Res.MethodIsInaccessible, id, TypeHelper.GetTypeName(method.DeclaringType!));
                     }
@@ -1941,7 +1938,7 @@ public class ExpressionParser
         switch (member)
         {
             case PropertyInfo property:
-                var propertyIsStatic = property?.GetGetMethod().IsStatic ?? property?.GetSetMethod().IsStatic ?? false;
+                var propertyIsStatic = property.GetGetMethod()?.IsStatic ?? property.GetSetMethod()?.IsStatic ?? false;
                 propertyOrFieldExpression = propertyIsStatic ? Expression.Property(null, property) : Expression.Property(expression, property);
                 return true;
 
