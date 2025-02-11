@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
+using System.Linq.Dynamic.Core.Tests.TestClasses;
 using FluentAssertions;
 using NFluent;
 using Xunit;
@@ -60,5 +61,35 @@ public class DefaultDynamicLinqCustomTypeProviderTests
 
         // Assert
         Check.That(result).IsNotNull();
+    }
+
+    [Fact]
+    public void DefaultDynamicLinqCustomTypeProvider_ResolveTypeBySimpleName_UsesAdditionalTypes()
+    {
+        // Act
+        var result = _sut.ResolveTypeBySimpleName(nameof(TestClassWithDynamicLinqAttribute));
+
+        // Assert
+        Check.That(result).IsNotNull();
+    }
+
+    [Fact]
+    public void DefaultDynamicLinqCustomTypeProvider_ResolveTypeBySimpleName_UsesTypesMarkedWithDynamicLinqTypeAttribute()
+    {
+        // Act
+        var result = _sut.ResolveTypeBySimpleName(nameof(DirectoryInfo));
+
+        // Assert
+        Check.That(result).IsNotNull();
+    }
+
+    [Fact]
+    public void DefaultDynamicLinqCustomTypeProvider_ResolveTypeBySimpleName_UnknownReturnsNull()
+    {
+        // Act
+        var result = _sut.ResolveTypeBySimpleName("Dummy123");
+
+        // Assert
+        Check.That(result).IsNull();
     }
 }
