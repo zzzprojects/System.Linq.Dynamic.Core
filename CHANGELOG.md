@@ -1,3 +1,6 @@
+# v1.6.0.2 (11 February 2025)
+- [#896](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/896) - Fix AbstractDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName to use AdditionalTypes [bug] contributed by [StefH](https://github.com/StefH)
+
 # v1.6.0.1 (28 January 2025)
 - [#887](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/887) - Make TextParser public [feature] contributed by [StefH](https://github.com/StefH)
 - [#885](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/885) - Make the TextParser public again [feature]
