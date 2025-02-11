@@ -47,7 +47,7 @@ public class MyCustomClass
 }
 ```
 If it's not possible to add that attribute, you need to implement a custom [CustomTypeProvider](https://dynamic-linq.net/advanced-configuration#customtypeprovider) and set this to the `ParsingConfig` and provide that config to all dynamic calls.
-Or provide a list of addtional types in the [DefaultDynamicLinqCustomTypeProvider.cs](https://github.com/zzzprojects/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs).
+Or provide a list of additional types in the [DefaultDynamicLinqCustomTypeProvider.cs](https://github.com/zzzprojects/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs).
 
 ### v1.6.0
 #### Change 1
@@ -60,6 +60,11 @@ By default the `RestrictOrderByToPropertyOrField` is now set to `true` in the `P
 Which means that only properties and fields can be used in the `OrderBy` / `ThenBy`.
 This is done to mitigate the risk of calling methods or other expressions in the `OrderBy` / `ThenBy` which could lead to security issues.
 To allow these methods set `RestrictOrderByToPropertyOrField` to `false` in the `ParsingConfig` and provide that config to all dynamic calls.
+
+#### Change 3
+The `DefaultDynamicLinqCustomTypeProvider` has been changed to only return types which have the `[DynamicLinqType]` attribute applied.
+If it's not possible to add that attribute, you need to implement a custom [CustomTypeProvider](https://dynamic-linq.net/advanced-configuration#customtypeprovider) and set this to the `ParsingConfig` and provide that config to all dynamic calls.
+Or provide a list of additional types in the [DefaultDynamicLinqCustomTypeProvider.cs](https://github.com/zzzprojects/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs).
 
 ---
 

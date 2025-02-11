@@ -66,16 +66,11 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
         Check.NotNull(assemblies);
         Check.NotEmpty(simpleTypeName);
 
-        var types = FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies);
+        var types = FindTypesMarkedWithDynamicLinqTypeAttribute(assemblies).Union(AdditionalTypes);
         var fullNames = types.Select(t => t.FullName!).Distinct().ToArray();
         var firstMatchingFullname = fullNames.FirstOrDefault(fn => fn.EndsWith($".{simpleTypeName}"));
 
-        if (firstMatchingFullname == null)
-        {
-            return null;
-        }
-
-        return types.FirstOrDefault(t => t.FullName == firstMatchingFullname);
+        return firstMatchingFullname == null ? null : types.FirstOrDefault(t => t.FullName == firstMatchingFullname);
     }
 
 #if (UAP10_0 || NETSTANDARD)
