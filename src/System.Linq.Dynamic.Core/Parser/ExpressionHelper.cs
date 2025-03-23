@@ -137,6 +137,8 @@ internal class ExpressionHelper : IExpressionHelper
     {
         OptimizeForEqualityIfPossible(ref left, ref right);
 
+        TryConvertTypes(ref left, ref right);
+
         WrapConstantExpressions(ref left, ref right);
 
         return Expression.Equal(left, right);
@@ -146,6 +148,8 @@ internal class ExpressionHelper : IExpressionHelper
     {
         OptimizeForEqualityIfPossible(ref left, ref right);
 
+        TryConvertTypes(ref left, ref right);
+
         WrapConstantExpressions(ref left, ref right);
 
         return Expression.NotEqual(left, right);
@@ -153,9 +157,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateGreaterThan(Expression left, Expression right)
     {
+        TryConvertTypes(ref left, ref right);
+
         if (left.Type == typeof(string))
         {
-            return Expression.GreaterThan(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
+            return Expression.GreaterThan(GenerateStaticMethodCall(nameof(string.Compare), left, right), Expression.Constant(0));
         }
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
@@ -172,9 +178,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateGreaterThanEqual(Expression left, Expression right)
     {
+        TryConvertTypes(ref left, ref right);
+
         if (left.Type == typeof(string))
         {
-            return Expression.GreaterThanOrEqual(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
+            return Expression.GreaterThanOrEqual(GenerateStaticMethodCall(nameof(string.Compare), left, right), Expression.Constant(0));
         }
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
@@ -192,9 +200,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateLessThan(Expression left, Expression right)
     {
+        TryConvertTypes(ref left, ref right);
+
         if (left.Type == typeof(string))
         {
-            return Expression.LessThan(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
+            return Expression.LessThan(GenerateStaticMethodCall(nameof(string.Compare), left, right), Expression.Constant(0));
         }
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
@@ -212,9 +222,11 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateLessThanEqual(Expression left, Expression right)
     {
+        TryConvertTypes(ref left, ref right);
+
         if (left.Type == typeof(string))
         {
-            return Expression.LessThanOrEqual(GenerateStaticMethodCall("Compare", left, right), Expression.Constant(0));
+            return Expression.LessThanOrEqual(GenerateStaticMethodCall(nameof(string.Compare), left, right), Expression.Constant(0));
         }
 
         if (left.Type.GetTypeInfo().IsEnum || right.Type.GetTypeInfo().IsEnum)
@@ -268,14 +280,14 @@ internal class ExpressionHelper : IExpressionHelper
 #endif
 
 #if !NET35
-        if (type == typeof(Guid) && Guid.TryParse(text, out Guid guid))
+        if (type == typeof(Guid) && Guid.TryParse(text, out var guid))
         {
             return Expression.Constant(guid, typeof(Guid));
         }
 #else
         try
         {
-            return Expression.Constant(new Guid(text));
+            return Expression.Constant(new Guid(text!));
         }
         catch
         {
@@ -399,7 +411,7 @@ internal class ExpressionHelper : IExpressionHelper
         {
             switch (expression)
             {
-                case MemberExpression _:
+                case MemberExpression:
                     list.Add(sourceExpression);
                     break;
 
@@ -443,20 +455,54 @@ internal class ExpressionHelper : IExpressionHelper
         return list;
     }
 
-    private static Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
+    /// <summary>
+    /// If the types are different (and not null), try to convert the object type to other type.
+    /// </summary>
+    private void TryConvertTypes(ref Expression left, ref Expression right)
     {
-        return Expression.Call(null, GetStaticMethod(methodName, left, right), new[] { left, right });
-    }
-
-    private static MethodInfo GetStaticMethod(string methodName, Expression left, Expression right)
-    {
-        var methodInfo = left.Type.GetMethod(methodName, new[] { left.Type, right.Type });
-        if (methodInfo == null)
+        if (!_parsingConfig.ConvertObjectToSupportComparison || left.Type == right.Type || Constants.IsNull(left) || Constants.IsNull(right))
         {
-            methodInfo = right.Type.GetMethod(methodName, new[] { left.Type, right.Type })!;
+            return;
         }
 
-        return methodInfo;
+        if (left.Type == typeof(object))
+        {
+            left = Expression.Convert(left, right.Type);
+        }
+        else if (right.Type == typeof(object))
+        {
+            right = Expression.Convert(right, left.Type);
+        }
+    }
+
+    private static Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
+    {
+        if (!TryGetStaticMethod(methodName, left, right, out var methodInfo))
+        {
+            throw new ArgumentException($"Method '{methodName}' not found on type '{left.Type}' or '{right.Type}'");
+        }
+
+        var parameters = methodInfo.GetParameters();
+        var parameterTypeLeft = parameters[0].ParameterType;
+        var parameterTypeRight = parameters[1].ParameterType;
+
+        if (parameterTypeLeft != left.Type && !Constants.IsNull(left))
+        {
+            left = Expression.Convert(left, parameterTypeLeft);
+        }
+
+        if (parameterTypeRight != right.Type && !Constants.IsNull(right))
+        {
+            right = Expression.Convert(right, parameterTypeRight);
+        }
+
+        return Expression.Call(null, methodInfo, [left, right]);
+    }
+
+    private static bool TryGetStaticMethod(string methodName, Expression left, Expression right, [NotNullWhen(true)] out MethodInfo? methodInfo)
+    {
+        methodInfo = left.Type.GetMethod(methodName, [left.Type, right.Type]) ?? right.Type.GetMethod(methodName, [left.Type, right.Type]);
+        return methodInfo != null;
     }
 
     private static Expression? GetMethodCallExpression(MethodCallExpression methodCallExpression)

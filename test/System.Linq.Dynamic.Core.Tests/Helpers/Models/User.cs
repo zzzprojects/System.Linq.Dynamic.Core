@@ -24,11 +24,13 @@ public class User
 
     public int? NullableInt { get; set; }
 
+    public string? NullableString { get; set; }
+
     public int Income { get; set; }
 
     public char C { get; set; }
 
-    public UserProfile Profile { get; set; }
+    public UserProfile? Profile { get; set; }
 
     public UserState State { get; set; }
 

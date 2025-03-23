@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser;
@@ -50,7 +49,7 @@ internal static class TypeHelper
 
     public static bool IsCompatibleWith(Type source, Type target)
     {
-#if !(NETFX_CORE || WINDOWS_APP ||  UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
         if (source == target)
         {
             return true;
@@ -325,22 +324,16 @@ internal static class TypeHelper
 
     public static bool IsNullableType(Type type)
     {
-        Check.NotNull(type, nameof(type));
-
         return type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
     }
 
     public static bool TypeCanBeNull(Type type)
     {
-        Check.NotNull(type);
-
         return !type.GetTypeInfo().IsValueType || IsNullableType(type);
     }
 
     public static Type ToNullableType(Type type)
     {
-        Check.NotNull(type);
-
         if (IsNullableType(type))
         {
             // Already nullable, just return the type.
@@ -371,7 +364,7 @@ internal static class TypeHelper
     {
         type = GetNonNullableType(type);
 
-#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
         if (type.GetTypeInfo().IsEnum)
         {
             return 0;
@@ -421,9 +414,9 @@ internal static class TypeHelper
             return "null";
         }
 
-        Type baseType = GetNonNullableType(type);
+        var baseType = GetNonNullableType(type);
 
-        string name = baseType.Name;
+        var name = baseType.Name;
         if (type != baseType)
         {
             name += '?';
@@ -440,15 +433,11 @@ internal static class TypeHelper
 
     public static Type GetNonNullableType(Type type)
     {
-        Check.NotNull(type, nameof(type));
-
         return IsNullableType(type) ? type.GetTypeInfo().GetGenericTypeArguments()[0] : type;
     }
 
     public static Type GetUnderlyingType(Type type)
     {
-        Check.NotNull(type, nameof(type));
-
         Type[] genericTypeArguments = type.GetGenericArguments();
         if (genericTypeArguments.Any())
         {
@@ -461,8 +450,6 @@ internal static class TypeHelper
 
     public static IList<Type> GetSelfAndBaseTypes(Type type, bool excludeObject = false)
     {
-        Check.NotNull(type);
-
         if (type.GetTypeInfo().IsInterface)
         {
             var types = new List<Type>();

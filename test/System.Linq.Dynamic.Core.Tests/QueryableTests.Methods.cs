@@ -11,7 +11,7 @@ public partial class QueryableTests
     public void CallMethod()
     {
         // Arrange
-        var customTypeProvider = new Mock<IDynamicLinkCustomTypeProvider>();
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
         customTypeProvider.Setup(c => c.GetCustomTypes()).Returns(new HashSet<Type> { typeof(Test) });
         var config = new ParsingConfig
         {
@@ -30,7 +30,7 @@ public partial class QueryableTests
     public void CallMethodWhichReturnsNullable()
     {
         // Arrange
-        var customTypeProvider = new Mock<IDynamicLinkCustomTypeProvider>();
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
         customTypeProvider.Setup(c => c.GetCustomTypes()).Returns(new HashSet<Type> { typeof(Test) });
         var config = new ParsingConfig
         {
@@ -49,7 +49,7 @@ public partial class QueryableTests
     public void CallMethodWhichReturnsNullable_WithValue()
     {
         // Arrange
-        var customTypeProvider = new Mock<IDynamicLinkCustomTypeProvider>();
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
         customTypeProvider.Setup(c => c.GetCustomTypes()).Returns(new HashSet<Type> { typeof(Test) });
         var config = new ParsingConfig
         {

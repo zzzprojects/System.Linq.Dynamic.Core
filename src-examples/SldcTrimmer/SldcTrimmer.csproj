@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PublishTrimmed>true</PublishTrimmed>
+		<TrimMode>full</TrimMode>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--<PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.5" />-->
+		<TrimmerRootAssembly Include="System.Linq.Dynamic.Core" />
+	</ItemGroup>
+
+</Project>

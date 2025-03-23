@@ -59,7 +59,6 @@ internal class ParameterExpressionRenamer : ExpressionVisitor
             }
 
             return _parameterExpression;
-            // throw new InvalidOperationException($"The {nameof(ParameterExpressionRenamer)} can only rename 1 (Typed)ParameterExpression in an Expression.");
         }
 
         return node;

@@ -1,8 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Linq.Expressions;
+using AnyOfTypes;
 
 namespace System.Linq.Dynamic.Core.Parser;
 
-interface IKeywordsHelper
+internal interface IKeywordsHelper
 {
-    bool TryGetValue(string name, [NotNullWhen(true)] out object? keyWordOrType);
+    bool IsItOrRootOrParent(AnyOf<string, Expression, Type> value);
+
+    bool TryGetValue(string text, out AnyOf<string, Expression, Type> value);
 }

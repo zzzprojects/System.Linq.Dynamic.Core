@@ -13,6 +13,7 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
+    [DynamicLinqType]
     public enum TestEnumPublic : sbyte
     {
         Var1 = 0,
@@ -25,6 +26,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
     public partial class ExpressionTests
     {
+        [DynamicLinqType]
         public enum TestEnum2 : sbyte
         {
             Var1 = 0,
@@ -337,7 +339,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Cast_To_Enum_Using_CustomTypeProvider()
         {
             // Arrange
-            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
             dynamicLinqCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type> { typeof(SimpleValuesModelEnum) });
             var config = new ParsingConfig
             {
@@ -378,7 +380,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Cast_To_NullableEnum_Using_CustomTypeProvider()
         {
             // Arrange
-            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
+            var dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
             dynamicLinqCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type>
             {
                 typeof(SimpleValuesModelEnum),
@@ -919,6 +921,9 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_Enum_Property_Equality_Using_Enum_And_FullName_Inline()
         {
             // Arrange
+            var config = new ParsingConfig();
+            config.UseDefaultDynamicLinqCustomTypeProvider([typeof(TestEnum2)]);
+
             var qry = new List<TestEnumClass> { new TestEnumClass { B = TestEnum2.Var2 } }.AsQueryable();
             string enumType = typeof(TestEnum2).FullName!;
 
@@ -948,7 +953,7 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
-        public void ExpressionTests_Enum_Property_Equality_Using_Enum_Name_Inline_Should_Throw_Exception()
+        public void ExpressionTests_Enum_Property_Equality_Using_Enum_Name_Inline_ShouldBeOk()
         {
             // Arrange
             var config = new ParsingConfig
@@ -962,7 +967,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Action a = () => qry.Where(config, $"{enumType}.Var2 == it.B").ToDynamicArray();
 
             // Assert
-            a.Should().Throw<Exception>();
+            a.Should().NotThrow();
         }
 
         [Fact]
@@ -1031,7 +1036,10 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Enum_MoreTests()
         {
-            var config = new ParsingConfig();
+            var config = new ParsingConfig
+            {
+                ResolveTypesBySimpleName = true
+            };
 
             // Arrange
             var lst = new List<TestEnum> { TestEnum.Var1, TestEnum.Var2, TestEnum.Var3, TestEnum.Var4, TestEnum.Var5, TestEnum.Var6 };
@@ -1376,6 +1384,8 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_Indexer_Issue57()
         {
+            // Arrange
+            var config = new ParsingConfig { RestrictOrderByToPropertyOrField = true };
             var rows = new List<JObject>
             {
                 new JObject {["Column1"] = "B", ["Column2"] = 1},
@@ -1384,9 +1394,11 @@ namespace System.Linq.Dynamic.Core.Tests
                 new JObject {["Column1"] = "A", ["Column2"] = 2}
             };
 
+            // Act
             var expected = rows.OrderBy(x => x["Column1"]).ToList();
-            var result = rows.AsQueryable().OrderBy(@"it[""Column1""]").ToList();
+            var result = rows.AsQueryable().OrderBy(config, @"it[""Column1""]").ToList();
 
+            // Assert
             Assert.Equal(expected, result);
         }
 
@@ -1719,6 +1731,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_NullPropagating_DateTime()
         {
             // Arrange
+            var config = new ParsingConfig { RestrictOrderByToPropertyOrField = false };
             var q = new[]
             {
                 new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1) }
@@ -1726,7 +1739,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var result = q.OrderBy(x => x.date2).Select(x => x.id).ToArray();
-            var resultDynamic = q.OrderBy("np(date1)").Select("id").ToDynamicArray<int>();
+            var resultDynamic = q.OrderBy(config, "np(date1)").Select("id").ToDynamicArray<int>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);
@@ -1736,6 +1749,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_NullPropagation_NullableDateTime()
         {
             // Arrange
+            var config = new ParsingConfig { RestrictOrderByToPropertyOrField = false };
             var q = new[]
             {
                 new { id = 1, date1 = (DateTime?) DateTime.Now, date2 = DateTime.Now.AddDays(-1)}
@@ -1743,7 +1757,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var result = q.OrderBy(x => x.date1.Value.Year).Select(x => x.id).ToArray();
-            var resultDynamic = q.OrderBy("np(date1.Value.Year)").Select("id").ToDynamicArray<int>();
+            var resultDynamic = q.OrderBy(config, "np(date1.Value.Year)").Select("id").ToDynamicArray<int>();
 
             // Assert
             Check.That(resultDynamic).ContainsExactly(result);

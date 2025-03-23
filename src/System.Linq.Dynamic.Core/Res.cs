@@ -35,7 +35,7 @@ internal static class Res
     public const string IQueryableProviderNotAsync = "The provider for the source IQueryable doesn't implement IAsyncQueryProvider/IDbAsyncQueryProvider. Only providers that implement IAsyncQueryProvider/IDbAsyncQueryProvider can be used for Entity Framework asynchronous operations.";
     public const string IdentifierExpected = "Identifier expected";
     public const string IdentifierImplementingInterfaceExpected = "Identifier implementing interface '{0}' expected";
-    public const string IifRequiresThreeArgs = "The 'iif' function requires three arguments";
+    public const string IIFRequiresThreeArgs = "The 'iif' function requires three arguments";
     public const string IncompatibleOperand = "Operator '{0}' incompatible with operand type '{1}'";
     public const string IncompatibleOperands = "Operator '{0}' incompatible with operand types '{1}' and '{2}'";
     public const string IncompatibleTypes = "Types '{0}' and '{1}' are incompatible";
@@ -50,7 +50,7 @@ internal static class Res
     public const string InvalidStringLength = "String '{0}' should have at least {1} characters.";
     public const string IsNullRequiresTwoArgs = "The 'isnull' function requires two arguments";
     public const string MethodIsVoid = "Method '{0}' in type '{1}' does not return a value";
-    public const string MethodsAreInaccessible = "Methods on type '{0}' are not accessible";
+    public const string MethodIsInaccessible = "Method '{0}' on type '{1}' is not accessible.";
     public const string MinusCannotBeAppliedToUnsignedInteger = "'-' cannot be applied to unsigned integers.";
     public const string MissingAsClause = "Expression is missing an 'as' clause";
     public const string NeitherTypeConvertsToOther = "Neither of the types '{0}' and '{1}' converts to the other";
@@ -69,6 +69,7 @@ internal static class Res
     public const string OpenParenOrIdentifierExpected = "'(' or Identifier expected";
     public const string OutKeywordRequiresDiscard = "When using an out variable, a discard '_' is required.";
     public const string ParseExceptionFormat = "{0} (at index {1})";
+    public const string SequenceContainsNoElements = "Sequence contains no elements";
     public const string SyntaxError = "Syntax error";
     public const string TokenExpected = "{0} expected";
     public const string TypeHasNoNullableForm = "Type '{0}' has no nullable form";

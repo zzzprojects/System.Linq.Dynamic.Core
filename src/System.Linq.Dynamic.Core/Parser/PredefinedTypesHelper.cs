@@ -28,7 +28,7 @@ internal static class PredefinedTypesHelper
 
     public static readonly IDictionary<Type, int> PredefinedTypes = new ConcurrentDictionary<Type, int>(new Dictionary<Type, int>
     {
-        { typeof(object), 0 },
+        // { typeof(object), 0 }, Removed because of CVE-2024-51417
         { typeof(bool), 0 },
         { typeof(char), 0 },
         { typeof(string), 0 },

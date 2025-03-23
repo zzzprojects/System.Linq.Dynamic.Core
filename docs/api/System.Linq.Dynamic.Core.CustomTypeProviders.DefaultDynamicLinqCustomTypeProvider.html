@@ -86,12 +86,12 @@
   <div class="markdown level0 summary"><p>The default implementation for <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html">DefaultDynamicLinqCustomTypeProvider</a>.</p>
 <p>Scans the current AppDomain for all types marked with <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.DynamicLinqTypeAttribute.html">DynamicLinqTypeAttribute</a>, and adds them as custom Dynamic Link types.</p>
 <p>Also provides functionality to resolve a Type in the current Application Domain.</p>
-<p>This class is used as default for full .NET Framework, so not for .NET Core</p>
+<p>This class is used as default for full .NET Framework and .NET Core App 2.x and higher.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.AbstractDynamicLinqCustomTypeProvider.html">AbstractDynamicLinqCustomTypeProvider</a></div>
     <div class="level2"><span class="xref">DefaultDynamicLinqCustomTypeProvider</span></div>
   </div>
@@ -115,25 +115,25 @@
       <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.AbstractDynamicLinqCustomTypeProvider.html#System_Linq_Dynamic_Core_CustomTypeProviders_AbstractDynamicLinqCustomTypeProvider_GetAssemblyTypesWithDynamicLinqTypeAttribute_System_Collections_Generic_IEnumerable_System_Reflection_Assembly__">AbstractDynamicLinqCustomTypeProvider.GetAssemblyTypesWithDynamicLinqTypeAttribute(IEnumerable&lt;Assembly&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring#system-object-tostring">Object.ToString()</a>
+      <span class="xref">System.Object.ToString()</span>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">Object.Equals(Object)</a>
+      <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">Object.Equals(Object, Object)</a>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals#system-object-referenceequals(system-object-system-object)">Object.ReferenceEquals(Object, Object)</a>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode#system-object-gethashcode">Object.GetHashCode()</a>
+      <span class="xref">System.Object.GetHashCode()</span>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype#system-object-gettype">Object.GetType()</a>
+      <span class="xref">System.Object.GetType()</span>
     </div>
     <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone#system-object-memberwiseclone">Object.MemberwiseClone()</a>
+      <span class="xref">System.Object.MemberwiseClone()</span>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.html">System.Linq.Dynamic.Core.CustomTypeProviders</a></h6>
@@ -149,16 +149,18 @@
     <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider__ctor_System_Boolean_.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.%23ctor(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L29">View Source</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L30">View Source</a>
   </span>
   <a id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider__ctor_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.#ctor*"></a>
   <h4 id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider__ctor_System_Boolean_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.#ctor(System.Boolean)">DefaultDynamicLinqCustomTypeProvider(Boolean)</h4>
-  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html">DefaultDynamicLinqCustomTypeProvider</a> class.</p>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html">DefaultDynamicLinqCustomTypeProvider</a> class.
+Backwards compatibility for issue <a href="https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/830">https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/830</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DefaultDynamicLinqCustomTypeProvider(bool cacheCustomTypes = true)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Please use the DefaultDynamicLinqCustomTypeProvider(ParsingConfig config, bool cacheCustomTypes = true) constructor.&quot;)]
+public DefaultDynamicLinqCustomTypeProvider(bool cacheCustomTypes = true)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -171,7 +173,47 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">cacheCustomTypes</span></td>
+        <td><p>Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to 'true'.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider__ctor_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.%23ctor(System.Linq.Dynamic.Core.ParsingConfig%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L40">View Source</a>
+  </span>
+  <a id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider__ctor_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.#ctor*"></a>
+  <h4 id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider__ctor_System_Linq_Dynamic_Core_ParsingConfig_System_Boolean_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.#ctor(System.Linq.Dynamic.Core.ParsingConfig,System.Boolean)">DefaultDynamicLinqCustomTypeProvider(ParsingConfig, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.html">DefaultDynamicLinqCustomTypeProvider</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DefaultDynamicLinqCustomTypeProvider(ParsingConfig config, bool cacheCustomTypes = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="System.Linq.Dynamic.Core.ParsingConfig.html">ParsingConfig</a></td>
+        <td><span class="parametername">config</span></td>
+        <td><p>The parsing configuration.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">cacheCustomTypes</span></td>
         <td><p>Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to 'true'.</p>
 </td>
@@ -185,7 +227,7 @@
     <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_GetCustomTypes.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetCustomTypes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L35">View Source</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L47">View Source</a>
   </span>
   <a id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_GetCustomTypes_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetCustomTypes*"></a>
   <h4 id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_GetCustomTypes" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetCustomTypes">GetCustomTypes()</h4>
@@ -206,8 +248,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1">HashSet</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a>&gt;</td>
-        <td><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.hashset-1">HashSet&lt;T&gt;</a> list of custom types.</p>
+        <td><span class="xref">System.Collections.Generic.HashSet</span>&lt;<span class="xref">System.Type</span>&gt;</td>
+        <td><p>A <span class="xref">System.Collections.Generic.HashSet&lt;T&gt;</span> list of custom types.</p>
 </td>
       </tr>
     </tbody>
@@ -217,7 +259,7 @@
     <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_GetExtensionMethods.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L51">View Source</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L63">View Source</a>
   </span>
   <a id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_GetExtensionMethods_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods*"></a>
   <h4 id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_GetExtensionMethods" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.GetExtensionMethods">GetExtensionMethods()</h4>
@@ -238,7 +280,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.reflection.methodinfo">MethodInfo</a>&gt;&gt;</td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Type</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Reflection.MethodInfo</span>&gt;&gt;</td>
         <td><p>A list of custom extension methods that System.Linq.Dynamic.Core will understand.</p>
 </td>
       </tr>
@@ -249,7 +291,7 @@
     <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_ResolveType_System_String_.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.ResolveType(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L67">View Source</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L79">View Source</a>
   </span>
   <a id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_ResolveType_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.ResolveType*"></a>
   <h4 id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_ResolveType_System_String_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.ResolveType(System.String)">ResolveType(String)</h4>
@@ -271,7 +313,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">System.String</span></td>
         <td><span class="parametername">typeName</span></td>
         <td><p>The typename to resolve.</p>
 </td>
@@ -288,8 +330,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
-        <td><p>A resolved <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a> or null when not found.</p>
+        <td><span class="xref">System.Type</span></td>
+        <td><p>A resolved <span class="xref">System.Type</span> or null when not found.</p>
 </td>
       </tr>
     </tbody>
@@ -299,7 +341,7 @@
     <a href="https://github.com/StefH/System.Linq.Dynamic.Core/new/master/apiSpec/new?filename=System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_ResolveTypeBySimpleName_System_String_.md&amp;value=---%0Auid%3A%20System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L76">View Source</a>
+    <a href="https://github.com/StefH/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs/#L88">View Source</a>
   </span>
   <a id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_ResolveTypeBySimpleName_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName*"></a>
   <h4 id="System_Linq_Dynamic_Core_CustomTypeProviders_DefaultDynamicLinqCustomTypeProvider_ResolveTypeBySimpleName_System_String_" data-uid="System.Linq.Dynamic.Core.CustomTypeProviders.DefaultDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName(System.String)">ResolveTypeBySimpleName(String)</h4>
@@ -321,7 +363,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="xref">System.String</span></td>
         <td><span class="parametername">simpleTypeName</span></td>
         <td><p>The typename to resolve.</p>
 </td>
@@ -338,8 +380,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></td>
-        <td><p>A resolved <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a> or null when not found.</p>
+        <td><span class="xref">System.Type</span></td>
+        <td><p>A resolved <span class="xref">System.Type</span> or null when not found.</p>
 </td>
       </tr>
     </tbody>

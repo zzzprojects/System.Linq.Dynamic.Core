@@ -5,9 +5,13 @@ using System.Runtime.CompilerServices;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-    public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+    public class TestCustomTypeProvider : AbstractDynamicLinqCustomTypeProvider, IDynamicLinqCustomTypeProvider
     {
         private HashSet<Type>? _customTypes;
+
+        public TestCustomTypeProvider() : base([])
+        {
+        }
 
         public virtual HashSet<Type> GetCustomTypes()
         {
@@ -16,12 +20,13 @@ namespace System.Linq.Dynamic.Core.Tests
                 return _customTypes;
             }
 
-            _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute(new[] { GetType().GetTypeInfo().Assembly }))
+            _customTypes = new HashSet<Type>(FindTypesMarkedWithDynamicLinqTypeAttribute([GetType().GetTypeInfo().Assembly]))
             {
                 typeof(CustomClassWithStaticMethod),
                 typeof(StaticHelper),
                 typeof(StaticHelper.Nested)
             };
+
             return _customTypes;
         }
 

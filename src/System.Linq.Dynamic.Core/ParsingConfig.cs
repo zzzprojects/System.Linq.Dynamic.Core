@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq.Dynamic.Core.Config;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Util.Cache;
@@ -12,7 +13,7 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public class ParsingConfig
 {
-    private IDynamicLinkCustomTypeProvider? _customTypeProvider;
+    private IDynamicLinqCustomTypeProvider? _customTypeProvider;
     private IExpressionPromoter? _expressionPromoter;
     private IQueryableAnalyzer? _queryableAnalyzer;
 
@@ -38,20 +39,26 @@ public class ParsingConfig
     };
 
     /// <summary>
-    /// Gets or sets if parameter, method, and properties resolution should be case-sensitive or not.
+    /// Defines if the resolution should be case-sensitive for:
+    /// - fields and properties
+    /// - (extension) methods
+    /// - constant expressions ("null", "true", "false")
+    /// - keywords ("it", "parent", "root")
+    /// - functions ("as", "cast", "iif", "is", "isnull", "new", "np")
+    /// - operator aliases ("eq", "equal", "ne", "notequal", "neq", "lt", "LessThan", "le", "LessThanEqual", "gt", "GreaterThan", "ge", "GreaterThanEqual", "and", "AndAlso", "or", "OrElse", "not", "mod")
     ///
     /// Default value is <c>false</c>.
     /// </summary>
     public bool IsCaseSensitive { get; set; }
 
     /// <summary>
-    /// Gets or sets the <see cref="IDynamicLinkCustomTypeProvider"/>.
+    /// Gets or sets the <see cref="IDynamicLinqCustomTypeProvider"/>.
     /// </summary>
-    public IDynamicLinkCustomTypeProvider? CustomTypeProvider
+    public IDynamicLinqCustomTypeProvider? CustomTypeProvider
     {
         get
         {
-#if !(WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
             // Only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and .NET Core App 2.x and higher.
             return _customTypeProvider ??= new DefaultDynamicLinqCustomTypeProvider(this);
 #else
@@ -62,6 +69,25 @@ public class ParsingConfig
         {
             _customTypeProvider = value;
         }
+    }
+
+    /// <summary>
+    /// Sets the CustomTypeProvider to <see cref="DefaultDynamicLinqCustomTypeProvider"/>.
+    /// </summary>
+    /// <param name="cacheCustomTypes">Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to <c>true</c>.</param>
+    public void UseDefaultDynamicLinqCustomTypeProvider(bool cacheCustomTypes = true)
+    {
+        _customTypeProvider = new DefaultDynamicLinqCustomTypeProvider(this, cacheCustomTypes);
+    }
+
+    /// <summary>
+    /// Sets the CustomTypeProvider to <see cref="DefaultDynamicLinqCustomTypeProvider"/>.
+    /// </summary>
+    /// <param name="cacheCustomTypes">Defines whether to cache the CustomTypes (including extension methods) which are found in the Application Domain. Default set to <c>true</c>.</param>
+    /// <param name="additionalTypes">A list of additional types (without the DynamicLinqTypeAttribute annotation) which should also be resolved.</param>
+    public void UseDefaultDynamicLinqCustomTypeProvider(IList<Type> additionalTypes, bool cacheCustomTypes = true)
+    {
+        _customTypeProvider = new DefaultDynamicLinqCustomTypeProvider(this, additionalTypes, cacheCustomTypes);
     }
 
     /// <summary>
@@ -240,4 +266,57 @@ public class ParsingConfig
     /// Caches constant expressions to enhance performance. Periodic cleanup is performed to manage cache size, governed by this configuration.
     /// </summary>
     public CacheConfig? ConstantExpressionCacheConfig { get; set; }
+
+    /// <summary>
+    /// Converts typeof(object) to the correct type to allow comparison (Equal, NotEqual, GreaterThan, GreaterThanEqual, LessThan and LessThanEqual).
+    ///
+    /// Default value is <c>false</c>.
+    ///
+    /// When set to <c>true</c>, the following code will work correct:
+    /// <example>
+    /// <code>
+    /// <![CDATA[
+    /// class Person
+    /// {
+    ///     public string Name { get; set; }
+    ///     public object Age { get; set; }
+    /// }
+    ///
+    /// var persons = new[]
+    /// {
+    ///     new Person { Name = "Foo", Age = 99 },
+    ///     new Person { Name = "Bar", Age = 33 }
+    /// }.AsQueryable();
+    ///
+    /// var config = new ParsingConfig
+    /// {
+    ///     ConvertObjectToSupportComparison = true
+    /// };
+    /// 
+    /// var results = persons.Where(config, "Age > 50").ToList();
+    /// ]]>
+    /// </code>
+    /// </example>
+    /// </summary>
+    public bool ConvertObjectToSupportComparison { get; set; }
+
+    /// <summary>
+    /// Defines the type of string literal parsing that will be performed.
+    /// Default value is <c>StringLiteralParsingType.Default</c>.
+    /// </summary>
+    public StringLiteralParsingType StringLiteralParsing { get; set; } = StringLiteralParsingType.Default;
+
+    /// <summary>
+    /// When set to <c>true</c>, the parser will restrict the OrderBy and ThenBy methods to only allow properties or fields. If set to <c>false</c>, any expression is allowed.
+    ///
+    /// Default value is <c>true</c>.
+    /// </summary>
+    public bool RestrictOrderByToPropertyOrField { get; set; } = true;
+
+    /// <summary>
+    /// When set to <c>true</c>, the parser will allow the use of the Equals(object obj), Equals(object objA, object objB), ReferenceEquals(object objA, object objB) and ToString() methods on the <see cref="object"/> type.
+    ///
+    /// Default value is <c>false</c>.
+    /// </summary>
+    public bool AllowEqualsAndToStringMethodsOnObject { get; set; }
 }

@@ -1,7 +1,0 @@
-﻿@model String
-
-@if (!String.IsNullOrWhiteSpace(Model))
-{
-    <h3>Remarks</h3>
-    @Html.FormatMarkdown(Model)
-}

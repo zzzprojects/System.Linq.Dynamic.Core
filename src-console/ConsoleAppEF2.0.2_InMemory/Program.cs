@@ -24,8 +24,12 @@ namespace ConsoleAppEF2
             }
         }
 
-        class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinkCustomTypeProvider
+        class C : AbstractDynamicLinqCustomTypeProvider, IDynamicLinqCustomTypeProvider
         {
+            public C() : base(new List<Type>())
+            {
+            }
+
             public HashSet<Type> GetCustomTypes()
             {
                 // https://stackoverflow.com/a/2384679/255966

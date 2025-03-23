@@ -10,36 +10,15 @@ namespace System.Linq.Dynamic.Core.Tokenizer;
 public class TextParser
 {
     private const char DefaultNumberDecimalSeparator = '.';
-    private static readonly char[] EscapeCharacters = { '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v' };
-
-    // These aliases are supposed to simply the where clause and make it more human readable
-    private static readonly Dictionary<string, TokenId> PredefinedOperatorAliases = new(StringComparer.OrdinalIgnoreCase)
-    {
-        { "eq", TokenId.Equal },
-        { "equal", TokenId.Equal },
-        { "ne", TokenId.ExclamationEqual },
-        { "notequal", TokenId.ExclamationEqual },
-        { "neq", TokenId.ExclamationEqual },
-        { "lt", TokenId.LessThan },
-        { "LessThan", TokenId.LessThan },
-        { "le", TokenId.LessThanEqual },
-        { "LessThanEqual", TokenId.LessThanEqual },
-        { "gt", TokenId.GreaterThan },
-        { "GreaterThan", TokenId.GreaterThan },
-        { "ge", TokenId.GreaterThanEqual },
-        { "GreaterThanEqual", TokenId.GreaterThanEqual },
-        { "and", TokenId.DoubleAmpersand },
-        { "AndAlso", TokenId.DoubleAmpersand },
-        { "or", TokenId.DoubleBar },
-        { "OrElse", TokenId.DoubleBar },
-        { "not", TokenId.Exclamation },
-        { "mod", TokenId.Percent }
-    };
+    private static readonly char[] EscapeCharacters = ['\\', 'a', 'b', 'f', 'n', 'r', 't', 'v'];
 
     private readonly char _numberDecimalSeparator;
     private readonly string _text;
     private readonly int _textLen;
     private readonly ParsingConfig _parsingConfig;
+
+    // These aliases simplify the "Where"-clause and make it more human-readable.
+    private readonly Dictionary<string, TokenId> _predefinedOperatorAliases;
 
     private int _textPos;
     private char _ch;
@@ -57,6 +36,29 @@ public class TextParser
     public TextParser(ParsingConfig config, string text)
     {
         _parsingConfig = config;
+
+        _predefinedOperatorAliases = new(config.IsCaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase)
+        {
+            { "eq", TokenId.Equal },
+            { "equal", TokenId.Equal },
+            { "ne", TokenId.ExclamationEqual },
+            { "notequal", TokenId.ExclamationEqual },
+            { "neq", TokenId.ExclamationEqual },
+            { "lt", TokenId.LessThan },
+            { "LessThan", TokenId.LessThan },
+            { "le", TokenId.LessThanEqual },
+            { "LessThanEqual", TokenId.LessThanEqual },
+            { "gt", TokenId.GreaterThan },
+            { "GreaterThan", TokenId.GreaterThan },
+            { "ge", TokenId.GreaterThanEqual },
+            { "GreaterThanEqual", TokenId.GreaterThanEqual },
+            { "and", TokenId.DoubleAmpersand },
+            { "AndAlso", TokenId.DoubleAmpersand },
+            { "or", TokenId.DoubleBar },
+            { "OrElse", TokenId.DoubleBar },
+            { "not", TokenId.Exclamation },
+            { "mod", TokenId.Percent }
+        };
 
         _numberDecimalSeparator = config.NumberParseCulture?.NumberFormat.NumberDecimalSeparator[0] ?? DefaultNumberDecimalSeparator;
 
@@ -529,14 +531,14 @@ public class TextParser
         return ParseError(CurrentToken.Pos, format, args);
     }
 
+    private TokenId GetAliasedTokenId(TokenId tokenId, string alias)
+    {
+        return tokenId == TokenId.Identifier && _predefinedOperatorAliases.TryGetValue(alias, out TokenId id) ? id : tokenId;
+    }
+
     private static Exception ParseError(int pos, string format, params object[] args)
     {
         return new ParseException(string.Format(CultureInfo.CurrentCulture, format, args), pos);
-    }
-
-    private static TokenId GetAliasedTokenId(TokenId tokenId, string alias)
-    {
-        return tokenId == TokenId.Identifier && PredefinedOperatorAliases.TryGetValue(alias, out TokenId id) ? id : tokenId;
     }
 
     private static bool IsHexChar(char c)

@@ -140,6 +140,6 @@ public partial class EntitiesTests
             .Any("Name == \"Blog2\"");
 
         // Assert
-        Assert.Equal(true, result);
+        Assert.True(result);
     }
 }

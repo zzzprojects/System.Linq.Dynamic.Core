@@ -1,10 +1,23 @@
 <Project>
     <PropertyGroup>
         <LangVersion>12</LangVersion>
+        <Nullable>enable</Nullable>
 
         <!-- https://github.com/coverlet-coverage/coverlet/issues/1391 -->
         <CollectCoverage>true</CollectCoverage>
         <ExcludeByAttribute>GeneratedCodeAttribute</ExcludeByAttribute>
         <CoverletOutputFormat>opencover</CoverletOutputFormat>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.msbuild" Version="6.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="6.0.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
+    </ItemGroup>
 </Project>

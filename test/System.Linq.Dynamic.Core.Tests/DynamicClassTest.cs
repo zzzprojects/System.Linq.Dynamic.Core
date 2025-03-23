@@ -15,6 +15,66 @@ public class DynamicClassTest
     }
 
     [Fact]
+    public void DynamicClass_Equals()
+    {
+        // Arrange
+        var props = new[]
+        {
+            new DynamicProperty("Name", typeof(string)),
+            new DynamicProperty("Birthday", typeof(DateTime))
+        };
+        var type = DynamicClassFactory.CreateType(props);
+
+        // Act
+        dynamic dynamicInstance1 = Activator.CreateInstance(type)!;
+        dynamicInstance1.Name = "Albert";
+        dynamicInstance1.Birthday = new DateTime(1879, 3, 14);
+
+        dynamic dynamicInstance2 = Activator.CreateInstance(type)!;
+        dynamicInstance2.Name = "Albert";
+        dynamicInstance2.Birthday = new DateTime(1879, 3, 14);
+
+        bool equal1 = dynamicInstance1.Equals(dynamicInstance2);
+        equal1.Should().BeTrue();
+
+        bool equal2 = dynamicInstance2.Equals(dynamicInstance1);
+        equal2.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DynamicClass_OperatorEqualityAndNotEquality()
+    {
+        // Arrange
+        var props = new[]
+        {
+            new DynamicProperty("Name", typeof(string)),
+            new DynamicProperty("Birthday", typeof(DateTime))
+        };
+        var type = DynamicClassFactory.CreateType(props);
+
+        // Act
+        dynamic dynamicInstance1 = Activator.CreateInstance(type)!;
+        dynamicInstance1.Name = "Albert";
+        dynamicInstance1.Birthday = new DateTime(1879, 3, 14);
+
+        dynamic dynamicInstance2 = Activator.CreateInstance(type)!;
+        dynamicInstance2.Name = "Albert";
+        dynamicInstance2.Birthday = new DateTime(1879, 3, 14);
+
+        bool equal1 = dynamicInstance1 == dynamicInstance2;
+        equal1.Should().BeTrue();
+
+        bool equal2 = dynamicInstance2 == dynamicInstance1;
+        equal2.Should().BeTrue();
+
+        bool notEqual1 = dynamicInstance1 != dynamicInstance2;
+        notEqual1.Should().BeFalse();
+
+        bool notEqual2 = dynamicInstance2 != dynamicInstance1;
+        notEqual2.Should().BeFalse();
+    }
+
+    [Fact]
     public void DynamicClass_GetProperties_Should_Work()
     {
         // Arrange
@@ -150,11 +210,11 @@ public class DynamicClassTest
 
         // Assert 1
         var getType = dynamicInstance.GetType();
-        getType.ToString().Should().Contain("<>f__AnonymousType");
+        getType.ToString().Should().StartWith("<>f__AnonymousType").And.EndWith("`2");
 
         // Assert 2
         var typeOf = GetRuntimeType(dynamicInstance);
-        typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass"); // ???
+        typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass");
     }
 
     [SkipIfGitHubActions]
@@ -225,6 +285,11 @@ public class DynamicClassTest
     public void DynamicClassArray_Issue593_Solution1()
     {
         // Arrange
+        var config = new ParsingConfig
+        {
+            AllowEqualsAndToStringMethodsOnObject = true
+        };
+
         var field = new
         {
             Name = "firstName",
@@ -247,7 +312,7 @@ public class DynamicClassTest
         var query = dynamicClasses.AsQueryable();
 
         // Act
-        var isValid = query.Any("firstName.ToString() eq \"firstValue\"");
+        var isValid = query.Any(config, "firstName.ToString() eq \"firstValue\"");
 
         // Assert
         isValid.Should().BeTrue();

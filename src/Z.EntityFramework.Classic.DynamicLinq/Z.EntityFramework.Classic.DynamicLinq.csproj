@@ -10,7 +10,7 @@
         <PackageTags>system;linq;dynamic;Z.EntityFramework;core;async;classic</PackageTags>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584Ea20000}</ProjectGuid>
         <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-        <Version>1.4.$(PatchVersion)</Version>
+        <Version>1.6.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -35,7 +35,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" PrivateAssets="All" />
         <PackageReference Include="Z.EntityFramework.Classic" Version="7.1.7" />
     </ItemGroup>
 </Project>

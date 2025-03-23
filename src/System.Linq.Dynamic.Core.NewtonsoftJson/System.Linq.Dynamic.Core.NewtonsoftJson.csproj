@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="../../version.xml" />
+
+    <PropertyGroup>
+        <AssemblyOriginatorKeyFile>../System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.snk</AssemblyOriginatorKeyFile>
+        <PackageId>Z.DynamicLinq.NewtonsoftJson</PackageId>
+        <Authors>Stef Heyenrath</Authors>
+        <Description>Contains some extensions for System.Linq.Dynamic.Core to dynamically query a Newtonsoft.Json.JArray</Description>
+        <PackageTags>system;linq;dynamic;core;dotnet;json</PackageTags>
+        <ProjectGuid>{8C5851B8-5C47-4229-AB55-D4252703598E}</ProjectGuid>
+        <TargetFrameworks>net45;net452;net46;netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
+        <Version>1.6.$(PatchVersion)</Version>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DebugType>portable</DebugType>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="JsonConverter.Newtonsoft.Json" Version="0.7.1" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using FluentAssertions;
@@ -19,6 +20,7 @@ namespace System.Linq.Dynamic.Core.Tests
 {
     public partial class QueryableTests
     {
+        [DynamicLinqType]
         public class Example
         {
             public int Field;
@@ -29,10 +31,12 @@ namespace System.Linq.Dynamic.Core.Tests
             public int Sec { get; set; }
             public int? SecNull { get; set; }
 
+            [DynamicLinqType]
             public class NestedDto
             {
                 public string Name { get; set; }
 
+                [DynamicLinqType]
                 public class NestedDto2
                 {
                     public string Name2 { get; set; }
@@ -324,7 +328,11 @@ namespace System.Linq.Dynamic.Core.Tests
         public void Select_Dynamic_SystemType1()
         {
             // Arrange
-            var config = new ParsingConfig { AllowNewToEvaluateAnyType = true };
+            var config = new ParsingConfig
+            {
+                AllowNewToEvaluateAnyType = true
+            };
+            config.UseDefaultDynamicLinqCustomTypeProvider([typeof(DirectoryInfo)]);
             var queryable = new[] { "test" }.AsQueryable();
 
             // Act
@@ -429,7 +437,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result).Equals("System.Int32[].Select(it => (it * it))");
         }
 
-#if NET461 || NET5_0 || NET6_0 || NET7_0 || NET8_0
+#if NET461 || NET5_0 || NET6_0 || NET7_0 || NET8_0 || NET9_0
         [Fact(Skip = "Fails sometimes in GitHub CI build")]
 #else
         [Fact]
@@ -488,6 +496,45 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ArgumentNullException>(() => qry.Select(null));
             Assert.Throws<ArgumentException>(() => qry.Select(""));
             Assert.Throws<ArgumentException>(() => qry.Select(" "));
+        }
+
+        [Fact]
+        public void Select_Dynamic_Nested_With_SubString()
+        {
+            // Arrange
+            var users = new User[]
+            {
+                new() { Id = Guid.NewGuid(), UserName = "Luke Skywalker"},
+                new() { Id = Guid.NewGuid(), UserName = "Darth Vader"},
+                new() { Id = Guid.NewGuid(), UserName = "Han Solo"}
+            };
+            var queryable = users.AsQueryable();
+
+            // Act
+            var result = queryable.Select(x => x.UserName.Substring(0, x.UserName.IndexOf(" "))).ToArray();
+            var resultDynamic = queryable.Select("UserName.Substring(0, UserName.IndexOf(\" \"))").ToDynamicArray<string>();
+
+            // Assert
+            resultDynamic.Should().BeEquivalentTo(result);
+        }
+
+        // 845
+        [Theory]
+        [InlineData("it + \"txt\" & 99", "_a_txt99")]
+        [InlineData("it & \"txt\" + 99", "_a_txt99")]
+        [InlineData("99 + it & \"txt\"", "99_a_txt")]
+        [InlineData("99 & it + \"txt\"", "99_a_txt")]
+        public void Select_Dynamic_StringConcatDifferentTypes(string expression, string expectedResult)
+        {
+            // Arrange
+            var config = new ParsingConfig
+            {
+                ConvertObjectToSupportComparison = true
+            };
+            var queryable = new[] { "_a_" }.AsQueryable();
+
+            // Act
+            queryable.Select(config, expression).ToDynamicArray<string>()[0].Should().Be(expectedResult);
         }
     }
 }

@@ -1,77 +1,76 @@
-﻿using Moq;
-using NFluent;
-using System.Linq.Dynamic.Core.CustomTypeProviders;
+﻿using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Tests.Entities;
 using System.Linq.Expressions;
+using FluentAssertions;
+using Moq;
 using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests.Parser
+namespace System.Linq.Dynamic.Core.Tests.Parser;
+
+public class TypeFinderTests
 {
-    public class TypeFinderTests
+    private readonly ParsingConfig _parsingConfig;
+
+    private readonly TypeFinder _sut;
+
+    public TypeFinderTests()
     {
-        private readonly ParsingConfig _parsingConfig = new ParsingConfig();
-        private readonly Mock<IKeywordsHelper> _keywordsHelperMock;
-        private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicTypeProviderMock;
+        var dynamicTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
+        dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(BaseEmployee).FullName!)).Returns(typeof(BaseEmployee));
+        dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Boss).FullName!)).Returns(typeof(Boss));
+        dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Worker).FullName!)).Returns(typeof(Worker));
+        dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Boss")).Returns(typeof(Boss));
 
-        private readonly TypeFinder _sut;
-
-        public TypeFinderTests()
+        _parsingConfig = new ParsingConfig
         {
-            _dynamicTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(BaseEmployee).FullName)).Returns(typeof(BaseEmployee));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Boss).FullName)).Returns(typeof(Boss));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Worker).FullName)).Returns(typeof(Worker));
-            _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Boss")).Returns(typeof(Boss));
+            CustomTypeProvider = dynamicTypeProviderMock.Object
+        };
 
-            _parsingConfig = new ParsingConfig
-            {
-                CustomTypeProvider = _dynamicTypeProviderMock.Object
-            };
+         var keywordsHelperMock = new Mock<IKeywordsHelper>();
 
-            _keywordsHelperMock = new Mock<IKeywordsHelper>();
+        _sut = new TypeFinder(_parsingConfig, keywordsHelperMock.Object);
+    }
 
-            _sut = new TypeFinder(_parsingConfig, _keywordsHelperMock.Object);
-        }
+    [Fact]
+    public void TypeFinder_TryFindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_Equals_false()
+    {
+        // Assign
+        _parsingConfig.ResolveTypesBySimpleName = true;
 
-        [Fact]
-        public void TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_false()
-        {
-            // Assign
-            _parsingConfig.ResolveTypesBySimpleName = true;
+        // Act
+        var result = _sut.TryFindTypeByName("Boss", null, forceUseCustomTypeProvider: false, out var type);
 
-            // Act
-            Type result = _sut.FindTypeByName("Boss", null, forceUseCustomTypeProvider: false);
+        // Assert
+        result.Should().BeFalse();
+    }
 
-            // Assert
-            Check.That(result).IsNull();
-        }
+    [Fact]
+    public void TypeFinder_TryFindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_Equals_true()
+    {
+        // Assign
+        _parsingConfig.ResolveTypesBySimpleName = true;
 
-        [Fact]
-        public void TypeFinder_FindTypeByName_With_SimpleTypeName_forceUseCustomTypeProvider_equals_true()
-        {
-            // Assign
-            _parsingConfig.ResolveTypesBySimpleName = true;
+        // Act
+        var result = _sut.TryFindTypeByName("Boss", null, forceUseCustomTypeProvider: true, out var type);
 
-            // Act
-            Type result = _sut.FindTypeByName("Boss", null, forceUseCustomTypeProvider: true);
+        // Assert
+        result.Should().BeTrue();
+        type.Should().Be<Boss>();
+    }
 
-            // Assert
-            Check.That(result).Equals(typeof(Boss));
-        }
+    [Fact]
+    public void TypeFinder_TryFindTypeByName_With_SimpleTypeName_BasedOn_it()
+    {
+        // Assign
+        _parsingConfig.ResolveTypesBySimpleName = true;
+        var expressions = new[] { Expression.Parameter(typeof(BaseEmployee)) };
 
-        [Fact]
-        public void TypeFinder_FindTypeByName_With_SimpleTypeName_basedon_it()
-        {
-            // Assign
-            _parsingConfig.ResolveTypesBySimpleName = true;
-            var expressions = new[] { Expression.Parameter(typeof(BaseEmployee)) };
+        // Act
+        var result = _sut.TryFindTypeByName("Boss", expressions, forceUseCustomTypeProvider: false, out var type);
 
-            // Act
-            Type result = _sut.FindTypeByName("Boss", expressions, forceUseCustomTypeProvider: false);
-
-            // Assert
-            Check.That(result).Equals(typeof(Boss));
-        }
+        // Assert
+        result.Should().BeTrue();
+        type.Should().Be<Boss>();
     }
 }

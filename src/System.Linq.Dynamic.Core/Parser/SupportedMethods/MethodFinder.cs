@@ -45,32 +45,35 @@ internal class MethodFinder
         _expressionHelper = Check.NotNull(expressionHelper);
     }
 
-    public bool TryFindAverageMethod(Type callType, Type parameterType, [NotNullWhen(true)] out MethodInfo? averageMethod)
+    public bool TryFindAggregateMethod(Type callType, string methodName, Type parameterType, [NotNullWhen(true)] out MethodInfo? aggregateMethod)
     {
-        averageMethod = callType
+        aggregateMethod = callType
             .GetMethods()
-            .Where(m => m is { Name: nameof(Enumerable.Average), IsGenericMethodDefinition: false })
+            .Where(m => m.Name == methodName && !m.IsGenericMethodDefinition)
             .SelectMany(m => m.GetParameters(), (m, p) => new { Method = m, Parameter = p })
             .Where(x => x.Parameter.ParameterType == parameterType)
             .Select(x => x.Method)
             .FirstOrDefault();
 
-        return averageMethod != null;
+        return aggregateMethod != null;
     }
 
-    public void CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(string methodName, ref Expression[] args)
+    public bool CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(string methodName, ref Expression[] args)
     {
         if (methodName is nameof(IAggregateSignatures.Average) or nameof(IAggregateSignatures.Sum))
         {
             ContainsMethod(typeof(IAggregateSignatures), methodName, false, null, ref args);
+            return true;
         }
+
+        return false;
     }
 
     public bool ContainsMethod(Type type, string methodName, bool staticAccess = true)
     {
         Check.NotNull(type);
 
-#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
         var flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
         return type.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName).Any();
 #else
@@ -90,7 +93,7 @@ internal class MethodFinder
 
     public int FindMethod(Type? type, string methodName, bool staticAccess, ref Expression? instance, ref Expression[] args, out MethodBase? method)
     {
-#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
+#if !(UAP10_0 || NETSTANDARD)
         BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
         foreach (Type t in SelfAndBaseTypes(type))
         {
@@ -210,19 +213,19 @@ internal class MethodFinder
 
     public int FindIndexer(Type type, Expression[] args, out MethodBase? method)
     {
-        foreach (Type t in SelfAndBaseTypes(type))
+        foreach (var t in SelfAndBaseTypes(type))
         {
-            MemberInfo[] members = t.GetDefaultMembers();
+            var members = t.GetDefaultMembers();
             if (members.Length != 0)
             {
                 IEnumerable<MethodBase> methods = members.OfType<PropertyInfo>().
-#if !(NETFX_CORE || WINDOWS_APP || UAP10_0 || NETSTANDARD)
-                        Select(p => (MethodBase)p.GetGetMethod()).
-                        Where(m => m != null);
+#if !(UAP10_0 || NETSTANDARD)
+                    Select(p => (MethodBase?)p.GetGetMethod()).
+                    OfType<MethodBase>();
 #else
                     Select(p => (MethodBase)p.GetMethod);
 #endif
-                int count = FindBestMethodBasedOnArguments(methods, ref args, out method);
+                var count = FindBestMethodBasedOnArguments(methods, ref args, out method);
                 if (count != 0)
                 {
                     return count;
@@ -289,7 +292,7 @@ internal class MethodFinder
                 if (methodParameter.IsOut && args[i] is ParameterExpression parameterExpression)
                 {
 #if NET35
-                        return false;
+                    return false;
 #else
                     if (!parameterExpression.IsByRef)
                     {
@@ -318,33 +321,31 @@ internal class MethodFinder
 
     private static bool FirstIsBetterThanSecond(Expression[] args, MethodData first, MethodData second)
     {
-        // If args count is 0 -> parameterless method is better than method method with parameters
+        // If args count is 0 -> parameterless method is better than a method with parameters
         if (args.Length == 0)
         {
             return first.Parameters.Length == 0 && second.Parameters.Length != 0;
         }
 
-        bool better = false;
-        for (int i = 0; i < args.Length; i++)
+        var better = false;
+        for (var i = 0; i < args.Length; i++)
         {
-            CompareConversionType result = CompareConversions(args[i].Type, first.Parameters[i].ParameterType, second.Parameters[i].ParameterType);
+            var result = CompareConversions(args[i].Type, first.Parameters[i].ParameterType, second.Parameters[i].ParameterType);
 
-            // If second is better, return false
-            if (result == CompareConversionType.Second)
+            switch (result)
             {
-                return false;
-            }
+                // If second is better, return false
+                case CompareConversionType.Second:
+                    return false;
 
-            // If first is better, return true
-            if (result == CompareConversionType.First)
-            {
-                return true;
-            }
+                // If first is better, return true
+                case CompareConversionType.First:
+                    return true;
 
-            // If both are same, just set better to true and continue
-            if (result == CompareConversionType.Both)
-            {
-                better = true;
+                // If both are same, just set better to true and continue
+                case CompareConversionType.Both:
+                    better = true;
+                    break;
             }
         }
 
@@ -369,8 +370,8 @@ internal class MethodFinder
             return CompareConversionType.Second;
         }
 
-        bool firstIsCompatibleWithSecond = TypeHelper.IsCompatibleWith(first, second);
-        bool secondIsCompatibleWithFirst = TypeHelper.IsCompatibleWith(second, first);
+        var firstIsCompatibleWithSecond = TypeHelper.IsCompatibleWith(first, second);
+        var secondIsCompatibleWithFirst = TypeHelper.IsCompatibleWith(second, first);
 
         if (firstIsCompatibleWithSecond && !secondIsCompatibleWithFirst)
         {
