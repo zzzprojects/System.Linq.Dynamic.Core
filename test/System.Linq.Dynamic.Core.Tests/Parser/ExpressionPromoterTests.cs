@@ -1,8 +1,11 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
 using System.Collections.Generic;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using System.Threading;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser;
@@ -52,5 +55,50 @@ public class ExpressionPromoterTests
         _dynamicLinkCustomTypeProviderMock.Verify(d => d.ResolveType($"{typeof(SampleDto).FullName}"), Times.Once);
 
         _expressionPromoterMock.Verify(e => e.Promote(It.IsAny<ConstantExpression>(), typeof(Guid), true, true), Times.Once);
+    }
+
+    [Fact]
+    public async Task Promote_Should_Succeed_Even_When_LiteralsCache_Is_Cleaned()
+    {
+        // Arrange
+        var parsingConfig = new ParsingConfig()
+        {
+            ConstantExpressionCacheConfig = new Core.Util.Cache.CacheConfig
+            {
+                CleanupFrequency = TimeSpan.FromMilliseconds(500), // Run cleanup more often
+                TimeToLive = TimeSpan.FromMilliseconds(500), // Shorten TTL to force expiration
+                ReturnExpiredItems = false
+            }
+        };
+        var constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(parsingConfig);
+        var expressionPromoter = new ExpressionPromoter(parsingConfig);
+
+        double value = 0.40;
+        string text = "0.40";
+        Type targetType = typeof(decimal);
+
+        // Step 1: Add constant to cache
+        var literalExpression = constantExpressionHelper.CreateLiteral(value, text);
+        Assert.NotNull(literalExpression); // Ensure it was added
+
+        // Step 2: Manually trigger cleanup
+        var cts = new CancellationTokenSource(500);
+        await Task.Run(async () =>
+        {
+            while (!cts.IsCancellationRequested)
+            {
+                constantExpressionHelper.TryGetText(literalExpression, out _);
+                await Task.Delay(50); // Give some time for cleanup to be triggered
+            }
+        });
+
+        // Ensure some cleanup cycles have passed
+        await Task.Delay(500); // Allow cache cleanup to happen
+
+        // Step 3: Attempt to promote the expression after cleanup
+        var promotedExpression = expressionPromoter.Promote(literalExpression, targetType, exact: false, convertExpression: true);
+
+        // Assert: Promotion should still work even if the cache was cleaned
+        promotedExpression.Should().NotBeNull(); // Ensure `Promote()` still returns a valid expression
     }
 }
