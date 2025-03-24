@@ -72,7 +72,7 @@ public class ExpressionPromoter : IExpressionPromoter
                             // Make sure an enum value stays an enum value
                             if (target.IsEnum)
                             {
-                                value = Enum.ToObject(target, value!);
+                                TypeHelper.TryParseEnum(text, target, out value);
                             }
                             break;
 
