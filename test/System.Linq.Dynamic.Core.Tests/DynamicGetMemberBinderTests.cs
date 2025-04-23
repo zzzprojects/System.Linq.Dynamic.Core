@@ -49,16 +49,21 @@ public class DynamicGetMemberBinderTests
         // Arrange
         var dynamicData = new[] { 1, 2 }
             .AsQueryable()
-            .Select("new { it as Value }")
-            .ToDynamicArray();
+            .Select("new { it * 2 as Value }")
+            .ToDynamicArray()
+            .AsQueryable();
 
         // Act
-        var dynamicResult = dynamicData
-            .AsQueryable()
+        var dynamicResult1 = dynamicData
             .Select("Value")
             .ToDynamicArray();
 
+        var dynamicResult2 = dynamicData
+            .Select("Value")
+            .ToDynamicArray<int>();
+
         // Assert
-        dynamicResult.Should().HaveCount(2);
+        dynamicResult1.Should().HaveCount(2);
+        dynamicResult2.Should().BeEquivalentTo([2, 4]);
     }
 }
