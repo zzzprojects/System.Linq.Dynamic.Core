@@ -21,13 +21,15 @@ internal class DynamicGetMemberBinder : GetMemberBinder
 
     public override DynamicMetaObject FallbackGetMember(DynamicMetaObject target, DynamicMetaObject? errorSuggestion)
     {
-        var instance = Expression.Call(
+        var methodCallExpression = Expression.Call(
             DynamicGetMemberMethod,
             target.Expression,
             Expression.Constant(Name),
             Expression.Constant(IgnoreCase));
 
-        return DynamicMetaObject.Create(target.Value!, instance);
+        // Fix #907 and #912: "The result of the dynamic binding produced by the object with type '<>f__AnonymousType1`4' for the binder 'System.Linq.Dynamic.Core.DynamicGetMemberBinder' needs at least one restriction.".
+        var restrictions = BindingRestrictions.GetInstanceRestriction(target.Expression, target.Value);
+        return new DynamicMetaObject(methodCallExpression, restrictions, target.Value!);
     }
 
     public static object? GetDynamicMember(object value, string name, bool ignoreCase)
