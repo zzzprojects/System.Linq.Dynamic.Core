@@ -2,9 +2,9 @@
 
 namespace System.Linq.Dynamic.Core.Tests.TestHelpers;
 
-internal class SkipIfGitHubActionsAttribute : FactAttribute
+internal class SkipIfGitHubActionsFactAttribute : FactAttribute
 {
-    public SkipIfGitHubActionsAttribute()
+    public SkipIfGitHubActionsFactAttribute()
     {
         if (IsRunningOnGitHubActions())
         {
