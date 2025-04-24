@@ -1609,9 +1609,9 @@ public class ExpressionParser
 
         // Option 2. Call the default (empty) constructor and set the members
         var memberBindings = new MemberBinding[properties.Count];
-        for (int i = 0; i < memberBindings.Length; i++)
+        for (var i = 0; i < memberBindings.Length; i++)
         {
-            string propertyOrFieldName = properties[i].Name;
+            var propertyOrFieldName = properties[i].Name;
             Type propertyOrFieldType;
             MemberInfo memberInfo;
             var propertyInfo = type.GetProperty(propertyOrFieldName);
@@ -1632,12 +1632,8 @@ public class ExpressionParser
                 propertyOrFieldType = fieldInfo.FieldType;
             }
 
-            // Promote from Type to Nullable Type if needed
-            var promoted = _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true);
-            if (promoted is null)
-            {
-                throw new NotSupportedException($"Unable to promote expression '{expressions[i]}'.");
-            }
+            // Call Promote and if that returns false, just try to convert the expression to the destination type using Expression.Convert
+            var promoted = _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true) ?? Expression.Convert(expressions[i], propertyOrFieldType);
             memberBindings[i] = Expression.Bind(memberInfo, promoted);
         }
 

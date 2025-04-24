@@ -217,7 +217,7 @@ public class DynamicClassTest
         typeOf.ToString().Should().Be("System.Linq.Dynamic.Core.DynamicClass");
     }
 
-    [SkipIfGitHubActions]
+    [SkipIfGitHubActionsFact]
     public void DynamicClassArray()
     {
         // Arrange
@@ -249,7 +249,7 @@ public class DynamicClassTest
         isValid.Should().BeTrue();
     }
 
-    [SkipIfGitHubActions]
+    [SkipIfGitHubActionsFact]
     public void DynamicClassArray_Issue593_Fails()
     {
         // Arrange
@@ -281,7 +281,7 @@ public class DynamicClassTest
         isValid.Should().BeFalse(); // This should actually be true, but fails. For solution see Issue593_Solution1 and Issue593_Solution2.
     }
 
-    [SkipIfGitHubActions]
+    [SkipIfGitHubActionsFact]
     public void DynamicClassArray_Issue593_Solution1()
     {
         // Arrange
@@ -318,7 +318,7 @@ public class DynamicClassTest
         isValid.Should().BeTrue();
     }
 
-    [SkipIfGitHubActions]
+    [SkipIfGitHubActionsFact]
     public void DynamicClassArray_Issue593_Solution2()
     {
         // Arrange

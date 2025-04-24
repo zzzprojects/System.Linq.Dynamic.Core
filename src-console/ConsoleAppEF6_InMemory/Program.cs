@@ -26,7 +26,7 @@ static class Program
         await using (var context = new TestContextEF6())
         {
             var result784 = context.Products.Where("NullableInt = @0", 1).ToDynamicArray<ProductDynamic>();
-            Console.WriteLine("a1 {0}", string.Join(",", result784.Select(r => r.Key)));
+            Console.WriteLine("a1 {0}", string.Join(", ", result784.Select(r => r.Key)));
         }
 
         await using (var context = new TestContextEF6())
@@ -64,6 +64,21 @@ static class Program
             {
                 Console.WriteLine(result.Key + ":" + JsonSerializer.Serialize(result.Dict, JsonSerializerOptions));
             }
+        }
+
+        // #907 and #912
+        await using (var context = new TestContextEF6())
+        {
+            var dynamicData = context.Products
+                .AsQueryable()
+                .Select("new { NullableInt as Value }")
+                .ToDynamicArray();
+            var dynamicResult = dynamicData
+                .AsQueryable()
+                .Select("Value")
+                .ToDynamicArray();
+
+            Console.WriteLine("#907 and #912 = {0}", string.Join(", ", dynamicResult));
         }
     }
 }
