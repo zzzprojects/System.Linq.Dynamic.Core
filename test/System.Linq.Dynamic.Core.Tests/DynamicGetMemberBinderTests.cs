@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿#if !NET461
+using System.Data;
 using FluentAssertions;
 using Xunit;
 
@@ -95,7 +96,10 @@ public class DynamicGetMemberBinderTests
         dataTable.Rows.Add("South", "Apples", 200);
         dataTable.Rows.Add("South", "Oranges", 250);
 
-        var rows = dataTable.Rows.Cast<DataRow>().AsQueryable();
+        var extractedRows =
+            from row in dataTable.AsEnumerable()
+            select row;
+        var rows = extractedRows.AsQueryable();
 
         // Act
         var grouping1 = rows
@@ -127,7 +131,10 @@ public class DynamicGetMemberBinderTests
         dataTable.Rows.Add("South", "Apples", 200);
         dataTable.Rows.Add("South", "Oranges", 250);
 
-        var rows = dataTable.Rows.Cast<DataRow>().AsQueryable();
+        var extractedRows =
+            from row in dataTable.AsEnumerable()
+            select row;
+        var rows = extractedRows.AsQueryable();
 
         // Act
         var grouping1 = rows
@@ -169,3 +176,4 @@ public class DynamicGetMemberBinderTests
         dynamicResult2.Should().BeEquivalentTo([2, 4]);
     }
 }
+#endif
