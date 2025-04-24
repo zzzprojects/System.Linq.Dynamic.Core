@@ -33,7 +33,6 @@ public class GroupedSalesData
     public string Region { get; set; }
     public string? Product { get; set; }
     public int TotalSales { get; set; }
-
     public int GroupLevel { get; set; }
 }
 
@@ -83,14 +82,14 @@ class Program
         // GROUPING SET 1: (Region, Product)
         var detailed = rows
             .GroupBy("new (Region, Product)")
-            .Select("new (Key.Region as Region, Key.Product as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 0 as GroupLevel)");
+            .Select<GroupedSalesData>("new (Key.Region as Region, Key.Product as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 0 as GroupLevel)");
 
         // GROUPING SET 2: (Region)
         var regionSubtotal = rows
             .GroupBy("Region")
-            .Select("new (Key as Region, null as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 1 as GroupLevel)");
+            .Select<GroupedSalesData>("new (Key as Region, null as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 1 as GroupLevel)");
 
-        var combined = detailed.ToDynamicArray().Concat(regionSubtotal.ToDynamicArray()).AsQueryable();
+        var combined = detailed.Concat(regionSubtotal).AsQueryable();
         var ordered = combined.OrderBy("Product").ToDynamicList();
 
         int x = 9;
