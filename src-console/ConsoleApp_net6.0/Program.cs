@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.NewtonsoftJson;
@@ -40,7 +41,8 @@ class Program
 {
     static void Main(string[] args)
     {
-        Q912();
+        Q912a();
+        Q912b();
         return;
 
         Json();
@@ -66,7 +68,7 @@ class Program
         Dynamic();
     }
 
-    private static void Q912()
+    private static void Q912a()
     {
         var extractedRows = new List<SalesData>
         {
@@ -95,6 +97,39 @@ class Program
         int x = 9;
     }
 
+    private static void Q912b()
+    {
+        var eInfoJoinTable = new DataTable();
+        eInfoJoinTable.Columns.Add("Region", typeof(string));
+        eInfoJoinTable.Columns.Add("Product", typeof(string));
+        eInfoJoinTable.Columns.Add("Sales", typeof(int));
+
+        eInfoJoinTable.Rows.Add("North", "Apples", 100);
+        eInfoJoinTable.Rows.Add("North", "Oranges", 150);
+        eInfoJoinTable.Rows.Add("South", "Apples", 200);
+        eInfoJoinTable.Rows.Add("South", "Oranges", 250);
+
+        var extractedRows =
+            from row in eInfoJoinTable.AsEnumerable()
+            select row;
+
+        var rows = extractedRows.AsQueryable();
+
+        // GROUPING SET 1: (Region, Product)
+        var detailed = rows
+            .GroupBy("new (Region, Product)")
+            .Select("new (Key.Region as Region, Key.Product as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 0 as GroupLevel)");
+
+        // GROUPING SET 2: (Region)
+        var regionSubtotal = rows
+            .GroupBy("Region")
+            .Select("new (Key as Region, null as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 1 as GroupLevel)");
+
+        var combined = detailed.ToDynamicArray().Concat(regionSubtotal.ToDynamicArray()).AsQueryable();
+        var ordered = combined.OrderBy("Product").ToDynamicList();
+
+        int x = 9;
+    }
 
     private static void NewtonsoftJson()
     {
