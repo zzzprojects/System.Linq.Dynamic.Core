@@ -1,3 +1,8 @@
+# v1.6.2 (24 April 2025)
+- [#913](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/913) - Update DynamicGetMemberBinder to add BindingRestrictions to DynamicMetaObject [feature] contributed by [StefH](https://github.com/StefH)
+- [#907](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/907) - Select(&quot;...&quot;) from an IQueryable of anonymous objects created via Select(&quot;new { ... }&quot;) throws InvalidOperationException [bug]
+- [#912](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/912) - Concat question [bug]
+
 # v1.6.0.2 (11 February 2025)
 - [#896](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/896) - Fix AbstractDynamicLinqCustomTypeProvider.ResolveTypeBySimpleName to use AdditionalTypes [bug] contributed by [StefH](https://github.com/StefH)
 
