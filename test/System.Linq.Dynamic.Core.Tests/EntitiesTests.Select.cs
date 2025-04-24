@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq.Dynamic.Core.Exceptions;
+using FluentAssertions;
 using Newtonsoft.Json;
 #if EFCORE
 using Microsoft.EntityFrameworkCore;
@@ -141,5 +142,26 @@ public partial class EntitiesTests
 
         // Assert
         Assert.True(result);
+    }
+
+    /// <summary>
+    /// #907
+    /// </summary>
+    [Fact]
+    public void Entities_Select_DynamicClass_And_Select_DynamicClass()
+    {
+        // Act
+        var dynamicData = _context.Blogs
+            .Take(2)
+            .Select("new (BlogId as I, Name as N)")
+            .ToDynamicArray();
+
+        // Assert
+        var dynamicResult = dynamicData
+            .AsQueryable()
+            .Select("I")
+            .ToDynamicArray();
+
+        dynamicResult.Should().BeEquivalentTo([1000, 1001]);
     }
 }

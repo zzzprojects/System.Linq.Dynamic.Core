@@ -30,6 +30,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="..\System.Linq.Dynamic.Core.Tests\TestHelpers\SkipIfGitHubActionsAttribute.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\src\System.Linq.Dynamic.Core\System.Linq.Dynamic.Core.csproj" />
         <ProjectReference Include="..\..\src\EntityFramework.DynamicLinq\EntityFramework.DynamicLinq.csproj" />
     </ItemGroup>

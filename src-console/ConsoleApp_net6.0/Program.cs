@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Dynamic.Core.NewtonsoftJson;
@@ -21,10 +22,29 @@ public class Y
 {
 }
 
+public class SalesData
+{
+    public string Region { get; set; }
+    public string Product { get; set; }
+    public string Sales { get; set; }
+}
+
+public class GroupedSalesData
+{
+    public string Region { get; set; }
+    public string? Product { get; set; }
+    public int TotalSales { get; set; }
+    public int GroupLevel { get; set; }
+}
+
 class Program
 {
     static void Main(string[] args)
     {
+        Q912a();
+        Q912b();
+        return;
+
         Json();
         NewtonsoftJson();
 
@@ -39,13 +59,76 @@ class Program
         {
             new X { Key = "x" },
             new X { Key = "a" },
-            new X { Key = "a", Contestants = new List<Y> { new Y() } }
+            new X { Key = "a", Contestants = new List<Y> { new() } }
         }.AsQueryable();
         var groupByKey = q.GroupBy("Key");
         var selectQry = groupByKey.Select("new (Key, Sum(np(Contestants.Count, 0)) As TotalCount)").ToDynamicList();
 
         Normal();
         Dynamic();
+    }
+
+    private static void Q912a()
+    {
+        var extractedRows = new List<SalesData>
+        {
+            new() { Region = "North", Product = "Widget", Sales = "100" },
+            new() { Region = "North", Product = "Gadget", Sales = "150" },
+            new() { Region = "South", Product = "Widget", Sales = "200" },
+            new() { Region = "South", Product = "Gadget", Sales = "100" },
+            new() { Region = "North", Product = "Widget", Sales = "50" }
+        };
+
+        var rows = extractedRows.AsQueryable();
+
+        // GROUPING SET 1: (Region, Product)
+        var detailed = rows
+            .GroupBy("new (Region, Product)")
+            .Select<GroupedSalesData>("new (Key.Region as Region, Key.Product as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 0 as GroupLevel)");
+
+        // GROUPING SET 2: (Region)
+        var regionSubtotal = rows
+            .GroupBy("Region")
+            .Select<GroupedSalesData>("new (Key as Region, null as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 1 as GroupLevel)");
+
+        var combined = detailed.Concat(regionSubtotal).AsQueryable();
+        var ordered = combined.OrderBy("Product").ToDynamicList();
+
+        int x = 9;
+    }
+
+    private static void Q912b()
+    {
+        var eInfoJoinTable = new DataTable();
+        eInfoJoinTable.Columns.Add("Region", typeof(string));
+        eInfoJoinTable.Columns.Add("Product", typeof(string));
+        eInfoJoinTable.Columns.Add("Sales", typeof(int));
+
+        eInfoJoinTable.Rows.Add("North", "Apples", 100);
+        eInfoJoinTable.Rows.Add("North", "Oranges", 150);
+        eInfoJoinTable.Rows.Add("South", "Apples", 200);
+        eInfoJoinTable.Rows.Add("South", "Oranges", 250);
+
+        var extractedRows =
+            from row in eInfoJoinTable.AsEnumerable()
+            select row;
+
+        var rows = extractedRows.AsQueryable();
+
+        // GROUPING SET 1: (Region, Product)
+        var detailed = rows
+            .GroupBy("new (Region, Product)")
+            .Select("new (Key.Region as Region, Key.Product as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 0 as GroupLevel)");
+
+        // GROUPING SET 2: (Region)
+        var regionSubtotal = rows
+            .GroupBy("Region")
+            .Select("new (Key as Region, null as Product, Sum(Convert.ToInt32(Sales)) as TotalSales, 1 as GroupLevel)");
+
+        var combined = detailed.ToDynamicArray().Concat(regionSubtotal.ToDynamicArray()).AsQueryable();
+        var ordered = combined.OrderBy("Product").ToDynamicList();
+
+        int x = 9;
     }
 
     private static void NewtonsoftJson()
