@@ -218,11 +218,11 @@ public class ExpressionParser
         {
             var expr = ParseConditionalOperator();
             var ascending = true;
-            if (TokenIdentifierIs("asc") || TokenIdentifierIs("ascending"))
+            if (TokenIsIdentifier("asc") || TokenIsIdentifier("ascending"))
             {
                 _textParser.NextToken();
             }
-            else if (TokenIdentifierIs("desc") || TokenIdentifierIs("descending"))
+            else if (TokenIsIdentifier("desc") || TokenIsIdentifier("descending"))
             {
                 _textParser.NextToken();
                 ascending = false;
@@ -337,19 +337,34 @@ public class ExpressionParser
         return left;
     }
 
-    // in operator for literals - example: "x in (1,2,3,4)"
-    // in operator to mimic contains - example: "x in @0", compare to @0.Contains(x)
-    // Adapted from ticket submitted by github user mlewis9548 
+    // "in" / "not in" / "not_in" operator for literals - example: "x in (1,2,3,4)"
+    // "in" / "not in" / "not_in" operator to mimic contains - example: "x in @0", compare to @0.Contains(x)
     private Expression ParseIn()
     {
         Expression left = ParseLogicalAndOrOperator();
         Expression accumulate = left;
 
-        while (TokenIdentifierIs("in"))
+        while (_textParser.TryGetToken(["in", "not_in", "not"], [TokenId.Exclamation], out var token))
         {
-            var op = _textParser.CurrentToken;
+            var not = false;
+            if (token.Text == "not_in")
+            {
+                not = true;
+            }
+            else if (token.Text == "not" || token.Id == TokenId.Exclamation)
+            {
+                not = true;
+
+                _textParser.NextToken();
+
+                if (!TokenIsIdentifier("in"))
+                {
+                    throw ParseError(token.Pos, Res.TokenExpected, "in");
+                }
+            }
 
             _textParser.NextToken();
+
             if (_textParser.CurrentToken.Id == TokenId.OpenParen) // literals (or other inline list)
             {
                 while (_textParser.CurrentToken.Id != TokenId.CloseParen)
@@ -364,18 +379,18 @@ public class ExpressionParser
                     {
                         if (right is ConstantExpression constantExprRight)
                         {
-                            right = ParseEnumToConstantExpression(op.Pos, left.Type, constantExprRight);
+                            right = ParseEnumToConstantExpression(token.Pos, left.Type, constantExprRight);
                         }
                         else if (_expressionHelper.TryUnwrapAsConstantExpression(right, out var unwrappedConstantExprRight))
                         {
-                            right = ParseEnumToConstantExpression(op.Pos, left.Type, unwrappedConstantExprRight);
+                            right = ParseEnumToConstantExpression(token.Pos, left.Type, unwrappedConstantExprRight);
                         }
                     }
 
                     // else, check for direct type match
                     else if (left.Type != right.Type)
                     {
-                        CheckAndPromoteOperands(typeof(IEqualitySignatures), TokenId.DoubleEqual, "==", ref left, ref right, op.Pos);
+                        CheckAndPromoteOperands(typeof(IEqualitySignatures), TokenId.DoubleEqual, "==", ref left, ref right, token.Pos);
                     }
 
                     if (accumulate.Type != typeof(bool))
@@ -389,7 +404,7 @@ public class ExpressionParser
 
                     if (_textParser.CurrentToken.Id == TokenId.End)
                     {
-                        throw ParseError(op.Pos, Res.CloseParenOrCommaExpected);
+                        throw ParseError(token.Pos, Res.CloseParenOrCommaExpected);
                     }
                 }
 
@@ -413,7 +428,12 @@ public class ExpressionParser
             }
             else
             {
-                throw ParseError(op.Pos, Res.OpenParenOrIdentifierExpected);
+                throw ParseError(token.Pos, Res.OpenParenOrIdentifierExpected);
+            }
+
+            if (not)
+            {
+                accumulate = Expression.Not(accumulate);
             }
         }
 
@@ -759,7 +779,7 @@ public class ExpressionParser
     private Expression ParseArithmetic()
     {
         Expression left = ParseUnary();
-        while (_textParser.CurrentToken.Id is TokenId.Asterisk or TokenId.Slash or TokenId.Percent || TokenIdentifierIs("mod"))
+        while (_textParser.CurrentToken.Id is TokenId.Asterisk or TokenId.Slash or TokenId.Percent || TokenIsIdentifier("mod"))
         {
             Token op = _textParser.CurrentToken;
             _textParser.NextToken();
@@ -787,11 +807,11 @@ public class ExpressionParser
     // -, !, not unary operators
     private Expression ParseUnary()
     {
-        if (_textParser.CurrentToken.Id == TokenId.Minus || _textParser.CurrentToken.Id == TokenId.Exclamation || TokenIdentifierIs("not"))
+        if (_textParser.CurrentToken.Id == TokenId.Minus || _textParser.CurrentToken.Id == TokenId.Exclamation || TokenIsIdentifier("not"))
         {
             Token op = _textParser.CurrentToken;
             _textParser.NextToken();
-            if (op.Id == TokenId.Minus && (_textParser.CurrentToken.Id == TokenId.IntegerLiteral || _textParser.CurrentToken.Id == TokenId.RealLiteral))
+            if (op.Id == TokenId.Minus && _textParser.CurrentToken.Id is TokenId.IntegerLiteral or TokenId.RealLiteral)
             {
                 _textParser.CurrentToken.Text = "-" + _textParser.CurrentToken.Text;
                 _textParser.CurrentToken.Pos = op.Pos;
@@ -1445,7 +1465,7 @@ public class ExpressionParser
             if (!arrayInitializer)
             {
                 string? propName;
-                if (TokenIdentifierIs("as"))
+                if (TokenIsIdentifier("as"))
                 {
                     _textParser.NextToken();
                     propName = GetIdentifierAs();
@@ -2527,11 +2547,11 @@ public class ExpressionParser
 #endif
     }
 
-    private bool TokenIdentifierIs(string id)
+    private bool TokenIsIdentifier(string id)
     {
-        return _textParser.CurrentToken.Id == TokenId.Identifier && string.Equals(id, _textParser.CurrentToken.Text, StringComparison.OrdinalIgnoreCase);
+        return _textParser.TokenIsIdentifier(id);
     }
-
+    
     private string GetIdentifier()
     {
         _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
