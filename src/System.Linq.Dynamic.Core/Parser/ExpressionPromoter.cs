@@ -50,7 +50,12 @@ public class ExpressionPromoter : IExpressionPromoter
             }
             else
             {
-                if (_constantExpressionHelper.TryGetText(ce, out var text))
+                if (!_constantExpressionHelper.TryGetText(ce, out var text))
+                {
+                    text = ce.Value?.ToString();
+                }
+
+                if (text != null)
                 {
                     Type target = TypeHelper.GetNonNullableType(type);
                     object? value = null;
@@ -67,7 +72,7 @@ public class ExpressionPromoter : IExpressionPromoter
                             // Make sure an enum value stays an enum value
                             if (target.IsEnum)
                             {
-                                value = Enum.ToObject(target, value!);
+                                TypeHelper.TryParseEnum(text, target, out value);
                             }
                             break;
 
