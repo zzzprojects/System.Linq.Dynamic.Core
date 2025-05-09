@@ -17,7 +17,7 @@ internal class DynamicGetMemberBinder : GetMemberBinder
     private static readonly MethodInfo DynamicGetMemberMethod = typeof(DynamicGetMemberBinder).GetMethod(nameof(GetDynamicMember))!;
     private readonly ConcurrentDictionary<Tuple<Type, string, bool>, DynamicMetaObject> _metaObjectCache = new();
 
-    public DynamicGetMemberBinder(string name, ParsingConfig? config) : base(name, config?.IsCaseSensitive != true)
+    internal DynamicGetMemberBinder(string name, ParsingConfig? config) : base(name, config?.IsCaseSensitive != true)
     {
     }
 
