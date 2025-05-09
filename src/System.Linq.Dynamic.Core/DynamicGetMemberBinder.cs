@@ -1,5 +1,6 @@
 ﻿#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq.Expressions;
@@ -14,6 +15,7 @@ namespace System.Linq.Dynamic.Core;
 internal class DynamicGetMemberBinder : GetMemberBinder
 {
     private static readonly MethodInfo DynamicGetMemberMethod = typeof(DynamicGetMemberBinder).GetMethod(nameof(GetDynamicMember))!;
+    private readonly ConcurrentDictionary<Tuple<Type, string, bool>, DynamicMetaObject> _metaObjectCache = new();
 
     public DynamicGetMemberBinder(string name, ParsingConfig? config) : base(name, config?.IsCaseSensitive != true)
     {
@@ -28,8 +30,20 @@ internal class DynamicGetMemberBinder : GetMemberBinder
             Expression.Constant(IgnoreCase));
 
         // Fix #907 and #912: "The result of the dynamic binding produced by the object with type '<>f__AnonymousType1`4' for the binder 'System.Linq.Dynamic.Core.DynamicGetMemberBinder' needs at least one restriction.".
-        var restrictions = BindingRestrictions.GetInstanceRestriction(target.Expression, target.Value);
-        return new DynamicMetaObject(methodCallExpression, restrictions, target.Value!);
+        // Fix #921: "Slow Performance"
+        // Only add TypeRestriction if it's a Dynamic type and make sure to cache the DynamicMetaObject.
+        if (target.Value is IDynamicMetaObjectProvider)
+        {
+            var key = new Tuple<Type, string, bool>(target.LimitType, Name, IgnoreCase);
+
+            return _metaObjectCache.GetOrAdd(key, _ =>
+            {
+                var restrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType);
+                return new DynamicMetaObject(methodCallExpression, restrictions, target.Value);
+            });
+        }
+
+        return DynamicMetaObject.Create(target.Value!, methodCallExpression);
     }
 
     public static object? GetDynamicMember(object value, string name, bool ignoreCase)
