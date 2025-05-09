@@ -15,7 +15,7 @@ namespace System.Linq.Dynamic.Core;
 internal class DynamicGetMemberBinder : GetMemberBinder
 {
     private static readonly MethodInfo DynamicGetMemberMethod = typeof(DynamicGetMemberBinder).GetMethod(nameof(GetDynamicMember))!;
-    
+
     // The _metaObjectCache uses a Tuple<Type, string, bool> as the key to cache DynamicMetaObject instances.
     // The key components are:
     // - Type: The LimitType of the target object, ensuring type-specific caching.
@@ -23,6 +23,7 @@ internal class DynamicGetMemberBinder : GetMemberBinder
     // - bool: The IgnoreCase flag, indicating whether the member name comparison is case-insensitive.
     // This strategy ensures that the cache correctly handles different types, member names, and case-sensitivity settings.
     private readonly ConcurrentDictionary<Tuple<Type, string, bool>, DynamicMetaObject> _metaObjectCache = new();
+
     internal DynamicGetMemberBinder(string name, ParsingConfig? config) : base(name, config?.IsCaseSensitive != true)
     {
     }
