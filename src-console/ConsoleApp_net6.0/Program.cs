@@ -41,8 +41,11 @@ class Program
 {
     static void Main(string[] args)
     {
-        Q912a();
-        Q912b();
+        Issue918();
+        return;
+
+        Issue912a();
+        Issue912b();
         return;
 
         Json();
@@ -68,7 +71,33 @@ class Program
         Dynamic();
     }
 
-    private static void Q912a()
+    private static void Issue918()
+    {
+        var persons = new DataTable();
+        persons.Columns.Add("FirstName", typeof(string));
+        persons.Columns.Add("Nickname", typeof(string));
+        persons.Columns.Add("Income", typeof(decimal)).AllowDBNull = true;
+
+        // Adding sample data to the first DataTable
+        persons.Rows.Add("alex", DBNull.Value, 5000.50m);
+        persons.Rows.Add("MAGNUS", "Mag", 5000.50m);
+        persons.Rows.Add("Terry", "Ter", 4000.20m);
+        persons.Rows.Add("Charlotte", "Charl", DBNull.Value);
+
+        var linqQuery =
+            from personsRow in persons.AsEnumerable()
+            select personsRow;
+
+        var queryableRows = linqQuery.AsQueryable();
+
+        // Sorted at the top of the list
+        var comparer = new DataColumnOrdinalIgnoreCaseComparer();
+        var sortedRows = queryableRows.OrderBy("FirstName", comparer).ToList();
+
+        int xxx = 0;
+    }
+
+    private static void Issue912a()
     {
         var extractedRows = new List<SalesData>
         {
@@ -97,7 +126,7 @@ class Program
         int x = 9;
     }
 
-    private static void Q912b()
+    private static void Issue912b()
     {
         var eInfoJoinTable = new DataTable();
         eInfoJoinTable.Columns.Add("Region", typeof(string));
