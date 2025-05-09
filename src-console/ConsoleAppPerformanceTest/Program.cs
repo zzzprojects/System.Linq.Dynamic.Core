@@ -17,7 +17,7 @@ static void TestDynamic()
 
     xTimeAll.Restart();
     _ = query.AsQueryable().Select("ID").Cast<int>().ToList();
-    Console.WriteLine($"Total nd Query: {(int)xTimeAll.Elapsed.TotalMilliseconds}ms");
+    Console.WriteLine($"Total 2nd Query: {(int)xTimeAll.Elapsed.TotalMilliseconds}ms");
 
     xTimeAll.Restart();
     _ = query.AsQueryable().Select("new { it.ID as Idee } ").ToDynamicList();
