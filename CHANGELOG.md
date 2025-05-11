@@ -1,3 +1,7 @@
+# v1.6.3 (09 May 2025)
+- [#922](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/922) - Update DynamicGetMemberBinder to only add BindingRestrictions for dynamic type and cache the DynamicMetaObject [bug] contributed by [StefH](https://github.com/StefH)
+- [#921](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/921) - Strange Performance issue after upgrading from 1.6.0.2 to 1.6.2 [bug]
+
 # v1.6.2 (24 April 2025)
 - [#913](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/913) - Update DynamicGetMemberBinder to add BindingRestrictions to DynamicMetaObject [feature] contributed by [StefH](https://github.com/StefH)
 - [#907](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/907) - Select(&quot;...&quot;) from an IQueryable of anonymous objects created via Select(&quot;new { ... }&quot;) throws InvalidOperationException [bug]
