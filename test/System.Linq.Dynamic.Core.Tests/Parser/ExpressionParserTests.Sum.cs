@@ -87,4 +87,31 @@ public partial class ExpressionParserTests
         // Assert
         parser.Parse(typeof(double));
     }
+
+    [Fact]
+    public void Parse_Aggregate_Sum_In_Sum_In_Sum_With_Predicate_On_ArrayArray()
+    {
+        // Arrange
+        var childType = DynamicClassFactory.CreateType(
+        [
+            new DynamicProperty("DoubleArrayArray", typeof(double[][]))
+        ]);
+
+        var parentType = DynamicClassFactory.CreateType(
+        [
+            new DynamicProperty("SubFoos", childType.MakeArrayType())
+        ]);
+
+        // Act
+        var parser = new ExpressionParser(
+            [
+                Expression.Parameter(parentType, "Foo")
+            ],
+            "Foo.SubFoos.Sum(s => s.DoubleArrayArray.Sum(x => x.Sum()))",
+            [],
+            new ParsingConfig());
+
+        // Assert
+        parser.Parse(typeof(double));
+    }
 }
