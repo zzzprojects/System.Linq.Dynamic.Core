@@ -8,6 +8,18 @@ namespace System.Linq.Dynamic.Core.Validation;
 [DebuggerStepThrough]
 internal static class Check
 {
+    private const string ParsingConfigError = "The ParsingConfig should be provided as first argument to this method.";
+
+    public static object?[]? Args(object?[]? args, [CallerArgumentExpression("args")] string? parameterName = null)
+    {
+        if (args?.Any(a => a is ParsingConfig) == true)
+        {
+            throw new ArgumentException(ParsingConfigError, parameterName);
+        }
+        
+        return args;
+    }
+
     public static T Condition<T>(T value, Predicate<T> predicate, [CallerArgumentExpression("value")] string? parameterName = null)
     {
         NotNull(predicate);
