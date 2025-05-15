@@ -390,8 +390,7 @@ public partial class ExpressionParserTests
             CustomTypeProvider = _dynamicTypeProviderMock.Object,
             AllowEqualsAndToStringMethodsOnObject = true
         };
-        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company")
-        ];
+        ParameterExpression[] parameters = [ ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") ];
         var sut = new ExpressionParser(parameters, expression, null, config);
 
         // Act
