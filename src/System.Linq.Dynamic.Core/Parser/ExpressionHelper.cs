@@ -328,7 +328,7 @@ internal class ExpressionHelper : IExpressionHelper
     {
         var expressions = CollectExpressions(addSelf, sourceExpression);
 
-        if (expressions.Count == 1 && !(expressions[0] is MethodCallExpression))
+        if (expressions.Count == 1 && expressions[0] is not MethodCallExpression)
         {
             generatedExpression = sourceExpression;
             return false;

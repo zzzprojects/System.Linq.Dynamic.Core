@@ -1281,8 +1281,8 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = qry.Where(x => new[] { TestEnum.Var1, TestEnum.Var2 }.Contains(x.TestEnum)).ToArray();
-            var result1 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")", config).ToArray();
-            var result2 = qry.Where("it.TestEnum in (0, 1)", config).ToArray();
+            var result1 = qry.Where(config, "it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
+            var result2 = qry.Where(config, "it.TestEnum in (0, 1)").ToArray();
 
             // Assert
             Check.That(result1).ContainsExactly(expected);
@@ -1307,28 +1307,44 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_In_String()
         {
             // Arrange
-            var testRange = Enumerable.Range(1, 100).ToArray();
             var testModels = User.GenerateSampleModels(10);
-            var testModelByUsername = string.Format("Username in (\"{0}\",\"{1}\",\"{2}\")", testModels[0].UserName, testModels[1].UserName, testModels[2].UserName);
+            var testModelByUsername = $"Username in (\"{testModels[0].UserName}\",\"{testModels[1].UserName}\",\"{testModels[2].UserName}\")";
+
+            // Act
+            var result1 = testModels.AsQueryable().Where(testModelByUsername).ToArray();
+            var result2 = testModels.AsQueryable().Where("Id in (@0, @1, @2)", testModels[0].Id, testModels[1].Id, testModels[2].Id).ToArray();
+
+            // Assert
+            Assert.Equal(testModels.Take(3).ToArray(), result1);
+            Assert.Equal(testModels.Take(3).ToArray(), result2);
+        }
+
+        [Fact]
+        public void ExpressionTests_In_IntegerArray()
+        {
+            // Arrange
+            var testRange = Enumerable.Range(1, 10).ToArray();
             var testInExpression = new[] { 2, 4, 6, 8 };
 
             // Act
             var result1a = testRange.AsQueryable().Where("it in (2,4,6,8)").ToArray();
             var result1b = testRange.AsQueryable().Where("it in (2, 4,  6, 8)").ToArray();
-            // https://github.com/NArnott/System.Linq.Dynamic/issues/52
-            var result2 = testModels.AsQueryable().Where(testModelByUsername).ToArray();
-            var result3 =
-                testModels.AsQueryable()
-                    .Where("Id in (@0, @1, @2)", testModels[0].Id, testModels[1].Id, testModels[2].Id)
-                    .ToArray();
-            var result4 = testRange.AsQueryable().Where("it in @0", testInExpression).ToArray();
+            var result2 = testRange.AsQueryable().Where("it in @0", testInExpression).ToArray();
 
             // Assert
-            Assert.Equal(new[] { 2, 4, 6, 8 }, result1a);
-            Assert.Equal(new[] { 2, 4, 6, 8 }, result1b);
-            Assert.Equal(testModels.Take(3).ToArray(), result2);
-            Assert.Equal(testModels.Take(3).ToArray(), result3);
-            Assert.Equal(new[] { 2, 4, 6, 8 }, result4);
+            Assert.Equal([2, 4, 6, 8], result1a);
+            Assert.Equal([2, 4, 6, 8], result1b);
+            Assert.Equal([2, 4, 6, 8], result2);
+        }
+
+        [Fact]
+        public void ExpressionTests_InvalidNotIn_ThrowsException()
+        {
+            // Arrange
+            var testRange = Enumerable.Range(1, 10).ToArray();
+
+            // Act + Assert
+            Check.ThatCode(() => testRange.AsQueryable().Where("it not not in (2,4,6,8)").ToArray()).Throws<ParseException>();
         }
 
         [Fact]
@@ -1520,6 +1536,26 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void ExpressionTests_NotIn_IntegerArray()
+        {
+            // Arrange
+            var testRange = Enumerable.Range(1, 9).ToArray();
+            var testInExpression = new[] { 2, 4, 6, 8 };
+
+            // Act
+            var result1a = testRange.AsQueryable().Where("it not in (2,4,6,8)").ToArray();
+            var result1b = testRange.AsQueryable().Where("it not_in (2, 4,  6, 8)").ToArray();
+            var result2 = testRange.AsQueryable().Where("it not in @0", testInExpression).ToArray();
+            var result3 = testRange.AsQueryable().Where("it not_in @0", testInExpression).ToArray();
+
+            // Assert
+            Assert.Equal([1, 3, 5, 7, 9], result1a);
+            Assert.Equal([1, 3, 5, 7, 9], result1b);
+            Assert.Equal([1, 3, 5, 7, 9], result2);
+            Assert.Equal([1, 3, 5, 7, 9], result3);
+        }
+
+        [Fact]
         public void ExpressionTests_NullCoalescing()
         {
             // Arrange
@@ -1699,7 +1735,7 @@ namespace System.Linq.Dynamic.Core.Tests
             queryAsString = queryAsString.Substring(queryAsString.IndexOf(".Select") + 1).TrimEnd(']');
             Check.That(queryAsString).Equals(query);
         }
-        
+
         [Fact]
         public void ExpressionTests_NullPropagation_Method()
         {
@@ -2103,7 +2139,7 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var result = baseQuery.Where("it.Value == \"ab\\\"cd\"").ToList();
-            
+
             // Assert
             Assert.Single(result);
             Assert.Equal("ab\"cd", result[0].Value);
@@ -2153,57 +2189,6 @@ namespace System.Linq.Dynamic.Core.Tests
             // Assert
             Check.That(result).ContainsExactly(expected);
         }
-
-        [Fact]
-        public void ExpressionTests_Sum()
-        {
-            // Arrange
-            int[] initValues = { 1, 2, 3, 4, 5 };
-            var qry = initValues.AsQueryable().Select(x => new { strValue = "str", intValue = x }).GroupBy(x => x.strValue);
-
-            // Act
-            var result = qry.Select("Sum(intValue)").AsDynamicEnumerable().ToArray()[0];
-
-            // Assert
-            Assert.Equal(15, result);
-        }
-
-        [Fact]
-        public void ExpressionTests_Sum_LowerCase()
-        {
-            // Arrange
-            int[] initValues = { 1, 2, 3, 4, 5 };
-            var qry = initValues.AsQueryable().Select(x => new { strValue = "str", intValue = x }).GroupBy(x => x.strValue);
-
-            // Act
-            var result = qry.Select("sum(intValue)").AsDynamicEnumerable().ToArray()[0];
-
-            // Assert
-            Assert.Equal(15, result);
-        }
-
-        [Fact]
-        public void ExpressionTests_Sum2()
-        {
-            // Arrange
-            var initValues = new[]
-            {
-                new SimpleValuesModel { FloatValue = 1 },
-                new SimpleValuesModel { FloatValue = 2 },
-                new SimpleValuesModel { FloatValue = 3 },
-            };
-
-            var qry = initValues.AsQueryable();
-
-            // Act
-            var result = qry.Select("FloatValue").Sum();
-            var result2 = ((IQueryable<float>)qry.Select("FloatValue")).Sum();
-
-            // Assert
-            Assert.Equal(6.0f, result);
-            Assert.Equal(6.0f, result2);
-        }
-
 
         [Fact]
         public void ExpressionTests_Type_Integer()

@@ -479,6 +479,40 @@ public class TextParser
         }
     }
 
+    /// <summary>
+    /// Check if the current token is an <see cref="TokenId.Identifier"/> with the provided id .
+    /// </summary>
+    /// <param name="id">The id</param>
+    public bool TokenIsIdentifier(string id)
+    {
+        return CurrentToken.Id == TokenId.Identifier && string.Equals(id, CurrentToken.Text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Try to get a token based on the id or <see cref="TokenId"/>.
+    /// </summary>
+    /// <param name="ids">The ids.</param>
+    /// <param name="tokenIds">The tokenIds.</param>
+    /// <param name="token">The found token, or default when not found.</param>
+    public bool TryGetToken(string[] ids, TokenId[] tokenIds, out Token token)
+    {
+        token = default;
+
+        if (ids.Any(TokenIsIdentifier))
+        {
+            token = CurrentToken;
+            return true;
+        }
+
+        if (tokenIds.Any(tokenId => tokenId == CurrentToken.Id))
+        {
+            token = CurrentToken;
+            return true;
+        }
+
+        return false;
+    }
+
     private void SetTextPos(int pos)
     {
         _textPos = pos;

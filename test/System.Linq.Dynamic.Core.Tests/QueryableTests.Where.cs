@@ -155,6 +155,8 @@ public partial class QueryableTests
         Assert.Throws<ArgumentNullException>(() => qry.Where((string?)null));
         Assert.Throws<ArgumentException>(() => qry.Where(""));
         Assert.Throws<ArgumentException>(() => qry.Where(" "));
+        var parsingConfigException = Assert.Throws<ArgumentException>(() => qry.Where("UserName == \"x\"", ParsingConfig.Default));
+        Assert.Equal("The ParsingConfig should be provided as first argument to this method. (Parameter 'args')", parsingConfigException.Message);
     }
 
     [Fact]
@@ -387,6 +389,58 @@ public partial class QueryableTests
 
         // Assert
         act.Should().Throw<InvalidOperationException>().And.Message.Should().MatchRegex("The binary operator .* is not defined for the types");
+    }
+
+    [Fact]
+    public void Where_Dynamic_NullPropagation_Test1_On_NullableDoubleToString_When_AllowEqualsAndToStringMethodsOnObject_True()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AllowEqualsAndToStringMethodsOnObject = true
+        };
+        var queryable = new[]
+        {
+            new { id = "1", d = (double?) null },
+            new { id = "2", d = (double?) 5 },
+            new { id = "3", d = (double?) 50 },
+            new { id = "4", d = (double?) 40 }
+        }.AsQueryable();
+
+        // Act
+        var result = queryable
+            .Where(config, """np(it.d, 0).ToString().StartsWith("5", StringComparison.OrdinalIgnoreCase)""")
+            .Select<double?>("d")
+            .ToArray();
+
+        // Assert
+        result.Should().ContainInOrder(5, 50);
+    }
+
+    [Fact]
+    public void Where_Dynamic_NullPropagation_Test2_On_NullableDoubleToString_When_AllowEqualsAndToStringMethodsOnObject_True()
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            AllowEqualsAndToStringMethodsOnObject = true
+        };
+        var queryable = new[]
+        {
+            new { id = "1", d = (double?) null },
+            new { id = "2", d = (double?) 5 },
+            new { id = "3", d = (double?) 50 },
+            new { id = "4", d = (double?) 40 }
+        }.AsQueryable();
+
+        // Act
+        var result = queryable
+            .Where(config, """np(it.d.ToString(), "").StartsWith("5", StringComparison.OrdinalIgnoreCase)""")
+            .Select<double?>("d")
+            .ToArray();
+
+        // Assert
+        result.Should().ContainInOrder(5, 50);
     }
 
     [ExcludeFromCodeCoverage]

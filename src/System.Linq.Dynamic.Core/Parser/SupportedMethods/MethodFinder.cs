@@ -10,6 +10,7 @@ internal class MethodFinder
 {
     private readonly ParsingConfig _parsingConfig;
     private readonly IExpressionHelper _expressionHelper;
+    private readonly IDictionary<Type, MethodInfo[]> _cachedMethods;
 
     /// <summary>
     /// #794
@@ -43,19 +44,32 @@ internal class MethodFinder
     {
         _parsingConfig = Check.NotNull(parsingConfig);
         _expressionHelper = Check.NotNull(expressionHelper);
+        _cachedMethods = new Dictionary<Type, MethodInfo[]>
+        {
+            { typeof(Enumerable), typeof(Enumerable).GetMethods().Where(m => !m.IsGenericMethodDefinition).ToArray() },
+            { typeof(Queryable), typeof(Queryable).GetMethods().Where(m => !m.IsGenericMethodDefinition).ToArray() }
+        };
     }
 
     public bool TryFindAggregateMethod(Type callType, string methodName, Type parameterType, [NotNullWhen(true)] out MethodInfo? aggregateMethod)
     {
-        aggregateMethod = callType
-            .GetMethods()
-            .Where(m => m.Name == methodName && !m.IsGenericMethodDefinition)
-            .SelectMany(m => m.GetParameters(), (m, p) => new { Method = m, Parameter = p })
-            .Where(x => x.Parameter.ParameterType == parameterType)
-            .Select(x => x.Method)
-            .FirstOrDefault();
+        var nonGenericMethodsByName = _cachedMethods[callType]
+            .Where(m => m.Name == methodName)
+            .ToArray();
 
-        return aggregateMethod != null;
+        if (TypeHelper.TryGetAsEnumerable(parameterType, out var parameterTypeAsEnumerable))
+        {
+            aggregateMethod = nonGenericMethodsByName
+                .SelectMany(m => m.GetParameters(), (m, p) => new { Method = m, Parameter = p })
+                .Where(x => x.Parameter.ParameterType == parameterTypeAsEnumerable)
+                .Select(x => x.Method)
+                .FirstOrDefault();
+
+            return aggregateMethod != null;
+        }
+
+        aggregateMethod = null;
+        return false;
     }
 
     public bool CheckAggregateMethodAndTryUpdateArgsToMatchMethodArgs(string methodName, ref Expression[] args)

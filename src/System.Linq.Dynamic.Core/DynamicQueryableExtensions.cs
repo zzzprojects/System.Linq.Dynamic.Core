@@ -125,6 +125,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -176,6 +177,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -246,6 +248,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -399,6 +402,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -529,6 +533,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -601,6 +606,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -679,8 +685,9 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotEmpty(keySelector, nameof(keySelector));
-            Check.NotEmpty(resultSelector, nameof(resultSelector));
+            Check.NotEmpty(keySelector);
+            Check.NotEmpty(resultSelector);
+            Check.Args(args);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
@@ -807,7 +814,8 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotEmpty(keySelector, nameof(keySelector));
+            Check.NotEmpty(keySelector);
+            Check.Args(args);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression keyLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, keySelector, args);
@@ -932,12 +940,13 @@ namespace System.Linq.Dynamic.Core
         /// <returns>An <see cref="IQueryable"/> obtained by performing a grouped join on two sequences.</returns>
         public static IQueryable GroupJoin(this IQueryable outer, ParsingConfig config, IEnumerable inner, string outerKeySelector, string innerKeySelector, string resultSelector, params object?[] args)
         {
-            Check.NotNull(outer, nameof(outer));
+            Check.NotNull(outer);
             Check.NotNull(config);
-            Check.NotNull(inner, nameof(inner));
-            Check.NotEmpty(outerKeySelector, nameof(outerKeySelector));
-            Check.NotEmpty(innerKeySelector, nameof(innerKeySelector));
-            Check.NotEmpty(resultSelector, nameof(resultSelector));
+            Check.NotNull(inner);
+            Check.NotEmpty(outerKeySelector);
+            Check.NotEmpty(innerKeySelector);
+            Check.NotEmpty(resultSelector);
+            Check.Args(args);
 
             Type outerType = outer.ElementType;
             Type innerType = inner.AsQueryable().ElementType;
@@ -989,12 +998,13 @@ namespace System.Linq.Dynamic.Core
         {
             //http://stackoverflow.com/questions/389094/how-to-create-a-dynamic-linq-join-extension-method
 
-            Check.NotNull(outer, nameof(outer));
+            Check.NotNull(outer);
             Check.NotNull(config);
-            Check.NotNull(inner, nameof(inner));
-            Check.NotEmpty(outerKeySelector, nameof(outerKeySelector));
-            Check.NotEmpty(innerKeySelector, nameof(innerKeySelector));
-            Check.NotEmpty(resultSelector, nameof(resultSelector));
+            Check.NotNull(inner);
+            Check.NotEmpty(outerKeySelector);
+            Check.NotEmpty(innerKeySelector);
+            Check.NotEmpty(resultSelector);
+            Check.Args(args);
 
             Type outerType = outer.ElementType;
             Type innerType = inner.AsQueryable().ElementType;
@@ -1094,6 +1104,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -1166,6 +1177,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -1244,6 +1256,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -1316,6 +1329,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(object), predicate, args);
@@ -1388,6 +1402,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(object), predicate, args);
@@ -1545,6 +1560,8 @@ namespace System.Linq.Dynamic.Core
         /// </example>
         public static IOrderedQueryable OrderBy(this IQueryable source, ParsingConfig config, string ordering, params object?[] args)
         {
+            Check.Args(args);
+
             if (args.Length > 0 && args[0] != null && args[0]!.GetType().GetInterfaces().Any(i => i.Name.Contains("IComparer`1")))
             {
                 return InternalOrderBy(source, config, ordering, args[0]!, args);
@@ -1584,6 +1601,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(ordering);
+            Check.Args(args);
 
             ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames)];
             var parser = new ExpressionParser(parameters, ordering, args, config, true);
@@ -1758,6 +1776,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(selector);
+            Check.Args(args);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, selector, args);
@@ -1799,6 +1818,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(selector);
+            Check.Args(args);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, typeof(TResult), selector, args);
@@ -1841,8 +1861,9 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotNull(resultType, nameof(resultType));
+            Check.NotNull(resultType);
             Check.NotEmpty(selector);
+            Check.Args(args);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, resultType, selector, args);
@@ -1907,6 +1928,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(config);
             Check.NotNull(resultType);
             Check.NotEmpty(selector);
+            Check.Args(args);
 
             return SelectManyInternal(source, config, resultType, selector, args);
         }
@@ -1978,6 +2000,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(selector);
+            Check.Args(args);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, selector, args);
@@ -2076,10 +2099,12 @@ namespace System.Linq.Dynamic.Core
         {
             Check.NotNull(source);
             Check.NotNull(config);
-            Check.NotEmpty(collectionSelector, nameof(collectionSelector));
-            Check.NotEmpty(collectionParameterName, nameof(collectionParameterName));
-            Check.NotEmpty(resultSelector, nameof(resultSelector));
-            Check.NotEmpty(resultParameterName, nameof(resultParameterName));
+            Check.NotEmpty(collectionSelector);
+            Check.NotEmpty(collectionParameterName);
+            Check.NotEmpty(resultSelector);
+            Check.NotEmpty(resultParameterName);
+            Check.Args(collectionSelectorArgs);
+            Check.Args(resultSelectorArgs);
 
             bool createParameterCtor = config.EvaluateGroupByAtDatabase || SupportsLinqToObjects(config, source);
             LambdaExpression sourceSelectLambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, collectionSelector, collectionSelectorArgs);
@@ -2227,6 +2252,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2309,6 +2335,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotNull(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2365,6 +2392,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2439,6 +2467,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotNull(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
@@ -2553,6 +2582,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(ordering);
+            Check.Args(args);
 
             ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(source.ElementType, string.Empty, config.RenameEmptyParameterExpressionNames) };
             ExpressionParser parser = new ExpressionParser(parameters, ordering, args, config);
@@ -2649,6 +2679,7 @@ namespace System.Linq.Dynamic.Core
             Check.NotNull(source);
             Check.NotNull(config);
             Check.NotEmpty(predicate);
+            Check.Args(args);
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);

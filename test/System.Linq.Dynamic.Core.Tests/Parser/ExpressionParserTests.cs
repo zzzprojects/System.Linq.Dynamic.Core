@@ -35,7 +35,7 @@ public partial class ExpressionParserTests
     public ExpressionParserTests()
     {
         _dynamicTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
-        _dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns(new HashSet<Type>() { typeof(Company), typeof(MainCompany) });
+        _dynamicTypeProviderMock.Setup(dt => dt.GetCustomTypes()).Returns([typeof(Company), typeof(MainCompany)]);
         _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(Company).FullName!)).Returns(typeof(Company));
         _dynamicTypeProviderMock.Setup(dt => dt.ResolveType(typeof(MainCompany).FullName!)).Returns(typeof(MainCompany));
         _dynamicTypeProviderMock.Setup(dt => dt.ResolveTypeBySimpleName("Company")).Returns(typeof(Company));
@@ -57,8 +57,8 @@ public partial class ExpressionParserTests
 #else
         var expected = "Convert((Convert(A, Int32) | Convert(B, Int32)), ExampleFlags)";
 #endif
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
-        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B }, null);
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x")];
+        var sut = new ExpressionParser(parameters, expression, [ExampleFlags.A, ExampleFlags.B], null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
@@ -87,8 +87,8 @@ public partial class ExpressionParserTests
 #else
         var expected = "Convert((Convert(A, Int32) & Convert(B, Int32)), ExampleFlags)";
 #endif
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
-        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B }, null);
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x")];
+        var sut = new ExpressionParser(parameters, expression, [ExampleFlags.A, ExampleFlags.B], null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
@@ -117,8 +117,8 @@ public partial class ExpressionParserTests
 #else
         var expected = "Convert(((Convert(A, Int32) | Convert(B, Int32)) | Convert(C, Int32)), ExampleFlags)";
 #endif
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
-        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B, ExampleFlags.C }, null);
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x")];
+        var sut = new ExpressionParser(parameters, expression, [ExampleFlags.A, ExampleFlags.B, ExampleFlags.C], null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
@@ -147,8 +147,8 @@ public partial class ExpressionParserTests
 #else
         var expected = "Convert(((Convert(A, Int32) & Convert(B, Int32)) & Convert(C, Int32)), ExampleFlags)";
 #endif
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
-        var sut = new ExpressionParser(parameters, expression, new object[] { ExampleFlags.A, ExampleFlags.B, ExampleFlags.C }, null);
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x")];
+        var sut = new ExpressionParser(parameters, expression, [ExampleFlags.A, ExampleFlags.B, ExampleFlags.C], null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
@@ -172,7 +172,7 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "0b1100000011101";
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x")];
         var sut = new ExpressionParser(parameters, expression, null, null);
 
         // Act
@@ -187,7 +187,7 @@ public partial class ExpressionParserTests
     {
         // Arrange
         var expression = "0xFF";
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x")];
         var sut = new ExpressionParser(parameters, expression, null, null);
 
         // Act
@@ -216,7 +216,7 @@ public partial class ExpressionParserTests
     public void Parse_ParseComparisonOperator(string expression, string result)
     {
         // Arrange
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x") };
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(int), "x")];
         var sut = new ExpressionParser(parameters, expression, null, null);
 
         // Act
@@ -233,7 +233,7 @@ public partial class ExpressionParserTests
     public void Parse_ParseOrOperator(string expression, string result)
     {
         // Arrange
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x") };
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x")];
         var sut = new ExpressionParser(parameters, expression, null, null);
 
         // Act
@@ -250,7 +250,7 @@ public partial class ExpressionParserTests
     public void Parse_ParseAndOperator(string expression, string result)
     {
         // Arrange
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x") };
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x")];
         var sut = new ExpressionParser(parameters, expression, null, null);
 
         // Act
@@ -264,22 +264,51 @@ public partial class ExpressionParserTests
     public void Parse_ParseMultipleInOperators()
     {
         // Arrange
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x") };
-        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name in (\"A\", \"B\")", null, null);
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name in (\"A\", \"B\") && 'y' in Name && 'z' in Name", null, null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso ((x.Name == \"A\") OrElse (x.Name == \"B\")))");
+        Check.That(parsedExpression).Equals("(((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso ((x.Name == \"A\") OrElse (x.Name == \"B\"))) AndAlso x.Name.Contains(y)) AndAlso x.Name.Contains(z))");
+    }
+
+    [Fact]
+    public void Parse_ParseMultipleInAndNotInOperators()
+    {
+        // Arrange
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name not in (\"A\", \"B\") && 'y' in Name && 'z' not in Name", null, null);
+
+        // Act
+        var parsedExpression = sut.Parse(null).ToString();
+
+        // Assert
+        Check.That(parsedExpression).Equals("(((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso Not(((x.Name == \"A\") OrElse (x.Name == \"B\")))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z)))");
+    }
+
+
+    [Fact]
+    public void Parse_ParseMultipleInAndNotInAndNot_InOperators()
+    {
+        // Arrange
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and MainCompanyId not in (3, 4) and Name not_in (\"A\", \"B\") && 'y' in Name && 'z' not in Name && 's' not_in Name", null, null);
+
+        // Act
+        var parsedExpression = sut.Parse(null).ToString();
+
+        // Assert
+        Check.That(parsedExpression).Equals("(((((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso Not(((x.MainCompanyId == 3) OrElse (x.MainCompanyId == 4)))) AndAlso Not(((x.Name == \"A\") OrElse (x.Name == \"B\")))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z))) AndAlso Not(x.Name.Contains(s)))");
     }
 
     [Fact]
     public void Parse_ParseInWrappedInParenthesis()
     {
         // Arrange
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x") };
-        var sut = new ExpressionParser(parameters, "(MainCompanyId in @0)", new object[] { new long?[] { 1, 2 } }, null);
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
+        var sut = new ExpressionParser(parameters, "(MainCompanyId in @0)", [new long?[] { 1, 2 }], null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
@@ -309,7 +338,7 @@ public partial class ExpressionParserTests
     public void Parse_CastStringIntShouldReturnConstantExpression(string expression, object result)
     {
         // Arrange
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x") };
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x")];
         var sut = new ExpressionParser(parameters, expression, null, null);
 
         // Act
@@ -332,7 +361,7 @@ public partial class ExpressionParserTests
     public void Parse_NullableShouldReturnNullable(string expression, object resultType, object result)
     {
         // Arrange
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x") };
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(bool), "x")];
         var sut = new ExpressionParser(parameters, expression, null, null);
 
         // Act
@@ -361,7 +390,7 @@ public partial class ExpressionParserTests
             CustomTypeProvider = _dynamicTypeProviderMock.Object,
             AllowEqualsAndToStringMethodsOnObject = true
         };
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
+        ParameterExpression[] parameters = [ ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") ];
         var sut = new ExpressionParser(parameters, expression, null, config);
 
         // Act
@@ -394,7 +423,8 @@ public partial class ExpressionParserTests
         {
             PrioritizePropertyOrFieldOverTheType = false
         };
-        ParameterExpression[] parameters = { ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") };
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company")
+        ];
 
         // Act
         string parsedExpression;
@@ -436,7 +466,7 @@ public partial class ExpressionParserTests
     public void Parse_InvalidExpressionShouldThrowArgumentException()
     {
         // Arrange & Act
-        Action act = () => DynamicExpressionParser.ParseLambda<MyView, bool>(ParsingConfig.Default, false, "Properties[\"foo\"] > 2", Array.Empty<object>());
+        Action act = () => DynamicExpressionParser.ParseLambda<MyView, bool>(ParsingConfig.Default, false, "Properties[\"foo\"] > 2", []);
 
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage("Method 'Compare' not found on type 'System.String' or 'System.Int32'");

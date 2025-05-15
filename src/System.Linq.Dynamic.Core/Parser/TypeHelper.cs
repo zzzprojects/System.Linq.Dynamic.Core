@@ -6,6 +6,24 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal static class TypeHelper
 {
+    internal static bool TryGetAsEnumerable(Type type, [NotNullWhen(true)] out Type? enumerableType)
+    {
+        if (type.IsArray)
+        {
+            enumerableType = typeof(IEnumerable<>).MakeGenericType(type.GetElementType()!);
+            return true;
+        }
+
+        if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+        {
+            enumerableType = type;
+            return true;
+        }
+
+        enumerableType = null;
+        return false;
+    }
+
     public static bool TryGetFirstGenericArgument(Type type, [NotNullWhen(true)] out Type? genericType)
     {
         var genericArguments = type.GetTypeInfo().GetGenericTypeArguments();
@@ -196,79 +214,79 @@ internal static class TypeHelper
         }
         return false;
 #else
-            if (source == target)
-            {
-                return true;
-            }
+        if (source == target)
+        {
+            return true;
+        }
 
-            if (!target.GetTypeInfo().IsValueType)
-            {
-                return target.IsAssignableFrom(source);
-            }
+        if (!target.GetTypeInfo().IsValueType)
+        {
+            return target.IsAssignableFrom(source);
+        }
 
-            Type st = GetNonNullableType(source);
-            Type tt = GetNonNullableType(target);
+        Type st = GetNonNullableType(source);
+        Type tt = GetNonNullableType(target);
 
-            if (st != source && tt == target)
-            {
-                return false;
-            }
-
-            Type sc = st.GetTypeInfo().IsEnum ? typeof(object) : st;
-            Type tc = tt.GetTypeInfo().IsEnum ? typeof(object) : tt;
-
-            if (sc == typeof(sbyte))
-            {
-                if (tc == typeof(sbyte) || tc == typeof(short) || tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
-                    return true;
-            }
-            else if (sc == typeof(byte))
-            {
-                if (tc == typeof(byte) || tc == typeof(short) || tc == typeof(ushort) || tc == typeof(int) || tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
-                    return true;
-            }
-            else if (sc == typeof(short))
-            {
-                if (tc == typeof(short) || tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
-                    return true;
-            }
-            else if (sc == typeof(ushort))
-            {
-                if (tc == typeof(ushort) || tc == typeof(int) || tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
-                    return true;
-            }
-            else if (sc == typeof(int))
-            {
-                if (tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
-                    return true;
-            }
-            else if (sc == typeof(uint))
-            {
-                if (tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
-                    return true;
-            }
-            else if (sc == typeof(long))
-            {
-                if (tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
-                    return true;
-            }
-            else if (sc == typeof(ulong))
-            {
-                if (tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
-                    return true;
-            }
-            else if (sc == typeof(float))
-            {
-                if (tc == typeof(float) || tc == typeof(double))
-                    return true;
-            }
-
-            if (st == tt)
-            {
-                return true;
-            }
-
+        if (st != source && tt == target)
+        {
             return false;
+        }
+
+        Type sc = st.GetTypeInfo().IsEnum ? typeof(object) : st;
+        Type tc = tt.GetTypeInfo().IsEnum ? typeof(object) : tt;
+
+        if (sc == typeof(sbyte))
+        {
+            if (tc == typeof(sbyte) || tc == typeof(short) || tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
+                return true;
+        }
+        else if (sc == typeof(byte))
+        {
+            if (tc == typeof(byte) || tc == typeof(short) || tc == typeof(ushort) || tc == typeof(int) || tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
+                return true;
+        }
+        else if (sc == typeof(short))
+        {
+            if (tc == typeof(short) || tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
+                return true;
+        }
+        else if (sc == typeof(ushort))
+        {
+            if (tc == typeof(ushort) || tc == typeof(int) || tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
+                return true;
+        }
+        else if (sc == typeof(int))
+        {
+            if (tc == typeof(int) || tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
+                return true;
+        }
+        else if (sc == typeof(uint))
+        {
+            if (tc == typeof(uint) || tc == typeof(long) || tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
+                return true;
+        }
+        else if (sc == typeof(long))
+        {
+            if (tc == typeof(long) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
+                return true;
+        }
+        else if (sc == typeof(ulong))
+        {
+            if (tc == typeof(ulong) || tc == typeof(float) || tc == typeof(double) || tc == typeof(decimal))
+                return true;
+        }
+        else if (sc == typeof(float))
+        {
+            if (tc == typeof(float) || tc == typeof(double))
+                return true;
+        }
+
+        if (st == tt)
+        {
+            return true;
+        }
+
+        return false;
 #endif
     }
 
@@ -391,19 +409,19 @@ internal static class TypeHelper
                 return 0;
         }
 #else
-            if (type.GetTypeInfo().IsEnum)
-            {
-                return 0;
-            }
-
-            if (type == typeof(char) || type == typeof(float) || type == typeof(double) || type == typeof(decimal))
-                return 1;
-            if (type == typeof(sbyte) || type == typeof(short) || type == typeof(int) || type == typeof(long))
-                return 2;
-            if (type == typeof(byte) || type == typeof(ushort) || type == typeof(uint) || type == typeof(ulong))
-                return 3;
-
+        if (type.GetTypeInfo().IsEnum)
+        {
             return 0;
+        }
+
+        if (type == typeof(char) || type == typeof(float) || type == typeof(double) || type == typeof(decimal))
+            return 1;
+        if (type == typeof(sbyte) || type == typeof(short) || type == typeof(int) || type == typeof(long))
+            return 2;
+        if (type == typeof(byte) || type == typeof(ushort) || type == typeof(uint) || type == typeof(ulong))
+            return 3;
+
+        return 0;
 #endif
     }
 
@@ -484,7 +502,7 @@ internal static class TypeHelper
 
     public static bool TryParseEnum(string value, Type? type, [NotNullWhen(true)] out object? enumValue)
     {
-        if (type is { } && type.GetTypeInfo().IsEnum && Enum.IsDefined(type, value))
+        if (type != null && type.GetTypeInfo().IsEnum && Enum.IsDefined(type, value))
         {
             enumValue = Enum.Parse(type, value, true);
             return true;
