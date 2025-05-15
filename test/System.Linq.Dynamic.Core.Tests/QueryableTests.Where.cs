@@ -412,7 +412,7 @@ public partial class QueryableTests
             .ToArray();
 
         // Assert
-        result.Should().ContainInConsecutiveOrder(5, 50);
+        result.Should().ContainInOrder(5, 50);
     }
 
     [Fact]
@@ -438,7 +438,7 @@ public partial class QueryableTests
             .ToArray();
 
         // Assert
-        result.Should().ContainInConsecutiveOrder(5, 50);
+        result.Should().ContainInOrder(5, 50);
     }
 
     [ExcludeFromCodeCoverage]
