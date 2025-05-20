@@ -1281,8 +1281,8 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = qry.Where(x => new[] { TestEnum.Var1, TestEnum.Var2 }.Contains(x.TestEnum)).ToArray();
-            var result1 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")", config).ToArray();
-            var result2 = qry.Where("it.TestEnum in (0, 1)", config).ToArray();
+            var result1 = qry.Where(config, "it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
+            var result2 = qry.Where(config, "it.TestEnum in (0, 1)").ToArray();
 
             // Assert
             Check.That(result1).ContainsExactly(expected);

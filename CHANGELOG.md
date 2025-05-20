@@ -1,3 +1,11 @@
+# v1.6.4 (19 May 2025)
+- [#915](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/915) - Add support for &quot;not in&quot; and &quot;not_in&quot; [feature] contributed by [StefH](https://github.com/StefH)
+- [#923](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/923) - Fix MethodFinder TryFindAggregateMethod to support array [bug] contributed by [StefH](https://github.com/StefH)
+- [#925](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/925) - Add extra unittests for NullPropagation / ToString / AllowEqualsAndToStringMethodsOnObject is true [test] contributed by [StefH](https://github.com/StefH)
+- [#926](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/926) - Add validation when passing ParsingConfig in args [feature] contributed by [StefH](https://github.com/StefH)
+- [#914](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/914) - Add support for &quot;not in&quot; [feature]
+- [#919](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/919) - Calling Sum in a Sum throws an InvalidOperationException [bug]
+
 # v1.6.3 (09 May 2025)
 - [#922](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/922) - Update DynamicGetMemberBinder to only add BindingRestrictions for dynamic type and cache the DynamicMetaObject [bug] contributed by [StefH](https://github.com/StefH)
 - [#921](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/921) - Strange Performance issue after upgrading from 1.6.0.2 to 1.6.2 [bug]
