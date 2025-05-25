@@ -34,7 +34,7 @@
         <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' ">
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net7.0' or '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0'">
         <DefineConstants>$(DefineConstants);ASYNCENUMERABLE</DefineConstants>
     </PropertyGroup>
 
