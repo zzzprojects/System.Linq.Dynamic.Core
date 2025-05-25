@@ -19,13 +19,13 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
         }
 
         private readonly Mock<IExpressionPromoter> _expressionPromoterMock;
-        private readonly Mock<IDynamicLinkCustomTypeProvider> _dynamicLinkCustomTypeProviderMock;
+        private readonly Mock<IDynamicLinqCustomTypeProvider> _dynamicLinqCustomTypeProviderMock;
 
         public ExpressionPromoterTests()
         {
-            _dynamicLinkCustomTypeProviderMock = new Mock<IDynamicLinkCustomTypeProvider>();
-            _dynamicLinkCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type>());
-            _dynamicLinkCustomTypeProviderMock.Setup(d => d.ResolveType(It.IsAny<string>())).Returns(typeof(SampleDto));
+            _dynamicLinqCustomTypeProviderMock = new Mock<IDynamicLinqCustomTypeProvider>();
+            _dynamicLinqCustomTypeProviderMock.Setup(d => d.GetCustomTypes()).Returns(new HashSet<Type>());
+            _dynamicLinqCustomTypeProviderMock.Setup(d => d.ResolveType(It.IsAny<string>())).Returns(typeof(SampleDto));
 
             _expressionPromoterMock = new Mock<IExpressionPromoter>();
             _expressionPromoterMock.Setup(e => e.Promote(It.IsAny<Expression>(), It.IsAny<Type>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(Expression.Constant(Guid.NewGuid()));
@@ -38,7 +38,7 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             var parsingConfig = new ParsingConfig()
             {
                 AllowNewToEvaluateAnyType = true,
-                CustomTypeProvider = _dynamicLinkCustomTypeProviderMock.Object,
+                CustomTypeProvider = _dynamicLinqCustomTypeProviderMock.Object,
                 ExpressionPromoter = _expressionPromoterMock.Object
             };
 
@@ -52,8 +52,8 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             Assert.NotNull(result);
 
             // Verify
-            _dynamicLinkCustomTypeProviderMock.Verify(d => d.GetCustomTypes(), Times.Once);
-            _dynamicLinkCustomTypeProviderMock.Verify(d => d.ResolveType($"{typeof(SampleDto).FullName}"), Times.Once);
+            _dynamicLinqCustomTypeProviderMock.Verify(d => d.GetCustomTypes(), Times.Once);
+            _dynamicLinqCustomTypeProviderMock.Verify(d => d.ResolveType($"{typeof(SampleDto).FullName}"), Times.Once);
 
             _expressionPromoterMock.Verify(e => e.Promote(It.IsAny<ConstantExpression>(), typeof(Guid), true, true), Times.Once);
         }
