@@ -1,3 +1,7 @@
+# v1.6.5 (28 May 2025)
+- [#905](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/905) - Fix: Add Fallback in ExpressionPromoter to Handle Cache Cleanup in ConstantExpressionHelper [bug] contributed by [RenanCarlosPereira](https://github.com/RenanCarlosPereira)
+- [#904](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/904) - Race Condition in ConstantExpressionHelper Causing Parsing Failures [bug]
+
 # v1.6.4 (19 May 2025)
 - [#915](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/915) - Add support for &quot;not in&quot; and &quot;not_in&quot; [feature] contributed by [StefH](https://github.com/StefH)
 - [#923](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/923) - Fix MethodFinder TryFindAggregateMethod to support array [bug] contributed by [StefH](https://github.com/StefH)
