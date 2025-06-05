@@ -2,6 +2,7 @@
 using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
 using System.Linq.Dynamic.Core.Validation;
+using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 
 namespace System.Linq.Dynamic.Core.NewtonsoftJson;
@@ -302,6 +303,42 @@ public static class NewtonsoftJsonExtensions
         return FirstOrDefault(source, NewtonsoftJsonParsingConfig.Default, predicate, args);
     }
     #endregion FirstOrDefault
+
+    #region GroupBy
+    /// <summary>
+    /// Groups the elements of a sequence according to a specified key string function 
+    /// and creates a result value from each group and its key.
+    /// </summary>
+    /// <param name="source">A <see cref="JArray"/> whose elements to group.</param>
+    /// <param name="keySelector">A string expression to specify the key for each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> where each element represents a projection over a group and its key.</returns>
+    [PublicAPI]
+    public static JArray GroupBy(this JArray source, string keySelector, params object[]? args)
+    {
+        return GroupBy(source, NewtonsoftJsonParsingConfig.Default, keySelector, args);
+    }
+
+    /// <summary>
+    /// Groups the elements of a sequence according to a specified key string function 
+    /// and creates a result value from each group and its key.
+    /// </summary>
+    /// <param name="source">A <see cref="JArray"/> whose elements to group.</param>
+    /// <param name="config">The <see cref="NewtonsoftJsonParsingConfig"/>.</param>
+    /// <param name="keySelector">A string expression to specify the key for each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JArray"/> where each element represents a projection over a group and its key.</returns>
+    [PublicAPI]
+    public static JArray GroupBy(this JArray source, NewtonsoftJsonParsingConfig config, string keySelector, params object[]? args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+        Check.NotNullOrEmpty(keySelector);
+
+        var queryable = ToQueryable(source, config);
+        return ToJArray(() => queryable.GroupBy(config, keySelector, args));
+    }
+    #endregion
 
     #region Last
     /// <summary>
@@ -813,7 +850,17 @@ public static class NewtonsoftJsonExtensions
         var array = new JArray();
         foreach (var dynamicElement in func())
         {
-            var element = dynamicElement is DynamicClass dynamicClass ? JObject.FromObject(dynamicClass) : dynamicElement;
+            var element = dynamicElement switch
+            {
+                IGrouping<object, object> grouping => new JObject
+                {
+                    [nameof(grouping.Key)] = JToken.FromObject(grouping.Key),
+                    ["Values"] = ToJArray(grouping.AsQueryable)
+                },
+                DynamicClass dynamicClass => JObject.FromObject(dynamicClass),
+                _ => dynamicElement
+            };
+
             array.Add(element);
         }
 

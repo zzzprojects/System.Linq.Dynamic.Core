@@ -5,6 +5,7 @@ using System.Linq.Dynamic.Core.SystemTextJson.Extensions;
 using System.Linq.Dynamic.Core.SystemTextJson.Utils;
 using System.Linq.Dynamic.Core.Validation;
 using System.Text.Json;
+using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson;
 
@@ -370,6 +371,42 @@ public static class SystemTextJsonExtensions
         return FirstOrDefault(source, SystemTextJsonParsingConfig.Default, predicate, args);
     }
     #endregion FirstOrDefault
+
+    #region GroupBy
+    /// <summary>
+    /// Groups the elements of a sequence according to a specified key string function 
+    /// and creates a result value from each group and its key.
+    /// </summary>
+    /// <param name="source">A <see cref="JsonDocument"/> whose elements to group.</param>
+    /// <param name="keySelector">A string expression to specify the key for each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> where each element represents a projection over a group and its key.</returns>
+    [PublicAPI]
+    public static JsonDocument GroupBy(this JsonDocument source, string keySelector, params object[]? args)
+    {
+        return GroupBy(source, SystemTextJsonParsingConfig.Default, keySelector, args);
+    }
+
+    /// <summary>
+    /// Groups the elements of a sequence according to a specified key string function 
+    /// and creates a result value from each group and its key.
+    /// </summary>
+    /// <param name="source">A <see cref="JsonDocument"/> whose elements to group.</param>
+    /// <param name="config">The <see cref="SystemTextJsonParsingConfig"/>.</param>
+    /// <param name="keySelector">A string expression to specify the key for each element.</param>
+    /// <param name="args">An object array that contains zero or more objects to insert into the predicate as parameters. Similar to the way String.Format formats strings.</param>
+    /// <returns>A <see cref="JsonDocument"/> where each element represents a projection over a group and its key.</returns>
+    [PublicAPI]
+    public static JsonDocument GroupBy(this JsonDocument source, SystemTextJsonParsingConfig config, string keySelector, params object[]? args)
+    {
+        Check.NotNull(source);
+        Check.NotNull(config);
+        Check.NotNullOrEmpty(keySelector);
+
+        var queryable = ToQueryable(source, config);
+        return ToJsonDocumentArray(() => queryable.GroupBy(config, keySelector, args));
+    }
+    #endregion
 
     #region Last
     /// <summary>
@@ -1037,7 +1074,17 @@ public static class SystemTextJsonExtensions
         var array = new List<object?>();
         foreach (var dynamicElement in func())
         {
-            array.Add(ToJsonElement(dynamicElement));
+            var element = dynamicElement switch
+            {
+                IGrouping<object, object> grouping => ToJsonElement(new
+                {
+                    Key = ToJsonElement(grouping.Key),
+                    Values = ToJsonDocumentArray(grouping.AsQueryable)
+                }),
+                _ => ToJsonElement(dynamicElement)
+            };
+
+            array.Add(element);
         }
 
         return JsonDocumentUtils.FromObject(array);

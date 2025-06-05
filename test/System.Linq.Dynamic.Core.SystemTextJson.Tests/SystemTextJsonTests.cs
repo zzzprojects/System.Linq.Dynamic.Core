@@ -6,6 +6,11 @@ namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 
 public class SystemTextJsonTests
 {
+    private static readonly JsonSerializerOptions options = new JsonSerializerOptions
+    {
+        WriteIndented = true
+    };
+
     private const string ExampleJsonObjectArray =
         """
         [
@@ -172,6 +177,89 @@ public class SystemTextJsonTests
 
         // Act + Assert 3
         _source.FirstOrDefault("Age > 999").Should().BeNull();
+    }
+
+    [Fact]
+    public void GroupBySimpleKeySelector()
+    {
+        // Arrange
+        var json =
+            """
+            [
+              {
+                "Name": "Mr. Test Smith",
+                "Type": "PAY",
+                "Something": {
+                  "Field1": "Test1",
+                  "Field2": "Test2"
+                }
+              },
+              {
+                "Name": "Mr. Test Smith",
+                "Type": "DISPATCH",
+                "Something": {
+                  "Field1": "Test1",
+                  "Field2": "Test2"
+                }
+              },
+              {
+                "Name": "Different Name",
+                "Type": "PAY",
+                "Something": {
+                  "Field1": "Test3",
+                  "Field2": "Test4"
+                }
+              }
+            ]
+            """;
+        var source = JsonDocument.Parse(json);
+
+        // Act
+        var result = source.GroupBy("Type");
+        var resultAsJson = JsonSerializer.Serialize(result, options);
+
+        // Assert
+        var expected =
+            """
+            [
+              {
+                "Key": "PAY",
+                "Values": [
+                  {
+                    "Name": "Mr. Test Smith",
+                    "Type": "PAY",
+                    "Something": {
+                      "Field1": "Test1",
+                      "Field2": "Test2"
+                    }
+                  },
+                  {
+                    "Name": "Different Name",
+                    "Type": "PAY",
+                    "Something": {
+                      "Field1": "Test3",
+                      "Field2": "Test4"
+                    }
+                  }
+                ]
+              },
+              {
+                "Key": "DISPATCH",
+                "Values": [
+                  {
+                    "Name": "Mr. Test Smith",
+                    "Type": "DISPATCH",
+                    "Something": {
+                      "Field1": "Test1",
+                      "Field2": "Test2"
+                    }
+                  }
+                ]
+              }
+            ]
+            """;
+
+        resultAsJson.Should().Be(expected);
     }
 
     [Fact]
