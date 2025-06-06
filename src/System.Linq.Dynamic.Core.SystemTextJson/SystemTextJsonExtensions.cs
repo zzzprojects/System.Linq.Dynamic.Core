@@ -1079,7 +1079,7 @@ public static class SystemTextJsonExtensions
                 IGrouping<object, object> grouping => ToJsonElement(new
                 {
                     Key = ToJsonElement(grouping.Key),
-                    Values = ToJsonDocumentArray(grouping.AsQueryable)
+                    Values = ToJsonDocumentArray(grouping.AsQueryable).RootElement
                 }),
                 _ => ToJsonElement(dynamicElement)
             };

@@ -6,7 +6,7 @@ namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 
 public class SystemTextJsonTests
 {
-    private static readonly JsonSerializerOptions options = new JsonSerializerOptions
+    private static readonly JsonSerializerOptions _options = new()
     {
         WriteIndented = true
     };
@@ -147,7 +147,7 @@ public class SystemTextJsonTests
                 }
             ]
             """;
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source.Select("Name").Distinct();
@@ -212,11 +212,11 @@ public class SystemTextJsonTests
               }
             ]
             """;
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source.GroupBy("Type");
-        var resultAsJson = JsonSerializer.Serialize(result, options);
+        var resultAsJson = JsonSerializer.Serialize(result, _options);
 
         // Assert
         var expected =
@@ -353,7 +353,7 @@ public class SystemTextJsonTests
                }
             ]
             """;
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source.OrderBy("Age, Name").Select("Name");
@@ -367,7 +367,7 @@ public class SystemTextJsonTests
     public void Page()
     {
         var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source.Page(2, 3);
@@ -381,7 +381,7 @@ public class SystemTextJsonTests
     public void PageResult()
     {
         var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var pagedResult = source.PageResult(2, 3);
@@ -427,7 +427,7 @@ public class SystemTextJsonTests
                    ]
                }]
             """;
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source
