@@ -1269,10 +1269,6 @@ namespace System.Linq.Dynamic.Core.Tests
         [Fact]
         public void ExpressionTests_In_Enum()
         {
-            var config = new ParsingConfig();
-#if NETSTANDARD
-            // config.CustomTypeProvider = new NetStandardCustomTypeProvider();
-#endif
             // Arrange
             var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
             var model2 = new ModelWithEnum { TestEnum = TestEnum.Var2 };
@@ -1281,8 +1277,28 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = qry.Where(x => new[] { TestEnum.Var1, TestEnum.Var2 }.Contains(x.TestEnum)).ToArray();
-            var result1 = qry.Where(config, "it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
-            var result2 = qry.Where(config, "it.TestEnum in (0, 1)").ToArray();
+            var result1 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
+            var result2 = qry.Where("it.TestEnum in (0, 1)").ToArray();
+
+            // Assert
+            Check.That(result1).ContainsExactly(expected);
+            Check.That(result2).ContainsExactly(expected);
+        }
+
+        [Fact]
+        public void ExpressionTests_In_EnumIsNullable()
+        {
+            // Arrange
+            var model1 = new ModelWithEnum { TestEnumNullable = TestEnum.Var1 };
+            var model2 = new ModelWithEnum { TestEnumNullable = TestEnum.Var2 };
+            var model3 = new ModelWithEnum { TestEnumNullable = TestEnum.Var3 };
+            var model4 = new ModelWithEnum { TestEnumNullable = null };
+            var qry = new[] { model1, model2, model3, model4 }.AsQueryable();
+
+            // Act
+            var expected = new[] { model1, model2 };
+            var result1 = qry.Where("it.TestEnumNullable in (\"Var1\", \"Var2\")").ToArray();
+            var result2 = qry.Where("it.TestEnumNullable in (0, 1)").ToArray();
 
             // Assert
             Check.That(result1).ContainsExactly(expected);
