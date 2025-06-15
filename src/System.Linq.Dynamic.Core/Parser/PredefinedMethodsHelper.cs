@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq.Dynamic.Core.Validation;
 using System.Reflection;
 
 namespace System.Linq.Dynamic.Core.Parser;
@@ -23,7 +22,6 @@ internal class PredefinedMethodsHelper
         { typeof(DateTimeOffset), [] },
         { typeof(decimal), [] },
         { typeof(double), [] },
-        // { typeof(Enum), [] },
         { typeof(float), [] },
         { typeof(Guid), [] },
         { typeof(int), [] },
@@ -38,11 +36,11 @@ internal class PredefinedMethodsHelper
         { typeof(ushort), [] },
 #if NET6_0_OR_GREATER
         { typeof(DateOnly), [] },
-        { typeof(TimeOnly), [] },
+        { typeof(TimeOnly), [] }
 #endif
     };
 
-    public PredefinedMethodsHelper(ParsingConfig config)
+    internal PredefinedMethodsHelper(ParsingConfig config)
     {
         foreach (var kvp in _supported)
         {
@@ -61,11 +59,8 @@ internal class PredefinedMethodsHelper
         }
     }
 
-    public bool IsPredefinedMethod(Type type, Type declaringType, MemberInfo member)
+    internal bool IsPredefinedMethod(Type type, Type declaringType, MemberInfo member)
     {
-        Check.NotNull(type);
-        Check.NotNull(member);
-
         if (_supported.TryGetValue(type, out var supportedMethodsForType) && supportedMethodsForType.Count > 0)
         {
             return supportedMethodsForType.Contains(member);
