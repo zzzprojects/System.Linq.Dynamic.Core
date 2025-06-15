@@ -414,7 +414,7 @@ public static class DynamicClassFactory
         ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendString);
         ilgeneratorToString.Emit(OpCodes.Pop);
         ilgeneratorToString.Emit(OpCodes.Ldloc_0);
-        ilgeneratorToString.Emit(OpCodes.Callvirt, PredefinedMethodsHelper.ObjectToString);
+        ilgeneratorToString.Emit(OpCodes.Callvirt, PredefinedMethodsHelper.ObjectInstanceToString);
         ilgeneratorToString.Emit(OpCodes.Ret);
 
         EmitEqualityOperators(typeBuilder, equals);
