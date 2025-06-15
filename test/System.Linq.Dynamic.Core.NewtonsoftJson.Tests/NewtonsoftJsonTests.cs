@@ -169,6 +169,88 @@ public class NewtonsoftJsonTests
     }
 
     [Fact]
+    public void GroupBySimpleKeySelector()
+    {
+        // Arrange
+        var json =
+            """
+            [
+              {
+                "Name": "Mr. Test Smith",
+                "Type": "PAY",
+                "Something": {
+                  "Field1": "Test1",
+                  "Field2": "Test2"
+                }
+              },
+              {
+                "Name": "Mr. Test Smith",
+                "Type": "DISPATCH",
+                "Something": {
+                  "Field1": "Test1",
+                  "Field2": "Test2"
+                }
+              },
+              {
+                "Name": "Different Name",
+                "Type": "PAY",
+                "Something": {
+                  "Field1": "Test3",
+                  "Field2": "Test4"
+                }
+              }
+            ]
+            """;
+        var source = JArray.Parse(json);
+
+        // Act
+        var resultAsJson = source.GroupBy("Type").ToString();
+
+        // Assert
+        var expected =
+            """
+            [
+              {
+                "Key": "PAY",
+                "Values": [
+                  {
+                    "Name": "Mr. Test Smith",
+                    "Type": "PAY",
+                    "Something": {
+                      "Field1": "Test1",
+                      "Field2": "Test2"
+                    }
+                  },
+                  {
+                    "Name": "Different Name",
+                    "Type": "PAY",
+                    "Something": {
+                      "Field1": "Test3",
+                      "Field2": "Test4"
+                    }
+                  }
+                ]
+              },
+              {
+                "Key": "DISPATCH",
+                "Values": [
+                  {
+                    "Name": "Mr. Test Smith",
+                    "Type": "DISPATCH",
+                    "Something": {
+                      "Field1": "Test1",
+                      "Field2": "Test2"
+                    }
+                  }
+                ]
+              }
+            ]
+            """;
+
+        resultAsJson.Should().Be(expected);
+    }
+
+    [Fact]
     public void Last()
     {
         // Act + Assert 

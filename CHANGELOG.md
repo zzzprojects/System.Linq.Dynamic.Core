@@ -1,3 +1,12 @@
+# v1.6.6 (11 June 2025)
+- [#929](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/929) - Add GroupBy method for Z.DynamicLinq.SystemTextJson and Z.DynamicLinq.NewtonsoftJson contributed by [StefH](https://github.com/StefH)
+- [#932](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/932) - Fix &quot;in&quot; for nullable Enums [bug] contributed by [StefH](https://github.com/StefH)
+- [#931](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/931) - Syntax IN dont work with nullable Enums [bug]
+
+# v1.6.5 (28 May 2025)
+- [#905](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/905) - Fix: Add Fallback in ExpressionPromoter to Handle Cache Cleanup in ConstantExpressionHelper [bug] contributed by [RenanCarlosPereira](https://github.com/RenanCarlosPereira)
+- [#904](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/904) - Race Condition in ConstantExpressionHelper Causing Parsing Failures [bug]
+
 # v1.6.4 (19 May 2025)
 - [#915](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/915) - Add support for &quot;not in&quot; and &quot;not_in&quot; [feature] contributed by [StefH](https://github.com/StefH)
 - [#923](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/923) - Fix MethodFinder TryFindAggregateMethod to support array [bug] contributed by [StefH](https://github.com/StefH)

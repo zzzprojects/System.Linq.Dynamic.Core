@@ -376,8 +376,8 @@ public class ExpressionParser
                     // we need to parse unary expressions because otherwise 'in' clause will fail in use cases like 'in (-1, -1)' or 'in (!true)'
                     Expression right = ParseUnary();
 
-                    // if the identifier is an Enum, try to convert the right-side also to an Enum.
-                    if (left.Type.GetTypeInfo().IsEnum)
+                    // if the identifier is an Enum (or nullable Enum), try to convert the right-side also to an Enum.
+                    if (TypeHelper.GetNonNullableType(left.Type).GetTypeInfo().IsEnum)
                     {
                         if (right is ConstantExpression constantExprRight)
                         {

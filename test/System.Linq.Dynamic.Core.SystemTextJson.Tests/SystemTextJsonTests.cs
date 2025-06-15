@@ -6,6 +6,11 @@ namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 
 public class SystemTextJsonTests
 {
+    private static readonly JsonSerializerOptions _options = new()
+    {
+        WriteIndented = true
+    };
+
     private const string ExampleJsonObjectArray =
         """
         [
@@ -142,7 +147,7 @@ public class SystemTextJsonTests
                 }
             ]
             """;
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source.Select("Name").Distinct();
@@ -172,6 +177,89 @@ public class SystemTextJsonTests
 
         // Act + Assert 3
         _source.FirstOrDefault("Age > 999").Should().BeNull();
+    }
+
+    [Fact]
+    public void GroupBySimpleKeySelector()
+    {
+        // Arrange
+        var json =
+            """
+            [
+              {
+                "Name": "Mr. Test Smith",
+                "Type": "PAY",
+                "Something": {
+                  "Field1": "Test1",
+                  "Field2": "Test2"
+                }
+              },
+              {
+                "Name": "Mr. Test Smith",
+                "Type": "DISPATCH",
+                "Something": {
+                  "Field1": "Test1",
+                  "Field2": "Test2"
+                }
+              },
+              {
+                "Name": "Different Name",
+                "Type": "PAY",
+                "Something": {
+                  "Field1": "Test3",
+                  "Field2": "Test4"
+                }
+              }
+            ]
+            """;
+        using var source = JsonDocument.Parse(json);
+
+        // Act
+        var result = source.GroupBy("Type");
+        var resultAsJson = JsonSerializer.Serialize(result, _options);
+
+        // Assert
+        var expected =
+            """
+            [
+              {
+                "Key": "PAY",
+                "Values": [
+                  {
+                    "Name": "Mr. Test Smith",
+                    "Type": "PAY",
+                    "Something": {
+                      "Field1": "Test1",
+                      "Field2": "Test2"
+                    }
+                  },
+                  {
+                    "Name": "Different Name",
+                    "Type": "PAY",
+                    "Something": {
+                      "Field1": "Test3",
+                      "Field2": "Test4"
+                    }
+                  }
+                ]
+              },
+              {
+                "Key": "DISPATCH",
+                "Values": [
+                  {
+                    "Name": "Mr. Test Smith",
+                    "Type": "DISPATCH",
+                    "Something": {
+                      "Field1": "Test1",
+                      "Field2": "Test2"
+                    }
+                  }
+                ]
+              }
+            ]
+            """;
+
+        resultAsJson.Should().Be(expected);
     }
 
     [Fact]
@@ -265,7 +353,7 @@ public class SystemTextJsonTests
                }
             ]
             """;
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source.OrderBy("Age, Name").Select("Name");
@@ -279,7 +367,7 @@ public class SystemTextJsonTests
     public void Page()
     {
         var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source.Page(2, 3);
@@ -293,7 +381,7 @@ public class SystemTextJsonTests
     public void PageResult()
     {
         var json = "[1, 2, 3, 4, 5, 6, 7, 8, 9, 0]";
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var pagedResult = source.PageResult(2, 3);
@@ -339,7 +427,7 @@ public class SystemTextJsonTests
                    ]
                }]
             """;
-        var source = JsonDocument.Parse(json);
+        using var source = JsonDocument.Parse(json);
 
         // Act
         var result = source
