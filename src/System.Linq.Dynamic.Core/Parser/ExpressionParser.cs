@@ -527,7 +527,11 @@ public class ExpressionParser
                 // If left or right is NullLiteral, just continue. Else check if the types differ.
                 if (!(Constants.IsNull(left) || Constants.IsNull(right)) && left.Type != right.Type)
                 {
-                    if (left.Type.IsAssignableFrom(right.Type) || HasImplicitConversion(right.Type, left.Type))
+                    if ((left.Type == typeof(object) || right.Type == typeof(object)) && _expressionHelper.TryConvertTypes(ref left, ref right))
+                    {
+                        // #937
+                    }
+                    else if (left.Type.IsAssignableFrom(right.Type) || HasImplicitConversion(right.Type, left.Type))
                     {
                         right = Expression.Convert(right, left.Type);
                     }
@@ -2551,7 +2555,7 @@ public class ExpressionParser
     {
         return _textParser.TokenIsIdentifier(id);
     }
-    
+
     private string GetIdentifier()
     {
         _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);
