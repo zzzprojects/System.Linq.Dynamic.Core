@@ -1,3 +1,6 @@
+# v1.6.7 (28 July 2025)
+- [#938](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/938) - Use TryConvertTypes also for strings [bug] contributed by [StefH](https://github.com/StefH)
+
 # v1.6.6 (11 June 2025)
 - [#929](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/929) - Add GroupBy method for Z.DynamicLinq.SystemTextJson and Z.DynamicLinq.NewtonsoftJson contributed by [StefH](https://github.com/StefH)
 - [#932](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/932) - Fix &quot;in&quot; for nullable Enums [bug] contributed by [StefH](https://github.com/StefH)
