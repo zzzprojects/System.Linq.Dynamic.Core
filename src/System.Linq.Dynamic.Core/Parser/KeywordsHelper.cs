@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
+using System.Threading;
 using AnyOfTypes;
 
 namespace System.Linq.Dynamic.Core.Parser;
@@ -32,7 +33,7 @@ internal class KeywordsHelper : IKeywordsHelper
     private static readonly Dictionary<string, Type> PreDefinedTypeMapping = new();
 
     // Custom DefinedTypes are not IgnoreCase
-    private readonly Dictionary<string, Type> _customTypeMapping = new();
+    private readonly Lazy<Dictionary<string, Type>> _customTypeMapping;
 
     static KeywordsHelper()
     {
@@ -66,21 +67,26 @@ internal class KeywordsHelper : IKeywordsHelper
             { FUNCTION_CAST, FUNCTION_CAST }
         };
 
+        _customTypeMapping = new Lazy<Dictionary<string, Type>>(() =>
+        {
+            Dictionary<string, Type> customTypeMapping = new();
+            if (config.CustomTypeProvider != null)
+            {
+                foreach (var type in config.CustomTypeProvider.GetCustomTypes())
+                {
+                    customTypeMapping[type.FullName!] = type;
+                    customTypeMapping[type.Name] = type;
+                }
+            }
+
+            return customTypeMapping;
+        }, LazyThreadSafetyMode.PublicationOnly);
+
         if (config.AreContextKeywordsEnabled)
         {
             _mappings.Add(KEYWORD_IT, KEYWORD_IT);
             _mappings.Add(KEYWORD_PARENT, KEYWORD_PARENT);
             _mappings.Add(KEYWORD_ROOT, KEYWORD_ROOT);
-        }
-
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (config.CustomTypeProvider != null)
-        {
-            foreach (var type in config.CustomTypeProvider.GetCustomTypes())
-            {
-                _customTypeMapping[type.FullName!] = type;
-                _customTypeMapping[type.Name] = type;
-            }
         }
     }
 
@@ -125,7 +131,7 @@ internal class KeywordsHelper : IKeywordsHelper
         }
 
         // 5. Try to get as custom type
-        if (_customTypeMapping.TryGetValue(text, out var customType))
+        if (_customTypeMapping.Value.TryGetValue(text, out var customType))
         {
             value = customType;
             return true;
