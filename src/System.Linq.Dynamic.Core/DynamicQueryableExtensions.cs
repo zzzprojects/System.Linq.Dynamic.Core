@@ -871,12 +871,10 @@ namespace System.Linq.Dynamic.Core
             Check.HasNoNulls(keySelectors);
 
             var selectors = new List<Func<TElement, object>>(keySelectors.Length);
-
-            bool createParameterCtor = true;
             foreach (var selector in keySelectors)
             {
-                LambdaExpression l = DynamicExpressionParser.ParseLambda(config, createParameterCtor, typeof(TElement), typeof(object), selector);
-                selectors.Add((Func<TElement, object>)l.Compile());
+                var lambdaExpression = DynamicExpressionParser.ParseLambda(config, createParameterCtor: true, typeof(TElement), null, selector);
+                selectors.Add((Func<TElement, object>)EnsureLambdaExpressionReturnsObject(lambdaExpression).Compile());
             }
 
             return GroupByManyInternal(source, selectors.ToArray(), 0);
@@ -913,8 +911,9 @@ namespace System.Linq.Dynamic.Core
 
             var selector = keySelectors[currentSelector];
 
-            var result = source.GroupBy(selector).Select(
-                g => new GroupResult
+            var result = source
+                .GroupBy(selector)
+                .Select(g => new GroupResult
                 {
                     Key = g.Key,
                     Count = g.Count(),
@@ -2846,6 +2845,16 @@ namespace System.Linq.Dynamic.Core
             }
 
             return (TResult?)Convert.ChangeType(result, typeof(TResult))!;
+        }
+
+        private static LambdaExpression EnsureLambdaExpressionReturnsObject(LambdaExpression lambdaExpression)
+        {
+            if (!lambdaExpression.GetReturnType().GetTypeInfo().IsSubclassOf(typeof(DynamicClass)))
+            {
+                return Expression.Lambda(Expression.Convert(lambdaExpression.Body, typeof(object)), lambdaExpression.Parameters.ToArray());
+            }
+
+            return lambdaExpression;
         }
         #endregion Private Helpers
     }

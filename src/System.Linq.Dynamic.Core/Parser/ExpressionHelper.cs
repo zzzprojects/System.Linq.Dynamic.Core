@@ -45,7 +45,7 @@ internal class ExpressionHelper : IExpressionHelper
             return true;
         }
 
-        value = default;
+        value = null;
         return false;
     }
 
@@ -53,7 +53,7 @@ internal class ExpressionHelper : IExpressionHelper
     {
         if (!_parsingConfig.UseParameterizedNamesInDynamicQuery || expression is not MemberExpression memberExpression)
         {
-            value = default;
+            value = null;
             return false;
         }
 
@@ -68,7 +68,7 @@ internal class ExpressionHelper : IExpressionHelper
             return true;
         }
 
-        value = default;
+        value = null;
         return false;
     }
 
@@ -531,6 +531,6 @@ internal class ExpressionHelper : IExpressionHelper
             return input.Cast<object>().ToArray();
         }
 
-        return new object[0];
+        return [];
     }
 }
