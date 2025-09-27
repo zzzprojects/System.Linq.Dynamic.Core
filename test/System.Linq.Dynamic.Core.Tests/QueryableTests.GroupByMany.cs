@@ -76,7 +76,7 @@ public partial class QueryableTests
             .Select(x => x.ToString())
             .ToList();
 
-        // Assert
+        // Assert 
         result.Should().BeEquivalentTo(normalResult);
     }
 }
