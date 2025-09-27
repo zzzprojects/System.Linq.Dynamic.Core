@@ -6,6 +6,8 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public abstract class DynamicClass
 {
+    internal const string IndexerName = "System_Linq_Dynamic_Core_DynamicClass_Indexer";
+
     /// <summary>
     /// Gets the dynamic property by name.
     /// </summary>

@@ -11,7 +11,7 @@ namespace System.Linq.Dynamic.Core.Tests;
 
 public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
 {
-    private static readonly Random Rnd = new Random(1);
+    private static readonly Random Rnd = new(1);
 
     private readonly BlogContext _context;
 
@@ -66,7 +66,8 @@ public partial class EntitiesTests : IClassFixture<EntitiesTestsDatabaseFixture>
                     Content = "My Content",
                     PostDate = postDate,
                     CloseDate = Rnd.Next(0, 10) < 5 ? postDate.AddDays(1) : null,
-                    NumberOfReads = Rnd.Next(0, 5000)
+                    NumberOfReads = Rnd.Next(0, 5000),
+                    Item = "Item " + Rnd.Next(0, 1000)
                 };
 
                 _context.Posts.Add(post);

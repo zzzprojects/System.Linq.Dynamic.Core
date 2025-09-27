@@ -2849,7 +2849,7 @@ namespace System.Linq.Dynamic.Core
 
         private static LambdaExpression EnsureLambdaExpressionReturnsObject(LambdaExpression lambdaExpression)
         {
-            if (!lambdaExpression.GetReturnType().GetTypeInfo().IsSubclassOf(typeof(DynamicClass)))
+            if (!TypeHelper.IsDynamicClass(lambdaExpression.GetReturnType()))
             {
                 return Expression.Lambda(Expression.Convert(lambdaExpression.Body, typeof(object)), lambdaExpression.Parameters.ToArray());
             }
