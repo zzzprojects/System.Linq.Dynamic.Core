@@ -1,6 +1,7 @@
 ﻿#if UAP10_0
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Runtime.CompilerServices;
 
 namespace System.Linq.Dynamic.Core;
 
@@ -9,6 +10,8 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public class DynamicClass : DynamicObject
 {
+    internal const string IndexerName = "System_Linq_Dynamic_Core_DynamicClass_Indexer";
+
     private readonly Dictionary<string, object> _properties = new();
 
     /// <summary>
@@ -31,6 +34,7 @@ public class DynamicClass : DynamicObject
     /// </value>
     /// <param name="name">The name.</param>
     /// <returns>Value from the property.</returns>
+    [IndexerName(IndexerName)]
     public object this[string name]
     {
         get

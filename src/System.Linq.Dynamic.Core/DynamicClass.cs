@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace System.Linq.Dynamic.Core;
 
@@ -18,6 +19,8 @@ namespace System.Linq.Dynamic.Core;
 /// </summary>
 public abstract class DynamicClass : DynamicObject
 {
+    internal const string IndexerName = "System_Linq_Dynamic_Core_DynamicClass_Indexer";
+
     private Dictionary<string, object?>? _propertiesDictionary;
 
     private Dictionary<string, object?> Properties
@@ -99,11 +102,12 @@ public abstract class DynamicClass : DynamicObject
     /// <value>The <see cref="object"/>.</value>
     /// <param name="name">The name.</param>
     /// <returns>Value from the property.</returns>
+    [IndexerName(IndexerName)]
     public object? this[string name]
     {
         get
         {
-            return Properties.TryGetValue(name, out object? result) ? result : null;
+            return Properties.TryGetValue(name, out var result) ? result : null;
         }
 
         set
@@ -153,7 +157,7 @@ public abstract class DynamicClass : DynamicObject
     /// </returns>
     public override bool TrySetMember(SetMemberBinder binder, object? value)
     {
-        string name = binder.Name;
+        var name = binder.Name;
         if (Properties.ContainsKey(name))
         {
             Properties[name] = value;

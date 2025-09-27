@@ -164,4 +164,15 @@ public partial class EntitiesTests
 
         dynamicResult.Should().BeEquivalentTo([1000, 1001]);
     }
+
+    [Fact]
+    public void Entities_Select_ClassWithItemProperty()
+    {
+        // Act
+        var result = _context.Posts.Select(x => new { x.Item, x.BlogId }).ToArray();
+        var resultDynamic = _context.Posts.Select("new (Item, BlogId)").ToDynamicArray();
+
+        // Assert
+        resultDynamic.Should().BeEquivalentTo(result);
+    }
 }
