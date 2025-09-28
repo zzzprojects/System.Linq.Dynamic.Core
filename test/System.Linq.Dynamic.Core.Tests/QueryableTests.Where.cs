@@ -5,6 +5,8 @@ using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
+using System.Text;
+using Docker.DotNet.Models;
 using FluentAssertions;
 using Xunit;
 
@@ -326,6 +328,56 @@ public partial class QueryableTests
         result2.Should().HaveCount(1);
     }
 
+    // #937
+    [Theory]
+    [InlineData("NameCalculated == \"FooFoo\"", 1)]
+    [InlineData("\"FooFoo\" == NameCalculated", 1)]
+    [InlineData("NameCalculated == \"x\"", 0)]
+    [InlineData("NameCalculated != \"x\"", 2)]
+    [InlineData("NameCalculated <> \"x\"", 2)]
+    [InlineData("\"x\" == NameCalculated", 0)]
+    [InlineData("\"x\" != NameCalculated", 2)]
+    [InlineData("\"x\" <> NameCalculated", 2)]
+    public void Where_Dynamic_CompareObjectToString_ConvertObjectToSupportComparisonIsTrue(string expression, int expectedCount)
+    {
+        // Arrange
+        var config = new ParsingConfig
+        {
+            ConvertObjectToSupportComparison = true
+        };
+        var queryable = new[]
+        {
+            new PersonWithObject { Name = "Foo", DateOfBirth = DateTime.UtcNow.AddYears(-31) },
+            new PersonWithObject { Name = "Bar", DateOfBirth = DateTime.UtcNow.AddYears(-1) }
+        }.AsQueryable();
+
+        // Act
+        queryable.Where(config, expression).ToList().Should().HaveCount(expectedCount);
+    }
+
+    // #937
+    [Theory]
+    [InlineData("NameCalculated == \"FooFoo\"", 0)] // This is the expected behavior when ConvertObjectToSupportComparison is false because "Foo" is a string and NameCalculated is an object which is a calculated string.
+    [InlineData("\"FooFoo\" == NameCalculated", 0)] // Also expected.
+    [InlineData("NameCalculated == \"x\"", 0)]
+    [InlineData("NameCalculated != \"x\"", 2)]
+    [InlineData("NameCalculated <> \"x\"", 2)]
+    [InlineData("\"x\" == NameCalculated", 0)]
+    [InlineData("\"x\" != NameCalculated", 2)]
+    [InlineData("\"x\" <> NameCalculated", 2)]
+    public void Where_Dynamic_CompareObjectToString_ConvertObjectToSupportComparisonIsFalse(string expression, int expectedCount)
+    {
+        // Arrange
+        var queryable = new[]
+        {
+            new PersonWithObject { Name = "Foo", DateOfBirth = DateTime.UtcNow.AddYears(-31) },
+            new PersonWithObject { Name = "Bar", DateOfBirth = DateTime.UtcNow.AddYears(-1) }
+        }.AsQueryable();
+
+        // Act
+        queryable.Where(expression).ToList().Should().HaveCount(expectedCount);
+    }
+
     // #451
     [Theory]
     [InlineData("Age == 99", 0)]
@@ -448,7 +500,11 @@ public partial class QueryableTests
     {
         // Deliberately typing these as `object` to illustrate the issue
         public object? Name { get; set; }
+
+        public object? NameCalculated => Name + Encoding.ASCII.GetString(Convert.FromBase64String("Rm9v")); // "...Foo";
+
         public object Age => Convert.ToInt32(Math.Floor((DateTime.Today.Month - DateOfBirth.Month + 12 * DateTime.Today.Year - 12 * DateOfBirth.Year) / 12d));
+
         public DateTime DateOfBirth { get; set; }
     }
 

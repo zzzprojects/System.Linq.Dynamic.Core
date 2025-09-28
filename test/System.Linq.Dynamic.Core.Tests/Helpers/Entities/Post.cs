@@ -22,4 +22,6 @@ public class Post
     public DateTime PostDate { get; set; }
 
     public DateTime? CloseDate { get; set; }
+
+    public string? Item { get; set; }
 }

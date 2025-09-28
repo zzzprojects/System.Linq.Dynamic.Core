@@ -84,7 +84,7 @@ Or provide a list of additional types in the [DefaultDynamicLinqCustomTypeProvid
 | &nbsp;&nbsp;**Issues** | [![GitHub issues](https://img.shields.io/github/issues/StefH/System.Linq.Dynamic.Core.svg)](https://github.com/StefH/System.Linq.Dynamic.Core/issues) |
 | | |
 | ***Quality*** | &nbsp; |
-| &nbsp;&nbsp;**CI Workflow** | ![CI Workflow](https://github.com/zzzprojects/System.Linq.Dynamic.Core/actions/workflows/ci.yml/badge.svg) |
+| &nbsp;&nbsp;**CI Workflow** | [![CI Workflow](https://github.com/zzzprojects/System.Linq.Dynamic.Core/actions/workflows/ci.yml/badge.svg)](https://github.com/zzzprojects/System.Linq.Dynamic.Core/actions/workflows/ci.yml) |
 | &nbsp;&nbsp;**SonarCloud** | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=zzzprojects_System.Linq.Dynamic.Core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=zzzprojects_System.Linq.Dynamic.Core) |
 | |
 | ***NuGet*** | &nbsp; |

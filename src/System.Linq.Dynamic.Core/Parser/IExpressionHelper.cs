@@ -48,4 +48,9 @@ internal interface IExpressionHelper
     Expression GenerateDefaultExpression(Type type);
 
     Expression ConvertAnyArrayToObjectArray(Expression arrayExpression);
+
+    /// <summary>
+    /// If the types are different (and not null), try to convert the object type to other type.
+    /// </summary>
+    public bool TryConvertTypes(ref Expression left, ref Expression right);
 }

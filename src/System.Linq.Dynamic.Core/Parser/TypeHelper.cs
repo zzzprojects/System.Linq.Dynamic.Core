@@ -6,6 +6,11 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal static class TypeHelper
 {
+    internal static bool IsDynamicClass(Type type)
+    {
+        return type == typeof(DynamicClass) || type.GetTypeInfo().IsSubclassOf(typeof(DynamicClass));
+    }
+
     internal static bool TryGetAsEnumerable(Type type, [NotNullWhen(true)] out Type? enumerableType)
     {
         if (type.IsArray)

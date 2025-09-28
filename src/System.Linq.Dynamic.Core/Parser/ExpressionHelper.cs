@@ -45,7 +45,7 @@ internal class ExpressionHelper : IExpressionHelper
             return true;
         }
 
-        value = default;
+        value = null;
         return false;
     }
 
@@ -53,7 +53,7 @@ internal class ExpressionHelper : IExpressionHelper
     {
         if (!_parsingConfig.UseParameterizedNamesInDynamicQuery || expression is not MemberExpression memberExpression)
         {
-            value = default;
+            value = null;
             return false;
         }
 
@@ -68,7 +68,7 @@ internal class ExpressionHelper : IExpressionHelper
             return true;
         }
 
-        value = default;
+        value = null;
         return false;
     }
 
@@ -378,6 +378,26 @@ internal class ExpressionHelper : IExpressionHelper
         );
     }
 
+    /// <inheritdoc/>
+    public bool TryConvertTypes(ref Expression left, ref Expression right)
+    {
+        if (!_parsingConfig.ConvertObjectToSupportComparison || left.Type == right.Type || Constants.IsNull(left) || Constants.IsNull(right))
+        {
+            return false;
+        }
+
+        if (left.Type == typeof(object))
+        {
+            left = Expression.Convert(left, right.Type);
+        }
+        else if (right.Type == typeof(object))
+        {
+            right = Expression.Convert(right, left.Type);
+        }
+
+        return true;
+    }
+
     private Expression? GetMemberExpression(Expression? expression)
     {
         if (ExpressionQualifiesForNullPropagation(expression))
@@ -455,26 +475,6 @@ internal class ExpressionHelper : IExpressionHelper
         return list;
     }
 
-    /// <summary>
-    /// If the types are different (and not null), try to convert the object type to other type.
-    /// </summary>
-    private void TryConvertTypes(ref Expression left, ref Expression right)
-    {
-        if (!_parsingConfig.ConvertObjectToSupportComparison || left.Type == right.Type || Constants.IsNull(left) || Constants.IsNull(right))
-        {
-            return;
-        }
-
-        if (left.Type == typeof(object))
-        {
-            left = Expression.Convert(left, right.Type);
-        }
-        else if (right.Type == typeof(object))
-        {
-            right = Expression.Convert(right, left.Type);
-        }
-    }
-
     private static Expression GenerateStaticMethodCall(string methodName, Expression left, Expression right)
     {
         if (!TryGetStaticMethod(methodName, left, right, out var methodInfo))
@@ -531,6 +531,6 @@ internal class ExpressionHelper : IExpressionHelper
             return input.Cast<object>().ToArray();
         }
 
-        return new object[0];
+        return [];
     }
 }
