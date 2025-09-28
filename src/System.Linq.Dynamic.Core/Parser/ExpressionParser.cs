@@ -374,8 +374,8 @@ public class ExpressionParser
                     // we need to parse unary expressions because otherwise 'in' clause will fail in use cases like 'in (-1, -1)' or 'in (!true)'
                     Expression right = ParseUnary();
 
-                    // if the identifier is an Enum, try to convert the right-side also to an Enum.
-                    if (left.Type.GetTypeInfo().IsEnum)
+                    // if the identifier is an Enum (or nullable Enum), try to convert the right-side also to an Enum.
+                    if (TypeHelper.GetNonNullableType(left.Type).GetTypeInfo().IsEnum)
                     {
                         if (right is ConstantExpression constantExprRight)
                         {
@@ -527,7 +527,11 @@ public class ExpressionParser
                 // If left or right is NullLiteral, just continue. Else check if the types differ.
                 if (!(Constants.IsNull(left) || Constants.IsNull(right)) && left.Type != right.Type)
                 {
-                    if (left.Type.IsAssignableFrom(right.Type) || HasImplicitConversion(right.Type, left.Type))
+                    if ((left.Type == typeof(object) || right.Type == typeof(object)) && _expressionHelper.TryConvertTypes(ref left, ref right))
+                    {
+                        // #937
+                    }
+                    else if (left.Type.IsAssignableFrom(right.Type) || HasImplicitConversion(right.Type, left.Type))
                     {
                         right = Expression.Convert(right, left.Type);
                     }
@@ -1576,7 +1580,7 @@ public class ExpressionParser
         var propertyInfos = type.GetProperties();
         if (type.GetTypeInfo().BaseType == typeof(DynamicClass))
         {
-            propertyInfos = propertyInfos.Where(x => x.Name != "Item").ToArray();
+            propertyInfos = propertyInfos.Where(x => x.Name != DynamicClass.IndexerName).ToArray();
         }
 
         var propertyTypes = propertyInfos.Select(p => p.PropertyType).ToArray();
@@ -1902,7 +1906,7 @@ public class ExpressionParser
 #if UAP10_0 || NETSTANDARD1_3
         if (type == typeof(DynamicClass))
         {
-            return Expression.MakeIndex(expression, typeof(DynamicClass).GetProperty("Item"), new[] { Expression.Constant(id) });
+            return Expression.MakeIndex(expression!, typeof(DynamicClass).GetProperty(DynamicClass.IndexerName), [Expression.Constant(id)]);
         }
 #endif
         if (TryFindPropertyOrField(type!, id, expression, out var propertyOrFieldExpression))
@@ -1916,7 +1920,8 @@ public class ExpressionParser
 
         if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && extraCheck)
         {
-            var indexerMethod = expression?.Type.GetMethod("get_Item", new[] { typeof(string) });
+            var indexerName = TypeHelper.IsDynamicClass(type!) ? DynamicClass.IndexerName : "Item";
+            var indexerMethod = expression?.Type.GetMethod($"get_{indexerName}", [typeof(string)]);
             if (indexerMethod != null)
             {
                 return Expression.Call(expression, indexerMethod, Expression.Constant(id));
@@ -2551,7 +2556,7 @@ public class ExpressionParser
     {
         return _textParser.TokenIsIdentifier(id);
     }
-    
+
     private string GetIdentifier()
     {
         _textParser.ValidateToken(TokenId.Identifier, Res.IdentifierExpected);

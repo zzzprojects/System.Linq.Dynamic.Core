@@ -21,6 +21,14 @@ namespace System.Linq.Dynamic.Core.Tests
     public partial class QueryableTests
     {
         [DynamicLinqType]
+        public class ClassWithItem
+        {
+            public string? Item { get; set; }
+
+            public int Value { get; set; }
+        }
+
+        [DynamicLinqType]
         public class Example
         {
             public int Field;
@@ -535,6 +543,25 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             queryable.Select(config, expression).ToDynamicArray<string>()[0].Should().Be(expectedResult);
+        }
+
+        [Fact]
+        public void Select_Dynamic_ClassWithItemProperty()
+        {
+            // Arrange
+            var data = new []
+            {
+                new ClassWithItem { Item = "Value1", Value = 1 },
+                new ClassWithItem { Item = "Value2", Value = 2 }
+            };
+            var queryable = data.AsQueryable();
+
+            // Act
+            var result = queryable.Select(x => new {x.Item, x.Value }).ToArray();
+            var resultDynamic = queryable.Select("new (Item, Value)").ToDynamicArray();
+
+            // Assert
+            resultDynamic.Should().BeEquivalentTo(result);
         }
     }
 }

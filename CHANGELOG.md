@@ -1,3 +1,21 @@
+# v1.6.8 (28 September 2025)
+- [#946](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/946) - Fix GroupByMany using composite key and normal key [bug] contributed by [StefH](https://github.com/StefH)
+- [#948](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/948) - Add IndexerName attribute to DynamicClass to fix naming issues with Item [bug] contributed by [StefH](https://github.com/StefH)
+- [#936](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/936) - AmbiguousMatchException when selecting a property named &#8220;Item&#8221; using EF Core DbContext [bug]
+- [#945](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/945) - ParseException when using composite key for grouping in GroupByMany [bug]
+
+# 1.6.7 (28 July 2025)
+- [#938](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/938) - Use TryConvertTypes also for strings [bug] contributed by [StefH](https://github.com/StefH)
+
+# v1.6.6 (11 June 2025)
+- [#929](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/929) - Add GroupBy method for Z.DynamicLinq.SystemTextJson and Z.DynamicLinq.NewtonsoftJson contributed by [StefH](https://github.com/StefH)
+- [#932](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/932) - Fix &quot;in&quot; for nullable Enums [bug] contributed by [StefH](https://github.com/StefH)
+- [#931](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/931) - Syntax IN dont work with nullable Enums [bug]
+
+# v1.6.5 (28 May 2025)
+- [#905](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/905) - Fix: Add Fallback in ExpressionPromoter to Handle Cache Cleanup in ConstantExpressionHelper [bug] contributed by [RenanCarlosPereira](https://github.com/RenanCarlosPereira)
+- [#904](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/904) - Race Condition in ConstantExpressionHelper Causing Parsing Failures [bug]
+
 # v1.6.4 (19 May 2025)
 - [#915](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/915) - Add support for &quot;not in&quot; and &quot;not_in&quot; [feature] contributed by [StefH](https://github.com/StefH)
 - [#923](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/923) - Fix MethodFinder TryFindAggregateMethod to support array [bug] contributed by [StefH](https://github.com/StefH)

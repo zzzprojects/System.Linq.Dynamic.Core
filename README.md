@@ -1,17 +1,7 @@
-### Library Powered By
-
-This library is powered by [Entity Framework Extensions](https://entityframework-extensions.net/?z=github&y=system.linq.dynamic.core)
-
-<a href="https://entityframework-extensions.net/?z=github&y=system.linq.dynamic.core">
-<kbd>
-<img src="https://zzzprojects.github.io/images/logo/entityframework-extensions-pub.jpg" alt="Entity Framework Extensions" />
-</kbd>
-</a>
-
----
-
 # System.Linq.Dynamic.Core
 This is a **.NET Core / Standard port** of the Microsoft assembly for the .Net 4.0 Dynamic language functionality.
+
+---
 
 ## Overview
 With this library it's possible to write Dynamic LINQ queries (string based) on an `IQueryable`:
@@ -29,6 +19,18 @@ string cityName = "London";
 int c = 10;
 db.Customers.WhereInterpolated($"City == {cityName} and Orders.Count >= {c}");
 ```
+
+---
+
+## Sponsors
+
+ZZZ Projects owns and maintains **System.Linq.Dynamic.Core** as part of our [mission](https://zzzprojects.com/mission) to add value to the .NET community
+
+Through [Entity Framework Extensions](https://entityframework-extensions.net/?utm_source=zzzprojects&utm_medium=systemlinqdynamiccore) and [Dapper Plus](https://dapper-plus.net/?utm_source=zzzprojects&utm_medium=systemlinqdynamiccore), we actively sponsor and help key open-source libraries grow.
+
+[![Entity Framework Extensions](https://raw.githubusercontent.com/zzzprojects/System.Linq.Dynamic.Core/master/entity-framework-extensions-sponsor.png)](https://entityframework-extensions.net/bulk-insert?utm_source=zzzprojects&utm_medium=systemlinqdynamiccore)
+
+[![Dapper Plus](https://raw.githubusercontent.com/zzzprojects/System.Linq.Dynamic.Core/master/dapper-plus-sponsor.png)](https://dapper-plus.net/bulk-insert?utm_source=zzzprojects&utm_medium=systemlinqdynamiccore)
 
 ---
 
@@ -82,7 +84,7 @@ Or provide a list of additional types in the [DefaultDynamicLinqCustomTypeProvid
 | &nbsp;&nbsp;**Issues** | [![GitHub issues](https://img.shields.io/github/issues/StefH/System.Linq.Dynamic.Core.svg)](https://github.com/StefH/System.Linq.Dynamic.Core/issues) |
 | | |
 | ***Quality*** | &nbsp; |
-| &nbsp;&nbsp;**CI Workflow** | ![CI Workflow](https://github.com/zzzprojects/System.Linq.Dynamic.Core/actions/workflows/ci.yml/badge.svg) |
+| &nbsp;&nbsp;**CI Workflow** | [![CI Workflow](https://github.com/zzzprojects/System.Linq.Dynamic.Core/actions/workflows/ci.yml/badge.svg)](https://github.com/zzzprojects/System.Linq.Dynamic.Core/actions/workflows/ci.yml) |
 | &nbsp;&nbsp;**SonarCloud** | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=zzzprojects_System.Linq.Dynamic.Core&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=zzzprojects_System.Linq.Dynamic.Core) |
 | |
 | ***NuGet*** | &nbsp; |
