@@ -12,16 +12,11 @@ public class MethodFinderTest
     public void Method_ToString_OnDynamicLinq_And_SystemLinq_ShouldBeEqual()
     {
         // Arrange
-        var config = new ParsingConfig
-        {
-            // AllowEqualsAndToStringMethodsOnObject = true
-        };
-
         Expression<Func<int, string>> expr = x => x.ToString();
 
         var selector = "ToString()";
         var prm = Parameter(typeof(int));
-        var parser = new ExpressionParser([prm], selector, [], config);
+        var parser = new ExpressionParser([prm], selector, [], ParsingConfig.Default);
 
         // Act
         var expression = parser.Parse(null);
