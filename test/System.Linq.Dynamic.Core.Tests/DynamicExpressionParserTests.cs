@@ -725,6 +725,25 @@ public class DynamicExpressionParserTests
         // Assert
         Check.That(result).Equals("3-1");
     }
+    
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_IndexerParameterMismatch()
+    {
+        // Arrange
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
+        customTypeProvider.Setup(c => c.GetCustomTypes()).Returns([typeof(ClassWithIndexers)]);
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = customTypeProvider.Object
+        };
+        var expressionParams = new[]
+        {
+            Expression.Parameter(typeof(ClassWithIndexers), "myObj")
+        };
+        
+        Assert.Throws<ParseException>(() =>
+            DynamicExpressionParser.ParseLambda(config, false, expressionParams, null, "myObj[3,\"1\",1]"));
+    }
 
     [Fact]
     public void DynamicExpressionParser_ParseLambda_DuplicateParameterNames_ThrowsException()

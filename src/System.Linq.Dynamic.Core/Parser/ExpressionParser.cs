@@ -2353,8 +2353,7 @@ public class ExpressionParser
         switch (_methodFinder.FindIndexer(expr.Type, args, out var mb))
         {
             case 0:
-                throw ParseError(errorPos, Res.NoApplicableIndexer,
-                    TypeHelper.GetTypeName(expr.Type));
+                throw ParseError(errorPos, Res.NoApplicableIndexer, TypeHelper.GetTypeName(expr.Type), args.Length);
 
             case 1:
                 var indexMethod = (MethodInfo)mb!;
