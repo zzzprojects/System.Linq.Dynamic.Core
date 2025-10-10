@@ -55,7 +55,7 @@ internal static class Res
     public const string MissingAsClause = "Expression is missing an 'as' clause";
     public const string NeitherTypeConvertsToOther = "Neither of the types '{0}' and '{1}' converts to the other";
     public const string NewOperatorIsNotAllowed = "Using the new operator is not allowed via the ParsingConfig.";
-    public const string NoApplicableIndexer = "No applicable indexer exists in type '{0}'";
+    public const string NoApplicableIndexer = "No applicable indexer exists in type '{0}' with {1} parameters";
     public const string NoApplicableMethod = "No applicable method '{0}' exists in type '{1}'";
     public const string NoItInScope = "No 'it' is in scope";
     public const string NoMatchingConstructor = "No matching constructor in type '{0}'";

@@ -2357,20 +2357,22 @@ public class ExpressionParser
         switch (_methodFinder.FindIndexer(expr.Type, args, out var mb))
         {
             case 0:
-                throw ParseError(errorPos, Res.NoApplicableIndexer,
-                    TypeHelper.GetTypeName(expr.Type));
+                throw ParseError(errorPos, Res.NoApplicableIndexer, TypeHelper.GetTypeName(expr.Type), args.Length);
 
             case 1:
                 var indexMethod = (MethodInfo)mb!;
-                var indexParameterType = indexMethod.GetParameters().First().ParameterType;
+                var indexMethodArguments = indexMethod.GetParameters();
 
-                var indexArgumentExpression = args[0]; // Indexer only has 1 parameter, so we can use args[0] here
-                if (indexParameterType != indexArgumentExpression.Type)
+                var indexArgumentExpressions = new Expression[args.Length];
+                for (var i = 0; i < indexMethodArguments.Length; ++i)
                 {
-                    indexArgumentExpression = Expression.Convert(indexArgumentExpression, indexParameterType);
+                    var indexParameterType = indexMethodArguments[i].ParameterType;
+                    indexArgumentExpressions[i] = indexParameterType != args[i].Type
+                        ? Expression.Convert(args[i], indexParameterType)
+                        : args[i];
                 }
 
-                return Expression.Call(expr, indexMethod, indexArgumentExpression);
+                return Expression.Call(expr, indexMethod, indexArgumentExpressions);
 
             default:
                 throw ParseError(errorPos, Res.AmbiguousIndexerInvocation, TypeHelper.GetTypeName(expr.Type));
