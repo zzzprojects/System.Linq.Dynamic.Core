@@ -70,6 +70,18 @@ public class DynamicExpressionParserTests
         }
     }
 
+    private class ClassWithIndexers
+    {
+        public int this[int i1]
+        {
+            get => i1 + 1;
+        }
+        public string this[int i1, string i2]
+        {
+            get => i1 + "-" + i2;
+        }
+    }
+    
     private class ComplexParseLambda1Result
     {
         public int? Age;
@@ -658,6 +670,60 @@ public class DynamicExpressionParserTests
 
         // Assert
         Check.That(result).Equals(42);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_Indexer1D()
+    {
+        // Arrange
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
+        customTypeProvider.Setup(c => c.GetCustomTypes()).Returns([typeof(ClassWithIndexers)]);
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = customTypeProvider.Object
+        };
+        var expressionParams = new[]
+        {
+            Expression.Parameter(typeof(ClassWithIndexers), "myObj")
+        };
+
+        var myClassInstance = new ClassWithIndexers();
+        var invokersMerge = new List<object> { myClassInstance };
+
+        // Act
+        var expression = DynamicExpressionParser.ParseLambda(config, false, expressionParams, null, "myObj[3]");
+        var del = expression.Compile();
+        var result = del.DynamicInvoke(invokersMerge.ToArray());
+
+        // Assert
+        Check.That(result).Equals(4);
+    }
+    
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_Indexer2D()
+    {
+        // Arrange
+        var customTypeProvider = new Mock<IDynamicLinqCustomTypeProvider>();
+        customTypeProvider.Setup(c => c.GetCustomTypes()).Returns([typeof(ClassWithIndexers)]);
+        var config = new ParsingConfig
+        {
+            CustomTypeProvider = customTypeProvider.Object
+        };
+        var expressionParams = new[]
+        {
+            Expression.Parameter(typeof(ClassWithIndexers), "myObj")
+        };
+
+        var myClassInstance = new ClassWithIndexers();
+        var invokersMerge = new List<object> { myClassInstance };
+
+        // Act
+        var expression = DynamicExpressionParser.ParseLambda(config, false, expressionParams, null, "myObj[3,\"1\"]");
+        var del = expression.Compile();
+        var result = del.DynamicInvoke(invokersMerge.ToArray());
+
+        // Assert
+        Check.That(result).Equals("3-1");
     }
 
     [Fact]
