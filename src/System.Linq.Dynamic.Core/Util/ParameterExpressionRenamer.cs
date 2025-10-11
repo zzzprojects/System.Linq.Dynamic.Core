@@ -48,7 +48,7 @@ internal class ParameterExpressionRenamer : ExpressionVisitor
         return visitedExpression;
     }
 
-    /// <inheritdoc cref="ExpressionVisitor.VisitParameter"/>
+    /// <inheritdoc />
     protected override Expression VisitParameter(ParameterExpression node)
     {
         if (string.Equals(_oldName, node.Name, StringComparison.Ordinal))

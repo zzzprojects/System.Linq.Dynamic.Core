@@ -189,7 +189,7 @@ public static class DynamicExpressionParser
         Check.NotNull(itType);
         Check.NotEmpty(expression);
 
-        return ParseLambda(createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(itType, string.Empty) }, resultType, expression, values);
+        return ParseLambda(createParameterCtor, [ParameterExpressionHelper.CreateParameterExpression(itType, string.Empty)], resultType, expression, values);
     }
 
     /// <summary>
@@ -207,7 +207,8 @@ public static class DynamicExpressionParser
     {
         Check.NotEmpty(expression);
 
-        return (Expression<Func<T, TResult>>)ParseLambda(parsingConfig, createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(T), string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false) }, typeof(TResult), expression, values);
+        return (Expression<Func<T, TResult>>)ParseLambda(parsingConfig, createParameterCtor, [ParameterExpressionHelper.CreateParameterExpression(typeof(T), string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false)
+        ], typeof(TResult), expression, values);
     }
 
     /// <summary>
@@ -227,7 +228,8 @@ public static class DynamicExpressionParser
         Check.NotNull(delegateType);
         Check.NotEmpty(expression);
 
-        return (Expression<Func<T, TResult>>)ParseLambda(delegateType, parsingConfig, createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(T), string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false) }, typeof(TResult), expression, values);
+        return (Expression<Func<T, TResult>>)ParseLambda(delegateType, parsingConfig, createParameterCtor, [ParameterExpressionHelper.CreateParameterExpression(typeof(T), string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false)
+            ], typeof(TResult), expression, values);
     }
 
     /// <summary>
@@ -374,7 +376,7 @@ public static class DynamicExpressionParser
         Check.NotNull(itType);
         Check.NotEmpty(expression);
 
-        return ParseLambda(delegateType, parsingConfig, createParameterCtor, new[] { ParameterExpressionHelper.CreateParameterExpression(itType, string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false) }, resultType, expression, values);
+        return ParseLambda(delegateType, parsingConfig, createParameterCtor, [ParameterExpressionHelper.CreateParameterExpression(itType, string.Empty, parsingConfig?.RenameEmptyParameterExpressionNames ?? false)], resultType, expression, values);
     }
 
     /// <summary>

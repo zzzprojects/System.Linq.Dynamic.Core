@@ -170,7 +170,7 @@ internal class MethodFinder
         var inlineArgs = args;
 
         MethodData[] applicable = methods
-            .Select(m => new MethodData { MethodBase = m, Parameters = m.GetParameters() })
+            .Select(m => new MethodData(m, m.GetParameters()))
             .Where(m => IsApplicable(m, inlineArgs))
             .ToArray();
 

@@ -419,7 +419,7 @@ public static class DynamicClassFactory
 
         EmitEqualityOperators(typeBuilder, equals);
 
-        return typeBuilder.CreateType();
+        return typeBuilder.CreateType()!;
     }
 
     private static void EmitEqualityOperators(TypeBuilder typeBuilder, MethodBuilder equals)

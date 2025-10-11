@@ -2094,7 +2094,7 @@ namespace System.Linq.Dynamic.Core
             string collectionParameterName,
             string resultParameterName,
             object?[]? collectionSelectorArgs = null,
-            params object[]? resultSelectorArgs)
+            params object?[]? resultSelectorArgs)
         {
             Check.NotNull(source);
             Check.NotNull(config);
