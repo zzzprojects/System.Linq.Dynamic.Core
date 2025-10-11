@@ -1,3 +1,6 @@
+# v1.6.9 (10 October 2025)
+- [#950](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/950) - DynamicExpressionParser - Handle indexed properties with any number of indices in expression [bug] contributed by [thibault-reigner](https://github.com/thibault-reigner)
+
 # v1.6.8 (28 September 2025)
 - [#946](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/946) - Fix GroupByMany using composite key and normal key [bug] contributed by [StefH](https://github.com/StefH)
 - [#948](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/948) - Add IndexerName attribute to DynamicClass to fix naming issues with Item [bug] contributed by [StefH](https://github.com/StefH)
