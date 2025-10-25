@@ -203,6 +203,32 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Select_Dynamic_Add_DayOfWeekEnum_And_Integer()
+        {
+            // Arrange
+            var range = new DayOfWeek[] { DayOfWeek.Monday };
+
+            // Act
+            var rangeResult = range.AsQueryable().Select("it + 1");
+
+            // Assert
+            Assert.Equal(range.Select(x => x + 1).ToArray(), rangeResult.Cast<DayOfWeek>().ToArray());
+        }
+
+        [Fact]
+        public void Select_Dynamic_Add_Integer_And_DayOfWeekEnum()
+        {
+            // Arrange
+            var range = new int[] { 1 };
+
+            // Act
+            var rangeResult = range.AsQueryable().Select("it + DayOfWeek.Monday");
+
+            // Assert
+            Assert.Equal(range.Select(x => x + DayOfWeek.Monday).Cast<int>().ToArray(), rangeResult.Cast<int>().ToArray());
+        }
+
+        [Fact]
         public void Select_Dynamic_WithIncludes()
         {
             // Arrange
