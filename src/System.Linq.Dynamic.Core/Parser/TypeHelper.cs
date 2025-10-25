@@ -83,20 +83,20 @@ internal static class TypeHelper
             return target.IsAssignableFrom(source);
         }
 
-        Type st = GetNonNullableType(source);
-        Type tt = GetNonNullableType(target);
+        var sourceType = GetNonNullableType(source);
+        var targetType = GetNonNullableType(target);
 
-        if (st != source && tt == target)
+        if (sourceType != source && targetType == target)
         {
             return false;
         }
 
-        TypeCode sc = st.GetTypeInfo().IsEnum ? TypeCode.Int64 : Type.GetTypeCode(st);
-        TypeCode tc = tt.GetTypeInfo().IsEnum ? TypeCode.Int64 : Type.GetTypeCode(tt);
-        switch (sc)
+        var sourceTypeCode = sourceType.GetTypeInfo().IsEnum ? TypeCode.Int32 : Type.GetTypeCode(sourceType);
+        var targetTypeCode = targetType.GetTypeInfo().IsEnum ? TypeCode.Int32 : Type.GetTypeCode(targetType);
+        switch (sourceTypeCode)
         {
             case TypeCode.SByte:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.SByte:
                     case TypeCode.Int16:
@@ -110,7 +110,7 @@ internal static class TypeHelper
                 break;
 
             case TypeCode.Byte:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.Byte:
                     case TypeCode.Int16:
@@ -127,7 +127,7 @@ internal static class TypeHelper
                 break;
 
             case TypeCode.Int16:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.Int16:
                     case TypeCode.Int32:
@@ -140,7 +140,7 @@ internal static class TypeHelper
                 break;
 
             case TypeCode.UInt16:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.UInt16:
                     case TypeCode.Int32:
@@ -155,7 +155,7 @@ internal static class TypeHelper
                 break;
 
             case TypeCode.Int32:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.Int32:
                     case TypeCode.Int64:
@@ -167,7 +167,7 @@ internal static class TypeHelper
                 break;
 
             case TypeCode.UInt32:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.UInt32:
                     case TypeCode.Int64:
@@ -180,7 +180,7 @@ internal static class TypeHelper
                 break;
 
             case TypeCode.Int64:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.Int64:
                     case TypeCode.Single:
@@ -191,7 +191,7 @@ internal static class TypeHelper
                 break;
 
             case TypeCode.UInt64:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.UInt64:
                     case TypeCode.Single:
@@ -202,7 +202,7 @@ internal static class TypeHelper
                 break;
 
             case TypeCode.Single:
-                switch (tc)
+                switch (targetTypeCode)
                 {
                     case TypeCode.Single:
                     case TypeCode.Double:
@@ -211,7 +211,7 @@ internal static class TypeHelper
                 break;
 
             default:
-                if (st == tt)
+                if (sourceType == targetType)
                 {
                     return true;
                 }
@@ -469,6 +469,11 @@ internal static class TypeHelper
         }
 
         return type;
+    }
+
+    public static bool TypesAreEqual(Type type, Type typeToCheck)
+    {
+        return GetNullableType(type) == GetNullableType(typeToCheck);
     }
 
     public static IList<Type> GetSelfAndBaseTypes(Type type, bool excludeObject = false)
