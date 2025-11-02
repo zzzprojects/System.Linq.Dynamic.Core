@@ -52,5 +52,5 @@ internal interface IExpressionHelper
     /// <summary>
     /// If the types are different (and not null), try to convert the object type to other type.
     /// </summary>
-    public bool TryConvertTypes(ref Expression left, ref Expression right);
+    bool TryConvertTypes(ref Expression left, ref Expression right);
 }

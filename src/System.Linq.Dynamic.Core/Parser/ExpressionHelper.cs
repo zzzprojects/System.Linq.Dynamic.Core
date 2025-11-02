@@ -361,7 +361,12 @@ internal class ExpressionHelper : IExpressionHelper
     public Expression GenerateDefaultExpression(Type type)
     {
 #if NET35
-        return Expression.Constant(Activator.CreateInstance(type));
+        if (type.IsValueType)
+        {
+            return Expression.Constant(Activator.CreateInstance(type), type);
+        }
+
+        return Expression.Constant(null, type);
 #else
         return Expression.Default(type);
 #endif
@@ -388,11 +393,19 @@ internal class ExpressionHelper : IExpressionHelper
 
         if (left.Type == typeof(object))
         {
-            left = Expression.Convert(left, right.Type);
+            left = Expression.Condition(
+                Expression.Equal(left, Expression.Constant(null, typeof(object))),
+                GenerateDefaultExpression(right.Type),
+                Expression.Convert(left, right.Type)
+            );
         }
         else if (right.Type == typeof(object))
         {
-            right = Expression.Convert(right, left.Type);
+            right = Expression.Condition(
+                Expression.Equal(right, Expression.Constant(null, typeof(object))),
+                GenerateDefaultExpression(left.Type),
+                Expression.Convert(right, left.Type)
+            );
         }
 
         return true;

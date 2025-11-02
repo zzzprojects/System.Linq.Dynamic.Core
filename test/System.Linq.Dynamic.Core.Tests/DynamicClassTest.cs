@@ -131,20 +131,24 @@ public class DynamicClassTest
     public void DynamicClass_SettingExistingPropertyValue_ByIndex_Should_Work()
     {
         // Arrange
-        var test = "Test";
-        var newTest = "abc";
-        var range = new List<object>
+        var originalValue = "Test";
+        var newValue = "abc";
+        var array = new object[]
         {
-            new { FieldName = test, Value = 3.14159 }
+            new
+            {
+                FieldName = originalValue, 
+                Value = 3.14159
+            }
         };
 
         // Act
-        var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
+        var rangeResult = array.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
         var item = rangeResult.First();
 
-        item["FieldName"] = newTest;
+        item["FieldName"] = newValue;
         var value = item["FieldName"] as string;
-        value.Should().Be(newTest);
+        value.Should().Be(newValue);
     }
 
     [Fact]

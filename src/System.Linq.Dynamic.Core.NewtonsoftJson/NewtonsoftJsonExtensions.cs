@@ -821,7 +821,7 @@ public static class NewtonsoftJsonExtensions
 
         if (source.Count == 0)
         {
-            return new JArray();
+            return [];
         }
 
         var queryable = ToQueryable(source, config);
@@ -848,7 +848,8 @@ public static class NewtonsoftJsonExtensions
     private static JArray ToJArray(Func<IQueryable> func)
     {
         var array = new JArray();
-        foreach (var dynamicElement in func())
+        var funcResult = func();
+        foreach (var dynamicElement in funcResult)
         {
             var element = dynamicElement switch
             {
