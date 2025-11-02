@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq.Dynamic.Core.Exceptions;
-using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Xunit;
