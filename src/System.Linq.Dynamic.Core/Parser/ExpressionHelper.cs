@@ -388,15 +388,39 @@ internal class ExpressionHelper : IExpressionHelper
 
         if (left.Type == typeof(object))
         {
-            left = Expression.Convert(left, right.Type);
+            left = Expression.Condition(
+                Expression.Equal(left, Expression.Constant(null, typeof(object))),
+                GenerateDefault(right.Type),
+                Expression.Convert(left, right.Type)
+            );
         }
         else if (right.Type == typeof(object))
         {
-            right = Expression.Convert(right, left.Type);
+            right = Expression.Condition(
+                Expression.Equal(right, Expression.Constant(null, typeof(object))),
+                GenerateDefault(left.Type),
+                Expression.Convert(right, left.Type)
+            );
         }
 
         return true;
     }
+
+    public Expression GenerateDefault(Type type)
+    {
+#if NET35
+        // .NET 3.5 doesn't have Expression.Default
+        if (type.IsValueType)
+        {
+            return Expression.Constant(Activator.CreateInstance(type), type);
+        }
+
+        return Expression.Constant(null, type);
+#else
+        return Expression.Default(type);
+#endif
+    }
+
 
     private Expression? GetMemberExpression(Expression? expression)
     {

@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -505,5 +508,63 @@ public class NewtonsoftJsonTests
         result.Should().HaveCount(1);
         var first = result.First();
         first.Value<string>().Should().Be("Doe");
+    }
+
+    //[Fact]
+    //public void Where_OptionalProperty()
+    //{
+    //    // Arrange
+    //    var config = new NewtonsoftJsonParsingConfig
+    //    {
+    //        ConvertObjectToSupportComparison = true
+    //    };
+    //    var array =
+    //        """
+    //        [
+    //            {
+    //                "Name": "John",
+    //                "Age": 30
+    //            },
+    //            {
+    //                "Name": "Doe"
+    //            }
+    //        ]
+    //        """;
+
+    //    // Act
+    //    var result = JArray.Parse(array).Where(config, "Age > 30").Select("Name");
+
+    //    // Assert
+    //    result.Should().HaveCount(1);
+    //    var first = result.First();
+    //    first.Value<string>().Should().Be("John");
+    //}
+
+    [Theory]
+    [InlineData("notExisting == true")]
+    [InlineData("notExisting == \"true\"")]
+    [InlineData("notExisting == 1")]
+    [InlineData("notExisting == \"1\"")]
+    [InlineData("notExisting == \"something\"")]
+    [InlineData("notExisting > 1")]
+    [InlineData("true == notExisting")]
+    [InlineData("\"true\" == notExisting")]
+    [InlineData("1 == notExisting")]
+    [InlineData("\"1\" == notExisting")]
+    [InlineData("\"something\" == notExisting")]
+    [InlineData("1 < notExisting")]
+    public void Where_NonExistingMember_EmptyResult(string predicate)
+    {
+        // Arrange
+        var config = new NewtonsoftJsonParsingConfig
+        {
+            ConvertObjectToSupportComparison = true
+        };
+
+        // Act
+        var result = _source.Where(config, predicate);
+
+        // Assert
+        result.Should().BeEmpty();
     }
 }

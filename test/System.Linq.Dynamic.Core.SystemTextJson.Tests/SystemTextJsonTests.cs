@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.SystemTextJson.Config;
+using System.Text.Json;
 using FluentAssertions;
 using Xunit;
 
@@ -534,5 +536,33 @@ public class SystemTextJsonTests
         var array = result.RootElement.EnumerateArray();
         array.Should().HaveCount(1);
         array.First().GetString().Should().Be("Doe");
+    }
+
+    [Theory]
+    [InlineData("notExisting == true")]
+    [InlineData("notExisting == \"true\"")]
+    [InlineData("notExisting == 1")]
+    [InlineData("notExisting == \"1\"")]
+    [InlineData("notExisting == \"something\"")]
+    [InlineData("notExisting > 1")]
+    [InlineData("true == notExisting")]
+    [InlineData("\"true\" == notExisting")]
+    [InlineData("1 == notExisting")]
+    [InlineData("\"1\" == notExisting")]
+    [InlineData("\"something\" == notExisting")]
+    [InlineData("1 < notExisting")]
+    public void Where_NonExistingMember_EmptyResult(string predicate)
+    {
+        // Arrange
+        var config = new SystemTextJsonParsingConfig
+        {
+            ConvertObjectToSupportComparison = true
+        };
+
+        // Act
+        var result = _source.Where(config, predicate).RootElement.EnumerateArray();
+
+        // Assert
+        result.Should().BeEmpty();
     }
 }
