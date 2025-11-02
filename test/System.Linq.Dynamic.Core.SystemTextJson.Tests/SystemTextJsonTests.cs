@@ -1,4 +1,3 @@
-﻿using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.SystemTextJson.Config;
 using System.Text.Json;
 using FluentAssertions;
