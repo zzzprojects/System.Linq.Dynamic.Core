@@ -1,4 +1,10 @@
-# v1.6.9 (10 October 2025)
+# v1.6.10 (08 November 2025)
+- [#953](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/953) - Fixed adding Enum and integer [bug] contributed by [StefH](https://github.com/StefH)
+- [#954](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/954) - Fix ExpressionHelper.TryConvertTypes to generate correct Convert in case left or right is null [bug] contributed by [StefH](https://github.com/StefH)
+- [#951](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/951) - Parsing error adding numeric constant to enum value [bug]
+- [#952](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/952) - Json: How to handle not existing member [bug]
+
+# v1.6.9 (11 October 2025)
 - [#950](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/950) - DynamicExpressionParser - Handle indexed properties with any number of indices in expression [bug] contributed by [thibault-reigner](https://github.com/thibault-reigner)
 
 # v1.6.8 (28 September 2025)
