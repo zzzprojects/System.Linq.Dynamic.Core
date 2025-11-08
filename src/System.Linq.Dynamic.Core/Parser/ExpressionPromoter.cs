@@ -122,7 +122,7 @@ public class ExpressionPromoter : IExpressionPromoter
 
         if (TypeHelper.IsCompatibleWith(returnType, type))
         {
-            if (type == typeof(decimal) && TypeHelper.IsEnumType(sourceExpression.Type))
+            if (TypeHelper.TypesAreEqual(type, typeof(decimal)) && TypeHelper.IsEnumType(sourceExpression.Type))
             {
                 return Expression.Convert(Expression.Convert(sourceExpression, Enum.GetUnderlyingType(sourceExpression.Type)), type);
             }
