@@ -1748,9 +1748,9 @@ public class DynamicExpressionParserTests
     }
 
     [Theory]
-    [InlineData(true, "c => c.Age == 8", "c => (c.Age == 8)")]
+    [InlineData(true, "c => c.Age == 8", "c => (c.Age == Convert(8, Nullable`1))")]
     [InlineData(true, "c => c.Name == \"test\"", "c => (c.Name == \"test\")")]
-    [InlineData(false, "c => c.Age == 8", "Param_0 => (Param_0.Age == 8)")]
+    [InlineData(false, "c => c.Age == 8", "Param_0 => (Param_0.Age == Convert(8, Nullable`1))")]
     [InlineData(false, "c => c.Name == \"test\"", "Param_0 => (Param_0.Name == \"test\")")]
     public void DynamicExpressionParser_ParseLambda_RenameParameterExpression(bool renameParameterExpression, string expressionAsString, string expected)
     {
