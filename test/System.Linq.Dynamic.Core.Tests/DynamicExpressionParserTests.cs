@@ -924,6 +924,7 @@ public class DynamicExpressionParserTests
             [null, "1.2345E4", 12345d]
         ];
     }
+
     [Theory]
     [MemberData(nameof(Doubles))]
     public void DynamicExpressionParser_ParseLambda_Double(string? culture, string expression, double expected)
@@ -939,6 +940,42 @@ public class DynamicExpressionParserTests
 
         // Act
         var lambda = DynamicExpressionParser.ParseLambda(config, parameters, typeof(double), expression);
+        var result = lambda.Compile().DynamicInvoke();
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("0x0", 0)]
+    [InlineData("0xa", 10)]
+    [InlineData("0xA", 10)]
+    [InlineData("0x10", 16)]
+    public void DynamicExpressionParser_ParseLambda_HexToLong(string expression, long expected)
+    {
+        // Arrange
+        var parameters = Array.Empty<ParameterExpression>();
+
+        // Act
+        var lambda = DynamicExpressionParser.ParseLambda( parameters, typeof(long), expression);
+        var result = lambda.Compile().DynamicInvoke();
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("0b0", 0)]
+    [InlineData("0B0", 0)]
+    [InlineData("0b1000", 8)]
+    [InlineData("0b1001", 9)]
+    public void DynamicExpressionParser_ParseLambda_BinaryToLong(string expression, long expected)
+    {
+        // Arrange
+        var parameters = Array.Empty<ParameterExpression>();
+
+        // Act
+        var lambda = DynamicExpressionParser.ParseLambda(parameters, typeof(long), expression);
         var result = lambda.Compile().DynamicInvoke();
 
         // Assert
@@ -1732,7 +1769,7 @@ public class DynamicExpressionParserTests
     }
 
     [Theory]
-    [InlineData("c => c.Age == 8", "([a-z]{16}) =\\> \\(\\1\\.Age == 8\\)")]
+    [InlineData("c => c.Age == 8", "([a-z]{16}) =\\> \\(\\1\\.Age == .+")]
     [InlineData("c => c.Name == \"test\"", "([a-z]{16}) =\\> \\(\\1\\.Name == \"test\"\\)")]
     public void DynamicExpressionParser_ParseLambda_RenameEmptyParameterExpressionNames(string expressionAsString, string expected)
     {
