@@ -984,11 +984,12 @@ public class ExpressionParser
     {
         _textParser.ValidateToken(TokenId.RealLiteral);
 
-        string text = _textParser.CurrentToken.Text;
+        var text = _textParser.CurrentToken.Text;
+        var textOriginal = text;
 
         _textParser.NextToken();
 
-        return _numberParser.ParseRealLiteral(text, text[text.Length - 1], true);
+        return _numberParser.ParseRealLiteral(text, textOriginal, text[text.Length - 1], true);
     }
 
     private Expression ParseParenExpression()

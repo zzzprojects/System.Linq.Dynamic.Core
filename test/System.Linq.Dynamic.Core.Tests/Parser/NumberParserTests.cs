@@ -159,7 +159,7 @@ public class NumberParserTests
     public void NumberParser_ParseDecimalLiteral(string text, char qualifier, decimal expected)
     {
         // Act
-        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, qualifier, true) as ConstantExpression;
+        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, text, qualifier, true) as ConstantExpression;
 
         // Assert
         result?.Value.Should().Be(expected);
@@ -175,7 +175,7 @@ public class NumberParserTests
         // Arrange
 
         // Act
-        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, qualifier, true) as ConstantExpression;
+        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, text, qualifier, true) as ConstantExpression;
 
         // Assert
         result?.Value.Should().Be(expected);
@@ -191,7 +191,7 @@ public class NumberParserTests
         // Arrange
 
         // Act
-        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, qualifier, true) as ConstantExpression;
+        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, text, qualifier, true) as ConstantExpression;
 
         // Assert
         result?.Value.Should().Be(expected);
