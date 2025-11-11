@@ -4,244 +4,234 @@ using System.Linq.Dynamic.Core.Validation;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 
-namespace System.Linq.Dynamic.Core.Parser
+namespace System.Linq.Dynamic.Core.Parser;
+
+/// <summary>
+/// NumberParser
+/// </summary>
+public class NumberParser
 {
+    private static readonly Regex RegexBinary32 = new("^[01]{1,32}$", RegexOptions.Compiled);
+    private static readonly Regex RegexBinary64 = new("^[01]{1,64}$", RegexOptions.Compiled);
+    private static readonly char[] Qualifiers = { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
+    private static readonly char[] QualifiersHex = { 'U', 'u', 'L', 'l' };
+    private static readonly string[] QualifiersReal = { "F", "f", "D", "d", "M", "m" };
+    private readonly ConstantExpressionHelper _constantExpressionHelper;
+
+    private readonly CultureInfo _culture;
+
     /// <summary>
-    /// NumberParser
+    /// Initializes a new instance of the <see cref="NumberParser"/> class.
     /// </summary>
-    public class NumberParser
+    /// <param name="config">The ParsingConfig.</param>
+    public NumberParser(ParsingConfig? config)
     {
-        private static readonly Regex RegexBinary32 = new("^[01]{1,32}$", RegexOptions.Compiled);
-        private static readonly Regex RegexBinary64 = new("^[01]{1,64}$", RegexOptions.Compiled);
-        private static readonly char[] Qualifiers = { 'U', 'u', 'L', 'l', 'F', 'f', 'D', 'd', 'M', 'm' };
-        private static readonly char[] QualifiersHex = { 'U', 'u', 'L', 'l' };
-        private static readonly string[] QualifiersReal = { "F", "f", "D", "d", "M", "m" };
-        private readonly ConstantExpressionHelper _constantExpressionHelper;
+        _culture = config?.NumberParseCulture ?? CultureInfo.InvariantCulture;
+        _constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(config ?? ParsingConfig.Default);
+    }
 
-        private readonly CultureInfo _culture;
+    /// <summary>
+    /// Tries to parse the text into a IntegerLiteral ConstantExpression.
+    /// </summary>
+    /// <param name="tokenPosition">The current token position (needed for error reporting).</param>
+    /// <param name="text">The text.</param>
+    public Expression ParseIntegerLiteral(int tokenPosition, string text)
+    {
+        Check.NotEmpty(text);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NumberParser"/> class.
-        /// </summary>
-        /// <param name="config">The ParsingConfig.</param>
-        public NumberParser(ParsingConfig? config)
+        var textOriginal = text;
+        var last = text[text.Length - 1];
+        var isNegative = text[0] == '-';
+        var isHexadecimal = text.StartsWith(isNegative ? "-0x" : "0x", StringComparison.OrdinalIgnoreCase);
+        var isBinary = text.StartsWith(isNegative ? "-0b" : "0b", StringComparison.OrdinalIgnoreCase);
+        var qualifiers = isHexadecimal ? QualifiersHex : Qualifiers;
+
+        string? qualifier = null;
+        if (qualifiers.Contains(last))
         {
-            _culture = config?.NumberParseCulture ?? CultureInfo.InvariantCulture;
-            _constantExpressionHelper = ConstantExpressionHelperFactory.GetInstance(config ?? ParsingConfig.Default);
+            int pos = text.Length - 1, count = 0;
+            while (qualifiers.Contains(text[pos]))
+            {
+                ++count;
+                --pos;
+            }
+            qualifier = text.Substring(text.Length - count, count);
+            text = text.Substring(0, text.Length - count);
         }
 
-        /// <summary>
-        /// Tries to parse the text into a IntegerLiteral ConstantExpression.
-        /// </summary>
-        /// <param name="tokenPosition">The current token position (needed for error reporting).</param>
-        /// <param name="text">The text.</param>
-        public Expression ParseIntegerLiteral(int tokenPosition, string text)
+        if (!isNegative)
         {
-            Check.NotEmpty(text, nameof(text));
-
-            var last = text[text.Length - 1];
-            var isNegative = text[0] == '-';
-            var isHexadecimal = text.StartsWith(isNegative ? "-0x" : "0x", StringComparison.OrdinalIgnoreCase);
-            var isBinary = text.StartsWith(isNegative ? "-0b" : "0b", StringComparison.OrdinalIgnoreCase);
-            var qualifiers = isHexadecimal ? QualifiersHex : Qualifiers;
-
-            string? qualifier = null;
-            if (qualifiers.Contains(last))
-            {
-                int pos = text.Length - 1, count = 0;
-                while (qualifiers.Contains(text[pos]))
-                {
-                    ++count;
-                    --pos;
-                }
-                qualifier = text.Substring(text.Length - count, count);
-                text = text.Substring(0, text.Length - count);
-            }
-
-            if (!isNegative)
-            {
-                if (isHexadecimal || isBinary)
-                {
-                    text = text.Substring(2);
-                }
-
-                if (isBinary)
-                {
-                    return ParseAsBinary(tokenPosition, text, isNegative);
-                }
-
-                if (!ulong.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, _culture, out ulong unsignedValue))
-                {
-                    throw new ParseException(string.Format(_culture, Res.InvalidIntegerLiteral, text), tokenPosition);
-                }
-
-                if (!string.IsNullOrEmpty(qualifier) && qualifier!.Length > 0)
-                {
-                    if (qualifier == "U" || qualifier == "u")
-                    {
-                        return _constantExpressionHelper.CreateLiteral((uint)unsignedValue, text);
-                    }
-
-                    if (qualifier == "L" || qualifier == "l")
-                    {
-                        return _constantExpressionHelper.CreateLiteral((long)unsignedValue, text);
-                    }
-
-                    if (QualifiersReal.Contains(qualifier))
-                    {
-                        return ParseRealLiteral(text, qualifier[0], false);
-                    }
-
-                    return _constantExpressionHelper.CreateLiteral(unsignedValue, text);
-                }
-
-                if (unsignedValue <= int.MaxValue)
-                {
-                    return _constantExpressionHelper.CreateLiteral((int)unsignedValue, text);
-                }
-
-                if (unsignedValue <= uint.MaxValue)
-                {
-                    return _constantExpressionHelper.CreateLiteral((uint)unsignedValue, text);
-                }
-
-                if (unsignedValue <= long.MaxValue)
-                {
-                    return _constantExpressionHelper.CreateLiteral((long)unsignedValue, text);
-                }
-
-                return _constantExpressionHelper.CreateLiteral(unsignedValue, text);
-            }
-
             if (isHexadecimal || isBinary)
             {
-                text = text.Substring(3);
+                text = text.Substring(2);
             }
 
             if (isBinary)
             {
-                return ParseAsBinary(tokenPosition, text, isNegative);
+                return ParseAsBinary(tokenPosition, text, textOriginal, isNegative);
             }
 
-            if (!long.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, _culture, out long value))
+            if (!ulong.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, _culture, out ulong unsignedValue))
             {
                 throw new ParseException(string.Format(_culture, Res.InvalidIntegerLiteral, text), tokenPosition);
             }
 
-            if (isHexadecimal)
-            {
-                value = -value;
-            }
-
             if (!string.IsNullOrEmpty(qualifier) && qualifier!.Length > 0)
             {
+                if (qualifier == "U" || qualifier == "u")
+                {
+                    return _constantExpressionHelper.CreateLiteral((uint)unsignedValue, textOriginal);
+                }
+
                 if (qualifier == "L" || qualifier == "l")
                 {
-                    return _constantExpressionHelper.CreateLiteral(value, text);
+                    return _constantExpressionHelper.CreateLiteral((long)unsignedValue, textOriginal);
                 }
 
                 if (QualifiersReal.Contains(qualifier))
                 {
-                    return ParseRealLiteral(text, qualifier[0], false);
+                    return ParseRealLiteral(text, textOriginal, qualifier[0], false);
                 }
 
-                throw new ParseException(Res.MinusCannotBeAppliedToUnsignedInteger, tokenPosition);
+                return _constantExpressionHelper.CreateLiteral(unsignedValue, textOriginal);
             }
 
-            if (value <= int.MaxValue)
+            if (unsignedValue <= int.MaxValue)
             {
-                return _constantExpressionHelper.CreateLiteral((int)value, text);
+                return _constantExpressionHelper.CreateLiteral((int)unsignedValue, textOriginal);
             }
 
-            return _constantExpressionHelper.CreateLiteral(value, text);
+            if (unsignedValue <= uint.MaxValue)
+            {
+                return _constantExpressionHelper.CreateLiteral((uint)unsignedValue, textOriginal);
+            }
+
+            if (unsignedValue <= long.MaxValue)
+            {
+                return _constantExpressionHelper.CreateLiteral((long)unsignedValue, textOriginal);
+            }
+
+            return _constantExpressionHelper.CreateLiteral(unsignedValue, textOriginal);
         }
 
-        /// <summary>
-        /// Parse the text into a Real ConstantExpression.
-        /// </summary>
-        public Expression ParseRealLiteral(string text, char qualifier, bool stripQualifier)
+        if (isHexadecimal || isBinary)
         {
-            if (stripQualifier)
-            {
-                var pos = text.Length - 1;
-                while (pos >= 0 && Qualifiers.Contains(text[pos]))
-                {
-                    pos--;
-                }
+            text = text.Substring(3);
+        }
 
-                if (pos < text.Length - 1)
-                {
-                    qualifier = text[pos + 1];
-                    text = text.Substring(0, pos + 1);
-                }
+        if (isBinary)
+        {
+            return ParseAsBinary(tokenPosition, text, textOriginal, isNegative);
+        }
+
+        if (!long.TryParse(text, isHexadecimal ? NumberStyles.HexNumber : NumberStyles.Integer, _culture, out long value))
+        {
+            throw new ParseException(string.Format(_culture, Res.InvalidIntegerLiteral, text), tokenPosition);
+        }
+
+        if (isHexadecimal)
+        {
+            value = -value;
+        }
+
+        if (!string.IsNullOrEmpty(qualifier) && qualifier!.Length > 0)
+        {
+            if (qualifier == "L" || qualifier == "l")
+            {
+                return _constantExpressionHelper.CreateLiteral(value, textOriginal);
             }
 
-            switch (qualifier)
+            if (QualifiersReal.Contains(qualifier))
             {
-                case 'f':
-                case 'F':
-                    return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(float))!, text);
+                return ParseRealLiteral(text, textOriginal, qualifier[0], false);
+            }
 
-                case 'm':
-                case 'M':
-                    return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(decimal))!, text);
+            throw new ParseException(Res.MinusCannotBeAppliedToUnsignedInteger, tokenPosition);
+        }
 
-                case 'd':
-                case 'D':
-                    return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, text);
+        if (value <= int.MaxValue)
+        {
+            return _constantExpressionHelper.CreateLiteral((int)value, textOriginal);
+        }
 
-                default:
-                    return _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, text);
+        return _constantExpressionHelper.CreateLiteral(value, textOriginal);
+    }
+
+    /// <summary>
+    /// Parse the text into a Real ConstantExpression.
+    /// </summary>
+    public Expression ParseRealLiteral(string text, string textOriginal, char qualifier, bool stripQualifier)
+    {
+        if (stripQualifier)
+        {
+            var pos = text.Length - 1;
+            while (pos >= 0 && Qualifiers.Contains(text[pos]))
+            {
+                pos--;
+            }
+
+            if (pos < text.Length - 1)
+            {
+                qualifier = text[pos + 1];
+                text = text.Substring(0, pos + 1);
             }
         }
 
-        /// <summary>
-        /// Tries to parse the number (text) into the specified type.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="result">The result.</param>
-        public bool TryParseNumber(string text, Type type, out object? result)
+        return qualifier switch
         {
-            result = ParseNumber(text, type);
-            return result != null;
-        }
+            'f' or 'F' => _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(float))!, textOriginal),
+            'm' or 'M' => _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(decimal))!, textOriginal),
+            _ => _constantExpressionHelper.CreateLiteral(ParseNumber(text, typeof(double))!, textOriginal)
+        };
+    }
 
-        /// <summary>
-        /// Parses the number (text) into the specified type.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="type">The type.</param>
-        public object? ParseNumber(string text, Type type)
+    /// <summary>
+    /// Tries to parse the number (text) into the specified type.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="type">The type.</param>
+    /// <param name="result">The result.</param>
+    public bool TryParseNumber(string text, Type type, out object? result)
+    {
+        result = ParseNumber(text, type);
+        return result != null;
+    }
+
+    /// <summary>
+    /// Parses the number (text) into the specified type.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="type">The type.</param>
+    public object? ParseNumber(string text, Type type)
+    {
+        try
         {
-            try
-            {
 #if !(UAP10_0 || NETSTANDARD)
-                switch (Type.GetTypeCode(TypeHelper.GetNonNullableType(type)))
-                {
-                    case TypeCode.SByte:
-                        return sbyte.Parse(text, _culture);
-                    case TypeCode.Byte:
-                        return byte.Parse(text, _culture);
-                    case TypeCode.Int16:
-                        return short.Parse(text, _culture);
-                    case TypeCode.UInt16:
-                        return ushort.Parse(text, _culture);
-                    case TypeCode.Int32:
-                        return int.Parse(text, _culture);
-                    case TypeCode.UInt32:
-                        return uint.Parse(text, _culture);
-                    case TypeCode.Int64:
-                        return long.Parse(text, _culture);
-                    case TypeCode.UInt64:
-                        return ulong.Parse(text, _culture);
-                    case TypeCode.Single:
-                        return float.Parse(text, _culture);
-                    case TypeCode.Double:
-                        return double.Parse(text, _culture);
-                    case TypeCode.Decimal:
-                        return decimal.Parse(text, _culture);
-                }
+            switch (Type.GetTypeCode(TypeHelper.GetNonNullableType(type)))
+            {
+                case TypeCode.SByte:
+                    return sbyte.Parse(text, _culture);
+                case TypeCode.Byte:
+                    return byte.Parse(text, _culture);
+                case TypeCode.Int16:
+                    return short.Parse(text, _culture);
+                case TypeCode.UInt16:
+                    return ushort.Parse(text, _culture);
+                case TypeCode.Int32:
+                    return int.Parse(text, _culture);
+                case TypeCode.UInt32:
+                    return uint.Parse(text, _culture);
+                case TypeCode.Int64:
+                    return long.Parse(text, _culture);
+                case TypeCode.UInt64:
+                    return ulong.Parse(text, _culture);
+                case TypeCode.Single:
+                    return float.Parse(text, _culture);
+                case TypeCode.Double:
+                    return double.Parse(text, _culture);
+                case TypeCode.Decimal:
+                    return decimal.Parse(text, _culture);
+            }
 #else
                 var tp = TypeHelper.GetNonNullableType(type);
                 if (tp == typeof(sbyte))
@@ -289,28 +279,27 @@ namespace System.Linq.Dynamic.Core.Parser
                     return decimal.Parse(text, _culture);
                 }
 #endif
-            }
-            catch
-            {
-                return null;
-            }
-
+        }
+        catch
+        {
             return null;
         }
 
-        private Expression ParseAsBinary(int tokenPosition, string text, bool isNegative)
+        return null;
+    }
+
+    private Expression ParseAsBinary(int tokenPosition, string text, string textOriginal, bool isNegative)
+    {
+        if (RegexBinary32.IsMatch(text))
         {
-            if (RegexBinary32.IsMatch(text))
-            {
-                return _constantExpressionHelper.CreateLiteral((isNegative ? -1 : 1) * Convert.ToInt32(text, 2), text);
-            }
-
-            if (RegexBinary64.IsMatch(text))
-            {
-                return _constantExpressionHelper.CreateLiteral((isNegative ? -1 : 1) * Convert.ToInt64(text, 2), text);
-            }
-
-            throw new ParseException(string.Format(_culture, Res.InvalidBinaryIntegerLiteral, text), tokenPosition);
+            return _constantExpressionHelper.CreateLiteral((isNegative ? -1 : 1) * Convert.ToInt32(text, 2), textOriginal);
         }
+
+        if (RegexBinary64.IsMatch(text))
+        {
+            return _constantExpressionHelper.CreateLiteral((isNegative ? -1 : 1) * Convert.ToInt64(text, 2), textOriginal);
+        }
+
+        throw new ParseException(string.Format(_culture, Res.InvalidBinaryIntegerLiteral, text), tokenPosition);
     }
 }
