@@ -16,7 +16,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.5" />
         <PackageReference Include="QueryInterceptor.Core" Version="1.0.9" />
         <PackageReference Include="NFluent" Version="2.8.0" />
@@ -31,7 +31,7 @@
         <PackageReference Include="NodaTime" Version="3.1.5" />
         <PackageReference Include="Testcontainers.MsSql" Version="3.10.0" />
 
-        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore7\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore7.csproj" />
+        <ProjectReference Include="..\..\src\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore8\Microsoft.EntityFrameworkCore.DynamicLinq.EFCore8.csproj" />
     </ItemGroup>
 
     <ItemGroup>

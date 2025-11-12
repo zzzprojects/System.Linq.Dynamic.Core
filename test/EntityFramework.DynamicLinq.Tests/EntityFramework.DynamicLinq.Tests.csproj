@@ -40,7 +40,7 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="NodaTime" Version="2.4.7" />
         <PackageReference Include="Testcontainers.MsSql" Version="3.10.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
