@@ -508,35 +508,31 @@ public class NewtonsoftJsonTests
         first.Value<string>().Should().Be("Doe");
     }
 
-    //[Fact]
-    //public void Where_OptionalProperty()
-    //{
-    //    // Arrange
-    //    var config = new NewtonsoftJsonParsingConfig
-    //    {
-    //        ConvertObjectToSupportComparison = true
-    //    };
-    //    var array =
-    //        """
-    //        [
-    //            {
-    //                "Name": "John",
-    //                "Age": 30
-    //            },
-    //            {
-    //                "Name": "Doe"
-    //            }
-    //        ]
-    //        """;
+    [Fact]
+    public void Where_OptionalProperty()
+    {
+        // Arrange
+        var array =
+            """
+            [
+                {
+                    "Name": "John",
+                    "Age": 30
+                },
+                {
+                    "Name": "Doe"
+                }
+            ]
+            """;
 
-    //    // Act
-    //    var result = JArray.Parse(array).Where(config, "Age > 30").Select("Name");
+        // Act
+        var result = JArray.Parse(array).Where("Age >= 30").Select("Name");
 
-    //    // Assert
-    //    result.Should().HaveCount(1);
-    //    var first = result.First();
-    //    first.Value<string>().Should().Be("John");
-    //}
+        // Assert
+        result.Should().HaveCount(1);
+        var first = result.First();
+        first.Value<string>().Should().Be("John");
+    }
 
     [Theory]
     [InlineData("notExisting == true")]

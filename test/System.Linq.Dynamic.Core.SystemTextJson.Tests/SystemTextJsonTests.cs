@@ -1,6 +1,7 @@
 using System.Linq.Dynamic.Core.SystemTextJson.Config;
 using System.Text.Json;
 using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
@@ -535,6 +536,34 @@ public class SystemTextJsonTests
         var array = result.RootElement.EnumerateArray();
         array.Should().HaveCount(1);
         array.First().GetString().Should().Be("Doe");
+    }
+
+    [Fact]
+    public void Where_OptionalProperty()
+    {
+        // Arrange
+        var data =
+            """
+            [
+                {
+                    "Name": "John",
+                    "Age": 30
+                },
+                {
+                    "Name": "Doe"
+                }
+            ]
+            """;
+        var source = JsonDocument.Parse(data);
+
+        // Act
+        var result = source.Where("Age >= 30").Select("Name");
+
+        // Assert
+        var array = result.RootElement.EnumerateArray();
+        array.Should().HaveCount(1);
+        var first = result.First();
+        array.First().GetString().Should().Be("John");
     }
 
     [Theory]
