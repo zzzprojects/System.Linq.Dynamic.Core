@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using System.Linq.Dynamic.Core.NewtonsoftJson.Extensions;
+using System.Linq.Dynamic.Core.NewtonsoftJson.Utils;
 using System.Linq.Dynamic.Core.Validation;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
@@ -870,7 +871,13 @@ public static class NewtonsoftJsonExtensions
 
     private static IQueryable ToQueryable(JArray source, NewtonsoftJsonParsingConfig? config = null)
     {
-        return source.ToDynamicJsonClassArray(config?.DynamicJsonClassOptions).AsQueryable();
+        var normalized = config?.Normalize == true ?
+            NormalizeUtils.NormalizeArray(source, config.NormalizationNonExistingPropertyValueBehavior):
+            source;
+
+        return normalized
+            .ToDynamicJsonClassArray(config?.DynamicJsonClassOptions)
+            .AsQueryable();
     }
     #endregion
 }
