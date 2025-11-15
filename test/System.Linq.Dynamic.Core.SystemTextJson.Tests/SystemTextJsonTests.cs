@@ -588,7 +588,6 @@ public class SystemTextJsonTests
             Normalize = false
         };
         var data = """[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""";
-        var array = JsonDocument.Parse(data);
 
         // Act
         Action act = () => JsonDocument.Parse(data).Where(config, "Age >= 30");
