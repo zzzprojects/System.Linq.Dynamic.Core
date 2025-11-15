@@ -12,7 +12,7 @@ internal static class NormalizeUtils
     /// </summary>
     internal static JArray NormalizeArray(JArray jsonArray, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
-        if (jsonArray.Count(item => item is not JObject) > 0)
+        if (jsonArray.Any(item => item is not JObject))
         {
             return jsonArray;
         }

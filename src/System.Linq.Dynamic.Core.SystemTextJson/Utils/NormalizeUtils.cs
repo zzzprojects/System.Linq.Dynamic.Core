@@ -147,8 +147,9 @@ internal static class NormalizeUtils
         {
             JsonValueKind.Array => new JsonArray(),
             JsonValueKind.False => false,
-            JsonValueKind.True => false,
             JsonValueKind.Number => default(int),
+            JsonValueKind.String => string.Empty,
+            JsonValueKind.True => false,
             _ => null,
         };
     }
