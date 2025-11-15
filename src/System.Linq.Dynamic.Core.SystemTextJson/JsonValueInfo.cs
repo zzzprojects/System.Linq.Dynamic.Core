@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-internal struct JsonValueInfo(JsonValueKind type, object? value)
+internal readonly struct JsonValueInfo(JsonValueKind type, object? value)
 {
     public JsonValueKind Type { get; } = type;
 

@@ -1,9 +1,9 @@
-﻿namespace System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+﻿namespace System.Linq.Dynamic.Core.SystemTextJson.Config;
 
 /// <summary>
 /// Specifies the behavior to use when setting a property vlue that does not exist or is missing during normalization.
 /// </summary>
-public enum NormalizationNonExistingPropertyValueBehavior
+public enum NormalizationNonExistingPropertyBehavior
 {
     /// <summary>
     /// Specifies that the default value should be used.

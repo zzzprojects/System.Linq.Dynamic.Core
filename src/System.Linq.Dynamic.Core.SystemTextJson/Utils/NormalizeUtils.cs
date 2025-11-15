@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.SystemTextJson.Config;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace ConsoleApp3;
+namespace System.Linq.Dynamic.Core.SystemTextJson.Utils;
 
 internal static class NormalizeUtils
 {
     /// <summary>
     /// Normalizes an document that each object contains all properties found in the array, including nested objects.
     /// </summary>
-    internal static JsonDocument NormalizeJsonDocument(JsonDocument jsonDocument, NormalizationNonExistingPropertyValueBehavior normalizationBehavior)
+    internal static JsonDocument NormalizeJsonDocument(JsonDocument jsonDocument, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
         if (jsonDocument.RootElement.ValueKind != JsonValueKind.Array)
         {
@@ -28,7 +26,7 @@ internal static class NormalizeUtils
     /// <summary>
     /// Normalizes an array of JSON objects so that each object contains all properties found in the array, including nested objects.
     /// </summary>
-    internal static JsonArray NormalizeJsonArray(JsonArray jsonArray, NormalizationNonExistingPropertyValueBehavior normalizationBehavior)
+    internal static JsonArray NormalizeJsonArray(JsonArray jsonArray, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
         if (jsonArray.Any(item => item != null && item.GetValueKind() != JsonValueKind.Object))
         {
@@ -88,7 +86,7 @@ internal static class NormalizeUtils
         }
     }
 
-    private static JsonObject NormalizeObject(JsonObject source, Dictionary<string, JsonValueInfo> schema, NormalizationNonExistingPropertyValueBehavior normalizationBehavior)
+    private static JsonObject NormalizeObject(JsonObject source, Dictionary<string, JsonValueInfo> schema, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
         var result = new JsonObject();
 
@@ -113,7 +111,7 @@ internal static class NormalizeUtils
                 }
                 else
                 {
-                    result[key] = normalizationBehavior == NormalizationNonExistingPropertyValueBehavior.UseDefaultValue ? GetDefaultValue(jType) : null;
+                    result[key] = normalizationBehavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(jType) : null;
                 }
             }
         }
@@ -121,7 +119,7 @@ internal static class NormalizeUtils
         return result;
     }
 
-    private static JsonObject CreateEmptyObject(Dictionary<string, JsonValueInfo> schema, NormalizationNonExistingPropertyValueBehavior normalizationBehavior)
+    private static JsonObject CreateEmptyObject(Dictionary<string, JsonValueInfo> schema, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
         var obj = new JsonObject();
         foreach (var kvp in schema)
@@ -135,7 +133,7 @@ internal static class NormalizeUtils
             }
             else
             {
-                obj[key] = normalizationBehavior == NormalizationNonExistingPropertyValueBehavior.UseDefaultValue ? GetDefaultValue(jType) : null;
+                obj[key] = normalizationBehavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(jType) : null;
             }
         }
 

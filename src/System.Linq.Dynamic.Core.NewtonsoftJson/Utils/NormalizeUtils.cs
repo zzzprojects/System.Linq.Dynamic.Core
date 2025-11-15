@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
-using ConsoleApp3;
 using Newtonsoft.Json.Linq;
 
 namespace System.Linq.Dynamic.Core.NewtonsoftJson.Utils;
@@ -11,7 +10,7 @@ internal static class NormalizeUtils
     /// Normalizes an array of JSON objects so that each object contains all properties found in the array,
     /// including nested objects. Missing properties will have null values.
     /// </summary>
-    internal static JArray NormalizeArray(JArray jsonArray, NormalizationNonExistingPropertyValueBehavior normalizationBehavior)
+    internal static JArray NormalizeArray(JArray jsonArray, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
         if (jsonArray.Count(item => item is not JObject) > 0)
         {
@@ -68,7 +67,7 @@ internal static class NormalizeUtils
         }
     }
 
-    private static JObject NormalizeObject(JObject source, Dictionary<string, JsonValueInfo> schema, NormalizationNonExistingPropertyValueBehavior normalizationBehavior)
+    private static JObject NormalizeObject(JObject source, Dictionary<string, JsonValueInfo> schema, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
         var result = new JObject();
 
@@ -86,7 +85,7 @@ internal static class NormalizeUtils
                 }
                 else
                 {
-                    result[key] = normalizationBehavior == NormalizationNonExistingPropertyValueBehavior.UseDefaultValue ? GetDefaultValue(schema[key]) : JValue.CreateNull();
+                    result[key] = normalizationBehavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(schema[key]) : JValue.CreateNull();
                 }
             }
         }
@@ -94,7 +93,7 @@ internal static class NormalizeUtils
         return result;
     }
 
-    private static JObject CreateEmptyObject(Dictionary<string, JsonValueInfo> schema, NormalizationNonExistingPropertyValueBehavior normalizationBehavior)
+    private static JObject CreateEmptyObject(Dictionary<string, JsonValueInfo> schema, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
         var obj = new JObject();
         foreach (var key in schema.Keys)
@@ -105,7 +104,7 @@ internal static class NormalizeUtils
             }
             else
             {
-                obj[key] = normalizationBehavior == NormalizationNonExistingPropertyValueBehavior.UseDefaultValue ? GetDefaultValue(schema[key]) : JValue.CreateNull();
+                obj[key] = normalizationBehavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(schema[key]) : JValue.CreateNull();
             }
         }
 

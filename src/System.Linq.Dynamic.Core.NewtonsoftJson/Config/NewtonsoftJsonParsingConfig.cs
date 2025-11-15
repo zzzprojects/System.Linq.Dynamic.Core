@@ -28,7 +28,7 @@ public class NewtonsoftJsonParsingConfig : ParsingConfig
     /// <remarks>
     /// Use this property to control how the normalization process handles properties that are missing or undefined.
     /// The selected behavior may affect the output or error handling of normalization operations.
-    /// The default value is <see cref="NormalizationNonExistingPropertyValueBehavior.UseDefaultValue"/>.
+    /// The default value is <see cref="NormalizationNonExistingPropertyBehavior.UseDefaultValue"/>.
     /// </remarks>
-    public NormalizationNonExistingPropertyValueBehavior NormalizationNonExistingPropertyValueBehavior { get; set; }
+    public NormalizationNonExistingPropertyBehavior NormalizationNonExistingPropertyValueBehavior { get; set; }
 }

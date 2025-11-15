@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace ConsoleApp3;
+namespace System.Linq.Dynamic.Core.NewtonsoftJson;
 
-internal struct JsonValueInfo(JTokenType type,  object? value)
+internal readonly struct JsonValueInfo(JTokenType type,  object? value)
 {
     public JTokenType Type { get; } = type;
 

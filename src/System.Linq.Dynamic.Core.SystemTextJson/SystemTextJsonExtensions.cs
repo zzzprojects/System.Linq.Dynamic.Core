@@ -5,7 +5,6 @@ using System.Linq.Dynamic.Core.SystemTextJson.Extensions;
 using System.Linq.Dynamic.Core.SystemTextJson.Utils;
 using System.Linq.Dynamic.Core.Validation;
 using System.Text.Json;
-using ConsoleApp3;
 using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson;
