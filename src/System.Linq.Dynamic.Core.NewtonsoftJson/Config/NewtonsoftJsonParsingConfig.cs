@@ -18,7 +18,7 @@ public class NewtonsoftJsonParsingConfig : ParsingConfig
     public DynamicJsonClassOptions? DynamicJsonClassOptions { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the objecs in an array should be normalized before processing.
+    /// Gets or sets a value indicating whether the objects in an array should be normalized before processing.
     /// </summary>
     public bool Normalize { get; set; } = true;
 
