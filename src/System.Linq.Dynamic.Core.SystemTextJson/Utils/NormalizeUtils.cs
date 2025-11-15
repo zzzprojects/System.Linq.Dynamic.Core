@@ -69,12 +69,13 @@ internal static class NormalizeUtils
         {
             if (prop.Value is JsonObject nested)
             {
-                if (!schema.ContainsKey(prop.Key))
+                if (!schema.TryGetValue(prop.Key, out var jsonValueInfo))
                 {
-                    schema[prop.Key] = new JsonValueInfo(JsonValueKind.Object, new Dictionary<string, JsonValueInfo>());
+                    jsonValueInfo = new JsonValueInfo(JsonValueKind.Object, new Dictionary<string, JsonValueInfo>());
+                    schema[prop.Key] = jsonValueInfo;
                 }
 
-                MergeSchema((Dictionary<string, JsonValueInfo>)schema[prop.Key].Value!, nested);
+                MergeSchema((Dictionary<string, JsonValueInfo>)jsonValueInfo.Value!, nested);
             }
             else
             {
