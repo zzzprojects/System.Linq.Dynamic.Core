@@ -77,7 +77,7 @@ jobs:
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Debug -p:buildType=azure-pipelines-ci
         
-    - name: Run Tests .NET 10 (with Coverage)
+    - name: Run Tests EFCore .NET 10 (with Coverage)
       run: |
         dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
         
@@ -91,7 +91,7 @@ jobs:
        
     - name: Run Tests System.Text.Json .NET 10 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj --configuration Debug --framework net18.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-systemtextjson.xml
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj --configuration Debug --framework net10.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-systemtextjson.xml
 
     - name: End analysis on SonarCloud
       if: ${{ steps.secret-check.outputs.run_analysis == 'true' }}

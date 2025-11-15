@@ -1,6 +1,6 @@
 using System.Linq.Dynamic.Core.SystemTextJson.Config;
 using System.Text.Json;
-using FluentAssertions;
+using AwesomeAssertions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;

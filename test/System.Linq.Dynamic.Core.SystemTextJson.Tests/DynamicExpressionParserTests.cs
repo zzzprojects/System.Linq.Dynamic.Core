@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Text.Json;
-using FluentAssertions;
+using AwesomeAssertions;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
 
