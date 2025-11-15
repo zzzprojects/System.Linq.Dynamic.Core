@@ -8,7 +8,7 @@ namespace System.Linq.Dynamic.Core.SystemTextJson.Utils;
 internal static class NormalizeUtils
 {
     /// <summary>
-    /// Normalizes an document that each object contains all properties found in the array, including nested objects.
+    /// Normalizes a document so that each object contains all properties found in the array, including nested objects.
     /// </summary>
     internal static JsonDocument NormalizeJsonDocument(JsonDocument jsonDocument, NormalizationNonExistingPropertyBehavior normalizationBehavior)
     {
