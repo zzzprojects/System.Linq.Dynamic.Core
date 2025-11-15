@@ -1,4 +1,5 @@
-﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+﻿using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -508,32 +509,6 @@ public class NewtonsoftJsonTests
         first.Value<string>().Should().Be("Doe");
     }
 
-    [Fact]
-    public void Where_OptionalProperty()
-    {
-        // Arrange
-        var array =
-            """
-            [
-                {
-                    "Name": "John",
-                    "Age": 30
-                },
-                {
-                    "Name": "Doe"
-                }
-            ]
-            """;
-
-        // Act
-        var result = JArray.Parse(array).Where("Age >= 30").Select("Name");
-
-        // Assert
-        result.Should().HaveCount(1);
-        var first = result.First();
-        first.Value<string>().Should().Be("John");
-    }
-
     [Theory]
     [InlineData("notExisting == true")]
     [InlineData("notExisting == \"true\"")]
@@ -560,5 +535,38 @@ public class NewtonsoftJsonTests
 
         // Assert
         result.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("""[ { "Name": "John", "Age": 30 }, { "Name": "Doe" }, { } ]""")]
+    [InlineData("""[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""")]
+    public void NormalizeArray(string array)
+    {
+        // Act
+        var result = JArray.Parse(array)
+            .Where("Age >= 30")
+            .Select("Name");
+
+        // Assert
+        result.Should().HaveCount(1);
+        var first = result.First();
+        first.Value<string>().Should().Be("John");
+    }
+
+    [Fact]
+    public void NormalizeArray_When_NormalizeIsFalse_ShouldThrow()
+    {
+        // Arrange
+        var config = new NewtonsoftJsonParsingConfig
+        {
+            Normalize = false
+        };
+        var array = """[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""";
+
+        // Act
+        Action act = () => JArray.Parse(array).Where(config, "Age >= 30");
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("The binary operator GreaterThanOrEqual is not defined for the types 'System.Object' and 'System.Int32'.");
     }
 }

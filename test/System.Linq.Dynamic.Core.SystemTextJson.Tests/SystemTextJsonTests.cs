@@ -1,7 +1,6 @@
 using System.Linq.Dynamic.Core.SystemTextJson.Config;
 using System.Text.Json;
 using FluentAssertions;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
@@ -538,34 +537,6 @@ public class SystemTextJsonTests
         array.First().GetString().Should().Be("Doe");
     }
 
-    [Fact]
-    public void Where_OptionalProperty()
-    {
-        // Arrange
-        var data =
-            """
-            [
-                {
-                    "Name": "John",
-                    "Age": 30
-                },
-                {
-                    "Name": "Doe"
-                }
-            ]
-            """;
-        var source = JsonDocument.Parse(data);
-
-        // Act
-        var result = source.Where("Age >= 30").Select("Name");
-
-        // Assert
-        var array = result.RootElement.EnumerateArray();
-        array.Should().HaveCount(1);
-        var first = result.First();
-        array.First().GetString().Should().Be("John");
-    }
-
     [Theory]
     [InlineData("notExisting == true")]
     [InlineData("notExisting == \"true\"")]
@@ -581,16 +552,48 @@ public class SystemTextJsonTests
     [InlineData("1 < notExisting")]
     public void Where_NonExistingMember_EmptyResult(string predicate)
     {
-        // Arrange
-        var config = new SystemTextJsonParsingConfig
-        {
-            ConvertObjectToSupportComparison = true
-        };
-
         // Act
-        var result = _source.Where(config, predicate).RootElement.EnumerateArray();
+        var result = _source.Where(predicate).RootElement.EnumerateArray();
 
         // Assert
         result.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("""[ { "Name": "John", "Age": 30 }, { "Name": "Doe" }, { } ]""")]
+    [InlineData("""[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""")]
+    public void NormalizeArray(string data)
+    {
+        // Arrange
+        var source = JsonDocument.Parse(data);
+
+        // Act
+        var result = source
+            .Where("Age >= 30")
+            .Select("Name");
+
+        // Assert
+        var array = result.RootElement.EnumerateArray();
+        array.Should().HaveCount(1);
+        var first = result.First();
+        array.First().GetString().Should().Be("John");
+    }
+
+    [Fact]
+    public void NormalizeArray_When_NormalizeIsFalse_ShouldThrow()
+    {
+        // Arrange
+        var config = new SystemTextJsonParsingConfig
+        {
+            Normalize = false
+        };
+        var data = """[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""";
+        var array = JsonDocument.Parse(data);
+
+        // Act
+        Action act = () => JsonDocument.Parse(data).Where(config, "Age >= 30");
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("Unable to find property 'Age' on type '<>f__AnonymousType*");
     }
 }
