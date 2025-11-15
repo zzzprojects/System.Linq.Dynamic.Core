@@ -79,7 +79,7 @@ jobs:
         
     - name: Run Tests .NET 10 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests.Net/System.Linq.Dynamic.Core.Tests.Net.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
         
     - name: Run Tests EF .NET 10 (with Coverage)
       run: |
