@@ -157,8 +157,9 @@ public partial class QueryableTests
         Assert.Throws<ArgumentNullException>(() => qry.Where((string?)null));
         Assert.Throws<ArgumentException>(() => qry.Where(""));
         Assert.Throws<ArgumentException>(() => qry.Where(" "));
-        var parsingConfigException = Assert.Throws<ArgumentException>(() => qry.Where("UserName == \"x\"", ParsingConfig.Default));
-        Assert.Equal("The ParsingConfig should be provided as first argument to this method. (Parameter 'args')", parsingConfigException.Message);
+
+        Action act = () => qry.Where("UserName == \"x\"", ParsingConfig.Default);
+        act.Should().Throw<ArgumentException>().WithMessage("The ParsingConfig should be provided as first argument to this method.*");
     }
 
     [Fact]

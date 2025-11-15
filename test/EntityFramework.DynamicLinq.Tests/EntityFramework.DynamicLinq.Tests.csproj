@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Authors>Stef Heyenrath</Authors>
-        <TargetFrameworks>net461;net8.0;net9.0</TargetFrameworks>
+        <TargetFrameworks>net461;net8.0;net9.0;net10.0</TargetFrameworks>
         <DebugType>full</DebugType>
         <DefineConstants>EF;NET461</DefineConstants>
         <AssemblyName>EntityFramework.DynamicLinq.Tests</AssemblyName>
@@ -40,7 +40,7 @@
 
     <ItemGroup>
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="NodaTime" Version="2.4.7" />
         <PackageReference Include="Testcontainers.MsSql" Version="3.10.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -58,20 +58,25 @@
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
         <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.1" />
-        <PackageReference Include="LinqKit.EntityFramework" Version="1.1.15" />
+        <PackageReference Include="LinqKit.EntityFramework" Version="1.3.9" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.6" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="8.1.9" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
-        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="9.0.6" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="9.0.9" />
     </ItemGroup>
 
-    <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' ">
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0' ">
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0" />
+        <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="10.0.9" />
+    </ItemGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' or '$(TargetFramework)' == 'net9.0' or '$(TargetFramework)' == 'net10.0' ">
         <DefineConstants>$(DefineConstants);AspNetCoreIdentity</DefineConstants>
     </PropertyGroup>
 

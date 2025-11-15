@@ -22,7 +22,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="Linq.PropertyTranslator.Core" Version="1.0.5" />
         <PackageReference Include="QueryInterceptor.Core" Version="1.0.9" />
         <PackageReference Include="xunit" Version="2.4.1" />

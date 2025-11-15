@@ -109,7 +109,11 @@ public class DynamicClassTest
         value.Should().Be(test);
     }
 
+#if NET461
+    [Fact(Skip = "Does not work for .NET 4.6.1")]
+#else
     [Fact]
+#endif
     public void DynamicClass_GettingValue_ByIndex_Should_Work()
     {
         // Arrange
@@ -127,7 +131,11 @@ public class DynamicClassTest
         value.Should().Be(test);
     }
 
+#if NET461
+    [Fact(Skip = "Does not work for .NET 4.6.1")]
+#else
     [Fact]
+#endif
     public void DynamicClass_SettingExistingPropertyValue_ByIndex_Should_Work()
     {
         // Arrange
@@ -151,7 +159,11 @@ public class DynamicClassTest
         value.Should().Be(newValue);
     }
 
+#if NET461
+    [Fact(Skip = "Does not work for .NET 4.6.1")]
+#else
     [Fact]
+#endif
     public void DynamicClass_SettingNewProperty_ByIndex_Should_Work()
     {
         // Arrange

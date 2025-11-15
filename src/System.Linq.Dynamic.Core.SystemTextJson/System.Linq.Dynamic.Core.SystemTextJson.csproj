@@ -8,7 +8,7 @@
         <Description>Contains some extensions for System.Linq.Dynamic.Core to dynamically query a System.Text.Json.JsonDocument</Description>
         <PackageTags>system;linq;dynamic;core;dotnet;json</PackageTags>
         <ProjectGuid>{FA01CE15-315A-499E-AFC2-955CA7EB45FF}</ProjectGuid>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0;net10.0</TargetFrameworks>
         <Version>1.6.$(PatchVersion)</Version>
     </PropertyGroup>
 
