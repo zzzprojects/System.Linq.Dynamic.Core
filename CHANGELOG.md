@@ -1,3 +1,9 @@
+# v1.7.0 (15 November 2025)
+- [#956](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/956) - Fix parsing Hex and Binary [bug] contributed by [StefH](https://github.com/StefH)
+- [#957](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/957) - .NET 10 [feature] contributed by [StefH](https://github.com/StefH)
+- [#958](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/958) - Support normalization of objects for Z.DynamicLinq.Json [feature] contributed by [StefH](https://github.com/StefH)
+- [#955](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/955) - Hexadecimal und binary literals sometimes are interpreted as decimal [bug]
+
 # v1.6.10 (08 November 2025)
 - [#953](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/953) - Fixed adding Enum and integer [bug] contributed by [StefH](https://github.com/StefH)
 - [#954](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/954) - Fix ExpressionHelper.TryConvertTypes to generate correct Convert in case left or right is null [bug] contributed by [StefH](https://github.com/StefH)
