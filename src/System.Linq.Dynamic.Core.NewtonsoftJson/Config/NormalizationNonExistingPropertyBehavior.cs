@@ -1,7 +1,7 @@
 ﻿namespace System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 
 /// <summary>
-/// Specifies the behavior to use when setting a property vlue that does not exist or is missing during normalization.
+/// Specifies the behavior to use when setting a property value that does not exist or is missing during normalization.
 /// </summary>
 public enum NormalizationNonExistingPropertyBehavior
 {
