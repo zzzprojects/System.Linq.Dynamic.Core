@@ -86,7 +86,7 @@ internal static class NormalizeUtils
                 }
                 else
                 {
-                    result[key] = normalizationBehavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(schema[key]) : JValue.CreateNull();
+                    result[key] = GetDefaultOrNullValue(normalizationBehavior, schema[key]);
                 }
             }
         }
@@ -105,7 +105,7 @@ internal static class NormalizeUtils
             }
             else
             {
-                obj[key] = normalizationBehavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(schema[key]) : JValue.CreateNull();
+                obj[key] = GetDefaultOrNullValue(normalizationBehavior, schema[key]);
             }
         }
 
@@ -125,7 +125,28 @@ internal static class NormalizeUtils
             JTokenType.Integer => default(int),
             JTokenType.String => string.Empty,
             JTokenType.TimeSpan => TimeSpan.MinValue,
+            _ => GetNullValue(jType),
+        };
+    }
+
+    private static JValue GetNullValue(JsonValueInfo jType)
+    {
+        return jType.Type switch
+        {
+            JTokenType.Boolean => new JValue((bool?)null),
+            JTokenType.Bytes => new JValue((byte[]?)null),
+            JTokenType.Date => new JValue((DateTime?)null),
+            JTokenType.Float => new JValue((float?)null),
+            JTokenType.Guid => new JValue((Guid?)null),
+            JTokenType.Integer => new JValue((int?)null),
+            JTokenType.String => new JValue((string?)null),
+            JTokenType.TimeSpan => new JValue((TimeSpan?)null),
             _ => JValue.CreateNull(),
         };
+    }
+
+    private static JToken GetDefaultOrNullValue(NormalizationNonExistingPropertyBehavior behavior, JsonValueInfo jType)
+    {
+        return behavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(jType) : GetNullValue(jType);
     }
 }

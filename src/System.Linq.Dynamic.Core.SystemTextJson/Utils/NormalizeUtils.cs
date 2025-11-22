@@ -113,7 +113,7 @@ internal static class NormalizeUtils
                 }
                 else
                 {
-                    result[key] = normalizationBehavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(jType) : null;
+                    result[key] = GetDefaultOrNullValue(normalizationBehavior, jType);
                 }
             }
         }
@@ -135,7 +135,7 @@ internal static class NormalizeUtils
             }
             else
             {
-                obj[key] = normalizationBehavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(jType) : null;
+                obj[key] = GetDefaultOrNullValue(normalizationBehavior, jType);
             }
         }
 
@@ -151,7 +151,25 @@ internal static class NormalizeUtils
             JsonValueKind.Number => default(int),
             JsonValueKind.String => string.Empty,
             JsonValueKind.True => false,
+            _ => GetNullValue(jType),
+        };
+    }
+
+    private static JsonNode? GetNullValue(JsonValueInfo jType)
+    {
+        return jType.Type switch
+        {
+            JsonValueKind.Array => null,
+            JsonValueKind.False => JsonValue.Create<bool?>(false),
+            JsonValueKind.Number => JsonValue.Create<int?>(null),
+            JsonValueKind.String => JsonValue.Create<string?>(null),
+            JsonValueKind.True => JsonValue.Create<bool?>(true),
             _ => null,
         };
+    }
+
+    private static JsonNode? GetDefaultOrNullValue(NormalizationNonExistingPropertyBehavior behavior, JsonValueInfo jType)
+    {
+        return behavior == NormalizationNonExistingPropertyBehavior.UseDefaultValue ? GetDefaultValue(jType) : GetNullValue(jType);
     }
 }

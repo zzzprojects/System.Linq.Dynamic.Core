@@ -568,6 +568,6 @@ public class NewtonsoftJsonTests
         Action act = () => JArray.Parse(array).Where(config, "Age >= 30");
 
         // Assert
-        act.Should().Throw<InvalidOperationException>().WithMessage("The binary operator GreaterThanOrEqual is not defined for the types 'System.Object' and 'System.Int32'.");
+        act.Should().Throw<InvalidOperationException>().WithMessage("Unable to find property 'Age' on type '<>*");
     }
 }

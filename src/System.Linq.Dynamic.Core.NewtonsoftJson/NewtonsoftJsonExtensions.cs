@@ -871,8 +871,11 @@ public static class NewtonsoftJsonExtensions
 
     private static IQueryable ToQueryable(JArray source, NewtonsoftJsonParsingConfig? config = null)
     {
-        var normalized = config?.Normalize == true ?
-            NormalizeUtils.NormalizeArray(source, config.NormalizationNonExistingPropertyValueBehavior):
+        config = config ?? NewtonsoftJsonParsingConfig.Default;
+        config.ConvertObjectToSupportComparison = true;
+
+        var normalized = config.Normalize == true ?
+            NormalizeUtils.NormalizeArray(source, config.NormalizationNonExistingPropertyValueBehavior) :
             source;
 
         return normalized

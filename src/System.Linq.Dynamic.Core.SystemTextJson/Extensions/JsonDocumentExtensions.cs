@@ -34,10 +34,7 @@ internal static class JsonDocumentExtensions
         foreach (var prop in src.Value.EnumerateObject())
         {
             var value = Resolvers[prop.Value.ValueKind](prop.Value, options);
-            if (value != null)
-            {
-                dynamicPropertiesWithValue.Add(new DynamicPropertyWithValue(prop.Name, value));
-            }
+            dynamicPropertiesWithValue.Add(new DynamicPropertyWithValue(prop.Name, value));
         }
 
         return DynamicClassFactory.CreateInstance(dynamicPropertiesWithValue);
@@ -129,7 +126,7 @@ internal static class JsonDocumentExtensions
     private static IEnumerable ConvertToTypedArray(IEnumerable<object?> src, Type newType)
     {
         var method = ConvertToTypedArrayGenericMethod.MakeGenericMethod(newType);
-        return (IEnumerable)method.Invoke(null, new object[] { src })!;
+        return (IEnumerable)method.Invoke(null, [src])!;
     }
 
     private static readonly MethodInfo ConvertToTypedArrayGenericMethod = typeof(JsonDocumentExtensions).GetMethod(nameof(ConvertToTypedArrayGeneric), BindingFlags.NonPublic | BindingFlags.Static)!;
