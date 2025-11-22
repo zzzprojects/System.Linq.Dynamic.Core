@@ -1921,11 +1921,35 @@ public class ExpressionParser
 
         if (!_parsingConfig.DisableMemberAccessToIndexAccessorFallback && extraCheck)
         {
-            var indexerName = TypeHelper.IsDynamicClass(type!) ? DynamicClass.IndexerName : "Item";
+            var isDynamicClass = TypeHelper.IsDynamicClass(type!);
+            var indexerName = isDynamicClass ? DynamicClass.IndexerName : "Item";
+
+            // Try to get the indexer property "Item" or "DynamicClass_Indexer" which takes a string as parameter
             var indexerMethod = expression?.Type.GetMethod($"get_{indexerName}", [typeof(string)]);
             if (indexerMethod != null)
             {
-                return Expression.Call(expression, indexerMethod, Expression.Constant(id));
+                if (!isDynamicClass)
+                {
+                    return Expression.Call(expression, indexerMethod, Expression.Constant(id));
+                }
+
+                var containsPropertyMethod = typeof(DynamicClass).GetMethod("ContainsProperty");
+                if (containsPropertyMethod == null)
+                {
+                    return Expression.Call(expression, indexerMethod, Expression.Constant(id));
+                }
+
+                var callContainsPropertyExpression = Expression.Call(
+                    expression!,
+                    containsPropertyMethod,
+                    Expression.Constant(id)
+                );
+
+                return Expression.Condition(
+                    Expression.Equal(callContainsPropertyExpression, Expression.Constant(true)),
+                    Expression.Call(expression, indexerMethod, Expression.Constant(id)),
+                    Expression.Constant(null)
+                );
             }
         }
 
