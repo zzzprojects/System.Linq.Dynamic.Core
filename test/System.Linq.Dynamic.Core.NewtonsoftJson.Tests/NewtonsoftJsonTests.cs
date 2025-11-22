@@ -1,5 +1,4 @@
-﻿using System.Linq.Dynamic.Core.Exceptions;
-using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -13,11 +12,13 @@ public class NewtonsoftJsonTests
         [
             {
                 "Name": "John",
-                "Age": 30
+                "Age": 30,
+                "IsNull": null
             },
             {
                 "Name": "Doe",
-                "Age": 40
+                "Age": 40,
+                "AlsoNull": null
             }
         ]
         """;
@@ -567,6 +568,6 @@ public class NewtonsoftJsonTests
         Action act = () => JArray.Parse(array).Where(config, "Age >= 30");
 
         // Assert
-        act.Should().Throw<InvalidOperationException>().WithMessage("The binary operator GreaterThanOrEqual is not defined for the types 'System.Object' and 'System.Int32'.");
+        act.Should().Throw<InvalidOperationException>().WithMessage("Unable to find property 'Age' on type '<>*");
     }
 }

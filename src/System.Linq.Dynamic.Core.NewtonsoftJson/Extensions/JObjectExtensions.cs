@@ -44,10 +44,7 @@ internal static class JObjectExtensions
         foreach (var prop in src.Properties())
         {
             var value = Resolvers[prop.Type](prop.Value, options);
-            if (value != null)
-            {
-                dynamicPropertiesWithValue.Add(new DynamicPropertyWithValue(prop.Name, value));
-            }
+            dynamicPropertiesWithValue.Add(new DynamicPropertyWithValue(prop.Name, value));
         }
 
         return DynamicClassFactory.CreateInstance(dynamicPropertiesWithValue);

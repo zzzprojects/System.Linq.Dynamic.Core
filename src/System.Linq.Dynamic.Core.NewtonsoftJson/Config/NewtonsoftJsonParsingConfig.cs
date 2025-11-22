@@ -10,7 +10,10 @@ public class NewtonsoftJsonParsingConfig : ParsingConfig
     /// <summary>
     /// The default ParsingConfig for <see cref="NewtonsoftJsonParsingConfig"/>.
     /// </summary>
-    public new static NewtonsoftJsonParsingConfig Default { get; } = new();
+    public new static NewtonsoftJsonParsingConfig Default { get; } = new NewtonsoftJsonParsingConfig
+    {
+        ConvertObjectToSupportComparison = true
+    };
 
     /// <summary>
     /// The default <see cref="DynamicJsonClassOptions"/> to use.
@@ -28,7 +31,7 @@ public class NewtonsoftJsonParsingConfig : ParsingConfig
     /// <remarks>
     /// Use this property to control how the normalization process handles properties that are missing or undefined.
     /// The selected behavior may affect the output or error handling of normalization operations.
-    /// The default value is <see cref="NormalizationNonExistingPropertyBehavior.UseDefaultValue"/>.
+    /// The default value is <see cref="NormalizationNonExistingPropertyBehavior.UseNull"/>.
     /// </remarks>
     public NormalizationNonExistingPropertyBehavior NormalizationNonExistingPropertyValueBehavior { get; set; }
 }

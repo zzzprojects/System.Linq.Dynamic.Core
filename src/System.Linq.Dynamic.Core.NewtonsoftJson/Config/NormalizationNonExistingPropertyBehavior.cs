@@ -6,12 +6,12 @@
 public enum NormalizationNonExistingPropertyBehavior
 {
     /// <summary>
-    /// Specifies that the default value should be used.
+    /// Specifies that a null value should be used.
     /// </summary>
-    UseDefaultValue = 0,
+    UseNull = 0,
 
     /// <summary>
-    /// Specifies that null values should be used.
+    /// Specifies that the default value should be used.
     /// </summary>
-    UseNull = 1
+    UseDefaultValue = 1    
 }

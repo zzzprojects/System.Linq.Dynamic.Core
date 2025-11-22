@@ -24,7 +24,7 @@ public class SystemTextJsonParsingConfig : ParsingConfig
     /// <remarks>
     /// Use this property to control how the normalization process handles properties that are missing or undefined.
     /// The selected behavior may affect the output or error handling of normalization operations.
-    /// The default value is <see cref="NormalizationNonExistingPropertyBehavior.UseDefaultValue"/>.
+    /// The default value is <see cref="NormalizationNonExistingPropertyBehavior.UseNull"/>.
     /// </remarks>
     public NormalizationNonExistingPropertyBehavior NormalizationNonExistingPropertyValueBehavior { get; set; }
 }

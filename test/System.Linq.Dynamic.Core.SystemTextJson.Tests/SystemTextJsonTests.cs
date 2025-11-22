@@ -17,11 +17,13 @@ public class SystemTextJsonTests
         [
             {
                 "Name": "John",
-                "Age": 30
+                "Age": 30,
+                "IsNull": null
             },
             {
                 "Name": "Doe",
-                "Age": 40
+                "Age": 40,
+                "AlsoNull": null
             }
         ]
         """;
@@ -161,20 +163,20 @@ public class SystemTextJsonTests
     public void First()
     {
         // Act + Assert 1
-        _source.First().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30}").RootElement.GetRawText());
+        _source.First().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 2
-        _source.First("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.First("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
     }
 
     [Fact]
     public void FirstOrDefault()
     {
         // Act + Assert 1
-        _source.FirstOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30}").RootElement.GetRawText());
+        _source.FirstOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 2
-        _source.FirstOrDefault("Age > 30")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.FirstOrDefault("Age > 30")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 3
         _source.FirstOrDefault("Age > 999").Should().BeNull();
@@ -267,20 +269,20 @@ public class SystemTextJsonTests
     public void Last()
     {
         // Act + Assert 1
-        _source.Last().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.Last().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 2
-        _source.Last("Age > 0").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.Last("Age > 0").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
     }
 
     [Fact]
     public void LastOrDefault()
     {
         // Act + Assert 1
-        _source.LastOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.LastOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 2
-        _source.LastOrDefault("Age > 0")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.LastOrDefault("Age > 0")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 3
         _source.LastOrDefault("Age > 999").Should().BeNull();
@@ -444,7 +446,7 @@ public class SystemTextJsonTests
     public void Single()
     {
         // Act + Assert
-        _source.Single("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.Single("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
     }
 
     [Fact]
