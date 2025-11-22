@@ -17,11 +17,13 @@ public class SystemTextJsonTests
         [
             {
                 "Name": "John",
-                "Age": 30
+                "Age": 30,
+                "IsNull": null
             },
             {
                 "Name": "Doe",
-                "Age": 40
+                "Age": 40,
+                "AlsoNull": null
             }
         ]
         """;

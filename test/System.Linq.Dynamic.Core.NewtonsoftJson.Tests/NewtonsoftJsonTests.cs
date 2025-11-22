@@ -1,5 +1,4 @@
-﻿using System.Linq.Dynamic.Core.Exceptions;
-using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -13,11 +12,13 @@ public class NewtonsoftJsonTests
         [
             {
                 "Name": "John",
-                "Age": 30
+                "Age": 30,
+                "IsNull": null
             },
             {
                 "Name": "Doe",
-                "Age": 40
+                "Age": 40,
+                "AlsoNull": null
             }
         ]
         """;

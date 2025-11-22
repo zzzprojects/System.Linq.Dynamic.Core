@@ -104,10 +104,11 @@ internal static class NormalizeUtils
             {
                 if (source.ContainsKey(key))
                 {
+                    var value = source[key];
 #if NET8_0_OR_GREATER
-                    result[key] = source[key]!.DeepClone();
+                    result[key] = value?.DeepClone();
 #else
-                    result[key] = JsonNode.Parse(source[key]!.ToJsonString());
+                    result[key] = value != null ? JsonNode.Parse(value.ToJsonString()) : null;
 #endif
                 }
                 else
