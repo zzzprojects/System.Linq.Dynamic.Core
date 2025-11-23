@@ -11,7 +11,7 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal class ExpressionHelper : IExpressionHelper
 {
-    private readonly Expression _nullExpression = Expression.Constant(null);
+    private static readonly Expression _nullExpression = Expression.Constant(null);
     private readonly IConstantExpressionWrapper _constantExpressionWrapper = new ConstantExpressionWrapper();
     private readonly ParsingConfig _parsingConfig;
 
@@ -394,7 +394,7 @@ internal class ExpressionHelper : IExpressionHelper
 
         if (left.Type == typeof(object))
         {
-            if (left is ConditionalExpression ce)
+            if (TryGetAsIndexerExpression(left, out var ce))
             {
                 var rightTypeAsNullableType = TypeHelper.GetNullableType(right.Type);
 
@@ -417,7 +417,7 @@ internal class ExpressionHelper : IExpressionHelper
         }
         else if (right.Type == typeof(object))
         {
-            if (right is ConditionalExpression ce)
+            if (TryGetAsIndexerExpression(right, out var ce))
             {
                 var leftTypeAsNullableType = TypeHelper.GetNullableType(left.Type);
 
@@ -576,5 +576,18 @@ internal class ExpressionHelper : IExpressionHelper
         }
 
         return [];
+    }
+
+    private static bool TryGetAsIndexerExpression(Expression expression, [NotNullWhen(true)] out ConditionalExpression? indexerExpresion)
+    {
+        indexerExpresion = expression as ConditionalExpression;
+        if (indexerExpresion == null)
+        {
+            return false;
+        }
+
+        return
+            indexerExpresion.IfTrue.ToString().Contains(DynamicClass.IndexerName) &&
+            indexerExpresion.Test.ToString().Contains("ContainsProperty");
     }
 }
