@@ -124,6 +124,16 @@ public abstract class DynamicClass : DynamicObject
     }
 
     /// <summary>
+    /// Determines whether a property with the specified name exists in the collection.
+    /// </summary>
+    /// <param name="name">The name of the property to locate. Cannot be null.</param>
+    /// <returns><c>true</c> if a property with the specified name exists; otherwise, <c>false</c>.</returns>
+    public bool ContainsProperty(string name)
+    {
+        return Properties.ContainsKey(name);
+    }
+
+    /// <summary>
     /// Returns the enumeration of all dynamic member names.
     /// </summary>
     /// <returns>

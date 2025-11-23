@@ -12,7 +12,7 @@ public class DynamicClass : DynamicObject
 {
     internal const string IndexerName = "System_Linq_Dynamic_Core_DynamicClass_Indexer";
 
-    private readonly Dictionary<string, object> _properties = new();
+    private readonly Dictionary<string, object?> _properties = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicClass"/> class.
@@ -35,7 +35,7 @@ public class DynamicClass : DynamicObject
     /// <param name="name">The name.</param>
     /// <returns>Value from the property.</returns>
     [IndexerName(IndexerName)]
-    public object this[string name]
+    public object? this[string name]
     {
         get
         {
@@ -57,6 +57,16 @@ public class DynamicClass : DynamicObject
                 _properties.Add(name, value);
             }
         }
+    }
+
+    /// <summary>
+    /// Determines whether a property with the specified name exists in the collection.
+    /// </summary>
+    /// <param name="name">The name of the property to locate. Cannot be null.</param>
+    /// <returns><c>true</c> if a property with the specified name exists; otherwise, <c>false</c>.</returns>
+    public bool ContainsProperty(string name)
+    {
+        return _properties.ContainsKey(name);
     }
 
     /// <summary>

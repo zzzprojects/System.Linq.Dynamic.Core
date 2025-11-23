@@ -546,12 +546,14 @@ public class SystemTextJsonTests
     [InlineData("notExisting == \"1\"")]
     [InlineData("notExisting == \"something\"")]
     [InlineData("notExisting > 1")]
+    [InlineData("notExisting < 1")]
     [InlineData("true == notExisting")]
     [InlineData("\"true\" == notExisting")]
     [InlineData("1 == notExisting")]
     [InlineData("\"1\" == notExisting")]
     [InlineData("\"something\" == notExisting")]
     [InlineData("1 < notExisting")]
+    [InlineData("1 > notExisting")]
     public void Where_NonExistingMember_EmptyResult(string predicate)
     {
         // Act

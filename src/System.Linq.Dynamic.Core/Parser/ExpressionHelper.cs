@@ -11,6 +11,7 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal class ExpressionHelper : IExpressionHelper
 {
+    private static readonly Expression _nullExpression = Expression.Constant(null);
     private readonly IConstantExpressionWrapper _constantExpressionWrapper = new ConstantExpressionWrapper();
     private readonly ParsingConfig _parsingConfig;
 
@@ -340,7 +341,7 @@ internal class ExpressionHelper : IExpressionHelper
         // Convert all expressions into '!= null' expressions (only if the type can be null)
         var binaryExpressions = expressions
             .Where(expression => TypeHelper.TypeCanBeNull(expression.Type))
-            .Select(expression => Expression.NotEqual(expression, Expression.Constant(null)))
+            .Select(expression => Expression.NotEqual(expression, _nullExpression))
             .ToArray();
 
         // Convert all binary expressions into `AndAlso(...)`
@@ -393,16 +394,46 @@ internal class ExpressionHelper : IExpressionHelper
 
         if (left.Type == typeof(object))
         {
+            if (TryGetAsIndexerExpression(left, out var ce))
+            {
+                var rightTypeAsNullableType = TypeHelper.GetNullableType(right.Type);
+
+                right = Expression.Convert(right, rightTypeAsNullableType);
+
+                left = Expression.Condition(
+                    ce.Test,
+                    Expression.Convert(ce.IfTrue, rightTypeAsNullableType),
+                    Expression.Convert(_nullExpression, rightTypeAsNullableType)
+                );
+
+                return true;
+            }
+
             left = Expression.Condition(
-                Expression.Equal(left, Expression.Constant(null, typeof(object))),
+                Expression.Equal(left, _nullExpression),
                 GenerateDefaultExpression(right.Type),
                 Expression.Convert(left, right.Type)
             );
         }
         else if (right.Type == typeof(object))
         {
+            if (TryGetAsIndexerExpression(right, out var ce))
+            {
+                var leftTypeAsNullableType = TypeHelper.GetNullableType(left.Type);
+
+                left = Expression.Convert(left, leftTypeAsNullableType);
+
+                right = Expression.Condition(
+                    ce.Test,
+                    Expression.Convert(ce.IfTrue, leftTypeAsNullableType),
+                    Expression.Convert(_nullExpression, leftTypeAsNullableType)
+                );
+
+                return true;
+            }
+
             right = Expression.Condition(
-                Expression.Equal(right, Expression.Constant(null, typeof(object))),
+                Expression.Equal(right, _nullExpression),
                 GenerateDefaultExpression(left.Type),
                 Expression.Convert(right, left.Type)
             );
@@ -545,5 +576,18 @@ internal class ExpressionHelper : IExpressionHelper
         }
 
         return [];
+    }
+
+    private static bool TryGetAsIndexerExpression(Expression expression, [NotNullWhen(true)] out ConditionalExpression? indexerExpresion)
+    {
+        indexerExpresion = expression as ConditionalExpression;
+        if (indexerExpresion == null)
+        {
+            return false;
+        }
+
+        return
+            indexerExpresion.IfTrue.ToString().Contains(DynamicClass.IndexerName) &&
+            indexerExpresion.Test.ToString().Contains("ContainsProperty");
     }
 }
