@@ -149,7 +149,7 @@ public class NumberParser
             throw new ParseException(Res.MinusCannotBeAppliedToUnsignedInteger, tokenPosition);
         }
 
-        if (value <= int.MaxValue)
+        if (value >= int.MinValue && value <= int.MaxValue)
         {
             return _constantExpressionHelper.CreateLiteral((int)value, textOriginal);
         }
