@@ -1,3 +1,10 @@
+# v1.7.1 (29 November 2025)
+- [#961](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/961) - Fix Json when property value is null [bug] contributed by [StefH](https://github.com/StefH)
+- [#962](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/962) - json: fix logic when property is not found [bug] contributed by [StefH](https://github.com/StefH)
+- [#965](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/965) - Fix NumberParser for integer &lt; int.MinValue [bug] contributed by [StefH](https://github.com/StefH)
+- [#960](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/960) - json: follow up for not existing members [bug]
+- [#964](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/964) - Integer numbers smaller than int.MinValue are not parsed correctly [bug]
+
 # v1.7.0 (15 November 2025)
 - [#956](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/956) - Fix parsing Hex and Binary [bug] contributed by [StefH](https://github.com/StefH)
 - [#957](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/957) - .NET 10 [feature] contributed by [StefH](https://github.com/StefH)
