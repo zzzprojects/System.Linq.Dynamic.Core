@@ -1910,7 +1910,7 @@ public class ExpressionParser
             return Expression.MakeIndex(expression!, typeof(DynamicClass).GetProperty(DynamicClass.IndexerName), [Expression.Constant(id)]);
         }
 #endif
-        if (TryFindPropertyOrField(type!, id, expression, out var propertyOrFieldExpression))
+         if (TryFindPropertyOrField(type!, id, expression, out var propertyOrFieldExpression))
         {
             return propertyOrFieldExpression;
         }
@@ -1980,7 +1980,9 @@ public class ExpressionParser
         switch (member)
         {
             case PropertyInfo property:
-                var propertyIsStatic = property?.GetGetMethod().IsStatic ?? property?.GetSetMethod().IsStatic ?? false;
+                var getter = property.GetGetMethod(true);
+                var setter = property.GetSetMethod(true);
+                var propertyIsStatic = (getter?.IsStatic == true) || (setter?.IsStatic == true);
                 propertyOrFieldExpression = propertyIsStatic ? Expression.Property(null, property) : Expression.Property(expression, property);
                 return true;
 
@@ -2542,7 +2544,8 @@ public class ExpressionParser
     {
 #if !(UAP10_0 || NETSTANDARD)
         var extraBindingFlag = _parsingConfig.PrioritizePropertyOrFieldOverTheType && staticAccess ? BindingFlags.Static : BindingFlags.Instance | BindingFlags.Static;
-        var bindingFlags = BindingFlags.Public | BindingFlags.DeclaredOnly | extraBindingFlag;
+        var visibilityFlags = BindingFlags.Public | (_parsingConfig.AllowAccessToNonPublicMembers ? BindingFlags.NonPublic : 0);
+        var bindingFlags = visibilityFlags | BindingFlags.DeclaredOnly | extraBindingFlag;
         foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
         {
             var findMembersType = _parsingConfig?.IsCaseSensitive == true ? Type.FilterName : Type.FilterNameIgnoreCase;
@@ -2560,14 +2563,18 @@ public class ExpressionParser
         {
             // Try to find a property with the specified memberName
             MemberInfo? member = t.GetTypeInfo().DeclaredProperties
-                .FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic) && (x.Name == memberName || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
+                .FirstOrDefault(x => (!staticAccess || x.GetAccessors(true)[0].IsStatic)
+                                     && (x.Name == memberName || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase)))
+                                     && (_parsingConfig.AllowAccessToNonPublicMembers || x.GetAccessors(true).Any(a => a.IsPublic)));
             if (member != null)
             {
                 return member;
             }
 
             // If no property is found, try to get a field with the specified memberName
-            member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (!staticAccess || x.IsStatic) && ((x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase))));
+            member = t.GetTypeInfo().DeclaredFields.FirstOrDefault(x => (!staticAccess || x.IsStatic)
+                                                                        && ((x.Name == memberName) || (!isCaseSensitive && x.Name.Equals(memberName, StringComparison.OrdinalIgnoreCase)))
+                                                                        && (_parsingConfig.AllowAccessToNonPublicMembers || x.IsPublic));
             if (member != null)
             {
                 return member;

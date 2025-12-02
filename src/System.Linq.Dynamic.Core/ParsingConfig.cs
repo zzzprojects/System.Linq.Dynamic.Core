@@ -319,4 +319,11 @@ public class ParsingConfig
     /// Default value is <c>false</c>.
     /// </summary>
     public bool AllowEqualsAndToStringMethodsOnObject { get; set; }
+
+    /// <summary>
+    /// When set to true, the parser will consider non-public members (internal and private)
+    /// during property/field lookup where the runtime permits access (e.g., via InternalsVisibleTo).
+    /// Default value is false.
+    /// </summary>
+    public bool AllowAccessToNonPublicMembers { get; set; }
 }
