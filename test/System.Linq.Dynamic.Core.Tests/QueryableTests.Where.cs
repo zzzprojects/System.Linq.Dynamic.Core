@@ -6,7 +6,6 @@ using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using System.Text;
-using Docker.DotNet.Models;
 using FluentAssertions;
 using Xunit;
 
@@ -496,6 +495,28 @@ public partial class QueryableTests
         result.Should().ContainInOrder(5, 50);
     }
 
+    [Fact]
+    public void Where_Dynamic_ToStringOnGuid()
+    {
+        // Arrange
+        const string fieldName = "Id";
+        const string value = "F370C09";
+        var data = new List<DataWithId>
+        {
+            new(Guid.NewGuid(), "bla1"),
+            new(Guid.NewGuid(), "bla2"),
+            new(Guid.NewGuid(), "bla3"),
+            new(Guid.NewGuid(), "bla4"),
+            new(new Guid("F370C098-8A29-4CF0-9B58-7F3CE258B607"), "bla5")
+        }.AsQueryable();
+
+        // Act
+        var result = data.Where(fieldName + ".ToString().StartsWith(\"" + value.ToLowerInvariant() + "\")").ToArray();
+
+        // Assert
+        result.Should().HaveCount(1);
+    }
+
     [ExcludeFromCodeCoverage]
     private class PersonWithObject
     {
@@ -526,4 +547,7 @@ public partial class QueryableTests
 
         public DateTime DateTime { get; set; }
     }
+
+    [ExcludeFromCodeCoverage]
+    public record DataWithId(Guid Id, string Field);
 }
