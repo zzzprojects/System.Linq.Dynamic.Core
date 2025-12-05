@@ -471,4 +471,51 @@ public partial class ExpressionParserTests
         // Assert
         act.Should().Throw<ArgumentException>().WithMessage("Method 'Compare' not found on type 'System.String' or 'System.Int32'");
     }
+    
+    [Theory]
+    [InlineData("List.MAX(x => x)", false, "List.Max(Param_0 => Param_0)")]
+    [InlineData("List.min(x => x)", false, "List.Min(Param_0 => Param_0)")]
+    [InlineData("List.Min(x => x)", false, "List.Min(Param_0 => Param_0)")]
+    [InlineData("List.Min(x => x)", true, "List.Min(Param_0 => Param_0)")]
+    [InlineData("List.WHERE(x => x.Ticks >= 100000).max()", false, "List.Where(Param_0 => (Param_0.Ticks >= 100000)).Max()")]
+    public void Parse_LinqMethodsRespectCasing(string expression, bool caseSensitive, string result)
+    {
+        // Arrange
+        var parameters = new[] { Expression.Parameter(typeof(DateTime[]), "List") };
+        
+        var parser = new ExpressionParser(
+            parameters,
+            expression, 
+            [],
+            new ParsingConfig
+            {
+                IsCaseSensitive = caseSensitive
+            });
+
+        // Act
+        var parsedExpression = parser.Parse(typeof(DateTime)).ToString();
+
+        // Assert
+        parsedExpression.Should().Be(result);
+    }
+
+    [Fact]
+    public void Parse_InvalidCasingShouldThrowInvalidOperationException()
+    {
+        // Arrange & Act
+        var parameters = new[] { Expression.Parameter(typeof(DateTime[]), "List") };
+        
+        Action act = () => new ExpressionParser(
+            parameters,
+            "List.MAX(x => x)", 
+            [],
+            new ParsingConfig
+            {
+                IsCaseSensitive = true
+            })
+            .Parse(typeof(DateTime));
+        
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("No generic method 'MAX' on type 'System.Linq.Enumerable' is compatible with the supplied type arguments and arguments. No type arguments should be provided if the method is non-generic.*");
+    }
 }
