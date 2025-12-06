@@ -2139,7 +2139,7 @@ public class ExpressionParser
         // Create a new innerIt based on the elementType.
         var innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty, _parsingConfig.RenameEmptyParameterExpressionNames);
 
-        if (new[] { "Contains", "ContainsKey", "Skip", "Take" }.Contains(methodName))
+        if (Contains(["Contains", "ContainsKey", "Skip", "Take"], methodName))
         {
             // For any method that acts on the parent element type, we need to specify the outerIt as scope.
             _it = outerIt;
@@ -2194,7 +2194,7 @@ public class ExpressionParser
         }
 
         Type[] typeArgs;
-        if (new[] { "OfType", "Cast" }.Contains(methodName))
+        if (Contains(["OfType", "Cast"], methodName))
         {
             if (args.Length != 1)
             {
@@ -2204,7 +2204,7 @@ public class ExpressionParser
             typeArgs = [ResolveTypeFromArgumentExpression(methodName, args[0])];
             args = [];
         }
-        else if (new[] { "Max", "Min", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy" }.Contains(methodName))
+        else if (Contains(["Max", "Min", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy"], methodName))
         {
             if (args.Length == 2)
             {
@@ -2219,7 +2219,7 @@ public class ExpressionParser
                 typeArgs = [elementType];
             }
         }
-        else if (methodName == "SelectMany")
+        else if (Contains(["SelectMany"], methodName))
         {
             var bodyType = Expression.Lambda(args[0], innerIt).Body.Type;
             var interfaces = bodyType.GetInterfaces().Union([bodyType]);
@@ -2238,7 +2238,7 @@ public class ExpressionParser
         }
         else
         {
-            if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union", "SequenceEqual" }.Contains(methodName))
+            if (Contains(["Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union", "SequenceEqual"], methodName))
             {
                 args = [instance, args[0]];
             }
@@ -2257,6 +2257,13 @@ public class ExpressionParser
 
         expression = Expression.Call(callType, methodName, typeArgs, args);
         return true;
+    }
+
+    private bool Contains(string[] haystack, string needle)
+    {
+        return _parsingConfig.IsCaseSensitive 
+            ? haystack.Contains(needle) 
+            : haystack.Any(item => item.Equals(needle, StringComparison.OrdinalIgnoreCase));
     }
 
     private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression, int? arguments = null)
