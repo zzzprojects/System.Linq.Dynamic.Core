@@ -2139,7 +2139,7 @@ public class ExpressionParser
         // Create a new innerIt based on the elementType.
         var innerIt = ParameterExpressionHelper.CreateParameterExpression(elementType, string.Empty, _parsingConfig.RenameEmptyParameterExpressionNames);
 
-        if (CanonicalContains(["Contains", "ContainsKey", "Skip", "Take"], ref methodName))
+        if (Contains(["Contains", "ContainsKey", "Skip", "Take"], methodName))
         {
             // For any method that acts on the parent element type, we need to specify the outerIt as scope.
             _it = outerIt;
@@ -2194,7 +2194,7 @@ public class ExpressionParser
         }
 
         Type[] typeArgs;
-        if (CanonicalContains(["OfType", "Cast"], ref methodName))
+        if (Contains(["OfType", "Cast"], methodName))
         {
             if (args.Length != 1)
             {
@@ -2204,7 +2204,7 @@ public class ExpressionParser
             typeArgs = [ResolveTypeFromArgumentExpression(methodName, args[0])];
             args = [];
         }
-        else if (CanonicalContains(["Max", "Min", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy"], ref methodName))
+        else if (Contains(["Max", "Min", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy"], methodName))
         {
             if (args.Length == 2)
             {
@@ -2219,7 +2219,7 @@ public class ExpressionParser
                 typeArgs = [elementType];
             }
         }
-        else if (CanonicalContains(["SelectMany"], ref methodName))
+        else if (Contains(["SelectMany"], methodName))
         {
             var bodyType = Expression.Lambda(args[0], innerIt).Body.Type;
             var interfaces = bodyType.GetInterfaces().Union([bodyType]);
@@ -2238,7 +2238,7 @@ public class ExpressionParser
         }
         else
         {
-            if (CanonicalContains(["Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union", "SequenceEqual"], ref methodName))
+            if (Contains(["Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union", "SequenceEqual"], methodName))
             {
                 args = [instance, args[0]];
             }
@@ -2259,23 +2259,11 @@ public class ExpressionParser
         return true;
     }
 
-    private bool CanonicalContains(string[] haystack, ref string needle)
+    private bool Contains(string[] haystack, string needle)
     {
-        if (_parsingConfig.IsCaseSensitive)
-        {
-            return haystack.Contains(needle);
-        }
-
-        var element = needle;
-        var index = Array.FindIndex(haystack, item => item.Equals(element, StringComparison.OrdinalIgnoreCase));
-        
-        if (index == -1)
-        {
-            return false;
-        }
-
-        needle = haystack[index];
-        return true;
+        return _parsingConfig.IsCaseSensitive 
+            ? haystack.Contains(needle) 
+            : haystack.Any(item => item.Equals(needle, StringComparison.OrdinalIgnoreCase));
     }
 
     private Type ResolveTypeFromArgumentExpression(string functionName, Expression argumentExpression, int? arguments = null)

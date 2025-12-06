@@ -518,4 +518,36 @@ public partial class ExpressionParserTests
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("No generic method 'MAX' on type 'System.Linq.Enumerable' is compatible with the supplied type arguments and arguments. No type arguments should be provided if the method is non-generic.*");
     }
+
+    [Theory]
+    [InlineData("List.max(x => x.max)", "List.Max(Param_0 => Param_0.max)")]
+    [InlineData("List.MAX(x => x.max)", "List.Max(Param_0 => Param_0.max)")]
+    [InlineData("List[0].MAX", "List[0].max")]
+    [InlineData("List.select(max => max.MAX).max()", "List.Select(Param_0 => Param_0.max).Max()")]
+    [InlineData("List.max(max)", "List.Max(Param_0 => Param_0.max)")]
+    public void Parse_LinqMethodsRespectCasingFromModel(string expression, string result)
+    {
+        // Arrange
+        var parameters = new[] { Expression.Parameter(typeof(Model[]), "List") };
+        
+        var parser = new ExpressionParser(
+            parameters,
+            expression, 
+            [],
+            new ParsingConfig
+            {
+                IsCaseSensitive = false
+            });
+
+        // Act
+        var parsedExpression = parser.Parse(typeof(DateTime)).ToString();
+
+        // Assert
+        parsedExpression.Should().Be(result);
+    }
+
+    private class Model
+    {
+        public DateTime max { get; set; }
+    }
 }
