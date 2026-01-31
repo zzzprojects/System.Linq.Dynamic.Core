@@ -1980,7 +1980,7 @@ public class ExpressionParser
         switch (member)
         {
             case PropertyInfo property:
-                var propertyIsStatic = property?.GetGetMethod().IsStatic ?? property?.GetSetMethod().IsStatic ?? false;
+                var propertyIsStatic = property.GetGetMethod()?.IsStatic ?? property.GetSetMethod()?.IsStatic ?? false;
                 propertyOrFieldExpression = propertyIsStatic ? Expression.Property(null, property) : Expression.Property(expression, property);
                 return true;
 
