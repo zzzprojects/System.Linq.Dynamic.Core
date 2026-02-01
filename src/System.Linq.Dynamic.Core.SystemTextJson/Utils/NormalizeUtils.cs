@@ -155,7 +155,7 @@ internal static class NormalizeUtils
         };
     }
 
-    private static JsonNode? GetNullValue(JsonValueInfo jType)
+    private static JsonValue? GetNullValue(JsonValueInfo jType)
     {
         return jType.Type switch
         {
