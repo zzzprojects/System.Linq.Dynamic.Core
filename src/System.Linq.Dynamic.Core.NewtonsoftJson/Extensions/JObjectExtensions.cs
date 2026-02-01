@@ -57,7 +57,7 @@ internal static class JObjectExtensions
 
     internal static IEnumerable ToDynamicJsonClassArray(this JArray? src, DynamicJsonClassOptions? options = null)
     {
-        return src == null ? new object?[0] : ConvertJTokenArray(src, options);
+        return src == null ? EmptyArray<object?>.Value : ConvertJTokenArray(src, options);
     }
 
     private static object? ConvertJObject(JToken arg, DynamicJsonClassOptions? options = null)
