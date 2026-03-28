@@ -1,10 +1,7 @@
 ﻿#if !NET452
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq.Dynamic.Core.CustomTypeProviders;
-using System.Reflection;
 using FluentAssertions;
 using NodaTime;
 using NodaTime.Text;
@@ -217,18 +214,23 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
 
         public class LocalDateConverter : TypeConverter
         {
-            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(string);
+            public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType == typeof(string);
 
-            public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+            public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
             {
-                var result = LocalDatePattern.Iso.Parse(value as string);
-
-                return result.Success
-                    ? result.Value
-                    : throw new FormatException(value?.ToString());
+                var result = Convert(value);
+                return result.Success ? result.Value : throw new FormatException(value?.ToString());
             }
 
-            protected ParseResult<LocalDate> Convert(object value) => LocalDatePattern.Iso.Parse(value as string);
+            private static ParseResult<LocalDate> Convert(object value)
+            {
+                if (value is string stringValue)
+                {
+                    return LocalDatePattern.Iso.Parse(stringValue);
+                }
+
+                return ParseResult<LocalDate>.ForException(() => new FormatException(value?.ToString()));
+            }
         }
     }
 }
