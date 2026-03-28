@@ -928,7 +928,7 @@ public class ExpressionParser
 
         if (_textParser.CurrentToken.Text[0] == '\'')
         {
-            if (parsedStringValue.Length > 1)
+            if (parsedStringValue.Length != 1)
             {
                 throw ParseError(Res.InvalidCharacterLiteral);
             }
@@ -1458,12 +1458,18 @@ public class ExpressionParser
             arrayInitializer = true;
         }
 
+        // Track the opening token to enforce matching close token
+        var openTokenId = _textParser.CurrentToken.Id;
         _textParser.NextToken();
+
+        // Determine the expected closing token based on the opening token
+        var closeTokenId = openTokenId == TokenId.OpenParen ? TokenId.CloseParen : TokenId.CloseCurlyParen;
 
         var properties = new List<DynamicProperty>();
         var expressions = new List<Expression>();
+        var propertyNames = new HashSet<string>(StringComparer.Ordinal);
 
-        while (_textParser.CurrentToken.Id != TokenId.CloseParen && _textParser.CurrentToken.Id != TokenId.CloseCurlyParen)
+        while (_textParser.CurrentToken.Id != closeTokenId)
         {
             int exprPos = _textParser.CurrentToken.Pos;
             Expression expr = ParseConditionalOperator();
@@ -1483,7 +1489,7 @@ public class ExpressionParser
                             && methodCallExpression.Arguments.Count == 1
                             && methodCallExpression.Arguments[0] is ConstantExpression methodCallExpressionArgument
                             && methodCallExpressionArgument.Type == typeof(string)
-                            && properties.All(x => x.Name != (string?)methodCallExpressionArgument.Value))
+                            && !propertyNames.Contains((string?)methodCallExpressionArgument.Value ?? string.Empty))
                         {
                             propName = (string?)methodCallExpressionArgument.Value;
                         }
@@ -1496,6 +1502,11 @@ public class ExpressionParser
 
                 if (!string.IsNullOrEmpty(propName))
                 {
+                    if (!propertyNames.Add(propName!))
+                    {
+                        throw ParseError(exprPos, Res.DuplicateIdentifier, propName);
+                    }
+
                     properties.Add(new DynamicProperty(propName!, expr.Type));
                 }
             }
@@ -1510,7 +1521,7 @@ public class ExpressionParser
             _textParser.NextToken();
         }
 
-        if (_textParser.CurrentToken.Id != TokenId.CloseParen && _textParser.CurrentToken.Id != TokenId.CloseCurlyParen)
+        if (_textParser.CurrentToken.Id != closeTokenId)
         {
             throw ParseError(Res.CloseParenOrCommaExpected);
         }
@@ -2393,7 +2404,24 @@ public class ExpressionParser
                         : args[i];
                 }
 
-                return Expression.Call(expr, indexMethod, indexArgumentExpressions);
+                var callExpr = Expression.Call(expr, indexMethod, indexArgumentExpressions);
+
+                // For constant expressions with constant arguments, evaluate at parse time to
+                // produce a ParseException instead of a runtime exception (e.g., index out of bounds).
+                if (expr is ConstantExpression && args.All(a => a is ConstantExpression))
+                {
+                    try
+                    {
+                        var value = Expression.Lambda(callExpr).Compile().DynamicInvoke();
+                        return Expression.Constant(value, callExpr.Type);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ParseError(errorPos, (ex.InnerException ?? ex).Message);
+                    }
+                }
+
+                return callExpr;
 
             default:
                 throw ParseError(errorPos, Res.AmbiguousIndexerInvocation, TypeHelper.GetTypeName(expr.Type));

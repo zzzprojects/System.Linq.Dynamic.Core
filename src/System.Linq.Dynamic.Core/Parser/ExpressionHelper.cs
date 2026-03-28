@@ -344,6 +344,13 @@ internal class ExpressionHelper : IExpressionHelper
             .Select(expression => Expression.NotEqual(expression, _nullExpression))
             .ToArray();
 
+        // If no nullable expressions were found, return false (nothing to null-check)
+        if (binaryExpressions.Length == 0)
+        {
+            generatedExpression = sourceExpression;
+            return false;
+        }
+
         // Convert all binary expressions into `AndAlso(...)`
         generatedExpression = binaryExpressions[0];
         for (int i = 1; i < binaryExpressions.Length; i++)
