@@ -169,6 +169,8 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         [InlineData(">=", 2)]
         [InlineData("<", 1)]
         [InlineData("<=", 2)]
+        [InlineData("==", 1)]
+        [InlineData("!=", 2)]
         public void FilterByInstant_WithRelationalOperator(string op, int expectedCount)
         {
             // Arrange
@@ -192,6 +194,8 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         [InlineData(">=", 2)]
         [InlineData("<", 1)]
         [InlineData("<=", 2)]
+        [InlineData("==", 1)]
+        [InlineData("!=", 3)] // null != now evaluates to true in C# nullable semantics
         public void FilterByNullableInstant_WithRelationalOperator(string op, int expectedCount)
         {
             // Arrange
