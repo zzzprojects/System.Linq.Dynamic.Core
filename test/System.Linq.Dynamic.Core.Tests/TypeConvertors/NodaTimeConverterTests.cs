@@ -158,6 +158,59 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
             result.Should().HaveCount(numberOfEntities);
         }
 
+        private class EntityWithInstant
+        {
+            public Instant Timestamp { get; set; }
+            public Instant? TimestampNullable { get; set; }
+        }
+
+        [Theory]
+        [InlineData(">")]
+        [InlineData(">=")]
+        [InlineData("<")]
+        [InlineData("<=")]
+        public void FilterByInstant_WithRelationalOperator(string op)
+        {
+            // Arrange
+            var now = SystemClock.Instance.GetCurrentInstant();
+            var data = new List<EntityWithInstant>
+            {
+                new EntityWithInstant { Timestamp = now - Duration.FromHours(1) },
+                new EntityWithInstant { Timestamp = now },
+                new EntityWithInstant { Timestamp = now + Duration.FromHours(1) }
+            }.AsQueryable();
+
+            // Act
+            var result = data.Where($"Timestamp {op} @0", now).ToList();
+
+            // Assert
+            result.Should().NotBeNull();
+        }
+
+        [Theory]
+        [InlineData(">")]
+        [InlineData(">=")]
+        [InlineData("<")]
+        [InlineData("<=")]
+        public void FilterByNullableInstant_WithRelationalOperator(string op)
+        {
+            // Arrange
+            var now = SystemClock.Instance.GetCurrentInstant();
+            var data = new List<EntityWithInstant>
+            {
+                new EntityWithInstant { TimestampNullable = now - Duration.FromHours(1) },
+                new EntityWithInstant { TimestampNullable = now },
+                new EntityWithInstant { TimestampNullable = now + Duration.FromHours(1) },
+                new EntityWithInstant { TimestampNullable = null }
+            }.AsQueryable();
+
+            // Act
+            var result = data.Where($"TimestampNullable {op} @0", now).ToList();
+
+            // Assert
+            result.Should().NotBeNull();
+        }
+
         public class LocalDateConverter : TypeConverter
         {
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(string);

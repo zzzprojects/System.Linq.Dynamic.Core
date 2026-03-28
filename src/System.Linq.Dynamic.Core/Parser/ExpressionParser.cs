@@ -607,7 +607,8 @@ public class ExpressionParser
                 bool typesAreSameAndImplementCorrectInterface = false;
                 if (left.Type == right.Type)
                 {
-                    var interfaces = left.Type.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType);
+                    var typeToCheck = TypeHelper.GetNonNullableType(left.Type);
+                    var interfaces = typeToCheck.GetInterfaces().Where(x => x.GetTypeInfo().IsGenericType);
                     if (isEquality)
                     {
                         typesAreSameAndImplementCorrectInterface = interfaces.Any(x => x.GetGenericTypeDefinition() == typeof(IEquatable<>));
