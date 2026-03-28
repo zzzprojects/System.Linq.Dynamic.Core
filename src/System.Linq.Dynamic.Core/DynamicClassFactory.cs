@@ -293,7 +293,7 @@ public static class DynamicClassFactory
             // Use object-based equality comparer for types that are not publicly accessible from
             // the dynamic assembly (e.g., compiler-generated anonymous types). Calling
             // EqualityComparer<T>.get_Default() for a non-public T will throw MethodAccessException.
-            var fieldTypeIsAccessible = IsTypePubliclyAccessible(fieldType);
+            var fieldTypeIsAccessible = IsTypePubliclyAccessible(fieldType.GetTypeInfo());
             var equalityType = fieldTypeIsAccessible ? fieldType : typeof(object);
             var equalityComparerT = EqualityComparer.MakeGenericType(equalityType);
 
@@ -437,10 +437,10 @@ public static class DynamicClassFactory
     /// type arguments in EqualityComparer&lt;T&gt; from a dynamic assembly without causing
     /// a <see cref="MethodAccessException"/> at runtime.
     /// </summary>
-    private static bool IsTypePubliclyAccessible(Type type)
+    private static bool IsTypePubliclyAccessible(TypeInfo typeInfo)
     {
         // Check if the type itself is public
-        if (!type.IsPublic && !type.IsNestedPublic)
+        if (!typeInfo.IsPublic && !typeInfo.IsNestedPublic)
         {
             return false;
         }
@@ -449,9 +449,9 @@ public static class DynamicClassFactory
         // all type arguments must also be publicly accessible.
         // Generic type definitions (e.g., List<>) have unbound type parameters
         // which are not concrete types and should not be checked.
-        if (type.IsGenericType && !type.IsGenericTypeDefinition)
+        if (typeInfo.IsGenericType && !typeInfo.IsGenericTypeDefinition)
         {
-            return type.GetGenericArguments().All(IsTypePubliclyAccessible);
+            return typeInfo.GetGenericArguments().All(t => IsTypePubliclyAccessible(t.GetTypeInfo()));
         }
 
         return true;
