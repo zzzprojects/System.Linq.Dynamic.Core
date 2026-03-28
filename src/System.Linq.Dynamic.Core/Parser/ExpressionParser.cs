@@ -766,14 +766,34 @@ public class ExpressionParser
                     }
                     else
                     {
+                        var leftTypeForAdd = left.Type;
+                        var rightTypeForAdd = right.Type;
                         CheckAndPromoteOperands(typeof(IAddSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
                         left = _expressionHelper.GenerateAdd(left, right);
+                        // C# semantics: enum + int = enum, int + enum = enum
+                        if (TypeHelper.IsEnumType(leftTypeForAdd) && TypeHelper.IsNumericType(rightTypeForAdd))
+                        {
+                            left = Expression.Convert(left, leftTypeForAdd);
+                        }
+                        else if (TypeHelper.IsNumericType(leftTypeForAdd) && TypeHelper.IsEnumType(rightTypeForAdd))
+                        {
+                            left = Expression.Convert(left, rightTypeForAdd);
+                        }
                     }
                     break;
 
                 case TokenId.Minus:
-                    CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
-                    left = _expressionHelper.GenerateSubtract(left, right);
+                    {
+                        var leftTypeForSubtract = left.Type;
+                        var rightTypeForSubtract = right.Type;
+                        CheckAndPromoteOperands(typeof(ISubtractSignatures), op.Id, op.Text, ref left, ref right, op.Pos);
+                        left = _expressionHelper.GenerateSubtract(left, right);
+                        // C# semantics: enum - int = enum (but enum - enum = underlying int type)
+                        if (TypeHelper.IsEnumType(leftTypeForSubtract) && TypeHelper.IsNumericType(rightTypeForSubtract))
+                        {
+                            left = Expression.Convert(left, leftTypeForSubtract);
+                        }
+                    }
                     break;
             }
         }
