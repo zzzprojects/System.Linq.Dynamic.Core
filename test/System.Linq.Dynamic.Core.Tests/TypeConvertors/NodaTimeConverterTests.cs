@@ -165,11 +165,11 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
         }
 
         [Theory]
-        [InlineData(">")]
-        [InlineData(">=")]
-        [InlineData("<")]
-        [InlineData("<=")]
-        public void FilterByInstant_WithRelationalOperator(string op)
+        [InlineData(">", 1)]
+        [InlineData(">=", 2)]
+        [InlineData("<", 1)]
+        [InlineData("<=", 2)]
+        public void FilterByInstant_WithRelationalOperator(string op, int expectedCount)
         {
             // Arrange
             var now = SystemClock.Instance.GetCurrentInstant();
@@ -184,15 +184,15 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
             var result = data.Where($"Timestamp {op} @0", now).ToList();
 
             // Assert
-            result.Should().NotBeNull();
+            result.Should().HaveCount(expectedCount);
         }
 
         [Theory]
-        [InlineData(">")]
-        [InlineData(">=")]
-        [InlineData("<")]
-        [InlineData("<=")]
-        public void FilterByNullableInstant_WithRelationalOperator(string op)
+        [InlineData(">", 1)]
+        [InlineData(">=", 2)]
+        [InlineData("<", 1)]
+        [InlineData("<=", 2)]
+        public void FilterByNullableInstant_WithRelationalOperator(string op, int expectedCount)
         {
             // Arrange
             var now = SystemClock.Instance.GetCurrentInstant();
@@ -207,8 +207,8 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
             // Act
             var result = data.Where($"TimestampNullable {op} @0", now).ToList();
 
-            // Assert
-            result.Should().NotBeNull();
+            // Assert - null values are excluded from comparison results
+            result.Should().HaveCount(expectedCount);
         }
 
         public class LocalDateConverter : TypeConverter
