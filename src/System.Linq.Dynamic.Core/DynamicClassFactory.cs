@@ -290,10 +290,9 @@ public static class DynamicClassFactory
             var fieldName = properties[i].Name;
             var fieldType = properties[i].Type;
 
-            // Use object-based equality comparer for types that are not publicly accessible from
-            // the dynamic assembly (e.g., compiler-generated anonymous types). Calling
-            // EqualityComparer<T>.get_Default() for a non-public T will throw MethodAccessException.
-            var fieldTypeIsAccessible = IsTypePubliclyAccessible(fieldType.GetTypeInfo());
+            // Use object-based equality comparer for types that are not publicly accessible from the dynamic assembly (e.g., compiler-generated anonymous types).
+            // Calling EqualityComparer<T>.get_Default() for a non-public T will throw MethodAccessException.
+            var fieldTypeIsAccessible = IsTypePubliclyAccessible(fieldType);
             var equalityType = fieldTypeIsAccessible ? fieldType : typeof(object);
             var equalityComparerT = EqualityComparer.MakeGenericType(equalityType);
 
@@ -428,7 +427,7 @@ public static class DynamicClassFactory
 
         EmitEqualityOperators(typeBuilder, equals);
 
-        return typeBuilder.CreateType();
+        return typeBuilder.CreateType()!;
     }
 
     /// <summary>
@@ -437,10 +436,10 @@ public static class DynamicClassFactory
     /// type arguments in EqualityComparer&lt;T&gt; from a dynamic assembly without causing
     /// a <see cref="MethodAccessException"/> at runtime.
     /// </summary>
-    private static bool IsTypePubliclyAccessible(TypeInfo typeInfo)
+    private static bool IsTypePubliclyAccessible(Type typeInfo)
     {
         // Check if the type itself is public
-        if (!typeInfo.IsPublic && !typeInfo.IsNestedPublic)
+        if (!typeInfo.GetTypeInfo().IsPublic && !typeInfo.GetTypeInfo().IsNestedPublic)
         {
             return false;
         }
@@ -449,9 +448,9 @@ public static class DynamicClassFactory
         // all type arguments must also be publicly accessible.
         // Generic type definitions (e.g., List<>) have unbound type parameters
         // which are not concrete types and should not be checked.
-        if (typeInfo.IsGenericType && !typeInfo.IsGenericTypeDefinition)
+        if (typeInfo.GetTypeInfo().IsGenericType && !typeInfo.GetTypeInfo().IsGenericTypeDefinition)
         {
-            return typeInfo.GetGenericArguments().All(t => IsTypePubliclyAccessible(t.GetTypeInfo()));
+            return typeInfo.GetGenericArguments().All(IsTypePubliclyAccessible);
         }
 
         return true;
