@@ -10,7 +10,7 @@ internal class MethodFinder
 {
     private readonly ParsingConfig _parsingConfig;
     private readonly IExpressionHelper _expressionHelper;
-    private readonly IDictionary<Type, MethodInfo[]> _cachedMethods;
+    private readonly Dictionary<Type, MethodInfo[]> _cachedMethods;
 
     /// <summary>
     /// #794

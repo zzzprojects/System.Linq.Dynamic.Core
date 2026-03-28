@@ -874,12 +874,12 @@ public static class NewtonsoftJsonExtensions
         config = config ?? NewtonsoftJsonParsingConfig.Default;
         config.ConvertObjectToSupportComparison = true;
 
-        var normalized = config.Normalize == true ?
+        var normalized = config.Normalize ?
             NormalizeUtils.NormalizeArray(source, config.NormalizationNonExistingPropertyValueBehavior) :
             source;
 
         return normalized
-            .ToDynamicJsonClassArray(config?.DynamicJsonClassOptions)
+            .ToDynamicJsonClassArray(config.DynamicJsonClassOptions)
             .AsQueryable();
     }
     #endregion

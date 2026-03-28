@@ -540,7 +540,7 @@ internal class ExpressionHelper : IExpressionHelper
             right = Expression.Convert(right, parameterTypeRight);
         }
 
-        return Expression.Call(null, methodInfo, [left, right]);
+        return Expression.Call(null, methodInfo, left, right);
     }
 
     private static bool TryGetStaticMethod(string methodName, Expression left, Expression right, [NotNullWhen(true)] out MethodInfo? methodInfo)

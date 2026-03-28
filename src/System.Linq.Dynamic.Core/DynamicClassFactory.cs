@@ -462,7 +462,7 @@ public static class DynamicClassFactory
 
         ILGenerator ilNeq = inequalityOperator.GetILGenerator();
 
-        // return !(left == right);
+        // Define return !(left == right);
         ilNeq.Emit(OpCodes.Ldarg_0);
         ilNeq.Emit(OpCodes.Ldarg_1);
         ilNeq.Emit(OpCodes.Call, equalityOperator);

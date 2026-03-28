@@ -1980,7 +1980,7 @@ public class ExpressionParser
         switch (member)
         {
             case PropertyInfo property:
-                var propertyIsStatic = property?.GetGetMethod().IsStatic ?? property?.GetSetMethod().IsStatic ?? false;
+                var propertyIsStatic = property.GetGetMethod()?.IsStatic ?? property.GetSetMethod()?.IsStatic ?? false;
                 propertyOrFieldExpression = propertyIsStatic ? Expression.Property(null, property) : Expression.Property(expression, property);
                 return true;
 
@@ -2545,7 +2545,7 @@ public class ExpressionParser
         var bindingFlags = BindingFlags.Public | BindingFlags.DeclaredOnly | extraBindingFlag;
         foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
         {
-            var findMembersType = _parsingConfig?.IsCaseSensitive == true ? Type.FilterName : Type.FilterNameIgnoreCase;
+            var findMembersType = _parsingConfig.IsCaseSensitive ? Type.FilterName : Type.FilterNameIgnoreCase;
             var members = t.FindMembers(MemberTypes.Property | MemberTypes.Field, bindingFlags, findMembersType, memberName);
 
             if (members.Length != 0)
@@ -2555,7 +2555,7 @@ public class ExpressionParser
         }
         return null;
 #else
-        var isCaseSensitive = _parsingConfig.IsCaseSensitive == true;
+        var isCaseSensitive = _parsingConfig.IsCaseSensitive;
         foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))
         {
             // Try to find a property with the specified memberName
