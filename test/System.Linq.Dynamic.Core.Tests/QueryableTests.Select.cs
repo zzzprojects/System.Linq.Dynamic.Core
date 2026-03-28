@@ -224,8 +224,34 @@ namespace System.Linq.Dynamic.Core.Tests
             // Act
             var rangeResult = range.AsQueryable().Select("it + DayOfWeek.Monday");
 
-            // Assert
-            Assert.Equal(range.Select(x => x + DayOfWeek.Monday).Cast<int>().ToArray(), rangeResult.Cast<int>().ToArray());
+            // Assert - C# semantics: int + enum = enum
+            Assert.Equal(range.Select(x => x + DayOfWeek.Monday).ToArray(), rangeResult.Cast<DayOfWeek>().ToArray());
+        }
+
+        [Fact]
+        public void Select_Dynamic_Subtract_DayOfWeekEnum_And_Integer()
+        {
+            // Arrange
+            var range = new DayOfWeek[] { DayOfWeek.Tuesday };
+
+            // Act
+            var rangeResult = range.AsQueryable().Select("it - 1");
+
+            // Assert - C# semantics: enum - int = enum
+            Assert.Equal(range.Select(x => x - 1).ToArray(), rangeResult.Cast<DayOfWeek>().ToArray());
+        }
+
+        [Fact]
+        public void Select_Dynamic_Subtract_DayOfWeekEnum_And_DayOfWeekEnum()
+        {
+            // Arrange
+            var range = new DayOfWeek[] { DayOfWeek.Tuesday };
+
+            // Act
+            var rangeResult = range.AsQueryable().Select("it - DayOfWeek.Monday");
+
+            // Assert - C# semantics: enum - enum = underlying int type
+            Assert.Equal(range.Select(x => x - DayOfWeek.Monday).ToArray(), rangeResult.Cast<int>().ToArray());
         }
 
         [Fact]
