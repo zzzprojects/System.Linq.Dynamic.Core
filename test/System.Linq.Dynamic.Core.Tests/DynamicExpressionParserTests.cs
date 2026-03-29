@@ -2303,6 +2303,35 @@ public class DynamicExpressionParserTests
         DynamicExpressionParser.ParseLambda<bool>(new ParsingConfig(), false, "new[]{1,2,3}.Any(z => z > 0)");
     }
 
+    // https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/701
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_NestedObjectInitialization()
+    {
+        // Arrange
+        var srcType = typeof(CustomerForNestedNewTest);
+
+        // Act
+        var lambda = DynamicExpressionParser.ParseLambda(ParsingConfig.DefaultEFCore21, srcType, srcType, "new (new (3 as Id) as CurrentDepartment)");
+        var @delegate = lambda.Compile();
+        var result = (CustomerForNestedNewTest)@delegate.DynamicInvoke(new CustomerForNestedNewTest())!;
+
+        // Assert
+        result.Should().NotBeNull();
+        result.CurrentDepartment.Should().NotBeNull();
+        result.CurrentDepartment!.Id.Should().Be(3);
+    }
+
+    public class CustomerForNestedNewTest
+    {
+        public int Id { get; set; }
+        public DepartmentForNestedNewTest? CurrentDepartment { get; set; }
+    }
+
+    public class DepartmentForNestedNewTest
+    {
+        public int Id { get; set; }
+    }
+
     public class DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod : DefaultDynamicLinqCustomTypeProvider
     {
         public DefaultDynamicLinqCustomTypeProviderForGenericExtensionMethod() : base(ParsingConfig.Default)

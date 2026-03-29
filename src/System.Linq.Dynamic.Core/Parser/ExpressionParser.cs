@@ -1678,12 +1678,65 @@ public class ExpressionParser
                 propertyOrFieldType = fieldInfo.FieldType;
             }
 
-            // Call Promote and if that returns false, just try to convert the expression to the destination type using Expression.Convert
-            var promoted = _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true) ?? Expression.Convert(expressions[i], propertyOrFieldType);
-            memberBindings[i] = Expression.Bind(memberInfo, promoted);
+            // Call Promote and if that returns null, try to rebuild a nested MemberInitExpression for the target type,
+            // and if that also fails, try to convert the expression to the destination type using Expression.Convert.
+            var promoted = _parsingConfig.ExpressionPromoter.Promote(expressions[i], propertyOrFieldType, true, true);
+            if (promoted == null && expressions[i] is MemberInitExpression memberInitExpression)
+            {
+                promoted = TryRebuildMemberInitExpression(memberInitExpression, propertyOrFieldType);
+            }
+            memberBindings[i] = Expression.Bind(memberInfo, promoted ?? Expression.Convert(expressions[i], propertyOrFieldType));
         }
 
         return Expression.MemberInit(Expression.New(type), memberBindings);
+    }
+
+    private static Expression? TryRebuildMemberInitExpression(MemberInitExpression memberInitExpression, Type targetType)
+    {
+        var defaultConstructor = targetType.GetConstructor(Type.EmptyTypes);
+        if (defaultConstructor == null)
+        {
+            return null;
+        }
+
+        var newBindings = new MemberBinding[memberInitExpression.Bindings.Count];
+        for (var i = 0; i < memberInitExpression.Bindings.Count; i++)
+        {
+            if (memberInitExpression.Bindings[i] is not MemberAssignment assignment)
+            {
+                return null;
+            }
+
+            var memberName = assignment.Member.Name;
+            MemberInfo? targetMember = targetType.GetProperty(memberName) ?? (MemberInfo?)targetType.GetField(memberName);
+            if (targetMember == null)
+            {
+                return null;
+            }
+
+            var targetMemberType = targetMember is PropertyInfo targetPropertyInfo
+                ? targetPropertyInfo.PropertyType
+                : ((FieldInfo)targetMember).FieldType;
+
+            var bindingExpression = assignment.Expression;
+            if (bindingExpression is MemberInitExpression nestedMemberInit && bindingExpression.Type != targetMemberType)
+            {
+                var rebuilt = TryRebuildMemberInitExpression(nestedMemberInit, targetMemberType);
+                if (rebuilt == null)
+                {
+                    return null;
+                }
+                bindingExpression = rebuilt;
+            }
+            else if (bindingExpression.Type != targetMemberType)
+            {
+                bindingExpression = Expression.Convert(bindingExpression, targetMemberType);
+            }
+
+            newBindings[i] = Expression.Bind(targetMember, bindingExpression);
+        }
+
+        return Expression.MemberInit(Expression.New(targetType), newBindings);
     }
 
     private Expression ParseLambdaInvocation(LambdaExpression lambda)
