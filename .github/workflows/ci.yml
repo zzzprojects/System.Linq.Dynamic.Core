@@ -14,7 +14,12 @@ permissions:
 jobs:
   build_and_test_Windows:
     name: "Windows: Build and Tests"
-    if: ${{ github.event_name != 'pull_request_target' || startsWith(github.actor, 'copilot') || github.actor == 'github-copilot[bot]' }}
+    if: >-
+      ${{
+        (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') ||
+        (github.event_name == 'pull_request' && github.actor != 'copilot-swe-agent[bot]' && github.actor != 'github-copilot[bot]') ||
+        (github.event_name == 'pull_request_target' && (github.actor == 'copilot-swe-agent[bot]' || github.actor == 'github-copilot[bot]'))
+      }}
     runs-on: windows-latest
 
     env:
@@ -25,7 +30,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        ref: ${{ github.event.pull_request.head.sha || github.sha }}
+        ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
         persist-credentials: false
 
     - uses: actions/setup-dotnet@v4
@@ -42,7 +47,12 @@ jobs:
 
   build_and_test_Linux:
     name: "Linux: Build and Tests"
-    if: ${{ github.event_name != 'pull_request_target' || startsWith(github.actor, 'copilot') || github.actor == 'github-copilot[bot]' }}
+    if: >-
+      ${{
+        (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') ||
+        (github.event_name == 'pull_request' && github.actor != 'copilot-swe-agent[bot]' && github.actor != 'github-copilot[bot]') ||
+        (github.event_name == 'pull_request_target' && (github.actor == 'copilot-swe-agent[bot]' || github.actor == 'github-copilot[bot]'))
+      }}
     runs-on: ubuntu-latest
 
     env:
@@ -52,7 +62,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.pull_request.head.sha || github.sha }}
+        ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
         persist-credentials: false
 
     - uses: actions/setup-dotnet@v4
