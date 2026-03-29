@@ -1556,7 +1556,7 @@ public class DynamicExpressionParserTests
         var expression = $"{nameof(MyMethodsWithImplicitOperatorSupport)}.{nameof(MyMethodsWithImplicitOperatorSupport.UsesMyStructWithImplicitOperator)}(\"Foo\")";
 
         // Act
-        var parser = new ExpressionParser([], expression, [], ParsingConfig.Default);
+        var parser = new ExpressionParser(parameters: [], expression, values: [], ParsingConfig.Default);
         var parsedExpression = parser.Parse(typeof(string));
         var lambda = Expression.Lambda<Func<string>>(parsedExpression);
         var method = lambda.Compile();

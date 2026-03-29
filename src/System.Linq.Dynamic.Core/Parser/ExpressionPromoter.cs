@@ -140,12 +140,20 @@ public class ExpressionPromoter : IExpressionPromoter
         // Look for op_Implicit on the source type or the target type.
         var implicitOperator =
             returnType.GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .Where(m => m.Name == "op_Implicit" && m.ReturnType == type)
-                .FirstOrDefault(m => m.GetParameters().FirstOrDefault()?.ParameterType == returnType)
+                .FirstOrDefault(m =>
+                {
+                    if (m.Name != "op_Implicit" || m.ReturnType != type) return false;
+                    var parameters = m.GetParameters();
+                    return parameters.Length == 1 && parameters[0].ParameterType == returnType;
+                })
             ??
             type.GetMethods(BindingFlags.Public | BindingFlags.Static)
-                .Where(m => m.Name == "op_Implicit" && m.ReturnType == type)
-                .FirstOrDefault(m => m.GetParameters().FirstOrDefault()?.ParameterType == returnType);
+                .FirstOrDefault(m =>
+                {
+                    if (m.Name != "op_Implicit" || m.ReturnType != type) return false;
+                    var parameters = m.GetParameters();
+                    return parameters.Length == 1 && parameters[0].ParameterType == returnType;
+                });
 
         if (implicitOperator != null)
         {
