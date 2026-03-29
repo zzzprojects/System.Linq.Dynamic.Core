@@ -680,18 +680,7 @@ public class ExpressionParser
 
     private static bool HasImplicitConversion(Type baseType, Type targetType)
     {
-        var baseTypeHasConversion = baseType.GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Where(mi => mi.Name == "op_Implicit" && mi.ReturnType == targetType)
-            .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
-
-        if (baseTypeHasConversion)
-        {
-            return true;
-        }
-
-        return targetType.GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Where(mi => mi.Name == "op_Implicit" && mi.ReturnType == targetType)
-            .Any(mi => mi.GetParameters().FirstOrDefault()?.ParameterType == baseType);
+        return TypeHelper.TryFindImplicitConversionOperator(baseType, targetType, out _);
     }
 
     private static ConstantExpression ParseEnumToConstantExpression(int pos, Type leftType, ConstantExpression constantExpr)
