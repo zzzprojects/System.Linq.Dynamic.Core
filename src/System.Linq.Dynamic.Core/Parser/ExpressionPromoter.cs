@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using System.Linq;
 
 namespace System.Linq.Dynamic.Core.Parser;
 
@@ -133,6 +134,22 @@ public class ExpressionPromoter : IExpressionPromoter
             }
 
             return sourceExpression;
+        }
+
+        // Check for implicit conversion operators (op_Implicit) from returnType to type.
+        // Look for op_Implicit on the source type or the target type.
+        var implicitOperator =
+            returnType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(m => m.Name == "op_Implicit" && m.ReturnType == type)
+                .FirstOrDefault(m => m.GetParameters().FirstOrDefault()?.ParameterType == returnType)
+            ??
+            type.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(m => m.Name == "op_Implicit" && m.ReturnType == type)
+                .FirstOrDefault(m => m.GetParameters().FirstOrDefault()?.ParameterType == returnType);
+
+        if (implicitOperator != null)
+        {
+            return Expression.Convert(sourceExpression, type);
         }
 
         return null;
