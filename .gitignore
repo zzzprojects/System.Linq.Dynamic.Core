@@ -238,4 +238,5 @@ _Pvt_Extensions
 /coverage.xml
 /dynamic-coverage-*.xml
 /test/**/coverage.net8.0.opencover.xml
+/test/**/coverage.opencover.xml
 .nuget/
