@@ -135,6 +135,11 @@ public class ExpressionPromoter : IExpressionPromoter
             return sourceExpression;
         }
 
+        if (TypeHelper.TryGetImplicitConversionOperatorMethod(returnType, type, out _))
+        {
+            return Expression.Convert(sourceExpression, type);
+        }
+
         return null;
     }
 }

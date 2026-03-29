@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq.Dynamic.Core.Config;
 using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
+using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Dynamic.Core.Tests.TestHelpers;
@@ -268,6 +269,37 @@ public class DynamicExpressionParserTests
         {
             return Name + " (" + Note + ")";
         }
+    }
+
+    [DynamicLinqType]
+    public static class MyMethodsWithImplicitOperatorSupport
+    {
+        public static string UsesMyStructWithImplicitOperator(MyStructWithImplicitOperator myStruct)
+        {
+            return myStruct.Value;
+        }
+    }
+
+    public readonly struct MyStructWithImplicitOperator
+    {
+        private readonly string _value;
+
+        public MyStructWithImplicitOperator(string value)
+        {
+            _value = value;
+        }
+
+        public static implicit operator MyStructWithImplicitOperator(string value)
+        {
+            return new MyStructWithImplicitOperator(value);
+        }
+
+        public static implicit operator string(MyStructWithImplicitOperator myStruct)
+        {
+            return myStruct._value;
+        }
+
+        public string Value => _value;
     }
 
     internal class TestClass794
@@ -1515,6 +1547,23 @@ public class DynamicExpressionParserTests
 
         // Assert 8
         Assert.NotNull(lambda);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_With_Implicit_Operator_In_Method_Argument()
+    {
+        // Arrange - Method takes a MyStructWithImplicitOperator but we pass a string literal
+        var expression = $"{nameof(MyMethodsWithImplicitOperatorSupport)}.{nameof(MyMethodsWithImplicitOperatorSupport.UsesMyStructWithImplicitOperator)}(\"Foo\")";
+
+        // Act
+        var parser = new ExpressionParser(parameters: [], expression, values: [], ParsingConfig.Default);
+        var parsedExpression = parser.Parse(typeof(string));
+        var lambda = Expression.Lambda<Func<string>>(parsedExpression);
+        var method = lambda.Compile();
+        var result = method();
+
+        // Assert
+        Assert.Equal("Foo", result);
     }
 
     [Fact]

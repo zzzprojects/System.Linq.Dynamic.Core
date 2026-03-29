@@ -533,4 +533,31 @@ internal static class TypeHelper
             TryFindGenericType(typeof(IReadOnlyDictionary<,>), type, out _);
 #endif
     }
+
+    /// <summary>
+    /// Check for implicit conversion operators (op_Implicit) from returnType to type.
+    /// Look for op_Implicit on the source type or the target type.
+    /// </summary>
+    public static bool TryGetImplicitConversionOperatorMethod(Type returnType, Type type, [NotNullWhen(true)] out MethodBase? implicitOperator)
+    {
+        const string methodName = "op_Implicit";
+
+        implicitOperator = Find(returnType) ?? Find(type);
+        return implicitOperator != null;
+
+        MethodBase? Find(Type searchType)
+        {
+            return searchType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .FirstOrDefault(m =>
+                {
+                    if (m.Name != methodName || m.ReturnType != type)
+                    {
+                        return false;
+                    }
+
+                    var parameters = m.GetParameters();
+                    return parameters.Length == 1 && parameters[0].ParameterType == returnType;
+                });
+        }
+    }
 }
