@@ -1,3 +1,16 @@
+# v1.7.2 (04 April 2026)
+- [#971](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/971) - Fix some sonarcloud issues [refactor] contributed by [StefH](https://github.com/StefH)
+- [#974](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/974) - Fix unhandled exceptions from malformed expression strings [bug] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#975](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/975) - Fix relational operators failing for nullable IComparable types (e.g., Instant?) [bug] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#976](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/976) - Fix enum type preservation in additive arithmetic operations [bug] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#977](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/977) - Support implicit operators in method argument matching [feature] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#979](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/979) - Fix NotSupportedException when parsing nested object initialization [bug] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#813](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/813) - Error when parsing a nested object initialization [bug]
+- [#880](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/880) - Support for implicit operators [feature]
+- [#969](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/969) - Unexpected type change when parsing addition of integer to enum [bug]
+- [#970](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/970) - Operator '&gt;' incompatible with operand types 'Instant?' and 'Instant?' [feature]
+- [#973](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/973) - Multiple unhandled exceptions from malformed expression strings (5 crash sites found via fuzzing) [bug]
+
 # v1.7.1 (29 November 2025)
 - [#961](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/961) - Fix Json when property value is null [bug] contributed by [StefH](https://github.com/StefH)
 - [#962](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/962) - json: fix logic when property is not found [bug] contributed by [StefH](https://github.com/StefH)
@@ -30,7 +43,7 @@
 - [#938](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/938) - Use TryConvertTypes also for strings [bug] contributed by [StefH](https://github.com/StefH)
 
 # v1.6.6 (11 June 2025)
-- [#929](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/929) - Add GroupBy method for Z.DynamicLinq.SystemTextJson and Z.DynamicLinq.NewtonsoftJson contributed by [StefH](https://github.com/StefH)
+- [#929](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/929) - Add GroupBy method for Z.DynamicLinq.SystemTextJson and Z.DynamicLinq.NewtonsoftJson [feature] contributed by [StefH](https://github.com/StefH)
 - [#932](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/932) - Fix &quot;in&quot; for nullable Enums [bug] contributed by [StefH](https://github.com/StefH)
 - [#931](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/931) - Syntax IN dont work with nullable Enums [bug]
 
