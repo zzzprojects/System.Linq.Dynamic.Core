@@ -1,29 +1,42 @@
 name: Build with Tests
 
-on: 
- push:
- workflow_dispatch:
- pull_request:
-   types: [opened, edited]
+on:
+  push:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
 
 jobs:
   build_and_test_Windows:
     name: "Windows: Build and Tests"
+    if: >-
+      ${{
+        (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') ||
+        (github.event_name == 'pull_request' && github.actor != 'copilot-swe-agent[bot]' && github.actor != 'github-copilot[bot]') ||
+        (github.event_name == 'pull_request_target' && (github.actor == 'copilot-swe-agent[bot]' || github.actor == 'github-copilot[bot]'))
+      }}
     runs-on: windows-latest
 
     env:
       IsRunningOnGitHubActions: 'true'
       UseInMemory: 'true'
 
-    steps:  
+    steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+        persist-credentials: false
 
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '10.0.x'
-              
+
     - name: Build
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
@@ -34,15 +47,24 @@ jobs:
 
   build_and_test_Linux:
     name: "Linux: Build and Tests"
+    if: >-
+      ${{
+        (github.event_name != 'pull_request' && github.event_name != 'pull_request_target') ||
+        (github.event_name == 'pull_request' && github.actor != 'copilot-swe-agent[bot]' && github.actor != 'github-copilot[bot]') ||
+        (github.event_name == 'pull_request_target' && (github.actor == 'copilot-swe-agent[bot]' || github.actor == 'github-copilot[bot]'))
+      }}
     runs-on: ubuntu-latest
 
     env:
       IsRunningOnGitHubActions: 'true'
       BranchName: ${{ github.head_ref || github.ref_name }}
 
-    steps:  
+    steps:
     - uses: actions/checkout@v4
-  
+      with:
+        ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
+        persist-credentials: false
+
     - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
@@ -58,6 +80,7 @@ jobs:
         dotnet tool install --global dotnet-coverage
 
     - name: Check if analysis on SonarCloud is possible
+      if: ${{ github.event_name != 'pull_request_target' }}
       id: secret-check
       # perform secret check & put boolean result as an output
       shell: bash
@@ -69,31 +92,31 @@ jobs:
         fi
 
     - name: Begin analysis on SonarCloud
-      if: ${{ steps.secret-check.outputs.run_analysis == 'true' }}
+      if: ${{ github.event_name != 'pull_request_target' && steps.secret-check.outputs.run_analysis == 'true' }}
       run: |
         dotnet sonarscanner begin /k:"zzzprojects_System.Linq.Dynamic.Core" /o:"zzzprojects" /d:sonar.branch.name=$BranchName /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
-              
+
     - name: Build
       run: |
         dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Debug -p:buildType=azure-pipelines-ci
-        
+
     - name: Run Tests EFCore .NET 10 (with Coverage)
       run: |
         dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
-        
+
     - name: Run Tests EF .NET 10 (with Coverage)
       run: |
         dotnet-coverage collect 'dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Debug --framework net10.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-ef.xml
-        
+
     - name: Run Tests Newtonsoft.Json .NET 10 (with Coverage)
       run: |
         dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj --configuration Debug --framework net10.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-newtonsoftjson.xml
-       
+
     - name: Run Tests System.Text.Json .NET 10 (with Coverage)
       run: |
         dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj --configuration Debug --framework net10.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-systemtextjson.xml
 
     - name: End analysis on SonarCloud
-      if: ${{ steps.secret-check.outputs.run_analysis == 'true' }}
+      if: ${{ github.event_name != 'pull_request_target' && steps.secret-check.outputs.run_analysis == 'true' }}
       run: |
         dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
