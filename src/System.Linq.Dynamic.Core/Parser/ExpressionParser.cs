@@ -2496,7 +2496,7 @@ public class ExpressionParser
 
     internal static Type ToNullableType(Type type)
     {
-        Check.NotNull(type, nameof(type));
+        Check.NotNull(type);
 
         if (!type.GetTypeInfo().IsValueType || TypeHelper.IsNullableType(type))
         {

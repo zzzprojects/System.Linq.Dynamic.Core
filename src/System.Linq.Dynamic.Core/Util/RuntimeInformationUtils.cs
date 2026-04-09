@@ -2,7 +2,7 @@
 
 internal static class RuntimeInformationUtils
 {
-    public static bool IsBlazorWASM;
+    public static readonly bool IsBlazorWASM;
 
     static RuntimeInformationUtils()
     {
