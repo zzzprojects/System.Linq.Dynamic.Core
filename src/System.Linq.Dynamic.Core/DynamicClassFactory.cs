@@ -296,7 +296,7 @@ public static class DynamicClassFactory
             var equalityType = fieldTypeIsAccessible ? fieldType : typeof(object);
             var equalityComparerT = EqualityComparer.MakeGenericType(equalityType);
 
-            // Equals()
+            // Implement Equals();
             MethodInfo equalityComparerTDefault = equalityComparerT.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public)!;
             MethodInfo equalityComparerTEquals = equalityComparerT.GetMethod(nameof(EqualityComparer.Equals), BindingFlags.Instance | BindingFlags.Public, null, [equalityType, equalityType], null)!;
 
@@ -306,13 +306,21 @@ public static class DynamicClassFactory
             ilgeneratorEquals.Emit(OpCodes.Call, equalityComparerTDefault);
             ilgeneratorEquals.Emit(OpCodes.Ldarg_0);
             ilgeneratorEquals.Emit(OpCodes.Ldfld, fieldBuilders[i]);
-            if (!fieldTypeIsAccessible) ilgeneratorEquals.Emit(OpCodes.Box, fieldType);
+            if (!fieldTypeIsAccessible)
+            {
+                ilgeneratorEquals.Emit(OpCodes.Box, fieldType);
+            }
+
             ilgeneratorEquals.Emit(OpCodes.Ldloc_0);
             ilgeneratorEquals.Emit(OpCodes.Ldfld, fieldBuilders[i]);
-            if (!fieldTypeIsAccessible) ilgeneratorEquals.Emit(OpCodes.Box, fieldType);
+            if (!fieldTypeIsAccessible)
+            {
+                ilgeneratorEquals.Emit(OpCodes.Box, fieldType);
+            }
+
             ilgeneratorEquals.Emit(OpCodes.Callvirt, equalityComparerTEquals);
 
-            // GetHashCode();
+            // Implement GetHashCode();
             MethodInfo equalityComparerTGetHashCode = equalityComparerT.GetMethod(nameof(EqualityComparer.GetHashCode), BindingFlags.Instance | BindingFlags.Public, null, [equalityType], null)!;
             ilgeneratorGetHashCode.Emit(OpCodes.Stloc_0);
             ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4, -1521134295);
@@ -321,11 +329,15 @@ public static class DynamicClassFactory
             ilgeneratorGetHashCode.Emit(OpCodes.Call, equalityComparerTDefault);
             ilgeneratorGetHashCode.Emit(OpCodes.Ldarg_0);
             ilgeneratorGetHashCode.Emit(OpCodes.Ldfld, fieldBuilders[i]);
-            if (!fieldTypeIsAccessible) ilgeneratorGetHashCode.Emit(OpCodes.Box, fieldType);
+            if (!fieldTypeIsAccessible)
+            {
+                ilgeneratorGetHashCode.Emit(OpCodes.Box, fieldType);
+            }
+
             ilgeneratorGetHashCode.Emit(OpCodes.Callvirt, equalityComparerTGetHashCode);
             ilgeneratorGetHashCode.Emit(OpCodes.Add);
 
-            // ToString();
+            // Implement ToString();
             ilgeneratorToString.Emit(OpCodes.Ldloc_0);
             ilgeneratorToString.Emit(OpCodes.Ldstr, i == 0 ? $"{{ {fieldName} = " : $", {fieldName} = ");
             ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendString);

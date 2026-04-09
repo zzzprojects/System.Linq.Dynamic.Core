@@ -342,7 +342,8 @@ internal class MethodFinder
         }
 
         var better = false;
-        for (var i = 0; i < args.Length; i++)
+        var maxLength = Math.Min(first.Parameters.Length, second.Parameters.Length);
+        for (var i = 0; i < maxLength; i++)
         {
             var result = CompareConversions(args[i].Type, first.Parameters[i].ParameterType, second.Parameters[i].ParameterType);
 

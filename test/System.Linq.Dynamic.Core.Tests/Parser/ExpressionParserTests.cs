@@ -390,7 +390,7 @@ public partial class ExpressionParserTests
             CustomTypeProvider = _dynamicTypeProviderMock.Object,
             AllowEqualsAndToStringMethodsOnObject = true
         };
-        ParameterExpression[] parameters = [ ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") ];
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company")];
         var sut = new ExpressionParser(parameters, expression, null, config);
 
         // Act
@@ -460,6 +460,69 @@ public partial class ExpressionParserTests
 
         // Assert
         parsedExpression.Should().Be(result);
+    }
+
+    [Fact]
+    public void Parse_StringConcat3Strings()
+    {
+        // Arrange
+        var parameters = new[]
+        {
+            Expression.Parameter(typeof(string), "x"),
+            Expression.Parameter(typeof(string), "y")
+        };
+
+        var parser = new ExpressionParser(
+            parameters,
+            "string.Concat(x, \" - \", y)",
+            values: null,
+            parsingConfig: null);
+
+        // Act
+        var expression = parser.Parse(typeof(string));
+
+        // Assert
+        expression.ToString().Should().Be("Concat(x, \" - \", y)");
+
+        // Compile and invoke
+        var lambda = Expression.Lambda<Func<string, string, string>>(expression, parameters);
+        var compiled = lambda.Compile();
+        var result = compiled("hello", "world");
+
+        // Assert
+        result.Should().Be("hello - world");
+    }
+
+    [Fact]
+    public void Parse_StringConcat4Strings()
+    {
+        // Arrange
+        var parameters = new[]
+        {
+            Expression.Parameter(typeof(string), "x"),
+            Expression.Parameter(typeof(string), "y"),
+            Expression.Parameter(typeof(string), "z")
+        };
+
+        var parser = new ExpressionParser(
+            parameters,
+            "string.Concat(x, \" - \", y, z)",
+            values: null,
+            parsingConfig: null);
+
+        // Act
+        var expression = parser.Parse(typeof(string));
+
+        // Assert
+        expression.ToString().Should().Be("Concat(x, \" - \", y, z)");
+
+        // Compile and invoke
+        var lambda = Expression.Lambda<Func<string, string, string, string>>(expression, parameters);
+        var compiled = lambda.Compile();
+        var result = compiled("hello", "earth", "moon");
+
+        // Assert
+        result.Should().Be("hello - earthmoon");
     }
 
     [Fact]
