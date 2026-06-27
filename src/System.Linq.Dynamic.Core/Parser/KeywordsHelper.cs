@@ -29,10 +29,10 @@ internal class KeywordsHelper : IKeywordsHelper
     private readonly Dictionary<string, AnyOf<string, Expression, Type>> _mappings;
 
     // Pre-defined Types are not IgnoreCase
-    private static readonly Dictionary<string, Type> PreDefinedTypeMapping = new();
+    private static readonly Dictionary<string, Type> PreDefinedTypeMapping = [];
 
     // Custom DefinedTypes are not IgnoreCase
-    private readonly Dictionary<string, Type> _customTypeMapping = new();
+    private readonly Dictionary<string, Type> _customTypeMapping = [];
 
     static KeywordsHelper()
     {

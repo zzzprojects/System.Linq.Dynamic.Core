@@ -82,7 +82,7 @@ public class DynamicExpressionParserTests
             get => i1 + "-" + i2;
         }
     }
-    
+
     private class ComplexParseLambda1Result
     {
         public int? Age;
@@ -730,7 +730,7 @@ public class DynamicExpressionParserTests
         // Assert
         Check.That(result).Equals(4);
     }
-    
+
     [Fact]
     public void DynamicExpressionParser_ParseLambda_Indexer2D()
     {
@@ -757,7 +757,7 @@ public class DynamicExpressionParserTests
         // Assert
         Check.That(result).Equals("3-1");
     }
-    
+
     [Fact]
     public void DynamicExpressionParser_ParseLambda_IndexerParameterMismatch()
     {
@@ -772,9 +772,30 @@ public class DynamicExpressionParserTests
         {
             Expression.Parameter(typeof(ClassWithIndexers), "myObj")
         };
-        
+
         Assert.Throws<ParseException>(() =>
             DynamicExpressionParser.ParseLambda(config, false, expressionParams, null, "myObj[3,\"1\",1]"));
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_Int16_CaseSensitive_IsValid()
+    {
+        // Act
+        var lambda = DynamicExpressionParser.ParseLambda(typeof(object), null, "Int16(5)");
+        var result = lambda.Compile().DynamicInvoke("x");
+
+        // Assert
+        result.Should().Be(5);
+    }
+
+    [Fact]
+    public void DynamicExpressionParser_ParseLambda_Int16_CaseInsensitive_Throws()
+    {
+        // Act
+        Action act = () => DynamicExpressionParser.ParseLambda(typeof(object), null, "int16(5)");
+
+        // Assert
+        act.Should().Throw<ParseException>();
     }
 
     [Fact]
@@ -989,7 +1010,7 @@ public class DynamicExpressionParserTests
         var parameters = Array.Empty<ParameterExpression>();
 
         // Act
-        var lambda = DynamicExpressionParser.ParseLambda( parameters, typeof(long), expression);
+        var lambda = DynamicExpressionParser.ParseLambda(parameters, typeof(long), expression);
         var result = lambda.Compile().DynamicInvoke();
 
         // Assert
@@ -2372,6 +2393,6 @@ public class DynamicExpressionParserTests
         }
 
         public override HashSet<Type> GetCustomTypes() =>
-            [..base.GetCustomTypes(), typeof(Methods), typeof(MethodsItemExtension)];
+            [.. base.GetCustomTypes(), typeof(Methods), typeof(MethodsItemExtension)];
     }
 }
