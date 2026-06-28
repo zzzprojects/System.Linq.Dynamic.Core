@@ -58,7 +58,7 @@ internal static class EnumerationsAndWellKnownTypesFromMscorlib
         try
         {
             return types
-                .Where(t => t.GetTypeInfo().IsPublic && !t.GetTypeInfo().IsEnum && HasStaticInstancesOfOwnType(t))
+                .Where(t => t.GetTypeInfo().IsPublic && !t.GetTypeInfo().IsEnum && HasStaticPropertiesOrFieldsOfOwnType(t))
                 .ToArray();
         }
         catch
@@ -67,20 +67,20 @@ internal static class EnumerationsAndWellKnownTypesFromMscorlib
         }
     }
 
-    private static bool HasStaticInstancesOfOwnType(Type type)
+    private static bool HasStaticPropertiesOrFieldsOfOwnType(Type type)
     {
-        // Check for static properties that return the same type
+        var baseType = type.GetTypeInfo().BaseType;
+
         var anyStaticProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Static)
-            .Any(p => p.PropertyType == type || p.PropertyType == type);
+            .Any(p => p.PropertyType == type || p.PropertyType == baseType);
 
         if (anyStaticProperties)
         {
             return true;
         }
 
-        // Check for static fields that return the same type
         var anyStaticFields = type.GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Any(f => f.FieldType == type || f.FieldType == type);
+            .Any(f => f.FieldType == type || f.FieldType == baseType);
 
         return anyStaticFields;
     }
