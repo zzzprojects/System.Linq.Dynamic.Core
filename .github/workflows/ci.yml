@@ -75,7 +75,7 @@ jobs:
         fi
 
     - name: Begin analysis on SonarCloud
-      if: ${{ steps.secret-check.outputs.run_analysis == 'true' && inputs.SonarScanner }}
+      if: ${{ steps.secret-check.outputs.run_analysis == 'true' && (github.event_name != 'workflow_dispatch' || inputs.SonarScanner) }}
       run: |
         dotnet sonarscanner begin /k:"zzzprojects_System.Linq.Dynamic.Core" /o:"zzzprojects" /d:sonar.branch.name=$BranchName /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token=${{ secrets.SONAR_TOKEN }} /d:sonar.pullrequest.provider=github /d:sonar.dotnet.excludeTestProjects=true /d:sonar.cs.vscoveragexml.reportsPaths=**/dynamic-coverage-*.xml /d:sonar.verbose=true
 
@@ -100,6 +100,6 @@ jobs:
         dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj --configuration Debug --framework net10.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-systemtextjson.xml
 
     - name: End analysis on SonarCloud
-      if: ${{ steps.secret-check.outputs.run_analysis == 'true' && inputs.SonarScanner }}
+      if: ${{ steps.secret-check.outputs.run_analysis == 'true' && (github.event_name != 'workflow_dispatch' || inputs.SonarScanner) }}
       run: |
         dotnet sonarscanner end /d:sonar.token=${{ secrets.SONAR_TOKEN }}
