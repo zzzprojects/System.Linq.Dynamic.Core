@@ -2317,7 +2317,16 @@ public class ExpressionParser
         {
             if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union", "SequenceEqual" }.Contains(methodName))
             {
-                args = [instance, args[0]];
+                if (args.Length == 1)
+                {
+                    args = [instance, args[0]];
+                }
+                else
+                {
+                    var argsAsList = new List<Expression> { instance };
+                    argsAsList.AddRange(args);
+                    args = argsAsList.ToArray();
+                }
             }
             else
             {

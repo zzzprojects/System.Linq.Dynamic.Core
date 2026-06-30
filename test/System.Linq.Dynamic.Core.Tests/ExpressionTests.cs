@@ -5,6 +5,8 @@ using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
 using System.Linq.Dynamic.Core.Tests.Helpers.Models;
+using System.Net.WebSockets;
+using System.Xml;
 using FluentAssertions;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -851,6 +853,36 @@ namespace System.Linq.Dynamic.Core.Tests
 
             Check.That(resultEqualStringMixedCaseParamLeft.Single()).Equals(TestEnum.Var5);
             Check.That(resultEqualStringMixedCaseParamRight.Single()).Equals(TestEnum.Var5);
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_XmlNodeType()
+        {
+            // Arrange
+            var lst = new[] { XmlNodeType.Text, XmlNodeType.Element };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var result = lst.Count(it => new[] { XmlNodeType.Text }.Contains(it));
+            var dynamicResult = qry.Count("new XmlNodeType[] { XmlNodeType.Text }.Contains(it)");
+
+            // Assert
+            dynamicResult.Should().Be(result);
+        }
+
+        [Fact]
+        public void ExpressionTests_WellKnownTypes_StringComparer()
+        {
+            // Arrange
+            var lst = new[] { "test" };
+            var qry = lst.AsQueryable();
+
+            // Act
+            var result = lst.Count(it => new string[] { "Test" }.Contains(it, StringComparer.OrdinalIgnoreCase));
+            var dynamicResult = qry.Count("new string[] { \"Test\" }.Contains(it, StringComparer.OrdinalIgnoreCase)");
+
+            // Assert
+            dynamicResult.Should().Be(result);
         }
 
         [Fact]

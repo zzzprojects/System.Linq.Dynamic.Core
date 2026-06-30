@@ -118,7 +118,7 @@ internal class KeywordsHelper : IKeywordsHelper
         }
 
         // 4. Try to get as an enum from the system namespace
-        if (_config.SupportEnumerationsFromSystemNamespace && EnumerationsFromMscorlib.PredefinedEnumerationTypes.TryGetValue(text, out var predefinedEnumType))
+        if (_config.SupportEnumerationsFromSystemNamespace && EnumerationsAndWellKnownTypesFromMscorlib.PredefinedEnumerationTypes.TryGetValue(text, out var predefinedEnumType))
         {
             value = predefinedEnumType;
             return true;
