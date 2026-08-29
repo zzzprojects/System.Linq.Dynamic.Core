@@ -3,6 +3,7 @@ using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Tests.Entities;
+using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
@@ -271,7 +272,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso ((x.Name == \"A\") OrElse (x.Name == \"B\"))) AndAlso x.Name.Contains(y)) AndAlso x.Name.Contains(z))");
+        Check.That(parsedExpression).Equals("(((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso new [] {\"A\", \"B\"}.Contains(x.Name)) AndAlso x.Name.Contains(y)) AndAlso x.Name.Contains(z))");
     }
 
     [Fact]
@@ -285,9 +286,26 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso Not(((x.Name == \"A\") OrElse (x.Name == \"B\")))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z)))");
+        Check.That(parsedExpression).Equals("(((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z)))");
     }
 
+
+    [Fact]
+    public void Parse_In_FallsBackTo_OrElse_When_ContainsCannotBeUsed()
+    {
+        // Arrange
+        var values = new[] { new SnowflakeId(1), new SnowflakeId(100), new SnowflakeId(5) }.AsQueryable();
+
+        // Act
+        var query = values.Where("it in (100, 5UL)");
+        var expressionText = query.Expression.ToString();
+        var result = query.ToArray();
+
+        // Assert
+        Assert.Contains("OrElse", expressionText);
+        Assert.DoesNotContain(".Contains(", expressionText);
+        Assert.Equal([new SnowflakeId(100), new SnowflakeId(5)], result);
+    }
 
     [Fact]
     public void Parse_ParseMultipleInAndNotInAndNot_InOperators()
@@ -300,7 +318,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso Not(((x.MainCompanyId == 3) OrElse (x.MainCompanyId == 4)))) AndAlso Not(((x.Name == \"A\") OrElse (x.Name == \"B\")))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z))) AndAlso Not(x.Name.Contains(s)))");
+        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {3, 4}.Contains(x.MainCompanyId))) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z))) AndAlso Not(x.Name.Contains(s)))");
     }
 
     [Fact]
@@ -321,7 +339,7 @@ public partial class ExpressionParserTests
     public void Parse_CastActingOnIt()
     {
         // Arrange
-        var parameters = new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(User), "u") };
+        var parameters = new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(System.Linq.Dynamic.Core.Tests.Entities.User), "u") };
         var sut = new ExpressionParser(parameters, "DisplayName.Any(int(it) > 109)", null, null);
 
         // Act

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace System.Linq.Dynamic.Core.Parser;
@@ -20,6 +21,8 @@ internal interface IExpressionHelper
     Expression GenerateLessThanEqual(Expression left, Expression right);
 
     Expression GenerateNotEqual(Expression left, Expression right);
+
+    Expression GenerateBinaryOrElseTree(IList<Expression> expressions);
 
     Expression GenerateStringConcat(Expression left, Expression right);
 

@@ -38,10 +38,24 @@ public class GroupedSalesData
     public int GroupLevel { get; set; }
 }
 
+class MyEntity
+{
+    // Factory method to create a list of MyEntity objects from a given list of ids
+    public static IEnumerable<MyEntity> CreateList(IEnumerable<int> ids)
+    {
+        foreach (var id in ids) yield return new MyEntity { Id = id };
+    }
+
+    public int Id { get; set; }
+}
+
 class Program
 {
     static void Main(string[] args)
     {
+        Issue987();
+        return;
+
         Issue918();
         return;
 
@@ -70,6 +84,52 @@ class Program
 
         Normal();
         Dynamic();
+    }
+
+    private static void Issue987()
+    {
+        var list = new List<MyEntity>();
+        for (int i = 0; i < 10000; i++)
+            list.Add(new MyEntity { Id = i });
+
+        var test1 = list.AsQueryable()
+            .Where("Id in (9495, 9496, 9498, 9500, 9501, 9503, 9505, 9508, 9509, 9510, 9511, 9514, 9515, 9517, 9518, 9519, 9520, 9521, 9523, 9524, 9525, 9526, 9527, 9528, 9529, 9530, 9531, 9532, 9533, 9534, 9535, 9536, 9538, 9539, 9540, 9541, 9542, 9543, 9544, 9545, 9546, 9547, 9548, 9549, 9550, 9552, 9554, 9556, 9557, 9558, 9559, 9560, 9561, 9562, 9563, 9565, 9567, 9569, 9570, 9575, 9576, 9577, 9578, 9579, 9580, 9581, 9582, 9583, 9584, 9585, 9586, 9587, 9588, 9589, 9590, 9591, 9592, 9593, 9594, 9595, 9596, 9597, 9598, 9599, 9600, 9601, 9602, 9603, 9604, 9605, 9606, 9607, 9608, 9609, 9610, 9611, 9612, 9613, 9614, 9615, 9616, 9617, 9618, 9619, 9620, 9621, 9622, 9623, 9624, 9625, 9626, 9627, 9628, 9629)")
+            .ToList();
+
+        Console.WriteLine("Number of elements : " + test1.Count);
+
+        //the list of ids that were actually used in our application and resulted in the discovery of this bug
+        var originalIdList = new List<int>() { 9495, 9496, 9498, 9500, 9501, 9503, 9505, 9508, 9509, 9510, 9511, 9514, 9515, 9517, 9518, 9519, 9520, 9521, 9523, 9524, 9525, 9526, 9527, 9528, 9529, 9530, 9531, 9532, 9533, 9534, 9535, 9536, 9538, 9539, 9540, 9541, 9542, 9543, 9544, 9545, 9546, 9547, 9548, 9549, 9550, 9552, 9554, 9556, 9557, 9558, 9559, 9560, 9561, 9562, 9563, 9565, 9567, 9569, 9570, 9575, 9576, 9577, 9578, 9579, 9580, 9581, 9582, 9583, 9584, 9585, 9586, 9587, 9588, 9589, 9590, 9591, 9592, 9593, 9594, 9595, 9596, 9597, 9598, 9599, 9600, 9601, 9602, 9603, 9604, 9605, 9606, 9607, 9608, 9609, 9610, 9611, 9612, 9613, 9614, 9615, 9616, 9617, 9618, 9619, 9620, 9621, 9622, 9623, 9624, 9625, 9626, 9627, 9628, 9629 };
+        //list of ids also starting at 9495, but without gaps
+        var adjacentIdList = Enumerable.Range(9495, 114);
+        //original list starting at Id1
+        var originalIdListStartingAt1 = originalIdList.Select(id => id - 9494);
+        //list with gaps of 1
+        var listWithGapsOf1 = Enumerable.Range(1, 114).Select(id => id * 2);
+        //list with gaps of 2
+        var listWithGapsOf2 = Enumerable.Range(1, 114).Select(id => id * 3);
+        //list with gaps of 3
+        var listWithGapsOf3 = Enumerable.Range(1, 114).Select(id => id * 4);
+        //list with gaps of 4
+        var listWithGapsOf4 = Enumerable.Range(1, 114).Select(id => id * 5);
+
+        //list of 10.000 entities , with ids starting at 0
+        var entityList = MyEntity.CreateList(Enumerable.Range(1, 10_000));
+
+        //filter the list of entities by the list of ids using dynamic linq and write the number of elements in the filtered list to the console
+        static void Filter(IEnumerable<MyEntity> entities, IEnumerable<int> ids)
+        {
+            var filtered = entities.AsQueryable().Where($"Id in ({string.Join(',', ids)})").ToList();
+            Console.WriteLine("Number of elements : " + filtered.Count);
+        }
+
+        Filter(entityList, originalIdList);
+        Filter(entityList, adjacentIdList);
+        Filter(entityList, originalIdListStartingAt1);
+        Filter(entityList, listWithGapsOf1);
+        Filter(entityList, listWithGapsOf2);
+        Filter(entityList, listWithGapsOf3);
+        Filter(entityList, listWithGapsOf4);
     }
 
     private static void Issue918()

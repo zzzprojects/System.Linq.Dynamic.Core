@@ -87,7 +87,7 @@ public class DynamicExpressionParserTests
     {
         public int? Age;
         public int TotalIncome;
-        public string Name;
+        public string? Name;
     }
 
     [DynamicLinqType]

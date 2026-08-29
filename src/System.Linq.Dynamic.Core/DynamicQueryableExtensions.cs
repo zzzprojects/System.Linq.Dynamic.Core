@@ -24,7 +24,7 @@ namespace System.Linq.Dynamic.Core
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public static class DynamicQueryableExtensions
     {
-#if !(SILVERLIGHT)
+#if !SILVERLIGHT
         private static readonly TraceSource TraceSource = new(nameof(DynamicQueryableExtensions));
 #endif
 
@@ -34,7 +34,7 @@ namespace System.Linq.Dynamic.Core
             {
                 var optimized = ExtensibilityPoint.QueryOptimizer(expression);
 
-#if !(SILVERLIGHT)
+#if !SILVERLIGHT
                 if (optimized != expression)
                 {
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
@@ -2094,7 +2094,7 @@ namespace System.Linq.Dynamic.Core
             string collectionParameterName,
             string resultParameterName,
             object?[]? collectionSelectorArgs = null,
-            params object[]? resultSelectorArgs)
+            params object?[]? resultSelectorArgs)
         {
             Check.NotNull(source);
             Check.NotNull(config);
@@ -2682,7 +2682,6 @@ namespace System.Linq.Dynamic.Core
 
             bool createParameterCtor = SupportsLinqToObjects(config, source);
             LambdaExpression lambda = DynamicExpressionParser.ParseLambda(config, createParameterCtor, source.ElementType, null, predicate, args);
-
             var optimized = OptimizeExpression(Expression.Call(typeof(Queryable), nameof(Queryable.Where), [source.ElementType], source.Expression, Expression.Quote(lambda)));
             return source.Provider.CreateQuery(optimized);
         }

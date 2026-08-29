@@ -156,6 +156,37 @@ internal class ExpressionHelper : IExpressionHelper
         return Expression.NotEqual(left, right);
     }
 
+    public Expression GenerateBinaryOrElseTree(IList<Expression> expressions)
+    {
+        Check.NotNullOrEmpty(expressions);
+
+        if (expressions.Count == 1)
+        {
+            return expressions[0];
+        }
+
+        var currentLevel = new List<Expression>(expressions);
+        while (currentLevel.Count > 1)
+        {
+            var nextLevel = new List<Expression>((currentLevel.Count + 1) / 2);
+            for (var i = 0; i < currentLevel.Count; i += 2)
+            {
+                if (i + 1 < currentLevel.Count)
+                {
+                    nextLevel.Add(Expression.OrElse(currentLevel[i], currentLevel[i + 1]));
+                }
+                else
+                {
+                    nextLevel.Add(currentLevel[i]);
+                }
+            }
+
+            currentLevel = nextLevel;
+        }
+
+        return currentLevel[0];
+    }
+
     public Expression GenerateGreaterThan(Expression left, Expression right)
     {
         TryConvertTypes(ref left, ref right);

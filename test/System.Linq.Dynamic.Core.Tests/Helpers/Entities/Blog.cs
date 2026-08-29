@@ -10,6 +10,8 @@ public class Blog
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public int BlogId { get; set; }
 
+    public long BlogLongId { get; set; }
+
     public string? X { get; set; }
 
     public string Name { get; set; }

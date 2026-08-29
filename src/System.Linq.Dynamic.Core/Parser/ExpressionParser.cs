@@ -367,6 +367,12 @@ public class ExpressionParser
 
             if (_textParser.CurrentToken.Id == TokenId.OpenParen) // literals (or other inline list)
             {
+                var values = new List<Expression>();
+                var comparisons = new List<Expression>();
+                Expression? containsLeft = null;
+                string? containsLeftText = null;
+                var canUseContains = true;
+
                 while (_textParser.CurrentToken.Id != TokenId.CloseParen)
                 {
                     _textParser.NextToken();
@@ -393,19 +399,43 @@ public class ExpressionParser
                         CheckAndPromoteOperands(typeof(IEqualitySignatures), TokenId.DoubleEqual, "==", ref left, ref right, token.Pos);
                     }
 
-                    if (accumulate.Type != typeof(bool))
+                    var equalsExpression = _expressionHelper.GenerateEqual(left, right);
+                    comparisons.Add(equalsExpression);
+
+                    if (canUseContains && equalsExpression is BinaryExpression binaryExpression && binaryExpression.NodeType == ExpressionType.Equal)
                     {
-                        accumulate = _expressionHelper.GenerateEqual(left, right);
+                        containsLeft ??= binaryExpression.Left;
+                        containsLeftText ??= binaryExpression.Left.ToString();
+
+                        if (containsLeft.Type != binaryExpression.Left.Type || !string.Equals(containsLeftText, binaryExpression.Left.ToString(), StringComparison.Ordinal) || binaryExpression.Right.Type != containsLeft.Type)
+                        {
+                            canUseContains = false;
+                        }
+                        else
+                        {
+                            values.Add(binaryExpression.Right);
+                        }
                     }
                     else
                     {
-                        accumulate = Expression.OrElse(accumulate, _expressionHelper.GenerateEqual(left, right));
+                        canUseContains = false;
                     }
 
                     if (_textParser.CurrentToken.Id == TokenId.End)
                     {
                         throw ParseError(token.Pos, Res.CloseParenOrCommaExpected);
                     }
+                }
+
+                if (canUseContains && containsLeft != null)
+                {
+                    var typeArgs = new[] { containsLeft.Type };
+                    var args = new Expression[] { Expression.NewArrayInit(containsLeft.Type, values), containsLeft };
+                    accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+                }
+                else
+                {
+                    accumulate = _expressionHelper.GenerateBinaryOrElseTree(comparisons);
                 }
 
                 // Since this started with an open paren, make sure to move off the close
@@ -1514,7 +1544,7 @@ public class ExpressionParser
                 {
                     if (!propertyNames.Add(propName!))
                     {
-                        throw ParseError(exprPos, Res.DuplicateIdentifier, propName);
+                        throw ParseError(exprPos, Res.DuplicateIdentifier, propName!);
                     }
 
                     properties.Add(new DynamicProperty(propName!, expr.Type));
