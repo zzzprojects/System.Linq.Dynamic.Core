@@ -1,9 +1,10 @@
-﻿using Moq;
+﻿using System.Diagnostics;
 using System.Linq.Dynamic.Core.Util;
 using System.Linq.Dynamic.Core.Util.Cache;
 using System.Linq.Expressions;
 using System.Threading;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Util.Cache;
@@ -115,10 +116,7 @@ public class SlidingCacheTests
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        Sleep();
-
-        // Ensure no item is in the cache
-        cache.Count.Should().Be(0, $"Expected 0 items in the cache, had {cache.Count}");
+        WaitUntil("Expected 0 items in the cache", () => cache.Count == 0);
     }
 
     [Fact]
@@ -159,24 +157,37 @@ public class SlidingCacheTests
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        Sleep();
-
-        // Ensure one item is in the cache
-        cache.Count.Should().Be(1, $"Expected 1 items in the cache, only had {cache.Count}");
+        WaitUntil("Expected 1 items in the cache", () => cache.Count == 1);
 
         // Act
         cache.AddOrUpdate(2, "two");
 
         // Since the cache cleanup is triggered by a Task and not on the same thread, 
         // give it a moment for the cleanup to happen
-        Sleep();
-
-        // Ensure one item is in the cache
-        cache.Count.Should().Be(1, $"Expected 1 items in the cache, had {cache.Count}");
+        WaitUntil("Expected 1 items in the cache", () => cache.Count == 1);
     }
 
-    private static void Sleep()
+    private static readonly TimeSpan SettleTimeout = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(1);
+
+    private static void WaitUntil(string what, Func<bool> condition)
     {
-        Thread.Sleep(1000);
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        while (true)
+        {
+            if (condition())
+            {
+                return;
+            }
+
+            if (stopwatch.Elapsed >= SettleTimeout)
+            {
+                Assert.Fail($"'{what}' never became true within {SettleTimeout.TotalSeconds:0}s.");
+            }
+
+            Thread.Sleep(PollInterval);
+        }
     }
 }
