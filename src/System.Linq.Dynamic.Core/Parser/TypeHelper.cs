@@ -13,20 +13,19 @@ internal static class TypeHelper
 
     internal static bool TryGetAsEnumerable(Type type, [NotNullWhen(true)] out Type? enumerableType)
     {
-        if (type.IsArray)
-        {
-            enumerableType = typeof(IEnumerable<>).MakeGenericType(type.GetElementType()!);
-            return true;
-        }
-
         if (type.GetTypeInfo().IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
         {
             enumerableType = type;
             return true;
         }
 
-        enumerableType = null;
-        return false;
+        enumerableType = type
+            .GetInterfaces()
+            .FirstOrDefault(i =>
+                i.GetTypeInfo().IsGenericType &&
+                i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+
+        return enumerableType is not null;
     }
 
     public static bool TryGetFirstGenericArgument(Type type, [NotNullWhen(true)] out Type? genericType)

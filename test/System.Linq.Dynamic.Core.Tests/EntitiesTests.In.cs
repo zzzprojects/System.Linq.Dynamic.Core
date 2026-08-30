@@ -1,7 +1,6 @@
 ﻿using System.Linq.Dynamic.Core.Tests.Helpers.Entities;
 
 #if EFCORE
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 #else
 using System.Data.Entity;
@@ -20,10 +19,16 @@ public partial class EntitiesTests
     public void Entities_Where_In_And()
     {
         // Arrange
-        var expected = _context.Blogs.Include(b => b.Posts).Where(b => new[] { 1000, 1001, 1002 }.Contains(b.BlogId) && new[] { "Blog1", "Blog2" }.Contains(b.Name)).ToArray();
+        var expected = _context.Blogs.Include(b => b.Posts)
+            .Where(b => 
+                new[] { 1000, 1001, 1002 }.Contains(b.BlogId) && new[] { "Blog1", "Blog2" }.Contains(b.Name) && b.Name.Contains('o')
+            )
+            .ToArray();
 
         // Act
-        var test = _context.Blogs.Include(b => b.Posts).Where(@"BlogId in (1000, 1001, 1002) and Name in (""Blog1"", ""Blog2"")").ToArray();
+        var test = _context.Blogs.Include(b => b.Posts)
+            .Where(@"BlogId in (1000, 1001, 1002) and Name in (""Blog1"", ""Blog2"") && Name.Contains('o')")
+            .ToArray();
 
         // Assert
         Assert.Equal(expected, test);

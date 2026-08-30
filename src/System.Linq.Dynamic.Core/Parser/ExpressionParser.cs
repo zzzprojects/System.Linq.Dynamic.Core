@@ -365,14 +365,10 @@ public class ExpressionParser
 
             _textParser.NextToken();
 
+            var expressions = new Dictionary<Expression, int>();
+
             if (_textParser.CurrentToken.Id == TokenId.OpenParen) // literals (or other inline list)
             {
-                var values = new List<Expression>();
-                var comparisons = new List<Expression>();
-                Expression? containsLeft = null;
-                string? containsLeftText = null;
-                var canUseContains = true;
-
                 while (_textParser.CurrentToken.Id != TokenId.CloseParen)
                 {
                     _textParser.NextToken();
@@ -380,46 +376,7 @@ public class ExpressionParser
                     // we need to parse unary expressions because otherwise 'in' clause will fail in use cases like 'in (-1, -1)' or 'in (!true)'
                     Expression right = ParseUnary();
 
-                    // if the identifier is an Enum (or nullable Enum), try to convert the right-side also to an Enum.
-                    if (TypeHelper.GetNonNullableType(left.Type).GetTypeInfo().IsEnum)
-                    {
-                        if (right is ConstantExpression constantExprRight)
-                        {
-                            right = ParseEnumToConstantExpression(token.Pos, left.Type, constantExprRight);
-                        }
-                        else if (_expressionHelper.TryUnwrapAsConstantExpression(right, out var unwrappedConstantExprRight))
-                        {
-                            right = ParseEnumToConstantExpression(token.Pos, left.Type, unwrappedConstantExprRight);
-                        }
-                    }
-
-                    // else, check for direct type match
-                    else if (left.Type != right.Type)
-                    {
-                        CheckAndPromoteOperands(typeof(IEqualitySignatures), TokenId.DoubleEqual, "==", ref left, ref right, token.Pos);
-                    }
-
-                    var equalsExpression = _expressionHelper.GenerateEqual(left, right);
-                    comparisons.Add(equalsExpression);
-
-                    if (canUseContains && equalsExpression is BinaryExpression binaryExpression && binaryExpression.NodeType == ExpressionType.Equal)
-                    {
-                        containsLeft ??= binaryExpression.Left;
-                        containsLeftText ??= binaryExpression.Left.ToString();
-
-                        if (containsLeft.Type != binaryExpression.Left.Type || !string.Equals(containsLeftText, binaryExpression.Left.ToString(), StringComparison.Ordinal) || binaryExpression.Right.Type != containsLeft.Type)
-                        {
-                            canUseContains = false;
-                        }
-                        else
-                        {
-                            values.Add(binaryExpression.Right);
-                        }
-                    }
-                    else
-                    {
-                        canUseContains = false;
-                    }
+                    expressions.Add(right, token.Pos);
 
                     if (_textParser.CurrentToken.Id == TokenId.End)
                     {
@@ -427,16 +384,7 @@ public class ExpressionParser
                     }
                 }
 
-                if (canUseContains && containsLeft != null)
-                {
-                    var typeArgs = new[] { containsLeft.Type };
-                    var args = new Expression[] { Expression.NewArrayInit(containsLeft.Type, values), containsLeft };
-                    accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
-                }
-                else
-                {
-                    accumulate = _expressionHelper.GenerateBinaryOrElseTree(comparisons);
-                }
+                accumulate = ProcessInExpressions(accumulate, expressions);
 
                 // Since this started with an open paren, make sure to move off the close
                 _textParser.NextToken();
@@ -445,16 +393,29 @@ public class ExpressionParser
             {
                 Expression right = ParsePrimary();
 
-                if (!typeof(IEnumerable).IsAssignableFrom(right.Type))
+                if (!TypeHelper.TryGetAsEnumerable(right.Type, out _))
                 {
-                    throw ParseError(_textParser.CurrentToken.Pos, Res.IdentifierImplementingInterfaceExpected, typeof(IEnumerable));
+                    throw ParseError(_textParser.CurrentToken.Pos, Res.IdentifierImplementingInterfaceExpected, typeof(IEnumerable<>));
                 }
 
-                var typeArgs = new[] { left.Type };
+                // Handle "it.TestEnum in @0", and the @0 should be a object like a List<string>.
+                if (_symbols.Count > 0 && right is ConstantExpression constantExprRight && constantExprRight.Value != null)
+                {
+                    foreach (var item in (IEnumerable)constantExprRight.Value)
+                    {
+                        expressions.Add(Expression.Constant(item), token.Pos);
+                    }
 
-                var args = new[] { right, left };
+                    accumulate = ProcessInExpressions(accumulate, expressions);
+                }
 
-                accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+                // Handle "'y' in Name"
+                else
+                {
+                    var typeArgs = new[] { left.Type };
+                    var args = new[] { right, left };
+                    accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+                }
             }
             else
             {
@@ -468,6 +429,71 @@ public class ExpressionParser
         }
 
         return accumulate;
+    }
+
+    private Expression ProcessInExpressions(Expression left, Dictionary<Expression, int> expressions)
+    {
+        var values = new List<Expression>();
+        var comparisons = new List<Expression>();
+        Expression? containsLeft = null;
+        string? containsLeftText = null;
+        var canUseContains = true;
+
+        for (int i = 0; i < expressions.Count; i++)
+        {
+            var right = expressions.ElementAt(i).Key;
+            var tokenPos = expressions.ElementAt(i).Value;
+
+            // if the identifier is an Enum (or nullable Enum), try to convert the right-side also to an Enum.
+            if (TypeHelper.GetNonNullableType(left.Type).GetTypeInfo().IsEnum)
+            {
+                if (right is ConstantExpression constantExprRight)
+                {
+                    right = ParseEnumToConstantExpression(tokenPos, left.Type, constantExprRight);
+                }
+                else if (_expressionHelper.TryUnwrapAsConstantExpression(right, out var unwrappedConstantExprRight))
+                {
+                    right = ParseEnumToConstantExpression(tokenPos, left.Type, unwrappedConstantExprRight);
+                }
+            }
+
+            // else, check for direct type match
+            else if (left.Type != right.Type)
+            {
+                CheckAndPromoteOperands(typeof(IEqualitySignatures), TokenId.DoubleEqual, "==", ref left, ref right, tokenPos);
+            }
+
+            var equalsExpression = _expressionHelper.GenerateEqual(left, right);
+            comparisons.Add(equalsExpression);
+
+            if (canUseContains && equalsExpression is BinaryExpression binaryExpression && binaryExpression.NodeType == ExpressionType.Equal)
+            {
+                containsLeft ??= binaryExpression.Left;
+                containsLeftText ??= binaryExpression.Left.ToString();
+
+                if (containsLeft.Type != binaryExpression.Left.Type || !string.Equals(containsLeftText, binaryExpression.Left.ToString(), StringComparison.Ordinal) || binaryExpression.Right.Type != containsLeft.Type)
+                {
+                    canUseContains = false;
+                }
+                else
+                {
+                    values.Add(binaryExpression.Right);
+                }
+            }
+            else
+            {
+                canUseContains = false;
+            }
+        }
+
+        if (canUseContains && containsLeft != null)
+        {
+            var typeArgs = new[] { containsLeft.Type };
+            var args = new Expression[] { Expression.NewArrayInit(containsLeft.Type, values), containsLeft };
+            return Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+        }
+
+        return _expressionHelper.GenerateBinaryOrElseTree(comparisons);
     }
 
     // &, | bitwise operators
@@ -2081,9 +2107,9 @@ public class ExpressionParser
         throw ParseError(errorPos, Res.UnknownPropertyOrField, id, TypeHelper.GetTypeName(type));
     }
 
-    private bool TryFindPropertyOrField(Type type, string id, Expression? expression, [NotNullWhen(true)] out Expression? propertyOrFieldExpression)
+    private bool TryFindPropertyOrField(Type type, string memberName, Expression? expression, [NotNullWhen(true)] out Expression? propertyOrFieldExpression)
     {
-        var member = FindPropertyOrField(type, id, expression == null);
+        var member = FindPropertyOrField(type, memberName, expression == null);
         switch (member)
         {
             case PropertyInfo property:

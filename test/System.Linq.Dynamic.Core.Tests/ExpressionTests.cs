@@ -1310,10 +1310,22 @@ namespace System.Linq.Dynamic.Core.Tests
             var expected = qry.Where(x => new[] { TestEnum.Var1, TestEnum.Var2 }.Contains(x.TestEnum)).ToArray();
             var result1 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
             var result2 = qry.Where("it.TestEnum in (0, 1)").ToArray();
+            var result3 = qry.Where("it.TestEnum in @0", new[] { TestEnum.Var1, TestEnum.Var2 });
+            var objectList = new List<string> { "Var1", "Var2" };
+            var result4 = qry.Where("it.TestEnum in @0", objectList);
+            var result5 = qry.Where("it.TestEnum in @0", GetVar1AndVar2());
 
             // Assert
-            Check.That(result1).ContainsExactly(expected);
-            Check.That(result2).ContainsExactly(expected);
+            Assert.Equivalent(result1, expected);
+            Assert.Equivalent(result2, expected);
+            Assert.Equivalent(result3, expected);
+            Assert.Equivalent(result4, expected);
+            Assert.Equivalent(result5, expected);
+        }
+
+        private static List<string> GetVar1AndVar2()
+        {
+            return new List<string> { "Var1", "Var" + "2" };
         }
 
         [Fact]
@@ -1330,10 +1342,18 @@ namespace System.Linq.Dynamic.Core.Tests
             var expected = new[] { model1, model2 };
             var result1 = qry.Where("it.TestEnumNullable in (\"Var1\", \"Var2\")").ToArray();
             var result2 = qry.Where("it.TestEnumNullable in (0, 1)").ToArray();
+            var result3 = qry.Where("it.TestEnumNullable in @0", new[] { TestEnum.Var1, TestEnum.Var2 });
+
+            var objectList = new List<string> { "Var1", "Var2" };
+            var result4 = qry.Where("it.TestEnumNullable in @0", objectList);
+            var result5 = qry.Where("it.TestEnumNullable in @0", GetVar1AndVar2());
 
             // Assert
-            Check.That(result1).ContainsExactly(expected);
-            Check.That(result2).ContainsExactly(expected);
+            Assert.Equivalent(result1, expected);
+            Assert.Equivalent(result2, expected);
+            Assert.Equivalent(result3, expected);
+            Assert.Equivalent(result4, expected);
+            Assert.Equivalent(result5, expected);
         }
 
         [Fact]
