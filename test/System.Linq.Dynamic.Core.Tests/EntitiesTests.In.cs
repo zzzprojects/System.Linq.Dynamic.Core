@@ -21,7 +21,7 @@ public partial class EntitiesTests
         // Arrange
         var expected = _context.Blogs.Include(b => b.Posts)
             .Where(b => 
-                new[] { 1000, 1001, 1002 }.Contains(b.BlogId) && new[] { "Blog1", "Blog2" }.Contains(b.Name) && b.Name.Contains('o'.ToString()) && b.Name.Contains("g")
+                new[] { 1000, 1001, 1002 }.Contains(b.BlogId) && new[] { "Blog1", "Blog2" }.Contains(b.Name) && b.Name.Contains("o") && b.Name.Contains("g")
             )
             .ToArray();
 
