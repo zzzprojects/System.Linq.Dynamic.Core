@@ -408,24 +408,19 @@ public class ExpressionParser
 
                     accumulate = ProcessInExpressions(accumulate, expressions);
                 }
-
-                // Handle `'y' in Name` and `"x" in Name`
                 else
                 {
-                    // if (right.Type == typeof(string))
-                    // {
-                    //     accumulate = _expressionHelper.GenerateStringContains(right, left);
-                    // }
-                    // else
-                    // {
-                    //     var typeArgs = new[] { left.Type };
-                    //     var args = new[] { right, left };
-                    //     accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
-                    // }
-
-                    var typeArgs = new[] { left.Type };
-                    var args = new[] { right, left };
-                    accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+                    // Handle `'y' in Name` and `"x" in Name` where Name is a string
+                    if (right.Type == typeof(string))
+                    {
+                        accumulate = _expressionHelper.GenerateStringContains(right, left);
+                    }
+                    else
+                    {
+                        var typeArgs = new[] { left.Type };
+                        var args = new[] { right, left };
+                        accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+                    }
                 }
             }
             else
