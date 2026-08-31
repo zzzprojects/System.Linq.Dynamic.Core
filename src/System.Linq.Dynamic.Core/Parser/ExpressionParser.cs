@@ -414,7 +414,7 @@ public class ExpressionParser
                 {
                     if (right.Type == typeof(string))
                     {
-                        accumulate = _expressionHelper.GenerateStringContains(left, right);
+                        accumulate = _expressionHelper.GenerateStringContains(right, left);
                     }
                     else
                     {

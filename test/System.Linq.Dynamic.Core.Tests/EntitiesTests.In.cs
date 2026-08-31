@@ -27,7 +27,7 @@ public partial class EntitiesTests
 
         // Act
         var test = _context.Blogs.Include(b => b.Posts)
-            .Where(@"BlogId in (1000, 1001, 1002) and Name in (""Blog1"", ""Blog2"") && Name.Contains('o') && Name.Contains(""g"")")
+            .Where(@"BlogId in (1000, 1001, 1002) and Name in (""Blog1"", ""Blog2"") && 'o' in Name && Name.Contains(""g"") && ""l"" in Name")
             .ToArray();
 
         // Assert
