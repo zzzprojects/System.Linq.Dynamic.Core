@@ -412,16 +412,20 @@ public class ExpressionParser
                 // Handle `'y' in Name` and `"x" in Name`
                 else
                 {
-                    if (right.Type == typeof(string))
-                    {
-                        accumulate = _expressionHelper.GenerateStringContains(right, left);
-                    }
-                    else
-                    {
-                        var typeArgs = new[] { left.Type };
-                        var args = new[] { right, left };
-                        accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
-                    }
+                    // if (right.Type == typeof(string))
+                    // {
+                    //     accumulate = _expressionHelper.GenerateStringContains(right, left);
+                    // }
+                    // else
+                    // {
+                    //     var typeArgs = new[] { left.Type };
+                    //     var args = new[] { right, left };
+                    //     accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+                    // }
+
+                    var typeArgs = new[] { left.Type };
+                    var args = new[] { right, left };
+                    accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
                 }
             }
             else
