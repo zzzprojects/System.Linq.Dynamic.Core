@@ -267,13 +267,13 @@ public partial class ExpressionParserTests
         // Arrange
         ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
         var values = new object?[] { new List<int> { 42, 43 }, new List<int> { 100, 100 + 1 } };
-        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name in (\"A\", \"B\") && 'y' in Name && 'z' in Name and MainCompanyId in @0 and MainCompanyId in @1", values, null);
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name in (\"A\", \"B\") && 'y' in Name && \"z\" in Name and MainCompanyId in @0 and MainCompanyId in @1", values, null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso new [] {\"A\", \"B\"}.Contains(x.Name)) AndAlso x.Name.Contains(y)) AndAlso x.Name.Contains(z)) AndAlso new [] {42, 43}.Contains(x.MainCompanyId)) AndAlso new [] {100, 101}.Contains(x.MainCompanyId))");
+        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso new [] {\"A\", \"B\"}.Contains(x.Name)) AndAlso x.Name.Contains(y.ToString())) AndAlso x.Name.Contains(z)) AndAlso new [] {42, 43}.Contains(x.MainCompanyId)) AndAlso new [] {100, 101}.Contains(x.MainCompanyId))");
     }
 
     [Fact]
@@ -281,13 +281,13 @@ public partial class ExpressionParserTests
     {
         // Arrange
         ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
-        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name not in (\"A\", \"B\") && 'y' in Name && 'z' not in Name", null, null);
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name not in (\"A\", \"B\") && 'y' in Name && \"z\" not in Name", null, null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z)))");
+        Check.That(parsedExpression).Equals("(((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y.ToString())) AndAlso Not(x.Name.Contains(z)))");
     }
 
 
@@ -313,13 +313,13 @@ public partial class ExpressionParserTests
     {
         // Arrange
         ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
-        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and MainCompanyId not in (3, 4) and Name not_in (\"A\", \"B\") && 'y' in Name && 'z' not in Name && 's' not_in Name", null, null);
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and MainCompanyId not in (3, 4) and Name not_in (\"A\", \"B\") && 'y' in Name && \"z\" not in Name && 's' not_in Name", null, null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {3, 4}.Contains(x.MainCompanyId))) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z))) AndAlso Not(x.Name.Contains(s)))");
+        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {3, 4}.Contains(x.MainCompanyId))) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y.ToString())) AndAlso Not(x.Name.Contains(z))) AndAlso Not(x.Name.Contains(s.ToString())))");
     }
 
     [Fact]
