@@ -417,6 +417,11 @@ public class ExpressionParser
                     }
                     else
                     {
+                        if (TypeHelper.TryGetFirstGenericArgument(right.Type, out var genericRightType))
+                        {
+                            TryConvertExpressionToEnum(genericRightType, ref left, token.Pos);
+                        }
+
                         var typeArgs = new[] { left.Type };
                         var args = new[] { right, left };
                         accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
@@ -451,20 +456,8 @@ public class ExpressionParser
             var tokenPos = expressions.ElementAt(i).Value;
 
             // if the identifier is an Enum (or nullable Enum), try to convert the right-side also to an Enum.
-            if (TypeHelper.GetNonNullableType(left.Type).GetTypeInfo().IsEnum)
-            {
-                if (right is ConstantExpression constantExprRight)
-                {
-                    right = ParseEnumToConstantExpression(tokenPos, left.Type, constantExprRight);
-                }
-                else if (_expressionHelper.TryUnwrapAsConstantExpression(right, out var unwrappedConstantExprRight))
-                {
-                    right = ParseEnumToConstantExpression(tokenPos, left.Type, unwrappedConstantExprRight);
-                }
-            }
-
             // else, check for direct type match
-            else if (left.Type != right.Type)
+            if (!TryConvertExpressionToEnum(left.Type, ref right, tokenPos) && left.Type != right.Type)
             {
                 CheckAndPromoteOperands(typeof(IEqualitySignatures), TokenId.DoubleEqual, "==", ref left, ref right, tokenPos);
             }
@@ -500,6 +493,26 @@ public class ExpressionParser
         }
 
         return _expressionHelper.GenerateBinaryOrElseTree(comparisons);
+    }
+
+    private bool TryConvertExpressionToEnum(Type leftType, ref Expression right, int tokenPos)
+    {
+        if (TypeHelper.GetNonNullableType(leftType).GetTypeInfo().IsEnum)
+        {
+            if (right is ConstantExpression constantExprRight)
+            {
+                right = ParseEnumToConstantExpression(tokenPos, leftType, constantExprRight);
+                return true;
+            }
+
+            if (_expressionHelper.TryUnwrapAsConstantExpression(right, out var unwrappedConstantExprRight))
+            {
+                right = ParseEnumToConstantExpression(tokenPos, leftType, unwrappedConstantExprRight);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // &, | bitwise operators
@@ -2000,7 +2013,7 @@ public class ExpressionParser
 
             if (isApplicableForEnumerable &&
                 TypeHelper.TryFindGenericType(typeof(IEnumerable<>), type, out var enumerableType) &&
-                TryParseEnumerable(expression!, enumerableType, id, type, out args, out var enumerableExpression))
+                TryParseEnumerable(expression!, enumerableType, id, type, errorPos, out args, out var enumerableExpression))
             {
                 return enumerableExpression;
             }
@@ -2262,7 +2275,7 @@ public class ExpressionParser
         return ParseMemberAccess(type, null, identifier);
     }
 
-    private bool TryParseEnumerable(Expression instance, Type enumerableType, string methodName, Type? type, out Expression[]? args, [NotNullWhen(true)] out Expression? expression)
+    private bool TryParseEnumerable(Expression instance, Type enumerableType, string methodName, Type? type, int tokenPos, out Expression[]? args, [NotNullWhen(true)] out Expression? expression)
     {
         var elementType = enumerableType.GetTypeInfo().GetGenericTypeArguments()[0];
 
@@ -2379,6 +2392,11 @@ public class ExpressionParser
         {
             if (new[] { "Concat", "Contains", "ContainsKey", "DefaultIfEmpty", "Except", "Intersect", "Skip", "Take", "Union", "SequenceEqual" }.Contains(methodName))
             {
+                if (TypeHelper.TryGetFirstGenericArgument(instance.Type, out var genericInstanceType))
+                {
+                    TryConvertExpressionToEnum(genericInstanceType, ref args[0], tokenPos);
+                }
+
                 if (args.Length == 1)
                 {
                     args = [instance, args[0]];

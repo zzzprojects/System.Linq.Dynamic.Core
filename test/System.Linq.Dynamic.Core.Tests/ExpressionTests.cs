@@ -1297,10 +1297,37 @@ namespace System.Linq.Dynamic.Core.Tests
             Assert.Throws<ParseException>(() => values.AsQueryable().Where("it < 11a"));
         }
 
+        public class TestClass
+        {
+            public TestEnum P1 { get; set; }
+
+            public IEnumerable<TestEnum> P2 { get; set; } = [];
+        }
+
+        [Fact]
+        public void ExpressionTests_Enum_Issue963()
+        {
+            // Arrange
+            var list = new List<TestClass>
+            {
+                new TestClass { P1 = TestEnum.Var1, P2 = [TestEnum.Var1, TestEnum.Var2] },
+                new TestClass { P1 = TestEnum.Var2, P2 = [TestEnum.Var2] }
+            };
+
+            // Act
+            var result1 = list.AsQueryable().Where("\"Var1\" in P2").ToArray().First();
+            var result2 = list.AsQueryable().Where("P2.Contains(\"Var1\")").ToArray().First();
+
+            // Assert
+            Assert.Equal(TestEnum.Var1, result1.P1);
+            Assert.Equal(TestEnum.Var1, result2.P1);
+        }
+
         [Fact]
         public void ExpressionTests_In_Enum()
         {
             // Arrange
+            var objectList = new List<string> { "Var1", "Var2" };
             var model1 = new ModelWithEnum { TestEnum = TestEnum.Var1 };
             var model2 = new ModelWithEnum { TestEnum = TestEnum.Var2 };
             var model3 = new ModelWithEnum { TestEnum = TestEnum.Var3 };
@@ -1308,19 +1335,18 @@ namespace System.Linq.Dynamic.Core.Tests
 
             // Act
             var expected = qry.Where(x => new[] { TestEnum.Var1, TestEnum.Var2 }.Contains(x.TestEnum)).ToArray();
-            var result1 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
-            var result2 = qry.Where("it.TestEnum in (0, 1)").ToArray();
-            var result3 = qry.Where("it.TestEnum in @0", new[] { TestEnum.Var1, TestEnum.Var2 });
-            var objectList = new List<string> { "Var1", "Var2" };
-            var result4 = qry.Where("it.TestEnum in @0", objectList);
-            var result5 = qry.Where("it.TestEnum in @0", GetVar1AndVar2());
+            var result01 = qry.Where("it.TestEnum in (\"Var1\", \"Var2\")").ToArray();
+            var result02 = qry.Where("it.TestEnum in (0, 1)").ToArray();
+            var result03 = qry.Where("it.TestEnum in @0", new[] { TestEnum.Var1, TestEnum.Var2 }).ToArray();
+            var result04 = qry.Where("it.TestEnum in @0", objectList).ToArray();
+            var result05 = qry.Where("it.TestEnum in @0", GetVar1AndVar2()).ToArray();
 
             // Assert
-            Assert.Equivalent(result1, expected);
-            Assert.Equivalent(result2, expected);
-            Assert.Equivalent(result3, expected);
-            Assert.Equivalent(result4, expected);
-            Assert.Equivalent(result5, expected);
+            Assert.Equivalent(result01, expected);
+            Assert.Equivalent(result02, expected);
+            Assert.Equivalent(result03, expected);
+            Assert.Equivalent(result04, expected);
+            Assert.Equivalent(result05, expected);
         }
 
         private static List<string> GetVar1AndVar2()
@@ -1332,6 +1358,7 @@ namespace System.Linq.Dynamic.Core.Tests
         public void ExpressionTests_In_EnumIsNullable()
         {
             // Arrange
+            var objectList = new List<string> { "Var1", "Var2" };
             var model1 = new ModelWithEnum { TestEnumNullable = TestEnum.Var1 };
             var model2 = new ModelWithEnum { TestEnumNullable = TestEnum.Var2 };
             var model3 = new ModelWithEnum { TestEnumNullable = TestEnum.Var3 };
@@ -1343,8 +1370,6 @@ namespace System.Linq.Dynamic.Core.Tests
             var result1 = qry.Where("it.TestEnumNullable in (\"Var1\", \"Var2\")").ToArray();
             var result2 = qry.Where("it.TestEnumNullable in (0, 1)").ToArray();
             var result3 = qry.Where("it.TestEnumNullable in @0", new[] { TestEnum.Var1, TestEnum.Var2 });
-
-            var objectList = new List<string> { "Var1", "Var2" };
             var result4 = qry.Where("it.TestEnumNullable in @0", objectList);
             var result5 = qry.Where("it.TestEnumNullable in @0", GetVar1AndVar2());
 

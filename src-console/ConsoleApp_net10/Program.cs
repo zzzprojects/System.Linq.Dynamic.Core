@@ -49,10 +49,25 @@ class MyEntity
     public int Id { get; set; }
 }
 
+public enum TestEnum
+{
+    T1, T2
+}
+
+public class TestClass
+{
+    public TestEnum P1 { get; set; }
+
+    public IEnumerable<TestEnum> P2 { get; set; } = [];
+}
+
 class Program
 {
     static void Main(string[] args)
     {
+        Issue963();
+        return;
+
         Issue987();
         return;
 
@@ -84,6 +99,18 @@ class Program
 
         Normal();
         Dynamic();
+    }
+
+    private static void Issue963()
+    {
+        var list = new List<TestClass> 
+        {
+            new TestClass { P1 = TestEnum.T1, P2 = [TestEnum.T1, TestEnum.T2] },
+            new TestClass { P1 = TestEnum.T2, P2 = [TestEnum.T2] }
+        };
+
+        var result1 = list.AsQueryable().Where("\"T1\" in P2").ToArray();
+        var result2 = list.AsQueryable().Where("P2.Contains(\"T1\")").ToArray();
     }
 
     private static void Issue987()
