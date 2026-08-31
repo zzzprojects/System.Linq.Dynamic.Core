@@ -287,9 +287,8 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y.ToString())) AndAlso Not(x.Name.Contains(z)))");
+        Check.That(parsedExpression).Equals("(((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y.ToString())) AndAlso Not(x.Name.Contains(\"z\")))");
     }
-
 
     [Fact]
     public void Parse_In_FallsBackTo_OrElse_When_ContainsCannotBeUsed()
