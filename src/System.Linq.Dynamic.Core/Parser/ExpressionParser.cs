@@ -414,8 +414,7 @@ public class ExpressionParser
                 {
                     if (right.Type == typeof(string))
                     {
-                        var searchValue = left.Type == typeof(char) ? Expression.Call(left, typeof(char).GetMethod(nameof(char.ToString), Type.EmptyTypes)!): left;
-                        accumulate = Expression.Call(right, nameof(string.Contains), Type.EmptyTypes, searchValue);
+                        accumulate = _expressionHelper.GenerateStringContains(left, right);
                     }
                     else
                     {

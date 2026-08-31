@@ -26,7 +26,9 @@ internal interface IExpressionHelper
 
     Expression GenerateStringConcat(Expression left, Expression right);
 
-    Expression GenerateSubtract(Expression left, Expression right);
+    Expression GenerateStringContains(Expression left, Expression right);
+
+    Expression GenerateSubtract(Expression left, Expression right);    
 
     void OptimizeForEqualityIfPossible(ref Expression left, ref Expression right);
 

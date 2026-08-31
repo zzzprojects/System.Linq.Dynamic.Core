@@ -11,6 +11,7 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal class ExpressionHelper : IExpressionHelper
 {
+    private static readonly MethodInfo _containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
     private static readonly Expression _nullExpression = Expression.Constant(null);
     private readonly IConstantExpressionWrapper _constantExpressionWrapper = new ConstantExpressionWrapper();
     private readonly ParsingConfig _parsingConfig;
@@ -127,6 +128,18 @@ internal class ExpressionHelper : IExpressionHelper
     public Expression GenerateStringConcat(Expression left, Expression right)
     {
         return GenerateStaticMethodCall("Concat", left, right);
+    }
+
+    public Expression GenerateStringContains(Expression left, Expression right)
+    {
+        Expression searchValue = left;
+
+        if (left.Type == typeof(char) && left is ConstantExpression { Value: char character })
+        {
+            searchValue = Expression.Constant(character.ToString(), typeof(string));
+        }
+
+        return Expression.Call(right, _containsMethod, searchValue);
     }
 
     public Expression GenerateSubtract(Expression left, Expression right)
