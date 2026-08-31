@@ -273,7 +273,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso new [] {\"A\", \"B\"}.Contains(x.Name)) AndAlso x.Name.Contains(y.ToString())) AndAlso x.Name.Contains(z)) AndAlso new [] {42, 43}.Contains(x.MainCompanyId)) AndAlso new [] {100, 101}.Contains(x.MainCompanyId))");
+        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso new [] {\"A\", \"B\"}.Contains(x.Name)) AndAlso x.Name.Contains(y.ToString())) AndAlso x.Name.Contains(\"z\")) AndAlso new [] {42, 43}.Contains(x.MainCompanyId)) AndAlso new [] {100, 101}.Contains(x.MainCompanyId))");
     }
 
     [Fact]
@@ -319,7 +319,7 @@ public partial class ExpressionParserTests
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {3, 4}.Contains(x.MainCompanyId))) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y.ToString())) AndAlso Not(x.Name.Contains(z))) AndAlso Not(x.Name.Contains(s.ToString())))");
+        Check.That(parsedExpression).Equals("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {3, 4}.Contains(x.MainCompanyId))) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(y.ToString())) AndAlso Not(x.Name.Contains(\"z\"))) AndAlso Not(x.Name.Contains(s.ToString())))");
     }
 
     [Fact]
