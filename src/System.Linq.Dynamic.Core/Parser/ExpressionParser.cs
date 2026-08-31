@@ -398,7 +398,7 @@ public class ExpressionParser
                     throw ParseError(_textParser.CurrentToken.Pos, Res.IdentifierImplementingInterfaceExpected, typeof(IEnumerable<>));
                 }
 
-                // Handle "it.TestEnum in @0", and the @0 should be a object like a List<string>.
+                // Handle `it.TestEnum in @0`, and the @0 should be a object like a List<string>.
                 if (_symbols.Count > 0 && right is ConstantExpression constantExprRight && constantExprRight.Value != null)
                 {
                     foreach (var item in (IEnumerable)constantExprRight.Value)
@@ -409,12 +409,20 @@ public class ExpressionParser
                     accumulate = ProcessInExpressions(accumulate, expressions);
                 }
 
-                // Handle "'y' in Name"
+                // Handle `'y' in Name` and `"x" in Name`
                 else
                 {
-                    var typeArgs = new[] { left.Type };
-                    var args = new[] { right, left };
-                    accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+                    if (right.Type == typeof(string))
+                    {
+                        var searchValue = left.Type == typeof(char) ? Expression.Call(left, typeof(char).GetMethod(nameof(char.ToString), Type.EmptyTypes)!): left;
+                        accumulate = Expression.Call(right, nameof(string.Contains), Type.EmptyTypes, searchValue);
+                    }
+                    else
+                    {
+                        var typeArgs = new[] { left.Type };
+                        var args = new[] { right, left };
+                        accumulate = Expression.Call(typeof(Enumerable), nameof(Enumerable.Contains), typeArgs, args);
+                    }
                 }
             }
             else
