@@ -132,12 +132,14 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression GenerateStringContains(Expression left, Expression right)
     {
-        // if (left.Type == typeof(char) && left is ConstantExpression { Value: char character })
-        // {
-        //     searchValue = Expression.Constant(character.ToString(), typeof(string));
-        // }
+        Expression searchValue = right;
 
-        return Expression.Call(left, _containsMethod, right);
+        if (right.Type == typeof(char) && right is ConstantExpression { Value: char character })
+        {
+            searchValue = Expression.Constant(character.ToString(), typeof(string));
+        }
+
+        return Expression.Call(left, _containsMethod, searchValue);
     }
 
     public Expression GenerateSubtract(Expression left, Expression right)
