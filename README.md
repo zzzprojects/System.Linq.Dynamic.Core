@@ -68,6 +68,14 @@ The `DefaultDynamicLinqCustomTypeProvider` has been changed to only return types
 If it's not possible to add that attribute, you need to implement a custom [CustomTypeProvider](https://dynamic-linq.net/advanced-configuration#customtypeprovider) and set this to the `ParsingConfig` and provide that config to all dynamic calls.
 Or provide a list of additional types in the [DefaultDynamicLinqCustomTypeProvider.cs](https://github.com/zzzprojects/System.Linq.Dynamic.Core/blob/master/src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs).
 
+### v1.7.5
+
+#### Dictionary methods
+Dictionary method calls are restricted to recognized framework dictionary read methods.
+Custom dictionary methods, including methods that hide or overload those names, are not permitted through this path.
+Dictionary interface calls and other virtual calls can still dispatch to application-provided implementations, and enumerable operations can execute application-provided enumerators.
+Use trusted implementations when evaluating untrusted expressions.
+
 ---
 
 ## Useful links
