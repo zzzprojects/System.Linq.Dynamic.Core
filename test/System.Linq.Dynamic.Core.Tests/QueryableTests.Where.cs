@@ -219,10 +219,10 @@ public partial class QueryableTests
 
         // Assert
         act.Should().Throw<ParseException>().WithMessage("Method '*' on type '*' is not accessible*");
-        items.Select(i => i.Meta.Count).Should().AllBeEquivalentTo(1);
-        items.Select(i => i.C.Count).Should().AllBeEquivalentTo(0);
-        items.Select(i => i.Custom.CallCount).Should().AllBeEquivalentTo(0);
-        items.Select(i => i.Custom["k"]).Should().AllBeEquivalentTo("v");
+        items.Select(i => i.Meta.Count).Should().OnlyContain(count => count == 1);
+        items.Select(i => i.C.Count).Should().OnlyContain(count => count == 0);
+        items.Select(i => i.Custom.CallCount).Should().OnlyContain(callCount => callCount == 0);
+        items.Select(i => i.Custom["k"]).Should().OnlyContain(value => value == "v");
     }
 
     [Fact]
