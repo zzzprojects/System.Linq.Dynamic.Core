@@ -2324,6 +2324,11 @@ public class ExpressionParser
         if (type != null && TypeHelper.IsDictionary(type) && _methodFinder.ContainsMethod(type, methodName, false))
         {
             var dictionaryMethod = type.GetMethod(methodName)!;
+            if (!PredefinedMethodsHelper.IsPredefinedDictionaryMethod(dictionaryMethod))
+            {
+                throw ParseError(tokenPos, Res.MethodIsInaccessible, methodName, TypeHelper.GetTypeName(dictionaryMethod.DeclaringType!));
+            }
+
             expression = Expression.Call(instance, dictionaryMethod, args);
             return true;
         }

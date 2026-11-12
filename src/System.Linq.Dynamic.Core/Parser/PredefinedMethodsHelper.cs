@@ -20,6 +20,15 @@ internal static class PredefinedMethodsHelper
         ObjectStaticReferenceEquals
     ];
 
+    private static readonly HashSet<string> AllowedDictionaryMethodNames = ["ContainsKey", "ContainsValue", "TryGetValue", "get_Item"];
+
+    public static bool IsPredefinedDictionaryMethod(MethodInfo method)
+    {
+        Check.NotNull(method);
+
+        return AllowedDictionaryMethodNames.Contains(method.Name);
+    }
+
     public static bool IsPredefinedMethod(ParsingConfig config, MemberInfo member)
     {
         Check.NotNull(config);
