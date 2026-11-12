@@ -1,4 +1,5 @@
 ﻿using System.Linq.Dynamic.Core.Parser;
+using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using Xunit;
 using static System.Linq.Expressions.Expression;
@@ -11,16 +12,11 @@ public class MethodFinderTest
     public void Method_ToString_OnDynamicLinq_And_SystemLinq_ShouldBeEqual()
     {
         // Arrange
-        var config = new ParsingConfig
-        {
-            AllowEqualsAndToStringMethodsOnObject = true
-        };
-
-        Expression<Func<int?, string?>> expr = x => x.ToString();
+        Expression<Func<int, string>> expr = x => x.ToString();
 
         var selector = "ToString()";
-        var prm = Parameter(typeof(int?));
-        var parser = new ExpressionParser([prm], selector, [], config);
+        var prm = Parameter(typeof(int));
+        var parser = new ExpressionParser([prm], selector, [], ParsingConfig.Default);
 
         // Act
         var expression = parser.Parse(null);
@@ -30,7 +26,7 @@ public class MethodFinderTest
     }
 
     [Fact]
-    public void Method_Equals1_OnDynamicLinq_And_SystemLinq_ShouldBeEqual()
+    public void Method_InstanceEquals_OnDynamicLinq_And_SystemLinq_ShouldBeEqual()
     {
         // Arrange
         var config = new ParsingConfig
@@ -38,10 +34,10 @@ public class MethodFinderTest
             AllowEqualsAndToStringMethodsOnObject = true
         };
 
-        Expression<Func<int?, bool>> expr = x => x.Equals("a");
+        Expression<Func<User, bool>> expr = x => x.Equals("a");
 
         var selector = "Equals(\"a\")";
-        var prm = Parameter(typeof(int?));
+        var prm = Parameter(typeof(User));
         var parser = new ExpressionParser([prm], selector, [], config);
 
         // Act
@@ -52,7 +48,7 @@ public class MethodFinderTest
     }
 
     [Fact]
-    public void Method_Equals2_OnDynamicLinq_And_SystemLinq_ShouldBeEqual()
+    public void Method_StaticEquals_OnDynamicLinq_And_SystemLinq_ShouldBeEqual()
     {
         // Arrange
         var config = new ParsingConfig
