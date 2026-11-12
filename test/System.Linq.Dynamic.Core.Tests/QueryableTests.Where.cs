@@ -162,6 +162,69 @@ public partial class QueryableTests
         act.Should().Throw<ArgumentException>().WithMessage("The ParsingConfig should be provided as first argument to this method.*");
     }
 
+    public class DictionaryValidationService
+    {
+        public bool Danger() => true;
+    }
+
+    public class CustomDictionary : Dictionary<string, string>, IDictionary<string, string>
+    {
+        public int CallCount { get; private set; }
+
+        public bool Danger()
+        {
+            CallCount++;
+            return true;
+        }
+
+        public void Reset(string key)
+        {
+            CallCount++;
+            this[key] = "reset";
+        }
+    }
+
+    public class DictionaryValidationItem
+    {
+        public CustomDictionary Custom { get; set; } = new() { { "k", "v" } };
+
+        public string Name { get; set; } = null!;
+
+        public DictionaryValidationService S { get; set; } = new();
+
+        public Dictionary<string, string> Meta { get; set; } = new() { { "k", "v" } };
+
+        public System.Collections.Concurrent.ConcurrentDictionary<string, string> C { get; set; } = new();
+    }
+
+    [Theory]
+    [InlineData("S.Danger()")]
+    [InlineData("Meta.TryAdd(\"z\",\"y\")")]
+    [InlineData("Meta.EnsureCapacity(100000000) > 0")]
+    [InlineData("C.TryAdd(\"x\",\"y\")")]
+    [InlineData("C.TryUpdate(\"x\",\"z\",\"y\")")]
+    [InlineData("Custom.Danger()")]
+    [InlineData("Custom.Reset(\"k\")")]
+    public void Where_Dynamic_DictionaryMethods_ShouldThrowParseException_WhenMethodIsNotAccessible(string query)
+    {
+        // Arrange
+        var items = new List<DictionaryValidationItem>
+        {
+            new() { Name = "a" },
+            new() { Name = "b" }
+        }.AsQueryable();
+
+        // Act
+        Action act = () => items.Where(query).ToList();
+
+        // Assert
+        act.Should().Throw<ParseException>().WithMessage("Method '*' on type '*' is not accessible*");
+        items.Select(i => i.Meta.Count).Should().AllBeEquivalentTo(1);
+        items.Select(i => i.C.Count).Should().AllBeEquivalentTo(0);
+        items.Select(i => i.Custom.CallCount).Should().AllBeEquivalentTo(0);
+        items.Select(i => i.Custom["k"]).Should().AllBeEquivalentTo("v");
+    }
+
     [Fact]
     public void Where_Dynamic_StringQuoted()
     {
