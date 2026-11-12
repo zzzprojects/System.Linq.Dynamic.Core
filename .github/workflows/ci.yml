@@ -8,7 +8,7 @@ on:
         description: 'Enable SonarCloud analysis'
         type: boolean
         required: false
-        default: true
+        default: false
   pull_request:
     types: [opened, edited]
 
