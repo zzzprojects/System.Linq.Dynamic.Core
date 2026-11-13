@@ -38,6 +38,14 @@ jobs:
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -p:buildType=azure-pipelines-ci
 
+    - name: Pack projects
+      shell: pwsh
+      run: |
+        Get-ChildItem ./src -Recurse -Filter *.csproj |
+        ForEach-Object {
+          dotnet pack $_.FullName -c Release --no-build -o ./packages
+        }
+
   build_and_test_Linux:
     name: "Linux: Build and Tests"
     runs-on: ubuntu-latest
