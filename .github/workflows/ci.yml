@@ -38,6 +38,25 @@ jobs:
       run: |
         dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release
 
+    - name: Install UWP tools and Windows SDK
+      shell: pwsh
+      run: |
+        $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $vsPath = & $vswhere -latest -products * -property installationPath
+        if (-not $vsPath) { throw "Visual Studio not found" }
+
+        $installer = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\setup.exe"
+        $args = @(
+          'modify', '--installPath', "`"$vsPath`"",
+          '--add', 'Microsoft.VisualStudio.ComponentGroup.UWP.Support',
+          '--add', 'Microsoft.VisualStudio.Component.Windows10SDK.19041',
+          '--quiet', '--norestart'
+        )
+        $process = Start-Process -FilePath $installer -ArgumentList $args -Wait -PassThru
+        if ($process.ExitCode -ne 0) {
+          throw "Visual Studio installer failed: $($process.ExitCode)"
+        }
+
     - name: Build and pack projects
       shell: pwsh
       run: |
@@ -62,7 +81,7 @@ jobs:
   
     - uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.x'
+       dotnet-version: '10.0.x'
 
     - uses: actions/setup-java@v4
       with:
