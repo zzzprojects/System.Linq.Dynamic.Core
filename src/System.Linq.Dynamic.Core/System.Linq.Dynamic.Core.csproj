@@ -26,9 +26,9 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(IsRunningOnGitHubActions)' == 'true' ">
+    <!--<PropertyGroup Condition=" '$(IsRunningOnGitHubActions)' == 'true' ">
         <TargetFrameworks>net40;net45;net46;netstandard1.3;netstandard2.0;netcoreapp2.1;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
-    </PropertyGroup>
+    </PropertyGroup>-->
 
     <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
         <DefineConstants>$(DefineConstants);NETSTANDARD</DefineConstants>
