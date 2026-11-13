@@ -22,21 +22,32 @@ jobs:
       UseInMemory: 'true'
 
     steps:  
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         fetch-depth: 0
 
-    - uses: actions/setup-dotnet@v4
+    - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
       with:
-        dotnet-version: '10.0.x'
+        dotnet-version: '11.0.x'
               
     - name: Build
       run: |
-        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Release
 
     - name: Run Tests EFCore net10.0
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -p:buildType=azure-pipelines-ci
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release
+
+    - name: Build and pack projects
+      shell: pwsh
+      run: |
+        Get-ChildItem ./src -Recurse -Filter *.csproj |
+        ForEach-Object {
+          dotnet build $_.FullName -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet pack $_.FullName -c Release --no-build -o ./packages
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        }
 
   build_and_test_Linux:
     name: "Linux: Build and Tests"
@@ -47,13 +58,13 @@ jobs:
       BranchName: ${{ github.head_ref || github.ref_name }}
 
     steps:  
-    - uses: actions/checkout@v4
-  
-    - uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-    - uses: actions/setup-java@v4
+    - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+      with:
+       dotnet-version: '10.0.x'
+
+    - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
       with:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
@@ -81,23 +92,23 @@ jobs:
 
     - name: Build
       run: |
-        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Debug -p:buildType=azure-pipelines-ci
-        
+        dotnet build ./src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj -c Debug
+
     - name: Run Tests EFCore .NET 10 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-efcore.xml
-        
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj --configuration Debug' -f xml -o dynamic-coverage-efcore.xml
+
     - name: Run Tests EF .NET 10 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Debug --framework net10.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-ef.xml
-        
+        dotnet-coverage collect 'dotnet test ./test/EntityFramework.DynamicLinq.Tests/EntityFramework.DynamicLinq.Tests.csproj --configuration Debug --framework net10.0' -f xml -o dynamic-coverage-ef.xml
+
     - name: Run Tests Newtonsoft.Json .NET 10 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj --configuration Debug --framework net10.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-newtonsoftjson.xml
-       
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.NewtonsoftJson.Tests/System.Linq.Dynamic.Core.NewtonsoftJson.Tests.csproj --configuration Debug --framework net10.0' -f xml -o dynamic-coverage-newtonsoftjson.xml
+
     - name: Run Tests System.Text.Json .NET 10 (with Coverage)
       run: |
-        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj --configuration Debug --framework net10.0 -p:buildType=azure-pipelines-ci' -f xml -o dynamic-coverage-systemtextjson.xml
+        dotnet-coverage collect 'dotnet test ./test/System.Linq.Dynamic.Core.SystemTextJson.Tests/System.Linq.Dynamic.Core.SystemTextJson.Tests.csproj --configuration Debug --framework net10.0' -f xml -o dynamic-coverage-systemtextjson.xml
 
     - name: End analysis on SonarCloud
       if: ${{ steps.secret-check.outputs.run_analysis == 'true' && (github.event_name != 'workflow_dispatch' || inputs.SonarScanner) }}
