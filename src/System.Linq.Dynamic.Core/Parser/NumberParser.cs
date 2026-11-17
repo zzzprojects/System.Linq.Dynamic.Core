@@ -206,7 +206,7 @@ public class NumberParser
     {
         try
         {
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
             switch (Type.GetTypeCode(TypeHelper.GetNonNullableType(type)))
             {
                 case TypeCode.SByte:

@@ -11,7 +11,7 @@ internal class DefaultAssemblyHelper(ParsingConfig parsingConfig) : IAssemblyHel
 
     public Assembly[] GetAssemblies()
     {
-#if UAP10_0 || NETSTANDARD || WPSL
+#if NETSTANDARD
         throw new NotSupportedException();
 #elif NET35
         return AppDomain.CurrentDomain.GetAssemblies();

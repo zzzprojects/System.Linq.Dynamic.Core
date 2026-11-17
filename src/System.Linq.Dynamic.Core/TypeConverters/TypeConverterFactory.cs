@@ -37,21 +37,6 @@ internal class TypeConverterFactory : ITypeConverterFactory
             return typeConverter;
         }
 
-#if !SILVERLIGHT
         return TypeDescriptor.GetConverter(type);
-#else
-        var attributes = type.GetCustomAttributes(typeof(TypeConverterAttribute), false);
-
-        if (attributes.Length != 1)
-            return new TypeConverter();
-
-        var converterAttribute = (TypeConverterAttribute)attributes[0];
-        var converterType = Type.GetType(converterAttribute.ConverterTypeName);
-
-        if (converterType == null)
-            return new TypeConverter();
-
-        return (TypeConverter) Activator.CreateInstance(converterType);
-#endif
     }
 }

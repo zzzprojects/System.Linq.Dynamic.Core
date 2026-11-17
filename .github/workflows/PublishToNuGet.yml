@@ -25,6 +25,7 @@ jobs:
         Get-ChildItem ./src -Recurse -Filter *.csproj |
         ForEach-Object {
           dotnet build $_.FullName -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         }
 
     - name: Pack projects
@@ -33,6 +34,7 @@ jobs:
         Get-ChildItem ./src -Recurse -Filter *.csproj |
         ForEach-Object {
           dotnet pack $_.FullName -c Release --no-build -o ./packages
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         }
 
     - name: NuGet login (OIDC → temp API key)

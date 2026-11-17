@@ -1,4 +1,4 @@
-﻿#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+﻿#if !NET35 && !NETSTANDARD1_3
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

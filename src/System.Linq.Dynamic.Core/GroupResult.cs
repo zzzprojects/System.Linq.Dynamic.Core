@@ -12,7 +12,7 @@ namespace System.Linq.Dynamic.Core
         /// <summary>
         /// The key value of the group.
         /// </summary>
-#if NET35 || SILVERLIGHT
+#if NET35
         public object Key { get; internal set; } = null!;
 #else
         public dynamic Key { get; internal set; } = null!;

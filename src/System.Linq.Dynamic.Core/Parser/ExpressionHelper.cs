@@ -353,7 +353,7 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression ConvertToExpandoObjectAndCreateDynamicExpression(Expression expression, Type type, string propertyName)
     {
-#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+#if !NET35 && !NETSTANDARD1_3
         return Expression.Dynamic(new DynamicGetMemberBinder(propertyName, _parsingConfig), type, expression);
 #else
         throw new NotSupportedException(Res.DynamicExpandoObjectIsNotSupported);

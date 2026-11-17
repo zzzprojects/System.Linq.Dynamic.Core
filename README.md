@@ -101,8 +101,7 @@ Or provide a list of additional types in the [DefaultDynamicLinqCustomTypeProvid
 The following frameworks are supported:
 - net35, net40, net45, net46 and up
 - netstandard1.3, netstandard2.0 and netstandard2.1
-- netcoreapp3.1, net5.0, net6.0, net7.0, net8.0 and net9.0
-- uap10.0
+- netcoreapp3.1, net5.0, net6.0, net7.0, net8.0, net9.0 and .net10.0
 
 ### Fork details
 This fork takes the basic library to a new level. Also adds unit tests to help ensure that it works properly.

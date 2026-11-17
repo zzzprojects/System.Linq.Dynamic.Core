@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-#if !(SILVERLIGHT || WINDOWS_APP ||  UAP10_0 || NETSTANDARD || PORTABLE || WPSL)
+#if !(WINDOWS_APP || NETSTANDARD || PORTABLE)
 using System.Runtime.Serialization;
 #endif
 
@@ -9,7 +9,7 @@ namespace System.Linq.Dynamic.Core.Exceptions;
 /// <summary>
 /// Represents errors that occur while parsing dynamic linq string expressions.
 /// </summary>
-#if !(SILVERLIGHT || UAP10_0 || NETSTANDARD || PORTABLE || WPSL || NETSTANDARD2_0)
+#if !(NETSTANDARD || PORTABLE || NETSTANDARD2_0)
 [Serializable]
 #endif
 public sealed class ParseException : Exception
@@ -63,7 +63,7 @@ public sealed class ParseException : Exception
         return text;
     }
 
-#if !(SILVERLIGHT || UAP10_0 || NETSTANDARD || PORTABLE || WPSL || NETSTANDARD2_0)
+#if !(NETSTANDARD || PORTABLE || NETSTANDARD2_0)
     private ParseException(SerializationInfo info, StreamingContext context) : base(info, context)
     {
         Position = (int)info.GetValue("position", typeof(int))!;
