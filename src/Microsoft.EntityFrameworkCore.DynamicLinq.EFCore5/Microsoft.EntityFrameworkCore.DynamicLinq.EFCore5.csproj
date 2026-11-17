@@ -25,10 +25,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
-    </PropertyGroup>
-
     <ItemGroup>
         <Compile Include="..\System.Linq.Dynamic.Core\Res.cs" />
         <Compile Include="..\System.Linq.Dynamic.Core\Compatibility\*.cs" />

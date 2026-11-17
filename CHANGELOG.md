@@ -722,7 +722,7 @@
 
 # 1.0.7.13 (29 November 2017)
 - [#117](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/117) -  New features contributed by [jogibear9988](https://github.com/jogibear9988)
-- [#123](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/123) - appveyor contributed by [StefH](https://github.com/StefH)
+- [#123](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/123) - CI configuration contributed by [StefH](https://github.com/StefH)
 - [#114](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/114) - Dynamic Linq Query not usable with ORM Provider [bug]
 - [#120](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/120) - Error with parsing
 - [#122](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/122) - Join with int list
@@ -755,7 +755,7 @@
 - [#85](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/85) - [Fix] Guid? == null comparison contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#86](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/86) - [Fix] Fixed null in Parameter and added functionality Binary And and Or with different Types contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#92](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/92) - [Feature] Adds support for decimal qualifiers. Resolves #91 contributed by [pferraris](https://github.com/pferraris)
-- [#93](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/93) - [Bug] Fix uap10 build in appveyor contributed by [StefH](https://github.com/StefH)
+- [#93](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/93) - [Bug] Fix uap10 build in CI contributed by [StefH](https://github.com/StefH)
 - [#99](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/99) - Added DynamicEnumerable Async extension methods contributed by [StefH](https://github.com/StefH)
 - [#100](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/100) - Feature: NullPropagation operator contributed by [StefH](https://github.com/StefH)
 - [#103](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/103) - support group by with 2 parameters, add tolist contributed by [jogibear9988](https://github.com/jogibear9988)
