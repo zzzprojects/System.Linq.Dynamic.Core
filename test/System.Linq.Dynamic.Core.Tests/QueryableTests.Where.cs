@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Tests.Helpers;
@@ -160,6 +161,109 @@ public partial class QueryableTests
 
         Action act = () => qry.Where("UserName == \"x\"", ParsingConfig.Default);
         act.Should().Throw<ArgumentException>().WithMessage("The ParsingConfig should be provided as first argument to this method.*");
+    }
+
+    public class DictionaryValidationService
+    {
+        public bool Danger() => true;
+    }
+
+    public class CustomDictionary : Dictionary<string, string>, IDictionary<string, string>
+    {
+        public int CallCount { get; private set; }
+
+        public bool Danger()
+        {
+            CallCount++;
+            return true;
+        }
+
+        public void Reset(string key)
+        {
+            CallCount++;
+            this[key] = "reset";
+        }
+
+        public new bool ContainsKey(string key)
+        {
+            CallCount++;
+            this[key] = "changed";
+            return true;
+        }
+
+        public bool ContainsValue(int value)
+        {
+            CallCount++;
+            return true;
+        }
+
+        public new bool TryGetValue(string key, out string value)
+        {
+            CallCount++;
+            value = "changed";
+            return true;
+        }
+    }
+
+    public class DictionaryValidationItem
+    {
+        public CustomDictionary Custom { get; set; } = new() { { "k", "v" } };
+
+        public string Name { get; set; } = null!;
+
+        public DictionaryValidationService S { get; set; } = new();
+
+        public Dictionary<string, string> Meta { get; set; } = new() { { "k", "v" } };
+
+        public ConcurrentDictionary<string, string> C { get; set; } = new();
+    }
+
+    [Theory]
+    [InlineData("S.Danger()")]
+    [InlineData("Meta.TryAdd(\"z\",\"y\")")]
+    [InlineData("Meta.EnsureCapacity(100000000) > 0")]
+    [InlineData("C.TryAdd(\"x\",\"y\")")]
+    [InlineData("C.TryUpdate(\"x\",\"z\",\"y\")")]
+    [InlineData("Custom.Danger()")]
+    [InlineData("Custom.Reset(\"k\")")]
+    [InlineData("Custom.ContainsKey(\"k\")")]
+    [InlineData("Custom.ContainsValue(1)")]
+    [InlineData("Custom.TryGetValue(\"k\", out _)")]
+    public void Where_Dynamic_DictionaryMethods_ShouldThrowParseException_WhenMethodIsNotAccessible(string query)
+    {
+        // Arrange
+        var items = new List<DictionaryValidationItem>
+        {
+            new() { Name = "a" },
+            new() { Name = "b" }
+        }.AsQueryable();
+
+        // Act
+        Action act = () => items.Where(query).ToList();
+
+        // Assert
+        act.Should().Throw<ParseException>().WithMessage("Method '*' on type '*' is not accessible*");
+        items.Select(i => i.Meta.Count).Should().OnlyContain(count => count == 1);
+        items.Select(i => i.C.Count).Should().OnlyContain(count => count == 0);
+        items.Select(i => i.Custom.CallCount).Should().OnlyContain(callCount => callCount == 0);
+        items.Select(i => i.Custom["k"]).Should().OnlyContain(value => value == "v");
+    }
+
+    [Theory]
+    [InlineData("Meta.ContainsKey(\"k\")")]
+    [InlineData("Meta.ContainsValue(\"v\")")]
+    [InlineData("C.ContainsKey(\"k\")")]
+    public void Where_Dynamic_DictionaryMethods_AllowsStandardReadOperations(string query)
+    {
+        // Arrange
+        var item = new DictionaryValidationItem();
+        item.C.TryAdd("k", "v");
+        var items = new[] { item }.AsQueryable();
+
+        // Act & Assert
+        Assert.Same(item, Assert.Single(items.Where(query).ToList()));
+        Assert.Equal(new KeyValuePair<string, string>("k", "v"), Assert.Single(item.Meta));
+        Assert.Equal(new KeyValuePair<string, string>("k", "v"), Assert.Single(item.C));
     }
 
     [Fact]
