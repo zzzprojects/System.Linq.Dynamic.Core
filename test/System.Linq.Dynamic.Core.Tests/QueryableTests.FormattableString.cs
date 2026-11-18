@@ -7,7 +7,7 @@ using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests
 {
-#if NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER || UAP10_0
+#if NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER
     public partial class QueryableTests
     {
 

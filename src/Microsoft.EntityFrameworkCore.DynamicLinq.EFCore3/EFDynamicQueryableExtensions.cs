@@ -956,7 +956,7 @@ namespace EntityFramework.DynamicLinq
         #region Private Helpers
         private static readonly MethodInfo _executeAsyncMethod =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
-#if NETSTANDARD || UAP10_0
+#if NETSTANDARD
                 .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
                 .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }));
 #else
@@ -1007,7 +1007,7 @@ namespace EntityFramework.DynamicLinq
 
         private static readonly MethodInfo _executeAsyncMethodWithExpression =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
-#if NETSTANDARD || UAP10_0
+#if NETSTANDARD
                 .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
                 .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }));
 #else
@@ -1102,13 +1102,11 @@ namespace EntityFramework.DynamicLinq
             {
                 var optimized = ExtensibilityPoint.QueryOptimizer(expression);
 
-#if !(SILVERLIGHT)
                 if (optimized != expression)
                 {
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
                 }
-#endif
                 return optimized;
             }
 

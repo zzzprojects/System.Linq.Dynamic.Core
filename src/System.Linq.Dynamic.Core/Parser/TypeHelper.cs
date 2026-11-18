@@ -71,7 +71,7 @@ internal static class TypeHelper
 
     public static bool IsCompatibleWith(Type source, Type target)
     {
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
         if (source == target)
         {
             return true;
@@ -386,7 +386,7 @@ internal static class TypeHelper
     {
         type = GetNonNullableType(type);
 
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
         if (type.GetTypeInfo().IsEnum)
         {
             return 0;

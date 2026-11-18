@@ -1,4 +1,4 @@
-﻿#if !UAP10_0 && !NET35
+﻿#if !NET35
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Reflection;

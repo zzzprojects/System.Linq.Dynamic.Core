@@ -10,9 +10,7 @@ using JetBrains.Annotations;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Util;
 
-#if !(SILVERLIGHT)
 using System.Diagnostics;
-#endif
 
 namespace System.Linq.Dynamic.Core
 {
@@ -24,9 +22,7 @@ namespace System.Linq.Dynamic.Core
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public static class DynamicQueryableExtensions
     {
-#if !SILVERLIGHT
         private static readonly TraceSource TraceSource = new(nameof(DynamicQueryableExtensions));
-#endif
 
         private static Expression OptimizeExpression(Expression expression)
         {
@@ -34,13 +30,11 @@ namespace System.Linq.Dynamic.Core
             {
                 var optimized = ExtensibilityPoint.QueryOptimizer(expression);
 
-#if !SILVERLIGHT
                 if (optimized != expression)
                 {
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
                 }
-#endif
                 return optimized;
             }
 
@@ -1628,12 +1622,8 @@ namespace System.Linq.Dynamic.Core
                     }
                     else
                     {
-#if !UAP10_0
                         var newType = DynamicClassFactory.CreateGenericComparerType(comparerGenericType, comparer.GetType());
                         constant = Expression.Constant(Activator.CreateInstance(newType), comparerGenericType);
-#else
-                        constant = Expression.Constant(comparer, comparerGenericType);
-#endif
                     }
 
                     queryExpr = Expression.Call(

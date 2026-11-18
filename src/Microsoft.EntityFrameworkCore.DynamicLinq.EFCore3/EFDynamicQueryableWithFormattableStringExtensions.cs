@@ -23,7 +23,7 @@ namespace Microsoft.EntityFrameworkCore.DynamicLinq
 namespace EntityFramework.DynamicLinq
 #endif
 {
-#if EFCORE || (NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER || UAP10_0)
+#if EFCORE || NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER
     public static class EFDynamicQueryableWithFormattableStringExtensions
     {
 

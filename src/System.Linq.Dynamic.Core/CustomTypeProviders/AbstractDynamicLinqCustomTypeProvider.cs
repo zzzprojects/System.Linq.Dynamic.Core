@@ -73,7 +73,7 @@ public abstract class AbstractDynamicLinqCustomTypeProvider
         return firstMatchingFullname == null ? null : types.FirstOrDefault(t => t.FullName == firstMatchingFullname);
     }
 
-#if (UAP10_0 || NETSTANDARD)
+#if NETSTANDARD
     /// <summary>
     /// Gets the assembly types annotated with <see cref="DynamicLinqTypeAttribute"/> in an Exception friendly way.
     /// </summary>

@@ -1645,32 +1645,7 @@ public class ExpressionParser
 
         if (type == null)
         {
-#if UAP10_0
-            type = typeof(DynamicClass);
-            Type typeForKeyValuePair = typeof(KeyValuePair<string, object>);
-
-            ConstructorInfo constructorForKeyValuePair = typeForKeyValuePair.GetTypeInfo().DeclaredConstructors.First();
-
-            var arrayIndexParams = new List<Expression>();
-            for (int i = 0; i < expressions.Count; i++)
-            {
-                // Just convert the expression always to an object expression.
-                UnaryExpression boxingExpression = Expression.Convert(expressions[i], typeof(object));
-                NewExpression parameter = Expression.New(constructorForKeyValuePair, (Expression)Expression.Constant(properties[i].Name), boxingExpression);
-
-                arrayIndexParams.Add(parameter);
-            }
-
-            // Create an expression tree that represents creating and initializing a one-dimensional array of type KeyValuePair<string, object>.
-            NewArrayExpression newArrayExpression = Expression.NewArrayInit(typeof(KeyValuePair<string, object>), arrayIndexParams);
-
-            // Get the "public DynamicClass(KeyValuePair<string, object>[])" constructor
-            ConstructorInfo constructor = type.GetTypeInfo().DeclaredConstructors.First();
-
-            return Expression.New(constructor, newArrayExpression);
-#else
             type = DynamicClassFactory.CreateType(properties, _createParameterCtor);
-#endif
         }
 
         // Option 1. Try to bind via properties (TODO : investigate if this code block is 100% correct and is needed) 
@@ -2056,7 +2031,7 @@ public class ExpressionParser
             return Expression.Constant(enumValue);
         }
 
-#if UAP10_0 || NETSTANDARD1_3
+#if NETSTANDARD1_3
         if (type == typeof(DynamicClass))
         {
             return Expression.MakeIndex(expression!, typeof(DynamicClass).GetProperty(DynamicClass.IndexerName), [Expression.Constant(id)]);
@@ -2105,7 +2080,7 @@ public class ExpressionParser
             }
         }
 
-#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+#if !NET35 && !NETSTANDARD1_3
         if (type == typeof(object))
         {
             // The member is a dynamic or ExpandoObject, so convert this
@@ -2616,14 +2591,6 @@ public class ExpressionParser
             return true;
         }
 
-#if NETFX_CORE
-        var indexExpression = expression as IndexExpression;
-        if (indexExpression != null && indexExpression.Indexer.DeclaringType == typeof(DynamicObjectClass))
-        {
-            memberName = ((ConstantExpression)indexExpression.Arguments.First()).Value as string;
-            return true;
-        }
-#endif
         memberName = null;
         return false;
     }
@@ -2730,7 +2697,7 @@ public class ExpressionParser
 
     private MemberInfo? FindPropertyOrField(Type type, string memberName, bool staticAccess)
     {
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
         var extraBindingFlag = _parsingConfig.PrioritizePropertyOrFieldOverTheType && staticAccess ? BindingFlags.Static : BindingFlags.Instance | BindingFlags.Static;
         var bindingFlags = BindingFlags.Public | BindingFlags.DeclaredOnly | extraBindingFlag;
         foreach (Type t in TypeHelper.GetSelfAndBaseTypes(type))

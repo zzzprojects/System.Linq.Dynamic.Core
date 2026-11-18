@@ -19,7 +19,7 @@ internal static class Res
     public const string DotExpected = "'.' expected";
     public const string DotOrOpenParenExpected = "'.' or '(' expected";
     public const string DotOrOpenParenOrStringLiteralExpected = "'.' or '(' or string literal expected";
-    public const string DynamicExpandoObjectIsNotSupported = "Dynamic / ExpandoObject is not supported in .NET 3.5, UAP and .NETStandard 1.3";
+    public const string DynamicExpandoObjectIsNotSupported = "Dynamic / ExpandoObject is not supported in .NET 3.5 and .NETStandard 1.3";
     public const string DuplicateIdentifier = "The identifier '{0}' was defined more than once";
     public const string EnumTypeNotFound = "Enum type '{0}' not found";
     public const string EnumValueExpected = "Enum value expected";

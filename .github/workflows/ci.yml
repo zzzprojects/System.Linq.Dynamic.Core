@@ -36,7 +36,7 @@ jobs:
 
     - name: Run Tests EFCore net10.0
       run: |
-        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release
+        dotnet test ./test/System.Linq.Dynamic.Core.Tests/System.Linq.Dynamic.Core.Tests.csproj -c Release -p:CollectCoverage=false
 
     - name: Build and pack projects
       shell: pwsh

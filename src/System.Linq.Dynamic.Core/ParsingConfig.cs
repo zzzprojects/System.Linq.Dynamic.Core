@@ -58,7 +58,7 @@ public class ParsingConfig
     {
         get
         {
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
             // Only use DefaultDynamicLinqCustomTypeProvider for full .NET Framework and .NET Core App 2.x and higher.
             return _customTypeProvider ??= new DefaultDynamicLinqCustomTypeProvider(this);
 #else

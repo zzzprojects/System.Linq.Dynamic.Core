@@ -1,5 +1,4 @@
-﻿#if !UAP10_0
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +28,7 @@ public static class DynamicClassFactory
     private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(Type.EmptyTypes)!;
 
     private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(Type.EmptyTypes)!;
-#if UAP10_0 || NETSTANDARD
+#if NETSTANDARD
     private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(string)])!;
     private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(object)])!;
 #else
@@ -551,4 +550,3 @@ public static class DynamicClassFactory
         }
     }
 }
-#endif

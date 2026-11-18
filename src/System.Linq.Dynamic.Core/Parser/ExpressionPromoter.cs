@@ -60,7 +60,7 @@ public class ExpressionPromoter : IExpressionPromoter
                     Type target = TypeHelper.GetNonNullableType(type);
                     object? value = null;
 
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
                     switch (Type.GetTypeCode(ce.Type))
                     {
                         case TypeCode.Int32:
