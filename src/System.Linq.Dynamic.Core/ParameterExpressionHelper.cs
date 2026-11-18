@@ -22,6 +22,6 @@ internal static class ParameterExpressionHelper
     {
         const int wordLength = 16;
         const int diff = 'A' - '0';
-        return string.Concat(Guid.NewGuid().ToString(@"N").Select(c => (char)(c + diff)).Take(wordLength)).ToLower();
+        return string.Concat(Guid.NewGuid().ToString(@"N").Select(c => (char)(c + diff)).Take(wordLength)).ToLowerInvariant();
     }
 }
