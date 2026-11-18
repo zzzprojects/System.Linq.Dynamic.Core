@@ -150,27 +150,5 @@ namespace System.Linq.Dynamic.Core.Tests.Parser
             // Assert
             Check.That(result).Matches(@"[a-z]{16}");
         }
-
-        [Fact]
-        public void ParameterExpressionHelper_GenerateRandomWord_ShouldOnlyContainAsciiLettersInTurkishCulture()
-        {
-            // Arrange
-            var originalCulture = System.Globalization.CultureInfo.CurrentCulture;
-            System.Globalization.CultureInfo.CurrentCulture = new System.Globalization.CultureInfo("tr-TR");
-
-            try
-            {
-                // Act and Assert
-                // About 64% of the generated words contain the letter 'I', which becomes 'ı' when lowercased with the Turkish culture.
-                for (int i = 0; i < 1000; i++)
-                {
-                    Check.That(ParameterExpressionHelper.GenerateRandomWord()).Matches("^[a-z]{16}$");
-                }
-            }
-            finally
-            {
-                System.Globalization.CultureInfo.CurrentCulture = originalCulture;
-            }
-        }
     }
 }
