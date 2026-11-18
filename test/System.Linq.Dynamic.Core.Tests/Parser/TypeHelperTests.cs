@@ -45,7 +45,7 @@ public class TypeHelperTests
     }
 
     [Fact]
-    public void TypeHelper_IsCompatibleWith_True()
+    public void TypeHelper_IsCompatibleWith_Int_And_Long_Returns_True()
     {
         // Assign + Act
         var result = TypeHelper.IsCompatibleWith(typeof(int), typeof(long));
@@ -54,8 +54,52 @@ public class TypeHelperTests
         Check.That(result).IsTrue();
     }
 
+    [Theory]
+
+    // True (enum underlying Int32 compatible targets)
+    [InlineData(typeof(DayOfWeek), true)]
+    [InlineData(typeof(DayOfWeek?), true)]
+    [InlineData(typeof(int), true)]
+    [InlineData(typeof(int?), true)]
+    [InlineData(typeof(long), true)]
+    [InlineData(typeof(long?), true)]
+    [InlineData(typeof(float), true)]
+    [InlineData(typeof(float?), true)]
+    [InlineData(typeof(double), true)]
+    [InlineData(typeof(double?), true)]
+    [InlineData(typeof(decimal), true)]
+    [InlineData(typeof(decimal?), true)]
+    [InlineData(typeof(object), true)]
+
+    // False (not compatible with enum's Int32 widening rules or reference types)
+    [InlineData(typeof(char), false)]
+    [InlineData(typeof(char?), false)]
+    [InlineData(typeof(short), false)]
+    [InlineData(typeof(short?), false)]
+    [InlineData(typeof(byte), false)]
+    [InlineData(typeof(byte?), false)]
+    [InlineData(typeof(sbyte), false)]
+    [InlineData(typeof(sbyte?), false)]
+    [InlineData(typeof(ushort), false)]
+    [InlineData(typeof(ushort?), false)]
+    [InlineData(typeof(uint), false)]
+    [InlineData(typeof(uint?), false)]
+    [InlineData(typeof(ulong), false)]
+    [InlineData(typeof(ulong?), false)]
+    [InlineData(typeof(bool), false)]
+    [InlineData(typeof(bool?), false)]
+    [InlineData(typeof(string), false)]
+    public void TypeHelper_IsCompatibleWith_Enum(Type targetType, bool expected)
+    {
+        // Assign + Act
+        var result = TypeHelper.IsCompatibleWith(typeof(DayOfWeek), targetType);
+
+        // Assert
+        result.Should().Be(expected);
+    }
+
     [Fact]
-    public void TypeHelper_IsCompatibleWith_False()
+    public void TypeHelper_IsCompatibleWith_Long_And_Int_Returns_False()
     {
         // Assign + Act
         var result = TypeHelper.IsCompatibleWith(typeof(long), typeof(int));

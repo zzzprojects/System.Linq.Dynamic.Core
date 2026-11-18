@@ -23,7 +23,7 @@ namespace Microsoft.EntityFrameworkCore.DynamicLinq
 namespace EntityFramework.DynamicLinq
 #endif
 {
-#if EFCORE || (NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER || UAP10_0)
+#if EFCORE || NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER
     public static class EFDynamicQueryableWithFormattableStringExtensions
     {
 
@@ -43,7 +43,7 @@ namespace EntityFramework.DynamicLinq
         }
 
         [PublicAPI]
-        public static Task<bool> AllInterpolatedAsync([NotNull] this IQueryable source, [NotNull] FormattableString predicate, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<bool> AllInterpolatedAsync([NotNull] this IQueryable source, [NotNull] FormattableString predicate, CancellationToken cancellationToken = default)
         {
             string predicateStr = ParseFormattableString(predicate, out object[] args);
             return EntityFrameworkDynamicQueryableExtensions.AllAsync(source, predicateStr, cancellationToken, args);
@@ -57,7 +57,7 @@ namespace EntityFramework.DynamicLinq
         }
 
         [PublicAPI]
-        public static Task<bool> AnyInterpolatedAsync([NotNull] this IQueryable source, [NotNull] FormattableString predicate, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<bool> AnyInterpolatedAsync([NotNull] this IQueryable source, [NotNull] FormattableString predicate, CancellationToken cancellationToken = default)
         {
             string predicateStr = ParseFormattableString(predicate, out object[] args);
             return EntityFrameworkDynamicQueryableExtensions.AnyAsync(source, predicateStr, cancellationToken, args);
@@ -72,7 +72,7 @@ namespace EntityFramework.DynamicLinq
 
 
         [PublicAPI]
-        public static Task<double> AverageInterpolatedAsync([NotNull] this IQueryable source, [NotNull] FormattableString selector, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<double> AverageInterpolatedAsync([NotNull] this IQueryable source, [NotNull] FormattableString selector, CancellationToken cancellationToken = default)
         {
             string selectorStr = ParseFormattableString(selector, out object[] args);
             return EntityFrameworkDynamicQueryableExtensions.AverageAsync(source, selectorStr, cancellationToken, args);

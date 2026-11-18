@@ -1,5 +1,4 @@
-﻿#if !UAP10_0
-using System.Reflection;
+﻿using System.Reflection;
 using System.Reflection.Emit;
 
 namespace System.Linq.Dynamic.Core
@@ -14,7 +13,7 @@ namespace System.Linq.Dynamic.Core
         /// <returns>An object that represents the new assembly.</returns>
         public static AssemblyBuilder DefineDynamicAssembly(AssemblyName name, AssemblyBuilderAccess access)
         {
-#if (NET35 || NET40 || SILVERLIGHT)
+#if NET35 || NET40
             return AppDomain.CurrentDomain.DefineDynamicAssembly(name, access);
 #else
             return AssemblyBuilder.DefineDynamicAssembly(name, access);
@@ -22,4 +21,3 @@ namespace System.Linq.Dynamic.Core
         }
     }
 }
-#endif

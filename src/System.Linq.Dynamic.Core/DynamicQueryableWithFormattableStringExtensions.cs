@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace System.Linq.Dynamic.Core;
 
-#if NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER  || NETSTANDARD1_3_OR_GREATER || UAP10_0
+#if NET46_OR_GREATER || NET5_0_OR_GREATER || NETCOREAPP2_1_OR_GREATER || NETSTANDARD1_3_OR_GREATER
 /// <summary>
 /// Provides a set of static extension methods for querying data structures that implement <see cref="IQueryable"/>.
 /// It supports a FormattableString string as predicate.

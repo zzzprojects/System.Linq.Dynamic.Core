@@ -11,6 +11,8 @@ namespace System.Linq.Dynamic.Core.Parser;
 
 internal class ExpressionHelper : IExpressionHelper
 {
+    private static readonly MethodInfo _containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
+    private static readonly Expression _nullExpression = Expression.Constant(null);
     private readonly IConstantExpressionWrapper _constantExpressionWrapper = new ConstantExpressionWrapper();
     private readonly ParsingConfig _parsingConfig;
 
@@ -128,6 +130,18 @@ internal class ExpressionHelper : IExpressionHelper
         return GenerateStaticMethodCall("Concat", left, right);
     }
 
+    public Expression GenerateStringContains(Expression left, Expression right)
+    {
+        Expression searchValue = right;
+
+        if (right.Type == typeof(char) && right is ConstantExpression { Value: char character })
+        {
+            searchValue = Expression.Constant(character.ToString(), typeof(string));
+        }
+
+        return Expression.Call(left, _containsMethod, searchValue);
+    }
+
     public Expression GenerateSubtract(Expression left, Expression right)
     {
         return Expression.Subtract(left, right);
@@ -153,6 +167,37 @@ internal class ExpressionHelper : IExpressionHelper
         WrapConstantExpressions(ref left, ref right);
 
         return Expression.NotEqual(left, right);
+    }
+
+    public Expression GenerateBinaryOrElseTree(IList<Expression> expressions)
+    {
+        Check.NotNullOrEmpty(expressions);
+
+        if (expressions.Count == 1)
+        {
+            return expressions[0];
+        }
+
+        var currentLevel = new List<Expression>(expressions);
+        while (currentLevel.Count > 1)
+        {
+            var nextLevel = new List<Expression>((currentLevel.Count + 1) / 2);
+            for (var i = 0; i < currentLevel.Count; i += 2)
+            {
+                if (i + 1 < currentLevel.Count)
+                {
+                    nextLevel.Add(Expression.OrElse(currentLevel[i], currentLevel[i + 1]));
+                }
+                else
+                {
+                    nextLevel.Add(currentLevel[i]);
+                }
+            }
+
+            currentLevel = nextLevel;
+        }
+
+        return currentLevel[0];
     }
 
     public Expression GenerateGreaterThan(Expression left, Expression right)
@@ -308,7 +353,7 @@ internal class ExpressionHelper : IExpressionHelper
 
     public Expression ConvertToExpandoObjectAndCreateDynamicExpression(Expression expression, Type type, string propertyName)
     {
-#if !NET35 && !UAP10_0 && !NETSTANDARD1_3
+#if !NET35 && !NETSTANDARD1_3
         return Expression.Dynamic(new DynamicGetMemberBinder(propertyName, _parsingConfig), type, expression);
 #else
         throw new NotSupportedException(Res.DynamicExpandoObjectIsNotSupported);
@@ -340,8 +385,15 @@ internal class ExpressionHelper : IExpressionHelper
         // Convert all expressions into '!= null' expressions (only if the type can be null)
         var binaryExpressions = expressions
             .Where(expression => TypeHelper.TypeCanBeNull(expression.Type))
-            .Select(expression => Expression.NotEqual(expression, Expression.Constant(null)))
+            .Select(expression => Expression.NotEqual(expression, _nullExpression))
             .ToArray();
+
+        // If no nullable expressions were found, return false (nothing to null-check)
+        if (binaryExpressions.Length == 0)
+        {
+            generatedExpression = sourceExpression;
+            return false;
+        }
 
         // Convert all binary expressions into `AndAlso(...)`
         generatedExpression = binaryExpressions[0];
@@ -361,7 +413,12 @@ internal class ExpressionHelper : IExpressionHelper
     public Expression GenerateDefaultExpression(Type type)
     {
 #if NET35
-        return Expression.Constant(Activator.CreateInstance(type));
+        if (type.IsValueType)
+        {
+            return Expression.Constant(Activator.CreateInstance(type), type);
+        }
+
+        return Expression.Constant(null, type);
 #else
         return Expression.Default(type);
 #endif
@@ -388,11 +445,49 @@ internal class ExpressionHelper : IExpressionHelper
 
         if (left.Type == typeof(object))
         {
-            left = Expression.Convert(left, right.Type);
+            if (TryGetAsIndexerExpression(left, out var ce))
+            {
+                var rightTypeAsNullableType = TypeHelper.GetNullableType(right.Type);
+
+                right = Expression.Convert(right, rightTypeAsNullableType);
+
+                left = Expression.Condition(
+                    ce.Test,
+                    Expression.Convert(ce.IfTrue, rightTypeAsNullableType),
+                    Expression.Convert(_nullExpression, rightTypeAsNullableType)
+                );
+
+                return true;
+            }
+
+            left = Expression.Condition(
+                Expression.Equal(left, _nullExpression),
+                GenerateDefaultExpression(right.Type),
+                Expression.Convert(left, right.Type)
+            );
         }
         else if (right.Type == typeof(object))
         {
-            right = Expression.Convert(right, left.Type);
+            if (TryGetAsIndexerExpression(right, out var ce))
+            {
+                var leftTypeAsNullableType = TypeHelper.GetNullableType(left.Type);
+
+                left = Expression.Convert(left, leftTypeAsNullableType);
+
+                right = Expression.Condition(
+                    ce.Test,
+                    Expression.Convert(ce.IfTrue, leftTypeAsNullableType),
+                    Expression.Convert(_nullExpression, leftTypeAsNullableType)
+                );
+
+                return true;
+            }
+
+            right = Expression.Condition(
+                Expression.Equal(right, _nullExpression),
+                GenerateDefaultExpression(left.Type),
+                Expression.Convert(right, left.Type)
+            );
         }
 
         return true;
@@ -496,7 +591,7 @@ internal class ExpressionHelper : IExpressionHelper
             right = Expression.Convert(right, parameterTypeRight);
         }
 
-        return Expression.Call(null, methodInfo, [left, right]);
+        return Expression.Call(null, methodInfo, left, right);
     }
 
     private static bool TryGetStaticMethod(string methodName, Expression left, Expression right, [NotNullWhen(true)] out MethodInfo? methodInfo)
@@ -532,5 +627,18 @@ internal class ExpressionHelper : IExpressionHelper
         }
 
         return [];
+    }
+
+    private static bool TryGetAsIndexerExpression(Expression expression, [NotNullWhen(true)] out ConditionalExpression? indexerExpresion)
+    {
+        indexerExpresion = expression as ConditionalExpression;
+        if (indexerExpresion == null)
+        {
+            return false;
+        }
+
+        return
+            indexerExpresion.IfTrue.ToString().Contains(DynamicClass.IndexerName) &&
+            indexerExpresion.Test.ToString().Contains("ContainsProperty");
     }
 }

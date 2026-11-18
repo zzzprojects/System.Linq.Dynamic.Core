@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
-using FluentAssertions;
+using System.Linq.Dynamic.Core.SystemTextJson.Config;
+using System.Text.Json;
+using AwesomeAssertions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.SystemTextJson.Tests;
@@ -16,11 +17,13 @@ public class SystemTextJsonTests
         [
             {
                 "Name": "John",
-                "Age": 30
+                "Age": 30,
+                "IsNull": null
             },
             {
                 "Name": "Doe",
-                "Age": 40
+                "Age": 40,
+                "AlsoNull": null
             }
         ]
         """;
@@ -160,20 +163,20 @@ public class SystemTextJsonTests
     public void First()
     {
         // Act + Assert 1
-        _source.First().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30}").RootElement.GetRawText());
+        _source.First().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 2
-        _source.First("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.First("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
     }
 
     [Fact]
     public void FirstOrDefault()
     {
         // Act + Assert 1
-        _source.FirstOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30}").RootElement.GetRawText());
+        _source.FirstOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""John"",""Age"":30,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 2
-        _source.FirstOrDefault("Age > 30")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.FirstOrDefault("Age > 30")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 3
         _source.FirstOrDefault("Age > 999").Should().BeNull();
@@ -266,20 +269,20 @@ public class SystemTextJsonTests
     public void Last()
     {
         // Act + Assert 1
-        _source.Last().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.Last().GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 2
-        _source.Last("Age > 0").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.Last("Age > 0").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
     }
 
     [Fact]
     public void LastOrDefault()
     {
         // Act + Assert 1
-        _source.LastOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.LastOrDefault()!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 2
-        _source.LastOrDefault("Age > 0")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.LastOrDefault("Age > 0")!.Value.GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
 
         // Act + Assert 3
         _source.LastOrDefault("Age > 999").Should().BeNull();
@@ -443,7 +446,7 @@ public class SystemTextJsonTests
     public void Single()
     {
         // Act + Assert
-        _source.Single("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40}").RootElement.GetRawText());
+        _source.Single("Age > 30").GetRawText().Should().BeEquivalentTo(JsonDocument.Parse(@"{""Name"":""Doe"",""Age"":40,""IsNull"":null,""AlsoNull"":null}").RootElement.GetRawText());
     }
 
     [Fact]
@@ -534,5 +537,66 @@ public class SystemTextJsonTests
         var array = result.RootElement.EnumerateArray();
         array.Should().HaveCount(1);
         array.First().GetString().Should().Be("Doe");
+    }
+
+    [Theory]
+    [InlineData("notExisting == true")]
+    [InlineData("notExisting == \"true\"")]
+    [InlineData("notExisting == 1")]
+    [InlineData("notExisting == \"1\"")]
+    [InlineData("notExisting == \"something\"")]
+    [InlineData("notExisting > 1")]
+    [InlineData("notExisting < 1")]
+    [InlineData("true == notExisting")]
+    [InlineData("\"true\" == notExisting")]
+    [InlineData("1 == notExisting")]
+    [InlineData("\"1\" == notExisting")]
+    [InlineData("\"something\" == notExisting")]
+    [InlineData("1 < notExisting")]
+    [InlineData("1 > notExisting")]
+    public void Where_NonExistingMember_EmptyResult(string predicate)
+    {
+        // Act
+        var result = _source.Where(predicate).RootElement.EnumerateArray();
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("""[ { "Name": "John", "Age": 30 }, { "Name": "Doe" }, { } ]""")]
+    [InlineData("""[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""")]
+    public void NormalizeArray(string data)
+    {
+        // Arrange
+        var source = JsonDocument.Parse(data);
+
+        // Act
+        var result = source
+            .Where("Age >= 30")
+            .Select("Name");
+
+        // Assert
+        var array = result.RootElement.EnumerateArray();
+        array.Should().HaveCount(1);
+        var first = result.First();
+        array.First().GetString().Should().Be("John");
+    }
+
+    [Fact]
+    public void NormalizeArray_When_NormalizeIsFalse_ShouldThrow()
+    {
+        // Arrange
+        var config = new SystemTextJsonParsingConfig
+        {
+            Normalize = false
+        };
+        var data = """[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""";
+
+        // Act
+        Action act = () => JsonDocument.Parse(data).Where(config, "Age >= 30");
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("Unable to find property 'Age' on type '<>f__AnonymousType*");
     }
 }

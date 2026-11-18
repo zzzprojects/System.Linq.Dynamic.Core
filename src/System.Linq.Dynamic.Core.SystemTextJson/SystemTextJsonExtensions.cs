@@ -1093,13 +1093,20 @@ public static class SystemTextJsonExtensions
     // ReSharper disable once UnusedParameter.Local
     private static IQueryable ToQueryable(JsonDocument source, SystemTextJsonParsingConfig? config = null)
     {
+        config = config ?? SystemTextJsonParsingConfig.Default;
+        config.ConvertObjectToSupportComparison = true;
+
         var array = source.RootElement;
         if (array.ValueKind != JsonValueKind.Array)
         {
             throw new NotSupportedException("The source is not a JSON array.");
         }
 
-        return JsonDocumentExtensions.ToDynamicJsonClassArray(array).AsQueryable();
+        var normalized = config.Normalize ?
+           NormalizeUtils.NormalizeJsonDocument(source, config.NormalizationNonExistingPropertyValueBehavior) :
+           source;
+
+        return JsonDocumentExtensions.ToDynamicJsonClassArray(normalized.RootElement).AsQueryable();
     }
     #endregion
 }

@@ -186,9 +186,6 @@ ClientBin/
 node_modules/
 orleans.codegen.cs
 
-# RIA/Silverlight projects
-Generated_Code/
-
 # Backup & report files from converting an old project file
 # to a newer Visual Studio version. Backup files are not needed,
 # because we have git ;-)
@@ -237,4 +234,6 @@ _Pvt_Extensions
 
 /coverage.xml
 /dynamic-coverage-*.xml
-/test/**/coverage.net8.0.opencover.xml
+/test/**/coverage.*.opencover.xml
+/test/**/coverage.opencover.xml
+.nuget/

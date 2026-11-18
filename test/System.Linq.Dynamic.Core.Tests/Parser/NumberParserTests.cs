@@ -1,8 +1,8 @@
-using FluentAssertions;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Expressions;
+using FluentAssertions;
 using Xunit;
 
 namespace System.Linq.Dynamic.Core.Tests.Parser;
@@ -129,6 +129,8 @@ public class NumberParserTests
     [Theory]
     [InlineData("42", 42)]
     [InlineData("-42", -42)]
+    [InlineData("3000000000", 3000000000)]
+    [InlineData("-3000000000", -3000000000)]
     [InlineData("77u", 77)]
     [InlineData("77l", 77)]
     [InlineData("77ul", 77)]
@@ -159,7 +161,7 @@ public class NumberParserTests
     public void NumberParser_ParseDecimalLiteral(string text, char qualifier, decimal expected)
     {
         // Act
-        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, qualifier, true) as ConstantExpression;
+        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, text, qualifier, true) as ConstantExpression;
 
         // Assert
         result?.Value.Should().Be(expected);
@@ -175,7 +177,7 @@ public class NumberParserTests
         // Arrange
 
         // Act
-        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, qualifier, true) as ConstantExpression;
+        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, text, qualifier, true) as ConstantExpression;
 
         // Assert
         result?.Value.Should().Be(expected);
@@ -191,7 +193,7 @@ public class NumberParserTests
         // Arrange
 
         // Act
-        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, qualifier, true) as ConstantExpression;
+        var result = new NumberParser(_parsingConfig).ParseRealLiteral(text, text, qualifier, true) as ConstantExpression;
 
         // Assert
         result?.Value.Should().Be(expected);

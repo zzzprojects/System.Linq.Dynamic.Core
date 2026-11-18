@@ -1,5 +1,4 @@
-﻿#if !UAP10_0
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +28,7 @@ public static class DynamicClassFactory
     private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(Type.EmptyTypes)!;
 
     private static readonly ConstructorInfo StringBuilderCtor = typeof(StringBuilder).GetConstructor(Type.EmptyTypes)!;
-#if UAP10_0 || NETSTANDARD
+#if NETSTANDARD
     private static readonly MethodInfo StringBuilderAppendString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(string)])!;
     private static readonly MethodInfo StringBuilderAppendObject = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(object)])!;
 #else
@@ -289,11 +288,16 @@ public static class DynamicClassFactory
         {
             var fieldName = properties[i].Name;
             var fieldType = properties[i].Type;
-            var equalityComparerT = EqualityComparer.MakeGenericType(fieldType);
 
-            // Equals()
+            // Use object-based equality comparer for types that are not publicly accessible from the dynamic assembly (e.g., compiler-generated anonymous types).
+            // Calling EqualityComparer<T>.get_Default() for a non-public T will throw MethodAccessException.
+            var fieldTypeIsAccessible = IsTypePubliclyAccessible(fieldType);
+            var equalityType = fieldTypeIsAccessible ? fieldType : typeof(object);
+            var equalityComparerT = EqualityComparer.MakeGenericType(equalityType);
+
+            // Implement Equals();
             MethodInfo equalityComparerTDefault = equalityComparerT.GetMethod("get_Default", BindingFlags.Static | BindingFlags.Public)!;
-            MethodInfo equalityComparerTEquals = equalityComparerT.GetMethod(nameof(EqualityComparer.Equals), BindingFlags.Instance | BindingFlags.Public, null, [fieldType, fieldType], null)!;
+            MethodInfo equalityComparerTEquals = equalityComparerT.GetMethod(nameof(EqualityComparer.Equals), BindingFlags.Instance | BindingFlags.Public, null, [equalityType, equalityType], null)!;
 
             // Illegal one-byte branch at position: 9. Requested branch was: 143.
             // So replace OpCodes.Brfalse_S to OpCodes.Brfalse
@@ -301,12 +305,22 @@ public static class DynamicClassFactory
             ilgeneratorEquals.Emit(OpCodes.Call, equalityComparerTDefault);
             ilgeneratorEquals.Emit(OpCodes.Ldarg_0);
             ilgeneratorEquals.Emit(OpCodes.Ldfld, fieldBuilders[i]);
+            if (!fieldTypeIsAccessible)
+            {
+                ilgeneratorEquals.Emit(OpCodes.Box, fieldType);
+            }
+
             ilgeneratorEquals.Emit(OpCodes.Ldloc_0);
             ilgeneratorEquals.Emit(OpCodes.Ldfld, fieldBuilders[i]);
+            if (!fieldTypeIsAccessible)
+            {
+                ilgeneratorEquals.Emit(OpCodes.Box, fieldType);
+            }
+
             ilgeneratorEquals.Emit(OpCodes.Callvirt, equalityComparerTEquals);
 
-            // GetHashCode();
-            MethodInfo equalityComparerTGetHashCode = equalityComparerT.GetMethod(nameof(EqualityComparer.GetHashCode), BindingFlags.Instance | BindingFlags.Public, null, [fieldType], null)!;
+            // Implement GetHashCode();
+            MethodInfo equalityComparerTGetHashCode = equalityComparerT.GetMethod(nameof(EqualityComparer.GetHashCode), BindingFlags.Instance | BindingFlags.Public, null, [equalityType], null)!;
             ilgeneratorGetHashCode.Emit(OpCodes.Stloc_0);
             ilgeneratorGetHashCode.Emit(OpCodes.Ldc_I4, -1521134295);
             ilgeneratorGetHashCode.Emit(OpCodes.Ldloc_0);
@@ -314,10 +328,15 @@ public static class DynamicClassFactory
             ilgeneratorGetHashCode.Emit(OpCodes.Call, equalityComparerTDefault);
             ilgeneratorGetHashCode.Emit(OpCodes.Ldarg_0);
             ilgeneratorGetHashCode.Emit(OpCodes.Ldfld, fieldBuilders[i]);
+            if (!fieldTypeIsAccessible)
+            {
+                ilgeneratorGetHashCode.Emit(OpCodes.Box, fieldType);
+            }
+
             ilgeneratorGetHashCode.Emit(OpCodes.Callvirt, equalityComparerTGetHashCode);
             ilgeneratorGetHashCode.Emit(OpCodes.Add);
 
-            // ToString();
+            // Implement ToString();
             ilgeneratorToString.Emit(OpCodes.Ldloc_0);
             ilgeneratorToString.Emit(OpCodes.Ldstr, i == 0 ? $"{{ {fieldName} = " : $", {fieldName} = ");
             ilgeneratorToString.Emit(OpCodes.Callvirt, StringBuilderAppendString);
@@ -419,7 +438,33 @@ public static class DynamicClassFactory
 
         EmitEqualityOperators(typeBuilder, equals);
 
-        return typeBuilder.CreateType();
+        return typeBuilder.CreateType()!;
+    }
+
+    /// <summary>
+    /// Determines whether a type is publicly accessible from an external (dynamic) assembly.
+    /// Non-public types (e.g., compiler-generated anonymous types) cannot be used as generic
+    /// type arguments in EqualityComparer&lt;T&gt; from a dynamic assembly without causing
+    /// a <see cref="MethodAccessException"/> at runtime.
+    /// </summary>
+    private static bool IsTypePubliclyAccessible(Type typeInfo)
+    {
+        // Check if the type itself is public
+        if (!typeInfo.GetTypeInfo().IsPublic && !typeInfo.GetTypeInfo().IsNestedPublic)
+        {
+            return false;
+        }
+
+        // For constructed generic types (e.g., List<MyPrivateType>),
+        // all type arguments must also be publicly accessible.
+        // Generic type definitions (e.g., List<>) have unbound type parameters
+        // which are not concrete types and should not be checked.
+        if (typeInfo.GetTypeInfo().IsGenericType && !typeInfo.GetTypeInfo().IsGenericTypeDefinition)
+        {
+            return typeInfo.GetGenericArguments().All(IsTypePubliclyAccessible);
+        }
+
+        return true;
     }
 
     private static void EmitEqualityOperators(TypeBuilder typeBuilder, MethodBuilder equals)
@@ -462,7 +507,7 @@ public static class DynamicClassFactory
 
         ILGenerator ilNeq = inequalityOperator.GetILGenerator();
 
-        // return !(left == right);
+        // Define return !(left == right);
         ilNeq.Emit(OpCodes.Ldarg_0);
         ilNeq.Emit(OpCodes.Ldarg_1);
         ilNeq.Emit(OpCodes.Call, equalityOperator);
@@ -505,4 +550,3 @@ public static class DynamicClassFactory
         }
     }
 }
-#endif

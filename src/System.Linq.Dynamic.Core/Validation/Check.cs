@@ -10,7 +10,7 @@ internal static class Check
 {
     private const string ParsingConfigError = "The ParsingConfig should be provided as first argument to this method.";
 
-    public static object?[]? Args(object?[]? args, [CallerArgumentExpression("args")] string? parameterName = null)
+    public static object?[]? Args(object?[]? args, [CallerArgumentExpression(nameof(args))] string? parameterName = null)
     {
         if (args?.Any(a => a is ParsingConfig) == true)
         {
@@ -20,7 +20,7 @@ internal static class Check
         return args;
     }
 
-    public static T Condition<T>(T value, Predicate<T> predicate, [CallerArgumentExpression("value")] string? parameterName = null)
+    public static T Condition<T>(T value, Predicate<T> predicate, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         NotNull(predicate);
 
@@ -34,7 +34,7 @@ internal static class Check
         return value;
     }
 
-    public static T NotNull<T>(T value, [CallerArgumentExpression("value")] string? parameterName = null)
+    public static T NotNull<T>(T value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value is null)
         {
@@ -59,7 +59,7 @@ internal static class Check
         return value;
     }
 
-    public static IEnumerable<T> NotNullOrEmpty<T>(IEnumerable<T> value, [CallerArgumentExpression("value")] string? parameterName = null)
+    public static IEnumerable<T> NotNullOrEmpty<T>(IEnumerable<T> value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         IEnumerable<T> result = NotNull(value, parameterName);
 
@@ -75,10 +75,10 @@ internal static class Check
         return result;
     }
 
-    public static string NotEmpty(string? value, [CallerArgumentExpression("value")] string? parameterName = null) =>
+    public static string NotEmpty(string? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null) =>
         NotNullOrWhiteSpace(value, parameterName);
 
-    public static string NotNullOrEmpty(string? value, [CallerArgumentExpression("value")] string? parameterName = null)
+    public static string NotNullOrEmpty(string? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value is null)
         {
@@ -95,7 +95,7 @@ internal static class Check
         return value;
     }
 
-    public static string NotNullOrWhiteSpace(string? value, [CallerArgumentExpression("value")] string? parameterName = null)
+    public static string NotNullOrWhiteSpace(string? value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value is null)
         {
@@ -112,7 +112,7 @@ internal static class Check
         return value;
     }
 
-    public static IEnumerable<T> HasNoNulls<T>(IEnumerable<T> value, [CallerArgumentExpression("value")] string? parameterName = null)
+    public static IEnumerable<T> HasNoNulls<T>(IEnumerable<T> value, [CallerArgumentExpression(nameof(value))] string? parameterName = null)
     {
         if (value is null)
         {

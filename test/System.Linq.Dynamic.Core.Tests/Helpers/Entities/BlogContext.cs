@@ -28,6 +28,8 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
         public DbSet<Blog> Blogs { get; set; }
 
         public DbSet<Post> Posts { get; set; }
+
+        public DbSet<BlogText> BlogTexts { get; set; }
     }
 #else
     [DbConfigurationType(typeof(CodeConfig))]
@@ -50,6 +52,8 @@ namespace System.Linq.Dynamic.Core.Tests.Helpers.Entities
         public DbSet<Blog> Blogs { get; set; }
 
         public DbSet<Post> Posts { get; set; }
+
+        public DbSet<BlogText> BlogTexts { get; set; }
     }
 
     public class CodeConfig : DbConfiguration

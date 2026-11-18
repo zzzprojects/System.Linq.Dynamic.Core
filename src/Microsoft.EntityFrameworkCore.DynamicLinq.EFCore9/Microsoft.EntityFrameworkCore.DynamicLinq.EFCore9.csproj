@@ -10,7 +10,7 @@
         <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
         <ProjectGuid>{C774DAE7-54A0-4FCD-A3B7-3CB63D7E112D}</ProjectGuid>
         <TargetFrameworks>net9.0</TargetFrameworks>
-        <Version>9.6.$(PatchVersion)</Version>
+        <Version>9.8.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -23,10 +23,6 @@
         <PathMap>$(MSBuildProjectDirectory)=/</PathMap>-->
         <DebugType>portable</DebugType>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>net9.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>

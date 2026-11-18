@@ -10,7 +10,7 @@
         <PackageTags>system;linq;dynamic;Z.EntityFramework;core;async;classic</PackageTags>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584Ea20000}</ProjectGuid>
         <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-        <Version>1.6.$(PatchVersion)</Version>
+        <Version>1.8.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -35,6 +35,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Z.EntityFramework.Classic" Version="7.1.7" />
+        <PackageReference Include="Z.EntityFramework.Classic" Version="7.2.43" />
     </ItemGroup>
 </Project>

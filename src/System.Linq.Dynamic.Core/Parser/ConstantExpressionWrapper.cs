@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-#if UAP10_0 || NETSTANDARD1_3
+#if NETSTANDARD1_3
 using System.Reflection;
 #endif
 

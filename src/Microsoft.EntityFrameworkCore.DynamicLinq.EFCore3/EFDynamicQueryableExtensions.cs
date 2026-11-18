@@ -52,7 +52,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<bool> AllAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return AllAsync(source, predicate, default(CancellationToken), args);
+            return AllAsync(source, predicate, default, args);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation. The task result contains true if every element of the source sequence passes the test in the specified predicate; otherwise, false.
         /// </returns>
         [PublicAPI]
-        public static Task<bool> AllAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
+        public static Task<bool> AllAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
@@ -106,7 +106,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation. The task result contains true if the source sequence contains any elements; otherwise, false.
         /// </returns>
         [PublicAPI]
-        public static Task<bool> AnyAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<bool> AnyAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
@@ -134,7 +134,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<bool> AnyAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return AnyAsync(source, predicate, default(CancellationToken), args);
+            return AnyAsync(source, predicate, default, args);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation. The task result contains true if the source sequence contains any elements; otherwise, false.
         /// </returns>
         [PublicAPI]
-        public static Task<bool> AnyAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
+        public static Task<bool> AnyAsync([NotNull] this IQueryable source, [NotNull] string predicate, CancellationToken cancellationToken = default, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(predicate, nameof(predicate));
@@ -188,7 +188,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation. The task result contains the average of the sequence of values.
         /// </returns>
         [PublicAPI]
-        public static Task<double> AverageAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<double> AverageAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
@@ -218,7 +218,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<double> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, [CanBeNull] params object[] args)
         {
-            return AverageAsync(source, selector, default(CancellationToken), args);
+            return AverageAsync(source, selector, default, args);
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace EntityFramework.DynamicLinq
         ///     predicate; otherwise, <c>false</c>.
         /// </returns>
         [PublicAPI]
-        public static Task<double> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, CancellationToken cancellationToken = default(CancellationToken), [CanBeNull] params object[] args)
+        public static Task<double> AverageAsync([NotNull] this IQueryable source, [NotNull] string selector, CancellationToken cancellationToken = default, [CanBeNull] params object[] args)
         {
             Check.NotNull(source, nameof(source));
             Check.NotEmpty(selector, nameof(selector));
@@ -275,7 +275,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the number of elements in the input sequence.
         /// </returns>
         [PublicAPI]
-        public static Task<int> CountAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<int> CountAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
@@ -305,7 +305,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<int> CountAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return CountAsync(source, default(CancellationToken), predicate, args);
+            return CountAsync(source, default, predicate, args);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the first element in <paramref name="source" />.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> FirstAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<dynamic> FirstAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
 
@@ -391,7 +391,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<dynamic> FirstAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return FirstAsync(source, default(CancellationToken), predicate, args);
+            return FirstAsync(source, default, predicate, args);
         }
 
         /// <summary>
@@ -448,7 +448,7 @@ namespace EntityFramework.DynamicLinq
         ///     <paramref name="source" /> is empty; otherwise, the first element in <paramref name="source" />.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> FirstOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<dynamic> FirstOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
@@ -480,7 +480,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<dynamic> FirstOrDefaultAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return FirstOrDefaultAsync(source, default(CancellationToken), predicate, args);
+            return FirstOrDefaultAsync(source, default, predicate, args);
         }
 
         /// <summary>
@@ -539,7 +539,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the last element in <paramref name="source" />.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> LastAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<dynamic> LastAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
 
@@ -568,7 +568,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<dynamic> LastAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return LastAsync(source, default(CancellationToken), predicate, args);
+            return LastAsync(source, default, predicate, args);
         }
 
         /// <summary>
@@ -625,7 +625,7 @@ namespace EntityFramework.DynamicLinq
         ///     <paramref name="source" /> is empty; otherwise, the last element in <paramref name="source" />.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> LastOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<dynamic> LastOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
@@ -657,7 +657,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<dynamic> LastOrDefaultAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return LastOrDefaultAsync(source, default(CancellationToken), predicate, args);
+            return LastOrDefaultAsync(source, default, predicate, args);
         }
 
         /// <summary>
@@ -716,7 +716,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains the number of elements in the input sequence.
         /// </returns>
         [PublicAPI]
-        public static Task<long> LongCountAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<long> LongCountAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
@@ -746,7 +746,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<long> LongCountAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return LongCountAsync(source, default(CancellationToken), predicate, args);
+            return LongCountAsync(source, default, predicate, args);
         }
 
         /// <summary>
@@ -803,7 +803,7 @@ namespace EntityFramework.DynamicLinq
         ///     A task that represents the asynchronous operation. The task result contains the single element of the input sequence that satisfies the condition in predicate.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> SingleOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<dynamic> SingleOrDefaultAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
@@ -832,7 +832,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<dynamic> SingleOrDefaultAsync([NotNull] this IQueryable source, [NotNull] string predicate, [CanBeNull] params object[] args)
         {
-            return SingleOrDefaultAsync(source, default(CancellationToken), predicate, args);
+            return SingleOrDefaultAsync(source, default, predicate, args);
         }
 
         /// <summary>
@@ -886,7 +886,7 @@ namespace EntityFramework.DynamicLinq
         ///     The task result contains sum of the values in the sequence.
         /// </returns>
         [PublicAPI]
-        public static Task<dynamic> SumAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        public static Task<dynamic> SumAsync([NotNull] this IQueryable source, CancellationToken cancellationToken = default)
         {
             Check.NotNull(source, nameof(source));
             Check.NotNull(cancellationToken, nameof(cancellationToken));
@@ -916,7 +916,7 @@ namespace EntityFramework.DynamicLinq
         [PublicAPI]
         public static Task<dynamic> SumAsync([NotNull] this IQueryable source, [NotNull] string selector, [CanBeNull] params object[] args)
         {
-            return SumAsync(source, default(CancellationToken), selector, args);
+            return SumAsync(source, default, selector, args);
         }
 
         /// <summary>
@@ -956,14 +956,14 @@ namespace EntityFramework.DynamicLinq
         #region Private Helpers
         private static readonly MethodInfo _executeAsyncMethod =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
-#if NETSTANDARD || UAP10_0
+#if NETSTANDARD
                 .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
                 .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }));
 #else
                 .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(CancellationToken) }, null);
 #endif
 
-        private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default)
         {
             var executeAsyncMethod = _executeAsyncMethod.MakeGenericMethod(operatorMethodInfo.ReturnType);
 
@@ -973,7 +973,7 @@ namespace EntityFramework.DynamicLinq
             return castedTask;
         }
 
-        private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default(CancellationToken))
+        private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, CancellationToken cancellationToken = default)
         {
 #if EFCORE
             var provider = source.Provider as IAsyncQueryProvider;
@@ -1002,19 +1002,19 @@ namespace EntityFramework.DynamicLinq
             throw new InvalidOperationException(Res.IQueryableProviderNotAsync);
         }
 
-        private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression, CancellationToken cancellationToken = default(CancellationToken))
+        private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, LambdaExpression expression, CancellationToken cancellationToken = default)
             => ExecuteAsync<TResult>(operatorMethodInfo, source, Expression.Quote(expression), cancellationToken);
 
         private static readonly MethodInfo _executeAsyncMethodWithExpression =
                 typeof(EntityFrameworkDynamicQueryableExtensions)
-#if NETSTANDARD || UAP10_0
+#if NETSTANDARD
                 .GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
                 .Single(m => m.Name == nameof(ExecuteAsync) && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }));
 #else
                 .GetMethod(nameof(ExecuteAsync), BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(MethodInfo), typeof(IQueryable), typeof(Expression), typeof(CancellationToken) }, null);
 #endif
 
-        private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
+        private static Task<dynamic> ExecuteDynamicAsync(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default)
         {
             var executeAsyncMethod = _executeAsyncMethodWithExpression.MakeGenericMethod(operatorMethodInfo.ReturnType);
 
@@ -1024,7 +1024,7 @@ namespace EntityFramework.DynamicLinq
             return castedTask;
         }
 
-        private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
+        private static Task<TResult> ExecuteAsync<TResult>(MethodInfo operatorMethodInfo, IQueryable source, Expression expression, CancellationToken cancellationToken = default)
         {
 #if EFCORE
             var provider = source.Provider as IAsyncQueryProvider;
@@ -1081,7 +1081,7 @@ namespace EntityFramework.DynamicLinq
             return source;
         }
 
-        private static Task<TResult> ExecuteAsync<TResult>(IAsyncQueryProvider provider, Expression expression, CancellationToken cancellationToken = default(CancellationToken))
+        private static Task<TResult> ExecuteAsync<TResult>(IAsyncQueryProvider provider, Expression expression, CancellationToken cancellationToken = default)
         {
             if (typeof(TResult) == typeof(object) && expression.Type != typeof(object))
             {
@@ -1102,13 +1102,11 @@ namespace EntityFramework.DynamicLinq
             {
                 var optimized = ExtensibilityPoint.QueryOptimizer(expression);
 
-#if !(SILVERLIGHT)
                 if (optimized != expression)
                 {
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression before : {0}", expression);
                     TraceSource.TraceEvent(TraceEventType.Verbose, 0, "Expression after  : {0}", optimized);
                 }
-#endif
                 return optimized;
             }
 

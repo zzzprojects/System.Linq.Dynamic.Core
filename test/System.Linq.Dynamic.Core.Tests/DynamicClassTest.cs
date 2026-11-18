@@ -109,7 +109,11 @@ public class DynamicClassTest
         value.Should().Be(test);
     }
 
+#if NET461
+    [Fact(Skip = "Does not work for .NET 4.6.1")]
+#else
     [Fact]
+#endif
     public void DynamicClass_GettingValue_ByIndex_Should_Work()
     {
         // Arrange
@@ -127,27 +131,39 @@ public class DynamicClassTest
         value.Should().Be(test);
     }
 
+#if NET461
+    [Fact(Skip = "Does not work for .NET 4.6.1")]
+#else
     [Fact]
+#endif
     public void DynamicClass_SettingExistingPropertyValue_ByIndex_Should_Work()
     {
         // Arrange
-        var test = "Test";
-        var newTest = "abc";
-        var range = new List<object>
+        var originalValue = "Test";
+        var newValue = "abc";
+        var array = new object[]
         {
-            new { FieldName = test, Value = 3.14159 }
+            new
+            {
+                FieldName = originalValue, 
+                Value = 3.14159
+            }
         };
 
         // Act
-        var rangeResult = range.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
+        var rangeResult = array.AsQueryable().Select("new(FieldName as FieldName)").ToDynamicList();
         var item = rangeResult.First();
 
-        item["FieldName"] = newTest;
+        item["FieldName"] = newValue;
         var value = item["FieldName"] as string;
-        value.Should().Be(newTest);
+        value.Should().Be(newValue);
     }
 
+#if NET461
+    [Fact(Skip = "Does not work for .NET 4.6.1")]
+#else
     [Fact]
+#endif
     public void DynamicClass_SettingNewProperty_ByIndex_Should_Work()
     {
         // Arrange

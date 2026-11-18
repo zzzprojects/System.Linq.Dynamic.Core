@@ -1,43 +1,38 @@
-﻿using NFluent;
-using Xunit;
+﻿using Xunit;
 
-namespace System.Linq.Dynamic.Core.Tests
+namespace System.Linq.Dynamic.Core.Tests;
+
+public class ParsingConfigTests
 {
-    public class ParsingConfigTests
+    class TestQueryableAnalyzer : IQueryableAnalyzer
     {
-        class TestQueryableAnalyzer : IQueryableAnalyzer
+        public bool SupportsLinqToObjects(IQueryable query, IQueryProvider? provider = null)
         {
-            public bool SupportsLinqToObjects(IQueryable query, IQueryProvider provider)
-            {
-                return true;
-            }
+            return true;
         }
+    }
 
-        [Fact]
-        public void ParsingConfig_QueryableAnalyzer_Set_Null()
-        {
-            // Assign
-            var config = ParsingConfig.Default;
+    [Fact]
+    public void ParsingConfig_QueryableAnalyzer_Set_Null()
+    {
+        // Assign
+        var config = ParsingConfig.Default;
 
-            // Act
-            config.QueryableAnalyzer = null;
+        // Assert
+        Assert.NotNull(config.QueryableAnalyzer);
+    }
 
-            // Assert
-            Check.That(config.QueryableAnalyzer).IsNotNull();
-        }
+    [Fact]
+    public void ParsingConfig_QueryableAnalyzer_Set_Custom()
+    {
+        // Assign
+        var config = ParsingConfig.Default;
+        var analyzer = new TestQueryableAnalyzer();
 
-        [Fact]
-        public void ParsingConfig_QueryableAnalyzer_Set_Custom()
-        {
-            // Assign
-            var config = ParsingConfig.Default;
-            var analyzer = new TestQueryableAnalyzer();
+        // Act
+        config.QueryableAnalyzer = analyzer;
 
-            // Act
-            config.QueryableAnalyzer = analyzer;
-
-            // Assert
-            Check.That(config.QueryableAnalyzer).IsEqualTo(analyzer);
-        }
+        // Assert
+        Assert.Equal(analyzer, config.QueryableAnalyzer);
     }
 }

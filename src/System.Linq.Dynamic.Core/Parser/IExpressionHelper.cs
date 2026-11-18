@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace System.Linq.Dynamic.Core.Parser;
@@ -21,9 +22,13 @@ internal interface IExpressionHelper
 
     Expression GenerateNotEqual(Expression left, Expression right);
 
+    Expression GenerateBinaryOrElseTree(IList<Expression> expressions);
+
     Expression GenerateStringConcat(Expression left, Expression right);
 
-    Expression GenerateSubtract(Expression left, Expression right);
+    Expression GenerateStringContains(Expression left, Expression right);
+
+    Expression GenerateSubtract(Expression left, Expression right);    
 
     void OptimizeForEqualityIfPossible(ref Expression left, ref Expression right);
 
@@ -52,5 +57,5 @@ internal interface IExpressionHelper
     /// <summary>
     /// If the types are different (and not null), try to convert the object type to other type.
     /// </summary>
-    public bool TryConvertTypes(ref Expression left, ref Expression right);
+    bool TryConvertTypes(ref Expression left, ref Expression right);
 }

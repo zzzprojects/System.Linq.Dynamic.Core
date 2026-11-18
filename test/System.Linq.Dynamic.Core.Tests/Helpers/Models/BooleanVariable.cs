@@ -1,15 +1,10 @@
 ﻿namespace System.Linq.Dynamic.Core.Tests.Helpers.Models;
 
-public readonly struct BooleanVariable : IEquatable<bool>, IEquatable<BooleanVariable>, IConvertible
+public readonly struct BooleanVariable(bool innerValue) : IEquatable<bool>, IEquatable<BooleanVariable>, IConvertible
 {
-    private readonly bool _innerValue;
+    private readonly bool _innerValue = innerValue;
 
-    public BooleanVariable(bool innerValue)
-    {
-        _innerValue = innerValue;
-    }
-
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is bool val && Equals(val);
     }
@@ -31,7 +26,7 @@ public readonly struct BooleanVariable : IEquatable<bool>, IEquatable<BooleanVar
 
     public static implicit operator bool(BooleanVariable v) => v._innerValue;
 
-    public static implicit operator BooleanVariable(bool b) => new BooleanVariable(b);
+    public static implicit operator BooleanVariable(bool b) => new(b);
 
     public static bool operator true(BooleanVariable v) => v._innerValue;
 
@@ -64,82 +59,82 @@ public readonly struct BooleanVariable : IEquatable<bool>, IEquatable<BooleanVar
         return _innerValue.GetTypeCode();
     }
 
-    public bool ToBoolean(IFormatProvider provider)
+    public bool ToBoolean(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToBoolean(provider);
     }
 
-    public byte ToByte(IFormatProvider provider)
+    public byte ToByte(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToByte(provider);
     }
 
-    public char ToChar(IFormatProvider provider)
+    public char ToChar(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToChar(provider);
     }
 
-    public DateTime ToDateTime(IFormatProvider provider)
+    public DateTime ToDateTime(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToDateTime(provider);
     }
 
-    public decimal ToDecimal(IFormatProvider provider)
+    public decimal ToDecimal(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToDecimal(provider);
     }
 
-    public double ToDouble(IFormatProvider provider)
+    public double ToDouble(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToDouble(provider);
     }
 
-    public short ToInt16(IFormatProvider provider)
+    public short ToInt16(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToInt16(provider);
     }
 
-    public int ToInt32(IFormatProvider provider)
+    public int ToInt32(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToInt32(provider);
     }
 
-    public long ToInt64(IFormatProvider provider)
+    public long ToInt64(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToInt64(provider);
     }
 
-    public sbyte ToSByte(IFormatProvider provider)
+    public sbyte ToSByte(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToSByte(provider);
     }
 
-    public float ToSingle(IFormatProvider provider)
+    public float ToSingle(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToSingle(provider);
     }
 
-    public string ToString(IFormatProvider provider)
+    public string ToString(IFormatProvider? provider)
     {
         return _innerValue.ToString(provider);
     }
 
-    public object ToType(Type conversionType, IFormatProvider provider)
+    public object ToType(Type conversionType, IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToType(conversionType, provider);
     }
 
-    public ushort ToUInt16(IFormatProvider provider)
+    public ushort ToUInt16(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToUInt16(provider);
     }
 
-    public uint ToUInt32(IFormatProvider provider)
+    public uint ToUInt32(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToUInt32(provider);
     }
 
-    public ulong ToUInt64(IFormatProvider provider)
+    public ulong ToUInt64(IFormatProvider? provider)
     {
         return ((IConvertible)_innerValue).ToUInt64(provider);
     }

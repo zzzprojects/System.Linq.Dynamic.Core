@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Linq.Dynamic.Core.NewtonsoftJson.Config;
+using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -11,11 +12,13 @@ public class NewtonsoftJsonTests
         [
             {
                 "Name": "John",
-                "Age": 30
+                "Age": 30,
+                "IsNull": null
             },
             {
                 "Name": "Doe",
-                "Age": 40
+                "Age": 40,
+                "AlsoNull": null
             }
         ]
         """;
@@ -505,5 +508,68 @@ public class NewtonsoftJsonTests
         result.Should().HaveCount(1);
         var first = result.First();
         first.Value<string>().Should().Be("Doe");
+    }
+
+    [Theory]
+    [InlineData("notExisting == true")]
+    [InlineData("notExisting == \"true\"")]
+    [InlineData("notExisting == 1")]
+    [InlineData("notExisting == \"1\"")]
+    [InlineData("notExisting == \"something\"")]
+    [InlineData("notExisting > 1")]
+    [InlineData("notExisting < 1")]
+    [InlineData("true == notExisting")]
+    [InlineData("\"true\" == notExisting")]
+    [InlineData("1 == notExisting")]
+    [InlineData("\"1\" == notExisting")]
+    [InlineData("\"something\" == notExisting")]
+    [InlineData("1 < notExisting")]
+    [InlineData("1 > notExisting")]
+    public void Where_NonExistingMember_EmptyResult(string predicate)
+    {
+        // Arrange
+        var config = new NewtonsoftJsonParsingConfig
+        {
+            ConvertObjectToSupportComparison = true
+        };
+
+        // Act
+        var result = _source.Where(config, predicate);
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("""[ { "Name": "John", "Age": 30 }, { "Name": "Doe" }, { } ]""")]
+    [InlineData("""[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""")]
+    public void NormalizeArray(string array)
+    {
+        // Act
+        var result = JArray.Parse(array)
+            .Where("Age >= 30")
+            .Select("Name");
+
+        // Assert
+        result.Should().HaveCount(1);
+        var first = result.First();
+        first.Value<string>().Should().Be("John");
+    }
+
+    [Fact]
+    public void NormalizeArray_When_NormalizeIsFalse_ShouldThrow()
+    {
+        // Arrange
+        var config = new NewtonsoftJsonParsingConfig
+        {
+            Normalize = false
+        };
+        var array = """[ { "Name": "Doe" }, { "Name": "John", "Age": 30 }, { } ]""";
+
+        // Act
+        Action act = () => JArray.Parse(array).Where(config, "Age >= 30");
+
+        // Assert
+        act.Should().Throw<InvalidOperationException>().WithMessage("Unable to find property 'Age' on type '<>*");
     }
 }

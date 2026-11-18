@@ -10,7 +10,7 @@
         <PackageTags>system;linq;dynamic;entityframework;core;async</PackageTags>
         <ProjectGuid>{D3804228-91F4-4502-9595-39584E510001}</ProjectGuid>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
-        <Version>2.6.$(PatchVersion)</Version>
+        <Version>2.8.$(PatchVersion)</Version>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -20,10 +20,6 @@
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
         <DebugType>portable</DebugType>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(buildType)' == 'azure-pipelines-ci' ">
-        <TargetFrameworks>netstandard2.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>

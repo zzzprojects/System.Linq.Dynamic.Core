@@ -10,7 +10,7 @@ internal class MethodFinder
 {
     private readonly ParsingConfig _parsingConfig;
     private readonly IExpressionHelper _expressionHelper;
-    private readonly IDictionary<Type, MethodInfo[]> _cachedMethods;
+    private readonly Dictionary<Type, MethodInfo[]> _cachedMethods;
 
     /// <summary>
     /// #794
@@ -87,7 +87,7 @@ internal class MethodFinder
     {
         Check.NotNull(type);
 
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
         var flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
         return type.FindMembers(MemberTypes.Method, flags, Type.FilterNameIgnoreCase, methodName).Any();
 #else
@@ -107,7 +107,7 @@ internal class MethodFinder
 
     public int FindMethod(Type? type, string methodName, bool staticAccess, ref Expression? instance, ref Expression[] args, out MethodBase? method)
     {
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
         BindingFlags flags = BindingFlags.Public | BindingFlags.DeclaredOnly | (staticAccess ? BindingFlags.Static : BindingFlags.Instance);
         foreach (Type t in SelfAndBaseTypes(type))
         {
@@ -238,7 +238,7 @@ internal class MethodFinder
             if (members.Length != 0)
             {
                 IEnumerable<MethodBase> methods = members.OfType<PropertyInfo>().
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
                     Select(p => (MethodBase?)p.GetGetMethod()).
                     OfType<MethodBase>();
 #else
@@ -347,7 +347,8 @@ internal class MethodFinder
         }
 
         var better = false;
-        for (var i = 0; i < args.Length; i++)
+        var maxLength = Math.Min(first.Parameters.Length, second.Parameters.Length);
+        for (var i = 0; i < maxLength; i++)
         {
             var result = CompareConversions(args[i].Type, first.Parameters[i].ParameterType, second.Parameters[i].ParameterType);
 

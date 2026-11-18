@@ -60,7 +60,7 @@ public class ExpressionPromoter : IExpressionPromoter
                     Type target = TypeHelper.GetNonNullableType(type);
                     object? value = null;
 
-#if !(UAP10_0 || NETSTANDARD)
+#if !NETSTANDARD
                     switch (Type.GetTypeCode(ce.Type))
                     {
                         case TypeCode.Int32:
@@ -122,7 +122,7 @@ public class ExpressionPromoter : IExpressionPromoter
 
         if (TypeHelper.IsCompatibleWith(returnType, type))
         {
-            if (type == typeof(decimal) && TypeHelper.IsEnumType(sourceExpression.Type))
+            if (TypeHelper.TypesAreEqual(type, typeof(decimal)) && TypeHelper.IsEnumType(sourceExpression.Type))
             {
                 return Expression.Convert(Expression.Convert(sourceExpression, Enum.GetUnderlyingType(sourceExpression.Type)), type);
             }
@@ -133,6 +133,11 @@ public class ExpressionPromoter : IExpressionPromoter
             }
 
             return sourceExpression;
+        }
+
+        if (TypeHelper.TryGetImplicitConversionOperatorMethod(returnType, type, out _))
+        {
+            return Expression.Convert(sourceExpression, type);
         }
 
         return null;

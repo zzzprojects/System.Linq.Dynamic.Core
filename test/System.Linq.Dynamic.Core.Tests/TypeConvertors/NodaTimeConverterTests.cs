@@ -1,10 +1,7 @@
 ﻿#if !NET452
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq.Dynamic.Core.CustomTypeProviders;
-using System.Reflection;
 using FluentAssertions;
 using NodaTime;
 using NodaTime.Text;
@@ -158,20 +155,82 @@ namespace System.Linq.Dynamic.Core.Tests.TypeConvertors
             result.Should().HaveCount(numberOfEntities);
         }
 
+        private class EntityWithInstant
+        {
+            public Instant Timestamp { get; set; }
+            public Instant? TimestampNullable { get; set; }
+        }
+
+        [Theory]
+        [InlineData(">", 1)]
+        [InlineData(">=", 2)]
+        [InlineData("<", 1)]
+        [InlineData("<=", 2)]
+        [InlineData("==", 1)]
+        [InlineData("!=", 2)]
+        public void FilterByInstant_WithRelationalOperator(string op, int expectedCount)
+        {
+            // Arrange
+            var now = SystemClock.Instance.GetCurrentInstant();
+            var data = new List<EntityWithInstant>
+            {
+                new EntityWithInstant { Timestamp = now - Duration.FromHours(1) },
+                new EntityWithInstant { Timestamp = now },
+                new EntityWithInstant { Timestamp = now + Duration.FromHours(1) }
+            }.AsQueryable();
+
+            // Act
+            var result = data.Where($"Timestamp {op} @0", now).ToList();
+
+            // Assert
+            result.Should().HaveCount(expectedCount);
+        }
+
+        [Theory]
+        [InlineData(">", 1)]
+        [InlineData(">=", 2)]
+        [InlineData("<", 1)]
+        [InlineData("<=", 2)]
+        [InlineData("==", 1)]
+        [InlineData("!=", 3)] // null != now evaluates to true in C# nullable semantics
+        public void FilterByNullableInstant_WithRelationalOperator(string op, int expectedCount)
+        {
+            // Arrange
+            var now = SystemClock.Instance.GetCurrentInstant();
+            var data = new List<EntityWithInstant>
+            {
+                new EntityWithInstant { TimestampNullable = now - Duration.FromHours(1) },
+                new EntityWithInstant { TimestampNullable = now },
+                new EntityWithInstant { TimestampNullable = now + Duration.FromHours(1) },
+                new EntityWithInstant { TimestampNullable = null }
+            }.AsQueryable();
+
+            // Act
+            var result = data.Where($"TimestampNullable {op} @0", now).ToList();
+
+            // Assert - null values are excluded from comparison results
+            result.Should().HaveCount(expectedCount);
+        }
+
         public class LocalDateConverter : TypeConverter
         {
-            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) => sourceType == typeof(string);
+            public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => sourceType == typeof(string);
 
-            public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+            public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
             {
-                var result = LocalDatePattern.Iso.Parse(value as string);
-
-                return result.Success
-                    ? result.Value
-                    : throw new FormatException(value?.ToString());
+                var result = Convert(value);
+                return result.Success ? result.Value : throw new FormatException(value?.ToString());
             }
 
-            protected ParseResult<LocalDate> Convert(object value) => LocalDatePattern.Iso.Parse(value as string);
+            private static ParseResult<LocalDate> Convert(object value)
+            {
+                if (value is string stringValue)
+                {
+                    return LocalDatePattern.Iso.Parse(stringValue);
+                }
+
+                return ParseResult<LocalDate>.ForException(() => new FormatException(value?.ToString()));
+            }
         }
     }
 }

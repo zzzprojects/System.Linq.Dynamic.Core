@@ -42,7 +42,7 @@ public partial class QueryableTests
         var result = query.Select<decimal?>(config, "t => t.GetNullableDecimal()").First();
 
         // Assert
-        Assert.Equal(null, result);
+        Assert.Null(result);
     }
 
     [Fact]

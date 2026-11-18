@@ -9,6 +9,8 @@ public class Post
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public int PostId { get; set; }
 
+    public long PostLongId { get; set; }
+
     public string Title { get; set; }
 
     public string Content { get; set; }

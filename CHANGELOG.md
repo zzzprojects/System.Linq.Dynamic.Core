@@ -1,3 +1,60 @@
+# v1.8.0 (18 November 2026)
+- [#991](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/991) - Support string to enum conversion using &quot;in-expression&quot; [bug] contributed by [StefH](https://github.com/StefH)
+- [#992](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/992) - Fix Contains on enum [bug] contributed by [StefH](https://github.com/StefH)
+- [#994](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/994) - Restrict method calls on dictionary receivers to an allow-list [security] contributed by [StefH](https://github.com/StefH)
+- [#996](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/996) - Drop support for uap10.0 [feature] contributed by [StefH](https://github.com/StefH)
+- [#997](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/997) - Fix GenerateRandomWord producing non-ASCII letters in the Turkish culture [bug] contributed by [menes97](https://github.com/menes97)
+- [#942](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/942) - Support string to enum conversion using `in` expression with substitution value [feature]
+- [#963](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/963) - Expression could not be translated while filtering [bug]
+
+# v1.7.4 (30 August 2026)
+- [#988](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/988) - Refactor &quot;In&quot;-Expression [bug] contributed by [StefH](https://github.com/StefH)
+- [#989](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/989) - Upgrade some dependencies [dependencies] contributed by [StefH](https://github.com/StefH)
+- [#990](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/990) - Fix SlidingCacheTests [test] contributed by [StefH](https://github.com/StefH)
+- [#987](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/987) - After upgrading from NET8 to NET10, Dynamic Linq &quot;in&quot; statement return different results in Debug or Release mode [bug]
+
+# v1.7.3 (11 July 2026)
+- [#981](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/981) - Fix MethodFinder.FirstIsBetterThanSecond [bug] contributed by [StefH](https://github.com/StefH)
+- [#984](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/984) - By default, also support WellKnownTypes like StringComparer [feature] contributed by [StefH](https://github.com/StefH)
+- [#985](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/985) - Add some more unit tests for DynamicExpressionParser.ParseLambda [test] contributed by [StefH](https://github.com/StefH)
+- [#980](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/980) - IndexOutOfRangeException in MethodFinder.FirstIsBetterThanSecond after upgrading to v1.7.2 [bug]
+- [#983](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/983) - How to IEnumerable&lt;string&gt;.Contains(x, StringComparer.OrdinalIgnoreCase) ? [feature]
+
+# v1.7.2 (04 April 2026)
+- [#971](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/971) - Fix some sonarcloud issues [refactor] contributed by [StefH](https://github.com/StefH)
+- [#974](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/974) - Fix unhandled exceptions from malformed expression strings [bug] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#975](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/975) - Fix relational operators failing for nullable IComparable types (e.g., Instant?) [bug] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#976](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/976) - Fix enum type preservation in additive arithmetic operations [bug] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#977](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/977) - Support implicit operators in method argument matching [feature] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#979](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/979) - Fix NotSupportedException when parsing nested object initialization [bug] contributed by [Copilot](https://github.com/apps/copilot-swe-agent)
+- [#813](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/813) - Error when parsing a nested object initialization [bug]
+- [#880](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/880) - Support for implicit operators [feature]
+- [#969](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/969) - Unexpected type change when parsing addition of integer to enum [bug]
+- [#970](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/970) - Operator '&gt;' incompatible with operand types 'Instant?' and 'Instant?' [feature]
+- [#973](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/973) - Multiple unhandled exceptions from malformed expression strings (5 crash sites found via fuzzing) [bug]
+
+# v1.7.1 (29 November 2025)
+- [#961](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/961) - Fix Json when property value is null [bug] contributed by [StefH](https://github.com/StefH)
+- [#962](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/962) - json: fix logic when property is not found [bug] contributed by [StefH](https://github.com/StefH)
+- [#965](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/965) - Fix NumberParser for integer &lt; int.MinValue [bug] contributed by [StefH](https://github.com/StefH)
+- [#960](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/960) - json: follow up for not existing members [bug]
+- [#964](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/964) - Integer numbers smaller than int.MinValue are not parsed correctly [bug]
+
+# v1.7.0 (15 November 2025)
+- [#956](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/956) - Fix parsing Hex and Binary [bug] contributed by [StefH](https://github.com/StefH)
+- [#957](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/957) - .NET 10 [feature] contributed by [StefH](https://github.com/StefH)
+- [#958](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/958) - Support normalization of objects for Z.DynamicLinq.Json [feature] contributed by [StefH](https://github.com/StefH)
+- [#955](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/955) - Hexadecimal und binary literals sometimes are interpreted as decimal [bug]
+
+# v1.6.10 (08 November 2025)
+- [#953](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/953) - Fixed adding Enum and integer [bug] contributed by [StefH](https://github.com/StefH)
+- [#954](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/954) - Fix ExpressionHelper.TryConvertTypes to generate correct Convert in case left or right is null [bug] contributed by [StefH](https://github.com/StefH)
+- [#951](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/951) - Parsing error adding numeric constant to enum value [bug]
+- [#952](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/952) - Json: How to handle not existing member [bug]
+
+# v1.6.9 (11 October 2025)
+- [#950](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/950) - DynamicExpressionParser - Handle indexed properties with any number of indices in expression [bug] contributed by [thibault-reigner](https://github.com/thibault-reigner)
+
 # v1.6.8 (28 September 2025)
 - [#946](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/946) - Fix GroupByMany using composite key and normal key [bug] contributed by [StefH](https://github.com/StefH)
 - [#948](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/948) - Add IndexerName attribute to DynamicClass to fix naming issues with Item [bug] contributed by [StefH](https://github.com/StefH)
@@ -8,7 +65,7 @@
 - [#938](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/938) - Use TryConvertTypes also for strings [bug] contributed by [StefH](https://github.com/StefH)
 
 # v1.6.6 (11 June 2025)
-- [#929](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/929) - Add GroupBy method for Z.DynamicLinq.SystemTextJson and Z.DynamicLinq.NewtonsoftJson contributed by [StefH](https://github.com/StefH)
+- [#929](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/929) - Add GroupBy method for Z.DynamicLinq.SystemTextJson and Z.DynamicLinq.NewtonsoftJson [feature] contributed by [StefH](https://github.com/StefH)
 - [#932](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/932) - Fix &quot;in&quot; for nullable Enums [bug] contributed by [StefH](https://github.com/StefH)
 - [#931](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/931) - Syntax IN dont work with nullable Enums [bug]
 

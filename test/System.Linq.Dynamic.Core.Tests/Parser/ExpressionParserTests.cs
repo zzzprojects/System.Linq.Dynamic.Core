@@ -3,6 +3,7 @@ using System.Linq.Dynamic.Core.CustomTypeProviders;
 using System.Linq.Dynamic.Core.Exceptions;
 using System.Linq.Dynamic.Core.Parser;
 using System.Linq.Dynamic.Core.Tests.Entities;
+using System.Linq.Dynamic.Core.Tests.Helpers.Models;
 using System.Linq.Expressions;
 using FluentAssertions;
 using Moq;
@@ -265,13 +266,14 @@ public partial class ExpressionParserTests
     {
         // Arrange
         ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
-        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name in (\"A\", \"B\") && 'y' in Name && 'z' in Name", null, null);
+        var values = new object?[] { new List<int> { 42, 43 }, new List<int> { 100, 100 + 1 } };
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name in (\"A\", \"B\") && 'y' in Name && \"z\" in Name and MainCompanyId in @0 and MainCompanyId in @1", values, null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso ((x.Name == \"A\") OrElse (x.Name == \"B\"))) AndAlso x.Name.Contains(y)) AndAlso x.Name.Contains(z))");
+        Assert.Equal("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso new [] {\"A\", \"B\"}.Contains(x.Name)) AndAlso x.Name.Contains(\"y\")) AndAlso x.Name.Contains(\"z\")) AndAlso new [] {42, 43}.Contains(x.MainCompanyId)) AndAlso new [] {100, 101}.Contains(x.MainCompanyId))", parsedExpression);
     }
 
     [Fact]
@@ -279,28 +281,44 @@ public partial class ExpressionParserTests
     {
         // Arrange
         ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
-        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name not in (\"A\", \"B\") && 'y' in Name && 'z' not in Name", null, null);
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and Name not in (\"A\", \"B\") && 'y' in Name && \"z\" not in Name", null, null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso Not(((x.Name == \"A\") OrElse (x.Name == \"B\")))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z)))");
+        Assert.Equal("(((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(\"y\")) AndAlso Not(x.Name.Contains(\"z\")))", parsedExpression);
     }
 
+    [Fact]
+    public void Parse_In_FallsBackTo_OrElse_When_ContainsCannotBeUsed()
+    {
+        // Arrange
+        var values = new[] { new SnowflakeId(1), new SnowflakeId(100), new SnowflakeId(5) }.AsQueryable();
+
+        // Act
+        var query = values.Where("it in (100, 5UL)");
+        var expressionText = query.Expression.ToString();
+        var result = query.ToArray();
+
+        // Assert
+        Assert.Contains("OrElse", expressionText);
+        Assert.DoesNotContain(".Contains(", expressionText);
+        Assert.Equal([new SnowflakeId(100), new SnowflakeId(5)], result);
+    }
 
     [Fact]
     public void Parse_ParseMultipleInAndNotInAndNot_InOperators()
     {
         // Arrange
         ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
-        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and MainCompanyId not in (3, 4) and Name not_in (\"A\", \"B\") && 'y' in Name && 'z' not in Name && 's' not_in Name", null, null);
+        var sut = new ExpressionParser(parameters, "MainCompanyId in (1, 2) and MainCompanyId not in (3, 4) and Name not_in (\"A\", \"B\") && 'y' in Name && \"z\" not in Name && 's' not_in Name", null, null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("(((((((x.MainCompanyId == 1) OrElse (x.MainCompanyId == 2)) AndAlso Not(((x.MainCompanyId == 3) OrElse (x.MainCompanyId == 4)))) AndAlso Not(((x.Name == \"A\") OrElse (x.Name == \"B\")))) AndAlso x.Name.Contains(y)) AndAlso Not(x.Name.Contains(z))) AndAlso Not(x.Name.Contains(s)))");
+        Assert.Equal("(((((new [] {1, 2}.Contains(x.MainCompanyId) AndAlso Not(new [] {3, 4}.Contains(x.MainCompanyId))) AndAlso Not(new [] {\"A\", \"B\"}.Contains(x.Name))) AndAlso x.Name.Contains(\"y\")) AndAlso Not(x.Name.Contains(\"z\"))) AndAlso Not(x.Name.Contains(\"s\")))", parsedExpression);
     }
 
     [Fact]
@@ -308,20 +326,20 @@ public partial class ExpressionParserTests
     {
         // Arrange
         ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "x")];
-        var sut = new ExpressionParser(parameters, "(MainCompanyId in @0)", [new long?[] { 1, 2 }], null);
+        var sut = new ExpressionParser(parameters, "(MainCompanyId in @0)", [new long?[] { 1, (long) int.MaxValue + 1 }], null);
 
         // Act
         var parsedExpression = sut.Parse(null).ToString();
 
         // Assert
-        Check.That(parsedExpression).Equals("value(System.Nullable`1[System.Int64][]).Contains(x.MainCompanyId)");
+        Check.That(parsedExpression).Equals("new [] {1, 2147483648}.Contains(x.MainCompanyId)");
     }
 
     [Fact]
     public void Parse_CastActingOnIt()
     {
         // Arrange
-        var parameters = new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(User), "u") };
+        var parameters = new[] { ParameterExpressionHelper.CreateParameterExpression(typeof(System.Linq.Dynamic.Core.Tests.Entities.User), "u") };
         var sut = new ExpressionParser(parameters, "DisplayName.Any(int(it) > 109)", null, null);
 
         // Act
@@ -390,7 +408,7 @@ public partial class ExpressionParserTests
             CustomTypeProvider = _dynamicTypeProviderMock.Object,
             AllowEqualsAndToStringMethodsOnObject = true
         };
-        ParameterExpression[] parameters = [ ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company") ];
+        ParameterExpression[] parameters = [ParameterExpressionHelper.CreateParameterExpression(typeof(Company), "company")];
         var sut = new ExpressionParser(parameters, expression, null, config);
 
         // Act
@@ -460,6 +478,69 @@ public partial class ExpressionParserTests
 
         // Assert
         parsedExpression.Should().Be(result);
+    }
+
+    [Fact]
+    public void Parse_StringConcat3Strings()
+    {
+        // Arrange
+        var parameters = new[]
+        {
+            Expression.Parameter(typeof(string), "x"),
+            Expression.Parameter(typeof(string), "y")
+        };
+
+        var parser = new ExpressionParser(
+            parameters,
+            "string.Concat(x, \" - \", y)",
+            values: null,
+            parsingConfig: null);
+
+        // Act
+        var expression = parser.Parse(typeof(string));
+
+        // Assert
+        expression.ToString().Should().Be("Concat(x, \" - \", y)");
+
+        // Compile and invoke
+        var lambda = Expression.Lambda<Func<string, string, string>>(expression, parameters);
+        var compiled = lambda.Compile();
+        var result = compiled("hello", "world");
+
+        // Assert
+        result.Should().Be("hello - world");
+    }
+
+    [Fact]
+    public void Parse_StringConcat4Strings()
+    {
+        // Arrange
+        var parameters = new[]
+        {
+            Expression.Parameter(typeof(string), "x"),
+            Expression.Parameter(typeof(string), "y"),
+            Expression.Parameter(typeof(string), "z")
+        };
+
+        var parser = new ExpressionParser(
+            parameters,
+            "string.Concat(x, \" - \", y, z)",
+            values: null,
+            parsingConfig: null);
+
+        // Act
+        var expression = parser.Parse(typeof(string));
+
+        // Assert
+        expression.ToString().Should().Be("Concat(x, \" - \", y, z)");
+
+        // Compile and invoke
+        var lambda = Expression.Lambda<Func<string, string, string, string>>(expression, parameters);
+        var compiled = lambda.Compile();
+        var result = compiled("hello", "earth", "moon");
+
+        // Assert
+        result.Should().Be("hello - earthmoon");
     }
 
     [Fact]

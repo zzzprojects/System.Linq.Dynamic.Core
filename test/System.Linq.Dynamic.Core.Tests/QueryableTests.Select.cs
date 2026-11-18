@@ -203,6 +203,58 @@ namespace System.Linq.Dynamic.Core.Tests
         }
 
         [Fact]
+        public void Select_Dynamic_Add_DayOfWeekEnum_And_Integer()
+        {
+            // Arrange
+            var range = new DayOfWeek[] { DayOfWeek.Monday };
+
+            // Act
+            var rangeResult = range.AsQueryable().Select("it + 1");
+
+            // Assert
+            Assert.Equal(range.Select(x => x + 1).ToArray(), rangeResult.Cast<DayOfWeek>().ToArray());
+        }
+
+        [Fact]
+        public void Select_Dynamic_Add_Integer_And_DayOfWeekEnum()
+        {
+            // Arrange
+            var range = new int[] { 1 };
+
+            // Act
+            var rangeResult = range.AsQueryable().Select("it + DayOfWeek.Monday");
+
+            // Assert - C# semantics: int + enum = enum
+            Assert.Equal(range.Select(x => x + DayOfWeek.Monday).ToArray(), rangeResult.Cast<DayOfWeek>().ToArray());
+        }
+
+        [Fact]
+        public void Select_Dynamic_Subtract_DayOfWeekEnum_And_Integer()
+        {
+            // Arrange
+            var range = new DayOfWeek[] { DayOfWeek.Tuesday };
+
+            // Act
+            var rangeResult = range.AsQueryable().Select("it - 1");
+
+            // Assert - C# semantics: enum - int = enum
+            Assert.Equal(range.Select(x => x - 1).ToArray(), rangeResult.Cast<DayOfWeek>().ToArray());
+        }
+
+        [Fact]
+        public void Select_Dynamic_Subtract_DayOfWeekEnum_And_DayOfWeekEnum()
+        {
+            // Arrange
+            var range = new DayOfWeek[] { DayOfWeek.Tuesday };
+
+            // Act
+            var rangeResult = range.AsQueryable().Select("it - DayOfWeek.Monday");
+
+            // Assert - C# semantics: enum - enum = underlying int type
+            Assert.Equal(range.Select(x => x - DayOfWeek.Monday).ToArray(), rangeResult.Cast<int>().ToArray());
+        }
+
+        [Fact]
         public void Select_Dynamic_WithIncludes()
         {
             // Arrange
@@ -445,7 +497,7 @@ namespace System.Linq.Dynamic.Core.Tests
             Check.That(result).Equals("System.Int32[].Select(it => (it * it))");
         }
 
-#if NET461 || NET5_0 || NET6_0 || NET7_0 || NET8_0 || NET9_0
+#if NET461 || NET5_0 || NET6_0 || NET7_0 || NET8_0 || NET9_0 || NET10_0
         [Fact(Skip = "Fails sometimes in GitHub CI build")]
 #else
         [Fact]

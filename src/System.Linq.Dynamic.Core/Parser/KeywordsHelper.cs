@@ -29,10 +29,10 @@ internal class KeywordsHelper : IKeywordsHelper
     private readonly Dictionary<string, AnyOf<string, Expression, Type>> _mappings;
 
     // Pre-defined Types are not IgnoreCase
-    private static readonly Dictionary<string, Type> PreDefinedTypeMapping = new();
+    private static readonly Dictionary<string, Type> PreDefinedTypeMapping = [];
 
     // Custom DefinedTypes are not IgnoreCase
-    private readonly Dictionary<string, Type> _customTypeMapping = new();
+    private readonly Dictionary<string, Type> _customTypeMapping = [];
 
     static KeywordsHelper()
     {
@@ -118,7 +118,7 @@ internal class KeywordsHelper : IKeywordsHelper
         }
 
         // 4. Try to get as an enum from the system namespace
-        if (_config.SupportEnumerationsFromSystemNamespace && EnumerationsFromMscorlib.PredefinedEnumerationTypes.TryGetValue(text, out var predefinedEnumType))
+        if (_config.SupportEnumerationsFromSystemNamespace && EnumerationsAndWellKnownTypesFromMscorlib.PredefinedEnumerationTypes.TryGetValue(text, out var predefinedEnumType))
         {
             value = predefinedEnumType;
             return true;
