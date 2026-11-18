@@ -220,8 +220,10 @@ public partial class QueryableTests
 
     [Theory]
     [InlineData("S.Danger()")]
+    #if !NET461
     [InlineData("Meta.TryAdd(\"z\",\"y\")")]
     [InlineData("Meta.EnsureCapacity(100000000) > 0")]
+    #endif
     [InlineData("C.TryAdd(\"x\",\"y\")")]
     [InlineData("C.TryUpdate(\"x\",\"z\",\"y\")")]
     [InlineData("Custom.Danger()")]

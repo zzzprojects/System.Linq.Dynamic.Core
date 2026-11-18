@@ -1,3 +1,12 @@
+# v1.8.0 (18 November 2026)
+- [#991](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/991) - Support string to enum conversion using &quot;in-expression&quot; [bug] contributed by [StefH](https://github.com/StefH)
+- [#992](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/992) - Fix Contains on enum [bug] contributed by [StefH](https://github.com/StefH)
+- [#994](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/994) - Restrict method calls on dictionary receivers to an allow-list [security] contributed by [StefH](https://github.com/StefH)
+- [#996](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/996) - Drop support for uap10.0 [feature] contributed by [StefH](https://github.com/StefH)
+- [#997](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/997) - Fix GenerateRandomWord producing non-ASCII letters in the Turkish culture [bug] contributed by [menes97](https://github.com/menes97)
+- [#942](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/942) - Support string to enum conversion using `in` expression with substitution value [feature]
+- [#963](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/963) - Expression could not be translated while filtering [bug]
+
 # v1.7.4 (30 August 2026)
 - [#988](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/988) - Refactor &quot;In&quot;-Expression [bug] contributed by [StefH](https://github.com/StefH)
 - [#989](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/989) - Upgrade some dependencies [dependencies] contributed by [StefH](https://github.com/StefH)
@@ -722,7 +731,7 @@
 
 # 1.0.7.13 (29 November 2017)
 - [#117](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/117) -  New features contributed by [jogibear9988](https://github.com/jogibear9988)
-- [#123](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/123) - CI configuration contributed by [StefH](https://github.com/StefH)
+- [#123](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/123) - appveyor contributed by [StefH](https://github.com/StefH)
 - [#114](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/114) - Dynamic Linq Query not usable with ORM Provider [bug]
 - [#120](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/120) - Error with parsing
 - [#122](https://github.com/zzzprojects/System.Linq.Dynamic.Core/issues/122) - Join with int list
@@ -755,7 +764,7 @@
 - [#85](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/85) - [Fix] Guid? == null comparison contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#86](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/86) - [Fix] Fixed null in Parameter and added functionality Binary And and Or with different Types contributed by [jogibear9988](https://github.com/jogibear9988)
 - [#92](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/92) - [Feature] Adds support for decimal qualifiers. Resolves #91 contributed by [pferraris](https://github.com/pferraris)
-- [#93](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/93) - [Bug] Fix uap10 build in CI contributed by [StefH](https://github.com/StefH)
+- [#93](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/93) - [Bug] Fix uap10 build in appveyor contributed by [StefH](https://github.com/StefH)
 - [#99](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/99) - Added DynamicEnumerable Async extension methods contributed by [StefH](https://github.com/StefH)
 - [#100](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/100) - Feature: NullPropagation operator contributed by [StefH](https://github.com/StefH)
 - [#103](https://github.com/zzzprojects/System.Linq.Dynamic.Core/pull/103) - support group by with 2 parameters, add tolist contributed by [jogibear9988](https://github.com/jogibear9988)
